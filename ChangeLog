@@ -1,3 +1,12 @@
+2013-09-17  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_incidents.php: Simplified the layout
+	on the listing view of incidents. Removed the "flags" column
+	(last WU owner is shown now under a tooltip in the "talk"
+	icon), other "flags" are not really useful (email, file, 
+	participants, etc). Also simplified shown of updated/started
+	dates if they are the same, only show one of them.
+
 2013-09-17  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php,
