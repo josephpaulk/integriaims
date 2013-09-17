@@ -186,9 +186,9 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 	$kbs = get_db_all_rows_sql ($sql);
 	
 	if ($kbs !== false) {
-		
+		unset($table);
 		echo "<h3>";
-		echo __("Knowlegue Base");
+		echo __("Knowledge Base");
 		echo "</h3>";
 		
 		$table->width = '80%';

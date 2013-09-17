@@ -1,5 +1,13 @@
 2013-09-17  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php,
+	operation/incidents/incident_tracking.php: Fixed a bug
+	which shows incident statistic view without data.
+	* operation/search.php: Fixed a table layout in general 
+	search.
+
+2013-09-17  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css,
 	include/functions_incidents.php,
 	operation/incidents/incident_dashboard.php: Fixed several

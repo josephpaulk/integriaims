@@ -1729,6 +1729,10 @@ function incidents_get_incident_stats ($id) {
 	
 	//Get all incident
 	$raw_stats = get_db_all_rows_filter('tincident_stats', array('id_incident' => $id));
+
+	if(!$raw_stats) {
+		return array();
+	}
 	
 	//Sort incident by type and metric into a hash table :)
 	$stats = array();
