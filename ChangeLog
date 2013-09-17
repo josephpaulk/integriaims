@@ -1,3 +1,8 @@
+2013-09-17  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/download/browse.php: Fixed bug: You can't
+	upload files to File Releases section.
+
 2013-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/ajax/crm.php: Fixed the ajax company search.

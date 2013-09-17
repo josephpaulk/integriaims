@@ -199,7 +199,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$public = $row["public"];
 		$external_id = $row["external_id"];
 	}
-		
+	
+	echo "<h1>".__('File releases management')."</h1>";	
+	
 	$current_directory = $config["homedir"]. "/attachment/downloads";
 
 	// Upload file
@@ -224,9 +226,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		}
 	}
 
-
-
 	echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
+	echo '<h3>'.__('Upload a new file').'</h3>';
 	echo '</a>';
 	echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
 
