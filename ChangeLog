@@ -1,3 +1,10 @@
+2013-09-17  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_calendar.php: Fixed bad count
+	of vacation days.
+
+	* include/languages/index.pot: Update traductions.
+
 2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions.php: Now is possible to do an

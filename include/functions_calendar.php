@@ -605,7 +605,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		}
 
 		// Show SUM workunits for that day (GREEN) - standard wu
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task != 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 		$normal = 0;
 		$res=mysql_query($sqlquery);
 		if ($row=mysql_fetch_array($res)){
