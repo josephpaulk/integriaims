@@ -77,13 +77,17 @@ unset($groups[1]);
 
 $count = 0;
 foreach ($groups as $key => $grp) {
+
+	$incidents = get_incidents("id_grupo = $key AND estado <> 7", true);	
+
+	if (!$incidents) {
+		continue;
+	}
 	
 	if ($count % 2 == 0) {
 		$search_by_group .= "<tr>";
 	}
 		
-	$incidents = get_incidents("id_grupo = $key AND estado <> 7", true);
-	
 	$search_by_group .= "<td>";
 	$search_by_group .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
 	$search_by_group .= $grp." (".count($incidents).")";
@@ -117,9 +121,21 @@ if (!$rows) {
 	$search_by_owner .="</tr>";
 
 } else {
+
+	$count = 0;
+
 	foreach ($rows as $key => $owners) {
-	
-		if ($key % 4 == 0) {
+
+		$incidents = get_incidents("id_usuario = '".$owners["id_usuario"]."' AND estado <> 7", true);
+
+		//If no incident not show owner
+		//1.- Because this user hasn't got incident assigned
+		//2.- Because the operator hasn't got enough privileges to see the incidents
+		if (!$incidents) {
+			continue;
+		}		
+		
+		if ($count % 4 == 0) {
 			$search_by_owner .= "<tr>";
 		}
 
@@ -135,9 +151,12 @@ if (!$rows) {
 		$search_by_owner .= "</a>";
 		$search_by_owner .= "</td>";
 		
-		if ($key % 4 == 3) {
+		if ($count % 4 == 3) {
 			$search_by_owner .= "</tr>";
 		}
+
+		//Increase counter
+		$count++;
 	}
 }
 
@@ -145,47 +164,6 @@ $search_by_owner .= "</table>";
 
 $left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner);
 
-$rows = get_db_all_rows_sql ("SELECT DISTINCT(prioridad) as priority, count(*) as count FROM tincidencia WHERE estado <> 7 GROUP BY priority");
-
-$search_by_priority = "<table class='search_by_priority'>";
-
-$search_by_priority .="<tr>";
-
-for ($i = 0; $i<=5; $i++) {
-	// Change the priority code to database code
-	if($i == 0) {
-		$db_priority = 10;
-	}
-	else {
-		$db_priority = $i-1;
-	}
-
-	$incident_fake = array();
-	$incident_fake["prioridad"] = $db_priority;
-	
-	$search_by_priority .= "<td style='background: " . incidents_get_priority_color($incident_fake) . ";'>";
-	$search_by_priority .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_priority=".$db_priority."'>";
-
-	// Search in query totals for each priority (based on DB codes, not user codes)
-
-	$priority_count = 0;
-
-	foreach ($rows as $key => $val){
-		if ($val[0] == $db_priority)
-			$priority_count = $val[1];		
-	}
-
-	$search_by_priority .= $priority_count;
-
-	$search_by_priority .= "</a>";
-	$search_by_priority .= "</td>";
-}
-
-$search_by_priority .="</tr>";
-
-$search_by_priority .= "</table>";
-
-$left_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority);
 
 /**** DASHBOARD RIGHT SIDE ****/
 
@@ -228,12 +206,20 @@ if (!$rows) {
 
 } else {
 	$count = 0;
+
+	array_push($rows, array("id" => 0, "name" => __("Without type")));
+
 	foreach ($rows as $type) {
 		if ($count % 2 == 0) {
 			$search_by_type .= "<tr>";
 		}
-				
-		$incidents = get_incidents("id_incident_type = ".$type["id"]." AND estado <> 7", true);
+		
+		if ($type["id"]) {
+			$incidents = get_incidents("id_incident_type = ".$type["id"]." AND estado <> 7", true);
+		} else {
+			//Without type means type 0 and NULL
+			$incidents = get_incidents("(id_incident_type = ".$type["id"]." OR id_incident_type IS NULL) AND estado IN (1,2,3,4,5,6)", true);
+		}
 	
 		$search_by_type .= "<td>";
 		$search_by_type .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_incident_type=".$type["id"]."'>";
@@ -250,6 +236,60 @@ if (!$rows) {
 $search_by_type .= "</table>";
 
 $right_side .= print_container('incident_search_by_type', __('Search by type'), $search_by_type);
+
+//Get open incident and count them by priority
+$incidents = get_incidents("estado <> 7", false);
+
+$rows = array();
+foreach ($incidents as $inc) {
+
+	if (isset($rows[$inc["prioridad"]])) {
+		$rows[$inc["prioridad"]]++;
+	} else {
+		$rows[$inc["prioridad"]] = 1;
+	}
+}
+
+$search_by_priority = "<table class='search_by_priority'>";
+
+$search_by_priority .="<tr>";
+
+for ($i = 0; $i<=5; $i++) {
+	// Change the priority code to database code
+	if($i == 0) {
+		$db_priority = 10;
+	}
+	else {
+		$db_priority = $i-1;
+	}
+
+	$incident_fake = array();
+	$incident_fake["prioridad"] = $db_priority;
+	
+	$search_by_priority .= "<td style='background: " . incidents_get_priority_color($incident_fake) . ";'>";
+	$search_by_priority .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_priority=".$db_priority."'>";
+
+	// Search in query totals for each priority (based on DB codes, not user codes)
+
+	$priority_count = 0;
+
+	if (!isset($rows[$db_priority])) {
+		$count_priority = 0;
+	} else {
+		$count_priority = $rows[$db_priority];
+	}
+
+	$search_by_priority .= $count_priority;
+
+	$search_by_priority .= "</a>";
+	$search_by_priority .= "</td>";
+}
+
+$search_by_priority .="</tr>";
+
+$search_by_priority .= "</table>";
+
+$right_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority);
 
 $table->data[1][0] = $left_side;
 $table->data[1][1] = $right_side;

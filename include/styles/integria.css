@@ -1276,6 +1276,10 @@ div.pager input {
 	width: auto;
 }
 
+#incident_search_by_owner_div td {
+	vertical-align: top;
+}
+
 #incident_users_div span {
 	font-weight: bold;
 	color: #FF9933; /* orange */
@@ -1856,6 +1860,7 @@ table.search_by_priority td {
 	font-weight: bold;
 	border-radius: 2px;
 	border-bottom-right-radius: 10px;
+	width: 15%;
 }
 
 div.incident_container, .integria_form, .container, table.search-table, table.search-table-button  {
