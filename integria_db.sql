@@ -618,7 +618,7 @@ CREATE TABLE `tmanufacturer` (
 
 CREATE TABLE `tinventory` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
-  `id_object_type` mediumint(8) unsigned,
+  `id_object_type` mediumint(8) unsigned default NULL,
   `owner` varchar(60),
   `name` TEXT default '',
   `public` TINYINT(1) unsigned DEFAULT 1,

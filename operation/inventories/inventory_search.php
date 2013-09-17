@@ -39,6 +39,12 @@ if (defined ('AJAX')) {
 				WHERE `id_object_type`=$id_item
 				AND tinventory.id_object_type = tobject_type.id $sql_search
 				GROUP BY tinventory.`id`";
+
+		if ($id_item == 0) {
+			$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory
+				WHERE `id_object_type` is null $sql_search
+				GROUP BY tinventory.`id`";
+		}
 		
 		$cont_aux = get_db_all_rows_sql($sql);
 

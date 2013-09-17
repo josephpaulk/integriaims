@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `tincident_field_data` (
 ALTER TABLE `tusuario` ADD COLUMN `num_employee` varchar(125) NOT NULL default '';
 ALTER TABLE `tusuario` ADD COLUMN `enable_login` tinyint(1) NOT NULL default '1';
 
-ALTER TABLE `tinventory` ADD COLUMN `id_object_type` mediumint(8) unsigned;
+ALTER TABLE `tinventory` ADD COLUMN `id_object_type` mediumint(8) unsigned default NULL;
 ALTER TABLE `tinventory` ADD COLUMN `owner` varchar(60);
 ALTER TABLE `tinventory` CHANGE COLUMN `name` `name` TEXT default '';
 ALTER TABLE `tinventory` ADD COLUMN `public` TINYINT(1) unsigned DEFAULT 1;

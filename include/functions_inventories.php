@@ -869,6 +869,10 @@ function inventories_print_tree ($sql_search = '') {
 
 	}
 
+	$elements_type[$key+1]['name'] = __('No object type');
+	$elements_type[$key+1]['img'] = print_image ("images/objects/box.png", true, array ("style" => 'vertical-align: middle;'));
+	$elements_type[$key+1]['id'] = 0;
+
 	echo "<ul style='margin: 0; margin-top: 20px; padding: 0;'>\n";
 	$first = true;
 	
@@ -903,6 +907,7 @@ function inventories_print_tree ($sql_search = '') {
 			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search)); //count
 			$inventories_stock = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search), true); //all inventories to calculate stock
 		}
+
 		if ($count_inventories != 0) {
 			
 			// STOCK
@@ -910,6 +915,10 @@ function inventories_print_tree ($sql_search = '') {
 			$unused_stock = inventories_get_stock($inventories_stock, 'unused');
 			$new_stock = inventories_get_stock($inventories_stock, 'new');
 			$min_stock = get_db_value('min_stock', 'tobject_type', 'id', $element['id']);
+			
+			if ($element['id'] == 0) { //no type
+				$min_stock = 0;
+			}
 			
 			$color_div = 'no_error_stock';
 			if ($total_stock < $min_stock) {
@@ -1089,6 +1098,12 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', 
 			WHERE `id_object_type`=$id_item 
 			AND tinventory.id_object_type = tobject_type.id $sql_search
 			GROUP BY tinventory.`id`";
+	
+	if ($id_item == 0) { //no type
+		$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
+			WHERE tinventory.id_object_type is null $sql_search
+			GROUP BY tinventory.`id`";
+	}
 	
 	$cont = get_db_all_rows_sql($sql);
 	
