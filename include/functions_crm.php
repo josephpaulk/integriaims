@@ -791,7 +791,7 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 			break;
 		
 		case 'contact':
-				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
+			$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
 			break;
 	}
 	

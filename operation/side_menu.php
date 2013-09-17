@@ -455,9 +455,13 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		}
 
 		if ($sec2 == 'operation/incidents/incident' || $sec2 == 'operation/incidents/incident_dashboard'
-			|| $sec2 == 'operation/incidents/incident_search') {
-			echo '<li>';
-			echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
+			|| $sec2 == 'operation/incidents/incident_search' || $sec2 == 'operation/incidents/incident_dashboard_detail') {
+				
+			if ($sec2 == 'operation/incidents/incident_dashboard_detail')
+				echo "<li id='sidesel'>";
+			else
+				echo '<li>';
+			echo '<a href="" onclick="return false">'.__('Incident #').'&nbsp;</a>';
 			echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
 			print_input_text ('id', $id_incident ? $id_incident : '', '', 1, 10);
 			echo '</form>';
