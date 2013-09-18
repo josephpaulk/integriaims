@@ -1050,6 +1050,9 @@ function returnMIMEType($filename){
 		case "swf" :
 			return "application/x-shockwave-flash";
 			break;
+		case "iso" :
+			return "application/iso-image";
+			break;
 		default :
 			return "text/plain";
 			break;

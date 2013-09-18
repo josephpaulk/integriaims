@@ -1,5 +1,13 @@
 2013-09-18  Dario Rodriguez <dario@artica.es>
 
+	* include/functions.php: Added new mime type
+	for iso images.
+	* operation/common/download_file.php,
+	operation/download/browse.php: Improved download
+	system.
+
+2013-09-18  Dario Rodriguez <dario@artica.es>
+
 	* operation/common/download_file.php
 	operation/download/download.php: Fixed several
 	biugs with file download.

@@ -420,7 +420,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "<tr>";
 
 		// Name
-		echo "<td><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
+		echo "<td><a title='".$row["description"]."' href='operation/common/download_file.php?type=release&id_attachment=".$row["id"]."'>";
 		echo $row["name"]."</a>";
 		if ($row["description"] != ""){
 			echo "<img src='images/zoom.png'>";
