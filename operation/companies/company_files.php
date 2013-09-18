@@ -20,23 +20,13 @@ check_login ();
 
 if ($id != 0) {
 	
-	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id));
-	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, true));
-	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, false, false, true));
-
-	$enterprise = false;
+	$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id);
+	$write_permission = check_crm_acl ('other', 'cw', $config['id_user'], $id);
+	$manage_permission = check_crm_acl ('other', 'cm', $config['id_user'], $id);
 	
-	if ($read_permission !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		
-		if (!$read_permission) {
-			include ("general/noaccess.php");
-			exit;
-		}
-	} else {
-		$read_permission = true;
-		$write_permission = true;
-		$manage_permission = true;
+	if (! $read_permission) {
+		include ("general/noaccess.php");
+		exit;
 	}
 }
 // Delete file

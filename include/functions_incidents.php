@@ -2103,9 +2103,7 @@ function incidents_get_priority_color($incident) {
 }
 
 function incidents_get_by_notified_email ($email) {
-	$email = mysqli_real_escape_string($email);
-
-	$sql = sprintf('SELECT * FROM tincidencia WHERE notify_email LIKE "%%%s%%"', $email);
+	$sql = sprintf('SELECT * FROM tincidencia WHERE email_copy LIKE "%%%s%%"', $email);
 	
 	$result = process_sql($sql);	
 	

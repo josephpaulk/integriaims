@@ -19,20 +19,18 @@ global $config;
 
 check_login ();
 
-$manage_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $company, false, false, true));
-
-if ($manage_permission === ENTERPRISE_NOT_HOOK) {	
-	$manage_permission = true;	
-} else {
-	if (!$manage_permission) {
-		include ("general/noaccess.php");
-		exit;
-	}
-}
-
+include_once('include/functions_crm.php');
 
 $operation = get_parameter ("operation");
-$id = get_parameter ("id");
+$id = (int) get_parameter ("id");
+
+$manage_permission = check_crm_acl ('company', 'cm', false, $id);
+
+if (!$manage_permission) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to template manager");
+	include ("general/noaccess.php");
+	exit;
+}
 
 // ---------------
 // CREATE template

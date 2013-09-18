@@ -96,19 +96,9 @@ if ($get_contact_search) {
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
-        $companies = crm_get_all_companies(true);
+	$companies = crm_get_companies_list("", false, "", true);
 
-        if ($read && $enterprise) {
-        	$companies = crm_get_user_companies($config['id_user'], $companies);
-        }
-
-        $select_comp = array();
-                
-        foreach($companies as $id => $name) {
-        	$select_comp[$id] = $name;
-	}	
-
-	$table->data[0][1] = print_select ($select_comp, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
+	$table->data[0][1] = print_select ($companies, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	echo '<form id="contact_search_form" method="post">';
 	print_table ($table);

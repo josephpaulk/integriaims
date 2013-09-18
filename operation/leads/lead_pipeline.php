@@ -20,16 +20,11 @@ check_login ();
 
 $read = true;
 
-$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'CR'));
-$enterprise = false;
-
-if ($read !== ENTERPRISE_NOT_HOOK) {
-	$enterprise = true;
-	if (!$read) {
-		include ("general/noaccess.php");
-		exit;
-	}
-} 
+$read = check_crm_acl ('lead', 'cr');
+if (!$read) {
+	include ("general/noaccess.php");
+	exit;
+}
 
 $id = (int) get_parameter ('id');
 
@@ -55,18 +50,15 @@ foreach ($progress as $k => $v) {
 	}
 
 	//Get statistics for $k status
-	$leads = get_db_all_rows_filter ('tlead', array ('progress' => $k, "owner" => $config["id_user"]));
-	
-	if ($read && $enterprise) {
-		$leads = crm_get_user_leads($config['id_user'], $leads);
-	}
+	$leads = crm_get_all_leads ("WHERE progress = $k AND owner = '".$config["id_user"]."'");
 	
 	if(!$leads) {
 		$leads = array();
+		$num_leads = 0;
+	} else {
+		$num_leads = count($leads);
 	}
-
-	$num_leads = count($leads);
-
+	
 	$sql = sprintf("SELECT SUM(estimated_sale) as amount FROM tlead WHERE progress = %d AND owner = '%s'", $k, $config["id_user"]);
 
 	$amount = process_sql($sql);

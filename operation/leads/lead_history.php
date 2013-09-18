@@ -18,6 +18,14 @@ global $config;
 
 check_login ();
 
+if (!isset($read_permission)) {
+	$read_permission = check_crm_acl ('lead', 'cr', $config['id_user'], $id);
+	if (!$read_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a lead");
+		include ("general/noaccess.php");
+		exit;
+	}
+}
 
 $sql = "SELECT * FROM tlead_history WHERE id_lead = $id ORDER BY timestamp DESC";
 

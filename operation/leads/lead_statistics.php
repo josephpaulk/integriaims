@@ -19,15 +19,10 @@ global $config;
 check_login ();
 
 $read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
-$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 $enterprise = false;
 
 if ($result === ENTERPRISE_NOT_HOOK) {
 	$read = true;
-	$write = true;
-	$manage = true;
-	
 } else {
 	$enterprise = true;
 	if (!$read) {

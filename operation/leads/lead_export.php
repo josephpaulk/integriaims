@@ -17,11 +17,14 @@ check_login ();
 
 $id_company = (int) get_parameter ('id_company');
 
-// Check if current user have access to this company.
-if ($id_company && ! check_company_acl ($config["id_user"], $id_company, "CR")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to lead export");
-	require ("general/noaccess.php");
-	exit;
+if ($id_company) {
+	// Check if current user have access to this company.
+	$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
+	if (!$read_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to lead export");
+		require ("general/noaccess.php");
+		exit;
+	}
 }
 
 $search_text = (string) get_parameter ('search_text');

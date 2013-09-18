@@ -18,6 +18,16 @@ global $config;
 
 check_login ();
 
+$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
+if ($id_company) {
+	$read = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
+	if (!$read) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to contact export");
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
 // Activities
 $op2 = get_parameter ("op2", "");
 
@@ -28,8 +38,6 @@ if ($op2 == "add"){
 	$sql = sprintf ('INSERT INTO tcontact_activity (id_contact, written_by, creation, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
 	process_sql ($sql, 'insert_id');
 }
-
-
 
 if ($op2 == "purge"){
 	$activity_id = get_parameter ("activity_id");
@@ -43,21 +51,19 @@ if ($op2 == "purge"){
 }
 
 // Add item form
-if($manage) {
-	$table->width = "99%";
-	$table->class = "search-table-button";
-	$table->data = array ();
-	$table->size = array ();
-	$table->style = array ();
-	
-	$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
-	$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
-	$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
-	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&op=activity&id='.$id.'&op2=add">';
-	print_table($table);
-	echo '</form>';
-}
+$table->width = "99%";
+$table->class = "search-table-button";
+$table->data = array ();
+$table->size = array ();
+$table->style = array ();
+
+$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
+$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
+$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
+
+echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&op=activity&id='.$id.'&op2=add">';
+print_table($table);
+echo '</form>';
 
 $sql = "SELECT * FROM tcontact_activity WHERE id_contact = $id ORDER BY creation DESC";
 

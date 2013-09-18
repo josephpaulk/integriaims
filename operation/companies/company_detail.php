@@ -609,7 +609,7 @@ elseif ($op == "contracts") {
 
 elseif ($op == "contacts") {
 	
-	if (! check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
+	if (! check_crm_acl ('contact', 'cr', $config['id_user'], $id)) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -631,10 +631,6 @@ elseif ($op == "contacts") {
 
 	if ($contacts === false)
 		$contacts = array ();
-		
-	if ($other_read_permission && $enterprise) {
-		$contacts = crm_get_user_contacts($config['id_user'], $contacts);
-	}
 
 	foreach ($contacts as $contact) {
 		$data = array ();
@@ -651,7 +647,7 @@ elseif ($op == "contacts") {
 	}
 	print_table ($table);
 	
-	if (check_crm_acl ('other', 'cm', $config['id_user'], $id)) {
+	if (check_crm_acl ('contact', 'cw', $config['id_user'], $id) || check_crm_acl ('contact', 'cm', $config['id_user'], $id)) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
 		echo '<div style="width: '.$table->width.'; text-align: right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -1021,7 +1017,7 @@ if ((!$id) AND ($new_company == 0)){
 	print_input_hidden ('order_by_activity', $order_by_activity);
 	print_input_hidden ('order_by_company', $order_by_company);
 	echo '</form>';
-
+	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by);
 
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);

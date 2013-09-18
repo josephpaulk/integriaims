@@ -34,23 +34,15 @@ $export_csv_contracts = get_parameter('export_csv_contracts', 0);
 $export_csv_invoices = get_parameter('export_csv_invoices', 0);
 
 if ($export_csv_invoices) {
-	$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-	$enterprise = false;
-
-	if ($read !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		if (!$read) {
-			exit;
-		}
-	} 
+	
+	$read = check_crm_acl ('company', 'cr');
+	if (!$read) {
+		exit;
+	}
 
 	$where_clause = get_parameter('where_clause');
 	
 	$rows = crm_get_all_invoices (clean_output($where_clause));
-	
-	if ($read && $enterprise) {
-		$rows = crm_get_user_invoices($config['id_user'], $rows);
-	}
 	
 	$filename = clean_output ('invoices_export').'-'.date ("YmdHi");
 
@@ -68,15 +60,11 @@ if ($export_csv_invoices) {
 }
 
 if ($export_csv_contracts) {
-	$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-	$enterprise = false;
-
-	if ($read !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		if (!$read) {
-			exit;
-		}
-	} 
+	
+	$read = check_crm_acl ('company', 'cr');
+	if (!$read) {
+		exit;
+	}
 
 	$where_clause = get_parameter('where_clause');
 	
@@ -102,23 +90,15 @@ if ($export_csv_contracts) {
 }
 
 if ($export_csv_contacts) {
-	$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-	$enterprise = false;
-
-	if ($read !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		if (!$read) {
-			exit;
-		}
-	} 
+	
+	$read = check_crm_acl ('company', 'cr');
+	if (!$read) {
+		exit;
+	}
 	
 	$where_clause = get_parameter('where_clause');
 
 	$rows = crm_get_all_contacts (clean_output($where_clause));
-
-	if ($read && $enterprise) {
-		$rows = crm_get_user_contacts($config['id_user'], $rows);
-	}
 	
 	$filename = clean_output ('contacts_export').'-'.date ("YmdHi");
 
@@ -137,15 +117,11 @@ if ($export_csv_contacts) {
 }
 
 if ($export_csv_companies) {
-	$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-	$enterprise = false;
-
-	if ($read !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		if (!$read) {
-			exit;
-		}
-	} 
+	
+	$read = check_crm_acl ('company', 'cr');
+	if (!$read) {
+		exit;
+	}
 	
 	$where_clause = get_parameter('where_clause');
 	$date = get_parameter('date');	
@@ -162,52 +138,14 @@ if ($export_csv_companies) {
 	
 	$rows = crm_get_companies_list(clean_output($where_clause), $date);
 	
-	if ($read && $enterprise) {
-		$rows = crm_get_user_companies($config['id_user'], $rows);
-	}
-	
 	if ($rows === false)
 		return;
 }
 
 if ($export_csv_leads) {
 	
-	$read = true;
-	$read_permission = true;
-		
-	$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-	$enterprise = false;
-
-	if ($read !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		if (!$read) {
-			//include ("general/noaccess.php");
-			exit;
-		}
-	} 
-	
-	$id_company = (int) get_parameter ('id_company');
-	
-	if ($id_company != 0) {
-		$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id));
-		
-		if ($read_permission === ENTERPRISE_NOT_HOOK) {
-			$read_permission = true;		
-		} else {
-			
-			$enterprise = true;
-			
-			if (!$read_permission) {
-				//include ("general/noaccess.php");
-				exit;
-			}
-		}
-	}
-
-	// Check if current user have access to this company.
-	if ($id_company && ! $read_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to lead export");
-		require ("general/noaccess.php");
+	$read = check_crm_acl ('company', 'cr');
+	if (!$read) {
 		exit;
 	}
 
@@ -225,10 +163,6 @@ if ($export_csv_leads) {
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 
 	$rows = crm_get_all_leads (clean_output($where_clause));
-	
-	if ($read && $enterprise) {
-		$rows = crm_get_user_leads($config['id_user'], $rows);
-	}
 	
 	if ($rows === false)
 		return;

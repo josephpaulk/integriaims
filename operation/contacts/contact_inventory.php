@@ -17,14 +17,24 @@ global $config;
 
 check_login ();
 
-enterprise_include('include/functions_crm.php');
+enterprise_include("include/functions_inventory.php", true);
 include_once('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
 $contact = get_db_row ('tcompany_contact', 'id', $id);
 
+$read = check_crm_acl ('other', 'cr', $config['id_user'], $contact['id_company']);
+if (!$read) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to contact inventory without permission");
+	include ("general/noaccess.php");
+	exit;
+}
+
 $inv_obj = enterprise_hook('inventory_get_objects_by_contact', array($contact["id"]));
+if ($inv_obj === ENTERPRISE_NOT_HOOK) {
+	$inv_obj = array();
+}
 
 if (!$inv_obj) {
 	echo '<h3 class="error">'.__("This contact doesn't have any inventory objects").'</h3>';

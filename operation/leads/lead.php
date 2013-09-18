@@ -18,28 +18,14 @@ global $config;
 
 check_login ();
 
-enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
 
-$read = true;
-$write = true;
-$manage = true;
-$write_permission = true;
-$manage_permission = true;
-$read_permission = true;
-	
-$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
-$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
-$enterprise = false;
-
-if ($read !== ENTERPRISE_NOT_HOOK) {
-	$enterprise = true;
-	if (!$read) {
-		include ("general/noaccess.php");
-		exit;
-	}
-} 
+$section_read_permission = check_crm_acl ('lead', 'cr');
+if (!$section_read_permission) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to the lead section");
+	include ("general/noaccess.php");
+	exit;
+}
 
 $id = (int) get_parameter ('id');
 $tab = (string) get_parameter("tab");
@@ -54,10 +40,10 @@ switch ($tab) {
 		$title = __('Lead search');
 		break;
 	case "statistics":
-		$title =__("Lead search statistics");
+		$title =__('Lead search statistics');
 		break;		
 	default:
-		$title = __('Lead pipeline');
+		$title = __('Lead detail');
 }
 
 // Listing of contacts
@@ -72,18 +58,21 @@ if ((!$new && !$id && ($tab != "statistics")) || $delete) {
 	echo "<h1>".$title;
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
+	
 	echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=pipeline'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
 	echo "</li>";
+	
 	echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search'>".print_image ("images/zoom.png", true, array("title" => __("Search leads")))."</a>";
 	echo "</li>";
-
-	if ($tab == "search") {
+	
+	if ($tab == "search" || $tab == "") {
 		echo "<li>";
 		echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
-		echo "</li>";		
+		echo "</li>";
 	}
+	
 	echo "</ul>";
 	echo "</div>";
 	echo "</h1>";
@@ -100,7 +89,7 @@ switch ($tab) {
 		include("lead_statistics.php");
 		break;
 	default:
-		include("lead_pipeline.php");
+		include("lead_detail.php");
 }
 
 </script>

@@ -18,6 +18,13 @@ global $config;
 
 check_login ();
 
+$read = check_crm_acl ('lead', 'cr', $config['id_user'], $id);
+if (!$read) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a lead activity");
+	include ("general/noaccess.php");
+	exit;
+}
+
 // Activities
 $op2 = get_parameter ("op2", "");
 

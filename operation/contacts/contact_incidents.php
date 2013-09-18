@@ -17,20 +17,24 @@ global $config;
 
 check_login ();
 
-enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
 include_once('include/functions_incidents.php');
 $id = (int) get_parameter ('id');
 
 $contact = get_db_row ('tcompany_contact', 'id', $id);
 
+$read = check_crm_acl ('other', 'cr', $config['id_user'], $contact['id_company']);
+if (!$read) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to contact incidents without permission");
+	include ("general/noaccess.php");
+	exit;
+}
+
 $email = safe_output($contact["email"]);
-
 $email = trim($email);
-
 $email = safe_input($email);
 
-$incidents = incidents_get_by_notified_email ($contact["email"]);
+$incidents = incidents_get_by_notified_email ($email);
 
 if (!$incidents) {
         echo '<h3 class="error">'.__("This contact doesn't have any incident associated").'</h3>';

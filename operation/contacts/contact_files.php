@@ -23,6 +23,12 @@ $id = (int) get_parameter ('id');
 
 $contact = get_db_row ('tcompany_contact', 'id', $id);
 
+$read = check_crm_acl ('other', 'cr', $config['id_user'], $contact['id_company']);
+if (!$read) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to contact files without permission");
+	include ("general/noaccess.php");
+	exit;
+}
 
 //Upload new file
 $filename = get_parameter ('upfile', false);

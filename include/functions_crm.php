@@ -140,14 +140,32 @@ function crm_get_all_leads ($where_clause) {
 	$sql = "SELECT * FROM tlead $where_clause ORDER BY creation DESC";
 	$leads = get_db_all_rows_sql ($sql);
 	
+	$user_leads = enterprise_hook('crm_get_user_leads', array($config['id_user'], $leads));
+	if ($user_leads !== ENTERPRISE_NOT_HOOK) {
+		$leads = $user_leads;
+	}
+	
 	return $leads;
 }
 
-function crm_get_all_contacts ($where_clause) {
+function crm_get_all_contacts ($where_clause, $only_name = false) {
 	
 	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
 
 	$contacts = get_db_all_rows_sql ($sql);
+	
+	$user_contacts = enterprise_hook('crm_get_user_contacts', array($config['id_user'], $contacts, $only_name));
+	if ($user_contacts !== ENTERPRISE_NOT_HOOK) {
+		$contacts = $user_contacts;
+	} else {
+		if ($only_name) {
+			$contacts_name = array();
+			foreach ($contacts as $key=>$val)  {
+				$contacts_name[$val['id']] = $val['name']; 
+			}
+			$contacts = $contacts_name;
+		}
+	}
 	
 	return $contacts;
 }
@@ -664,14 +682,14 @@ function crm_get_all_companies ($only_name = false) {
 }
 
 function crm_get_contact_files ($id_contact, $order_desc = false) {
-        if($order_desc) {
-                $order = "id_attachment DESC";
-        }
-        else { 
-                $order = "";
-        }
+	if($order_desc) {
+			$order = "id_attachment DESC";
+	}
+	else { 
+			$order = "";
+	}
 
-        return get_db_all_rows_field_filter ('tattachment', 'id_contact', $id_contact, $order);
+	return get_db_all_rows_field_filter ('tattachment', 'id_contact', $id_contact, $order);
 }
 
 // Count companies per owner
@@ -786,12 +804,16 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 		
 		case 'other':
 			if ($id) {
-				$permission = enterprise_hook('crm_check_acl_other', array($user, $id));
+				$permission = enterprise_hook('crm_check_acl_other', array($user, $id, $flag));
 			}
 			break;
 		
-		case 'contact':
-			$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
+		case 'lead':
+			if ($id) {
+				$permission = enterprise_hook('crm_check_acl_lead', array($user, $id, $flag));
+			} else {
+				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
+			}
 			break;
 	}
 	

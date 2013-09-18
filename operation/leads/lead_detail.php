@@ -18,60 +18,43 @@ global $config;
 
 check_login ();
 
-//enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
 
-$read = true;
-$write = true;
-$manage = true;
-$write_permission = true;
-$manage_permission = true;
-$read_permission = true;
-	
-$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
-$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
-$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
-$enterprise = false;
+$section_read_permission = check_crm_acl ('lead', 'cr');
+$section_write_permission = check_crm_acl ('lead', 'cw');
+$section_manage_permission = check_crm_acl ('lead', 'cm');
 
-if ($read !== ENTERPRISE_NOT_HOOK) {
-	$enterprise = true;
-	if (!$read) {
-		include ("general/noaccess.php");
-		exit;
-	}
-} 
+if (!$section_read_permission) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to the lead section");
+	include ("general/noaccess.php");
+	exit;
+}
 
 $id = (int) get_parameter ('id');
+$id_company = (int) get_parameter ('id_company');
 
-
-if ($id != 0) {
+if ($id || $id_company) {
 	
-	$read_permission = enterprise_hook ('crm_check_acl_lead', array ($config['id_user'], $id));
-	$write_permission = enterprise_hook ('crm_check_acl_lead', array ($config['id_user'], $id, true));
-	$manage_permission = enterprise_hook ('crm_check_acl_lead', array ($config['id_user'], $id, false, false, true));
-
-	$enterprise = false;
-
-	if ($read_permission === ENTERPRISE_NOT_HOOK) {
-		
-		$read_permission = true;
-		$write_permission = true;
-		$manage_permission = true;
-		
-	} else {
-		
-		$enterprise = true;
-		
-		if (!$read_permission) {
-
+	if ($id) {
+		$read_permission = check_crm_acl ('lead', 'cr', $config['id_user'], $id);
+		$write_permission = check_crm_acl ('lead', 'cw', $config['id_user'], $id);
+		$manage_permission = check_crm_acl ('lead', 'cm', $config['id_user'], $id);
+		if (!$read_permission && !$write_permission && !$manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a lead");
 			include ("general/noaccess.php");
 			exit;
 		}
-		
-	}	
+	} elseif ($id_company) {
+		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
+		$write_permission = check_crm_acl ('other', 'cw', $config['id_user'], $id_company);
+		$manage_permission = check_crm_acl ('other', 'cm', $config['id_user'], $id_company);
+		if (!$read_permission && !$write_permission && !$manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a lead");
+			include ("general/noaccess.php");
+			exit;
+		}
+	}
 }
-
-//TODO (sancho): Implement ACL system depending on company
 
 $new = (bool) get_parameter ('new');
 $create = (bool) get_parameter ('create');
@@ -89,14 +72,21 @@ $delete_custom_search = (bool) get_parameter ('delete_custom_search');
 
 // Create
 if ($create) {
-
-	if (!$manage_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
+	
+	if ($$id_company) {
+		if (!$write_permission && !$manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a lead");
+			require ("general/noaccess.php");
+			exit;
+		}
+	} else {
+		if (!$section_write_permission && !$section_manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a lead");
+			require ("general/noaccess.php");
+			exit;
+		}
 	}
 	
-	$id_company = (int) get_parameter ('id_company');
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
 	$mobile = (string) get_parameter ('mobile');
@@ -138,23 +128,23 @@ if ($create) {
 // Make owner
 if ($make_owner){
 
-	if (!$write_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
+	if (!$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to make owner of a lead");
+		require ("general/noaccess.php");
+		exit;
 	}
 	
 	// Get company of current user
 	$id_company = get_db_value  ('id_company', 'tusuario', 'id_usuario', $config["id_user"]);
 	
-	if ($id_company == ""){
+	if ($id_company == false){
 		$id_company = 0;
 	}
 
 	// Update lead with current user/company to take ownership of the lead.
 	$sql = sprintf ('UPDATE tlead
 		SET id_company = %d, owner = "%s" WHERE id = %d',
-		$id_company,$config["id_user"], $id);
+		$id_company, $config["id_user"], $id);
 	$result = process_sql ($sql);
 
 	// Add tracking info.
@@ -168,13 +158,12 @@ if ($make_owner){
 // Update
 if ($update) { // if modified any parameter
 	
-	if (!$write_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	if (!$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a lead");
 		require ("general/noaccess.php");
 		exit;
 	}
 	
-	$id_company = (int) get_parameter ('id_company');
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
 	$mobile = (string) get_parameter ('mobile');
@@ -222,23 +211,15 @@ if ($update) { // if modified any parameter
 		$result = process_sql ($sql);
 
 	}
-	
-/*
-	$update = false; // continue editing...
-
-	// Clean up all inputs
-	unset ($_POST);
-*/
 }
 
 // Delete
 if ($delete) {
 	
-	//TODO: ACL check here !
-	if (!$manage_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
+	if (!$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a lead");
+		require ("general/noaccess.php");
+		exit;
 	}
 
 	$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
@@ -259,11 +240,10 @@ if ($delete) {
 // Close
 if ($close) {
 
-	//TODO: ACL check here !
-	if (!$write_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
+	if (!$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to close a lead");
+		require ("general/noaccess.php");
+		exit;
 	}
 
 	$sql = sprintf ('UPDATE tlead SET progress = 100 WHERE id = %d', $id);
@@ -348,11 +328,11 @@ if ($id_search && $delete_custom_search) {
 // FORM (Update / Create)
 if ($id || $new) {
 	if ($new) {
-
-		if (!$manage_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
+		
+		if (!$section_write_permission && !$section_manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a lead");
+			require ("general/noaccess.php");
+			exit;
 		}
 		
 		$id = 0;
@@ -373,13 +353,6 @@ if ($id || $new) {
 		$id_category = (int) get_parameter ('product');
 
 	} else {
-
-		// TODO (slerena): implement ACL here based on company or something :)
-		if (!$write_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
-		}
 		
 		clean_cache_db();
 		$lead = get_db_row ("tlead", "id", $id);
@@ -399,7 +372,6 @@ if ($id || $new) {
 		$creation = $lead["creation"];
 		$modification = $lead["modification"];
 		$id_category = $lead["id_category"];
-
 	}
 	
 	// Show tabs
@@ -508,12 +480,13 @@ if ($id || $new) {
 	}
 
 	$table->width = "99%";
-	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[8][0] = 4;
 	
-	if ($write_permission) {
+	if ($write_permission || $manage_permission) {
+		
+		$table->class = "search-table-button";
 		
 		if ($id == 0) {
 			echo "<h1>".__('Create lead')."</h1>";
@@ -535,22 +508,18 @@ if ($id || $new) {
 		$table->data[4][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		$table->data[5][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 		
-		// TODO: Show only companies with access to them
-
-
 		if ($config["lead_company_filter"] != ""){
-			$sql2 = "SELECT id, name FROM tcompany WHERE id_company_role IN ('".$config["lead_company_filter"]."')";
+			$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."')";
 		} else {
-			$sql2 = "SELECT id, name FROM tcompany ";
+			$where_filter = "AND 1=1";
 		}
-		$sql2 .=  " ORDER by name";
-
-		$companies = process_sql($sql2);
+		if ($manage_permission) {
+			$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
+		} else {
+			$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."' $where_filter";
+			$companies = process_sql($sql);
+		}
 		
-		if ($read && $enterprise) {
-			$companies = crm_get_user_companies($config['id_user'], $companies, true);
-		}
-	
 		$languages = crm_get_all_languages();
 		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, false,  __('Language'));
 		
@@ -561,7 +530,8 @@ if ($id || $new) {
 
 		// Show delete control if its owned by the user
 		if ($id && $config["id_user"] == $owner){
-			$table->data[6][0] .= ' <a href="index.php?sec=customers&
+			$table->data[6][0] .= ' <a title="'.__('Delete this lead').'"
+							href="index.php?sec=customers&
 							sec2=operation/leads/lead&tab=search&
 							delete=1&id='.$id.'&offset='.$offset.'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -570,17 +540,19 @@ if ($id || $new) {
 		}
 
 		// Show "close" control if it's owned by the user
-		if ($id && ( ($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"])) ) ) {
-                        $table->data[6][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
-                        $id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
-                }
-
+		if ($id && ( ($config["id_user"] == $lead["owner"]) || dame_admin($config["id_user"]) ) ) {
+			$table->data[6][0] .= " <a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
+			$id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
+		}
+		
 		// Show take control is owned by nobody
-		if ($owner == "" && $id)
-				$table->data[6][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
-				$id."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
-
-		$table->data[6][1] =  print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
+		if (($owner == "" || dame_admin($config["id_user"])) && $id) {
+			$table->data[6][0] .= " <a title='".__('Take control')."'
+				href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=$id&make_owner=1'>
+				<img src='images/award_star_silver_1.png'></a>";
+		}
+		
+		$table->data[6][1] = print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
 		if ($id_company) {
 			$table->data[6][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 			$table->data[6][1] .= "<img src='images/company.png'></a>";
@@ -592,8 +564,23 @@ if ($id || $new) {
 		$table->data[7][1] = combo_kb_products ($id_category, true, 'Product type', true);
 
 		$table->data[8][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
+		
+		if ($id) {
+			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('update', 1, true);
+			$button .= print_input_hidden ('id', $id, true);
+		} else {
+			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+			$button .= print_input_hidden ('create', 1, true);
+		}
+		
+		$table->colspan[count($table->data) + 1][0] = 4;
+		$table->data[count($table->data) + 1][0] = $button;
 	}
 	else {
+		
+		$table->class = "search-table";
+		
 		if($fullname == '') {
 			$fullname = '<i>-'.__('Empty').'-</i>';
 		}		
@@ -637,18 +624,6 @@ if ($id || $new) {
 		}		
 		$table->data[6][0] = "<b>".__('Description')."</b><br>$description<br>";
 	}
-	
-	if ($id) {
-		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update', 1, true);
-		$button .= print_input_hidden ('id', $id, true);
-	} else {
-		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-		$button .= print_input_hidden ('create', 1, true);
-	}
-	
-	$table->colspan[count($table->data) + 1][0] = 4;
-	$table->data[count($table->data) + 1][0] = $button;
 	
 	echo '<form method="post" id="lead_form">';
 	print_table ($table);
@@ -707,9 +682,6 @@ if ($id || $new) {
 	print_table ($table);
 	echo '</form>';
 	echo '</div>';
-	
-	// TODO: Show only leads of my company or my company's children.
-	// TODO: Implement ACL check !
 	
 	if ($id_search) {
 		$search_text = $filter['search_text'];
@@ -809,11 +781,16 @@ if ($id || $new) {
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
 	if ($config["lead_company_filter"] != ""){
-		$sql2 = "SELECT id, name FROM tcompany WHERE id_company_role IN ('".$config["lead_company_filter"]."')";
+		$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."')";
 	} else {
-		$sql2 = "SELECT id, name FROM tcompany ";
+		$where_filter = "AND 1=1";
 	}
-	$sql2 .=  " ORDER by name";
+	if ($manage_permission) {
+		$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
+	} else {
+		$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."' $where_filter";
+		$companies = process_sql($sql);
+	}
 
 
 	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 15, 30, false, '',
@@ -844,9 +821,8 @@ if ($id || $new) {
 	$table_advanced->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), -1, true, 0, false, __('Progress equal or below') );
 
 	$table_advanced->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
-
-	$table_advanced->data[0][3] = print_select_from_sql ($sql2, 'id_company_search', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
 	
+	$table_advanced->data[0][3] = print_select ($companies, 'id_company_search', $id_company, '', __("Any"), 0, true, 0, false,  __('Managed by'));
 	$table_advanced->data[1][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
 	$table_advanced->data[1][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
 
@@ -863,10 +839,6 @@ if ($id || $new) {
 	echo '</form>';
 
 	$leads = crm_get_all_leads ($where_clause);
-
-	if ($read && $enterprise) {
-		$leads = crm_get_user_leads($config['id_user'], $leads);
-	}
 
 	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$params", $offset);
 
@@ -939,20 +911,20 @@ if ($id || $new) {
 
 			if ($lead['owner'] == "")
 				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
-				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>&nbsp;";
+				$lead['id']."&make_owner=1&offset=$offset'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>&nbsp;";
 			else
 				$data[9] = "";
 
 
 			// Close that lead
-			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
+			if (($config["id_user"] == $lead["owner"]) || dame_admin($config["id_user"])) {
 				$data[9] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
-				$lead['id']."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
+				$lead['id']."&close=1&offset=$offset'><img src='images/lock.png' title='".__('Close this lead')."'></a>";
 		
 			}
 
 			// Show delete control if its owned by the user
-			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
+			if (($config["id_user"] == $lead["owner"]) || dame_admin($config["id_user"])) {
 				$data[9] .= '&nbsp;<a href="index.php?sec=customers&
 								sec2=operation/leads/lead&tab=search&
 								delete=1&id='.$lead["id"].'&offset='.$offset.'"
@@ -962,10 +934,10 @@ if ($id || $new) {
 			} else {
 				if ($lead["owner"] == ""){
 					// TODO. Check ACK for CRM Write here
-					if ($manage_permission) {
+					if ($section_write_permission || $section_manage_permission) {
 						$data[9] .= '&nbsp;<a href="index.php?sec=customers&
 										sec2=operation/leads/lead&tab=search&
-										delete=1&id='.$lead["id"].'"
+										delete=1&id='.$lead["id"].'&offset='.$offset.'"
 										onClick="if (!confirm(\''.__('Are you sure?').'\'))
 										return false;">
 										<img src="images/cross.png"></a>';
@@ -979,7 +951,7 @@ if ($id || $new) {
 		print_table ($table);
 	}
 	
-	if ($manage_permission) {
+	if ($section_write_permission || $section_manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search">';
 		echo '<div style="width: '.$table->width.'; text-align: right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
@@ -1094,7 +1066,8 @@ $(document).ready (function () {
 			}
 		});
 	};
-	bindAutocomplete ("#text-user", idUser, false, onAutocompleteChange);
+	bindAutocomplete ("#text-user", idUser);
+	$("#text-user").blur(onAutocompleteChange);
 	
 	$("#checkbox-duplicated_leads").click(function () {
 		changeAllowDuplicatedLeads ();
