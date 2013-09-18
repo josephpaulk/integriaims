@@ -1,5 +1,11 @@
 2013-09-18  Dario Rodriguez <dario@artica.es>
 
+	* include/js/jquery-migrate-1.2.1.js: Replaced
+	development version of jquery migrate 1.2.1 by
+	production version (no debug traces).
+
+2013-09-18  Dario Rodriguez <dario@artica.es>
+
 	* include/js/integria_incident_search.js,
 	include/functions_incidents.php,
 	operation/incidents/incident_search_logic.php,
