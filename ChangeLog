@@ -1,3 +1,8 @@
+2013-09-18  SAncho lerena <sleren2artica.es>
+
+	* godmode/setup/setup_mail.php: Delete mail queue code 
+	was missing ¿?: Added again.
+
 2013-09-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/export_csv.php,
