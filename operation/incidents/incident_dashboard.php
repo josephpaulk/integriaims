@@ -207,23 +207,24 @@ if (!$rows) {
 } else {
 	$count = 0;
 
-	array_push($rows, array("id" => 0, "name" => __("Without type")));
+	$rows = get_incident_types();
 
-	foreach ($rows as $type) {
+	foreach ($rows as $id => $name) {
+		
 		if ($count % 2 == 0) {
 			$search_by_type .= "<tr>";
 		}
 		
-		if ($type["id"]) {
-			$incidents = get_incidents("id_incident_type = ".$type["id"]." AND estado <> 7", true);
+		if ($id != -1) {
+			$incidents = get_incidents("id_incident_type = ".$id." AND estado <> 7", true);
 		} else {
 			//Without type means type 0 and NULL
-			$incidents = get_incidents("(id_incident_type = ".$type["id"]." OR id_incident_type IS NULL) AND estado IN (1,2,3,4,5,6)", true);
+			$incidents = get_incidents("(id_incident_type = 0 OR id_incident_type IS NULL) AND estado <> 7", true);
 		}
 	
 		$search_by_type .= "<td>";
-		$search_by_type .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_incident_type=".$type["id"]."'>";
-		$search_by_type .= $type["name"]." (".count($incidents).")";
+		$search_by_type .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_incident_type=".$id."'>";
+		$search_by_type .= $name." (".count($incidents).")";
 		$search_by_type .= "</a>";
 		$search_by_type .= "</td>";
 		

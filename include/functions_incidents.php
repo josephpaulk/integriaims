@@ -88,11 +88,15 @@ function filter_incidents ($filters) {
 	if (! empty ($filters['id_user_or_creator']))
 		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
 
-	if (! empty ($filters['id_incident_type'])) {
-		$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
-	} else {
+	if ($filters['id_incident_type']) {
+		//Incident type 0 means all and incident type -1 means without type
+		if ($filters["id_incident_type"] != -1) {
+			$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
+		} else {
 			$sql_clause .=  ' AND (id_incident_type = 0 OR id_incident_type IS NULL)';
+		}
 	}
+
 	if (! empty ($filters['first_date'])) {
 		$time = strtotime ($filters['first_date']);
 		//00:00:00 to set date at the beginig of the day

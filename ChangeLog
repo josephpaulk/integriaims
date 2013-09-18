@@ -1,3 +1,10 @@
+2013-09-18  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_incidents.php,
+	include/functions_db.php,
+	operation/incidents/incident_dashboard.php: Fixed a problem
+	filtering incidents without type.
+
 2013-09-17  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_incidents.php: Simplified the layout

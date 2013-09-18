@@ -1617,7 +1617,10 @@ function get_incident_types ($only_names = true) {
 	$types = get_db_all_rows_in_table ('tincident_type');
 	if ($types == false)
 		return array ();
-	
+
+	//Add without type option
+	array_push($types, array("id" => -1, "name" => __("Without type"))); 		
+
 	if ($only_names) {
 		$result = array ();
 		foreach ($types as $type) {
@@ -1625,6 +1628,7 @@ function get_incident_types ($only_names = true) {
 		}
 		return $result;
 	}
+
 	return $types;
 }
 
