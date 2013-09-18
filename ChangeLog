@@ -1,3 +1,20 @@
+2013-09-18  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Added missing styles for green rows
+
+	* include/functions_incidents.php: Fixed green and red rows. Yellow
+	rows are not used at the moment. Added last WU people in the last contact
+	row. Set more width for that column also.
+
+	* operation/side_menu.php: Added quick link to "my incidents", thanks for
+	the idea, Mario.
+
+	* operation/download/browse.php: Not FRW users will not see public URL
+	link and download count.
+	
+	* operation/download/download.php: Fixed ACL. This code is pending to be 
+	patched by dario (tomorrow).
+
 2013-09-18  Dario Rodriguez <dario@artica.es>
 
 	* include/functions.php: Added new mime type

@@ -1954,7 +1954,7 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo "<th>";
 	echo __('Priority');
 	echo "</th>";
-	echo "<th>";
+	echo "<th style='width: 70px;'>";
 	echo __('Updated')."<br><i>".__('Started')."</i>";
 	echo "</th>";
 
@@ -1980,11 +1980,11 @@ function incidents_search_result ($filter, $ajax=false) {
 			   jQuery table and it only needs the rows */
 
 			if ($incident["estado"] < 3 )
-				$tr_status = 'class="red"';
-			elseif ($incident["estado"] < 7 )
-				$tr_status = 'class="yellow"';
+				$tr_status = 'class="red_row"';
+			elseif ($incident["estado"] < 6 )
+				$tr_status = 'class="yellow_row"';
 			else
-				$tr_status = 'class="green"';
+				$tr_status = 'class="green_row"';
 
 			echo '<tr '.$tr_status.' id="incident-'.$incident['id_incidencia'].'"';
 
@@ -2046,6 +2046,10 @@ function incidents_search_result ($filter, $ajax=false) {
 				echo "<br><em>[". human_time_comparation ($incident["inicio"]);
 				echo "]</em>";
 			}
+			echo "<br>";
+			echo '<span style="font-size:9px;">';
+			echo $last_wu["id_user"];
+			echo "</span>";
 			echo '</td>';
 			
 			if ($config["show_creator_incident"] == 1){	

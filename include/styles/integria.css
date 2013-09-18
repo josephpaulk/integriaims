@@ -2249,6 +2249,11 @@ tr.red_row > td {
 	background-color: #ffefef !important;
 }
 
+tr.green_row > td {
+        background-color: #efffef !important;
+}
+
+
 table.pipeline-table  {
 	padding: 2px 0px 1px 12px;
 	margin-bottom: 9px;

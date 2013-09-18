@@ -32,7 +32,7 @@ else {
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "KR")==0) {
+if (give_acl($config["id_user"], 0, "FRR")==0) {
     audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
     require ("general/noaccess.php");
     exit;

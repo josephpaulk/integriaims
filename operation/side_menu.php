@@ -1244,12 +1244,12 @@ echo "<div style='clear:both; margin-bottom: 10px;'></div>";
 echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
 echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
 
-if (give_acl ($config["id_user"], 0, "PR")) {
-	// Link to project graph
+if (give_acl ($config["id_user"], 0, "IR")) {
 	echo "&nbsp;";
-	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
-	echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
-
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
+	echo '<img src="images/incident.png" title="'.__('My incidents').'"></a>';
+}
+if (give_acl ($config["id_user"], 0, "PR")) {
 	// Link to Work user spare inster
 	echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
 	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';

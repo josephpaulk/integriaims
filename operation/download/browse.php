@@ -408,8 +408,10 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Size')."</th>";
 		echo "<th>".__('Category')."</th>";
-		echo "<th>".__('Downloads')."</th>";
-		echo "<th>".__('Public link')."</th>";
+		if (give_acl($config["id_user"], 0, "FRW")){
+			echo "<th>".__('Downloads')."</th>";
+			echo "<th>".__('Public link')."</th>";
+		}
 		echo "<th>".__('Date')."</th>";
 		if (give_acl($config["id_user"], 0, "FRW")){
 			echo "<th>".__('Admin')."</th>";
@@ -439,17 +441,18 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		//	echo "<td class=f9>";
 		//	echo $row["description"];
 
-		// Downloads
-		echo "<td>";
-		echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
+		if (give_acl($config["id_user"], 0, "FRW")){
+			// Downloads
+			echo "<td>";
+			echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
 
-		// Public URL
-		echo "<td>";
-		if ($row["public"]){
-			$url = $config["base_url"] . "/index.php?external_download_id=".$row["external_id"];
-			echo "<a href='$url'><img src='images/world.png'></a>";
+			// Public URL
+			echo "<td>";
+			if ($row["public"]){
+				$url = $config["base_url"] . "/index.php?external_download_id=".$row["external_id"];
+				echo "<a href='$url'><img src='images/world.png'></a>";
+			}
 		}
-
 		// Timestamp
 		echo "<td class='f9'>";
 		echo human_time_comparation($row["date"]);
