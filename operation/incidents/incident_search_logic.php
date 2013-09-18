@@ -51,6 +51,12 @@ $search_form = (bool) get_parameter ('search_form');
 $create_custom_search = (bool) get_parameter ('save-search');
 $delete_custom_search = (bool) get_parameter ('delete_custom_search');
 $id_search = get_parameter ('saved_searches');
+$serialized_filter = get_parameter("serialized_filter");
+
+//If serialize filter use the filter stored in a file in tmp dir
+if ($serialized_filter) {
+	$filter = unserialize_in_temp($config["id_user"]);
+}
 
 //Filter auxiliar array 
 $filter_form = $filter;
@@ -186,11 +192,8 @@ foreach ($filter as $key => $value) {
 }
 echo "</form>";
 
-echo '<form id="detail_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" style="clear: both">';
-foreach ($filter as $key => $value) {
-	print_input_hidden ("search_".$key, $value);
-}
-echo "</form>";
+//Store serialize filter
+serialize_in_temp($filter, $config["id_user"]);
 
 echo "<span style='font-size: 10px'>";
 echo sprintf(__('Results found:  %d'), $total_incidents_in_search);

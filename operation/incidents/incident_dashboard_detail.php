@@ -431,7 +431,7 @@ $check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, fa
 
 if ($check_acl !== ENTERPRISE_NOT_HOOK && $check_acl) {
 	echo "<li>";
-	echo '<a href="javascript:edit_incident(\''.$id.'\');">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
 	echo "</li>";
 }
 echo '<li>';
@@ -441,7 +441,7 @@ echo '<li>';
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
 echo '</li>';
 echo '<li>';
-echo "<a id='go_search' href='#'>".print_image ("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
+echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image ("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
 echo '</li>';
 echo "</ul>";
 echo "</div>";
@@ -548,36 +548,6 @@ echo "</div>";
 
 echo "</div>";
 
-/* Add a form to carry filter between incident detail and search views */
-$filter = array ();
-$filter['string'] = (string) get_parameter ('search_string');
-$filter['priority'] = (int) get_parameter ('search_priority', -1);
-$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
-$filter['status'] = (int) get_parameter ('search_status', -10);
-$filter['id_product'] = (int) get_parameter ('search_id_product');
-$filter['id_company'] = (int) get_parameter ('search_id_company');
-$filter['id_inventory'] = (int) get_parameter ('id_inventory');
-$filter['serial_number'] = (string) get_parameter ('search_serial_number');
-$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
-$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-$filter['id_creator'] = (string) get_parameter ('search_creator', '');
-$filter['editor'] = (string) get_parameter ('search_editor', '');
-$filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
-
-echo '<form id="go_search_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=search" style="clear: both">';
-foreach ($filter as $key => $value) {
-	print_input_hidden ("search_".$key, $value);
-}
-echo "</form>";
-
-echo '<form id="edit_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail" style="clear: both">';
-foreach ($filter as $key => $value) {
-	print_input_hidden ("search_".$key, $value);
-}
-echo "</form>";
-
 ?>
 
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
@@ -598,11 +568,6 @@ $('.incident_container h2').click(function() {
 	}
 	
 	$('#' + $(this).attr('id') + ' img').attr('src', new_arrow);
-});
-
-$("#go_search").click(function (event) {
-	event.preventDefault();
-	$("#go_search_form").submit();
 });
 
 </script>

@@ -1994,7 +1994,7 @@ function incidents_search_result ($filter, $ajax=false) {
 			echo '</td>';
 			
 			//Print incident link if not ajax, if ajax link to js funtion to replace parent
-			$link = "javascript:incident_details('".$incident["id_incidencia"]."')";
+			$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
 			
 			if ($ajax) {
 				$link = "javascript:update_parent('".$incident["id_incidencia"]."')";

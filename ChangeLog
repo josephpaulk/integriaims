@@ -1,3 +1,13 @@
+2013-09-18  Dario Rodriguez <dario@artica.es>
+
+	* include/js/integria_incident_search.js,
+	include/functions_incidents.php,
+	operation/incidents/incident_search_logic.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_dashboard_detail.php: Improved method
+	to carry search filter, now you can use right click open in a new 
+	window or tab on incidents list.
+
 2013-09-18  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions.php
