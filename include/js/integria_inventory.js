@@ -25,10 +25,11 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 				});
 			$("#inventory_search_window").dialog('open');
 			
-			$("a[id^='page']").click(function(e) {
+			$("a[class^='page']").click(function(e) {
 
 				e.preventDefault();
-				var id = $(this).attr("id");
+
+				var id = $(this).attr("class");
 								
 				offset = id.substr(5,id.length);
 

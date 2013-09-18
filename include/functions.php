@@ -453,7 +453,7 @@ function pagination ($count, $url, $offset ) {
 		
 		echo "<div><p>";
 		// Show GOTO FIRST button
-		echo '<a id="page_0" href="'.$url.'&offset=0">';
+		echo '<a id="page_0" class= "page_0" href="'.$url.'&offset=0">';
 		echo "<img src='".$config["base_url"]."/images/control_start_blue.png' border=0 valign='bottom'>";
 		echo "</a>";
 		echo "&nbsp;";
@@ -462,7 +462,7 @@ function pagination ($count, $url, $offset ) {
 			$index_page_prev= ($index_page-(floor($block_limit/2)))*$block_size;
 			if ($index_page_prev < 0)
 				$index_page_prev = 0;
-			echo '<a id="page_'.$index_page_prev.'" href="'.$url.'&offset='.$index_page_prev.'"><img src="'.$config["base_url"].'/images/control_rewind_blue.png" border=0 valign="bottom"></a>';
+			echo '<a id="page_'.$index_page_prev.'" class="page_'.$index_page_prev.'" href="'.$url.'&offset='.$index_page_prev.'"><img src="'.$config["base_url"].'/images/control_rewind_blue.png" border=0 valign="bottom"></a>';
 		}
 		echo "&nbsp;";echo "&nbsp;";
 		// Draw blocks markers
@@ -478,7 +478,7 @@ function pagination ($count, $url, $offset ) {
 			$inicio_bloque_fake = $inicio_bloque + 1;
 			// To Calculate last block (doesnt end with round data,
 			// it must be shown if not round to block limit)
-			echo '<a id="page_'.$inicio_bloque.'" href="'.$url.'&offset='.$inicio_bloque.'">';
+			echo '<a id="page_'.$inicio_bloque.'" class="page_'.$inicio_bloque.'" href="'.$url.'&offset='.$inicio_bloque.'">';
 			if ($inicio_bloque == $offset)
 				echo "<b>[ $i ]</b>";
 			else
@@ -493,7 +493,7 @@ function pagination ($count, $url, $offset ) {
 				$prox_bloque = ($i+ceil($block_limit/2))*$block_size;
 				if ($prox_bloque > $count)
 					$prox_bloque = ($count -1) - $block_size;
-				echo '<a id="page_'.$prox_bloque.'" href="'.$url.'&offset='.$prox_bloque.'">';
+				echo '<a id="page_'.$prox_bloque.'" class="page_'.$prox_bloque.'" href="'.$url.'&offset='.$prox_bloque.'">';
 				echo "<img border=0 valign='bottom' src='images/control_fastforward_blue.png'></a> ";
 				$i = $index_counter;
 		}
@@ -503,7 +503,7 @@ function pagination ($count, $url, $offset ) {
 		// as painted in last block (last integer block).
 		if (($count - $block_size) > 0){
 			$myoffset = floor(($count-1)/ $block_size)* $block_size;
-			echo '<a id="page_'.$myoffset.'" href="'.$url.'&offset='.$myoffset.'">';
+			echo '<a id="page_'.$myoffset.'" class="page_'.$myoffset.'" href="'.$url.'&offset='.$myoffset.'">';
 			echo "<img border=0 valign='bottom' src='images/control_end_blue.png'>";
 			echo "</a>";
 		}
