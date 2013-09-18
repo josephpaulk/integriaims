@@ -51,22 +51,25 @@ $fileLocation = $config["homedir"]."$location";
 
 /*TODO: ACL checking here */
 
+
 if (file_exists($fileLocation)){
 	$short_name = preg_split ("/\//", $location);
 	$last_name = $short_name[sizeof($short_name)-1];
 
 	$timestamp = date('Y-m-d H:i:s');
 	mysql_query ("INSERT INTO tdownload_tracking (id_download, id_user, date) VALUES ($download_id, '".$config['id_user']."','$timestamp')");
-
-
-	# If file is too big (>80MB) do a redirect
+	 
+	header("Location: ".$config["base_url"]."/".$location);
+        echo "<script>window.location.href='".$config["base_url"]."/".$location."';</script>";
+        exit;
+	
+	/*# If file is too big (>80MB) do a redirect
 	if (filesize($fileLocation) >80000000){
 		header("Location: ".$config["base_url"]."/".$location);
-		return;
-	} 
-
+		exit;
+	}
 	header('Content-type: aplication/octet-stream;');
-	header('Content-type: ' . returnMIMEType($fileLocation) . ';');
+	//header('Content-type: ' . $mime_type . ';');
 	header("Content-Length: " . filesize($fileLocation));
 	header('Content-Disposition: attachment; filename="' . $last_name . '"');
 
@@ -87,6 +90,7 @@ if (file_exists($fileLocation)){
 	} else {
 		readfile($fileLocation);
 	}
+	exit;*/
 } else {
 	audit_db("",$config["REMOTE_ADDR"], "ACL Violation","Trying to access a non-existant file in disk");
 	echo "File not found";

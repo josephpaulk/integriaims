@@ -1,5 +1,11 @@
 2013-09-18  Dario Rodriguez <dario@artica.es>
 
+	* operation/common/download_file.php
+	operation/download/download.php: Fixed several
+	biugs with file download.
+
+2013-09-18  Dario Rodriguez <dario@artica.es>
+
 	* include/js/jquery-migrate-1.2.1.js: Replaced
 	development version of jquery migrate 1.2.1 by
 	production version (no debug traces).

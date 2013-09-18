@@ -66,15 +66,13 @@ session_write_close();
 // Allow download file
 
 $fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
-
 $last_name = $data["filename"];
 
 if (file_exists($fileLocation)){
-	
 	// Just redirect it, this file could be BIG and problematic.
-
 	header("Location: ".$config["base_url"]."/attachment/".$data["id_attachment"]."_".$data["filename"]);
-	return;
+	echo "<script>window.location.href='".$config["base_url"]."/attachment/".$data["id_attachment"]."_".$data["filename"]."';</script>";
+	exit;
 	
 } else {
 	echo "File is missing in disk storage. Please contact the administrator";
