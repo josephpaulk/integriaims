@@ -112,8 +112,7 @@ if ($files !== false) {
 	foreach ($files as $file) {
 		$data = array ();
 		
-		$filename_encoded = $file["id_attachment"] . "_" . rawurlencode($file["filename"]);
-		$data[0] = "<a href='attachment/$filename_encoded'>".$file["filename"] . "</a>";
+		$data[0] = "<a href='operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=lead'>".$file["filename"] . "</a>";
 		$data[1] = $file["description"];
 		$data[2] = format_numeric($file["size"]);
 		$data[3] = $file["timestamp"];

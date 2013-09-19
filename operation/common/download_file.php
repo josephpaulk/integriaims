@@ -21,11 +21,13 @@ if (!file_exists('../../include/config.php')) {
 	require_once ('include/config.php');
 	require_once ('include/functions.php');
 	require_once ('include/functions_db.php');
+	require_once ("include/functions_crm.php");
 	$general_error = "general/noaccess.php";
 } else {
 	require_once ('../../include/config.php');
 	require_once ('../../include/functions.php');
 	require_once ('../../include/functions_db.php');
+	require_once ("../../include/functions_crm.php");
 	$general_error = "../../general/noaccess.php";
 }
 
@@ -107,7 +109,72 @@ switch ($type) {
 		$short_name = preg_split ("/\//", $data["location"]);
 		$last_name = $short_name[sizeof($short_name)-1];
 		break;
+	case "workorder":
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+
+		$todo = get_db_row ("ttodo", "id", $data["id_todo"]);
+
+		if (!dame_admin($config["id_user"]) && $todo["assigned_user"] != $config['id_user'] && $todo["created_by_user"] != $config['id_user']) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+    		require ($general_error);
+    		exit;
+		}
+
+		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
+		$last_name = $data["filename"];		
+
+		break;
+	case "kb":
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+
+		if (! check_kb_item_accessibility($config["id_user"], $id_attachment)) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+			require ($general_error);
+			exit;
+		}
+
+		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
+		$last_name = $data["filename"];		
+
+		break;
+	case "company":
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+
+		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $data["id_company"]);
+	
+		if (! $read_permission) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+			require ($general_error);
+			exit;
+		}
+
+		break;
+
+	case "lead":
+		
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+		$lead = get_db_row ("tlead", "id", $data["id_lead"]);
+	
+		$user_leads = enterprise_hook('crm_get_user_leads', array($config['id_user'], $lead));
+		//The array is not empty just return empty information
+		if (!$user_leads[0]) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+			require ($general_error);
+			exit;	
+		}
+
+		break;
 	default:
+}
+
+//Compound file path
+if ($type == "release" ||$type == "external_release") {
+	$fileLocation = $config["homedir"]."/".$data["location"];
+	$short_name = preg_split ("/\//", $data["location"]);
+	$last_name = $short_name[sizeof($short_name)-1];	
+} else {
+	$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
+	$last_name = $data["filename"];			
 }
 
 //General check to avoid hacking using wrong id of files

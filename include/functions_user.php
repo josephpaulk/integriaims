@@ -1,7 +1,12 @@
 <?php
 
 global $config;
-require_once ('include/functions_db.php');
+
+if(!file_exists('include/functions_db.php')) {
+	require_once ('../../include/functions_db.php');
+} else {
+	require_once ('include/functions_db.php');
+}
 
 function user_print_autocomplete_input($parameters) {
 	

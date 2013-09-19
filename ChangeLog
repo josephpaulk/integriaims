@@ -1,3 +1,14 @@
+2013-09-19  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_user.php,
+	operation/leads/lead_files.php,
+	operation/common/download_file.php,
+	operation/kb/browse_data.php,
+	operation/workorders/wo_files.php,
+	operation/companies/company_files.php: Unified all file
+	download points (workorders, kb, companies and leads) in
+	the same php scripts, with ACLs checks.
+
 2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/contracts/contract_detail.php: ACL fix.

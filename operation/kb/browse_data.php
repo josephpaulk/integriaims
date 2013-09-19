@@ -122,7 +122,7 @@ if ($attachments !== false && $id) {
 		$data = array ();
 		
 		$attach_id = $attachment['id_attachment'];
-		$link = 'operation/kb/kb_download_file.php?id_attachment='.$attachment['id_attachment'];
+		$link = 'operation/common/download_file.php?type=kb&id_attachment='.$attachment['id_attachment'];
 		$data[0] = '<a href="'.$link.'" title="'.$attachment['description'].'">';
 		$data[0] .= '<img src="images/disk.png"/> ';
 		$data[0] .= $attachment['filename'];
