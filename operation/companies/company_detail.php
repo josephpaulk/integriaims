@@ -23,21 +23,23 @@ include_once('include/functions_user.php');
 
 $id = (int) get_parameter ('id');
 
-$read = check_crm_acl ('company', 'cr');
-
-if (!$read) {
+$section_read_permission = check_crm_acl ('company', 'cr');
+$section_write_permission = check_crm_acl ('company', 'cw');
+$section_manage_permission = check_crm_acl ('company', 'cm');
+if (!$section_read_permission && !$section_write_permission && !$section_manage_permission) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to the company section");
 	include ("general/noaccess.php");
 	exit;
 }
 
-if ($id > 0) {
-	//ACL EXTERNAL USER (OPEN AND ENTERPRISE)
-	if (user_is_external($config['id_user'])) {
-		$check_external_user = crm_check_acl_external_user($config['id_user'], $id);
-		if (!$check_external_user) {
-			include ("general/noaccess.php");
-			exit;
-		}
+if ($id) {
+	$read_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
+	$write_permission = check_crm_acl ('company', 'cw', $config['id_user'], $id);
+	$manage_permission = check_crm_acl ('company', 'cm', $config['id_user'], $id);
+	if (!$read_permission && !$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a company");
+		include ("general/noaccess.php");
+		exit;
 	}
 }
 
@@ -68,7 +70,8 @@ if (($create_company) OR ($update_company)) {
 
 	if ($create_company){
 		
-		if (!check_crm_acl ('company', 'cm')) {
+		if (!$section_write_permission && !$section_manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a company");
 			include ("general/noaccess.php");
 			exit;
 		}
@@ -88,13 +91,8 @@ if (($create_company) OR ($update_company)) {
 	} else {
 
 		// Update company
-
-		if (!check_crm_acl ('company', 'cw')) {
-			include ("general/noaccess.php");
-			exit;
-		}
-
-		if (!check_crm_acl ('company', 'cw', $config['id_user'], $id)) {
+		if (!$write_permission && !$manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a company");
 			include ("general/noaccess.php");
 			exit;
 		}
@@ -127,15 +125,10 @@ if (($create_company) OR ($update_company)) {
 
 if ($delete_company) { // if delete
 
-	$id = (int) get_parameter ('id');
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
 
-	if (!check_crm_acl ('company', 'cm')) {
-		include ("general/noaccess.php");
-		exit;
-	}
-
-	if (!check_crm_acl ('company', 'cm', $config['id_user'], $id)) {
+	if (!$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company");
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -159,10 +152,10 @@ if ($delete_company) { // if delete
 
 // Delete INVOICE
 // ----------------
-
 if ($delete_invoice == 1){
 	
-	if (!check_crm_acl ('invoice', 'cm', $config['id_user'], $id)) {
+	if (!check_crm_acl ('invoice', 'cw', $config['id_user'], $id) &&
+		!check_crm_acl ('invoice', 'cm', $config['id_user'], $id)) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -299,19 +292,14 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	$disabled_write = false;
 	
 	if ($new_company) {
-		if (!check_crm_acl ('company', 'cm')) {
+		if (!$section_write_permission && !$section_manage_permission) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a company");
 			include ("general/noaccess.php");
 			exit;
 		}
 	} else { //edit or read
-		$permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
-		if (!$permission) {
-			include ("general/noaccess.php");
-			exit;
-		} else {
-			if (!check_crm_acl ('company', 'cw', $config['id_user'], $id)) {
-				$disabled_write = true;
-			}
+		if (!$write_permission && !$manage_permission) {
+			$disabled_write = true;
 		}
 	}
 	
@@ -343,13 +331,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$id_parent = 0;
 		$last_update = '';
 	}
-
-	// TODO: Make ACL check here. 
-	// #1. Check if manager = current user -> OK
-	// #2. If have CRM Manager, and current user is parent of this company -> OK
-	// #3. If not, NO PERM to Write.
-
-
+	
 	$table->width = '99%';
 	$table->class = "search-table-button";
 	$table->data = array ();
@@ -360,17 +342,17 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'), $disabled_write);
 	
 
-	if ($id > 0 && check_crm_acl ('company', 'cm', $config['id_user'], $id)) {
+	if ($id > 0 && ($write_permission || $manage_permission)) {
 		$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1'><img src='images/cross.png'></a>";
 	}
 
 
 	$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, $disabled_write, '',
-	array(), true, '', __('Manager')) . print_help_tip (__("Type at least two characters to search"), true);
-
-	// TODO: Replace this for a function to get visible compenies for this user
-	$sql2 = "SELECT id, name FROM tcompany";
-
+	array(), true, '', __('Manager'));
+	if (!$disabled_write) {
+		$table->data[0][1] .= print_help_tip (__("Type at least two characters to search"), true);
+	}
+	
 	$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
 	
 	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, $disabled_write, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
@@ -378,28 +360,23 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'), $disabled_write);
 	
-	$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 15, 100, true, __('Fiscal ID'));
+	$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 15, 100, true, __('Fiscal ID'), $disabled_write);
 	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'), $disabled_write);
 
 	$table->data[3][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'), $disabled_write);
 	$table->data[3][1] = print_input_text ("country", $country, "", 20, 100, true, __('Country'), $disabled_write);
 
-	$table->data[4][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'));
-	$table->data[5][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
+	$table->data[4][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'), $disabled_write);
+	$table->data[5][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'), $disabled_write);
 	
-	
-	if ($id > 0) {
-		if (check_crm_acl ('company', 'cw', $config['id_user'], $id)) {
-			$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
-			$button .= print_input_hidden ('update_company', 1, true);
-			$button .= print_input_hidden ('id', $id, true);
-		}
-	} else {
-		if (check_crm_acl ('company', 'cm', $config['id_user'], $id)) {
-			$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
-			$button .= print_input_hidden ('create_company', 1, true);
-		}
+	if ($id > 0 && ($write_permission || $manage_permission)) {
+		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_company', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} elseif ($section_write_permission || $section_manage_permission) {
+		$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('create_company', 1, true);
 	}
 	
 	$table->data[6][0] = $button;
@@ -898,11 +875,6 @@ elseif ($op == "leads") {
 	
 if ((!$id) AND ($new_company == 0)){
 	
-	if (!$read) {
-		include ("general/noaccess.php");
-		exit;
-	}
-
 	// Search // General Company listing
 	echo "<div id='inventory-search-content'>";
 	echo "<h1>".__('Company management');
@@ -1114,7 +1086,9 @@ $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
-	bindAutocomplete ('#text-user', idUser);
+	if (<?php echo json_encode($disabled_write) ?> == false) {
+		bindAutocomplete ('#text-user', idUser);
+	}
 	
 	// Form validation
 	trim_element_on_submit('#text-search_text');

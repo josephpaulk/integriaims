@@ -1,9 +1,27 @@
+2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Improved the function "check_crm_acl".
+	
+	* include/functions_html.php: Added the posibility to create a
+	disabled textarea with the function "print_textarea".
+	
+	* operation/companies/company_detail.php: ACL improvements.
+	
 2013-09-19  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php: Added no_process header
 	to email sent by incident created y email. 
 	* integria_db.sql: Added new avatar as default avatar.
 
+2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Improved the function "check_crm_acl".
+	
+	* include/functions_html.php: Added the posibility to create a
+	disabled textarea with the function "print_textarea".
+	
+	* operation/companies/company_detail.php: ACL improvements.
+	
 2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/side_menu.php: Added new link, changed some ACL

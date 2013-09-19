@@ -84,7 +84,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 	}
 	
 	if ($disabled) {
-		$disabledText = 'disabled="disabled"';
+		$disabledText = 'disabled';
 	}
 	else {
 		$disabledText = '';
@@ -590,14 +590,20 @@ function print_button ($value = 'OK', $name = '', $disabled = false, $script = '
 	echo $output;
 }
 
-function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', $return = false, $label = false) {
+function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', $return = false, $label = false, $disabled = false) {
 	$output = '';
 	
 	if ($label) {
 		$output .= print_label ($label, $name, 'textarea', true);
 	}
 	
-	$output .= '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.' >';
+	if ($disabled) {
+		$disabledText = 'disabled';
+	} else {
+		$disabledText = '';
+	}
+	
+	$output .= '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.'" '.$disabledText.'>';
 	$output .= $value;
 	$output .= '</textarea>';
 

@@ -806,7 +806,7 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 	switch ($type) {
 		case 'company':
 			if ($id) {
-				$permission = enterprise_hook('crm_check_acl_hierarchy', array($user, $id));
+				$permission = enterprise_hook('crm_check_acl_company', array($user, $id, $flag));
 			} else {
 				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
 			}
