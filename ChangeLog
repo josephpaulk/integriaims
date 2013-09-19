@@ -1,3 +1,12 @@
+2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/contracts/contract_detail.php: ACL fix.
+	
+	* operation/leads/lead_activity.php: Now every user with
+	read access to the lead, can add an activity.
+	
+	* operation/leads/lead_detail.php: Visual and ACL fixes.
+	
 2013-09-19  Dario Rodriguez <dario@artica.es>
 
 	* index.php,

@@ -47,9 +47,9 @@ if ($id != 0) {
 	
 	$id_company = get_db_value('id_company', 'tcontract', 'id', $id);
 	
-	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company));
-	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, true));
-	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, false, false, true));
+	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, 'cr'));
+	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, 'cw'));
+	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, 'cm'));
 
 	$enterprise = false;
 	

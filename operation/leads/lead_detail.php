@@ -453,7 +453,7 @@ if ($id || $new) {
 		
 		$name = get_db_value ('fullname', 'tlead', 'id', $id);
 		
-		echo '<div class="under_tabs_info">' . sprintf(__('Lead #%s: %s'), $id, $name) . '</div>';
+		echo '<div class="under_tabs_info">' . sprintf(__('Lead #%s: %s'), $id, $name) . '</div><br>';
 	}
 
 	switch ($op) {
@@ -484,7 +484,7 @@ if ($id || $new) {
 	$table->colspan = array ();
 	$table->colspan[8][0] = 4;
 	
-	if ($write_permission || $manage_permission) {
+	if ($section_write_permission || $section_manage_permission) {
 		
 		$table->class = "search-table-button";
 		
@@ -513,11 +513,17 @@ if ($id || $new) {
 		} else {
 			$where_filter = "AND 1=1";
 		}
-		if ($manage_permission) {
+		if ($manage_permission || (!$id && $section_manage_permission)) {
 			$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
 		} else {
-			$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."' $where_filter";
+			$user_company = get_db_value("id_company", "tusuario", "id_usuario", $config['id_user']);
+			$sql = "SELECT * FROM tcompany WHERE manager='".$config['id_user']."' OR id = $user_company $where_filter";
 			$companies = process_sql($sql);
+			foreach ($companies as $key=>$company) {
+				$all_companies[$company['id']] = $company['name'];
+			}
+			$companies = $all_companies;
+			$all_companies = null;
 		}
 		
 		$languages = crm_get_all_languages();
@@ -529,7 +535,7 @@ if ($id || $new) {
 
 
 		// Show delete control if its owned by the user
-		if ($id && $config["id_user"] == $owner){
+		if ($id && ( ($config["id_user"] == $owner) || dame_admin($config["id_user"]) ) ){
 			$table->data[6][0] .= ' <a title="'.__('Delete this lead').'"
 							href="index.php?sec=customers&
 							sec2=operation/leads/lead&tab=search&
@@ -540,13 +546,13 @@ if ($id || $new) {
 		}
 
 		// Show "close" control if it's owned by the user
-		if ($id && ( ($config["id_user"] == $lead["owner"]) || dame_admin($config["id_user"]) ) ) {
+		if ($progress < 100 && $id && ( ($config["id_user"] == $owner) || dame_admin($config["id_user"]) ) ) {
 			$table->data[6][0] .= " <a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 			$id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
 		}
 		
 		// Show take control is owned by nobody
-		if (($owner == "" || dame_admin($config["id_user"])) && $id) {
+		if (($owner == "" || dame_admin($config["id_user"])) && $progress < 100 && $id) {
 			$table->data[6][0] .= " <a title='".__('Take control')."'
 				href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=$id&make_owner=1'>
 				<img src='images/award_star_silver_1.png'></a>";
@@ -785,14 +791,9 @@ if ($id || $new) {
 	} else {
 		$where_filter = "AND 1=1";
 	}
-	if ($manage_permission) {
-		$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
-	} else {
-		$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."' $where_filter";
-		$companies = process_sql($sql);
-	}
-
-
+	
+	$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
+	
 	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __('Owner'))
 
@@ -909,7 +910,7 @@ if ($id || $new) {
 			$data[8] = "<span style='font-size: 9px' title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
 			$data[8] .= "<br><span style='font-size: 9px'>". human_time_comparation ($lead['modification']). "</span>";
 
-			if ($lead['owner'] == "")
+			if ($lead['progress'] < 100 && $lead['owner'] == "")
 				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."&make_owner=1&offset=$offset'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>&nbsp;";
 			else
@@ -917,15 +918,14 @@ if ($id || $new) {
 
 
 			// Close that lead
-			if (($config["id_user"] == $lead["owner"]) || dame_admin($config["id_user"])) {
+			if ($lead['progress'] < 100 && ((($config["id_user"] == $lead["owner"] && ($section_write_permission || $section_manage_permission)) || dame_admin($config["id_user"])))) {
 				$data[9] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."&close=1&offset=$offset'><img src='images/lock.png' title='".__('Close this lead')."'></a>";
-		
 			}
 
 			// Show delete control if its owned by the user
-			if (($config["id_user"] == $lead["owner"]) || dame_admin($config["id_user"])) {
-				$data[9] .= '&nbsp;<a href="index.php?sec=customers&
+			if (($config["id_user"] == $lead["owner"] && ($section_write_permission || $section_manage_permission)) || dame_admin($config["id_user"])) {
+				$data[9] .= '<a href="index.php?sec=customers&
 								sec2=operation/leads/lead&tab=search&
 								delete=1&id='.$lead["id"].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -933,9 +933,8 @@ if ($id || $new) {
 								<img src="images/cross.png"></a>';
 			} else {
 				if ($lead["owner"] == ""){
-					// TODO. Check ACK for CRM Write here
 					if ($section_write_permission || $section_manage_permission) {
-						$data[9] .= '&nbsp;<a href="index.php?sec=customers&
+						$data[9] .= '<a href="index.php?sec=customers&
 										sec2=operation/leads/lead&tab=search&
 										delete=1&id='.$lead["id"].'&offset='.$offset.'"
 										onClick="if (!confirm(\''.__('Are you sure?').'\'))
