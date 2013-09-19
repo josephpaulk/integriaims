@@ -17,16 +17,22 @@
 //Delete black lines on include!
 ob_start();
 
-require_once ('../../include/config.php');
-require_once ('../../include/functions.php');
-require_once ('../../include/functions_db.php');
+if (!file_exists('../../include/config.php')) {
+	require_once ('include/config.php');
+	require_once ('include/functions.php');
+	require_once ('include/functions_db.php');
+	$general_error = "general/noaccess.php";
+} else {
+	require_once ('../../include/config.php');
+	require_once ('../../include/functions.php');
+	require_once ('../../include/functions_db.php');
+	$general_error = "../../general/noaccess.php";
+}
 
 //Delete black lines on include!
 ob_end_clean();
 
 session_start();
-
-check_login();
 
 global $config;
 
@@ -35,6 +41,11 @@ $config["id_user"] = $_SESSION["id_usuario"];
 $id_user = $config["id_user"];
 $id_attachment = get_parameter ("id_attachment", 0);
 $type = get_parameter("type");
+
+
+if ($type !== "external_release") {
+	check_login();
+}
 
 //Check ACLs restriction based on type parameter and get data
 $data = array();
@@ -45,7 +56,7 @@ switch ($type) {
 	case "contact":
 		if (! give_acl ($config['id_user'], 0, "CR")){
     		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
-    		require ("../../general/noaccess.php");
+    		require ($general_error);
     		exit;
 		}
 		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
@@ -62,24 +73,36 @@ switch ($type) {
 
 			if (! give_acl ($config['id_user'], $id_group, "IR")){
     			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
-    			require ("../../general/noaccess.php");
+    			require ($general_error);
     			exit;
 			}
 		}
 		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 		$last_name = $data["filename"];
 		break;
-	case "release":
+	case "release":		
 		if (! give_acl($config["id_user"], 0, "KR")) {
     		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
-    		require ("../../general/noaccess.php");
+    		require ($general_error);
     		exit;
 		}
+
 		$timestamp = date('Y-m-d H:i:s');
 		mysql_query ("INSERT INTO tdownload_tracking (id_download, id_user, date) VALUES ($id_attachment, '".$config['id_user']."','$timestamp')");
+
 		$data = get_db_row ("tdownload", "id", $id_attachment );
 
+		$fileLocation = $config["homedir"]."/".$data["location"];
+		$short_name = preg_split ("/\//", $data["location"]);
+		$last_name = $short_name[sizeof($short_name)-1];
+		break;
+	case "external_release":
 
+		$timestamp = date('Y-m-d H:i:s');
+		mysql_query ("INSERT INTO tdownload_tracking (id_download, id_user, date) VALUES ($id_attachment, 'anonymous','$timestamp')");
+		
+		$data = get_db_row ("tdownload", "external_id", $id_attachment );
+		
 		$fileLocation = $config["homedir"]."/".$data["location"];
 		$short_name = preg_split ("/\//", $data["location"]);
 		$last_name = $short_name[sizeof($short_name)-1];
@@ -90,7 +113,7 @@ switch ($type) {
 //General check to avoid hacking using wrong id of files
 if (! $data) {
     audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
-    require ("../../general/noaccess.php");
+    require ($general_error);
     exit;
 }
 

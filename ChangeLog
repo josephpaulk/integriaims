@@ -1,3 +1,11 @@
+2013-09-19  Dario Rodriguez <dario@artica.es>
+
+	* index.php,
+	operation/common/download_file.php: Added support to
+	download external files.
+	* operation/download/download_external.php: Delete old
+	code for external downloads.
+
 2013-09-18  SAncho lerena <sleren2artica.es>
 
 	* godmode/setup/setup_mail.php: Delete mail queue code 

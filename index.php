@@ -104,7 +104,10 @@ if ($change_pass == 1) {
 // Process external download id's
 $external_download_id = get_parameter('external_download_id', "");
 if ($external_download_id != ""){
-	include ("operation/download/download_external.php");
+	//Set some variables to use in download script
+	$_POST["type"] = "external_release";
+	$_POST["id_attachment"] = $external_download_id;
+	include ("operation/common/download_file.php");
 	exit;
 }
 
