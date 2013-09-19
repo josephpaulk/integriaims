@@ -24,7 +24,7 @@ $section_read_permission = check_crm_acl ('lead', 'cr');
 $section_write_permission = check_crm_acl ('lead', 'cw');
 $section_manage_permission = check_crm_acl ('lead', 'cm');
 
-if (!$section_read_permission) {
+if (!$section_read_permission && !$section_write_permission && !$section_manage_permission) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to the lead section");
 	include ("general/noaccess.php");
 	exit;
@@ -513,18 +513,7 @@ if ($id || $new) {
 		} else {
 			$where_filter = "AND 1=1";
 		}
-		if ($manage_permission || (!$id && $section_manage_permission)) {
-			$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
-		} else {
-			$user_company = get_db_value("id_company", "tusuario", "id_usuario", $config['id_user']);
-			$sql = "SELECT * FROM tcompany WHERE manager='".$config['id_user']."' OR id = $user_company $where_filter";
-			$companies = process_sql($sql);
-			foreach ($companies as $key=>$company) {
-				$all_companies[$company['id']] = $company['name'];
-			}
-			$companies = $all_companies;
-			$all_companies = null;
-		}
+		$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
 		
 		$languages = crm_get_all_languages();
 		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, false,  __('Language'));

@@ -221,16 +221,9 @@ if ($id || $new_contact) {
 		$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 		
-		if (dame_admin($config['id_user'])) {
-			$companies = get_companies();
-			$table->data[3][1] = print_select ($companies, 'id_company', $id_company, '', '', 0, true, 0, true, __('Company'));
-		} elseif ($manage_permission || $section_manage_permission) {
-			$companies = crm_get_companies_list ("", false, "", true);
-			$table->data[3][1] = print_select ($companies, 'id_company', $id_company, '', '', 0, true, 0, true, __('Company'));
-		} else {
-			$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."'";
-			$table->data[3][1] = print_select_from_sql ($sql, 'id_company', $id_company, '', '', 0, true, 0, true, __('Company'));
-		}
+		$companies = crm_get_companies_list ("", false, "", true);
+		$table->data[3][1] = print_select ($companies, 'id_company', $id_company, '', '', 0, true, 0, true, __('Company'));
+		
 		if ($id) {
 			$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 			$table->data[3][1] .= "<img src='images/company.png'></a>";

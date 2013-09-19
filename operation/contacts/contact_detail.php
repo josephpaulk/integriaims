@@ -188,7 +188,7 @@ if ($id == 0 && !$new_contact) {
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Company');
 		$table->head[2] = __('Email');
-		if($manage_permission) {
+		if($section_write_permission || $section_manage_permission) {
 			$table->head[3] = __('Delete');
 		}
 		
@@ -199,7 +199,7 @@ if ($id == 0 && !$new_contact) {
 				$contact['id']."'>".$contact['fullname']."</a>";
 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contact['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
 			$data[2] = $contact['email'];
-			if($manage_permission) {
+			if($section_write_permission || $section_manage_permission) {
 				$data[3] = '<a href="index.php?sec=customers&
 							sec2=operation/contacts/contact_detail&
 							delete_contact=1&id='.$contact['id'].'&offset='.$offset.'"

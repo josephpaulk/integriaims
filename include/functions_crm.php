@@ -172,9 +172,24 @@ function crm_get_all_contacts ($where_clause, $only_name = false) {
 }
 
 function crm_get_all_contracts ($where_clause) {
+	global $config;
+	
 	$sql = "SELECT * FROM tcontract $where_clause ORDER BY date_end DESC";
 
 	$contracts = get_db_all_rows_sql ($sql);
+	
+	$user_contracts = enterprise_hook('crm_get_user_contracts', array($config['id_user'], $contracts, $only_name));
+	if ($user_contracts !== ENTERPRISE_NOT_HOOK) {
+		$contracts = $user_contracts;
+	} else {
+		if ($only_name) {
+			$contracts_name = array();
+			foreach ($contracts as $key=>$val)  {
+				$contracts_name[$val['id']] = $val['name']; 
+			}
+			$contracts = $contracts_name;
+		}
+	}
 	
 	return $contracts;
 }
@@ -797,21 +812,29 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 			}
 			break;
 		
-		case 'invoice':
-			if ($id) {
-				$permission = enterprise_hook('crm_check_acl_invoice', array($user, $id));
-			}
-			break;
-		
 		case 'other':
 			if ($id) {
 				$permission = enterprise_hook('crm_check_acl_other', array($user, $id, $flag));
 			}
 			break;
 		
+		case 'invoice':
+			if ($id) {
+				$permission = enterprise_hook('crm_check_acl_invoice', array($user, $id));
+			}
+			break;
+		
 		case 'lead':
 			if ($id) {
 				$permission = enterprise_hook('crm_check_acl_lead', array($user, $id, $flag));
+			} else {
+				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
+			}
+			break;
+			
+		case 'contract':
+			if ($id) {
+				$permission = enterprise_hook('crm_check_acl_contract', array($user, $id, $flag));
 			} else {
 				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
 			}
