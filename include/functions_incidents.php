@@ -1204,14 +1204,14 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
 	$msg_code .= "/" . $row["id_usuario"];;
 	
-	integria_sendmail ($email_owner, $subject, $text, false, $msg_code);
+	integria_sendmail ($email_owner, $subject, $text, false, $msg_code, "", 0, "", "X-Integria: no_process");
 
     // Send a copy to each address in "email_copy"
 
     if ($email_copy != ""){
         $emails = explode (",",$email_copy);
         foreach ($emails as $em){
-        	integria_sendmail ($em, $subject, $text, false, "");
+        	integria_sendmail ($em, $subject, $text, false, "", "", 0, "", "X-Integria: no_process");
         }
     }
 
@@ -1222,7 +1222,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
     	$msg_code .= "/".$row["id_creator"];
 
-	integria_sendmail ($email_creator, $subject, $text, false, $msg_code);
+	integria_sendmail ($email_creator, $subject, $text, false, $msg_code, "", "", 0, "", "X-Integria: no_process");
     }	
 	if ($public == 1){
 		// Send email for all users with workunits for this incident
@@ -1235,7 +1235,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
             	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
                 	$msg_code .= "/". $row[1];
 
-					integria_sendmail ( $row[0], $subject, $text, false, $msg_code);
+					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, "", "", 0, "", "X-Integria: no_process");
                 }
 			}
 		}
@@ -1246,7 +1246,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			if ($contats)
             foreach ($contacts as $contact) {
                 $contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
-                integria_sendmail ($contact_email, $subject, $text, false, $msg_code);
+                integria_sendmail ($contact_email, $subject, $text, false, $msg_code, "", "", 0, "", "X-Integria: no_process");
             }
 	    }
     }

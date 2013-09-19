@@ -25,7 +25,7 @@ CREATE TABLE `tusuario` (
   `direccion` varchar(100) default '',
   `telefono` varchar(100) default '',
   `nivel` tinyint(1) NOT NULL default '0',
-  `avatar` varchar(100) default 'people_1',
+  `avatar` varchar(100) default 'moustache4',
   `lang` varchar(10) default '',
   `pwdhash` varchar(100) default '',
   `disabled` int default 0,
