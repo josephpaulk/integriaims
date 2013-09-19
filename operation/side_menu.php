@@ -564,19 +564,23 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 
 	echo "<h3 class='admin'>".__('Customers')."</h3>";
 	echo "<ul class='sidemenu'>";
-
-
-	if (($sec2=="operation/companies/company_detail") AND (!isset($_GET["create"])))
+	
+	// Company
+	$new_company = (int) get_parameter('new_company');
+	
+	if (($sec2=="operation/companies/company_detail") AND (!$new_company))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
-
-
-	if ($sec2 == "operation/companies/company_detail" && give_acl ($config["id_user"], 0, "CM")) {
+	
+	if ($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if ($new_company)
+			echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+		else
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a>";
-			echo "</li>";
+		echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a>";
+		echo "</li>";
 	}
 
 
@@ -590,54 +594,81 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 	}
 
 	// Invoices
-	if (($sec2=="operation/invoices/invoice_detail"))
+	$new_invoice = (int) get_parameter('new_invoice');
+	
+	if (($sec2 == "operation/invoices/invoice_detail" || $sec2 == "operation/invoices/invoices") && !$new_invoice)
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail'>".__('Invoices')."</a></li>";
-
+	
+	// new
+	if (($sec2 == "operation/invoices/invoice_detail" || $sec2 == "operation/invoices/invoices") && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if ($new_invoice)
+			echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+		else
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+		echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoices&new_invoice=1'>".__('New invoice')."</a>";
+		echo "</li>";
+	}
+	
+	
 	// Contract overview
-	if (($sec2=="operation/contracts/contract_detail") && (!isset($_GET["create"])))
+	$new_contract = (int) get_parameter('new_contract');
+	
+	if (($sec2=="operation/contracts/contract_detail") && !$new_contract)
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail'>".__('Contracts')."</a></li>";
 
 	// new
-	if ($sec2 == "operation/contracts/contract_detail" && give_acl ($config["id_user"], 0, "CM")) {
+	if ($sec2 == "operation/contracts/contract_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if ($new_contract)
+			echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+		else
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a>";
-			echo "</li>";
+		echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a>";
+		echo "</li>";
 	}
 
 
 	// Contact overview
-	if (($sec2=="operation/contacts/contact_detail") AND (!isset($_GET["create"])))
+	$new_contact = (int) get_parameter('new_contact');
+	
+	if (($sec2=="operation/contacts/contact_detail") && !$new_contact)
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail'>".__('Contacts')."</a></li>";
 
-	if ($sec2 == "operation/contacts/contact_detail" && give_acl ($config["id_user"], 0, "CM")) {
+	if ($sec2 == "operation/contacts/contact_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if ($new_contact)
+			echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+		else
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a>";
-			echo "</li>";
-		}
+		echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a>";
+		echo "</li>";
+	}
 
 
 	// Lead management
+	$new_lead = (int) get_parameter('new');
 
-	if (($sec2=="operation/leads/lead") AND (!isset($_GET["create"])))
+	if (($sec2=="operation/leads/lead") AND !$new_lead)
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead'>".__('Leads')."</a></li>";
 
-	if ($sec2 == "operation/leads/lead" && give_acl ($config["id_user"], 0, "CM")) {
+	if ($sec2 == "operation/leads/lead" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if ($new_lead)
+			echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+		else
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&new=1'>".__('New lead')."</a>";
-			echo "</li>";
-		}
+		echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&new=1'>".__('New lead')."</a>";
+		echo "</li>";
+	}
 
 
 	echo "</ul>";

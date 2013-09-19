@@ -27,6 +27,7 @@ $offset = get_parameter ('offset', 0);
 include_once('include/functions_crm.php');
 
 $read = check_crm_acl ('company', 'cr');
+$write = check_crm_acl ('company', 'cw');
 $manage = check_crm_acl ('company', 'cm');
 
 if (!$read) {

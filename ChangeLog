@@ -1,5 +1,13 @@
 2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/side_menu.php: Added new link, changed some ACL
+	and improved the sidesel of the CRM section.
+	
+	* operation/invoices/invoice_detail.php,
+	  operation/invoices/invoices.php: ACL fixes.
+	
+2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_crm.php: Improved the functions
 	"crm_get_all_contracts" and "check_crm_acl".
 	

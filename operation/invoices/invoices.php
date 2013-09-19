@@ -288,12 +288,8 @@ if ($id_company > 0) {
 	$table->data[0][0] .= print_input_hidden ('id', $id_company);
 } else {
 	$table->colspan[0][0] = 2;
-	if ($manage) {
-		$table->data[0][0] = print_select (get_companies(), 'id', $id_company, '', '', 0, true, 0, true, __('Company'));
-	} else {
-		$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."'";
-		$table->data[0][0] = print_select_from_sql ($sql, 'id', $id_company, '', '', 0, true, 0, true, __('Company'));
-	}
+	$companies = crm_get_companies_list ("", false, "ORDER BY name", true);
+	$table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
 }
 
 $table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
