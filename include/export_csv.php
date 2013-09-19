@@ -11,16 +11,15 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-//session_start ();
-
-require_once('functions.php');
-require_once('functions_crm.php');
-
-session_start();
-
 require_once ("config.php");
 
 global $config;
+
+$config["id_user"] = $_SESSION["id_usuario"];
+$config['mysql_result_type'] = MYSQL_ASSOC;
+
+require_once('functions.php');
+require_once('functions_crm.php');
 
 
 //connect to database
@@ -52,8 +51,6 @@ if ($export_csv_invoices) {
 
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	header ('Content-Type: text/css; charset=utf-8');
-
-	$config['mysql_result_type'] = MYSQL_ASSOC;
 	
 	if ($rows === false)
 		return;
@@ -82,8 +79,6 @@ if ($export_csv_contracts) {
 
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	header ('Content-Type: text/css; charset=utf-8');
-
-	$config['mysql_result_type'] = MYSQL_ASSOC;
 	
 	if ($rows === false)
 		return;
@@ -108,8 +103,6 @@ if ($export_csv_contacts) {
 
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	header ('Content-Type: text/css; charset=utf-8');
-
-	$config['mysql_result_type'] = MYSQL_ASSOC;
 	
 	if ($rows === false)
 		return;
@@ -134,8 +127,6 @@ if ($export_csv_companies) {
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	header ('Content-Type: text/css; charset=utf-8');
 
-	$config['mysql_result_type'] = MYSQL_ASSOC;
-	
 	$rows = crm_get_companies_list(clean_output($where_clause), $date);
 	
 	if ($rows === false)
@@ -159,8 +150,6 @@ if ($export_csv_leads) {
 
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	header ('Content-Type: text/css; charset=utf-8');
-
-	$config['mysql_result_type'] = MYSQL_ASSOC;
 
 	$rows = crm_get_all_leads (clean_output($where_clause));
 	

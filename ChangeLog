@@ -1,3 +1,13 @@
+2013-09-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/export_csv.php: ACL fixes.
+	
+	* include/functions_crm.php: Now the functions
+	"crm_get_all_leads" and "crm_get_all_contacts" don't
+	filter any element to the admin.
+	
+	* include/functions_user.php: Error fix.
+	
 2013-09-19  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_user.php,

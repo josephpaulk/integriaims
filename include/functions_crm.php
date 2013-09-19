@@ -19,7 +19,6 @@ global $config;
 enterprise_include('include/functions_crm.php', true);
 
 function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "", $only_name = false) {
-	
 	global $config;
 	
 	if ($date) {
@@ -136,6 +135,7 @@ function crm_change_invoice_lock ($id_user, $id_invoice) {
 }
 
 function crm_get_all_leads ($where_clause) {
+	global $config;
 	
 	$sql = "SELECT * FROM tlead $where_clause ORDER BY creation DESC";
 	$leads = get_db_all_rows_sql ($sql);
@@ -149,6 +149,7 @@ function crm_get_all_leads ($where_clause) {
 }
 
 function crm_get_all_contacts ($where_clause, $only_name = false) {
+	global $config;
 	
 	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
 
@@ -601,7 +602,7 @@ function crm_get_data_lead_creation_graph($data) {
 		return false;
 	}
 
-	require_once ("include/functions_graph.php");  
+	require_once ($config['homedir']."include/functions_graph.php");  
 	
 	$start_unixdate = strtotime ($data[0]["creation"]);
     $end_unixdate = strtotime ("now");
