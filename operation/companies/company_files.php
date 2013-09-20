@@ -20,11 +20,9 @@ check_login ();
 
 if ($id != 0) {
 	
-	$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id);
-	$write_permission = check_crm_acl ('other', 'cw', $config['id_user'], $id);
-	$manage_permission = check_crm_acl ('other', 'cm', $config['id_user'], $id);
-	
+	$read_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
 	if (! $read_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to company files");
 		include ("general/noaccess.php");
 		exit;
 	}

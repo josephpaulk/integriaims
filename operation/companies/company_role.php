@@ -18,15 +18,12 @@ global $config;
 
 check_login();
 
-enterprise_include('include/functions_crm.php');
+require_once('include/functions_crm.php');
 
-$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
-
-if ($manage !== ENTERPRISE_NOT_HOOK) {
-	if (!$manage) {
-		include ("general/noaccess.php");
-		exit;
-	}
+$section_manage_permission = check_crm_acl ('company', 'cm');
+if (!$section_manage_permission) {
+	include ("general/noaccess.php");
+	exit;
 }
 
 echo "<h1>".__('Company role management')."</h1>";

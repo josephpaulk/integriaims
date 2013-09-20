@@ -384,7 +384,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
-	echo '</form>';	
+	echo '</form>';
 }
 
 // Files
@@ -397,19 +397,9 @@ elseif ($op == "files") {
 // ~~~~~~~~~
 elseif ($op == "activities") {
 
-	if (!check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
-		include ("general/noaccess.php");
-		exit;
-	}
-	
 	$op2 = get_parameter ("op2", "");
 	if ($op2 == "add"){
 		
-		if (check_crm_acl ('other', 'cw', $config['id_user'], $id)) {
-			include ("general/noaccess.php");
-			exit;
-		}
-	
 		$datetime =  date ("Y-m-d H:i:s");
 		$comments = get_parameter ("comments", "");
 		
@@ -423,27 +413,21 @@ elseif ($op == "activities") {
 		}
 	}
 	
-	// ADD item form
-	// TODO: ACL Check
+	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 
-	if (check_crm_acl ('other', 'cw', $config['id_user'], $id)) {
+	$table->width = "99%";
+	$table->class = "search-table-button";
+	$table->data = array ();
+	$table->size = array ();
+	$table->style = array ();
 
-		$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
+	$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
+	$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
+	$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
 
-		$table->width = "99%";
-		$table->class = "search-table-button";
-		$table->data = array ();
-		$table->size = array ();
-		$table->style = array ();
-		
-		$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
-		$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
-		$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
-	
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
-		print_table($table);
-		echo '</form>';
-	}
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
+	print_table($table);
+	echo '</form>';
 
 	$contacts = crm_get_all_contacts (sprintf(" WHERE id_company = %d", $id));
 
@@ -521,16 +505,11 @@ elseif ($op == "activities") {
 
 elseif ($op == "contracts") {
 	
-	if (! check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
-		include ("general/noaccess.php");
-		exit;
-	}
-	
 	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 	$contracts = crm_get_user_contracts($config['id_user'], $contracts);
 	
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
-
+	
 	if ($contracts !== false) {
 	
 		$table->width = "99%";
@@ -570,7 +549,7 @@ elseif ($op == "contracts") {
 		print_table ($table);
 
 
-		if (check_crm_acl ('other', 'cm', $config['id_user'], $id)) {
+		if ($write_permission || $manage_permission) {
 			
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
 			echo '<div style="width: '.$table->width.'; text-align: right;">';
@@ -585,11 +564,6 @@ elseif ($op == "contracts") {
 // CONTACT LISTING
 
 elseif ($op == "contacts") {
-	
-	if (! check_crm_acl ('contact', 'cr', $config['id_user'], $id)) {
-		include ("general/noaccess.php");
-		exit;
-	}
 	
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
 		
@@ -624,7 +598,7 @@ elseif ($op == "contacts") {
 	}
 	print_table ($table);
 	
-	if (check_crm_acl ('contact', 'cw', $config['id_user'], $id) || check_crm_acl ('contact', 'cm', $config['id_user'], $id)) {
+	if ($write_permission || $manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
 		echo '<div style="width: '.$table->width.'; text-align: right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -635,15 +609,11 @@ elseif ($op == "contacts") {
 } // end of contact view
 
 // INVOICES LISTING
-
 elseif ($op == "invoices") {
 	
 	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id);
-	$read = check_crm_acl ('company', 'cr');
-	$write = check_crm_acl ('company', 'cw');
-	$manage = check_crm_acl ('company', 'cm');
 	
-	if (!$permission && !$manage) {
+	if (!$permission && !$manage_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -698,8 +668,7 @@ elseif ($op == "invoices") {
 
 	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
 		
-		$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
-		$invoices = get_db_all_rows_sql ($sql);
+		$invoices = crm_get_all_invoices ("id_company = $id");
 		
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
 		
@@ -804,23 +773,13 @@ elseif ($op == "invoices") {
 
 elseif ($op == "leads") {
 	
-	if (! check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
-		include ("general/noaccess.php");
-		exit;
-	}
+	$leads = crm_get_all_leads ("WHERE id_company = $id and progress < 100");
 	
-	$sql = "SELECT * FROM tlead WHERE id_company = $id and progress < 100 ORDER BY estimated_sale DESC,  modification DESC";
-	$invoices = get_db_all_rows_sql ($sql);
-	
-	if ($other_read_permission && $enterprise) {
-		$invoices = crm_get_user_leads($config['id_user'], $invoices);
-	}
-		
-	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
+	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 	
-	if ($invoices !== false) {
+	if ($leads !== false) {
 	
 		$table->width = "99%";
 		$table->class = "listing";
@@ -842,18 +801,18 @@ elseif ($op == "leads") {
 		$table->head[6] = __('Estimated sale');
 		$counter = 0;
 			
-		foreach ($invoices as $invoice) {	
+		foreach ($leads as $lead) {	
 			$data = array ();
 		
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id="
-				.$invoice["id"]."'>".$invoice["fullname"]."</a>";
+				.$lead["id"]."'>".$lead["fullname"]."</a>";
 
-			$data[1] = $invoice["owner"];
-			$data[2] = $invoice["company"];
-			$data[3] = $invoice["modification"];
-			$data[4] = $invoice["country"];
-			$data[5] = translate_lead_progress ($invoice["progress"]);		
-			$data[6] = format_numeric ($invoice["estimated_sale"]);
+			$data[1] = $lead["owner"];
+			$data[2] = $lead["company"];
+			$data[3] = $lead["modification"];
+			$data[4] = $lead["country"];
+			$data[5] = translate_lead_progress ($lead["progress"]);		
+			$data[6] = format_numeric ($lead["estimated_sale"]);
 			
 			array_push ($table->data, $data);
 		}	
@@ -959,7 +918,7 @@ if ((!$id) AND ($new_company == 0)){
 	}
 
 	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company";
-
+	
 	$table->width = '99%';
 	$table->class = 'search-table-button';
 	$table->style = array ();
@@ -969,9 +928,9 @@ if ((!$id) AND ($new_company == 0)){
 		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
 	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 10, 100, true, __('Country'));
 	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
-
-	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-		'search_parent', $search_parent, '', __('Select'), 0, true, false, false, __('Parent'));
+	
+	$companies_name = crm_get_companies_list("", false, "ORDER BY name", true);
+	$table->data[1][0] = print_select ($companies_name, 'search_parent', $search_parent, '', __('Any'), 0, true, false, false, __('Parent'));
 	$table->data[1][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 		
@@ -991,7 +950,6 @@ if ((!$id) AND ($new_company == 0)){
 	echo '</form>';
 	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by);
-
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
 
 	if ($companies !== false) {
@@ -1086,7 +1044,7 @@ $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
-	if (<?php echo json_encode($disabled_write) ?> == false) {
+	if (<?php echo json_encode($id) ?> <= 0 || <?php echo json_encode($disabled_write) ?> == false) {
 		bindAutocomplete ('#text-user', idUser);
 	}
 	

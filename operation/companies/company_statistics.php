@@ -19,7 +19,6 @@ global $config;
 check_login ();
 
 include_once ('include/functions_crm.php');
-enterprise_include('include/functions_crm.php');
 
 $read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
 $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
