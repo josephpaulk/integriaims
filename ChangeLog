@@ -1,5 +1,11 @@
 2013-09-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/incident_files.php,
+	  include/functions_incidents.php: Setted the time used
+	  on a workunit to 0 when uploading a file.
+	
+2013-09-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/graphs/functions_pchart.php: Fixed an error that
 	caused a PHP warning.
 	

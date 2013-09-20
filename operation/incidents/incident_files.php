@@ -90,7 +90,7 @@ if ((give_acl ($config['id_user'], $id_grupo, "IR") ||
 			$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
 			$public = 1;
 			$timestamp = print_mysql_timestamp();
-			$timeused = "0.05";
+			$timeused = "0";
 			$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $nota, $public);
 
 			$id_workunit = process_sql ($sql, "insert_id");

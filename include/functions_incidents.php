@@ -248,7 +248,7 @@ function attach_incident_file ($id, $file_temp, $file_description, $email_notify
 		// Adding a WU noticing about this
 		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". clean_input($filename);
 		$public = 1;
-		$timeused = "0.05";
+		$timeused = 0;
 		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);
 		
 		$timestamp = print_mysql_timestamp();
