@@ -55,7 +55,8 @@ if ((give_acl ($config['id_user'], $id_grupo, "IR") ||
 		// Insert into database
 		$filename_real = safe_output ( $filename ); // Avoid problems with blank spaces
 		$file_temp = sys_get_temp_dir()."/$filename_real";
-		$file_new = str_replace (" ", "_", $filename_real);
+		$file_new = str_replace (" ", "_", $filename_real); // Replace blank spaces
+		$file_new = filter_var($file_new, FILTER_SANITIZE_URL); // Replace conflictive characters
 		$filesize = filesize($file_temp); // In bytes
 
 		$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,

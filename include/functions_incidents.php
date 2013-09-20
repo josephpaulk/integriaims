@@ -204,12 +204,14 @@ function filter_incidents ($filters) {
  *
  */
  
-function attach_incident_file ($id, $file_temp, $file_description) {
+function attach_incident_file ($id, $file_temp, $file_description, $email_notify = false) {
 	global $config;
 	
+	$file_temp = safe_output ($file_temp); // Decoding HTML entities
 	$filesize = filesize($file_temp); // In bytes
 	$filename = basename($file_temp);
-	$filename = str_replace (" ", "_", $filename); // Avoid blank spaces
+	$filename = str_replace (" ", "_", $filename); // Replace blank spaces
+	$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 	
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 			filename, description, size)
@@ -223,13 +225,11 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	$result_msg = ui_print_success_message(__('File added'), '', true);
 	
 	// Email notify to all people involved in this incident
-	/*
-	if ($email_notify == 1) {
+	if ($email_notify) {
 		if ($config["email_on_incident_update"] == 1){
 			mail_incident ($id, $config['id_user'], 0, 0, 2);
 		}
 	}
-	*/
 	
 	// Copy file to directory and change name
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
@@ -250,6 +250,10 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 		$public = 1;
 		$timeused = "0.05";
 		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);
+		
+		$timestamp = print_mysql_timestamp();
+		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
+		process_sql ($sql);
 	}
 	
 	return $result_msg;
