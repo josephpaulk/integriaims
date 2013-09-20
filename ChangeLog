@@ -1,5 +1,18 @@
 2013-09-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/graphs/functions_pchart.php: Fixed an error that
+	caused a PHP warning.
+	
+	* operation/leads/lead_statistics.php: Minor fixes.
+	
+	* operation/leads/lead_pipeline.php,
+	  operation/leads/lead_detail.php,
+	  operation/leads/lead.php: Now the lead pipeline shows the
+	  data filtered with the search results and this results are
+	  keept when navigating through the lead tabs.
+	
+2013-09-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_incidents.php: Fixed an error in the function
 	"attach_incident_file" that caused the upload failed when the
 	filename had blank spaces. Now the conflictive characters of the

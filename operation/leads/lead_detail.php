@@ -1062,11 +1062,11 @@ $(document).ready (function () {
 	});
 });
 
-function changeAction() {
+function changeAction(tab) {
 	
 	var f = document.forms.lead_stats_form;
-
-	f.action = "index.php?sec=customers&sec2=operation/leads/lead&tab=statistics<?php echo $params ?>";
+	
+	f.action = "index.php?sec=customers&sec2=operation/leads/lead&tab="+tab+"<?php echo $params ?>";
 	$("#lead_stats_form").submit();
 }
 

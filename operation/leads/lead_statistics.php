@@ -18,6 +18,8 @@ global $config;
 
 check_login ();
 
+include_once('include/functions_crm.php');
+
 $read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
 $enterprise = false;
 
@@ -36,7 +38,7 @@ $id_company = (int) get_parameter ('id_company_search');
 $start_date = (string) get_parameter ('start_date_search');
 $end_date = (string) get_parameter ('end_date_search');
 $country = (string) get_parameter ('country_search');
-$id_category = (int) get_parameter ('product_search');
+$id_category = (int) get_parameter ('product');
 $progress_major_than = (int) get_parameter ('progress_major_than_search');
 $progress_minor_than = (int) get_parameter ('progress_minor_than_search');
 $owner = (string) get_parameter ("owner_search");
@@ -44,7 +46,7 @@ $show_100 = (int) get_parameter ("show_100_search");
 $id_language = (string) get_parameter ("id_language", "");
 $est_sale = (int) get_parameter ("est_sale_search", 0);
 
-$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 echo "<div id='incident-search-content'>";
 echo "<h1>".__('Lead search statistics');
@@ -139,7 +141,11 @@ if ($leads_funnel != false) {
 	}
 
 	foreach ($leads_funnel as $lf) {
-		$completion = ($lf["total_leads"] / $total_leads) * 100;
+		if ($total_leads <= 0) {
+			$completion = 0;
+		} else {
+			$completion = ($lf["total_leads"] / $total_leads) * 100;
+		}
 		$data[$lf["progress"]]["completion"] = $completion;
 		$data[$lf["progress"]]["amount"] = $lf["amount"];
 	}
@@ -157,7 +163,11 @@ $success_leads_array = crm_get_all_leads("WHERE progress = 200 ");
 
 $total_success = count($success_leads_array);
 
-$conversion_rate = $total_success / $total_leads * 100;
+if ($total_leads <= 0) {
+	$conversion_rate = 0;
+} else {
+	$conversion_rate = $total_success / $total_leads * 100;
+}
 
 $total_amount_success = 0;
 if (isset($data[200]["amount"])) {

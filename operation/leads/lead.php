@@ -52,16 +52,18 @@ $new = get_parameter("new");
 $delete = get_parameter("delete");
 
 //Don't show header if we are creating a new lead
-if ((!$new && !$id && ($tab != "statistics")) || $delete) {
+if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete) {
 
 	echo "<div id='lead-search-content'>";
 	echo "<h1>".$title;
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	
-	echo "<li>";
-	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=pipeline'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
-	echo "</li>";
+	if ($tab == "search" || $tab == "") {
+		echo "<li>";
+		echo "<a id='lead_stats_form_submit' href='javascript: changeAction(\"pipeline\");'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
+		echo "</li>";
+	}
 	
 	echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search'>".print_image ("images/zoom.png", true, array("title" => __("Search leads")))."</a>";
@@ -69,7 +71,7 @@ if ((!$new && !$id && ($tab != "statistics")) || $delete) {
 	
 	if ($tab == "search" || $tab == "") {
 		echo "<li>";
-		echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
+		echo "<a id='lead_stats_form_submit' href='javascript: changeAction(\"statistics\");'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
 		echo "</li>";
 	}
 	

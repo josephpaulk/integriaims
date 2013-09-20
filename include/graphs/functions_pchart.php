@@ -226,8 +226,9 @@ switch($graph_type) {
 
 $rgb_color = array();
 
-if (!isset($colors))
+if (!isset($colors) || !is_array($colors)) {
 	$colors = array();
+}
 
 foreach($colors as $i => $color) {		
 	$rgb['border'] = html2rgb($color['border']);
