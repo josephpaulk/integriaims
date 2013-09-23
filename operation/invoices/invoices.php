@@ -33,7 +33,7 @@ if ($id_invoice > 0 || $id_company > 0) {
 	}
 	if ($id_company > 0) {
 		$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
-		if (!$permission && !$manage) {
+		if (!$permission) {
 			include ("general/noaccess.php");
 			exit;
 		} elseif (!$write && !$manage && $read) {

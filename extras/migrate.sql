@@ -317,7 +317,6 @@ UPDATE tprofile SET `cn` = 1;
 ALTER TABLE `tcompany` DROP COLUMN `id_grupo`;
 
 /* 09/07/2013 */
-ALTER TABLE tinvoice MODIFY `bill_id` int(10) unsigned NOT NULL;
 ALTER TABLE tinvoice MODIFY `invoice_create_date` date NOT NULL DEFAULT '0000-00-00';
 ALTER TABLE tinvoice MODIFY `invoice_payment_date` date DEFAULT NULL;
 ALTER TABLE tinvoice DROP COLUMN `ammount`;
@@ -461,8 +460,8 @@ UPDATE tlead SET progress=80 WHERE progress=90;
 /* 06/09/2013  */
 ALTER TABLE tcontract ADD `status` tinyint(3) NOT NULL DEFAULT 1;
 
-/* 11/09/2013  */
-ALTER TABLE tinvoice MODIFY `bill_id` varchar(30) NOT NULL DEFAULT '';
-
 /* 12/03/2013 */
 ALTER TABLE tpending_mail ADD `extra_headers` text DEFAULT NULL;
+
+/* 11/09/2013  */
+ALTER TABLE tinvoice MODIFY `bill_id` tinytext NOT NULL DEFAULT '';

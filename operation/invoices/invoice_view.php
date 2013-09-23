@@ -13,11 +13,7 @@ if (!$invoice) {
 
 // ACL
 if (!isset($permission)) {
-	enterprise_include('include/functions_crm.php');
-	$permission = enterprise_hook('crm_check_acl_invoice', array($config['id_user'], $invoice['id_company']));
-}
-if ($permission === ENTERPRISE_NOT_HOOK) {
-	$permission = true;
+	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
 }
 if (!$permission) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to an invoice view without permission");

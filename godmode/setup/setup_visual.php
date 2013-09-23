@@ -100,9 +100,9 @@ function get_image_files () {
 }
 
 $imagelist = get_image_files ();
-$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, __('Site logo')) ;
+$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', __('Default'), '',  true, 0, true, __('Site logo')) ;
 
-$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true,  __('Header logo')) ;
+$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', __('Default'), '',  true, 0, true,  __('Header logo')) ;
 
 $flash_options = array();
 $flash_options[0]="Disabled";

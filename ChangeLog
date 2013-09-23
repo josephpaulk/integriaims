@@ -1,5 +1,16 @@
 2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* extras/migrate.sql, integria_db.sql: Changed the column
+	'bill_id' from the table 'tinvoice'.
+	
+	* godmode/setup/setup_visual.php: Now is possible to reset
+	the site and header logos to default.
+	
+	* operation/invoices/invoice_view.php,
+	  operation/invoices/invoices.php: ACL improvements.
+	
+2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_html.php: Added function
 	"print_autorefresh_button".
 	
