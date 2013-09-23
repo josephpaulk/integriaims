@@ -1,5 +1,15 @@
 2013-09-23  Dario Rodriguez <dario@artica.es>
 
+	* operation/campaign,
+	operation/campaign/campaign_list.php,
+	operation/campaign/campaign_stats.php,
+	operation/campaign/campaign.php,
+	operation/campaign/track_newsletter.php,
+	operation/campaign/campaign_editor.php: New feature to
+	create and track campaigns.
+
+2013-09-23  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_crm.php,
 	operation/leads/lead_detail.php,
 	operation/newsletter/issue_creation.php,
