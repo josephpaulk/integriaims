@@ -18,6 +18,14 @@ global $config;
 
 check_login ();
 
+include_once ('include/functions_projects.php');
+
+$id = get_parameter("id");
+
+if (! get_workorder_acl($id)) {
+	no_permission();
+}
+
 // Delete file
 
 $deletef = get_parameter ("deletef", "");

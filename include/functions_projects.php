@@ -1,7 +1,7 @@
 <?php
 
 global $config;
-enterprise_include ('include/functions_projects.php');
+enterprise_include ('include/functions_projects.php', true);
 
  /**
  * Get an SQL query with the accessible projects
@@ -139,6 +139,27 @@ function manage_any_task ($id_user, $id_project = false, $permission_type = "man
 		return $return;
 	return true;
 	
+}
+
+function get_workorder_acl ($id_workorder, $type = '', $id_user = false) {
+	
+	$return = enterprise_hook ('get_workorder_acl_extra', array($id_workorder, $type, $id_user));
+	
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return true;
+	
+}
+
+function get_workorders ($where_clause = "", $order_by = "") {
+	
+	$sql = "SELECT * FROM ttodo ".$where_clause." ".$order_by;
+	
+	$return = enterprise_hook ('get_workorders_extra', array($where_clause, $order_by));
+	
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return get_db_all_rows_sql ($sql);
 }
 
 ?>

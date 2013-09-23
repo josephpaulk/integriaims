@@ -17,6 +17,8 @@ global $config;
 
 check_login ();
 
+include_once("include/functions_crm.php");
+
 // We need to strip HTML entities if we want to use in a sql search
 $search_string = get_parameter ("search_string","");
 
@@ -84,7 +86,7 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 			OR (dame_admin ($config["id_user"]))) {
 
 				$data[0] = $incident["id_incidencia"];
-				$data[1] = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident["id_incidencia"]."'>".$incident["titulo"]."</a>";
+				$data[1] = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"]."'>".$incident["titulo"]."</a>";
 				$data[2] = $incident["inicio"];
 				$data[3] = $incident["estado"];
 				$data[4] = get_incident_workunit_hours($incident["id_incidencia"]);
@@ -101,8 +103,8 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 
 	$sql = "SELECT tproject.id as project_id, ttask.id as task_id, tproject.name as pname, ttask.name as tname FROM 
-tproject, ttask WHERE tproject.disabled = 0 AND ttask.id_project = tproject.id AND (ttask.name LIKE '%$search_string%' 
-OR tproject.name  LIKE '%$search_string%')";
+			tproject, ttask WHERE tproject.disabled = 0 AND ttask.id_project = tproject.id AND (ttask.name LIKE '%$search_string%' 
+			OR tproject.name  LIKE '%$search_string%')";
 
 	$tasks = get_db_all_rows_sql ($sql);
 	
@@ -213,12 +215,12 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 }
 
 // Contact
-if (give_acl($config["id_user"], 0, "CR") && $show_inventory != MENU_HIDDEN){
+if ( check_crm_acl('company', 'cr') && $show_inventory != MENU_HIDDEN ) {
 
-	$sql = "SELECT * FROM tcompany_contact  WHERE fullname LIKE '%".$search_string."%' OR email LIKE '%".$search_string."%' OR phone LIKE '%".$search_string."%' OR mobile LIKE '%".$search_string."%'";
-	$contacts = get_db_all_rows_sql ($sql);
+	$where_clause = " WHERE fullname LIKE '%".$search_string."%' OR email LIKE '%".$search_string."%' OR phone LIKE '%".$search_string."%' OR mobile LIKE '%".$search_string."%'";
+	$contacts = crm_get_all_contacts ($where_clause);
 	
-	if ($contacts !== false) {
+	if ($contacts) {
 		
 		echo "<h3>";
 		echo __("Contacts");
@@ -249,13 +251,13 @@ if (give_acl($config["id_user"], 0, "CR") && $show_inventory != MENU_HIDDEN){
 }
 
 // Contracts
-if (give_acl($config["id_user"], 0, "CR") && $show_customers != MENU_HIDDEN){
+if ( check_crm_acl ('contract', 'cr') && $show_customers != MENU_HIDDEN ) {
 
-        $sql = "SELECT * FROM tcontract  WHERE name LIKE '%".$search_string."%' OR description LIKE '%".$search_string."%' AND id_group in ". get_user_groups_for_sql ($config["id_user"]);
+        $where_clause = " WHERE name LIKE '%".$search_string."%' OR description LIKE '%".$search_string."%' AND id_group in ". get_user_groups_for_sql ($config["id_user"]);
 
-        $contracts = get_db_all_rows_sql ($sql);
+        $contracts = crm_get_all_contracts ($where_clause);
         
-        if ($contracts !== false) {
+        if ($contracts) {
 
                 echo "<h3>";
                 echo __("Contracts");
@@ -286,14 +288,15 @@ if (give_acl($config["id_user"], 0, "CR") && $show_customers != MENU_HIDDEN){
 
 
 // Companies
-if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
+if ( check_crm_acl('company', 'cr') && $show_customers != MENU_HIDDEN ){
 
-	$sql = "SELECT * FROM tcompany WHERE 
-		name LIKE '%".$search_string."%'
-		OR id IN (SELECT id_company FROM tcompany_activity WHERE description LIKE '%$search_string%')";
-	$companies = get_db_all_rows_sql ($sql);
+	$where_clause = " AND (name LIKE '%".$search_string."%' OR id IN (SELECT id_company
+																FROM tcompany_activity
+																WHERE description LIKE '%$search_string%'))";
 	
-	if ($companies !== false) {
+	$companies = crm_get_companies_list($where_clause, false, "ORDER BY name");
+	
+	if ($companies) {
 		
 		echo "<h3>";
 		echo __("Companies");
@@ -322,14 +325,14 @@ if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
 }
 
 // Leads
-if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
+if ( check_crm_acl('lead', 'cr') && $show_customers != MENU_HIDDEN ){
 
-        $sql = "SELECT * FROM tlead WHERE fullname LIKE '%".$search_string."%'
-		OR email LIKE '%".$search_string."%'
-                OR company LIKE '%".$search_string."%'";
-        $companies = get_db_all_rows_sql ($sql);
+        $where_clause = " WHERE fullname LIKE '%".$search_string."%'
+							OR email LIKE '%".$search_string."%'
+							OR company LIKE '%".$search_string."%'";
+        $leads = crm_get_all_leads ($where_clause);
 
-        if ($companies !== false) {
+        if ($leads) {
 
                 echo "<h3>";
                 echo __("Leads");
@@ -342,16 +345,16 @@ if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
                 $table->style = array ();
                 $table->head = array();
                 $table->head[0] = __('Name');
-		$table->head[1] = __('Email');
+				$table->head[1] = __('Email');
                 $table->head[1] = __('Company');
 
-                foreach ($companies as $company) {
+                foreach ($leads as $lead) {
                         $data = array ();
 
-                        $data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".$company["id"]."'>" .
-                        $company["fullname"]. "</a>";
-                        $data[1] = $company["email"];
-			$data[1] = $company["company"];
+                        $data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".$lead["id"]."'>" .
+                        $lead["fullname"]. "</a>";
+                        $data[1] = $lead["email"];
+						$data[1] = $lead["company"];
 
                         array_push ($table->data, $data);
                 }

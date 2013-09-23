@@ -24,10 +24,18 @@ require_once ('include/functions_db.php');
 require_once ('include/functions_ui.php');
 require_once ('include/functions_user.php');
 include_once ('include/functions_workorders.php');
+include_once ('include/functions_projects.php');
 
 $id = (int) get_parameter ("id");
 $id_task = (int) get_parameter ("id_task");
 $offset = get_parameter ("offset", 0);
+
+$section_permission = get_project_access ($config['id_user']);
+if (!$section_permission['read']) {
+	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation", "Trying to access workorder section");
+	require ("general/noaccess.php");
+	exit;
+}
 
 if (defined ('AJAX')) {
 	
@@ -101,9 +109,8 @@ if ($operation == "update2") {
 	$id = get_parameter ("id");
 	$todo = get_db_row ("ttodo", "id", $id);
 	
-	if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
-		if (!dame_admin($config["id_user"]))
-			no_permission();
+	if (! get_workorder_acl($id)) {
+		no_permission();
 	}
 	
 	$name = (string) get_parameter ("name", "");
@@ -148,7 +155,7 @@ if ($operation == "delete") {
 	$id_todo = get_parameter ("id");
 	$todo = get_db_row ("ttodo", "id", $id_todo);
 
-	if (!dame_admin($config["id_user"]) AND $todo["created_by_user"] != $config['id_user']){
+	if (! get_workorder_acl($id, 'delete')) {
 		no_permission();
 	}
 	
@@ -182,9 +189,10 @@ if ($set_progress > -1 ) {
 	$id_todo = get_parameter ("id");
 	$todo = get_db_row ("ttodo", "id", $id_todo);
 
-	if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
+	if (! get_workorder_acl($id)) {
 		no_permission();
 	}
+	
 	$datetime =  date ("Y-m-d H:i:s");
 	$sql_delete= "UPDATE ttodo SET progress = $set_progress, last_update = '$datetime' WHERE id = $id_todo";
 	$result=mysql_query($sql_delete);
@@ -218,11 +226,8 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 		$todo = get_db_row ("ttodo", "id", $id);
 
-		// Basic ACL check
-		if (!dame_admin($config["id_user"])) {
-			if ($todo["assigned_user"] != $config['id_user'] && $todo["created_by_user"] != $config['id_user']) {
-				no_permission ();
-			}
+		if (! get_workorder_acl($id)) {
+			no_permission();
 		}
 		
 		$creator = $todo["created_by_user"];
@@ -283,19 +288,19 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	}
 
 	// Create WU
-	if ($tab == "wu"){
+	if ($tab == "wu") {
 		$_POST["id_task"]=$id_task;
 		include "operation/users/user_spare_workunit.php";
 	}
 
 	// Files
-	if ($tab == "files"){
+	if ($tab == "files") {
 		$id_task = get_parameter("id_task");
 		include "operation/workorders/wo_files.php";
 	}
 
 	// Files
-	if ($tab == "notes"){
+	if ($tab == "notes") {
 		include "operation/workorders/wo_notes.php";
 	}	
 
@@ -426,9 +431,6 @@ if ($operation == "") {
 
 	echo "<h1>".__('Work order management')."</h1>";
 
-	// TODO: Show only leads of my company or my company's children.
-	// TODO: Implement ACL check !
-
 	$search_text = (string) get_parameter ('search_text');
 	$id_wo_category = (int) get_parameter ('id_wo_category');
 	$search_status = (int) get_parameter ("search_status",0);
@@ -443,9 +445,9 @@ if ($operation == "") {
 	$params = "&search_priority=$search_priority&search_tatus=$search_status&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&id_project=$id_project&need_validation=$need_validation";
 
 	$where_clause = "WHERE 1=1 ";
-
+	
 	if ($need_validation){
-		$where_clause = "WHERE need_external_validation = 1 ";
+		$where_clause .= " AND need_external_validation = 1 ";
 	}
 
 	if ($creator != ""){
@@ -555,9 +557,7 @@ if ($operation == "") {
 		$order_by = "ORDER BY priority, last_update DESC";
 	}
 	
-	$sql = "SELECT * FROM ttodo ".$where_clause." ".$order_by;
-	
-	$wos = get_db_all_rows_sql ($sql);
+	$wos = get_workorders ($where_clause, $order_by);
 
 	$wos = print_array_pagination ($wos, "index.php?sec=projects&sec2=operation/workorders/wo$params");
 

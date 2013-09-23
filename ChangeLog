@@ -1,3 +1,15 @@
+2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_projects.php: Added the functions
+	"get_workorder_acl" and "get_workorders".
+	
+	* operation/workorders/wo_files.php,
+	  operation/workorders/wo_notes.php,
+	  operation/workorders/wo.php: Improved the ACL.
+	
+	* operation/search.php: Fixed the link to the incidents.
+	Improved the ACL of the CRM elements.
+
 2013-09-23  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_crm.php,

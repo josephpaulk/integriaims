@@ -18,8 +18,13 @@ global $config;
 
 check_login ();
 
+include_once ('include/functions_projects.php');
 
 $id = get_parameter("id");
+
+if (! get_workorder_acl($id)) {
+	no_permission();
+}
 
 $add_note = get_parameter("addnote");
 $delete = get_parameter("delete");
