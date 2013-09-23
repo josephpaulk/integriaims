@@ -225,6 +225,85 @@ function bindAutocomplete (idTag, idUser, idProject, onChange) {
 	});
 }
 
+function beginReloadTimeout(seconds) {
+	reloadTimeoutID = window.setTimeout(reloadPage, seconds * 1000);
+}
+
+function reloadPage() {
+	window.location.reload();
+}
+
+function clearReloadTimeout(token) {
+	setAutorefreshSeconds(token, 0);
+	window.clearTimeout(reloadTimeoutID);
+}
+
+function setAutorefreshSeconds (token, seconds) {
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/autorefresh&set_seconds=1&token="+token+"&seconds="+seconds,
+		dataType: "json",
+		success: function(data){}
+	});
+}
+
+function enableAutorefresh (id, token) {
+	
+	var button = $("#"+id);
+	
+	button.attr('reload_enabled', 1);
+	button.animate({ backgroundColor: "#238A1C" });
+	$("#autorefresh_combo").show( "blind", { direction: "right" }, "slow" );
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/autorefresh&get_seconds=1&token="+token,
+		dataType: "json",
+		success: function(data){
+			if (data == 0) {
+				setAutorefreshSeconds (token, 60)
+				beginReloadTimeout(60);
+			} else {
+				beginReloadTimeout(data);
+			}
+		}
+	});
+}
+
+function disableAutorefresh (id, token) {
+	
+	var button = $("#"+id);
+	
+	button.attr('reload_enabled', 0);
+	button.animate({ backgroundColor: "#A82323"});
+	$("#autorefresh_combo").hide( "blind", { direction: "left" }, "slow" );
+	
+	clearReloadTimeout(token);
+}
+
+function toggleAutorefresh (id, token) {
+	
+	var button = $("#"+id);
+	
+	if (button.attr('reload_enabled') == 1) {
+		disableAutorefresh(id, token);
+	} else {
+		enableAutorefresh(id, token);
+	}
+}
+
+function changeAutorefreshTime (id, token) {
+	
+	var combo = $("#"+id);
+	var seconds = combo.val();
+	
+	setAutorefreshSeconds(token, seconds);
+	beginReloadTimeout(seconds);
+	
+}
+
 // Show the modal window of license info
 function show_license_info() {
 

@@ -1,3 +1,20 @@
+2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_html.php: Added function
+	"print_autorefresh_button".
+	
+	* include/ajax/autorefresh.php: New file.
+	
+	* include/js/integria.js: Added functions "beginReloadTimeout",
+	"reloadPage", "clearReloadTimeout", "setAutorefreshSeconds",
+	"enableAutorefresh", "disableAutorefresh", "toggleAutorefresh"
+	and "changeAutorefreshTime".
+	
+	* include/styles/integria.css: Added new style rules.
+	
+	* operation/incidents/incident_search_logic.php: Added a new
+	control to autorefresh the section.
+
 2013-09-23  Dario Rodriguez <dario@artica.es>
 
 	* include/newsletter.php,
@@ -8,6 +25,23 @@
 	Also change the way issues count Reads to use this
 	new tracking method.
 
+2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_html.php: Added function
+	"print_autorefresh_button".
+	
+	* include/ajax/autorefresh.php: New file.
+	
+	* include/js/integria.js: Added functions "beginReloadTimeout",
+	"reloadPage", "clearReloadTimeout", "setAutorefreshSeconds",
+	"enableAutorefresh", "disableAutorefresh", "toggleAutorefresh"
+	and "changeAutorefreshTime".
+	
+	* include/styles/integria.css: Added new style rules.
+	
+	* operation/incidents/incident_search_logic.php: Added a new
+	control to autorefresh the section.
+	
 2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_projects.php: Added the functions

@@ -1950,13 +1950,49 @@ div.incident_container>div, .container>div {
 	border-top-right-radius: 2px;
 }
 
-
 #button-bar-title li a {
 	text-decoration: none;
 }
 
 #button-bar-title li a img {
 	vertical-align: bottom;
+}
+
+#autorefresh {
+	float: right;
+}
+
+#autorefresh a {
+	float: left;
+	margin: 5px;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+	text-decoration: none;
+	text-transform: none;
+	font-size: 12px;
+	background-color: #A82323;
+	border-bottom-left-radius: 2px;
+	border-top-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	border-top-right-radius: 2px;
+	border: 1px solid #ccc;
+}
+
+#autorefresh a:link {
+	color: white;
+}
+
+#autorefresh a:hover {
+	color: #FF9933;
+}
+
+#autorefresh div {
+	float: left;
+	vertical-align: bottom;
+	margin-top: 6px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 .pagination {

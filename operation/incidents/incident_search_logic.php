@@ -40,11 +40,14 @@ echo "</h1>";
 echo "<div class='under_tabs_info'>";
 echo "</div>";
 
-echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
+print_autorefresh_button();
+
+echo "<div id='button-bar-title' style='margin-right: 5px; padding-bottom: 3px; margin-top: 6px;'>";
 echo "<ul>";	
 echo "<li style='padding: 3px;'>";
 echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
 echo "</li>";
+echo "</ul>";
 echo "</div>";
 
 $search_form = (bool) get_parameter ('search_form');
