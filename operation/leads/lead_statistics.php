@@ -59,13 +59,7 @@ echo "</ul>";
 echo "</div>";
 echo "</h1>";
 
-$where_clause = '';
-
-if ($show_100){
-	$where_clause = "WHERE 1=1 $where_group ";
-} else {
-	$where_clause = "WHERE progress < 100 $where_group ";
-}
+$where_clause = "WHERE (1=1 $where_group ";
 
 if ($est_sale != ""){
 	$where_clause .= " AND estimated_sale >= $est_sale ";
@@ -111,6 +105,8 @@ if ($id_category) {
 	$where_clause .= sprintf(' AND id_category = %d ', $id_category);
 }
 
+$where_clause .= ")";
+
 $table->class = 'blank';
 $table->width = '99%';
 $table->data = array ();
@@ -123,10 +119,9 @@ $table->valign[1] = "top";
 //FUNNEL
 
 $leads_funnel = crm_get_total_leads_funnel($where_clause);
-$total_leads_array = crm_get_all_leads($where_clause);
+
 if ($read && $enterprise) {
 	$leads_funnel = crm_get_user_leads($config['id_user'], $leads_funnel);
-	$total_leads_array = crm_get_user_leads($config["id_user"], $total_leads_array);
 }
 
 if ($leads_funnel != false) {
@@ -140,16 +135,28 @@ if ($leads_funnel != false) {
 		$data[$key] = array("title" => $name, "completion" => 0);
 	}
 
+	//Calculate total number of leads
+	$total_leads = 0;
 	foreach ($leads_funnel as $lf) {
+
+		if ($lf["progress"] < 100 ||$lf["progress"] == 200) {
+			$total_leads = $total_leads + $lf["total_leads"];
+		}
+	} 
+
+	foreach ($leads_funnel as $lf) {
+		$completion = ($lf["total_leads"] / $total_leads) * 100;
+
 		if ($total_leads <= 0) {
 			$completion = 0;
 		} else {
 			$completion = ($lf["total_leads"] / $total_leads) * 100;
 		}
+
 		$data[$lf["progress"]]["completion"] = $completion;
 		$data[$lf["progress"]]["amount"] = $lf["amount"];
 	}
-
+	debugPrint($data);
 	$leads_funnel_content = funnel($data, $config["font"], $ttl);
 } else {
 	$leads_funnel_content = __('No data to show');
@@ -158,16 +165,23 @@ if ($leads_funnel != false) {
 $leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content . '</div>';
 $table->data[0][0] = print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, '10px');
 
+
 //CONVERSION RATE
-$success_leads_array = crm_get_all_leads("WHERE progress = 200 ");
+$success_leads_array = crm_get_all_leads($where_clause." AND progress = 200 ");
+$total_leads_array = crm_get_all_leads($where_clause);
 
-$total_success = count($success_leads_array);
-
-if ($total_leads <= 0) {
-	$conversion_rate = 0;
-} else {
-	$conversion_rate = $total_success / $total_leads * 100;
+if ($read && $enterprise) {
+	$success_leads_array = crm_get_user_leads($config['id_user'], $success_leads_array);
+	$total_leads_array = crm_get_user_leads($config['id_user'], $total_leads_array);
 }
+
+$total_success = 0;
+if ($success_leads_array) {
+	$total_success = count($success_leads_array);
+}
+
+$total_leads = count($total_leads_array);
+$conversion_rate = $total_success / $total_leads * 100;
 
 $total_amount_success = 0;
 if (isset($data[200]["amount"])) {

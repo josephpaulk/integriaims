@@ -807,16 +807,14 @@ if ($id || $new) {
 	$table_advanced->width = "99%";
 	
 	$progress_values = lead_progress_array ();
-	$table_advanced->data[0][0] = print_select ($progress_values, 'progress_major_than_search', $progress_major_than, '', __("None"), -1, true, 0, false, __('Progress equal or above') );
-	$table_advanced->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), -1, true, 0, false, __('Progress equal or below') );
+	$table_advanced->data[0][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
+	$table_advanced->data[0][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
 
 	$table_advanced->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
 	
-	$table_advanced->data[0][3] = print_select ($companies, 'id_company_search', $id_company, '', __("Any"), 0, true, 0, false,  __('Managed by'));
-	$table_advanced->data[1][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
-	$table_advanced->data[1][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
+	$table_advanced->data[1][0] = print_select ($companies, 'id_company_search', $id_company, '', __("Any"), 0, true, 0, false,  __('Managed by'));
 
-	$table_advanced->data[1][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+	$table_advanced->data[1][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', __('Any'), '', true, false, false,
 	__('Language'));
 	

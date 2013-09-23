@@ -1,3 +1,10 @@
+2013-09-23  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_crm.php,
+	operation/leads/lead_statistics.php,
+	operation/leads/lead_detail.php: Fixed some problems
+	with funnel and ratio charts.
+
 2013-09-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_files.php,
