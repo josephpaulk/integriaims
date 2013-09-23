@@ -52,6 +52,8 @@ if (! give_acl ($config["id_user"], 0, "VM")) {
 	exit;
 }
 
+include_once("include/functions_crm.php");
+
 $create = get_parameter("create", 0);
 $id = get_parameter ("id", 0);
 
@@ -61,7 +63,8 @@ if ($create == 1) {
 	$html = "";
 	$plain = "";
 	$id_newsletter = 0;
-	$datetime = date ("Y-m-d H:i:s"); 
+	$datetime = date ("Y-m-d H:i:s");
+	$campaign = 0;
 	
 	echo "<h2>".__("Issue creation")."</h2>";
 } else {
@@ -73,13 +76,15 @@ if ($create == 1) {
 	$datetime = $issue["datetime"];
 	$status = $issue["status"];
 	$email_subject = $issue["email_subject"];
+	$campaign = $issue["id_campaign"];
 }
 	
 $table->width = '90%';
 $table->class = 'databox';
 $table->colspan = array ();
-$table->colspan[3][0] = 2;
-$table->colspan[4][0] = 2;
+$table->colspan[3][0] = 3;
+$table->colspan[4][0] = 3;
+$table->colspan[0][1] = 2;
 $table->data = array ();
 
 
@@ -96,6 +101,10 @@ $status_values[1] = __('Pending');
 $status_values[2] = __('Sent');
 
 $table->data[1][1] = print_select ($status_values, "status", $status, '','','',true,0,true, __('Issue status'));
+
+$campaigns = crm_get_campaigns_combo_list();
+
+$table->data[1][2] = print_select ($campaigns, "campaign", $campaign, '', __("None"), 0,true,0,true, __('Campaign'));
 
 //$table->data[3][0] = print_textarea ("plain", 10, 1, $plain, '', true, "<br>".__('Plain ascii'));
 $table->data[4][0] = print_textarea ("html", 10, 1, $html, '', true, "<br>".__('HTML'));

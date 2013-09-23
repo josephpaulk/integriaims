@@ -1,3 +1,14 @@
+2013-09-23  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_crm.php,
+	operation/leads/lead_detail.php,
+	operation/newsletter/issue_creation.php,
+	operation/newsletter/issue_definition.php,
+	operation/side_menu.php,
+	integria_db.sql,
+	extras/migrate.sql: Created db structures and modified views
+	to support new campaigns feature.
+
 2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* extras/migrate.sql, integria_db.sql: Changed the column

@@ -465,3 +465,17 @@ ALTER TABLE tpending_mail ADD `extra_headers` text DEFAULT NULL;
 
 /* 11/09/2013  */
 ALTER TABLE tinvoice MODIFY `bill_id` tinytext NOT NULL DEFAULT '';
+
+/* 23/03/2013 */
+CREATE TABLE `tcampaign` (
+   `id` int(10) unsigned NOT NULL auto_increment,
+  `start_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `title` mediumtext DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `tlead` ADD `id_campaign` int(10) unsigned NOT NULL default 0;
+
+ALTER TABLE `tnewsletter_content` ADD `id_campaign` int(10) unsigned NOT NULL default 0;

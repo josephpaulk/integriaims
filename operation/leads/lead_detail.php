@@ -100,12 +100,13 @@ if ($create) {
 	$estimated_sale = (string) get_parameter ('estimated_sale');
 	$id_category = (int) get_parameter ('product');
 	$progress = (string) get_parameter ('progress');
+	$campaign = (int) get_parameter("campaign");
 		
 	$sql = sprintf ('INSERT INTO tlead (modification, creation, fullname, phone, mobile,
-			email, position, id_company, description, company, country, id_language, owner, estimated_sale, id_category, progress)
-			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d)',
+			email, position, id_company, description, company, country, id_language, owner, estimated_sale, id_category, progress, id_campaign)
+			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
 			date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), $fullname, $phone, $mobile, $email, $position,
-			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale, $id_category, $Progress);
+			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale, $id_category, $progress, $campaign);
 
 	$id = process_sql ($sql, 'insert_id');
 
@@ -177,6 +178,7 @@ if ($update) { // if modified any parameter
 	$progress = (string) get_parameter ('progress');
 	$estimated_sale = (string) get_parameter ('estimated_sale');
 	$id_category = (int) get_parameter ('product');
+	$id_campaign = (int) get_parameter ('campaign');
 
 	// Detect if it's a progress change
 
@@ -185,9 +187,11 @@ if ($update) { // if modified any parameter
 	$sql = sprintf ('UPDATE tlead
 		SET modification = "%s", description = "%s", fullname = "%s", phone = "%s",
 		mobile = "%s", email = "%s", position = "%s",
-		id_company = %d, country = "%s", owner = "%s", progress = %d , id_language = "%s", estimated_sale = "%s" , company = "%s", id_category = %d WHERE id = %d',
+		id_company = %d, country = "%s", owner = "%s", progress = %d , id_language = "%s", estimated_sale = "%s" , 
+		company = "%s", id_category = %d , id_campaign = %d WHERE id = %d',
 		date('Y-m-d H:i:s'), $description, $fullname, $phone, $mobile, $email, $position,
-		$id_company, $country, $owner, $progress, $id_language, $estimated_sale, $company, $id_category, $id);
+		$id_company, $country, $owner, $progress, $id_language, $estimated_sale, $company, $id_category, 
+		$id_campaign, $id);
 
 	$result = process_sql ($sql);
 	if ($result === false) {
@@ -351,6 +355,7 @@ if ($id || $new) {
 		$progress = (string) get_parameter ('progress');
 		$estimated_sale = (string) get_parameter ('estimated_sale');
 		$id_category = (int) get_parameter ('product');
+		$campaign = (int) get_parameter ("campaign");
 
 	} else {
 		
@@ -372,6 +377,7 @@ if ($id || $new) {
 		$creation = $lead["creation"];
 		$modification = $lead["modification"];
 		$id_category = $lead["id_category"];
+		$campaign = $lead["id_campaign"];
 	}
 	
 	// Show tabs
@@ -492,7 +498,12 @@ if ($id || $new) {
 			echo "<h1>".__('Create lead')."</h1>";
 		}
 
+		$campaigns = crm_get_campaigns_combo_list();
+
 		$table->data[0][0] = print_checkbox ("duplicated_leads", 0, false, true, __('Allow duplicated leads'));
+
+		$table->data[0][1] = print_select ($campaigns, 'campaign', $campaign, 0, __("None"), 0, true, 0, false, __('Campaign') );			
+
 		$table->data[1][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		$table->data[1][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));
 		$table->data[2][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));

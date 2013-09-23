@@ -863,4 +863,26 @@ function crm_check_if_exists ($id, $companies) {
 	}
 	return false;
 }
+
+function crm_get_campaigns () {
+	$campaigns = get_db_all_rows_in_table ("tcampaign");
+
+	return $campaigns;
+}
+
+function crm_get_campaigns_combo_list () {
+	$campaigns = crm_get_campaigns();
+
+	if (!$campaigns) {
+		return array();
+	}
+
+	$result = array();
+	
+	foreach ($campaigns as $camp) {
+		$result[$camp["id"]] = $camp["title"];
+	}
+
+	return $result;
+}
 ?>

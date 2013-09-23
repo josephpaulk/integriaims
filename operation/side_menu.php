@@ -745,8 +745,23 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 		
 }
 
+//Print campaign menu
+if (($sec == "customers") && (give_acl ($config["id_user"], 0, "VM")) && ($show_customers != MENU_HIDDEN)) {
+	echo "<div class='portlet'>";
 
 
+	echo "<h3 class='admin'>".__('Campaign')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+
+	if ($sec2=="operation/campaign/campaign")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/campaign/campaign'>".__('Campaigns')."</a></li>";
+	echo "</ul>";
+	echo "</div>";
+}
 
 // MANUFACTURER
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {

@@ -842,6 +842,7 @@ CREATE TABLE `tnewsletter_content` (
   `plain` text default NULL,
   `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
   `status` int unsigned NOT NULL default '0',
+  `id_campaign` int(10) unsigned NOT NULL default 0,
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -974,6 +975,7 @@ CREATE TABLE `tlead` (
   `modification` datetime NOT NULL default '0000-00-00 00:00:00',  
   `progress` mediumint(5) NULL default 0,
   `estimated_sale` mediumint NULL default 0,
+  `id_campaign` int(10) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id`),
   KEY `id_company_idx` (`id_company`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1102,5 +1104,14 @@ CREATE TABLE `tcontact_activity` (
 CREATE TABLE `tlead_progress` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tcampaign` (
+   `id` int(10) unsigned NOT NULL auto_increment,
+  `start_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `title` mediumtext DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

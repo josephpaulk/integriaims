@@ -45,6 +45,7 @@ if ($create) {
 	$plain = get_parameter ("plain");
 	$datetime = get_parameter ("datetime"); 
 	$id_newsletter = get_parameter ("id_newsletter"); 
+	$campaign = get_parameter("campaign");
 		
 	if (! give_acl ($config["id_user"], $id_group, "VM")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
@@ -52,7 +53,9 @@ if ($create) {
 		exit;
 	}
 
-	$sql = sprintf ('INSERT INTO tnewsletter_content (id_newsletter, email_subject, status, datetime, html, plain) VALUES (%d, "%s", "%s", "%s", "%s", "%s")', $id_newsletter, $email_subject, $status, $datetime, $html, $plain);
+	$sql = sprintf ('INSERT INTO tnewsletter_content (id_newsletter, email_subject, status, datetime, html, plain, id_campaign) 
+					VALUES (%d, "%s", "%s", "%s", "%s", "%s", %d)', $id_newsletter, $email_subject, $status, $datetime, 
+					$html, $plain, $campaign);
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false)
@@ -74,10 +77,11 @@ if ($update) {
 	$plain = get_parameter ("plain");
 	$datetime = get_parameter ("datetime"); 
 	$id_newsletter = get_parameter ("id_newsletter"); 
+	$campaign = get_parameter("campaign");
 
 	$sql = sprintf ('UPDATE tnewsletter_content SET id_newsletter = %d, email_subject = "%s", html = "%s",
-		plain = "%s", status = "%s",datetime = "%s" WHERE id = %d',
-		$id_newsletter, $email_subject, $html, $plain, $status, $datetime, $id);
+		plain = "%s", status = "%s",datetime = "%s", id_campaign = %d WHERE id = %d',
+		$id_newsletter, $email_subject, $html, $plain, $status, $datetime, $campaign, $id);
 
 	$result = mysql_query ($sql);
 	if ($result === false)
@@ -93,7 +97,9 @@ if ($update) {
 if ($delete) { // if delete
 
 	$id = (int) get_parameter ('id');
-	$name = get_db_value ('name', 'tnewsletter_content', 'id', $id);
+
+	$id_newsletter = get_db_value("id_newsletter", "tnewsletter_content", "id", $id);
+	$name = get_db_value ('name', 'tnewsletter', 'id', $id_newsletter);
 	
 	$sql= sprintf ('DELETE FROM tnewsletter_content WHERE id = %d', $id);
 	process_sql ($sql);
@@ -179,7 +185,7 @@ if ($issues !== false) {
 		else
 			$data[4] = __("Sent");	
 
-		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 2 AND id_newsletter = ".$issue["id_newsletter"]);
+		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 2 AND id_newsletter_content = ".$issue["id"]);
 
 		$data[6] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
 	
