@@ -225,51 +225,40 @@ function bindAutocomplete (idTag, idUser, idProject, onChange) {
 	});
 }
 
-function beginReloadTimeout(seconds) {
-	reloadTimeoutID = window.setTimeout(reloadPage, seconds * 1000);
-}
-
-function reloadPage() {
-	window.location.reload();
+function beginReloadTimeout(seconds, form_id) {
+	var reload;
+	if (form_id) {
+		reload = function () { document.getElementById(form_id).submit() };
+	} else {
+		reload = function () { window.location.reload() };
+	}
+	reloadTimeoutID = window.setInterval(reload, seconds * 1000);
 }
 
 function clearReloadTimeout(token) {
-	setAutorefreshSeconds(token, 0);
 	window.clearTimeout(reloadTimeoutID);
 }
 
 function setAutorefreshSeconds (token, seconds) {
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/autorefresh&set_seconds=1&token="+token+"&seconds="+seconds,
-		dataType: "json",
-		success: function(data){}
-	});
+	eraseCookie(token);
+	createCookie(token, seconds, false);
 }
 
-function enableAutorefresh (id, token) {
+function enableAutorefresh (id, token, form_id) {
 	
 	var button = $("#"+id);
+	var seconds = readCookie(token);
 	
 	button.attr('reload_enabled', 1);
 	button.animate({ backgroundColor: "#238A1C" });
 	$("#autorefresh_combo").show( "blind", { direction: "right" }, "slow" );
 	
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/autorefresh&get_seconds=1&token="+token,
-		dataType: "json",
-		success: function(data){
-			if (data == 0) {
-				setAutorefreshSeconds (token, 60)
-				beginReloadTimeout(60);
-			} else {
-				beginReloadTimeout(data);
-			}
-		}
-	});
+	if (! seconds) {
+		setAutorefreshSeconds (token, 60)
+		beginReloadTimeout(60, form_id);
+	} else {
+		beginReloadTimeout(seconds, form_id);
+	}
 }
 
 function disableAutorefresh (id, token) {
@@ -280,28 +269,53 @@ function disableAutorefresh (id, token) {
 	button.animate({ backgroundColor: "#A82323"});
 	$("#autorefresh_combo").hide( "blind", { direction: "left" }, "slow" );
 	
+	eraseCookie(token);
 	clearReloadTimeout(token);
 }
 
-function toggleAutorefresh (id, token) {
+function toggleAutorefresh (id, token, form_id) {
 	
 	var button = $("#"+id);
 	
 	if (button.attr('reload_enabled') == 1) {
 		disableAutorefresh(id, token);
 	} else {
-		enableAutorefresh(id, token);
+		enableAutorefresh(id, token, form_id);
 	}
 }
 
-function changeAutorefreshTime (id, token) {
+function changeAutorefreshTime (id, token, form_id) {
 	
 	var combo = $("#"+id);
 	var seconds = combo.val();
 	
 	setAutorefreshSeconds(token, seconds);
-	beginReloadTimeout(seconds);
+	beginReloadTimeout(seconds, form_id);
 	
+}
+
+function createCookie(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+    } else var expires = "";
+    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = escape(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name, "", -1);
 }
 
 // Show the modal window of license info

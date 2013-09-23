@@ -26,6 +26,18 @@
 
 2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_html.php: Fixed the function
+	"print_autorefresh_button".
+	
+	* include/ajax/autorefresh.php: Deleted file.
+	
+	* include/js/integria.js: Fixed some functions. Added the
+	functions "createCookie", "readCookie" and "eraseCookie".
+
+	* extras/migrate.sql: Fixed the date of the last update.
+
+2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/migrate.sql, integria_db.sql: Changed the column
 	'bill_id' from the table 'tinvoice'.
 	

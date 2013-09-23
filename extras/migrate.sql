@@ -463,7 +463,7 @@ ALTER TABLE tcontract ADD `status` tinyint(3) NOT NULL DEFAULT 1;
 /* 12/03/2013 */
 ALTER TABLE tpending_mail ADD `extra_headers` text DEFAULT NULL;
 
-/* 11/09/2013  */
+/* 23/09/2013  */
 ALTER TABLE tinvoice MODIFY `bill_id` tinytext NOT NULL DEFAULT '';
 
 /* 23/03/2013 */
