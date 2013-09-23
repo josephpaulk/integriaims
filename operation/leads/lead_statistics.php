@@ -156,7 +156,7 @@ if ($leads_funnel != false) {
 		$data[$lf["progress"]]["completion"] = $completion;
 		$data[$lf["progress"]]["amount"] = $lf["amount"];
 	}
-	debugPrint($data);
+	
 	$leads_funnel_content = funnel($data, $config["font"], $ttl);
 } else {
 	$leads_funnel_content = __('No data to show');
