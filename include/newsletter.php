@@ -32,7 +32,7 @@ if ($operation == "read"){
 	echo safe_output($issue["html"]);
 	
 	// Update tracking system
-	$sql = "INSERT INTO tnewsletter_tracking (id_newsletter, id_newsletter_content, status, datetime) VALUES ($id_newsletter, $id, 1, '$now')";;
+	$sql = "INSERT INTO tnewsletter_tracking (id_newsletter, id_newsletter_content, status, datetime) VALUES ($id_newsletter, $id, 0, '$now')";;
 	$result = mysql_query ($sql);
 	return;
 }

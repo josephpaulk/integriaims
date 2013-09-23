@@ -179,7 +179,7 @@ if ($issues !== false) {
 		else
 			$data[4] = __("Sent");	
 
-		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 1 AND id_newsletter = ".$issue["id_newsletter"]);
+		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 2 AND id_newsletter = ".$issue["id_newsletter"]);
 
 		$data[6] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
 	

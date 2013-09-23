@@ -744,6 +744,9 @@ function run_newsletter_queue () {
 
 				// TODO: replace names on macros in the body / HTML parts.
 
+				//Add void pixel to track campaings
+				$issue["html"] .= "<img src='".$config["base_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
+
 				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
 
 				$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');

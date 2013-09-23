@@ -1,3 +1,13 @@
+2013-09-23  Dario Rodriguez <dario@artica.es>
+
+	* include/newsletter.php,
+	include/integria_cron.php,
+	operation/newsletter/issue_definition.php,
+	operation/newsletter/track_newsletter.php: Developed
+	feature to track email views using a void pixel image.
+	Also change the way issues count Reads to use this
+	new tracking method.
+
 2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_projects.php: Added the functions
