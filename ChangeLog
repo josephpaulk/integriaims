@@ -1,3 +1,8 @@
+2013-09-24  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_api.php: Fixed a wrong sql query
+	to insert incidents via API.
+
 2013-09-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_html.php,

@@ -145,11 +145,11 @@ function api_create_incident ($return_type, $user, $params){
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
 			resolution)
-			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d)', $timestamp, $timestamp, $title, $description, $owner,
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
+			"%s", %d)', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
 			$email_notify, $resolution);
-
+	
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 
