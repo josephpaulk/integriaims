@@ -1006,8 +1006,8 @@ function api_create_lead ($return_type, $user, $params){
 	$comments = trim($params[11]);
 	$id_category = trim($params[12]);
 	$id_company = trim($params[13]);
+	$id_campaign = trim($params[14]);
 
-	
 	// Search if any current lead with the same email already exists
 	$duped_id = get_db_value('id','tlead','email',$email);
 
@@ -1029,8 +1029,8 @@ function api_create_lead ($return_type, $user, $params){
 		}
 
 		$sql = sprintf ('INSERT INTO tlead
-				(fullname, company, email, country, estimated_sale, progress, phone, mobile, position, owner, id_language, description, id_category, id_company, creation, modification)  
-				VALUES ("%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, "%s", "%s")', $fullname, $company, $email, $country, $estimated_sale, $progress, $phone, $mobile, $position, $owner, $language, $comments, $id_category, $id_company, date('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+				(fullname, company, email, country, estimated_sale, progress, phone, mobile, position, owner, id_language, description, id_category, id_company, creation, modification, id_campaign)  
+				VALUES ("%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, "%s", "%s", %d)', $fullname, $company, $email, $country, $estimated_sale, $progress, $phone, $mobile, $position, $owner, $language, $comments, $id_category, $id_company, date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), $id_campaign);
 
 		$new_id = process_sql ($sql, 'insert_id');
 

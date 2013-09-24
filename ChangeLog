@@ -1,5 +1,10 @@
 2013-09-24  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_api.php: Added suppot to set campaign
+	id on lead creation.
+	
+2013-09-24  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_crm.php,
 	operation/campaign/campaign_list.php,
 	operation/campaign/campaign_stats.php,
