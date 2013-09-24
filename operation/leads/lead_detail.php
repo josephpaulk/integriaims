@@ -527,7 +527,7 @@ if ($id || $new) {
 		$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
 		
 		$languages = crm_get_all_languages();
-		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, false,  __('Language'));
+		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, true,  __('Language'));
 		
 		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __("Owner") )

@@ -1081,7 +1081,7 @@ function print_autorefresh_button ($name = "autorefresh", $text = "", $return = 
 			</script>";
 	
 	if ($text == "") {
-		$text = __("Autorefresh: OFF");
+		$text = __("Enable autorefresh");
 	}
 	
 	$values = array();

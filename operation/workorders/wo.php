@@ -109,10 +109,6 @@ if ($operation == "update2") {
 	$id = get_parameter ("id");
 	$todo = get_db_row ("ttodo", "id", $id);
 	
-	if (! get_workorder_acl($id)) {
-		no_permission();
-	}
-	
 	$name = (string) get_parameter ("name", "");
 	$id_task = get_parameter ("id_task", 0);
 	$priority = get_parameter ("priority");
@@ -127,10 +123,32 @@ if ($operation == "update2") {
 	$need_external_validation = (int) get_parameter ("need_external_validation");
 	$id_wo_category = (int) get_parameter ("id_wo_category");
 	$email_notify = (int) get_parameter ('email_notify');
-
-
+	
+	if ($assigned_user != $todo['assigned_user']) {
+		if ($section_permission['write']) {
+			if (! get_workorder_acl($id)) {
+				no_permission();
+			}
+		} else {
+			if (! get_workorder_acl($id, 'strict')) {
+				no_permission();
+			}
+		}
+		if (dame_admin($config['id_user'])) {
+			$operation = "view"; // Keep in view/edit mode.
+		} else {
+			$operation = ""; // Go to list.
+			$unset_id = true;
+		}
+	} else {
+		if (! get_workorder_acl($id)) {
+			no_permission();
+		}
+		$operation = "view"; // Keep in view/edit mode.
+	}
+	
 	$sql_update = "UPDATE ttodo SET created_by_user = '$creator', need_external_validation = $need_external_validation, id_wo_category = $id_wo_category, start_date = '$start_date', end_date = '$end_date', assigned_user = '$assigned_user', id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update', name = '$name', email_notify = $email_notify WHERE id = $id";
-
+	
 	$result=mysql_query($sql_update);
 	if (! $result)
 		echo "<h3 class='error'>".__('Not updated. Error updating data')."</h3>";
@@ -144,8 +162,10 @@ if ($operation == "update2") {
 	if ($email_notify) {
 		mail_workorder ($id, 0);
 	}
-
-	$operation = "view"; // Keep in view/edit mode.
+	
+	if ($unset_id === true) {
+		unset($id);
+	}
 }
 
 // ---------------
@@ -186,8 +206,7 @@ if ($operation == "delete") {
 // ---------------
 
 if ($set_progress > -1 ) {
-	$id_todo = get_parameter ("id");
-	$todo = get_db_row ("ttodo", "id", $id_todo);
+	$todo = get_db_row ("ttodo", "id", get_parameter ("id"));
 
 	if (! get_workorder_acl($id)) {
 		no_permission();
@@ -205,7 +224,7 @@ if ($set_progress > -1 ) {
 if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	if ($operation == "create") {
 		echo "<h1>".__('New Work order')."</h1>";
-
+		
 		$progress = 0;
 		$priority = 2;
 		$name = '';
@@ -220,10 +239,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$owner = "";
 		$email_notify = 0;
 	} else {
-
-		if (!isset($id))
-			$id = get_parameter ("id");
-
+		
 		$todo = get_db_row ("ttodo", "id", $id);
 
 		if (! get_workorder_acl($id)) {
@@ -331,14 +347,14 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 				$table->data[1][1] .= __("Yes");
 			else
 				$table->data[1][1] .= __("No");
-			$table->data[1][1] .= print_input_hidden ("need_external_validation", $need_external_validatio, true);
+			$table->data[1][1] .= print_input_hidden ("need_external_validation", $need_external_validation, true);
 		} else
 			$table->data[1][1] = print_checkbox ("need_external_validation", 1, $need_external_validation, true, __("Require external validation"));
 
 
 		if ($creator != $config["id_user"]){
 			$table->data[2][0] = print_label (__("Submitter"), '', 'input', true);
-			$table->data[2][0] .= dame_nombre_real($creator);		
+			$table->data[2][0] .= dame_nombre_real($creator);
 			$table->data[2][0] .= print_input_hidden ("creator", $creator, true);
 		} else {
 			$table->data[2][0] = print_input_text_extended ('creator', $creator, 'text-user2', '', 15, 30, false, '',
@@ -346,17 +362,24 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 			. print_help_tip (__("Type at least two characters to search"), true);
 		}
-
-		$params['input_id'] = 'text-user';
-		$params['input_name'] = 'assigned_user';
-		$params['input_size'] = 30;
-		$params['input_maxlength'] = 100;
-		$params['input_value'] = $assigned_user;
-		$params['title'] = 'Assigned user';
-		$params['return'] = true;
-		$params['return_help'] = true;
-			
-		$table->data[2][1] = user_print_autocomplete_input($params);
+		
+		if ($creator != $config["id_user"] && !$section_permission['write']){
+			$table->data[2][1] = print_label (__("Assigned user"), '', 'input', true);
+			$table->data[2][1] .= dame_nombre_real($assigned_user);		
+			$table->data[2][1] .= print_input_hidden ("assigned_user", $assigned_user, true);
+		} else {
+			$params['input_id'] = 'text-user';
+			$params['input_name'] = 'assigned_user';
+			$params['input_size'] = 30;
+			$params['input_maxlength'] = 100;
+			$params['input_value'] = $assigned_user;
+			$params['title'] = 'Assigned user';
+			$params['return'] = true;
+			$params['return_help'] = true;
+				
+			$table->data[2][1] = user_print_autocomplete_input($params);
+		}
+		
 
 		$table->data[3][0] = combo_task_user_participant ($config["id_user"], false, $id_task, true, __('Task'));
 		if ($id_task) {

@@ -1,6 +1,18 @@
+2013-09-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_html.php,
+	  include/js/integria.js: Fixed the autorefresh button.
+	
+	* operation/contacts/contact_detail.php,
+	  operation/leads/lead_detail.php: Ordered the company combo.
+	
+	* operation/invoices/invoice_detail.php,
+	  operation/invoices/invoice_view.php,
+	  operation/workorders/wo.php: ACL improvements and fixes.
+	
 2013-09-24  Dario Rodriguez <dario@artica.es>
 
-	* include/functions_api.php: Added suppot to set campaign
+	* include/functions_api.php: Added support to set campaign
 	id on lead creation.
 	
 2013-09-24  Dario Rodriguez <dario@artica.es>

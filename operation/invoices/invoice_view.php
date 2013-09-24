@@ -1,5 +1,7 @@
 <?php
 
+include_once('include/functions_crm.php');
+
 $id_invoice = (int) get_parameter ("id_invoice", -1);
 if ($id_invoice == -1) {
 	echo '<h3>'.__('The invoice number is required'),'</h3>';
@@ -13,6 +15,7 @@ if (!$invoice) {
 
 // ACL
 if (!isset($permission)) {
+	$id_company = get_db_value("id_company", "tinvoice", "id", $id_invoice);
 	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
 }
 if (!$permission) {

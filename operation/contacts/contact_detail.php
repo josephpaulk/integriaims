@@ -162,7 +162,7 @@ if ($id == 0 && !$new_contact) {
 	
 	$companies = crm_get_companies_list("", false, "", true);
 	
-	$table->data[0][1] = print_select ($companies, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
+	$table->data[0][1] = print_select ($companies, 'id_company', $id_company, '', 'All', 0, true, false, true, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
