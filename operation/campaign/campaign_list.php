@@ -41,12 +41,15 @@ if ($create) {
 	$description = get_parameter("description");
 	$start_date = get_parameter("start_date");
 	$end_date = get_parameter("end_date");
+	$expenses = get_parameter("expenses");
 
 	//$campaign = 
 	$values = array("title" => $title,
 					"start_date" => $start_date,
 					"end_date" => $end_date,
-					"description" => $description);
+					"description" => $description,
+					"expenses" => $expenses);
+
 	$id = process_sql_insert ("tcampaign", $values);	
 
 	if ($id) {

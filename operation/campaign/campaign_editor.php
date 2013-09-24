@@ -47,12 +47,14 @@ if ($update) {
 	$start_date = get_parameter("start_date");
 	$end_date = get_parameter("end_date");
 	$description = get_parameter("description");
-	
+	$expenses = get_parameter("expenses");
+
 
 	$values = array("title" => $title,
 				"start_date" => $start_date,
 				"end_date" => $end_date,
-				"description" => $description);
+				"description" => $description,
+				"expenses" => $expenses);
 	
 	$res = process_sql_update ("tcampaign", $values, array("id" => $id));
 
@@ -72,6 +74,7 @@ if ($id) {
 	$start_date = $campaign["start_date"];
 	$end_date = $campaign["end_date"];
 	$description = $campaign["description"];
+	$expenses = $campaign["expenses"];
 
 	//Check if campaign exists
 	if (!$campaign) {
@@ -99,14 +102,16 @@ $table->class = "search-table-button";
 $table->data = array ();
 $table->style = array ();
 $table->colspan = array ();
-$table->colspan[1][0] = 3;
-$table->colspan[2][0] = 3;
+$table->colspan[1][0] = 4;
+$table->colspan[2][0] = 4;
 
 $table->data[0][0] = print_input_text ('title', $title, '', 55, 100, true, __('Title'));
 
 $table->data[0][1] = print_input_text ('start_date', $start_date, '', 10, 10, true, __('Start date'));
 
 $table->data[0][2] = print_input_text ('end_date', $end_date, '', 10, 10, true, __('End date'));
+
+$table->data[0][3] = print_input_text ('expenses', $expenses, '', 10, 10, true, __('Expenses'));
 
 $table->data[1][0] = print_textarea ('description', 9, 80, $description, false, true, __('Description'));
 

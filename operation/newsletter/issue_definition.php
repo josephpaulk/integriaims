@@ -24,6 +24,8 @@ if (! give_acl ($config["id_user"], 0, "VM")) {
 	exit;
 }
 
+include("include/functions_crm.php");
+
 $manager = give_acl ($config["id_user"], 0, "VM");
 
 $id = (int) get_parameter ('id');
@@ -185,7 +187,7 @@ if ($issues !== false) {
 		else
 			$data[4] = __("Sent");	
 
-		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 2 AND id_newsletter_content = ".$issue["id"]);
+		$data[5] = crm_get_issue_reads($issue["id"]);
 
 		$data[6] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
 	

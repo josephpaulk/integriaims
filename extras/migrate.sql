@@ -473,6 +473,7 @@ CREATE TABLE `tcampaign` (
   `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `title` mediumtext DEFAULT NULL,
   `description` mediumtext DEFAULT NULL,
+  `expenses` mediumint NULL default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

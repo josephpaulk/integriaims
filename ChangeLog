@@ -1,3 +1,15 @@
+2013-09-24  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_crm.php,
+	operation/campaign/campaign_list.php,
+	operation/campaign/campaign_stats.php,
+	operation/campaign/campaign_editor.php,
+	integria_db.sql,
+	extras/migrate.sql: Fixed several issues with campaigns and 
+	created statistics view. Also added "expenses" field.
+	* operation/newsletter/issue_definition.php: Encapsuled code 
+	in a function.
+	
 2013-09-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_search_logic.php,

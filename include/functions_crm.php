@@ -864,6 +864,17 @@ function crm_check_if_exists ($id, $companies) {
 	return false;
 }
 
+function crm_get_issue_reads($id_issue) {
+
+	$reads = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 2 AND id_newsletter_content = ".$id_issue);
+
+	if(!$reads) {
+		$reads = 0;
+	}
+
+	return $reads;
+}
+
 function crm_get_campaigns () {
 	$campaigns = get_db_all_rows_in_table ("tcampaign");
 
@@ -884,5 +895,29 @@ function crm_get_campaigns_combo_list () {
 	}
 
 	return $result;
+}
+
+function crm_get_campaign_email_stats($id_campaign) {
+	$email_issues = get_db_all_rows_filter ('tnewsletter_content', array ('id_campaign' => $id_campaign));
+
+	//Get email sent
+
+	//Get issue reads
+	$total_reads = 0;
+	$total_sent = 0;
+	foreach ($email_issues as $ei) {
+		$total_reads = $total_reads + crm_get_issue_reads($ei["id"]);
+		$total_sent = $total_sent + get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = ".$ei["id"]);
+	}
+	
+	$ratio = ($total_reads / $total_sent) * 100;
+
+	$stats = array();
+
+	$stats["reads"] = $total_reads;
+	$stats["sent"] = $total_sent;
+	$stats["ratio"] = $ratio;
+
+	return $stats;
 }
 ?>
