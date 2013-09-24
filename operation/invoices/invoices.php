@@ -56,11 +56,13 @@ if ($operation_invoices == "add_invoice"){
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
+	$concept = array();
 	$concept[0] = get_parameter ("concept1", "");
 	$concept[1] = get_parameter ("concept2", "");
 	$concept[2] = get_parameter ("concept3", "");
 	$concept[3] = get_parameter ("concept4", "");
 	$concept[4] = get_parameter ("concept5", "");
+	$amount = array();
 	$amount[0] = (float) get_parameter ("amount1", 0);
 	$amount[1] = (float) get_parameter ("amount2", 0);
 	$amount[2] = (float) get_parameter ("amount3", 0);
@@ -104,8 +106,8 @@ if ($operation_invoices == "add_invoice"){
 	amount4, amount5) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
 	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
-	$invoice_status, $concept1, $concept2, $concept3, $concept4, $concept5, $amount1, $amount2,
-	$amount3, $amount4, $amount5);
+	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
+	$amount[2], $amount[3], $amount[4]);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -116,16 +118,17 @@ if ($operation_invoices == "add_invoice"){
 }
 
 if ($operation_invoices == "update_invoice"){
-	$values = array();
 	
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
+	$concept = array();
 	$concept[0] = get_parameter ("concept1", "");
 	$concept[1] = get_parameter ("concept2", "");
 	$concept[2] = get_parameter ("concept3", "");
 	$concept[3] = get_parameter ("concept4", "");
 	$concept[4] = get_parameter ("concept5", "");
+	$amount = array();
 	$amount[0] = (float) get_parameter ("amount1", 0);
 	$amount[1] = (float) get_parameter ("amount2", 0);
 	$amount[2] = (float) get_parameter ("amount3", 0);
@@ -172,7 +175,7 @@ if ($operation_invoices == "update_invoice"){
 	}
 	
 	// Updating the invoice
-	
+	$values = array();
 	$values['description'] = $description;
 	$values['id_user'] = $user_id;
 	$values['id_company'] = $id_company;
@@ -210,11 +213,13 @@ if ($id_invoice > 0){
 	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
 	$bill_id = $invoice["bill_id"];
 	$description = $invoice["description"];
+	$concept = array();
 	$concept[0] = $invoice["concept1"];
 	$concept[1] = $invoice["concept2"];
 	$concept[2] = $invoice["concept3"];
 	$concept[3] = $invoice["concept4"];
 	$concept[4] = $invoice["concept5"];
+	$amount = array();
 	$amount[0] = $invoice["amount1"];
 	$amount[1] = $invoice["amount2"];
 	$amount[2] = $invoice["amount3"];
@@ -245,7 +250,7 @@ if ($id_invoice > 0){
 	$bill_id = "";
 	$description = "";
 	$id_attachment = "";
-	$invoice_create_date = "";
+	$invoice_create_date = date("Y-m-d");
 	$invoice_payment_date = "";
 	$tax = 0;
 	$currency = "EUR";

@@ -232,7 +232,7 @@ function beginReloadTimeout(seconds, form_id) {
 	} else {
 		reload = function () { window.location.reload() };
 	}
-	reloadTimeoutID = window.setInterval(reload, seconds * 1000);
+	reloadTimeoutID = window.setTimeout(reload, seconds * 1000);
 }
 
 function clearReloadTimeout(token) {
@@ -250,7 +250,8 @@ function enableAutorefresh (id, token, form_id) {
 	var seconds = readCookie(token);
 	
 	button.attr('reload_enabled', 1);
-	button.animate({ backgroundColor: "#238A1C" });
+	//button.animate({ backgroundColor: "#238A1C" });
+	button.html("Autorefresh: ON");
 	$("#autorefresh_combo").show( "blind", { direction: "right" }, "slow" );
 	
 	if (! seconds) {
@@ -266,7 +267,8 @@ function disableAutorefresh (id, token) {
 	var button = $("#"+id);
 	
 	button.attr('reload_enabled', 0);
-	button.animate({ backgroundColor: "#A82323"});
+	//button.animate({ backgroundColor: "#A82323"});
+	button.html("Autorefresh: OFF");
 	$("#autorefresh_combo").hide( "blind", { direction: "left" }, "slow" );
 	
 	eraseCookie(token);
@@ -290,6 +292,7 @@ function changeAutorefreshTime (id, token, form_id) {
 	var seconds = combo.val();
 	
 	setAutorefreshSeconds(token, seconds);
+	clearReloadTimeout(token);
 	beginReloadTimeout(seconds, form_id);
 	
 }

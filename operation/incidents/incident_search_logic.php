@@ -40,9 +40,11 @@ echo "</h1>";
 echo "<div class='under_tabs_info'>";
 echo "</div>";
 
+
 print_autorefresh_button();
 
-echo "<div id='button-bar-title' style='margin-right: 5px; padding-bottom: 3px; margin-top: 6px;'>";
+
+echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 6px;'>";
 echo "<ul>";	
 echo "<li style='padding: 3px;'>";
 echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";

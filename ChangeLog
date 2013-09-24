@@ -1,3 +1,24 @@
+2013-09-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_search_logic.php,
+	  include/functions_html.php,
+	  include/js/integria.js, : Fixed the incident autorefresh.
+	
+	* operation/invoices/invoices.php: Fixed an error on the
+	invoice creation.
+	
+2013-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_html.php: Fixed the function
+	"print_autorefresh_button".
+	
+	* include/ajax/autorefresh.php: Deleted file.
+	
+	* include/js/integria.js: Fixed some functions. Added the
+	functions "createCookie", "readCookie" and "eraseCookie".
+
+	* extras/migrate.sql: Fixed the date of the last update.
+	
 2013-09-23  Dario Rodriguez <dario@artica.es>
 	
 	*  operation/leads/lead_statistics.php: Removed
