@@ -328,6 +328,20 @@ select:not([multiple]) {
 	background-color: #FFF !important;
 }
 
+.ui-multiselect-optgroup-label {
+	border-bottom: none !important;
+}
+
+.ui-multiselect-optgroup-label a {
+	text-align: left !important;
+	color: #505050 !important;
+	border-bottom: 2px solid #505050 !important;
+}
+
+.ui-multiselect-all span, .ui-multiselect-none span {
+	color: #FFFFFF !important;
+}
+
 select.type {
 	float: none;
 }

@@ -269,7 +269,10 @@ $(document).ready (function () {
 		noneSelectedText: "<?php echo __('Select options') ?>",
 		selectedText: "# <?php echo __('selected') ?>",
 		checkAllText: "<?php echo __('Check all') ?>",
-		uncheckAllText: "<?php echo __('Uncheck all') ?>"
+		uncheckAllText: "<?php echo __('Uncheck all') ?>",
+		height: 400,
+		minWidth: 400,
+		selectedList: 1
 	});
 	
 	$("#roles").multiselect({

@@ -1,5 +1,13 @@
 2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/styles/integria.css: Added new rules for the multiselect
+	widget.
+	
+	* operation/projects/role_user_global.php: Visual changes on the
+	task multiselect.
+
+2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* godmode/setup/setup.php: Added an option to set the first day
 	of the week.
 	
