@@ -1,5 +1,10 @@
 2013-09-24  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_search.php: Removed default filter
+	for dates on incident search.
+
+2013-09-24  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_incidents.php
 	include/functions.php: Fixed some issues with pagination function
 	and adpated incident search pagination.

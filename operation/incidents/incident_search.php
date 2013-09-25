@@ -38,13 +38,6 @@ $filter['id_creator'] = (string) get_parameter ('search_creator', '');
 $filter['editor'] = (string) get_parameter ('search_editor', '');
 $filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
 
-//Calculate default dates
-$last_date = get_parameter("search_last_date", date ('Y-m-d'));
-$first_date = date('Y-m-d',strtotime($last_date) - 2592000);
-
-$filter['first_date'] = (string) get_parameter ('search_first_date', $first_date);
-$filter['last_date'] = (string) get_parameter ('search_last_date', $last_date);
-
 switch ($option) {
 	case "search":
 		include("incident_search_logic.php");
