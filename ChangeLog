@@ -1,5 +1,15 @@
 2013-09-24  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php
+	include/functions.php: Fixed some issues with pagination function
+	and adpated incident search pagination.
+	* include/styles/integria.css,
+	operation/incidents/incident_search_logic.php: Moved result found 
+	counter to pagination function now is possible to have this count 
+	on every pagination.
+
+2013-09-24  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_api.php: Fixed a wrong sql query
 	to insert incidents via API.
 

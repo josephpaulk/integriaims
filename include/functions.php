@@ -410,7 +410,7 @@ function byte_convert ($bytes) {
 	return sprintf ('%.2f '.$symbol[$exp], $converted_value );
 }
 
-function pagination ($count, $url, $offset ) {
+function pagination ($count, $url, $offset, $print_result_count=false) {
 	global $config;
 	
 	$block_size = $config["block_size"];
@@ -422,23 +422,23 @@ function pagination ($count, $url, $offset ) {
 	   " http://pandora/index.php?sec=godmode&sec2=godmode/admin_access_logs "
 	
 	*/
-	$block_limit = 15; // Visualize only $block_limit blocks
+	
 	if ($count > $block_size){
 		// If exists more registers than I can put in a page, calculate index markers
 		$index_counter = ceil($count/$block_size); // Number of blocks of block_size with data
-		$index_page = ceil($offset/$block_size)-(ceil($block_limit/2)); // block to begin to show data;
+		$index_page = ceil($offset/$block_size)-(ceil($block_size/2)); // block to begin to show data;
 		if ($index_page < 0)
 			$index_page = 0;
 		
 		// This calculate index_limit, block limit for this search.
-		if (($index_page + $block_limit) > $index_counter)
+		if (($index_page + $block_size) > $index_counter)
 			$index_limit = $index_counter;
 		else
-			$index_limit = $index_page + $block_limit;
+			$index_limit = $index_page + $block_size;
 		
-		// This calculate if there are more blocks than visible (more than $block_limit blocks)
-		if ($index_counter > $block_limit )
-			$paginacion_maxima = 1; // If maximum blocks ($block_limit), show only 10 and "...."
+		// This calculate if there are more blocks than visible (more than $block_size blocks)
+		if ($index_counter > $block_size )
+			$paginacion_maxima = 1; // If maximum blocks ($block_size), show only 10 and "...."
 		else
 			$paginacion_maxima = 0;
 		
@@ -451,7 +451,13 @@ function pagination ($count, $url, $offset ) {
 		else
 			$inicio_pag = 0;
 		
-		echo "<div><p>";
+		echo "<div>";
+		if ($print_result_count) {
+			echo "<span style='font-size: 10px'>";
+			echo sprintf(__('Results found:  %d'), $count);
+			echo "</span>";
+		}
+		echo "<p class='pagination'>";
 		// Show GOTO FIRST button
 		echo '<a id="page_0" class= "page_0" href="'.$url.'&offset=0">';
 		echo "<img src='".$config["base_url"]."/images/control_start_blue.png' border=0 valign='bottom'>";
@@ -459,7 +465,7 @@ function pagination ($count, $url, $offset ) {
 		echo "&nbsp;";
 		// Show PREVIOUS button
 		if ($index_page > 0){
-			$index_page_prev= ($index_page-(floor($block_limit/2)))*$block_size;
+			$index_page_prev= ($index_page-(floor($block_size/2)))*$block_size;
 			if ($index_page_prev < 0)
 				$index_page_prev = 0;
 			echo '<a id="page_'.$index_page_prev.'" class="page_'.$index_page_prev.'" href="'.$url.'&offset='.$index_page_prev.'"><img src="'.$config["base_url"].'/images/control_rewind_blue.png" border=0 valign="bottom"></a>';

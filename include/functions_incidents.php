@@ -50,7 +50,7 @@ include_once ($config["homedir"]."/include/graphs/fgraph.php");
 enterprise_include("include/functions_users.php");
 enterprise_include("include/functions_incidents.php");
 
-function filter_incidents ($filters) {
+function filter_incidents ($filters, $count=false) {
 	global $config;
 	
 	/* Set default values if none is set */
@@ -68,6 +68,7 @@ function filter_incidents ($filters) {
 	$filters['id_creator'] = isset ($filters['id_creator']) ? $filters['id_creator'] : '';
 	$filters['editor'] = isset ($filters['editor']) ? $filters['editor'] : '';
 	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
+	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -123,75 +124,95 @@ function filter_incidents ($filters) {
 		
 	if (! empty ($filters['closed_by']))
 		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
+	
+	if ($count) {
+		//Just count items
+		$sql = sprintf ('SELECT COUNT(id_incidencia) FROM tincidencia FD
+			WHERE estado IN (%s)
+			%s
+			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
+			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
+			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))',
+			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
+			$filters['string'],$filters['string'], $filters['string']);
 		
-	$sql = sprintf ('SELECT * FROM tincidencia FD
+		$count = get_db_value_sql($sql);
+		
+		if ($count === false) {
+			return 0;
+		}
+
+		return $count;
+	} else {
+		//Select all items and return all information
+		$sql = sprintf ('SELECT * FROM tincidencia FD
 			WHERE estado IN (%s)
 			%s
 			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
 			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
 			ORDER BY actualizacion DESC
-			LIMIT %d',
+			LIMIT %d OFFSET %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $config['limit_size']);
+			$filters['string'],$filters['string'], $filters['string'], $config['block_size'], $filters["offset"]);
 
-    // DEBUG
-    //echo $sql ." <br>";
-    
-	$incidents = get_db_all_rows_sql ($sql);
-	if ($incidents === false)
-		return false;
+		$incidents = get_db_all_rows_sql ($sql);
 
-	$result = array ();
-	foreach ($incidents as $incident) {
-		
-		//Check external users ACLs
-		$external_check = enterprise_hook("manage_external", array($incident));
 
-		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
-			continue;
-		} else {
-		
-			//Normal ACL pass if IR for this group or if the user is the incident creator
-			//or if the user is the owner or if the user has workunits
+		if ($incidents === false)
+			return false;
+	
+		$result = array ();
+		foreach ($incidents as $incident) {
 			
-			$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
+			//Check external users ACLs
+			$external_check = enterprise_hook("manage_external", array($incident));
+
+			if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+				continue;
+			} else {
 			
-			if (!$check_acl)
-				continue;		
+				//Normal ACL pass if IR for this group or if the user is the incident creator
+				//or if the user is the owner or if the user has workunits
 				
-		}
+				$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
+				
+				if (!$check_acl)
+					continue;		
+					
+			}
+			
+			$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+			
+			if ($filters['id_inventory']) {
+				$found = false;
+				foreach ($inventories as $inventory) {
+					if ($inventory['id'] == $filters['id_inventory']) {
+						$found = true;
+						break;
+					}
+				}
+			
+				if (! $found)
+					continue;
+			}
 		
-		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
-		
-		if ($filters['id_inventory']) {
-			$found = false;
-			foreach ($inventories as $inventory) {
-				if ($inventory['id'] == $filters['id_inventory']) {
-					$found = true;
-					break;
+			if ($filters['id_company']) {
+				$found = false;
+				$user_creator = $incident['id_creator'];
+				$user_company = get_db_value('id_company', 'tusuario', 'id_usuario', $user_creator);
+
+				//If company do no match, dismiss incident
+				if ($filters['id_company'] != $user_company) {
+					continue;
 				}
 			}
-		
-			if (! $found)
-				continue;
-		}
-	
-		if ($filters['id_company']) {
-			$found = false;
-			$user_creator = $incident['id_creator'];
-			$user_company = get_db_value('id_company', 'tusuario', 'id_usuario', $user_creator);
-
-			//If company do no match, dismiss incident
-			if ($filters['id_company'] != $user_company) {
-				continue;
-			}
+			
+			array_push ($result, $incident);
 		}
 		
-		array_push ($result, $incident);
+		return $result;
 	}
-	
-	return $result;
 }
 
 
@@ -1915,19 +1936,22 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 function incidents_search_result ($filter, $ajax=false) {
 	global $config;
 	
-	$incidents = filter_incidents ($filter);
-
 	$params = "";
 
 	foreach ($filter as $key => $value) {
 		$params .= "&search_".$key."=".$value;
 	}
 
-	//We need this auxiliar variable to use later for footer pagination
-	$incidents_aux = $incidents;
-	
-	$incidents = print_array_pagination ($incidents_aux, "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params);
+	$count = filter_incidents ($filter, true);
+	$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
+	$offset = get_parameter("offset");
+	pagination ($count, $url, $offset);
 
+	//Add offset to filter parameters
+	$filter["offset"] = $offset;
+
+	$incidents = filter_incidents($filter);
+	
 	$statuses = get_indicent_status ();
 	$resolutions = get_incident_resolutions ();
 
@@ -2076,7 +2100,9 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo "</tbody>";
 	echo "</table>";
 
-	$incidents = print_array_pagination ($incidents_aux, "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params);
+	pagination ($count, $url, $offset, true);
+
+	echo "<br>";	
 }
 
 //Returns color value (hex) for incident priority
