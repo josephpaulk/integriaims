@@ -41,8 +41,8 @@ if ($update) {
 	$config["fontsize"] = (int) get_parameter ("fontsize", 10);
 	$config["font"] = get_parameter ("font", "smallfont.ttf");
 	$config["pdffont"] = get_parameter ("pdffont", "code.ttf");
-	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
-    $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
+	$config["site_logo"] = get_parameter ("site_logo", "custom_logos/integria_logo.png");
+    $config["header_logo"] = get_parameter ("header_logo", "custom_logos/integria_logo_header.png");
 	$config["flash_charts"] = get_parameter ("flash_charts");
 	$config["graphviz_win"] = get_parameter ("graphviz_win");
 	
@@ -87,19 +87,22 @@ $table->data[1][0] = print_select ($fontlist, 'pdffont', $config["pdffont"], '',
 $table->data[1][1] = print_input_text ("fontsize", $config["fontsize"], '',
 	3, 5, true, __('Graphics font size'));
 
-function get_image_files () {
-	$base_dir = 'images';
+function get_logo_files () {
+	$base_dir = 'images/custom_logos';
 	$files = list_files ($base_dir, ".png", 1, 0);
+	$files = array_merge($files, list_files ($base_dir, ".jpg", 1, 0));
+	$files = array_merge($files, list_files ($base_dir, ".gif", 1, 0));
 	
 	$retval = array ();
 	foreach ($files as $file) {
-		$retval[$file] = $file;
+		$retval["custom_logos/$file"] = $file;
 	}
 	
 	return $retval;
 }
 
-$imagelist = get_image_files ();
+$imagelist = get_logo_files ();
+
 $table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', __('Default'), '',  true, 0, true, __('Site logo')) ;
 
 $table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', __('Default'), '',  true, 0, true,  __('Header logo')) ;

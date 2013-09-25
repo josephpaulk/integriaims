@@ -90,6 +90,7 @@ echo "<table cellpadding='4' cellspacing='4' width='99%' class='search-table'>";
 echo "<tr><td class='datos'>";
 
 $available_directory["images"] = "images";
+$available_directory["images/custom_logos"] = "images/custom_logos";
 $available_directory["attachment"] = "attachment";
 $available_directory["attachment/downloads"] = "attachment/downloads";
 // Current directory

@@ -1,5 +1,27 @@
 2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* godmode/setup/setup_visual.php: Now the site logos are picked
+	from "images/custom_logos".
+	
+	* godmode/setup/filemgr.php: Added "images/custom_logos" to the
+	available directories.
+	
+	* images/custom_logos/artica_logo.png,
+	  images/custom_logos/artica_logo_negro.png,
+	  images/custom_logos/header_logout.png,
+	  images/custom_logos/integria_logo.gif,
+	  images/custom_logos/integria_logo.png,
+	  images/custom_logos/integria_logo_header.png,
+	  images/custom_logos/integria_mini_logo.png,
+	  images/custom_logos/loginbacklogo.png,
+	  images/custom_logos/loginlogo.png,
+	  images/custom_logos/minilogoartica.jpg,
+	  images/custom_logos/sflogo.jpg,
+	  images/custom_logos/sflogo.png,
+	  images/custom_logos/sitelogo.png: Copied files.
+
+2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/styles/integria.css: Added new rules for the multiselect
 	widget.
 	
