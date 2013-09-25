@@ -449,7 +449,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 
 // Original function
 function generate_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array()){
-
+	
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
 	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -488,7 +488,12 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		$content  = $day;
 		$my_classes = "";
 		$mysql_date = "$year-$month-$day";
-
+		
+		if (!is_working_day("$year-$month-$day")) {
+			$days[$day][1] = "day_holiday";
+			$days[$day][2] = "$day";
+   		}
+		
 		$agenda_eventt = get_event_date ($mysql_date);
 		foreach ($agenda_eventt as $agenda_event){
 			list ($timestamp, $event) = explode ("|", $agenda_event);
@@ -522,7 +527,6 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$days[$day][1] = "project";
 			$days[$day][2] = "$day";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task&id_project=$idp";
-//			$project_name = $pname; // get_db_sql ("SELECT name FROM tproject WHERE id = $idp");
 			$days[$day][3] = $pname;
 		}
 		

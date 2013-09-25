@@ -52,6 +52,7 @@ if ($update) {
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
 	$config["max_file_size"] = get_parameter ("max_file_size", 1);
 	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
+	$config["first_day_week"] = get_parameter ("first_day_week", 0);
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -78,6 +79,7 @@ if ($update) {
 	update_config_token ("api_password", $config["api_password"]);
     update_config_token ("error_log", $config["error_log"]);
     update_config_token ("enable_newsletter", $config["enable_newsletter"]);
+    update_config_token ("first_day_week", $config["first_day_week"]);
     
     if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
@@ -157,6 +159,9 @@ if ($license_info === false)
 $table->data[4][0] = print_input_text ('license_info_key', $license_info, '', 40, 255, true, __('License key'));
 $table->data[4][0] .= '&nbsp;<a id="dialog_license_info" title="'.__("License Info").'" href="javascript: show_license_info()">'.print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
 $table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>';	
+
+$days_of_week = get_days_of_week();
+$table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of week'));
 
 $table->data[5][0] = print_input_hidden ('update', 1, true);
 $table->data[5][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);

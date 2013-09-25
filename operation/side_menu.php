@@ -1227,7 +1227,7 @@ echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
 // echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
 echo '<h3>'.__('Calendar').'</h3>';
 echo '<div id="calendar_div">';
-echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
+echo generate_calendar ($year, $month, array(), 1, NULL, $config["first_day_week"]);
 echo '</div>';
 
 echo "<ul class='sidemenu'>";

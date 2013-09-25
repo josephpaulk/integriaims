@@ -55,7 +55,7 @@ if ($get_holidays) {
 
 	if (!$id_user) {
 		$users = get_user_visible_users ($config["id_user"]);
-		$users_ids = array_keys($users);	
+		$users_ids = array_keys($users);
 	} else {
 		$users_ids = $id_user;
 	}

@@ -777,6 +777,20 @@ function get_periodicities () {
 	return $periodicites;
 }
 
+function get_days_of_week () {
+	$days = array ();
+	
+	$days[0] = __('Sunday');
+	$days[1] = __('Monday');
+	$days[2] = __('Tuesday');
+	$days[3] = __('Wednesday');
+	$days[4] = __('Thursday');
+	$days[5] = __('Friday');
+	$days[6] = __('Saturday');
+	
+	return $days;
+}
+
 function get_periodicity ($recurrence) {
 	$recurrences = get_periodicities ();
 	

@@ -1,5 +1,22 @@
 2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* godmode/setup/setup.php: Added an option to set the first day
+	of the week.
+	
+	* include/functions.php: Added the function "get_days_of_week".
+	
+	* include/functions_calendar.php: Now the small calendar shows
+	the non working days with grey color.
+	
+	* operation/side_menu.php,
+	  operation/user_report/report_annual.php: Now the weeks of the
+	  mini calendar begin from the day selected in the setup.
+	
+	* include/styles/integria.css: Fixed '.notetitle' and '.notebody'
+	styles to solve the problems with the long text lines.
+	
+2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* godmode/usuarios/lista_usuarios.php: Now is possible to
 	filter the results by status, global profile and group and
 	enable, disable or delete the users massively.

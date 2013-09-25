@@ -116,7 +116,7 @@ echo "</table>";
 
                 var url_source = 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time;
                 url_source += '&show_projects='+show_projects+'&show_events='+show_events+'&show_wo='+show_wo+'&show_tasks='+show_tasks;
-
+				
         		$.ajax({
             		url: url_source,
             		dataType: 'json',

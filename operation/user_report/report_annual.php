@@ -167,7 +167,7 @@
 		echo " - ";
 		echo __("Locked"). " : " . $locked_hours;        
  
-        echo generate_small_work_calendar ($year, $ax, $days_f, 3, 0, "en", $id_user_show);	
+        echo generate_small_work_calendar ($year, $ax, $days_f, 3, $config["first_day_week"], "en", $id_user_show);	
     }
     echo "</table>";
 
