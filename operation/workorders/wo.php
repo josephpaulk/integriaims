@@ -134,12 +134,8 @@ if ($operation == "update2") {
 				no_permission();
 			}
 		}
-		if (dame_admin($config['id_user'])) {
-			$operation = "view"; // Keep in view/edit mode.
-		} else {
-			$operation = ""; // Go to list.
-			$unset_id = true;
-		}
+		$operation = ""; // Go to list.
+		$unset_id = true;
 	} else {
 		if (! get_workorder_acl($id)) {
 			no_permission();

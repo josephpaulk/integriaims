@@ -13,15 +13,15 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-
-
 global $config;
 
 $search_users = (bool) get_parameter ('search_users');
 $search_users_role = (bool) get_parameter ('search_users_role');
 $get_group_info = (bool) get_parameter ('get_group_info');
 $get_user_company = (bool) get_parameter ('get_user_company');
+$delete_users = (bool) get_parameter ('delete_users');
+$enable_users = (bool) get_parameter ('enable_users');
+$disable_users = (bool) get_parameter ('disable_users');
 
 if ($search_users) {
 	require_once ('include/functions_db.php');
@@ -84,6 +84,52 @@ if ($get_user_company) {
 	$company = get_user_company ($id_user, false);
 	
 	echo json_encode($company['id']);
+}
+
+if ($delete_users) {
+	if (give_acl ($config["id_user"], 0, "UM")) {
+		$users = explode(",", get_parameter("ids"));
+		
+		foreach ($users as $user) {
+			if ($config["enteprise"] == 1){
+				process_sql("DELETE FROM tusuario_perfil WHERE id_usuario = '$user'");
+			}
+
+			// Delete trole_people_task entries 
+			process_sql("DELETE FROM trole_people_task WHERE id_user = '$user'");
+
+			// Delete trole_people_project entries
+			process_sql("DELETE FROM trole_people_project WHERE id_user = '$user'");	
+
+			$result += process_sql("DELETE FROM tusuario WHERE id_usuario = '$user'");
+		}
+	}
+	
+	echo json_encode($result);
+}
+
+if ($enable_users) {
+	if (give_acl ($config["id_user"], 0, "UM")) {
+		$users = explode(",", get_parameter("ids"));
+		
+		foreach ($users as $user) {
+			$result += process_sql("UPDATE tusuario SET disabled = 0 WHERE id_usuario = '$user'");
+		}
+	}
+	
+	echo json_encode($result);
+}
+
+if ($disable_users) {
+	if (give_acl ($config["id_user"], 0, "UM")) {
+		$users = explode(",", get_parameter("ids"));
+		
+		foreach ($users as $user) {
+			$result += process_sql("UPDATE tusuario SET disabled = 1 WHERE id_usuario = '$user'");
+		}
+	}
+	
+	echo json_encode($result);
 }
 
 ?>

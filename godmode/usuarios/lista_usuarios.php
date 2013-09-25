@@ -53,21 +53,57 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 
 $offset = get_parameter ("offset", 0);
 $search_text = get_parameter ("search_text", "");
+$disabled_user = get_parameter ("disabled_user", -1);
+$level = get_parameter ("level", -10);
+$group = get_parameter ("group", 0);
 
 echo '<h1>'.__('User management') . '</h1>';
 
-echo "<table class='search-table' style='width: 99%;'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>";
-echo "<td>";
-print_input_text ("search_text", $search_text, '', 15, 0, false, __('Search text'));
-echo "<td>";
-echo "<input type='submit' class='sub search' name='Search' value='".__('Search')."'>";
-echo "<td>";
-echo "</table></form>";
+$table->id = "table-user_search";
+$table->width = "99%";
+$table->class = "search-table";
+$table->size = array ();
+$table->style = array ();
+$table->data = array ();
+
+$table->data[0][0] = print_input_text ("search_text", $search_text, '', 15, 0, true, __('Search text'));
+
+$user_status = array();
+$user_status[0] = __('Enabled');
+$user_status[1] = __('Disabled');
+$table->data[0][1] = print_select ($user_status, 'disabled_user', $disabled_user, '', __('Any'), -1, true, 0, false, __('User status'));
+
+$global_profile = array();
+$global_profile[-1] = __('External');
+$global_profile[0] = __('Standard');
+$global_profile[1] = __('Administrator');
+$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+
+$table->data[0][3] = print_select (get_user_groups(), 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
+
+$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+
+echo "<form name='bskd' method=post action='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>";
+print_table ($table);
+echo "</form>";
 
 
 $search = "WHERE 1=1 ";
-if ($search_text != "")
+if ($search_text != "") {
 	$search .= " AND (id_usuario LIKE '%$search_text%' OR comentarios LIKE '%$search_text%' OR nombre_real LIKE '%$search_text%' OR direccion LIKE '%$search_text%')";
+}
+
+if ($disabled_user > -1) {
+	$search .= " AND disabled = $disabled_user";
+}
+
+if ($level > -10) {
+	$search .= " AND nivel = $level";
+}
+
+if ($group > 0) {
+	$search .= " AND id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+}
 
 $query1 = "SELECT * FROM tusuario $search ORDER BY id_usuario";
 
@@ -77,17 +113,17 @@ pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&se
 
 $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
-
 echo '<table width="99%" class="listing">';
-echo '<th>'.__('User ID');
 echo '<th>';
+echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
+echo '<th>'.__('User ID');
 echo '<th>'.__('Name');
 echo '<th>'.__('Company');
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
 echo '<th>'.__('Delete');
 
-$resq1=process_sql($sql1);
+$resq1 = process_sql($sql1);
 // Init vars
 $nombre = "";
 $nivel = "";
@@ -110,15 +146,18 @@ foreach($resq1 as $rowdup){
 
     $disabled = $rowdup["disabled"];	
     $id_company = $rowdup["id_company"];	
-
+	
 	echo "<tr><td>";
-	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
-
+	echo print_checkbox_extended ("user-".$rowdup["id_usuario"], $rowdup["id_usuario"], false, false, "", "class='user_checkbox'", true);
+	
 	echo "<td>";
-	 if ($disabled == 1){
-                echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'>";
-        }
-
+	if ($disabled == 1){
+		echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'> ";
+	}
+	
+	echo "<td>";
+	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
+	
 	echo "<td style='font-size:9px'>" . $realname;	
 	$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
 	echo "<td>".$company_name."</td>";
@@ -156,13 +195,16 @@ echo "</table>";
 echo "<div style='width:99%' class='button'>";
 
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
+echo "<input type='button' onclick='process_massive_operation(\"enable_users\")' class='sub people' name='en' value='".__('Enable selected')."'>";
+echo "<input type='button' onclick='process_massive_operation(\"disable_users\")' class='sub people' name='dis' value='".__('Disable selected')."'>";
+echo "<input type='button' onclick='if (confirm(\"".__('Are you sure?')."\")) process_massive_operation(\"delete_users\");' class='sub delete' name='del' value='".__('Delete selected')."'>";
 echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";
 echo "</form>";
 echo "</div>";
 
 ?>
 
-
+<script type="text/javascript" src="include/js/integria_users.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">
 trim_element_on_submit('#text-search_text');

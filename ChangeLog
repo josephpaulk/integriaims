@@ -1,3 +1,18 @@
+2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/usuarios/lista_usuarios.php: Now is possible to
+	filter the results by status, global profile and group and
+	enable, disable or delete the users massively.
+	
+	* include/ajax/users.php: Added code to enable, disable or
+	delete an array of users via ajax.
+	
+	* include/js/integria.js: Declared a variable to sove a PHP
+	warning.
+	
+	* operation/incidents/incident_search_logic.php: Little visual
+	change.
+	  
 2013-09-24  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_search.php: Removed default filter
