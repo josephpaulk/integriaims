@@ -1,5 +1,10 @@
 2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/user_report/holidays_calendar.php,
+	  operation/agenda/agenda.php: Deleted a pair of debug traces.
+	
+2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_calendar.php: Added the function
 	"calendar_get_non_working_days".
 	

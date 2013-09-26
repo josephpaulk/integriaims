@@ -199,7 +199,7 @@ echo "</table>";
 				yyyy = date.getFullYear();
 				date = yyyy+'-'+mm+'-'+dd;
 				
-				if ($.inArray(date, non_working_days) >= 0 && date != today) {console.log(date);console.log(today);
+				if ($.inArray(date, non_working_days) >= 0 && date != today) {
 					// Highlight the non working day
 					cell.css('background', '#F3F3F3');
 				}
