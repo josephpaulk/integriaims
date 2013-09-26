@@ -835,14 +835,14 @@ function graph_incident_statistics_sla_compliance($incidents, $width=200, $heigh
 	$data = array();
 	
 	if ($total == 0) {
-		$data["FAIL"] = 0;
 		$data["OK"] = 100;
+		$data["FAIL"] = 0;
 	} else {
 		$percent_ok = ($num_ok/$total)*100;
 		$percent_fail = ($num_fail/$total)*100;
 		
-		$data["FAIL"] = $percent_fail;
 		$data["OK"] = $percent_ok;
+		$data["FAIL"] = $percent_fail;
 	}
 	
 	if (isset($data))

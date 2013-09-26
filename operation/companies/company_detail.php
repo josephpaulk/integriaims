@@ -87,7 +87,6 @@ if (($create_company) OR ($update_company)) {
 			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 			insert_event ("COMPANY CREATED", $id, 0, $name);
 		}
-		$id = 0;
 	} else {
 
 		// Update company
@@ -116,7 +115,6 @@ if (($create_company) OR ($update_company)) {
 			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 			insert_event ("COMPANY", $id, 0, $name);
 		}
-		$id = 0;
 	}
 }
 
@@ -307,7 +305,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		echo "<h1>".__('New company')."</h1>";
 	}
 
-	if ($op == "") { 
+	if (!$new_company && $op == "") { 
 		$name = $company['name'];
 		$address = $company['address'];
 		$comments = $company['comments'];

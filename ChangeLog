@@ -1,5 +1,19 @@
 2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_graph.php: Now OK appears in green color and
+	FAIL appears in red in the function
+	"graph_incident_statistics_sla_compliance".
+	
+	* include/functions_incidents.php: Now the priorities in the
+	incidents by priority table are showed by its name.
+	
+	* operation/companies/company_detail.php: Now the user appears
+	by default as company manager in the new company form. Now the
+	page does not go to the company list when update or create a
+	company.
+	  
+2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/user_report/holidays_calendar.php,
 	  operation/agenda/agenda.php: Deleted a pair of debug traces.
 	

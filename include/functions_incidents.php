@@ -845,7 +845,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	
 		foreach ($incident_priority as $key => $value) {
 			$priority_aux .= "<tr>";
-			$priority_aux .= "<td>".render_priority ($key)."</td>";
+			$priority_aux .= "<td>".get_priority_name ($key)."</td>";
 			$priority_aux .= "<td style='text-align:center;'>".$value."</td>";
 			$priority_aux .= "</tr>";
 		}
