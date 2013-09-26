@@ -1,5 +1,17 @@
 2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/js/integria_users.js: New file. Added the function
+	"process_massive_operation" to delete or enable/disable users
+	massively.
+	
+	* operation/workorders/wo_workunits.php: New file. Form to
+	create workunits.
+	
+	* operation/workorders/wo.php: Now the tab 'Add workunit' goes
+	to 'operation/workorders/wo_workunits.php'.
+	
+2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* index.php: Deleted some unused code.
 	
 	* godmode/setup/setup_crm.php: Now the invoice logo are picked

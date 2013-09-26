@@ -302,7 +302,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	// Create WU
 	if ($tab == "wu") {
 		$_POST["id_task"]=$id_task;
-		include "operation/users/user_spare_workunit.php";
+		include "operation/workorders/wo_workunits.php";
 	}
 
 	// Files
