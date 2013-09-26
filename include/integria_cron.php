@@ -618,50 +618,54 @@ function run_mail_queue () {
 		// Use swift mailer library to connect to external SMTP
 	
 			try {	
-			$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-			$transport->setUsername($config["smtp_user"]);
-			$transport->setPassword($config["smtp_pass"]);
-			$mailer = Swift_Mailer::newInstance($transport);
-			$message = Swift_Message::newInstance($email["subject"]);
-			
-			if ($email["from"] == "") {
-				$message->setFrom($config["mail_from"]);
-			} else {
-				$message->setFrom($email["from"]);
-			}
-			
-			if ($email["cc"]) {
-				$message->setCc($email["cc"]);
-			}
+				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+				$transport->setUsername($config["smtp_user"]);
+				$transport->setPassword($config["smtp_pass"]);
+				$mailer = Swift_Mailer::newInstance($transport);
+				$message = Swift_Message::newInstance($email["subject"]);
+				
+				if ($email["from"] == "") {
+					$message->setFrom($config["mail_from"]);
+				} else {
+					$message->setFrom($email["from"]);
+				}
+				
+				if ($email["cc"]) {
+					$message->setCc($email["cc"]);
+				}
 
-			$to = trim(ascii_output($email['recipient']));
+				$to = trim(ascii_output($email['recipient']));
+				$toArray = array_map('trim', explode(",", $to));
+				if ($toArray) {
+					$to = $toArray;
+				}
+				
+				$message->setTo($to);
+				$message->setBody($email['body'], 'text/plain', 'utf-8');
+				
+				if ($email["attachment_list"] != ""){
+					$attachments = explode ( ",",$email["attachment_list"]);
+					foreach ($attachments as $attachment)
+							if (is_file($attachment))
+									$message->attach(Swift_Attachment::fromPath($attachment));
+				}
 
-			$message->setTo($to);
-			$message->setBody($email['body'], 'text/plain', 'utf-8');
+				// If SMTP port is not configured, abort mails directly!
+				if ($config["smtp_port"] == 0)
+					return;
 
-			if ($email["attachment_list"] != ""){
-				$attachments = explode ( ",",$email["attachment_list"]);
-				foreach ($attachments as $attachment)
-				        if (is_file($attachment))
-				                $message->attach(Swift_Attachment::fromPath($attachment));
-			}
+				$message->setContentType("text/plain");
 
-			// If SMTP port is not configured, abort mails directly!
-			if ($config["smtp_port"] == 0)
-				return;
+				$headers = $message->getHeaders();
 
-			$message->setContentType("text/plain");
-
-			$headers = $message->getHeaders();
-
-			foreach ($extra_headers as $eh) {
-				$aux_header = explode(":", $eh);
-				$headers->addTextHeader($aux_header[0], $aux_header[1]);
-			}
-			
-			//Check if the email was sent at least once
-			if ($mailer->send($message) >= 1)
-				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
+				foreach ($extra_headers as $eh) {
+					$aux_header = explode(":", $eh);
+					$headers->addTextHeader($aux_header[0], $aux_header[1]);
+				}
+				
+				//Check if the email was sent at least once
+				if ($mailer->send($message) >= 1)
+					process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
 
 			// SMTP error management!
 			} catch (Exception $e) {

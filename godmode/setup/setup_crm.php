@@ -77,27 +77,27 @@ $table->data = array ();
 
 // Gets all .png, .jpg and .gif files from "images" directory
 // and returns an array with their names
-function get_image_files () {
-	$base_dir = 'images';
+function get_logo_files () {
+	$base_dir = 'images/custom_logos';
 	$files = list_files ($base_dir, ".png", 1, 0);
 	$files = array_merge($files, list_files ($base_dir, ".jpg", 1, 0));
 	$files = array_merge($files, list_files ($base_dir, ".gif", 1, 0));
 	
 	$retval = array ();
 	foreach ($files as $file) {
-		$retval[$file] = $file;
+		$retval["custom_logos/$file"] = $file;
 	}
 	
 	return $retval;
 }
 
-$imagelist = get_image_files ();
+$imagelist = get_logo_files ();
 
 $table->colspan[0][0] = 2;
 $table->data[0][0] = "<h3>".__('Invoice generation parameters')."</h3><br>";
 
 $table->data[1][0] = print_select ($imagelist, 'invoice_logo', $config["invoice_logo"], '', __('None'), 'none',  true, 0, true, __('Invoice header logo'));
-$table->data[1][0] .= print_help_tip (__('You can submit your own logo in "images" folder using the file uploader'), true);
+$table->data[1][0] .= print_help_tip (__('You can submit your own logo in "images/custom_logo" folder using the file uploader'), true);
 
 $alignment = array ();
 $alignment["center"] = "center";

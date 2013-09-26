@@ -293,7 +293,12 @@ if ($id_company > 0) {
 	$table->data[0][0] .= print_input_hidden ('id', $id_company);
 } else {
 	$table->colspan[0][0] = 2;
-	$companies = crm_get_companies_list ("", false, "ORDER BY name", true);
+	if (dame_admin($config['id_user'])) {
+		$where_clause = "";
+	} else {
+		$where_clause = "AND manager = '".$config['id_user']."'";
+	}
+	$companies = crm_get_companies_list ($where_clause, false, "ORDER BY name", true);
 	$table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
 }
 

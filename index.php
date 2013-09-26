@@ -487,10 +487,9 @@ if ($pdf_output == 1){
 	if ($custom_pdf) {
 		$pdfObject->setMetadata(safe_output("Invoice", 'Integria IMS', 'Integria IMS', __("Integria IMS invoice")));
 		
-		$header = '<div align="'.$header_logo_alignment.'"><img src="'.$config["homedir"]."/images/".$header_logo.'"></div>';
-		$header .= '<br><p align="center">'.$header_text.'</p>';
-		
-		$pdfObject->setHeaderHTML($header, true);
+		//~ $header = '<div align="'.$header_logo_alignment.'"><img src="'.$config["homedir"]."/images/custom_logos/".$header_logo.'"></div>';
+		//~ 
+		//~ $pdfObject->setHeaderHTML($header, true);
 		$pdfObject->setFooterHTML($footer_text, true, true, true);
 	} else {
 		$pdfObject->setMetadata(safe_output("Integria IMS PDF Report", 'Integria IMS Report', 'Integria IMS', __("Automated Integria IMS report")));

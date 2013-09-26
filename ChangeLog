@@ -1,5 +1,26 @@
 2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* index.php: Deleted some unused code.
+	
+	* godmode/setup/setup_crm.php: Now the invoice logo are picked
+	from the directory "images/custom_logos".
+	
+	* include/integria_cron.php: Modified the function
+	"run_mail_queue" to send a mail to more than one email directions.
+	
+	* operation/companies/company_detail.php: Fixed an ACL error.
+	
+	* operation/invoices/invoice_template.php,
+	  operation/invoices/invoice_view.php: Added the header logo to
+	  the pdf invoices.
+	
+	* operation/invoices/invoices.php: Now the users only can only
+	assign to the invoices the companies that they manage.
+	
+	* operation/users/user_edit.php: Added a tip on email input.
+	
+2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_graph.php: Now OK appears in green color and
 	FAIL appears in red in the function
 	"graph_incident_statistics_sla_compliance".

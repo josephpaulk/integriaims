@@ -755,14 +755,12 @@ elseif ($op == "invoices") {
 			}	
 			print_table ($table);
 			
-			if ($write || $manage) { 
-				echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
-				echo '<div class="button" style="width: '.$table->width.'">';
-				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-				print_input_hidden ('new_invoice', 1);
-				echo '</div>';
-				echo '</form>';
-			}
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+			print_input_hidden ('new_invoice', 1);
+			echo '</div>';
+			echo '</form>';
 		}
 	} 
 }
@@ -816,7 +814,7 @@ elseif ($op == "leads") {
 		}	
 		print_table ($table);
 		
-		if (check_crm_acl ('other', 'cm', $config['id_user'], $id)) {
+		if ($section_write_permission || $section_manage_permission) {
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id_company='.$id.'">';
 			echo '<div style="width: '.$table->width.'; text-align: right;">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');

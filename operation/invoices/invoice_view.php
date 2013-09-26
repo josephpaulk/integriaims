@@ -34,13 +34,13 @@ $tax_amount = $amount * ($tax/100);
 //$total = round(get_invoice_amount ($id_invoice, $with_taxes = true), 2);
 $total = round($amount + $tax_amount, 2);
 
-// The template of the invoice view can be changed here
-include ("invoice_template.php");
-
 $custom_pdf = true;
-$header_logo = $config["invoice_logo"];
+$header_logo = "images/".$config["invoice_logo"];
 $header_logo_alignment = $config["invoice_logo_alignment"];
 $header_text = $config["invoice_header"];
 $footer_text= $config["invoice_footer"];
+
+// The template of the invoice view can be changed here
+include ("invoice_template.php");
 
 ?>

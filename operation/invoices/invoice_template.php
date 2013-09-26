@@ -1,5 +1,6 @@
 <table align="center"><tr><td>
 	<div style="width:620px; color:black; text-align:right;" align="right">
+	<?php echo  '<div style="text-align: '.$header_logo_alignment.';" align="'.$header_logo_alignment.'"><img src="'.$header_logo.'"></div>';?>
 	<?php if ($pdf_output == 1) { echo '<br><br><br><h1 style="color:black; font-size:20px;">'.__('Invoice').'</h1>'; } ?>
 	</div>
 	<table style="border-top:2px solid black; width:620px; text-align:center;">

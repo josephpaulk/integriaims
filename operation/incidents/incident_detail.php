@@ -1093,9 +1093,7 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete("#text-id_creator", idUser);
-	
 	bindAutocomplete("#text-id_user", idUser);
-	
 	bindAutocomplete("#text-closed_by", idUser);
 	
 	$("#tgl_incident_control").click(function() {
