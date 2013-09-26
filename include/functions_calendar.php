@@ -1347,6 +1347,46 @@ function calendar_get_holidays() {
 	return get_db_all_rows_in_table ("tholidays", "day");	
 }
 
+function calendar_get_non_working_days ($year = false) {
+	global $config;
+	
+	$holidays = get_db_all_rows_in_table ("tholidays", "day");
+	
+	if (!$year || $config["working_weekends"]) {
+		return $holidays;
+	}
+	
+	$res = array();
+	foreach ($holidays as $holiday) {
+		$day = new DateTime($holiday["day"]);
+		$res[] = $day->format("Y-m-d");
+	}
+	
+	$start = new DateTime("$year-1-1");
+	$end = new DateTime("$year-12-31");
+	$endTimestamp = $end->getTimestamp();
+	
+	if (($start->format("w") == 6) || ($start->format("w") == 0)) {
+		$d = $start;
+	} else {
+		$d = $start->modify("next saturday");
+	}
+	
+	$oneday = new DateInterval("P1D");
+	$sixdays = new DateInterval("P6D");
+	
+	while ($d->getTimestamp() <= $endTimestamp) {
+		$res[] = $d->format("Y-m-d");
+		$d = $d->add($oneday);
+		if ($d->getTimestamp() <= $endTimestamp) {
+			$res[] = $d->format("Y-m-d");
+		}
+		$d = $d->add($sixdays);
+	}
+	
+	return $res;
+}
+
 function mysql_timestamp ($unix_time){
     return date('Y-m-d H:i:s', $unix_time);
 }

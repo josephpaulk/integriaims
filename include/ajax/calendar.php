@@ -21,6 +21,7 @@ global $config;
 
 $get_events = (bool) get_parameter ('get_events');
 $get_holidays = (bool) get_parameter ('get_holidays');
+$get_non_working_days = (bool) get_parameter ('get_non_working_days');
 
 if ($get_events) {
 
@@ -64,6 +65,16 @@ if ($get_holidays) {
 
 	echo json_encode($holidays);
 
+	return;
+}
+
+if ($get_non_working_days) {
+	$year = safe_output(get_parameter("year"));
+	
+	$result = calendar_get_non_working_days($year);
+	
+	echo json_encode($result);
+	
 	return;
 }
 

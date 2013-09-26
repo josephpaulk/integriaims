@@ -31,9 +31,46 @@ echo "<div id='calendar'></div>";
 <script src='include/js/fullcalendar/fullcalendar.min.js'></script>
 
 <script>
-
-	$(document).ready(function() {
 	
+	function get_non_working_days (year) {
+		var res;
+		
+		$.ajax({
+			url: "ajax.php",
+			data: {
+				page: "include/ajax/calendar",
+				get_non_working_days: true,
+				year: year
+			},
+			dataType: 'json',
+			async: false,
+			type: "POST",
+			success: function(data) {
+				res = data;
+			}
+		});
+		
+		return res;
+	}
+	
+	$(document).ready(function() {
+		
+        var non_working_days = null;
+        var today = new Date();
+        var year = today.getFullYear();
+        var dateYmd;
+        var dd;
+        var mm;
+        var yyyy;
+        
+        // Today date to 'Ymd'
+        dd = today.getDate();
+		if (dd < 10) dd = '0'+dd;
+		mm = today.getMonth()+1;
+		if (mm < 10) mm = '0'+mm;
+		yyyy = today.getFullYear();
+        today = yyyy+'-'+mm+'-'+dd;
+		
 		$('#calendar').fullCalendar({
 			header: {
 				left: 'today',
@@ -101,7 +138,25 @@ echo "<div id='calendar'></div>";
                 
                 window.location.href = redirect_url;
                 return false;
-            }   
+            },
+    		dayRender: function (date, cell) {
+				if (non_working_days == null || year != date.getFullYear()) {
+					year = date.getFullYear();
+					non_working_days = get_non_working_days(year);
+				}
+				// To 'Y-m-d' format
+				dd = date.getDate();
+				if (dd < 10) dd = '0'+dd;
+				mm = date.getMonth()+1;
+				if (mm < 10) mm = '0'+mm;
+				yyyy = date.getFullYear();
+				date = yyyy+'-'+mm+'-'+dd;
+				
+				if ($.inArray(date, non_working_days) >= 0 && date != today) {console.log(date);console.log(today);
+					// Highlight the non working day
+					cell.css('background', '#F3F3F3');
+				}
+			}
 		});
 
         //start_date_aux = $("#calendar").fullCalendar('getDate');

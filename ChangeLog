@@ -1,3 +1,15 @@
+2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_calendar.php: Added the function
+	"calendar_get_non_working_days".
+	
+	* include/ajax/calendar.php: Added code to get the non working
+	days via ajax.
+	
+	* operation/user_report/holidays_calendar.php,
+	  operation/agenda/agenda.php: Now the non working days of this
+	  calendars are highlighted.
+	
 2013-09-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* godmode/setup/setup_visual.php: Now the site logos are picked
