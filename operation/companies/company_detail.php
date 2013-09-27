@@ -193,7 +193,17 @@ if ($lock_invoice == 1){
 // --------------------------------
 
 if ($id) {
-
+	
+	if (! isset($read_permission)) {
+		$read_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
+	}
+	if (! isset($write_permission)) {
+		$write_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
+	}
+	if (! isset($manage_permission)) {
+		$manage_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
+	}
+	
 	$op = get_parameter ("op", "");
 	
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';

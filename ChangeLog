@@ -1,3 +1,10 @@
+2013-09-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/common/download_file.php: Improved the ACL of the
+	CRM and workorder sections.
+	
+	* operation/companies/company_detail.php: Fixed an ACL error.
+	
 2013-09-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/js/integria_users.js: New file. Added the function

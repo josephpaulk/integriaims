@@ -56,12 +56,17 @@ switch ($type) {
 
 
 	case "contact":
-		if (! give_acl ($config['id_user'], 0, "CR")){
-    		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+		
+		$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $data["id_contact"]);
+		
+		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
+		if (!$read_permission) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
     		require ($general_error);
     		exit;
 		}
-		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+		
 		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 		$last_name = $data["filename"];
 		break;
@@ -113,8 +118,8 @@ switch ($type) {
 		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
 
 		$todo = get_db_row ("ttodo", "id", $data["id_todo"]);
-
-		if (!dame_admin($config["id_user"]) && $todo["assigned_user"] != $config['id_user'] && $todo["created_by_user"] != $config['id_user']) {
+		
+		if (! get_workorder_acl($todo["id"])) {
 			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
     		require ($general_error);
     		exit;
@@ -139,8 +144,8 @@ switch ($type) {
 		break;
 	case "company":
 		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
-
-		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $data["id_company"]);
+		
+		$read_permission = check_crm_acl ('company', 'cr', $config['id_user'], $data["id_company"]);
 	
 		if (! $read_permission) {
 			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
@@ -154,10 +159,9 @@ switch ($type) {
 		
 		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
 		$lead = get_db_row ("tlead", "id", $data["id_lead"]);
-	
-		$user_leads = enterprise_hook('crm_get_user_leads', array($config['id_user'], $lead));
-		//The array is not empty just return empty information
-		if (!$user_leads[0]) {
+		
+		$read_permission = check_crm_acl ('lead', 'cr', $config['id_user'], $data["id_lead"]);
+		if (!$read_permission) {
 			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
 			require ($general_error);
 			exit;	
