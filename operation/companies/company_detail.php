@@ -620,15 +620,15 @@ elseif ($op == "contacts") {
 elseif ($op == "invoices") {
 	
 	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id);
-	
-	if (!$permission && !$manage_permission) {
-		include ("general/noaccess.php");
-		exit;
-	}
-	
+
 	$new_invoice = get_parameter("new_invoice", 0);
 	$operation_invoices = get_parameter ("operation_invoices", "");
 	$view_invoice = get_parameter("view_invoice", 0);
+
+	if ((!$permission && !$manage_permission) AND ($operation_invoices != "add_invoice")) {
+                include ("general/noaccess.php");
+                exit;
+        }
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 

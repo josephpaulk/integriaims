@@ -290,7 +290,7 @@ if ($id_company > 0) {
 	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
 	$table->colspan[0][0] = 2;
 	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
-	$table->data[0][0] .= print_input_hidden ('id', $id_company);
+	$table->data[0][0] .= "<input type=hidden name='id' value='$id_company'>";
 } else {
 	$table->colspan[0][0] = 2;
 	if (dame_admin($config['id_user'])) {
