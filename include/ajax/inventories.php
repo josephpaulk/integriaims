@@ -139,7 +139,7 @@ if ($get_inventory_search) {
 
 	$fields_selected = get_parameter('object_fields_search');
 
-	$table_search->class = 'databox';
+	$table_search->class = 'search-table';
 	$table_search->width = '98%';
 	$table_search->data = array ();
 	
@@ -186,7 +186,7 @@ if ($get_inventory_search) {
 	print_table($table_search);
 	
 	echo '<div style="width:'.$table_search->width.'" class="action-buttons button">';
-	echo "<input type='button' class='sub next' onClick='javascript: loadParams(\".$search_free.\");' value='".__("Search")."''>";
+	echo "<input type='button' class='sub next' onClick='javascript: loadParams(\"$search_free\");' value='".__("Search")."''>";
 	echo '</div>';
 
 	if ($search) {

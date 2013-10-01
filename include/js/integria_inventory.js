@@ -7,11 +7,11 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 		url: "ajax.php",
 		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1&offset="+offset+"&last_update_search="+last_update_search,
 		dataType: "html",
-		success: function(data){	
+		success: function(data){
 			
 			$("#inventory_search_window").html (data);
 			$("#inventory_search_window").show ();
-
+			
 			$("#inventory_search_window").dialog ({
 					resizable: true,
 					draggable: true,
@@ -375,12 +375,12 @@ function loadParams() {
 	} else {
 		last_update_search = 0;
 	}
-
+	
 	offset = 0;
 	search = 1;
 	
 	object_fields_search = $("select[name='object_fields_search[]']").val();
-		
+	
 	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset);
 }
 
@@ -548,10 +548,10 @@ function incident_show_inventory_search(search_free, id_object_type_search, owne
 		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
 		dataType: "html",
 		success: function(data){	
-			$("#inventory_search_modal").html (data);
-			$("#inventory_search_modal").show ();
+			$("#inventory_search_window").html (data);
+			$("#inventory_search_window").show ();
 
-			$("#inventory_search_modal").dialog ({
+			$("#inventory_search_window").dialog ({
 					resizable: true,
 					draggable: true,
 					modal: true,
@@ -562,7 +562,7 @@ function incident_show_inventory_search(search_free, id_object_type_search, owne
 					width: 920,
 					height: 850
 				});
-			$("#inventory_search_modal").dialog('open');
+			$("#inventory_search_window").dialog('open');
 			
 			var idUser = "<?php echo $config['id_user'] ?>";
 		

@@ -922,7 +922,7 @@ echo '<div id="id_incident_hidden" style="display:none;">';
 	print_input_text('id_incident_hidden', $id);
 echo '</div>';
 
-echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."' id='inventory_search_modal'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."' id='inventory_search_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Incidents")."' id='parent_search_window'></div>";
 

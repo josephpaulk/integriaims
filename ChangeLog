@@ -1,5 +1,15 @@
 2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/ajax/inventories.php: Improved the styles of the inventory
+	search form and fixed a call to a function.
+	
+	* include/js/integria_inventory.js: Fixed some jQuery selectors.
+	
+	* operation/incidents/incident_detail.php: Changed the id of the div
+	that contains the inventory search dialog.
+	
+2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/invoices/invoices.php: Added the 'reference' to the
 	invoices forms.
 	
