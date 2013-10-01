@@ -13,6 +13,7 @@ if (! give_acl ($config['id_user'], 0, "AR")) {
 
 $show_agenda_entry = (bool) get_parameter ("show_agenda_entry");
 $update_agenda_entry = (bool) get_parameter ("update_agenda_entry");
+$delete_agenda_entry = (bool) get_parameter ("delete_agenda_entry");
 
 if ($show_agenda_entry) {
 	
@@ -194,5 +195,9 @@ if ($update_agenda_entry) {
 	}
 }
 
+
+if ($delete_agenda_entry) {
+	
+}
 
 ?>

@@ -34,6 +34,7 @@ if (! user_visible_for_me ($config["id_user"], $id_user)) {
 
 echo '<h1>'.__('User details').'</h1>';
 
+$upload_avatar = (bool) get_parameter ('upload_avatar');
 $update_user = (bool) get_parameter ('update_user');
 
 $has_permission = false;
@@ -59,6 +60,31 @@ $lang = $user['lang'];
 $id_company = $user['id_company'];
 $location = $user['location'];
 
+// Upload a new avatar
+if ($upload_avatar) {
+	if (! $has_permission) {
+		audit_db ($_SESSION["id_usuario"], $REMOTE_ADDR, "Security Alert. Trying to modify another user: (".$id_user.") ", "Security Alert");
+		no_permission ();
+	}
+	
+	if ($_FILES["upfile"]["error"] == UPLOAD_ERR_OK) {
+		$tmp_name = $_FILES["upfile"]["tmp_name"];
+		$filename = $_FILES["upfile"]["name"];
+		
+		$filename = str_replace (" ", "_", $filename); // Replace blank spaces
+		$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
+		
+		$upload_result = move_uploaded_file($tmp_name, $config["homedir"]."/images/avatars/$filename");
+		
+		if ($upload_result) {
+			echo "<h3 class=suc>".__("Avatar successfully uploaded")."</h3>";
+		} else {
+			echo "<h3 class=error>".__("The avatar could not be uploaded")."</h3>";
+		}
+	}
+	$update_user = false;
+}
+
 // Get user ID to modify data of current user.
 if ($update_user) {
 	if (! $has_permission) {
@@ -76,6 +102,10 @@ if ($update_user) {
 	$comments = (string) get_parameter ('comments');
 	$lang = (string) get_parameter ('language_code');
 	$location = (string) get_parameter ('location');
+	
+	if (! $avatar) {
+		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	}
 	
 	$error = false;
 	if ($password != '' && md5 ($password) != $user['password']) {
@@ -107,7 +137,7 @@ if ($update_user) {
 			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 		}
 	}
-} 
+}
 
 $table->width = '99%';
 $table->class = 'search-table-button';
@@ -128,11 +158,19 @@ if ($has_permission) {
 } else {
 	$table->data[0][1] = print_label (__('Real name'), '', '', true, $real_name);
 }
+
 $table->data[0][2] = print_label (__('Avatar'), '', '', true);
+$table->data[0][2] .= "<div id='avatar_box' mode='select'>";
 $avatar = $avatar.".png";
 $table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
 $files = list_files ('images/avatars/', "png", 1, 0, "small");
-$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 10px;');
+$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 5px; margin-bottom: 5px;');
+if ($has_permission) {
+	$table->data[0][2] .= "<div style='text-align:center;'>";
+	$table->data[0][2] .= print_button (__('Upload new avatar'), 'upload_avatar', false, 'change_avatar_mode(\'#avatar_box\');', 'class="sub next"', true);
+	$table->data[0][2] .= "</div>";
+}
+$table->data[0][2] .= "</div>";
 
 $company_name = get_db_value('name','tcompany','id',$id_company);
 $table->data[1][0] = "<b>".__('Company')."</b><br>$company_name";
@@ -170,7 +208,7 @@ if ($has_permission) {
 }
 
 if ($has_permission) {
-	echo '<form id="form-user_edit" method="post" action="index.php?sec=users&sec2=operation/users/user_edit">';
+	echo '<form id="form-user_edit" method="post" action="index.php?sec=users&sec2=operation/users/user_edit" enctype="multipart/form-data">';
 	
 	$data = print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"', true);
 	$data .= print_input_hidden ('update_user', 1, true);
@@ -206,7 +244,44 @@ if ($has_permission) {
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script  type="text/javascript">
+
+var avatarSelectHTML;
+
+function change_avatar_mode (box) {
+	var mode = $(box).prop('mode');
+	var avatarUploadHTML = "<form id='form-avatar_upload' method='post' action='index.php?sec=users&amp;sec2=operation/users/user_edit' enctype='multipart/form-data'>" +
+								"<div style='text-align: center;'>" +
+									"<input type='file' accept='image/png' name='upfile' class='file sub' style='margin: 5px;'><br>" +
+									"<input type='submit' value='<?php echo __('Upload') ?>' class='sub upload'>" +
+									"<input type='hidden' name='upload_avatar' value='true'>" +
+									"<input type='button' class='sub next' value='<?php echo __('Cancel') ?>' onclick='change_avatar_mode(\""+box+"\");'>" +
+								"</div>" +
+							"</form>";
 	
+	if (mode == 'upload') {
+		$(box).prop('mode', 'select');
+		avatarUploadHTML = $(box).html();
+		$(box).hide("slide", {direction: 'right'}, 500, function() {
+			$(box).html(avatarSelectHTML);
+			$(box).show("slide", {direction: 'left'}, 500);
+		});
+	} else {
+		$(box).prop('mode', 'upload');
+		avatarSelectHTML = $(box).html();
+		$(box).hide("slide", {direction: 'right'}, 500, function() {
+			$(box).html(avatarUploadHTML);
+			$(box).show("slide", {direction: 'left'}, 500);
+		});
+/*
+		$("#form-avatar_upload").validate({
+			rules: {
+				upfile: { accept: "image/png" }
+			}
+		});
+*/
+	}
+}
+
 $(document).ready (function () {
 	$("#avatar").change (function () {
 		icon = this.value.substr (0, this.value.length - 4);
@@ -215,6 +290,7 @@ $(document).ready (function () {
 			$(this).attr ("src", "images/avatars/"+icon+".png").fadeIn ();
 		});
 	});
+	
 	$('textarea').TextAreaResizer ();
 });
 

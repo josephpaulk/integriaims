@@ -53,7 +53,7 @@ class PDFTranslator {
 			$this->mpdf->Output($default_filename , "D");
 		}
 		else {
-			$this->mpdf->Output($file);
+			$this->mpdf->Output($file , "I");
 		}
 	}
 	

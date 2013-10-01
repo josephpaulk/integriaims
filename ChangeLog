@@ -1,3 +1,19 @@
+2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* index.php: Fixed the output name of the pdf.
+	
+	* include/pdf_translator.php: Now the function "writePDFfile" shows
+	a file with a custom name correctly.
+	
+	* operation/contracts/contract_detail.php: Now the 'days to expire'
+	filter does not sow the expired contracts.
+	
+	* operation/invoices/invoice_template.php: Visual changes on the
+	invoice output.
+	
+	* operation/users/user_edit.php: Now an user can upload a custom avatar
+	from his profile.
+	
 2013-09-30  Sancho Lerena <slerena@artica.es>
 
 	* operation/invoices/invoices.php

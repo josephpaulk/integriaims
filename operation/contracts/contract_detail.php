@@ -340,8 +340,8 @@ if ($id || $new_contract) {
 	}
 	
 	if ($search_expire_days > 0) {
-		// Uncomment this to not show contracts that expired yet
-		//$today_date = date ("Y/m/d");
+		// Comment $today_date to show contracts that expired yet
+		$today_date = date ("Y/m/d");
 		$expire_date = date ("Y/m/d", strtotime ("now") + $search_expire_days * 86400);
 		$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
 	}

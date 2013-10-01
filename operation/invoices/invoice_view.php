@@ -1,6 +1,9 @@
 <?php
 
-include_once('include/functions_crm.php');
+global $config;
+check_login ();
+
+$res = include_once($config["homedir"].'include/functions_crm.php');
 
 $id_invoice = (int) get_parameter ("id_invoice", -1);
 if ($id_invoice == -1) {
@@ -35,8 +38,8 @@ $tax_amount = $amount * ($tax/100);
 $total = round($amount + $tax_amount, 2);
 
 $custom_pdf = true;
+$pdf_filename = "invoice_$id_invoice.pdf";
 $header_logo = "images/".$config["invoice_logo"];
-$header_logo_alignment = $config["invoice_logo_alignment"];
 $header_text = $config["invoice_header"];
 $footer_text= $config["invoice_footer"];
 
