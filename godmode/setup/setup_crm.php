@@ -38,7 +38,6 @@ $update = (bool) get_parameter ("update");
 
 if ($update) {
 	$config["invoice_logo"] = (string) get_parameter ("invoice_logo");
-	$config["invoice_logo_alignment"] = (string) get_parameter ("invoice_logo_alignment");
 	$config["invoice_header"] = (string) get_parameter ("invoice_header");
 	$config["invoice_footer"] = (string) get_parameter ("invoice_footer");
 	$config["invoice_tax_name"] = (string) get_parameter ("invoice_tax_name");
@@ -46,7 +45,6 @@ if ($update) {
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");
 	
 	update_config_token ("invoice_logo", $config["invoice_logo"]);
-	update_config_token ("invoice_logo_alignment", $config["invoice_logo_alignment"]);
 	update_config_token ("invoice_header", $config["invoice_header"]);
 	update_config_token ("invoice_footer", $config["invoice_footer"]);
 	update_config_token ("invoice_tax_name", $config["invoice_tax_name"]);
@@ -99,14 +97,8 @@ $table->data[0][0] = "<h3>".__('Invoice generation parameters')."</h3><br>";
 $table->data[1][0] = print_select ($imagelist, 'invoice_logo', $config["invoice_logo"], '', __('None'), 'none',  true, 0, true, __('Invoice header logo'));
 $table->data[1][0] .= print_help_tip (__('You can submit your own logo in "images/custom_logo" folder using the file uploader'), true);
 
-$alignment = array ();
-$alignment["center"] = "center";
-$alignment["left"] = "left";
-$alignment["right"] = "right";
-$table->data[1][1] = print_select ($alignment, 'invoice_logo_alignment', $config["invoice_logo_alignment"], '', '', '',  true, 0, true, __('Invoice header logo alignment'));
-
-$table->data[2][0] = print_input_text ('invoice_tax_name', $config["invoice_tax_name"], '', 10, 10, true, __('Invoice tax name'));
-$table->data[2][0] .= print_help_tip (__('For example: VAT'), true);
+$table->data[1][1] = print_input_text ('invoice_tax_name', $config["invoice_tax_name"], '', 10, 10, true, __('Invoice tax name'));
+$table->data[1][1] .= print_help_tip (__('For example: VAT'), true);
 
 $table->colspan[3][0] = 2;
 $table->data[3][0] = print_textarea ('invoice_header', 5, 40, $config["invoice_header"], '', true, __('Invoice header'));

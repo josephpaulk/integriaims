@@ -146,11 +146,11 @@ if ($get_inventory_search) {
 	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
 	
 	$objects_type = get_object_types ();
-	$table_search->data[0][1] = print_label (__('Incident type'), '','',true);
+	$table_search->data[0][1] = print_label (__('Object type'), '','',true);
 	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type_search, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
 
 	
-	$table_search->data[0][2] = print_label (__('Incident fields'), '','',true);
+	$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
 	
 	$object_fields_search = array();
 	

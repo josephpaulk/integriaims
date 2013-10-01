@@ -466,7 +466,7 @@ ALTER TABLE tpending_mail ADD `extra_headers` text DEFAULT NULL;
 /* 23/09/2013  */
 ALTER TABLE tinvoice MODIFY `bill_id` tinytext NOT NULL DEFAULT '';
 
-/* 23/03/2013 */
+/* 23/09/2013 */
 CREATE TABLE `tcampaign` (
    `id` int(10) unsigned NOT NULL auto_increment,
   `start_date` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -480,3 +480,7 @@ CREATE TABLE `tcampaign` (
 ALTER TABLE `tlead` ADD `id_campaign` int(10) unsigned NOT NULL default 0;
 
 ALTER TABLE `tnewsletter_content` ADD `id_campaign` int(10) unsigned NOT NULL default 0;
+
+/* 01/10/2013 */
+ALTER TABLE `tinvoice` ADD `reference` text NOT NULL default "";
+

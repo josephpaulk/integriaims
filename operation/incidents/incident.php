@@ -73,110 +73,110 @@ if ($config["want_chat"] == 1){
 echo '</ul>';
 
 if (!$id) {///
-/* Tabs first container is manually set, so it loads immediately */
-echo '<div id="incident-search" class="ui-tabs-panel">';
+	/* Tabs first container is manually set, so it loads immediately */
+	echo '<div id="incident-search" class="ui-tabs-panel">';
 
-echo "<h1>".__('Incident search');
-echo "<div class='button-bar-title'>";
-echo "<a href='#incident-operations' onClick='toggleDiv(\"incident-search\");toggleDiv(\"incident-stats\");'>".__("Search statistics")."</a>";
-echo "</div>";
-echo "</h1>";
+	echo "<h1>".__('Incident search');
+	echo "<div class='button-bar-title'>";
+	echo "<a href='#incident-operations' onClick='toggleDiv(\"incident-search\");toggleDiv(\"incident-stats\");'>".__("Search statistics")."</a>";
+	echo "</div>";
+	echo "</h1>";
 
-echo '<div class="result"></div>';
+	echo '<div class="result"></div>';
 
-$table->id = 'saved_searches_table';
-$table->width = '90%';
-$table->class = 'search-table';
-$table->size = array ();
-$table->size[0] = '120px';
-$table->style = array ();
-$table->style[0] = 'font-weight: bold';
-$table->style[2] = 'font-weight: bold';
-$table->data = array ();
-$table->data[0][0] = __('Custom searches');
-$sql = sprintf ('SELECT id, name FROM tcustom_search
-	WHERE id_user = "%s"
-	AND section = "incidents"
-	ORDER BY name',
-	$config['id_user']);
-$table->data[0][1] = print_select_from_sql ($sql, 'saved_searches', 0, '', __('Select'), 0, true);
-$table->data[0][1] .= '<a href="ajax.php" style="display:none" id="delete_custom_search">';
-$table->data[0][1] .= '<img src="images/cross.png" /></a>';
-$table->data[0][2] = __('Save current search');
-$table->data[0][3] = print_input_text ('search_name', '', '', 10, 20, true);
-$table->data[0][4] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
+	$table->id = 'saved_searches_table';
+	$table->width = '90%';
+	$table->class = 'search-table';
+	$table->size = array ();
+	$table->size[0] = '120px';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold';
+	$table->style[2] = 'font-weight: bold';
+	$table->data = array ();
+	$table->data[0][0] = __('Custom searches');
+	$sql = sprintf ('SELECT id, name FROM tcustom_search
+		WHERE id_user = "%s"
+		AND section = "incidents"
+		ORDER BY name',
+		$config['id_user']);
+	$table->data[0][1] = print_select_from_sql ($sql, 'saved_searches', 0, '', __('Select'), 0, true);
+	$table->data[0][1] .= '<a href="ajax.php" style="display:none" id="delete_custom_search">';
+	$table->data[0][1] .= '<img src="images/cross.png" /></a>';
+	$table->data[0][2] = __('Save current search');
+	$table->data[0][3] = print_input_text ('search_name', '', '', 10, 20, true);
+	$table->data[0][4] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
 
-echo '<form id="saved-searches-form">';
-print_table ($table);
-echo '</form>';
+	echo '<form id="saved-searches-form">';
+	print_table ($table);
+	echo '</form>';
 
-form_search_incident ();
+	form_search_incident ();
 
-unset ($table);
+	unset ($table);
 
-/* Loading message is always shown at first because we run a default search */
-echo '<div id="loading">'.__('Loading');
-echo '... <img src="images/wait.gif" /></div>';
+	/* Loading message is always shown at first because we run a default search */
+	echo '<div id="loading">'.__('Loading');
+	echo '... <img src="images/wait.gif" /></div>';
 
-echo "<br>";
-echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
-echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
+	echo "<br>";
+	echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
+	echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
 
-$table->class = 'hide result_table listing';
-$table->width = '99%';
-$table->id = 'incident_search_result_table';
-$table->head = array ();
-$table->head[0] = '';
-$table->head[1] = __('ID');
-$table->head[2] = __('SLA');
-$table->head[3] = __('Incident');
-$table->head[4] = __('Group')."<br><i>".__('Company')."</i>";
-$table->head[5] = __('Status')."<br><i>".__('Resolution')."</i>";
-$table->head[6] = __('Priority');
-$table->head[7] = __('Updated')."<br><i>".__('Started')."</i>";
-$table->head[8] = __('Flags');
-if ($config["show_creator_incident"] == 1)
-	$table->head[9] = __('Creator');	
-if ($config["show_owner_incident"] == 1)
-	$table->head[10] = __('Owner');	
-$table->style = array ();
-$table->style[0] = '';
+	$table->class = 'hide result_table listing';
+	$table->width = '99%';
+	$table->id = 'incident_search_result_table';
+	$table->head = array ();
+	$table->head[0] = '';
+	$table->head[1] = __('ID');
+	$table->head[2] = __('SLA');
+	$table->head[3] = __('Incident');
+	$table->head[4] = __('Group')."<br><i>".__('Company')."</i>";
+	$table->head[5] = __('Status')."<br><i>".__('Resolution')."</i>";
+	$table->head[6] = __('Priority');
+	$table->head[7] = __('Updated')."<br><i>".__('Started')."</i>";
+	$table->head[8] = __('Flags');
+	if ($config["show_creator_incident"] == 1)
+		$table->head[9] = __('Creator');	
+	if ($config["show_owner_incident"] == 1)
+		$table->head[10] = __('Owner');	
+	$table->style = array ();
+	$table->style[0] = '';
 
-print_table ($table);
+	print_table ($table);
 
 
-print_table_pager ();
+	print_table_pager ();
 
-unset($table);
+	unset($table);
 
-$table->class = 'result_table listing';
-$table->width = '99%';
-$table->id = 'incident_massive';
+	$table->class = 'result_table listing';
+	$table->width = '99%';
+	$table->id = 'incident_massive';
 
-$table->style = array ();
+	$table->style = array ();
 
-$table->head[0] = print_label (__('Status'), '', '', true);
-$table->head[1] = print_label (__('Priority'), '', '', true);
-$table->head[2] = print_label (__('Resolution'), '', '', true);
-$table->head[3] = print_label (__('Assigned user'), '', '', true);
+	$table->head[0] = print_label (__('Status'), '', '', true);
+	$table->head[1] = print_label (__('Priority'), '', '', true);
+	$table->head[2] = print_label (__('Resolution'), '', '', true);
+	$table->head[3] = print_label (__('Assigned user'), '', '', true);
 
-echo '<br><h2>&nbsp;'.print_image('images/arrow_ele_blue.png', true).' '.__('Massive operations over selected items').'</h2>';
+	echo '<br><h2>&nbsp;'.print_image('images/arrow_ele_blue.png', true).' '.__('Massive operations over selected items').'</h2>';
 
-$table->data[0][0] = combo_incident_status (-1, 0, 0, true, true);
-$table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __('Select'), -1, true);
-$table->data[0][2] = combo_incident_resolution ($resolution, $disabled, true, true);
-$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true);
+	$table->data[0][0] = combo_incident_status (-1, 0, 0, true, true);
+	$table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __('Select'), -1, true);
+	$table->data[0][2] = combo_incident_resolution ($resolution, $disabled, true, true);
+	$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true);
 
-print_table ($table);
+	print_table ($table);
 
-echo "<div style='width:".$table->width."'>";
-print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next" style="float:right;');
-echo "</div>";
+	echo "<div style='width:".$table->width."'>";
+	print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next" style="float:right;');
+	echo "</div>";
 
-/* End of first tab container */
-echo '</div>';
+	/* End of first tab container */
+	echo '</div>';
 
-echo '<div id="incident-stats" style="display">TODO STATS</div>';
+	echo '<div id="incident-stats" style="display">TODO STATS</div>';
 }//////
 
 echo '</div>';

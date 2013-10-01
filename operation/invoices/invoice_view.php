@@ -36,6 +36,7 @@ $tax = get_invoice_tax ($id_invoice);
 $tax_amount = $amount * ($tax/100);
 //$total = round(get_invoice_amount ($id_invoice, $with_taxes = true), 2);
 $total = round($amount + $tax_amount, 2);
+$tax_amount = round($tax_amount, 2);
 
 $custom_pdf = true;
 $pdf_filename = "invoice_$id_invoice.pdf";

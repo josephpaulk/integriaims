@@ -693,7 +693,7 @@ elseif ($op == "invoices") {
 			$table->style[0] = 'font-weight: bold';
 			$table->colspan = array ();
 			$table->head[0] = __('ID');
-			$table->head[1] = __('Description');
+			//$table->head[1] = __('Description');
 			$table->head[2] = __('Amount');
 			$table->head[3] = __('Status');
 			$table->head[4] = __('Creation');
@@ -718,7 +718,7 @@ elseif ($op == "invoices") {
 				$url = "index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$id."&op=invoices&id_invoice=". $invoice["id"];
 
 				$data[0] = "<a href='$url'>".$invoice["bill_id"]."</a>";
-				$data[1] = "<a href='$url'>".$invoice["description"]."</a>";
+				//$data[1] = "<a href='$url'>".$invoice["description"]."</a>";
 				$data[2] = get_invoice_amount ($invoice["id"]) ." ". strtoupper ($invoice["currency"]);
 				$data[3] = __($invoice["status"]);
 				$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";

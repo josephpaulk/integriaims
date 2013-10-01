@@ -1,5 +1,26 @@
 2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* extras/migrate.sql: Added the column 'reference' to the table
+	'tinvoice'.
+	
+	* godmode/setup/setup_crm.php: Deleted the invoice logo alignment
+	from the form.
+	
+	* include/ajax/inventories.php: Changed some label names.
+	
+	* operation/companies/company_detail.php: Deleted the column
+	description from the invoice list of a company.
+	
+	* operation/incidents/incident.php: Improved the identation.
+	
+	* operation/invoices/invoice_template.php: Visual changes of the
+	invoice pdf.
+	
+	* operation/invoices/invoice_view.php: Now the tax amount appears
+	rounded to 2 decimal points.
+	
+2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* index.php: Fixed the output name of the pdf.
 	
 	* include/pdf_translator.php: Now the function "writePDFfile" shows
