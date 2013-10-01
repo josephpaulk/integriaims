@@ -1,5 +1,10 @@
 2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/invoices/invoices.php: Added the 'reference' to the
+	invoices forms.
+	
+2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/migrate.sql: Added the column 'reference' to the table
 	'tinvoice'.
 	

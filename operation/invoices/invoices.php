@@ -55,6 +55,7 @@ if ($operation_invoices == "add_invoice"){
 	
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
+	$reference = get_parameter ("reference", "");
 	$description = get_parameter ("description", "");
 	$concept = array();
 	$concept[0] = get_parameter ("concept1", "");
@@ -103,11 +104,11 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
+	amount4, amount5, reference) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4]);
+	$amount[2], $amount[3], $amount[4], $reference);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -120,6 +121,7 @@ if ($operation_invoices == "add_invoice"){
 if ($operation_invoices == "update_invoice"){
 	
 	$filename = get_parameter ('upfile', false);
+	$reference = get_parameter ("reference", "");
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
 	$concept = array();
@@ -179,6 +181,7 @@ if ($operation_invoices == "update_invoice"){
 	$values['description'] = $description;
 	$values['id_user'] = $user_id;
 	$values['id_company'] = $id_company;
+	$values['reference'] = $reference;
 	$values['bill_id'] = $bill_id;
 	$values['concept1'] = $concept[0];
 	$values['concept2'] = $concept[1];
@@ -211,6 +214,7 @@ if ($operation_invoices == "update_invoice"){
 if ($id_invoice > 0){
 	
 	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
+	$reference = $invoice["reference"];
 	$bill_id = $invoice["bill_id"];
 	$description = $invoice["description"];
 	$concept = array();
@@ -248,6 +252,7 @@ if ($id_invoice > 0){
 	}
 	
 	$bill_id = "";
+	$reference = "";
 	$description = "";
 	$id_attachment = "";
 	$invoice_create_date = date("Y-m-d");
@@ -288,11 +293,9 @@ $table->data = array ();
 
 if ($id_company > 0) {
 	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
-	$table->colspan[0][0] = 2;
 	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
 	$table->data[0][0] .= "<input type=hidden name='id' value='$id_company'>";
 } else {
-	$table->colspan[0][0] = 2;
 	if (dame_admin($config['id_user'])) {
 		$where_clause = "";
 	} else {
@@ -301,6 +304,8 @@ if ($id_company > 0) {
 	$companies = crm_get_companies_list ($where_clause, false, "ORDER BY name", true);
 	$table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
 }
+
+$table->data[0][1] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
 
 $table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
