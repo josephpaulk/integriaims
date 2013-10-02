@@ -984,7 +984,8 @@ if (<?php echo $id ?> > 0 || <?php echo json_encode($new) ?> == true) {
 
 	// Rules: #text-fullname
 	rules = {
-		required: true,
+		required: true//,
+/*
 		remote: {
 			url: "ajax.php",
 			type: "POST",
@@ -995,6 +996,7 @@ if (<?php echo $id ?> > 0 || <?php echo json_encode($new) ?> == true) {
 				lead_id: "<?php echo $id?>"
 			}
 		}
+*/
 	};
 	messages = {
 		required: "<?php echo __('Name required')?>",

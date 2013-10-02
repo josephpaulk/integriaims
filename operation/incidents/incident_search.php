@@ -37,7 +37,7 @@ $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_creator'] = (string) get_parameter ('search_creator', '');
 $filter['editor'] = (string) get_parameter ('search_editor', '');
 $filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
-//$filter['order_by'] = json_decode(get_parameter ('order_by', ''));
+$filter['order_by'] = get_parameter ('search_order_by', '');
 
 switch ($option) {
 	case "search":

@@ -125,6 +125,18 @@ function filter_incidents ($filters, $count=false) {
 	if (! empty ($filters['closed_by']))
 		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
 	
+	if ($filter['order_by'] && !is_array($filter['order_by'])) {
+		$order_by_array = json_decode(clean_output($filters["order_by"]), true);
+	} else {
+		$order_by_array = $filter['order_by'];
+	}
+	$order_by = "";
+	foreach ($order_by_array as $key => $value) {
+		if ($value) {
+			$order_by .= " $key $value, ";
+		}
+	}
+	
 	if ($count) {
 		//Just count items
 		$sql = sprintf ('SELECT COUNT(id_incidencia) FROM tincidencia FD
@@ -151,10 +163,10 @@ function filter_incidents ($filters, $count=false) {
 			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
 			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-			ORDER BY actualizacion DESC
+			ORDER BY %s actualizacion DESC
 			LIMIT %d OFFSET %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $config['block_size'], $filters["offset"]);
+			$filters['string'],$filters['string'], $filters['string'], $order_by, $config['block_size'], $filters["offset"]);
 
 		$incidents = get_db_all_rows_sql ($sql);
 
@@ -1956,15 +1968,20 @@ function incidents_search_result ($filter, $ajax=false) {
 	$resolutions = get_incident_resolutions ();
 	
 	// ORDER BY
-	//~ if ($filter["order_by"]["id_incidencia"] != "") {
-		//~ if ($filter["order_by"]["id_incidencia"] == "ASC") {
-			//~ $id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"DESC\")'><img src='images/arrow_down_orange.png'></a>";
-		//~ } else {
-			//~ $id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"ASC\")'><img src='images/arrow_up_orange.png'></a>";
-		//~ }
-	//~ } else {
-		//~ $id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
-	//~ }
+	if ($filter['order_by'] && !is_array($filter['order_by'])) {
+		$order_by = json_decode(clean_output($filter['order_by']), true);
+	} else {
+		$order_by = $filter['order_by'];
+	}
+	if ($order_by["id_incidencia"] != "") {
+		if ($order_by["id_incidencia"] == "DESC") {
+			$id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"ASC\")'><img src='images/arrow_down_orange.png'></a>";
+		} else {
+			$id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"\")'><img src='images/arrow_up_orange.png'></a>";
+		}
+	} else {
+		$id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
+	}
 	
 	// ----------------------------------------
 	// Here we print the result of the search

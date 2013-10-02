@@ -1065,7 +1065,7 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	}
 }
 
-function print_autorefresh_button ($name = "autorefresh", $text = "", $return = false, $token = "incidents_autorefresh", $form_id = "search_incident_form") {
+function print_autorefresh_button ($name = "autorefresh", $text = "", $return = false, $token = "incidents_autorefresh", $form_id = "saved-searches-form") {
 	global $config;
 	
 	$html .= "<script type='text/javascript'>

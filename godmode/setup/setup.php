@@ -161,7 +161,7 @@ $table->data[4][0] .= '&nbsp;<a id="dialog_license_info" title="'.__("License In
 $table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>';	
 
 $days_of_week = get_days_of_week();
-$table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of week'));
+$table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
 
 $table->data[5][0] = print_input_hidden ('update', 1, true);
 $table->data[5][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);

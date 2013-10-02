@@ -71,6 +71,10 @@ if ($create_custom_search && !$id_search) {
 	$form_values = get_parameter ('form_values');
 	$search_name = (string) get_parameter ('search_name');
 	
+	if ($filter['order_by'] && !is_array($filter['order_by'])) {
+		$filter['order_by'] = json_decode(clean_output($filter['order_by']), true);
+	}
+	
 	$result = create_custom_search ($search_name, 'incidents', $filter);
 	
 	if ($result === false) {
@@ -267,6 +271,11 @@ $(document).ready(function () {
 	bindAutocomplete ("#text-search_closed_by", idUser);
 	
 });
+
+function changeIdIncidentOrder(order) {
+	$('#hidden-search_order_by').val('{ "id_incidencia" : "'+order+'" }');
+	$('#saved-searches-form').submit();
+}
 
 function loadInventory(id_inventory) {
 	

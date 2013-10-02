@@ -1,3 +1,25 @@
+2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/setup/setup.php: Changed a label.
+	
+	* include/functions_html.php: Now the autorefresh also reloads the
+	incident custom searches.
+	
+	* include/functions_incidents.php: Modified the function
+	"filter_incidents" to order the incident search depending on the
+	'order_by' filter. Modified the function "incidents_search_result"
+	to show the control that orders the search by id.
+	
+	* operation/incidents/incident_search.php: Added the parameter
+	'order_by'.
+	
+	* operation/incidents/incident_search_logic.php: Added the javascript
+	function "changeIdIncidentOrder". Added the decoding of the order by
+	filter before creating a custom search.
+	
+	* operation/leads/lead_detail.php: Now the name of the lead can be
+	duplicated.
+	
 2013-10-02  Sancho Lerena <slerena@artica.es>
 
 	* include/mailtemplates/incident_create.tpl
