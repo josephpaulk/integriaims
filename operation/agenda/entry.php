@@ -3,6 +3,7 @@
 global $config;
 
 require_once ('include/functions_db.php');
+require_once ('include/functions_agenda.php');
 
 if (! give_acl ($config['id_user'], 0, "AR")) {
  	// Doesn't have access to this page
@@ -15,9 +16,11 @@ $show_agenda_entry = (bool) get_parameter ("show_agenda_entry");
 $update_agenda_entry = (bool) get_parameter ("update_agenda_entry");
 $delete_agenda_entry = (bool) get_parameter ("delete_agenda_entry");
 
+$id = get_parameter ("id", -1);
+$permission = agenda_get_entry_permission($config['id_user'], $id);
+
 if ($show_agenda_entry) {
 	
-	$id = get_parameter ("id", -1);
 	$date = get_parameter ("date", "");
 	
 	$entry = array();
@@ -29,7 +32,14 @@ if ($show_agenda_entry) {
 	}
 	
 	echo "<div id='calendar_entry'>";
-
+	
+	if ($id > -1 && !$permission && !$entry['public']) {
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to view an agenda entry");
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
@@ -69,11 +79,12 @@ if ($show_agenda_entry) {
 	$table->colspan[3][0] = 3;
 	$table->data[3][0] = print_textarea ('entry_description', 4, 50, $entry['description'], '', true, __('Description'));
 	
-	$button = print_button (__('Cancel'), 'cancel', false, '', 'class="sub delete" style="box-sizing:content-box; -moz-box-sizing:content-box; -ms-box-sizing:content-box; -webkit-box-sizing:content-box;"', true);
-	echo '&nbsp;';
+	$button = print_button (__('Cancel'), 'cancel', false, '', 'class="sub blank"', true);
+	
 	if ($id == -1) {
 		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-	} else {
+	} elseif ($permission) {
+		$button .= print_button (__('Delete'), 'delete', false, '', 'class="sub delete"', true);
 		$button .= print_submit_button (__('Update'), 'create_btn', false, 'class="sub upd"', true);
 	}
 	
@@ -89,7 +100,13 @@ if ($show_agenda_entry) {
 
 if ($update_agenda_entry) {
 	
-	$id = get_parameter ("id", -1);
+	if ($id > -1 && !$permission) {
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update an agenda entry");
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$title = get_parameter ("title", "");
 	$description = get_parameter ("description", "");
 	$time = get_parameter ("time");
@@ -183,7 +200,7 @@ if ($update_agenda_entry) {
 			insert_event ("UPDATED CALENDAR EVENT", 0, 0, $title);
 		}
 		echo "<br>";
-		print_button (__('OK'), 'OK', false, '', 'style="box-sizing:content-box; -moz-box-sizing:content-box; -ms-box-sizing:content-box; -webkit-box-sizing:content-box;"');
+		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
 	} else {
 		if ($id == -1) {
 			echo "<h3 class='error'>".__('An error ocurred. Event not inserted.')."</h3>";
@@ -191,13 +208,32 @@ if ($update_agenda_entry) {
 			echo "<h3 class='error'>".__('An error ocurred. Event not updated.')."</h3>";
 		}
 		echo "<br>";
-		print_button (__('OK'), 'OK', false, '', 'style="box-sizing:content-box; -moz-box-sizing:content-box; -ms-box-sizing:content-box; -webkit-box-sizing:content-box;"');
+		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
 	}
 }
 
 
 if ($delete_agenda_entry) {
 	
+	if ($id > -1 && !$permission) {
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete an agenda entry");
+		include ("general/noaccess.php");
+		exit;
+	}
+	
+	$sql = "DELETE FROM tagenda WHERE id = $id";
+	$result = process_sql($sql);
+	
+	if ($result > 0) {
+		echo "<h3 class='suc'>".__('The event was deleted')."</h3>";
+		echo "<br>";
+		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
+	} else {
+		echo "<h3 class='error'>".__('An error ocurred. Event not deleted')."</h3>";
+		echo "<br>";
+		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
+	}
 }
 
 ?>

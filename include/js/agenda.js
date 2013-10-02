@@ -36,6 +36,35 @@ function show_agenda_entry(id_entry, selected_date, min_date, refresh) {
 				$("#agenda_entry").dialog ('close');
 			});
 			
+			$("#button-delete").click(function(e) {
+				$.ajax({
+					type: "POST",
+					url: "ajax.php",
+					data: {
+						page: "operation/agenda/entry",
+						delete_agenda_entry: 1,
+						id: id_entry
+					},
+					dataType: "html",
+					success: function(data) {
+						$("#agenda_entry").html (data);
+						
+						$("#agenda_entry").on("dialogclose", function(event, ui) {
+							if (refresh == true) {
+								location.reload();
+							}
+						});
+						$("#button-OK").click(function(e) {
+							$("#agenda_entry").dialog ('close');
+							if (refresh == true) {
+								location.reload();
+							}
+						});
+					}
+				});
+				return false;
+			});
+			
 			$("#calendar_entry").submit(function() {
 				
 				var public;

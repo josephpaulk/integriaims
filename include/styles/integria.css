@@ -859,6 +859,10 @@ input.upload {
 	background: #FFFFFF url(../../images/input_upload.png) no-repeat right 3px;
 }
 
+input.blank {
+	background: #FFFFFF;
+}
+
 td {
 	padding-top: 1px;
 	padding-bottom: 1px;

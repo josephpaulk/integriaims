@@ -1,3 +1,16 @@
+2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_agenda.php: New file. Added he function
+	"agenda_get_entry_permission".
+	
+	* operation/agenda/entry.php: Added ACL rules to determine
+	who can edit or delete a file. Added code to delete an entry.
+	
+	* include/js/agenda.js: Added code and a button to delete an entry.
+	
+	* include/styles/integria.css: Added an style rule for blank
+	buttons.
+	
 2013-10-02  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/setup_project.php: Added file.
