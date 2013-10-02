@@ -1,5 +1,9 @@
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/inventories/inventory_detail.php: Some ACL fixes.
+	
+2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_agenda.php: New file. Added he function
 	"agenda_get_entry_permission".
 	

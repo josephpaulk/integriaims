@@ -87,8 +87,9 @@ $manage_permission = enterprise_hook ('inventory_check_acl', array ($config['id_
 if ($read_permission === ENTERPRISE_NOT_HOOK) {
 	$read_permission = true;
 	$write_permission = true;
+	$manage_permission = true;
 } else {
-	if (!$read_permission) {
+	if (!$read_permission && $id) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -498,7 +499,7 @@ if ($id && !$inventory_name) {
 
 	/* First row */
 
-	if ($write_permission) {
+	if ($write_permission || !$id) {
 		$table->data[0][0] = print_input_text ('name', $name, '', 40, 128, true,
 			__('Name'));
 	} else {
@@ -511,17 +512,19 @@ if ($id && !$inventory_name) {
 	$params_assigned['title'] = 'Owner';
 	$params_assigned['return'] = true;
 
-	if ($write_permission) {
+	if ($write_permission || !$id) {
 		$table->data[0][1] = user_print_autocomplete_input($params_assigned);
 	} else {
 		$table->data[0][1] = print_label (__('Owner'), '', '', true, $owner);
 	}
 	
-	$table->data[0][2] = print_checkbox_extended ('public', 1, $public,
-	! $write_permission, '', '', true, __('Public'));
-
-
-	if ($write_permission) {
+	if ($write_permission || !$id) {
+		$table->data[0][2] = print_checkbox_extended ('public', 1, $public, false, '', '', true, __('Public'));
+	} else {
+		$table->data[0][2] = print_checkbox_extended ('public', 1, $public, true, '', '', true, __('Public'));
+	}
+	
+	if ($write_permission || !$id) {
 	
 		$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
@@ -541,7 +544,7 @@ if ($id && !$inventory_name) {
 	$contracts = get_contracts ();
 	$manufacturers = get_manufacturers ();
 
-	if ($write_permission) {
+	if ($write_permission || !$id) {
 		$table->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
 		'', __('None'), 0, true, false, false, __('Contract'));
 
@@ -565,7 +568,7 @@ if ($id && !$inventory_name) {
 		$disabled = true;
 	}
 
-	if ($write_permission) {
+	if ($write_permission || !$id) {
 		$table->data[2][0] = print_label (__('Object type'), '','',true);
 		$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
 	} else {
@@ -588,17 +591,11 @@ if ($id && !$inventory_name) {
 
 	if ($id) {
 		$companies = enterprise_hook ('inventory_get_companies', array ($id));
-
-		if ($companies_aux !== ENTEPRRISE_NOT_HOOK) {
-			//foreach($companies_aux as $c) {
-			//$companies[$c["id"]] = $c["name"];
-			//}
-		}	
-
+		
 		$users = enterprise_hook ('inventory_get_users', array ($id));
 	}
 
-	if ($write_permission) {
+	if ($write_permission || !$id) {
 		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
 								'', '', '', true, false, false, __('Associated company'));
 		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
@@ -649,7 +646,7 @@ if ($id && !$inventory_name) {
 
 	echo '<div class="result">'.$result_msg.$msg_err.'</div>';
 
-	if ($write_permission) {
+	if ($write_permission || !$id) {
 		if ($id) {
 			$button = print_input_hidden ('update_inventory', 1, true);
 			$button .= print_input_hidden ('id', $id, true);
@@ -667,6 +664,7 @@ if ($id && !$inventory_name) {
 		print_table ($table);
 		echo '</form>';
 	} else {
+		$table->class = 'search-table';
 		print_table ($table);
 	}
 
