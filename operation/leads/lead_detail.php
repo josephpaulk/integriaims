@@ -1087,9 +1087,10 @@ function changeAllowDuplicatedLeads () {
 	var checked = $("#checkbox-duplicated_leads").is(":checked");
 	
 	if (checked) {
-		$('#text-fullname').rules("remove", "remote");
+		//$('#text-fullname').rules("remove", "remote");
 		$('#text-email').rules("remove", "remote");
 	} else {
+/*
 		$('#text-fullname').rules("add", { remote: {
 				url: "ajax.php",
 				type: "POST",
@@ -1101,6 +1102,7 @@ function changeAllowDuplicatedLeads () {
 				}
 			}
 		});
+*/
 		$('#text-email').rules("add", { remote: {
 				url: "ajax.php",
 				type: "POST",

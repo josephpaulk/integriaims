@@ -1,5 +1,10 @@
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/leads/lead_detail.php: Fixed an error related with
+	the validation of the lead name.
+	
+2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* godmode/setup/setup.php: Changed a label.
 	
 	* include/functions_html.php: Now the autorefresh also reloads the
