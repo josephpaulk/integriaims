@@ -1,3 +1,9 @@
+2013-10-02  Sancho Lerena <slerena@artica.es>
+
+	* include/mailtemplates/incident_create.tpl
+        operation/invoices/invoice_template.php: Updated some changes
+	for invoices, final changes, I hope.
+
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/invoices/invoices.php: Visual changes on the form.
