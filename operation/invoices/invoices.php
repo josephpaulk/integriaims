@@ -293,7 +293,7 @@ $table->data = array ();
 
 if ($id_company > 0) {
 	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
-	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
+	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 50, 100, true, __('Company'), true);
 	$table->data[0][0] .= "<input type=hidden name='id' value='$id_company'>";
 } else {
 	if (dame_admin($config['id_user'])) {
@@ -386,7 +386,7 @@ rules = {
           page: "include/ajax/remote_validations",
           search_existing_invoice: 1,
           bill_id: function() { return $('#text-bill_id').val() },
-          invoice_id: <?php echo $id_invoice; ?>
+          invoice_id: <?php echo $id_invoice ?>
         }
 	}
 };

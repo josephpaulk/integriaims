@@ -1954,7 +1954,18 @@ function incidents_search_result ($filter, $ajax=false) {
 	
 	$statuses = get_indicent_status ();
 	$resolutions = get_incident_resolutions ();
-
+	
+	// ORDER BY
+	//~ if ($filter["order_by"]["id_incidencia"] != "") {
+		//~ if ($filter["order_by"]["id_incidencia"] == "ASC") {
+			//~ $id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"DESC\")'><img src='images/arrow_down_orange.png'></a>";
+		//~ } else {
+			//~ $id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"ASC\")'><img src='images/arrow_up_orange.png'></a>";
+		//~ }
+	//~ } else {
+		//~ $id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+	//~ }
+	
 	// ----------------------------------------
 	// Here we print the result of the search
 	// ----------------------------------------
@@ -1965,7 +1976,7 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo "<th>";
 	echo "</th>";
 	echo "<th>";
-	echo __('ID');
+	echo __('ID') . $id_order_image;
 	echo "</th>";
 	echo "<th>";
 	echo __('SLA');

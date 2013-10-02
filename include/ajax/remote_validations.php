@@ -424,7 +424,7 @@ if ($search_existing_project) {
 	
 } elseif ($search_existing_invoice) {
 	require_once ('include/functions_db.php');
-	$bill_id = (int) get_parameter ('bill_id');
+	$bill_id = (string) get_parameter ('bill_id');
 	$invoice_id = get_parameter ('invoice_id', 0);
 	$old_bill_id = -1;
 	

@@ -1,5 +1,12 @@
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/invoices/invoices.php: Visual changes on the form.
+	
+	* include/ajax/remote_validations.php: Fixed the
+	"search_existing_invoice" check.
+	
+2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/styles/integria.css: Added a new style rule.
 	
 	* operation/side_menu.php: Now the incident id input for the
