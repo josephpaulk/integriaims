@@ -1,3 +1,8 @@
+2013-10-02  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Fixed some issues with local SMTP
+	sending. Fixed some issues in newsletter (trans pixel on local relay).
+
 2013-10-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/ajax/inventories.php: Improved the styles of the inventory

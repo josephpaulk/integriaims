@@ -557,12 +557,6 @@ function run_mail_queue () {
 	
 	include_once ($config["homedir"]."/include/functions.php");
 	
-	// If SMTP port is not configured, abort mails directly!
-	if ($config["smtp_port"] == 0){
-		integria_logwrite ("SMTP has no port configured. Aborting mail queue processing");
-		return;		
-	}
-	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 
    	$utimestamp = date("U");
@@ -694,12 +688,6 @@ function run_newsletter_queue () {
 	include_once ($config["homedir"] . "/include/functions.php");	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 	
-	// If SMTP port is not configured, abort mails directly!
-	if ($config["smtp_port"] == 0){
-		integria_logwrite ("SMTP has no port configured. Aborting newsletter processing");
-		return;		
-	}
-
 	$total = $config["batch_newsletter"];
 	
    	$utimestamp = date("U");
@@ -716,6 +704,9 @@ function run_newsletter_queue () {
 		// Get issue and newsletter records
 		
 		$issue = get_db_row ("tnewsletter_content", "id", $queue["id_newsletter_content"]);
+		//Add void pixel to track campaings
+                $issue["html"] .= "<img src='".$config["base_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
+
 		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
 		
 		// TODO
@@ -747,9 +738,6 @@ function run_newsletter_queue () {
 				$message->setTo($dest_email);
 
 				// TODO: replace names on macros in the body / HTML parts.
-
-				//Add void pixel to track campaings
-				$issue["html"] .= "<img src='".$config["base_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
 
 				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
 
