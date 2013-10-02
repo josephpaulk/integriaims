@@ -496,6 +496,7 @@ if ($id && !$inventory_name) {
 	$table->colspan = array ();
 	$table->colspan[4][1] = 2;
 	$table->colspan[5][0] = 3;
+	$table->colspan[7][0] = 3;
 
 	/* First row */
 
@@ -560,31 +561,9 @@ if ($id && !$inventory_name) {
 
 
 	/* Third row */
-	$objects_type = get_object_types ();
+	$all_inventory_status = inventories_get_inventory_status ();
+	$table->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, 'show_issue_date();', '', '', true, false, false, __('Status'));
 
-	if ($id_object_type == 0) {
-		$disabled = false;
-	} else {
-		$disabled = true;
-	}
-
-	if ($write_permission || !$id) {
-		$table->data[2][0] = print_label (__('Object type'), '','',true);
-		$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
-	} else {
-		$object_name = get_db_value('name', 'tobject_type', 'id', $id_object_type);
-		$table->data[2][0] = print_label (__('Object type'), '', '', true, $object_name);
-	
-		//show object hidden
-		echo '<div id="show_object_fields_hidden" style="display:none;">';
-		print_input_text('show_object_hidden', 1);
-		echo '</div>';
-	
-		//id_object_type hidden
-		echo '<div id="id_object_type_hidden" style="display:none;">';
-		print_input_text('id_object_type_hidden', $id_object_type);
-		echo '</div>';
-	}
 
 	$companies = array();
 	$users = array();
@@ -622,10 +601,33 @@ if ($id && !$inventory_name) {
 		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
 								'', '', '', true, false, false, __('Associated user'));
 	}
+	
+	$objects_type = get_object_types ();
 
-	$all_inventory_status = inventories_get_inventory_status ();
-	$table->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, 'show_issue_date();', '', '', true, false, false, __('Status'));
+	if ($id_object_type == 0) {
+		$disabled = false;
+	} else {
+		$disabled = true;
+	}
 
+	if ($write_permission || !$id) {
+		$table->data[3][0] = print_label (__('Object type'), '','',true);
+		$table->data[3][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
+	} else {
+		$object_name = get_db_value('name', 'tobject_type', 'id', $id_object_type);
+		$table->data[3][0] = print_label (__('Object type'), '', '', true, $object_name);
+	
+		//show object hidden
+		echo '<div id="show_object_fields_hidden" style="display:none;">';
+		print_input_text('show_object_hidden', 1);
+		echo '</div>';
+	
+		//id_object_type hidden
+		echo '<div id="id_object_type_hidden" style="display:none;">';
+		print_input_text('id_object_type_hidden', $id_object_type);
+		echo '</div>';
+	}
+	
 	$table->data[3][1] = print_input_text ('receipt_date', $receipt_date, '', 15, 15, true, __('Receipt date'));
 
 	$table->data[3][2] = print_input_text ('issue_date', $issue_date, '', 15, 15, true, __('Issue date'));
@@ -656,9 +658,8 @@ if ($id && !$inventory_name) {
 			$button = print_input_hidden ('create_inventory', 1, true);
 			$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
 		}
-	
+		
 		$table->data[7][0] = $button;
-		$table->colspan[7][0] = 3;
 	
 		echo '<form method="post" id="inventory_status_form">';
 		print_table ($table);

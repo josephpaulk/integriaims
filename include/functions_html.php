@@ -638,7 +638,7 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
 function print_table (&$table, $return = false) {
 	$output = '';
 	static $table_count = 0;
-
+	
 	$table_count++;
 	if (isset ($table->align)) {
 		foreach ($table->align as $key => $aa) {

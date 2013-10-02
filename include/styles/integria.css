@@ -1913,7 +1913,11 @@ table.search-table-button tr:last-child td {
 table.search-table tr:last-child td {
 	padding-top: 1px;
 	text-align: left;
-	
+}
+
+table.databox_color_without_line tr:last-child td {
+	padding-top: 1px;
+	text-align: left;
 }
 
 .integria_form {

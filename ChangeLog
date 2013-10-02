@@ -1,5 +1,15 @@
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/styles/integria.css: Added a new style rule.
+	
+	* operation/side_menu.php: Now the incident id input for the
+	search on the side menu is bigger to let to see easily ids with
+	4 digits of lenght.
+	
+	* operation/inventories/inventory_detail.php: Visual fixes.
+	
+2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/inventories/inventory_detail.php: Some ACL fixes.
 	
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
