@@ -140,7 +140,23 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 	if (@count ($result) === 0) {
 		echo __("No files found");
 	} else {
-		asort ($result);
+		// This code divide the directories to the rest of files
+		// to show them at the top
+		$dirs = array();
+		$nondirs = array();
+		array_walk($result, function($value, $key) {
+			global $current_directory, $dirs, $nondirs;
+			$fullfilename = $current_directory.'/'.$value;
+			if (is_dir($fullfilename)) {
+				$dirs[$key] = $value;
+			} else {
+				$nondirs[$key] = $value;
+			}
+		});
+		array_multisort($dirs, $nondirs);
+		$result = array_merge($dirs, $nondirs);
+		$dirs = null;
+		$nondirs = null;
 		
 		echo "<table width='99%' class='listing'>";
 		
@@ -179,7 +195,7 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 		while (@count($result) > 0){
 			$temp = array_shift ($result);
 			$fullfilename = $current_directory.'/'.$temp;
-			$mimetype = "";
+			$mimetype = mime_content_type($fullfilename);
 			if (($temp != "..") AND ($temp != ".")){
 				echo "<tr><td>";
 				if (!is_dir ($current_directory.'/'.$temp)){	
@@ -190,7 +206,7 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 				echo "<td>";
 				if (preg_match("/image/", $mimetype)){
 					list($ancho, $altura, $tipo, $atr) = getimagesize($fullfilename);
-					echo $ancho."x".$altura;
+					echo $ancho." x ".$altura." px";
 				}	
 				echo "<td>";
 				if (!is_dir ($fullfilename))

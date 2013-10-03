@@ -1,5 +1,12 @@
 2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* godmode/setup/filemgr.php: Now the file manager shows correctly
+	the mime types and the image properties. Now the directories
+	appear before the rest of the files, sorted alphabetically like
+	the files.
+	
+2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/incidents/incident_graph.php,
 	  operation/incidents/incident_search_logic.php,
 	  operation/incidents/incident_statistics.php: Now the offset
