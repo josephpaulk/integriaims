@@ -1,3 +1,8 @@
+2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_incidents.php: Fixed the order by id of the
+	incidents search section.
+	
 2013-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/leads/lead_detail.php: Fixed an error related with

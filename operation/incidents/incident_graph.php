@@ -35,7 +35,7 @@ if (empty($incidents))
 	$incidents = array();
 
 $incidents_by_user = array();
-//debugPrint($incidents);
+
 foreach ($incidents as $incident) {
 	$row = array();
 	

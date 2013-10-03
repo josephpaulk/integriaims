@@ -125,10 +125,10 @@ function filter_incidents ($filters, $count=false) {
 	if (! empty ($filters['closed_by']))
 		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
 	
-	if ($filter['order_by'] && !is_array($filter['order_by'])) {
+	if ($filters['order_by'] && !is_array($filters['order_by'])) {
 		$order_by_array = json_decode(clean_output($filters["order_by"]), true);
 	} else {
-		$order_by_array = $filter['order_by'];
+		$order_by_array = $filters['order_by'];
 	}
 	$order_by = "";
 	foreach ($order_by_array as $key => $value) {
@@ -167,7 +167,7 @@ function filter_incidents ($filters, $count=false) {
 			LIMIT %d OFFSET %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
 			$filters['string'],$filters['string'], $filters['string'], $order_by, $config['block_size'], $filters["offset"]);
-
+		
 		$incidents = get_db_all_rows_sql ($sql);
 
 
