@@ -1,4 +1,8 @@
 2013-10-03  Sancho Lerena <slerena@artica.es>
+	
+	* operation/invoices/invoice_detail.php,
+        operation/companies/company_detail.php: Showing tooltip with
+	total including tax and adding format_numeric to output.
 
 	* operation/invoices/invoice_detail.php: Removed column with
 	secondary invoice status / optional payment date. Put currency in

@@ -214,6 +214,12 @@ if ($invoices !== false) {
 			$total[$invoice["currency"]] = $partial;
 
 		$data[2] = format_numeric($partial);
+
+		$tax = get_invoice_tax ($invoice["id"]);
+                $tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
+                if ($tax != 0)
+			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount), true);
+
 		$data[3] = strtoupper ($invoice["currency"]);
 		$data[4] = __($invoice["status"]);
 		$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
