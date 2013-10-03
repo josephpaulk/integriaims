@@ -29,7 +29,6 @@ include_once('include/functions_crm.php');
 $read = check_crm_acl ('company', 'cr');
 $write = check_crm_acl ('company', 'cw');
 $manage = check_crm_acl ('company', 'cm');
-
 if (!$read) {
 	include ("general/noaccess.php");
 	exit;
@@ -64,31 +63,39 @@ if ($delete_invoice == 1 && $id_invoice){
 	
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
 	
-	// Do another security check, don't rely on information passed from URL
-	
 	if ($invoice["id"] && !crm_is_invoice_locked ($invoice["id"])) {
-	//if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){ // TODO: Check this
-			// Todo: Delete file from disk
-			if ($invoice["id_attachment"] != ""){
-				process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
-			}
-			process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
+		// Todo: Delete the invoice files from disk
+		if ($invoice["id_attachment"] != ""){
+			process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+		}
+		$res = process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
+		if ($res > 0) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice deleted", "Invoice ID: $id_invoice");
+		}
 	}
 }
 
 // Lock/Unlock INVOICE
 // ----------------
-if ($lock_invoice == 1 && $id_invoice){
+if ($lock_invoice == 1 && $id_invoice) {
 	
-	if (!crm_check_lock_permission ($config["id_user"], $id_invoice)) {
+	$locked = crm_is_invoice_locked ($id_invoice);
+	$res = crm_change_invoice_lock ($config["id_user"], $id_invoice);
+	
+	if ($res === -1) { // -1 equals to false permission to lock or unlock the invoice
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to lock/unlock an invoice");
 		include ("general/noaccess.php");
 		exit;
+	} else {
+		if ($locked && $res === 0) { // The invoice was locked and now is unlocked
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice unlocked", "Invoice ID: $id_invoice");
+		} elseif (!$locked && $res === 1) { // The invoice was unlocked and now is locked
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice locked", "Invoice ID: $id_invoice");
+		}
+		clean_cache_db();
 	}
-	
-	crm_change_invoice_lock ($config["id_user"], $id_invoice);
-	clean_cache_db();
 }
-	
+
 // Invoice listing
 $search_text = (string) get_parameter ('search_text');
 $search_date_end = get_parameter ('search_date_end');

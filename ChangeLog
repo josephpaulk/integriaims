@@ -1,5 +1,17 @@
 2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_crm.php: Fixed an error on the function
+	"crm_change_invoice_lock".
+	
+	* operation/companies/company_detail.php,
+	  operation/invoices/invoice_detail.php: Now the actions of
+	  delete, lock or unlock are registered in the log. Changed
+	  the ACL of delete, lock and unlock.
+	
+	* operation/invoices/invoices.php: Audited some actions. 
+	
+2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_incidents.php: Fixed the order by id of the
 	incidents search section.
 	

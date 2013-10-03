@@ -41,6 +41,7 @@ if ($id_invoice > 0 || $id_company > 0) {
 			return;
 		}
 	} else {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access an invoice");
 		include ("general/noaccess.php");
 		exit;
 	}
