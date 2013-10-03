@@ -1,5 +1,13 @@
 2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/incident_graph.php,
+	  operation/incidents/incident_search_logic.php,
+	  operation/incidents/incident_statistics.php: Now the offset
+	  are keeped when changing between the incident tabs and when
+	  the page is autorefreshed.
+	
+2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_incidents.php: Sorted some arrays and fixed
 	some URLs in the function "print_incidents_stats".
 	

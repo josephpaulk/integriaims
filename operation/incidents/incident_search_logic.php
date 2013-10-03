@@ -154,6 +154,7 @@ echo '<form id="saved-searches-form" method="post" action="index.php?sec=inciden
 foreach ($filter as $key => $value) {
 	print_input_hidden ("search_".$key, $value);
 }
+print_input_hidden ("offset", get_parameter("offset"));
 print_table ($table);
 echo '</form>';
 echo '</div>';
@@ -182,6 +183,7 @@ echo '<form id="stats_form" method="post" action="index.php?sec=incidents&sec2=o
 foreach ($filter as $key => $value) {
 	print_input_hidden ("search_".$key, $value);
 }
+print_input_hidden ("offset", get_parameter("offset"));
 echo "</form>";
 
 /* Add a form to carry filter between graphs and search views */
@@ -189,6 +191,7 @@ echo '<form id="graph_incidents_form" method="post" action="index.php?sec=incide
 foreach ($filter as $key => $value) {
 	print_input_hidden ("search_".$key, $value);
 }
+print_input_hidden ("offset", get_parameter("offset"));
 echo "</form>";
 
 //Store serialize filter

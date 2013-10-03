@@ -65,5 +65,6 @@ echo '<form id="search_form" method="post" action="index.php?sec=incidents&sec2=
 foreach ($filter as $key => $value) {
 	print_input_hidden ("search_".$key, $value);
 }
+print_input_hidden ("offset", get_parameter("offset"));
 echo "</form>";
 ?>
