@@ -98,10 +98,11 @@ if ($lock_invoice == 1 && $id_invoice) {
 
 // Invoice listing
 $search_text = (string) get_parameter ('search_text');
-$search_date_end = get_parameter ('search_date_end');
+$search_invoice_status = (string) get_parameter ('search_invoice_status');
 $search_date_begin = get_parameter ('search_date_begin');
+$search_date_end = get_parameter ('search_date_end');
 
-$search_params = "search_text=$search_text&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
+$search_params = "&search_text=$search_text&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
 
 $where_clause = " 1 = 1 ";
 
@@ -110,16 +111,15 @@ if ($search_text != "") {
 		bill_id LIKE "%%%s%%" OR 
 		description LIKE "%%%s%%")', $search_text, $search_text, $search_text);
 }
-
-
-if ($search_date_end != "") {
-	$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
+if ($search_invoice_status != "") {
+	$where_clause .= sprintf (' AND status = "%s"', $search_invoice_status);
 }
-
 if ($search_date_begin != "") {
 	$where_clause .= sprintf (' AND invoice_create_date >= "%s"', $search_date_begin);
 }
-
+if ($search_date_end != "") {
+	$where_clause .= sprintf (' AND invoice_payment_date <= "%s"', $search_date_end);
+}
 
 echo '<form method="post">';
 
@@ -128,6 +128,15 @@ echo "<tr>";
 
 echo "<td colspan=2>";
 echo print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
+echo "</td>";
+
+echo "<td>";
+$invoice_status_ar = array();
+$invoice_status_ar['']= __("Any");
+$invoice_status_ar['pending']= __("Pending");
+$invoice_status_ar['paid']= __("Paid");
+$invoice_status_ar['cancel']= __("Cancelled");
+echo print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, false, 0, false, __('Invoice status'));
 echo "</td>";
 
 echo "<td>";
@@ -154,7 +163,7 @@ echo '</form>';
 
 $invoices = crm_get_all_invoices ($where_clause);
 
-$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params");
+$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail$search_params");
 
 if ($invoices !== false) {
 	
@@ -173,8 +182,7 @@ if ($invoices !== false) {
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Creation');
 	$table->head[5] = __('Payment');
-	$table->head[6] = __('Desc.');
-	$table->head[7] = __('Options');
+	$table->head[6] = __('Options');
 	$counter = 0;
 	
 	foreach ($invoices as $invoice) {
@@ -194,8 +202,8 @@ if ($invoices !== false) {
 		} else {
 			$data[0] = __("N/A");
 		}
-		
-		$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
+		$id_title = $invoice["concept1"];
+		$data[1] = "<a title='$id_title' href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
 		$data[2] = get_invoice_amount ($invoice["id"]) ." ". strtoupper ($invoice["currency"]);
 		$data[3] = __($invoice["status"]);
 		$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
@@ -205,18 +213,7 @@ if ($invoices !== false) {
 			$data[5] = __("Not paid");
 		}
 
-		// Description could be huge, so is a bad idea to show up in a listing. We put in a hint,
-		// but to avoid user moving over all tip icons, show icon only if have something inside.
-
-		if ($invoice["description"] != ""){
-			$data[6] = "<a href='#' class='tip'><span>";
-			$data[6] .= $invoice["description"];
-			$data[6] .= "</span></a>";
-		} else {
-			$data[6] = "";
-		}
-
-		$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+		$data[6] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 			&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
 			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 		if ($lock_permission) {
@@ -228,19 +225,19 @@ if ($invoices !== false) {
 				$lock_image = 'lock_open.png';
 				$title = __('Lock');
 			}
-			$data[7] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
-				&lock_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'" 
+			$data[6] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
+				&lock_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'&offset='.$offset.$search_params.'" 
 				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 				<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
 		}
 		if (!$is_locked) {
-			$data[7] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
+			$data[6] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
 				&delete_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'
-				&offset='.$offset.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
+				&offset='.$offset.$search_params.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 		} else {
 			if ($locked_id_user) {
-				$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
+				$data[6] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
 				title="'.__('Locked by '.$locked_id_user).'">';
 			}
 		}

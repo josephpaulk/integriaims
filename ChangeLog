@@ -1,5 +1,13 @@
 2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/invoices/invoice_detail.php: Now is possible to
+	filter the results by the invoice status. Fixed the 'to' filter.
+	Deleted the column 'description'. Now the offset are keeped when
+	an invoice is unlocked/locked or deleted and when a new search
+	is done.
+	
+2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_crm.php: Fixed an error on the function
 	"crm_change_invoice_lock".
 	
