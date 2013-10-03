@@ -179,11 +179,13 @@ if ($invoices !== false) {
 	$table->head[0] = __('Company');
 	$table->head[1] = __('ID');
 	$table->head[2] = __('Amount');
-	$table->head[3] = __('Status');
-	$table->head[4] = __('Creation');
-	$table->head[5] = __('Payment');
+	$table->head[3] = __('Currency');
+	$table->head[4] = __('Status');
+	$table->head[5] = __('Creation');
 	$table->head[6] = __('Options');
 	$counter = 0;
+
+	$total=array();
 	
 	foreach ($invoices as $invoice) {
 		
@@ -204,15 +206,17 @@ if ($invoices !== false) {
 		}
 		$id_title = $invoice["concept1"];
 		$data[1] = "<a title='$id_title' href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
-		$data[2] = get_invoice_amount ($invoice["id"]) ." ". strtoupper ($invoice["currency"]);
-		$data[3] = __($invoice["status"]);
-		$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
-		if ($invoice["status"] == "paid") {
-			$data[5] = "<span style='font-size: 10px'>". $invoice["invoice_payment_date"]. "</span>";
-		} else {
-			$data[5] = __("Not paid");
-		}
+		$partial = get_invoice_amount ($invoice["id"]);
+		
+		if (isset($total[$invoice["currency"]]))
+			$total[$invoice["currency"]] = $total[$invoice["currency"]] + $partial;
+		else
+			$total[$invoice["currency"]] = $partial;
 
+		$data[2] = format_numeric($partial);
+		$data[3] = strtoupper ($invoice["currency"]);
+		$data[4] = __($invoice["status"]);
+		$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
 		$data[6] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 			&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
 			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
@@ -245,6 +249,12 @@ if ($invoices !== false) {
 		array_push ($table->data, $data);
 	}
 	print_table ($table);
+
+	if ($total)
+	echo __("Subtotals for each currency: ");
+	foreach ($total as $key => $value) {
+		echo "- $key : ". format_numeric ($value);
+	}
 	
 	if ($write || $manage) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices">';

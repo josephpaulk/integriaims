@@ -1,3 +1,17 @@
+2013-10-03  Sancho Lerena <slerena@artica.es>
+
+	* operation/invoices/invoice_detail.php: Removed column with
+	secondary invoice status / optional payment date. Put currency in
+	other column (easy to cyt/paste to excel). Added a niiiiiiiiice
+        summatory at the bottom, with the "totals" per currency.
+
+	* operation/invoices/invoice_template.php: Adjusted column 
+	width on long strings. Added a fancy "PAID" text on the header
+	if it's already paid.
+
+	* operation/companies/company_detail.php: Fixed creation
+	when fiscal ID was not numeric. Now is a string (SQL Insert).
+
 2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* godmode/setup/filemgr.php: Now the file manager shows correctly

@@ -77,7 +77,7 @@ if (($create_company) OR ($update_company)) {
 		}
 		
 		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
-					 VALUES ('$name', '$address', '$comments',  $fiscal_id, $id_company_role, '$website', '$country', '$manager', $id_parent)";
+					 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent)";
 
 		$id = process_sql ($sql, 'insert_id');
 

@@ -11,8 +11,19 @@
 					</td>
 				</tr>
 			</table>
+
+<?php 
+	if ($pdf_output == 1) { 
+		if ($invoice["status"] != 0){
+			echo "<div style='z-index: 100; position: absolute; padding-left: 250px; padding-top: -500px; font-size: 64px; weight: bold; color: #cc0000';>";
+			echo __("Paid");
+			echo "</div>";
+		}	
+	}
+?>
+	
 			<?php if ($pdf_output == 1) { echo '<br><h1 style="color:black; font-size:20px;">'.__('Invoice').'</h1>'; } ?>
-			<table style="border-top:2px solid black; padding:15px 15px 0px 15px; width:620px; text-align:right;">
+			<table style="border-top:2px solid black; padding:5px 15px 0px 15px; width:620px; text-align:right;">
 				<tr>
 					<td style="padding-right:5px; text-align:left;">
 						<div>
@@ -70,7 +81,7 @@
 			
 			<table style="border-top: 2px solid black; padding: 10px 15px 0px 15px; width:620px;">
 				<tr>
-					<td style=" text-align:left; font-size:14px; color:black;">
+					<td style=" text-align:left; font-size:14px; color:black; width: 450px;">
 						<?php echo __('Concept') ?>
 					</td>
 					<td style="text-align:right; font-size:14px; color:black;">
