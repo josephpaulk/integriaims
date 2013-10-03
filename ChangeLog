@@ -1,5 +1,10 @@
 2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_incidents.php: Sorted some arrays and fixed
+	some URLs in the function "print_incidents_stats".
+	
+2013-10-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/invoices/invoice_detail.php: Now is possible to
 	filter the results by the invoice status. Fixed the 'to' filter.
 	Deleted the column 'description'. Now the offset are keeped when

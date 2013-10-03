@@ -681,6 +681,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$users_label .= "<br/>N/A";
 	}
 	else {
+		arsort($users_data);
 		$users_label = pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl) . "<br>".$users_label. "<br>";
 	}
 	
@@ -691,7 +692,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$incidents_data['#'.$incident['id_incidencia']] = $incident['worked_hours'];
 		$incidents_label .= '<a class="incident_link" id="incident_link_'.
 			$incident['id_incidencia'].'"
-			href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
+			href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
 			'#'.$incident['id_incidencia'].': '.$incident['titulo']."</a> (".$incident['worked_hours']." ".
 			__('Hr').") <br />";
 	}
@@ -701,6 +702,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$incidents_label .= "<br/>N/A";
 	}
 	else {
+		arsort($incidents_data);
 		$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	}
 
@@ -708,7 +710,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	// TOP X creator users
 	
 	$creator_assigned_data = array();
-
+	
 	foreach ($creator_users as $clave => $valor) {
 		$creator_assigned_data["$clave ($valor)"] = $valor;
 	}	
@@ -717,6 +719,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$submitter_label .= "<br/>N/A";
 	}
 	else {
+		arsort($creator_assigned_data);
 		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	}
 	
@@ -732,6 +735,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$scoring_label .= "<br/>N/A";
 	}
 	else {
+		arsort($scoring_data);
 		$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	}
 	
@@ -747,31 +751,33 @@ function print_incidents_stats ($incidents, $return = false) {
 		$user_assigned_label .= "<br/>N/A";
 	}
 	else {
+		arsort($user_assigned_data);
 		$user_assigned_label .= "<br/>".pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 
 	}
 	
 	// Show graph with incidents by group
 	foreach ($incidents as $incident) {
-			$grupo = substr(safe_output(dame_grupo($incident["id_grupo"])),0,15);
+		$grupo = substr(safe_output(dame_grupo($incident["id_grupo"])),0,15);
 
-	if (!isset( $incident_group_data[$grupo]))
-			 $incident_group_data[$grupo] = 0;
+		if (!isset( $incident_group_data[$grupo]))
+			$incident_group_data[$grupo] = 0;
 
-		$incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;                                 
-
+		$incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;
 	}
-
+	arsort($incident_group_data);
+	
     // Show graph with incidents by source group
 	foreach ($incidents as $incident) {
-			$grupo_src = substr(safe_output(dame_grupo($incident["id_group_creator"])),0,15);
-
-	if (!isset( $incident_group_data2[$grupo_src]))
+		$grupo_src = substr(safe_output(dame_grupo($incident["id_group_creator"])),0,15);
+		
+		if (!isset( $incident_group_data2[$grupo_src]))
 			 $incident_group_data2[$grupo_src] = 0;
-
-		$incident_group_data2[$grupo_src] = $incident_group_data2[$grupo_src] + 1;                                 
-
+		
+		$incident_group_data2[$grupo_src] = $incident_group_data2[$grupo_src] + 1;
+		
 	}
+	arsort($incident_group_data2);
 	
 	//Print first table
     $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0 >";
@@ -873,7 +879,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	if ($oldest_incident) {
 		
         $oldest_incident_time = get_incident_workunit_hours  ($oldest_incident["id_incidencia"]);
-		$output .= '<strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
+		$output .= '<strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.
 			$oldest_incident['id_incidencia'].'">Incident #'.$oldest_incident['id_incidencia']. " : ".$oldest_incident['titulo']. "</strong></a>";
         $output .= "<br>".__("Worktime hours"). " : ".$oldest_incident_time. " ". __("Hours");
 		$output .= "<br>".__("Lifetime"). " : ".format_numeric($max_lifetime/86400). " ". __("Days");
@@ -972,7 +978,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$output .= "</tr>";
 		
 		$count = 1;
-		arsort($groups_time);
+		arsort($users_time);
 		foreach ($users_time as $key => $value) {
 			
 			//Only show first 5
