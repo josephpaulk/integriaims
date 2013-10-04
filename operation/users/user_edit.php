@@ -71,16 +71,33 @@ if ($upload_avatar) {
 		$tmp_name = $_FILES["upfile"]["tmp_name"];
 		$filename = $_FILES["upfile"]["name"];
 		
-		$filename = str_replace (" ", "_", $filename); // Replace blank spaces
+		$filename = str_replace (array(" ", "(", ")"), "_", $filename); // Replace blank spaces
 		$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 		
-		$upload_result = move_uploaded_file($tmp_name, $config["homedir"]."/images/avatars/$filename");
-		
-		if ($upload_result) {
-			echo "<h3 class=suc>".__("Avatar successfully uploaded")."</h3>";
+		$mimetype = mime_content_type($tmp_name);
+		if ($mimetype == "image/png") {
+			
+			$size = getimagesize($tmp_name);
+			if ($size[0] <= 150 && $size[1] <= 150) {
+				
+				$upload_result = move_uploaded_file($tmp_name, $config["homedir"]."/images/avatars/$filename");
+				if ($upload_result) {
+					echo "<h3 class=suc>".__("Avatar successfully uploaded")."</h3>";
+				} else {
+					unlink($tmp_name);
+					echo "<h3 class=error>".__("The avatar could not be uploaded")."</h3>";
+				}
+				
+			} else {
+				unlink($tmp_name);
+				echo "<h3 class=error>".__("The maximum dimensions of the avatar are 150x150px")."</h3>";
+			}
+			
 		} else {
-			echo "<h3 class=error>".__("The avatar could not be uploaded")."</h3>";
+			unlink($tmp_name);
+			echo "<h3 class=error>".__("The avatar should be a PNG file")."</h3>";
 		}
+		
 	}
 	$update_user = false;
 }
@@ -158,16 +175,30 @@ if ($has_permission) {
 } else {
 	$table->data[0][1] = print_label (__('Real name'), '', '', true, $real_name);
 }
-
-$table->data[0][2] = print_label (__('Avatar'), '', '', true);
+$avatar_help_tip = print_help_tip (__('The avatar should be PNG type and its height or width can not exceed the 150px'), true, 'tip" style="padding-top:0px;');
+$table->data[0][2] = print_label (__('Avatar'). $avatar_help_tip, '', '', true) ;
 $table->data[0][2] .= "<div id='avatar_box' mode='select'>";
+$table->data[0][2] .= "<div id='avatar_select'>";
 $avatar = $avatar.".png";
 $table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
 $files = list_files ('images/avatars/', "png", 1, 0, "small");
 $table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 5px; margin-bottom: 5px;');
 if ($has_permission) {
 	$table->data[0][2] .= "<div style='text-align:center;'>";
-	$table->data[0][2] .= print_button (__('Upload new avatar'), 'upload_avatar', false, 'change_avatar_mode(\'#avatar_box\');', 'class="sub next"', true);
+	$table->data[0][2] .= print_button (__('Upload new avatar'), 'upload_avatar', false, 'change_avatar_mode();', 'class="sub next"', true);
+	$table->data[0][2] .= "</div>";
+}
+$table->data[0][2] .= "</div>";
+if ($has_permission) {
+	$table->data[0][2] .= "<div id='avatar_upload' style='display:none;'>";
+	$table->data[0][2] .= "<form id='form-avatar_upload' method='post' action='index.php?sec=users&amp;sec2=operation/users/user_edit' enctype='multipart/form-data'>
+								<div style='text-align: center;'>
+									<input id='file-upfile' type='file' accept='image/png' name='upfile' class='file sub' style='margin: 5px;'>
+									<input id='submit-upload_avatar' type='submit' value='".__('Upload')."' class='sub upload'>
+									<input id='hidden-upload_avatar' type='hidden' name='upload_avatar' value='true'>
+									<input type='button' class='sub next' value='".__('Cancel')."' onclick='change_avatar_mode();'>
+								</div>
+							</form>";
 	$table->data[0][2] .= "</div>";
 }
 $table->data[0][2] .= "</div>";
@@ -243,46 +274,32 @@ if ($has_permission) {
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
-<script  type="text/javascript">
+<script type="text/javascript">
 
-var avatarSelectHTML;
-
-function change_avatar_mode (box) {
-	var mode = $(box).prop('mode');
-	var avatarUploadHTML = "<form id='form-avatar_upload' method='post' action='index.php?sec=users&amp;sec2=operation/users/user_edit' enctype='multipart/form-data'>" +
-								"<div style='text-align: center;'>" +
-									"<input type='file' accept='image/png' name='upfile' class='file sub' style='margin: 5px;'><br>" +
-									"<input type='submit' value='<?php echo __('Upload') ?>' class='sub upload'>" +
-									"<input type='hidden' name='upload_avatar' value='true'>" +
-									"<input type='button' class='sub next' value='<?php echo __('Cancel') ?>' onclick='change_avatar_mode(\""+box+"\");'>" +
-								"</div>" +
-							"</form>";
+function change_avatar_mode () {
 	
-	if (mode == 'upload') {
-		$(box).prop('mode', 'select');
-		avatarUploadHTML = $(box).html();
-		$(box).hide("slide", {direction: 'right'}, 500, function() {
-			$(box).html(avatarSelectHTML);
-			$(box).show("slide", {direction: 'left'}, 500);
+	if ($("#avatar_box").prop('mode') == 'upload') {
+		$("#avatar_box").prop('mode', 'select');
+		$("#avatar_upload").hide("slide", {direction: 'right'}, 250, function() {
+			$("#avatar_select").show("slide", {direction: 'left'}, 250);
 		});
 	} else {
-		$(box).prop('mode', 'upload');
-		avatarSelectHTML = $(box).html();
-		$(box).hide("slide", {direction: 'right'}, 500, function() {
-			$(box).html(avatarUploadHTML);
-			$(box).show("slide", {direction: 'left'}, 500);
+		$("#avatar_box").prop('mode', 'upload');
+		$("#avatar_select").hide("slide", {direction: 'right'}, 250, function() {
+			$("#avatar_upload").show("slide", {direction: 'left'}, 250);
 		});
-/*
-		$("#form-avatar_upload").validate({
-			rules: {
-				upfile: { accept: "image/png" }
-			}
-		});
-*/
 	}
 }
 
 $(document).ready (function () {
+	
+	$("#submit-upd_btn").click(function() {
+		$("#hidden-upload_avatar").val(0);
+	});
+	$("#submit-upload_avatar").click(function() {
+		$("#hidden-update_user").val(0);
+	});
+	
 	$("#avatar").change (function () {
 		icon = this.value.substr (0, this.value.length - 4);
 		
