@@ -1,5 +1,32 @@
 2013-10-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* mobile/operation/home.php,
+	  operation/workorders/wo.php: Deleted some unused code.
+	
+	* mobile/operation/incident.php,
+	  mobile/operation/incidents.php,
+	  mobile/operation/workorder.php,
+	  mobile/operation/workorders.php,
+	  mobile/operation/workunit.php,
+	  mobile/operation/workunits.php: A lot of ACL improvements.
+	
+	* mobile/operation/incident.php: Added the functions "getPermission"
+	and "checkPermission". Now the files list does not show the delete
+	button. Fixed some errors.
+	
+	* mobile/operation/incidents.php: Added the functions "getPermission"
+	and "checkPermission". The free search input now filters the items
+	like his big brother.
+	
+	* mobile/operation/workorder.php: Now is possible to select a task
+	in the workorder. Fixed some errors.
+	
+	* mobile/operation/workunit.php: Fixed an error in a query.
+	
+	* mobile/operation/workunits.php: Fixed an error.
+	
+2013-10-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/users/user_edit.php: Some changes and fixes on the
 	avatar upload control of the user edit section.
 	

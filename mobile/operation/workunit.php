@@ -42,7 +42,6 @@ class Workunit {
 		$this->permission = $this->checkPermission($system->getConfig('id_user'), $this->acl,
 											$this->operation, $this->id_workunit, $this->id_task,
 											$this->id_incident);
-		//$this->permission = false;
 	}
 	
 	public function getPermission () {
@@ -64,11 +63,11 @@ class Workunit {
 					if ( include_once ($system->getConfig('homedir')."/include/functions_projects.php") ) {
 						$task_access = get_project_access ($id_user, 0, $id_task, false, true);
 						// Task access
-						if ($task_access["write"]) {
+						if ($task_access["write"] || $task_access["manage"]) {
 							// If the workunit exists, should belong to the user
 							if ($operation != "" && $operation != "insert_workunit") {
 								$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
-								if ($user_workunit == $id_user) {
+								if (strcasecmp($id_user, $user_workunit) == 0) {
 									$permission = true;
 								}
 							} else {
@@ -83,7 +82,7 @@ class Workunit {
 						// If the workunit exists, should belong to the user
 						if ($operation != "" && $operation != "insert_workunit") {
 							$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
-							if ($user_workunit == $id_user) {
+							if (strcasecmp($id_user, $user_workunit) == 0) {
 								$permission = true;
 							}
 						} else {
@@ -281,7 +280,7 @@ class Workunit {
 						ORDER BY tproject.name, ttask.name";
 				if (dame_admin ($system->getConfig('id_user'))) {
 					$sql = "SELECT ttask.id, tproject.name, ttask.name 
-							FROM ttask, trole_people_task, tproject
+							FROM ttask, tproject
 							WHERE ttask.id_project = tproject.id
 								AND tproject.disabled = 0
 							ORDER BY tproject.name, ttask.name";

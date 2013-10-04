@@ -51,7 +51,7 @@ class Workunits {
 				if ($operation == "delete_workunit") {
 					if ($id_workunit > 0) {
 						$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
-						if ($user_workunit == $id_user) {
+						if (strcasecmp($id_user, $user_workunit) == 0) {
 							$permission = true;
 						}
 					}

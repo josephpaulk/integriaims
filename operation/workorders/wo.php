@@ -87,10 +87,6 @@ if ($operation == "insert") {
 		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
-		
-		//mail_todo (0, $id);
-
-		// TODO: Create agenda item if end_date is defined.
 	}
 
 	clean_cache_db();

@@ -74,10 +74,76 @@ class Incident {
 		$this->tab = (string) $system->getRequest('tab', "view");
 		
 		// ACL
-		if ($system->checkACL($this->acl)) {
-			$this->permission = true;
+		$this->permission = $this->checkPermission ($system->getConfig('id_user'), $this->acl, $this->operation, $this->id_incident);
+	}
+	
+	public function getPermission () {
+		return $this->permission;
+	}
+	
+	public function checkPermission ($id_user, $acl = 'IR', $operation = '', $id_incident = 0) {
+		$system = System::getInstance();
+		
+		$permission = false;
+		if (dame_admin($id_user)) {
+			$permission = true;
+		} else {
+			if ($system->checkACL($this->acl)) {
+				if ($id_incident > 0) {
+					$incident_creator = get_db_value ("id_creator", "tincidencia", "id_incidencia", $id_incident);
+					$incident_user = get_db_value ("id_usuario", "tincidencia", "id_incidencia", $id_incident);
+					if (strcasecmp($id_user, $incident_creator) == 0 || strcasecmp($id_user, $incident_user) == 0) {
+						switch ($operation) {
+							case 'insert_file':
+								if ($system->checkACL('IW') || $system->checkACL('IM')) {
+									$permission = true;
+								}
+								break;
+							case 'delete_file':
+								if ($system->checkACL('IW') || $system->checkACL('IM')) {
+									$permission = true;
+								}
+								break;
+							case 'update_incident':
+								if ($system->checkACL('IW') || $system->checkACL('IM')) {
+									$permission = true;
+								}
+								break;
+							case 'insert_workunit':
+								if ($system->checkACL('IW') || $system->checkACL('IM')) {
+									$permission = true;
+								}
+								break;
+							case 'update_workunit':
+								if ($system->checkACL('IW') || $system->checkACL('IM')) {
+									// If the workunit exists, should belong to the user
+									$id_workunit = (int) $system->getRequest('id_workunit', -1);
+									$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
+									if (strcasecmp($id_user, $user_workunit) == 0) {
+										$permission = true;
+									}
+								}
+								break;
+							case 'delete_incident':
+								if ($system->checkACL("IM") && strcasecmp($id_user, $incident_creator) == 0) {
+									$permission = true;
+								}
+								break;
+							default:
+								$permission = true;
+						}
+					}
+				} else if ($operation == "insert_incident") {
+					if ($system->checkACL('IW') || $system->checkACL('IM')) {
+						$permission = true;
+					}
+				} else if ($operation == "") {
+					$permission = true;
+				}
+			}
 		}
 		
+		return $permission;
 	}
 	
 	public function setId ($id_incident) {
@@ -634,7 +700,6 @@ class Incident {
 				$ui->contentGridAddCell($people);
 				$ui->contentGridAddCell($dates);
 			$html .= $ui->getContentEndGrid();
-			//$html = $detail.$description.$custom_fields.$people.$dates;
 		}
 		
 		return $html;
@@ -691,7 +756,7 @@ class Incident {
 		return $count;
 	}
 	
-	private function getFilesList ($href = "", $delete_button = true, $delete_href = "") {
+	private function getFilesList ($href = "", $delete_button = false, $delete_href = "") {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
@@ -1103,8 +1168,8 @@ class Incident {
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while deleting the incident')."</h2>";
 					}
-					break;
 					$this->showIncidentSimpleForm($message);
+					break;
 				case 'delete_file':
 					$this->showIncident($this->tab, $message);
 					break;

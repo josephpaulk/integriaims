@@ -36,9 +36,33 @@ class Incidents {
 		$this->filter_owner = (string) $system->getRequest('filter_owner', '');
 		
 		// ACL
-		if ($system->checkACL($this->acl)) {
-			$this->permission = true;
+		$this->permission = $this->checkPermission ($system->getConfig('id_user'), $this->acl, $this->operation, $this->id_incident);
+	}
+	
+	public function getPermission () {
+		return $this->permission;
+	}
+	
+	public function checkPermission ($id_user, $acl = 'IR', $operation = '', $id_incident = -1) {
+		$system = System::getInstance();
+		
+		$permission = false;
+		if (dame_admin($id_user)) {
+			$permission = true;
+		} else {
+			if ($system->checkACL($this->acl)) {
+				if ($id_incident > 0 && $operation == "delete") {
+					$incident_creator = get_db_value ("id_creator", "tincidencia", "id_incidencia", $id_incident);
+					if ($system->checkACL("IM") && strcasecmp($id_user, $incident_creator) == 0) {
+						$permission = true;
+					}
+				} else {
+					$permission = true;
+				}
+			}
 		}
+		
+		return $permission;
 	}
 	
 	private function getIncidentsQuery ($columns = "*", $order_by = "actualizacion DESC, prioridad DESC, titulo", $limit = true) {
@@ -46,7 +70,13 @@ class Incidents {
 		
 		$filter = "";
 		if ($this->filter_search != '') {
-			$filter .= " AND titulo LIKE '%".$this->filter_search."%' ";
+			$filter .= " AND (titulo LIKE '%".$this->filter_search."%'
+								OR descripcion LIKE '%".$this->filter_search."%' 
+								OR id_creator LIKE '%".$this->filter_search."%'
+								OR id_usuario LIKE '%".$this->filter_search."%' 
+								OR id_incidencia IN (SELECT id_incident
+													 FROM tincident_field_data
+													 WHERE data LIKE '%".$this->filter_search."%'))";
 		}
 		if ($this->filter_status != 0) {
 			if ($this->filter_status == -10) {

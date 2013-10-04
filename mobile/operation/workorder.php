@@ -21,6 +21,7 @@ class Workorder {
 	private $priority;
 	private $status;
 	private $category;
+	private $id_task;
 	private $description;
 	private $operation;
 	
@@ -36,6 +37,7 @@ class Workorder {
 		$this->priority = (int) $system->getRequest('priority', 2);
 		$this->status = (int) $system->getRequest('status', 0);
 		$this->category = (int) $system->getRequest('category', 0);
+		$this->id_task = (int) $system->getRequest('id_task', 0);
 		$this->description = (string) $system->getRequest('description', "");
 		// insert, update, delete, view or ""
 		$this->operation = (string) $system->getRequest('operation', "");
@@ -56,17 +58,12 @@ class Workorder {
 				// With this operations, the WO should have id
 				if ( ($operation == "" || $operation == "view" || $operation == "update" || $operation == "delete")
 						&& $id_workorder > 0) {
-					$workorder = get_db_row("ttodo", "id", $this->id_workorder);
-					// The user should be the owner or the creator
-					if ($id_user == $workorder['created_by_user']
-							|| $id_user == $workorder['assigned_user']) {
-						if ($operation == "delete") {
-							if ($id_user == $workorder['created_by_user']) {
-								$permission = true;
-							}
-						} else {
-							$permission = true;
-						}
+					include_once ($system->getConfig('homedir')."/include/functions_workorders.php");
+					
+					if ($operation == "delete") {
+						$permission = get_workorder_acl($id_workorder, 'delete', $id_user);
+					} else {
+						$permission = get_workorder_acl($id_workorder, '', $id_user);
 					}
 				} else {
 					$permission = true;
@@ -74,7 +71,7 @@ class Workorder {
 			}
 		}
 		if ( ($operation == "view" || $operation == "update" || $operation == "delete")
-				&& $id_workorder < 0) {
+				&& $id_workorder <= 0) {
 			$permission = false;
 		}
 		
@@ -85,25 +82,27 @@ class Workorder {
 		$this->id_workorder = $id_workorder;
 	}
 	
-	private function setValues ($id_workorder, $title, $assigned_user, $priority, $status, $category, $description, $operation) {
+	private function setValues ($id_workorder, $title, $assigned_user, $priority, $status, $category, $id_task, $description, $operation) {
 		$this->id_workorder = $id_workorder;
 		$this->title = $title;
 		$this->assigned_user = $assigned_user;
 		$this->priority = $priority;
 		$this->status = $status;
 		$this->category = $category;
+		$this->id_task = $id_task;
 		$this->description = $description;
 		$this->operation = $operation;
 	}
 	
-	public function insertWorkOrder ($id_user, $assigned_user, $title = "", $priority = 2, $status = 0, $category = 0, $description = "") {
+	public function insertWorkOrder ($id_user, $assigned_user, $title = "", $priority = 2, $status = 0, $category = 0, $id_task = 0, $description = "") {
 		$system = System::getInstance();
 		
 		$sql = sprintf ("INSERT INTO ttodo (name, priority, assigned_user,
-			created_by_user, progress, last_update, description, id_wo_category)
-			VALUES ('%s', %d, '%s', '%s', %d, '%s', '%s', %d)",
-			$title, $priority, $assigned_user, $id_user, $status, date("Y-m-d"),
-			$description, $category);
+			created_by_user, progress, last_update, description, id_wo_category,
+			id_task, start_date, end_date)
+			VALUES ('%s', %d, '%s', '%s', %d, '%s', '%s', %d, %d, '%s', '%s')",
+			$title, $priority, $assigned_user, $id_user, $status, date ('Y-m-d H:i:s'),
+			$description, $category, $id_task, date ('Y-m-d H:i:s'), "0000-00-00 00:00:00");
 		
 		$id_workorder = process_sql ($sql, "insert_id");
 		if ($id_workorder) {
@@ -112,16 +111,17 @@ class Workorder {
 		return false;
 	}
 	
-	public function updateWorkOrder ($id_workorder, $assigned_user, $title = "",$priority = 2, $status = 0,$category = 0, $description = "") {
+	public function updateWorkOrder ($id_workorder, $assigned_user, $title = "",$priority = 2, $status = 0,$category = 0, $id_task = 0, $description = "") {
+		$system = System::getInstance();
 										
 		$result = process_sql ("UPDATE ttodo SET id_wo_category = $category, assigned_user = '$assigned_user',
-								priority = $priority, progress = $status, description = '$description',
-								last_update = '".date("Y-m-d")."', name = '$title' WHERE id = $id_workorder");
+								priority = $priority, progress = $status, id_task = $id_task, description = '$description',
+								last_update = '".date ('Y-m-d H:i:s')."', name = '$title' WHERE id = $id_workorder");
 		
 		if ($result) {
 			$email_notify = get_db_value ("email_notify", "ttodo", "id", $id_workorder);
 			clean_cache_db();
-			if ($email_notify) {
+			if ($email_notify && include_once ($system->getConfig('homedir')."/include/functions_workorders.php")) {
 				mail_workorder ($id_workorder, 0);
 			}
 			return true;
@@ -242,6 +242,38 @@ class Workorder {
 					'selected' => $this->category
 					);
 				$ui->formAddSelectBox($options);
+				// Task
+				$sql = "SELECT ttask.id, tproject.name, ttask.name
+						FROM ttask, trole_people_task, tproject
+						WHERE ttask.id_project = tproject.id
+							AND tproject.disabled = 0
+							AND ttask.id = trole_people_task.id_task
+							AND trole_people_task.id_user = '".$system->getConfig('id_user')."'
+						ORDER BY tproject.name, ttask.name";
+				if (dame_admin ($system->getConfig('id_user'))) {
+					$sql = "SELECT ttask.id, tproject.name, ttask.name 
+							FROM ttask, tproject
+							WHERE ttask.id_project = tproject.id
+								AND tproject.disabled = 0
+							ORDER BY tproject.name, ttask.name";
+				}
+				$tasks = get_db_all_rows_sql ($sql);
+				$values = array();
+				$values[0] = __('N/A');
+				if ($tasks) {
+					foreach ($tasks as $task) {
+						$values[$task[0]] = array('optgroup' => $task[1], 'name' => $task[2]);
+					}
+				}
+				$selected = ($this->id_task > 0) ? $this->id_task : 0;
+				$options = array(
+					'name' => 'id_task',
+					'title' => __('Task'),
+					'label' => __('Task'),
+					'items' => $values,
+					'selected' => $selected
+					);
+				$ui->formAddSelectBox($options);
 				// Description
 				$options = array(
 						'name' => 'description',
@@ -316,7 +348,7 @@ class Workorder {
 				case 'insert':
 					$result = $this->insertWorkOrder($system->getConfig('id_user'), $this->assigned_user,
 													$this->title, $this->priority, $this->status,
-													$this->category, $this->description);
+													$this->category, $this->id_task, $this->description);
 					if ($result) {
 						$this->id_workorder = $result;
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
@@ -327,7 +359,7 @@ class Workorder {
 				case 'update':
 					$result = $this->updateWorkOrder($this->id_workorder, $this->assigned_user, $this->title,
 													$this->priority, $this->status,$this->category,
-													$this->description);
+													$this->id_task, $this->description);
 					if ($result) {
 						$message = "<h2 class='suc'>".__('Successfully updated')."</h2>";
 					} else {
@@ -346,13 +378,13 @@ class Workorder {
 				case 'view':
 					$workorder = get_db_row ("ttodo", "id", $this->id_workorder);
 					$this->setValues ($this->id_workorder, $workorder['name'], $workorder['assigned_user'], $workorder['priority'],
-							$workorder['progress'], $workorder['id_wo_category'], $workorder['description'], 'view');
+							$workorder['progress'], $workorder['id_wo_category'], $workorder['id_task'], $workorder['description'], 'view');
 					break;
 				default:
 					if ($this->id_workorder > 0) {
 						$workorder = get_db_row ("ttodo", "id", $this->id_workorder);
 						$this->setValues ($this->id_workorder, $workorder['name'], $workorder['assigned_user'], $workorder['priority'],
-								$workorder['progress'], $workorder['id_wo_category'], $workorder['description'], 'view');
+								$workorder['progress'], $workorder['id_wo_category'], $workorder['id_task'], $workorder['description'], 'view');
 					}
 			}
 			$this->showWorkOrder($message);

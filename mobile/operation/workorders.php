@@ -60,9 +60,10 @@ class Workorders {
 			if ($system->checkACL($acl)) {
 				if ($operation == "delete") {
 					if ($id_workorder > 0) {
-						$workorder_creator = get_db_value("created_by_user", "ttodo", "id", $this->id_workorder);
-						if ($id_user == $workorder_creator) {
-							$permission = true;
+						include_once ($system->getConfig('homedir')."/include/functions_workorders.php");
+						
+						if ($operation == "delete") {
+							$permission = get_workorder_acl($id_workorder, 'delete', $id_user);
 						}
 					}
 				} else {
