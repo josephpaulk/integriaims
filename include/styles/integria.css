@@ -1935,6 +1935,11 @@ div.incident_container table, .container table {
 	margin-left: -5px;
 }
 
+.incident_description_container {
+	max-width: 500px;
+	word-wrap:break-word;
+}
+
 div.incident_container>div, .container>div {
 	padding-left: 55px;
 }
@@ -2442,3 +2447,15 @@ td.conversion_value {
 p.pagination {
 	margin-top: 0px;
 }
+
+/* To prevent the ugly styles of the dialogs */
+.ui-dialog-content {
+	font: 0.885em Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif !important;
+}
+.ui-dialog-content a {
+	color: #707070 !important;
+}
+.ui-dialog-content input.sub {
+	font-size: 0.85em !important;
+}
+

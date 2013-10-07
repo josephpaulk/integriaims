@@ -141,7 +141,7 @@ echo '</ul>';
 // Workunit view
 $workunits = get_incident_workunits ($id_incident);
 
-if ($workunits === false) {
+if (!$workunits) {
 	echo '<h4>'.__('No workunit was done in this incident').'</h4>';
 	return;
 }
@@ -151,14 +151,14 @@ foreach ($workunits as $workunit) {
 	show_workunit_data ($workunit_data, $title);
 }
 
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-title">';
-echo "<h2>".__('Incident details')."</h2>";
-echo '</li>';
-echo '</ul>';
-
-echo "<div class='incident_details'><p>";
-echo clean_output_breaks ($incident["descripcion"]);
-echo "</div>";
+//~ echo '<ul class="ui-tabs-nav">';
+//~ echo '<li class="ui-tabs-title">';
+//~ echo "<h2>".__('Incident details')."</h2>";
+//~ echo '</li>';
+//~ echo '</ul>';
+//~ 
+//~ echo "<div class='incident_details'><p>";
+//~ echo clean_output_breaks ($incident["descripcion"]);
+//~ echo "</div>";
 
 ?>

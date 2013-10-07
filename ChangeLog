@@ -1,5 +1,14 @@
 2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/incident_workunits.php: Fixed an error.
+	Commented some code.
+	
+	* include/styles/integria.css: Added style rules to fix some
+	ugly styles on the dialogs and deal with the huge lines in
+	the incident description box.
+	
+2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* companies/company_detail.php: Now is possible to set the parent
 	company to none.
 	
