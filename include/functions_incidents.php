@@ -1737,12 +1737,16 @@ function incidents_get_incident_type_text ($id) {
 	return $name;	
 }
 
-function incident_get_type_field_values($id) {
+function incident_get_type_field_values ($id, $exclude_type = "") {
 	$id_type = get_db_value ('id_incident_type', 'tincidencia', 'id_incidencia', $id);
 	
+	if ($exclude_type != "") {
+		$exclude = " AND TF.type <> '$exclude_type'";
+	}
+	
 	$sql = sprintf("SELECT TF.label, FD.data FROM tincident_field_data FD, tincident_type_field TF 
-					WHERE TF.id_incident_type = %d AND TF.id = FD.id_incident_field 
-					AND FD.id_incident = %d", $id_type, $id);
+					WHERE TF.id_incident_type = %d AND TF.id = FD.id_incident_field
+					AND FD.id_incident = %d $exclude", $id_type, $id);
 					
 	$fields = get_db_all_rows_sql($sql);
 	
@@ -2077,6 +2081,17 @@ function incidents_search_result ($filter, $ajax=false) {
 			echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
 			echo "<span style='font-size:11px;font-style:italic'>";
 			echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
+			$show_in_list = get_db_value("show_in_list", "tincident_type", "id", $incident["id_incident_type"]);
+			$type_fields_values_text = "";
+			if ($show_in_list == 1) {
+				$type_fields_values = incident_get_type_field_values($incident["id_incidencia"], "textarea");
+				foreach ($type_fields_values as $type_field => $type_field_value) {
+					if ($type_field_value) {
+						$type_fields_values_text .= " <div title='$type_field' style='display: inline-block;'>[$type_field_value]</div>";
+					}
+				}
+			}
+			echo "&nbsp;$type_fields_values_text";
 			echo '</span></td>';
 			echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
 			if ($config["show_creator_incident"] == 1){	

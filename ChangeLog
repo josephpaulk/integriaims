@@ -1,5 +1,18 @@
 2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* extras/migrate.sql: Added the column 'show_in_list' in the
+	table 'tincident_type'.
+	
+	* operation/incidents/type_detail.php: Added the value
+	'show in list' to the incident types.
+	
+	* include/functions_incidents.php: Improved the function
+	"incident_get_type_field_values" to exclude a field type.
+	Now the incident field values are showed in the incident
+	list if the 'show_in_list' value of the incident type is 1.
+	
+2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/incidents/incident_workunits.php: Fixed an error.
 	Commented some code.
 	

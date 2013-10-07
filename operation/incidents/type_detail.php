@@ -109,6 +109,7 @@ if ($create_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
+	$values['show_in_list'] = (int) get_parameter ('show_in_list');
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
 	//$values['id_group'] = (int) get_parameter ('id_group');
 	
@@ -133,6 +134,7 @@ if ($update_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
+	$values['show_in_list'] = (int) get_parameter ('show_in_list');
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
 	//$values['id_group'] = (int) get_parameter ('id_group');
 
@@ -171,12 +173,14 @@ if ($id || $new_type) {
 		$id = 0;
 		$name = "";
 		$description = "";
+		$show_in_list = false;
 		//$id_wizard = "";
 		//$id_group = "";
 	} else {
 		$type = get_db_row ('tincident_type', 'id', $id);
 		$name = $type['name'];
 		$description = $type['description'];
+		$show_in_list = (boolean) $type['show_in_list'];
 		//$id_wizard = $type['id_wizard'];
 		//$id_group = $type['id_group'];
 	}
@@ -185,16 +189,18 @@ if ($id || $new_type) {
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
-	//$table->colspan[2][0] = 2;
+	$table->colspan[1][0] = 2;
+	$table->colspan[2][0] = 2;
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
+	$table->data[0][1] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the incidents list'));
 /*
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
 		'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
 	$table->data[1][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
 		'id_group', $id_group, '', 'Select', 0, true, false, false, __('Group'));
 */
-	$table->data[2][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
+	$table->data[1][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
 	
 	if ($id) {
 		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
@@ -205,7 +211,7 @@ if ($id || $new_type) {
 		$button .= print_input_hidden ('create_type', 1, true);
 	}
 	
-	$table->data[3][0] = $button;
+	$table->data[2][0] = $button;
 	
 	echo '<form id="form-type_detail" method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
 	print_table ($table);
