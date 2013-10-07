@@ -361,7 +361,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 
 	if ($id > 0 && ($write_permission || $manage_permission)) {
-		$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1'><img src='images/cross.png'></a>";
+		$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1' title='".__('Delete company')."'><img src='images/cross.png'></a>";
 	}
 
 
@@ -375,6 +375,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, $disabled_write, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table->data[1][0] .= "&nbsp;<a href='javascript:clearParent();' title='".__('Clear parent')."'><img src='images/cross.png'></a>";
 	
 	$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'), $disabled_write);
 	
@@ -1126,6 +1127,11 @@ function changeCompanyOrder (order) {
 	$("#hidden-order_by_company").val(order);
 	$("#hidden-order_by_activity").val('');
 	$("#company_stats_form").submit();
+}
+
+function clearParent () {
+	$("#hidden-id_parent").val(0);
+	$("#text-parent_name").val('<?php echo __('None') ?>');
 }
 
 </script>
