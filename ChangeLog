@@ -1,5 +1,9 @@
 2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/invoices/invoice_detail.php: ACL fix.
+	
+2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/migrate.sql: Added the column 'show_in_list' in the
 	table 'tincident_type'.
 	
