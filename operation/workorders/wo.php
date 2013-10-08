@@ -200,13 +200,13 @@ if ($operation == "delete") {
 if ($set_progress > -1 ) {
 	$todo = get_db_row ("ttodo", "id", get_parameter ("id"));
 
-	if (! get_workorder_acl($id)) {
+	if (! get_workorder_acl($todo["id"])) {
 		no_permission();
 	}
 	
-	$datetime =  date ("Y-m-d H:i:s");
-	$sql_delete= "UPDATE ttodo SET progress = $set_progress, last_update = '$datetime' WHERE id = $id_todo";
-	$result=mysql_query($sql_delete);
+	$datetime = date ("Y-m-d H:i:s");
+	$sql_update = "UPDATE ttodo SET progress = $set_progress, last_update = '$datetime' WHERE id = ".$todo["id"];
+	$result = process_sql($sql_update);
 }
 
 // ---------------

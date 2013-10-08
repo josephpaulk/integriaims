@@ -1,5 +1,10 @@
 2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/workorders/wo.php: Fixed an error that prevented
+	the 'set as finished' action.
+	
+2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/leads/lead_detail.php,
 	  operation/projects/people_manager.php,
 	  operation/projects/project_detail.php,
