@@ -1535,6 +1535,6 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 	echo '<li class="ui-tabs-title">' . $title . '</h1></li>';
 	echo '</ul>';
 	
-	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div>';
+	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div><br>';
 }
 ?>

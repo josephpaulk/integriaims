@@ -37,7 +37,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 			});
 			
 			var idUser = "<?php echo $config['id_user'] ?>";
-		
+			
 			bindAutocomplete ("#text-owner_search", idUser);
 		}
 	});

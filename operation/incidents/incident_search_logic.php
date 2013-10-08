@@ -273,6 +273,13 @@ $(document).ready(function () {
 	bindAutocomplete ("#text-search_editor", idUser);
 	bindAutocomplete ("#text-search_closed_by", idUser);
 	
+	if ($("#search_incident_form").length > 0) {
+		validate_user ("#search_incident_form", "#text-search_id_user", "<?php echo __('Invalid user')?>");
+		validate_user ("#search_incident_form", "#text-search_creator", "<?php echo __('Invalid user')?>");
+		validate_user ("#search_incident_form", "#text-search_editor", "<?php echo __('Invalid user')?>");
+		validate_user ("#search_incident_form", "#text-search_closed_by", "<?php echo __('Invalid user')?>");
+	}
+	
 });
 
 function changeIdIncidentOrder(order) {

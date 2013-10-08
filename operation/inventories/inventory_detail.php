@@ -731,6 +731,7 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('#text-name');
 validate_form("#inventory_status_form");
+validate_user ("#inventory_status_form", "#text-owner", "<?php echo __('Invalid user')?>");
 var rules, messages;
 // Rules: #text-name
 rules = {

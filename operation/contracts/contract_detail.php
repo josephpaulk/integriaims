@@ -237,9 +237,6 @@ if ($id || $new_contract) {
 			$table->data[3][0] .= "<img src='images/company.png'></a>";
 		}
 		
-		// I think we should delete this, not used anymore.		
-		// $table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name', 'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
-		
 		$table->data[3][1] = print_select (get_contract_status(), 'status', $status, '', '', '', true, 0, false,  __('Status'));
 
 		$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));

@@ -1,3 +1,24 @@
+2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/wiki/lionwiki_lib.php,
+	  operation/companies/company_detail.php,
+	  operation/incidents/incident_detail.php,
+	  operation/incidents/incident_search_logic.php,
+	  operation/inventories/inventory_detail.php,
+	  operation/inventories/inventory_search.php,
+	  operation/leads/lead_detail.php: Now the users introduced in
+	  the user inputs must exist.
+	
+	* operation/invoices/invoice_detail.php: Fixed an error.
+	
+	* operation/contracts/contract_detail.php: Deleted some code.
+	
+	* operation/companies/company_detail.php: Deleted the columns
+	'SLA' and 'Group' and added the comumn 'Status'.
+	
+	* include/functions_inventories.php: Added a line break after
+	the under tabs info in the function "print_inventory_tabs".
+	
 2013-10-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/invoices/invoice_detail.php: ACL fix.

@@ -1096,6 +1096,12 @@ $(document).ready (function () {
 	bindAutocomplete("#text-id_user", idUser);
 	bindAutocomplete("#text-closed_by", idUser);
 	
+	if ($("#incident_status_form").length > 0){
+	  validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
+	  validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
+	  validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
+	}
+	
 	$("#tgl_incident_control").click(function() {
 		 fila = document.getElementById('incident-editor-row_advanced-0');
 		  if (fila.style.display != "none") {

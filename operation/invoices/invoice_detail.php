@@ -102,7 +102,7 @@ $search_invoice_status = (string) get_parameter ('search_invoice_status');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 
-$search_params = "&search_text=$search_text&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
 
 $where_clause = " 1 = 1 ";
 

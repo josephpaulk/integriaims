@@ -544,10 +544,9 @@ elseif ($op == "contracts") {
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Contract number');
 		$table->head[2] = __('Company');
-		$table->head[3] = __('SLA');
-		$table->head[4] = __('Group');
-		$table->head[5] = __('Begin');
-		$table->head[6] = __('End');
+		$table->head[3] = __('Begin');
+		$table->head[4] = __('End');
+		$table->head[5] = __('Status');
 		$counter = 0;
 	
 		foreach ($contracts as $contract) {
@@ -558,10 +557,9 @@ elseif ($op == "contracts") {
 				.$contract["id"]."'>".$contract["name"]."</a>";
 			$data[1] = $contract["contract_number"];
 			$data[2] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
-			$data[3] = get_db_value ('name', 'tsla', 'id', $contract["id_sla"]);
-			$data[4] = get_db_value ('nombre', 'tgrupo', 'id_grupo', $contract["id_group"]);
-			$data[5] = $contract["date_begin"];
-			$data[6] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
+			$data[3] = $contract["date_begin"];
+			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
+			$data[5] = get_contract_status_name($contract["status"]);
 		
 			array_push ($table->data, $data);
 		}	
@@ -1067,6 +1065,13 @@ $(document).ready (function () {
 	trim_element_on_submit('#text-name');
 	trim_element_on_submit('#text-fiscal_id');
 	validate_form("#form-company_detail");
+	// id_user
+	if ($("#company_stats_form").length > 0){
+	  validate_user ("#company_stats_form", "#text-user", "<?php echo __('Invalid user')?>");
+	} else if ("#form-company_detail") {
+		validate_user ("#form-company_detail", "#text-user", "<?php echo __('Invalid user')?>");
+	}
+	
 	var rules, messages;
 	// Rules: #text-name
 	rules = {

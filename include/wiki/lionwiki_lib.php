@@ -850,7 +850,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 
 		$url = "index.php?sec=wiki&sec2=operation/wiki/wiki&action=write_acl&add_acl_write=1&page=$page_acl";
 
-		$data[0] = "<form name=adduser method=post action='" . $url . "'>";
+		$data[0] = "<form id='form-adduser' name=adduser method=post action='" . $url . "'>";
 		$data[0] .= user_print_autocomplete_input($params_assigned);
 		$data[1] = print_input_image("add_user", "images/add.png", 1, '', true);
 		$data[1] .= "</form>";
@@ -1250,4 +1250,6 @@ function plugin($method) {
 	$(document).ready (function () {
 		bindAutocomplete ("#text-new_user", idUser);	
 	});
+	// form-adduser
+	validate_user ("#form-adduser", "#text-new_user", "<?php echo __('Invalid user')?>");
 </script>

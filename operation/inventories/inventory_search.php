@@ -501,7 +501,10 @@ $(document).ready (function () {
 
 	// Form validation
 	trim_element_on_submit('#text-search_free');
-
+	
+	if ($("#tree_search").length > 0) {
+		validate_user ("#tree_search", "#text-owner", "<?php echo __('Invalid user')?>");
+	}
 });
 
 </script>
