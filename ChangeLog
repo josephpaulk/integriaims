@@ -1,5 +1,10 @@
 2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* integria_db.sql, integria_demo.sql: Updated this files with
+	the last changes.
+	
+2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/workorders/wo.php: Fixed an error that prevented
 	the 'set as finished' action.
 	

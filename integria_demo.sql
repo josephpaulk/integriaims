@@ -100,7 +100,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tcontract` WRITE;
 /*!40000 ALTER TABLE `tcontract` DISABLE KEYS */;
-INSERT INTO `tcontract` VALUES (1,'Sample&#x20;contract','453457/12','','2013-02-12','2014-02-12',1,NULL,NULL,0);
+INSERT INTO `tcontract` VALUES (1,'Sample&#x20;contract','453457/12','','2013-02-12','2014-02-12',1,NULL,NULL,0,1);
 /*!40000 ALTER TABLE `tcontract` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -284,7 +284,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_type` WRITE;
 /*!40000 ALTER TABLE `tincident_type` DISABLE KEYS */;
-INSERT INTO `tincident_type` VALUES (1,'Software&#x20;issues','This&#x20;kind&#x20;of&#x20;incidents&#x20;are&#x20;for&#x20;software&#x20;&#40;bugs,&#x20;feature&#x20;lack&#x20;reports,&#x20;etc&#41;',NULL,0);
+INSERT INTO `tincident_type` VALUES (1,'Software&#x20;issues','This&#x20;kind&#x20;of&#x20;incidents&#x20;are&#x20;for&#x20;software&#x20;&#40;bugs,&#x20;feature&#x20;lack&#x20;reports,&#x20;etc&#41;',NULL,0,0);
 /*!40000 ALTER TABLE `tincident_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
