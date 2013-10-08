@@ -248,7 +248,7 @@ if ($id_task != -1){
 	// Task people manager editor
 	// ===============================
 	echo "<h3>".__('Role/Group assignment')."</h3>";
-	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
+	echo "<form id='form-people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 	echo "<table cellpadding=4 cellspacing=4 width=99% class='search-table-button'>";
 
 	echo "<tr><td valign='top' class='datos2'>";
@@ -273,7 +273,7 @@ if ($id_task != -1){
 	// PROYECT PEOPLE MANAGER editor
 	// ===============================
 	echo "<h3>".__('Project role assignment')."</h3>";
-	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
+	echo "<form id='form-people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 	echo "<table width=99% class='search-table-button'>";
 
 	echo "<tr><td valign='top' class='datos2'>";
@@ -337,4 +337,6 @@ $(document).ready (function () {
 	bindAutocomplete ("#text-user_role", idUser, idProject);
 		
 });
+// #text-user
+validate_user ("#form-people_manager", "#text-user", "<?php echo __('Invalid user')?>");
 </script>

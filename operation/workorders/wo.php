@@ -493,7 +493,7 @@ if ($operation == "") {
 		$where_clause .= sprintf(' AND id_task = ANY(SELECT id FROM ttask WHERE id_project = %d) ', $id_project);
 	}
 
-	echo '<form action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
+	echo '<form id="form-search_wo" action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
 
 	$table->class = 'search-table';
 	$table->style = array ();
@@ -753,25 +753,33 @@ $(document).ready (function () {
 		}
 	});
 	
-	var changeHandler = function ( event, ui ) {
-		owner = $("#text-user").val();
-		$.ajax({
-			type: "POST",
-			url: "ajax.php",
-			data: {
-				page: "operation/workorders/wo",
-				change_combo_task: 1,
-				id_user: owner
-			},
-			dataType: "html",
-			success: function(data) {	
-				$("#table1-3-0").html(data);
-			}
-		});
-	};
 	var idUser = "<?php echo $config['id_user'] ?>";
-	bindAutocomplete ("#text-user", idUser, false, changeHandler);
-	bindAutocomplete ("#text-user2", idUser);
+	
+	if ($("#form-search_wo").length > 0) {
+		bindAutocomplete ("#text-user", idUser);
+		bindAutocomplete ("#text-user2", idUser);
+		validate_user ("#form-search_wo", "#text-user", "<?php echo __('Invalid user')?>");
+		validate_user ("#form-search_wo", "#text-user2", "<?php echo __('Invalid user')?>");
+	} else if ($("#form-wo").length > 0) {
+		var changeHandler = function (event, ui) {
+			owner = $("#text-user").val();
+			$.ajax({
+				type: "POST",
+				url: "ajax.php",
+				data: {
+					page: "operation/workorders/wo",
+					change_combo_task: 1,
+					id_user: owner
+				},
+				dataType: "html",
+				success: function(data) {	
+					$("#table1-3-0").html(data);
+				}
+			});
+		};
+		bindAutocomplete ("#text-user", idUser, false, changeHandler);
+		validate_user ("#form-search_wo", "#text-user", "<?php echo __('Invalid user')?>");
+	}
 	
 });
 

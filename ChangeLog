@@ -1,5 +1,23 @@
 2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/leads/lead_detail.php,
+	  operation/projects/people_manager.php,
+	  operation/projects/project_detail.php,
+	  operation/projects/project_timegraph.php,
+	  operation/projects/user_project_timegraph.php,
+	  operation/user_report/monthly.php,
+	  operation/user_report/report_annual.php,
+	  operation/user_report/report_full.php,
+	  operation/users/user_spare_workunit.php,
+	  operation/users/user_task_assigment.php,
+	  operation/workorders/wo.php: Now the users introduced in
+	  the user inputs must exist.
+	
+	* operation/user_report/report_full.php: Fixed a critical PHP
+	error.
+	  
+2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/wiki/lionwiki_lib.php,
 	  operation/companies/company_detail.php,
 	  operation/incidents/incident_detail.php,

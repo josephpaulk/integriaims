@@ -418,6 +418,8 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('input[name="name"]');
 validate_form("#form-new_project");
+// #text-id_owner
+validate_user ("#form-new_project", "#text-id_owner", "<?php echo __('Invalid user')?>");
 var rules, messages;
 // Rules: input[name="name"]
 rules = {

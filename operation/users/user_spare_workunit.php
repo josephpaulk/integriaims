@@ -548,7 +548,11 @@ function username_hook () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ('input[name~="id_username"]', idUser);
-
+	
+	validate_user ("#single_task_form", 'input[name~="id_username"]', "<?php echo __('Invalid user')?>");
+	$('input[name*="id_username"]').each( function () {
+		validate_user ("#multiple_task_form", '#'+$(this).prop('id'), "<?php echo __('Invalid user')?>");
+	});
 }
 
 //single task validation form
@@ -716,7 +720,7 @@ $(document).ready (function () {
 			jQuery.get ("ajax.php",
 				values,
 				function (data, status) {
-						
+					
 					$("#wu_"+(number_wu-1)).before(data);
 					
 					//Reset datepicker hook function

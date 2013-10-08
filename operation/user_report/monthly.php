@@ -117,7 +117,7 @@ echo "<tr><td>";
 
 if (give_acl($config["id_user"], 0, "PM")){
 	echo "<td colspan=3 style='text-align: center; padding-top: 5px;'>";
-	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
+	echo "<form id='form-monthly' method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
 	
 	$params['input_id'] = 'text-id_username';
 	$params['input_name'] = 'id';
@@ -156,4 +156,6 @@ $(document).ready (function () {
 	bindAutocomplete ("#text-id_username", idUser);
 
 });
+// #text-user
+validate_user ("#form-monthly", "#text-id_username", "<?php echo __('Invalid user')?>");
 </script>

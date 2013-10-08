@@ -1071,7 +1071,7 @@ $(document).ready (function () {
 	if ($("#lead_stats_form").length > 0) {
 		validate_user ("#lead_stats_form", "#text-user", "<?php echo __('Invalid user')?>");
 	} else if ($("#lead_form").length > 0) {
-		validate_user ("#tree_search", "#text-user", "<?php echo __('Invalid user')?>");
+		validate_user ("#lead_form", "#text-user", "<?php echo __('Invalid user')?>");
 	}
 	
 	$("#checkbox-duplicated_leads").click(function () {

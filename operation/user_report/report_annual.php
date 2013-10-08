@@ -116,13 +116,12 @@
 	}
     echo "</td></tr>";
     echo "<tr><td colspan=4>";
-    echo "<table cellpadding=4 cellspacing=4 style='margin: 0px auto;'>";
+	echo "<form id='form-report_annual' name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'>";
+	echo "<table cellpadding=4 cellspacing=4 style='margin: 0px auto;'>";
 	echo "<tr><td>";
 
 	if (give_acl($config["id_user"], 0, "PM") && $pdf_output == 0){		
 	
-        echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'>";
-        
         echo "<input type='hidden' name='year' value='$year'>";
         
         echo "<td>";
@@ -138,9 +137,9 @@
         		
 	    echo "<td>";
 	    print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
-	    echo "</td>";	
+	    echo "</td>";
 	}
-    echo "</form></table>";
+	echo "</table></form>";
     
     echo "</td></tr>";
     echo "<tr>";
@@ -190,5 +189,7 @@ $(document).ready (function () {
 	bindAutocomplete ("#text-id_user", idUser);	
 	
 });
+// #text-id_user
+validate_user ("#form-report_annual", "#text-id_user", "<?php echo __('Invalid user')?>");
 </script>
 

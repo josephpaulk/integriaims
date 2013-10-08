@@ -43,7 +43,7 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 
 echo "<h1>" . __('Time per project graph') . "</h1>";
 
-echo "<form method='post'>";
+echo "<form id='form-user_project_time_graph' method='post'>";
 
 echo '<table class="search-table-button" style="width: 99%;">';
 echo '<tr>';
@@ -94,6 +94,8 @@ echo "</form>";
 		
 		bindAutocomplete ("#text-user", idUser);
 	});
+	// #text-user
+	validate_user ("#form-user_project_time_graph", "#text-user", "<?php echo __('Invalid user')?>");
 </script>
 <?php
 

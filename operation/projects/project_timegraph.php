@@ -47,7 +47,7 @@ echo "<h1>" . __('Time graph') . "</h1>";
 
 if ($id_project) {
 	
-	echo "<form action='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=" . $id_project . "' method='post'>";
+	echo "<form id='form-time_graph' action='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=" . $id_project . "' method='post'>";
 	
 	echo '<table class="search-table-button" style="width: 99%;" border=0>';
 	echo '<tr>';
@@ -101,14 +101,16 @@ if ($id_project) {
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript">
-        add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
-
-
-        $(document).ready (function () {
-                var idUser = "<?php echo $config['id_user'] ?>";
-
-                bindAutocomplete ("#text-user", idUser);
-        });
+	add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
+	
+	
+	$(document).ready (function () {
+		var idUser = "<?php echo $config['id_user'] ?>";
+		
+		bindAutocomplete ("#text-user", idUser);
+	});
+	// #text-user
+	validate_user ("#form-time_graph", "#text-user", "<?php echo __('Invalid user')?>");
 </script>
 
 <?php
