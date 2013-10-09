@@ -179,15 +179,11 @@ if ($update) {
 		exit;
 	}
 	
+	$old_inventory = get_db_row('tinventory', 'id', $id);
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
-	$old_owner = get_db_value('owner', 'tinventory', 'id', $id);
-	$old_public = get_db_value('public', 'tinventory', 'id', $id);
 	
 	$last_update = date ("Y/m/d", get_system_time());
-	
-	if ($inventory_status == 'issued') {
-		$issue_date = date ('Y-m-d');
-	} else {
+	if ($inventory_status != 'issued') {
 		$issue_date = '';
 	}
 	
@@ -203,16 +199,67 @@ if ($update) {
 	$result = process_sql ($sql);	
 	
 	if ($result !== false) {
-		inventory_tracking($id,INVENTORY_UPDATED);
+		inventory_tracking($id, INVENTORY_UPDATED);
 		
-		if ($owner != $old_owner) {
-			inventory_tracking($id,INVENTORY_OWNER_CHANGED, $owner);
+		if ($owner != $old_inventory['owner']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['owner'];
+			$aditional_data['new'] = $owner;
+			inventory_tracking($id, INVENTORY_OWNER_CHANGED, $aditional_data);
 		}
-		if ($public != $old_public) {
+		if ($public != $old_inventory['public']) {
 			if ($public)
-				inventory_tracking($id,INVENTORY_PUBLIC);
+				inventory_tracking($id, INVENTORY_PUBLIC);
 			else 
-				inventory_tracking($id,INVENTORY_PRIVATE);
+				inventory_tracking($id, INVENTORY_PRIVATE);
+		}
+		if ($name != $old_inventory['name']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['name'];
+			$aditional_data['new'] = $name;
+			inventory_tracking($id, INVENTORY_NAME_CHANGED, $aditional_data);
+		}
+		if ($id_contract != $old_inventory['id_contract']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['id_contract'];
+			$aditional_data['new'] = $id_contract;
+			inventory_tracking($id, INVENTORY_CONTRACT_CHANGED, $aditional_data);
+		}
+		if ($id_manufacturer != $old_inventory['id_manufacturer']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['id_manufacturer'];
+			$aditional_data['new'] = $id_manufacturer;
+			inventory_tracking($id, INVENTORY_MANUFACTURER_CHANGED, $aditional_data);
+		}
+		if ($inventory_status != $old_inventory['status']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['status'];
+			$aditional_data['new'] = $inventory_status;
+			inventory_tracking($id, INVENTORY_STATUS_CHANGED, $aditional_data);
+		}
+		if ($id_object_type != $old_inventory['id_object_type']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['id_object_type'];
+			$aditional_data['new'] = $id_object_type;
+			inventory_tracking($id, INVENTORY_OBJECT_TYPE_CHANGED, $aditional_data);
+		}
+		if ($receipt_date != $old_inventory['receipt_date']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['receipt_date'];
+			$aditional_data['new'] = $receipt_date;
+			inventory_tracking($id, INVENTORY_RECEIPT_DATE_CHANGED, $aditional_data);
+		}
+		if ($issue_date != $old_inventory['issue_date']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['issue_date'];
+			$aditional_data['new'] = $issue_date;
+			inventory_tracking($id, INVENTORY_ISSUE_DATE_CHANGED, $aditional_data);
+		}
+		if ($description != $old_inventory['description']) {
+			$aditional_data = array();
+			$aditional_data['old'] = $old_inventory['description'];
+			$aditional_data['new'] = $description;
+			inventory_tracking($id, INVENTORY_DESCRIPTION_CHANGED, $aditional_data);
 		}
 	}
 	
@@ -269,7 +316,10 @@ if ($update) {
 					process_sql_delete('tobject_field_data', array('id_object_type_field' => $old['id'], 'id_inventory' => $id));
 				}
 			}
-			inventory_tracking($id,INVENTORY_PARENT_UPDATED, $id_parent);
+			$aditional_data = array();
+			$aditional_data['old'] = $old_parent;
+			$aditional_data['new'] = $id_parent;
+			inventory_tracking($id,INVENTORY_PARENT_UPDATED, $aditional_data);
 		}
 		
 		inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
@@ -294,6 +344,11 @@ if ($update) {
 				process_sql_insert('tobject_field_data', $values);
 			}
 		}
+	} else if ($old_parent != false) { // Parent set to none
+		$aditional_data = array();
+		$aditional_data['old'] = $old_parent;
+		$aditional_data['new'] = '';
+		inventory_tracking($id,INVENTORY_PARENT_UPDATED, $aditional_data);
 	}
 	
 	$inventory_companies = get_parameter("companies");
@@ -479,7 +534,7 @@ if ($id) {
 	$inventory_status = $inventory['status'];
 	$receipt_date = $inventory['receipt_date'];
 	
-	if ($inventory_status == 'issue') {
+	if ($inventory_status == 'issued') {
 		$issue_date = $inventory['issue_date'];
 	} else {
 		$issue_date = date ('Y-m-d');
@@ -576,12 +631,12 @@ if ($id && !$inventory_name) {
 
 	if ($write_permission || !$id) {
 		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
-								'', '', '', true, false, false, __('Associated company'));
+								'', '', '', true, false, false, __('Associated companies'));
 		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: removeCompany();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
 		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
-								'', '', '', true, false, false, __('Associated user'));
+								'', '', '', true, false, false, __('Associated users'));
 		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: removeUser();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
@@ -596,10 +651,10 @@ if ($id && !$inventory_name) {
 		}
 	} else {
 		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
-								'', '', '', true, false, false, __('Associated company'));
+								'', '', '', true, false, false, __('Associated companies'));
 								
 		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
-								'', '', '', true, false, false, __('Associated user'));
+								'', '', '', true, false, false, __('Associated users'));
 	}
 	
 	$objects_type = get_object_types ();
@@ -693,7 +748,8 @@ if ($id && !$inventory_name) {
 
 <script type="text/javascript">
 
-add_ranged_datepicker ("#text-receipt_date", "#text-issue_date", null);
+add_datepicker ("#text-receipt_date");
+add_datepicker ("#text-issue_date");
 
 $(document).ready (function () {
 	

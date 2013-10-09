@@ -237,13 +237,17 @@ function filter_incidents ($filters, $count=false) {
  *
  */
  
-function attach_incident_file ($id, $file_temp, $file_description, $email_notify = false) {
+function attach_incident_file ($id, $file_temp, $file_description, $email_notify = false, $file_name = "") {
 	global $config;
 	
 	$file_temp = safe_output ($file_temp); // Decoding HTML entities
 	$filesize = filesize($file_temp); // In bytes
-	$filename = basename($file_temp);
-	$filename = str_replace (" ", "_", $filename); // Replace blank spaces
+	if ($file_name != "") {
+		$filename = $file_name;
+	} else {
+		$filename = basename($file_temp);
+	}
+	$filename = str_replace (array(" ", "(", ")"), "_", $filename); // Replace blank spaces
 	$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 	
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,

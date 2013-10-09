@@ -2223,14 +2223,208 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			$description .= " -> ".get_db_value ("titulo", "tincidencia", "id_incidencia", $aditional_data);
 			break;
 		
-		case INVENTORY_OWNER_CHANGED:
-			$description = __('Owner changed');
-			$description .= " -> ".get_db_value ("nombre_real", "tusuario", "id_usuario", $aditional_data);
+		case INVENTORY_DELETED:
+			$description = __('Deleted');
 			break;
-			
+		
+		case INVENTORY_OWNER_CHANGED:
+			$description = __('Owner changed') . " -> ";
+			if ($aditional_data['old']) {
+				$old = get_db_value ("nombre_real", "tusuario", "id_usuario", $aditional_data['old']);
+				if ($old) {
+					$aditional_data['old'] = $old;
+				}
+				$description .= "Old: '" . $aditional_data['old'] . "'";
+			}
+			if ($aditional_data['new']) {
+				$new = get_db_value ("nombre_real", "tusuario", "id_usuario", $aditional_data['new']);
+				if ($new) {
+					$aditional_data['new'] = $new;
+				}
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . $aditional_data['new'] . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_NAME_CHANGED:
+			$description = __('Name changed') . " -> ";
+			if ($aditional_data['old']) {
+				$description .= "Old: '" . $aditional_data['old'] . "'";
+			}
+			if ($aditional_data['new']) {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . $aditional_data['new'] . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_CONTRACT_CHANGED:
+			$description = __('Contract changed') . " -> ";
+			if ($aditional_data['old']) {
+				$old = get_db_value ("name", "tcontract", "id", $aditional_data['old']);
+				if ($old) {
+					$aditional_data['old'] = $old;
+				}
+				$description .= "Old: '" . $aditional_data['old'] . "'";
+			}
+			if ($aditional_data['new']) {
+				$new = get_db_value ("name", "tcontract", "id", $aditional_data['new']);
+				if ($new) {
+					$aditional_data['new'] = $new;
+				}
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . $aditional_data['new'] . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_MANUFACTURER_CHANGED:
+			$description = __('Manufacturer changed') . " -> ";
+			if ($aditional_data['old']) {
+				$old = get_db_value ("name", "tmanufacturer", "id", $aditional_data['old']);
+				if ($old) {
+					$aditional_data['old'] = $old;
+				}
+				$description .= "Old: '" . $aditional_data['old'] . "'";
+			}
+			if ($aditional_data['new']) {
+				$new = get_db_value ("name", "tmanufacturer", "id", $aditional_data['new']);
+				if ($new) {
+					$aditional_data['new'] = $new;
+				}
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . $aditional_data['new'] . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_STATUS_CHANGED:
+			$description = __('Status changed') . " -> ";
+			if ($aditional_data['old']) {
+				$description .= "Old: '" . __($aditional_data['old']) . "'";
+			}
+			if ($aditional_data['new']) {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . __($aditional_data['new']) . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_OBJECT_TYPE_CHANGED:
+			$description = __('Object type changed') . " -> ";
+			if ($aditional_data['old']) {
+				$old = get_db_value ("name", "tincident_type", "id", $aditional_data['old']);
+				if ($old) {
+					$aditional_data['old'] = $old;
+				}
+				$description .= "Old: '" . $aditional_data['old'] . "'";
+			}
+			if ($aditional_data['new']) {
+				$new = get_db_value ("name", "tincident_type", "id", $aditional_data['new']);
+				if ($new) {
+					$aditional_data['new'] = $new;
+				}
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . $aditional_data['new'] . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_RECEIPT_DATE_CHANGED:
+			$description = __('Receipt date changed') . " -> ";
+			if ($aditional_data['old'] && $aditional_data['old'] != '0000-00-00') {
+				$description .= "Old: '" . __($aditional_data['old']) . "'";
+			}
+			if ($aditional_data['new'] && $aditional_data['new'] != '0000-00-00') {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . __($aditional_data['new']) . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
+		case INVENTORY_ISSUE_DATE_CHANGED:
+			$description = __('Issue date changed') . " -> ";
+			if ($aditional_data['old'] && $aditional_data['old'] != '0000-00-00') {
+				$description .= "Old: '" . __($aditional_data['old']) . "'";
+			}
+			if ($aditional_data['new'] && $aditional_data['new'] != '0000-00-00') {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . __($aditional_data['new']) . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
+			break;
+		
 		case INVENTORY_PARENT_UPDATED:
-			$description = __('Parent changed: ');
-			$description .= " -> ".get_db_value ("name", "tinventory", "id", $aditional_data);
+			$description = __('Parent changed: ') . " -> ";
+			$old = get_db_value ("name", "tinventory", "id", $aditional_data['old']);
+			if ($old) {
+				$aditional_data['old'] = $old;
+			}
+			$description .= "Old: '" . __($aditional_data['old']) . "'";
+			if ($aditional_data['new']) {
+				$new = get_db_value ("name", "tinventory", "id", $aditional_data['new']);
+				if ($new) {
+					$aditional_data['new'] = $new;
+				}
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: '" . $aditional_data['new'] . "'";
+			} else {
+				if ($aditional_data['old']) {
+					$description .= " - ";
+				}
+				$description .= "New: " . __('None');
+			}
 			break;
 		
 		case INVENTORY_PARENT_CREATED:
@@ -2244,17 +2438,33 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			break;
 			
 		case INVENTORY_PUBLIC:
-			$description = __('Inventory public');
+			$description = __('Inventory set to public');
 			break;
 			
 		case INVENTORY_PRIVATE:
-			$description = __('Inventory private');
+			$description = __('Inventory set to private');
 			break;
 		
-		case INVENTORY_DELETED:
-			$description = __('Deleted');
+		case INVENTORY_DESCRIPTION_CHANGED:
+			$description = __('Description changed');
 			break;
-				
+		
+		case INVENTORY_COMPANIES_CREATED:
+			$description = __('Companies added');
+			break;
+		
+		case INVENTORY_COMPANIES_UPDATED:
+			$description = __('Companies updated');
+			break;
+		
+		case INVENTORY_USERS_CREATED:
+			$description = __('Users added');
+			break;
+		
+		case INVENTORY_USERS_UPDATED:
+			$description = __('Users updated');
+			break;
+		
 		default:
 			$description = __('Unknown update');
 			break;
