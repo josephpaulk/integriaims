@@ -261,7 +261,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		if ($sec2 == '') {
 			$sec2 = 'general/home';
 		}
-
+		$minor_release_message = db_update_schema(); // MINOR RELEASES
 	} else { //login wrong
 		$blocked = false;
 		
@@ -413,14 +413,42 @@ if ($clean_output == 0) {
 					echo __('Please check that {HOMEDIR}/attachment directory has write rights for HTTP server');
 					echo "</p>";
 				}
-			
+				
 				if (!is_writable("attachment/tmp")){
 					echo "<h3 class='error'>".__('Temporal directory is not writtable by HTTP Server')."</h3>";
 					echo '<p>';
 					echo __('Please check that {HOMEDIR}/attachment/tmp directory has write rights for HTTP server');
 					echo "</p>";
 				}
-
+				
+				if (file_exists("extras/mr") && !is_writable("extras/mr")){
+					echo "<h3 class='error'>".__('Minor releases directory is not writtable by HTTP Server')."</h3>";
+					echo '<p>';
+					echo __('Please check that {HOMEDIR}/extras/mr directory has write rights for HTTP server');
+					echo "</p>";
+				}
+				
+				// Open a dialog if the database schema update has returned messages
+				if ($minor_release_message) {
+					echo "<div class= 'dialog ui-dialog-content' title='".__("Minor release update")."' id='mr_dialog'>$minor_release_message</div>";
+					echo "<script type='text/javascript'>";
+					echo "	$(document).ready (function () {";
+					echo "		$('#mr_dialog').dialog ({
+									resizable: true,
+									draggable: true,
+									modal: true,
+									overlay: {
+										opacity: 0.5,
+										background: 'black'
+									},
+									width: 400,
+									height: 150
+								});";
+					echo "		$('#mr_dialog').dialog('open');";
+					echo "	});";
+					echo "</script>";
+				}
+				
 				// Page loader / selector
 				if ($sec2 != "") {
 					if (file_exists ($sec2.".php")) {

@@ -40,6 +40,7 @@ if ($add_field) { //add field to incident type
 	$value['label'] = get_parameter('label', '');
 	$value['type'] = get_parameter ('type');
 	$value['combo_value'] = get_parameter ('combo_value', '');
+	$value['show_in_list'] = (int) get_parameter ('show_in_list');
 	$error_combo = false;
 	
 	if ($value['type'] == 'combo') {
@@ -81,6 +82,7 @@ if ($update_field) { //update field to incident type
 	$value_update['label'] = get_parameter('label');
 	$value_update['type'] = get_parameter ('type');
 	$value_update['combo_value'] = get_parameter ('combo_value', '');
+	$value_update['show_in_list'] = (int) get_parameter ('show_in_list');
 	$error_update = false;
 
 	if ($value_update['type'] == "combo") {
@@ -109,7 +111,6 @@ if ($create_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
-	$values['show_in_list'] = (int) get_parameter ('show_in_list');
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
 	//$values['id_group'] = (int) get_parameter ('id_group');
 	
@@ -134,7 +135,6 @@ if ($update_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
-	$values['show_in_list'] = (int) get_parameter ('show_in_list');
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
 	//$values['id_group'] = (int) get_parameter ('id_group');
 
@@ -173,14 +173,12 @@ if ($id || $new_type) {
 		$id = 0;
 		$name = "";
 		$description = "";
-		$show_in_list = false;
 		//$id_wizard = "";
 		//$id_group = "";
 	} else {
 		$type = get_db_row ('tincident_type', 'id', $id);
 		$name = $type['name'];
 		$description = $type['description'];
-		$show_in_list = (boolean) $type['show_in_list'];
 		//$id_wizard = $type['id_wizard'];
 		//$id_group = $type['id_group'];
 	}
@@ -193,7 +191,6 @@ if ($id || $new_type) {
 	$table->colspan[2][0] = 2;
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
-	$table->data[0][1] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the incidents list'));
 /*
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
 		'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
@@ -241,13 +238,14 @@ if ($id || $new_type) {
 		$table->style = array();
 		$table->size = array ();
 		$table->size[0] = '30%';
-		$table->size[1] = '30%';
+		$table->size[1] = '20%';
 		$table->size[2] = '30%';
 
 		$table->head[0] = __("Name field");
 		$table->head[1] = __("Type");
 		$table->head[2] = __("Value");
-		$table->head[3] = __("Action");
+		$table->head[3] = __("List");
+		$table->head[4] = __("Action");
 
 		$data = array();
 
@@ -274,10 +272,17 @@ if ($id || $new_type) {
 					$data[2] = "";
 				}
 				
-				$data[3] = "<a
+				if ($field["show_in_list"]) {
+					$data[3] = __('Yes');
+				} else {
+					$data[3] = __('No');
+				}
+				
+				
+				$data[4] = "<a
 				href='" . $url_update . "'>
 				<img src='images/wrench.png' border=0 /></a>";
-				$data[3] .= "<a
+				$data[4] .= "<a
 				onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
 				<img src='images/cross.png' border=0 /></a>";
 				

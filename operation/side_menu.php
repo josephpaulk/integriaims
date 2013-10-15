@@ -909,7 +909,14 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
-
+	
+	// Update Manager
+	if ($sec2 == "godmode/setup/offline_update")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/offline_update'>".__('Offline update')."</a></li>";
+	
 /* DISABLED UNTIL WE FIX IT
 
 	// Update Manager

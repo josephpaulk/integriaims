@@ -486,3 +486,7 @@ ALTER TABLE `tinvoice` ADD `reference` text NOT NULL default "";
 
 /* 07/10/2013 */
 ALTER TABLE `tincident_type` ADD `show_in_list` tinyint(3) unsigned NOT NULL DEFAULT 0;
+
+/* 11/10/2013 */
+ALTER TABLE `tincident_type` DROP `show_in_list`;
+ALTER TABLE `tincident_type_field` ADD `show_in_list` tinyint(1) unsigned NOT NULL default 0;

@@ -654,12 +654,12 @@ $types = get_incident_types ();
 $table->data[0][2] = print_label (__('Incident type'), '','',true);
 
 //Disabled incident type if any, type changes not allowed
-if ($id_incident_type == 0) {
+if ($id <= 0 || $config["incident_type_change"] == 1) {
 	$disabled_itype = false;
 } else {
 	$disabled_itype = true;
 }
-$table->data[0][2] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled_itype);
+$table->data[0][2] .= print_select($types, 'id_incident_type', $id_incident_type, '', 'Select', '', true, 0, true, false, $disabled_itype);
 
 $disabled = false;
 
@@ -944,6 +944,27 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 
 $(document).ready (function () {
 	
+	// Incident type combo change event
+	$("#id_incident_type").change( function() {
+		var selected = $(this).val();
+		
+		var first_id_incident_type = <?php echo json_encode($id_incident_type) ?>;
+		if (first_id_incident_type > 0) {
+			$.data(this, 'current', first_id_incident_type);
+			first_id_incident_type = 0;
+		}
+		
+		if (<?php echo json_encode($id) ?> > 0 && $.data(this, 'current') > 0) {
+			if (!confirm("<?php echo __('If you change the type, you will lost the information of the customized type fields. \n\nDo you want to continue?'); ?>")) {
+				$(this).val($.data(this, 'current'));
+				return false;
+			}
+		}
+		
+		$.data(this, 'current', $(this).val());
+		show_incident_type_fields();
+	});
+	
 	// Link to the task
 	$("#id_task").change(function() {
 		if ($("#id_task").val() > 0) {
@@ -1100,9 +1121,9 @@ $(document).ready (function () {
 	bindAutocomplete("#text-closed_by", idUser);
 	
 	if ($("#incident_status_form").length > 0){
-	  validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
-	  validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
-	  validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
+		validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
+		validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
+		validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
 	}
 	
 	$("#tgl_incident_control").click(function() {

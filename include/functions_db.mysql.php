@@ -1242,4 +1242,203 @@ function db_process_sql($sql, $rettype = "affected_rows", $dbconnection = '', $c
 }
 
 
+// ---------------------------------------------------------------
+// Starts a database transaction.
+// ---------------------------------------------------------------
+
+function db_process_sql_begin() {
+	mysql_query ('SET AUTOCOMMIT = 0');
+	mysql_query ('START TRANSACTION');
+}
+
+
+// ---------------------------------------------------------------
+// Commits a database transaction.
+// ---------------------------------------------------------------
+
+function db_process_sql_commit() {
+	mysql_query ('COMMIT');
+	mysql_query ('SET AUTOCOMMIT = 1');
+}
+
+
+// ---------------------------------------------------------------
+// Rollbacks a database transaction.
+// ---------------------------------------------------------------
+
+function db_process_sql_rollback() {
+	mysql_query ('ROLLBACK ');
+	mysql_query ('SET AUTOCOMMIT = 1');
+}
+
+
+// --------------------------------------------------------------- 
+// Initiates a transaction and run the queries of an sql file
+// --------------------------------------------------------------- 
+
+function db_run_sql_file ($location) {
+    global $config;
+    
+    // Load file
+    $commands = file_get_contents($location);
+	
+    // Delete comments
+    $lines = explode("\n",$commands);
+    $commands = '';
+    foreach($lines as $line){
+        $line = trim($line);
+        if($line && !preg_match('/^--/', $line) && !preg_match('/^\/\*/', $line)){
+            $commands .= $line . "\n";
+        }
+    }
+	
+    // Convert to array
+    $commands = explode(";", $commands);
+	
+    // Run commands
+	db_process_sql_begin(); // Begin transaction
+    foreach($commands as $command){
+        if(trim($command)){
+			
+			$result = mysql_query($command);
+			if (!$result) {
+				break; // Error
+			}
+        }
+    }
+    if ($result) {
+		db_process_sql_commit(); // Save results
+		return true;
+	} else {
+		db_process_sql_rollback(); // Undo results
+		return false;
+	}
+}
+
+
+// --------------------------------------------------------------- 
+// Initiates a transaction and run the queries of an sql file
+// --------------------------------------------------------------- 
+
+function db_run_sql_file_pdo ($location) {
+    global $config;
+    
+    // Load file
+    $commands = file_get_contents($location);
+	
+    // Delete comments
+    $lines = explode("\n",$commands);
+    $commands = '';
+    foreach($lines as $line){
+        $line = trim($line);
+        if($line && !preg_match('/^--/', $line) && !preg_match('/^\/\*/', $line)){
+            $commands .= $line . "\n";
+        }
+    }
+	
+    // Convert to array
+    $commands = explode(";", $commands);
+	
+	$dbcon = new mysqli($config["dbhost"], $config["dbuser"], $config["dbpass"], $config["dbname"]);
+	if ($dbcon->connect_error) {
+		break;
+	}
+	
+	try {
+		
+		$dbcon->autocommit(false);
+		
+		foreach($commands as $command){
+			if(trim($command)){
+				if (!$dbcon->query($command)) {
+					throw new Exception('Error');
+				}
+			}
+		}
+		
+		$dbcon->commit();
+		$dbcon->autocommit(true);
+		$result = true;
+	} catch (Exception $e) {
+		$dbcon->rollback();
+		$dbcon->autocommit(true);
+		$result = false;
+	}
+	$dbcon->close();
+	
+	return $result;
+}
+
+
+// --------------------------------------------------------------- 
+// Access to the sql files in the extras/mr dir and process the
+// database updates that have not been done
+// --------------------------------------------------------------- 
+
+function db_update_schema () {
+	global $config;
+	
+	$dir = $config["homedir"]."extras/mr";
+	
+	if (file_exists($dir) && is_dir($dir)) {
+		if (is_readable($dir)) {
+			$files = scandir($dir); // Get all the files from the directory ordered by asc
+			
+			if ($files !== false) {
+				$pattern = "/^\d+\.sql$/";
+				$sqlfiles = preg_grep($pattern, $files); // Get the name of the correct files
+				$files = null;
+				$pattern = "/\.sql$/";
+				$replacement = "";
+				$sqlfiles_num = preg_replace($pattern, $replacement, $sqlfiles); // Get the number of the file
+				$sqlfiles = null;
+				
+				if ($sqlfiles_num) {
+					foreach ($sqlfiles_num as $sqlfile_num) {
+						
+						$file = "$dir/$sqlfile_num.sql";
+						
+						if ($config["minor_release"] >= $sqlfile_num) {
+							if (!file_exists($dir."/updated") || !is_dir($dir."/updated")) {
+								mkdir($dir."/updated");
+							}
+							$file_dest = "$dir/updated/$sqlfile_num.sql";
+							if (copy($file, $file_dest)) {
+								unlink($file);
+							}
+						} else {
+							
+							$result = db_run_sql_file($file);
+							
+							if ($result) {
+								update_config_token ("minor_release", $sqlfile_num);
+								
+								if ($config["minor_release"] == $sqlfile_num) {
+									if (!file_exists($dir."/updated") || !is_dir($dir."/updated")) {
+										mkdir($dir."/updated");
+									}
+									$file_dest = "$dir/updated/$sqlfile_num.sql";
+									if (copy($file, $file_dest)) {
+										unlink($file);
+									}
+								}
+								
+								return "<h3 class='suc'>".__('The database schema has been updated to the minor release')." $sqlfile_num</h3>";
+							} else {
+								return "<h3 class='error'>".__('An error occurred while updating the database schema to the minor release ')." $sqlfile_num</h3>";
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+		} else {
+			return "<h3 class='error'>".__('The directory '.$dir.' should have read permissions in order to update the database schema')."</h3>";
+		}
+	} else {
+		return "<h3 class='error'>".__('The directory '.$dir.' does not exist')."</h3>";
+	}
+}
+
 ?>

@@ -2459,3 +2459,141 @@ p.pagination {
 	font-size: 0.85em !important;
 }
 
+/*----------------------------
+    File upload form
+    Used in the offline update section
+    Thanks to: http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
+-----------------------------*/
+
+#form-offline_update {
+    font-family:'PT Sans Narrow', sans-serif;
+    background-color:#373a3d;
+	
+    background-image:-webkit-linear-gradient(top, #373a3d, #313437);
+    background-image:-moz-linear-gradient(top, #373a3d, #313437);
+    background-image:linear-gradient(top, #373a3d, #313437);
+	
+    padding:30px;
+    border-radius:3px;
+
+    margin:20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#drop_file {
+    background-color: #e6e6e6;
+    padding: 40px 50px;
+    margin-bottom: 30px;
+    border: 20px solid rgba(0, 0, 0, 0);
+    border-radius: 3px;
+    text-align: center;
+    text-transform: uppercase;
+
+    font-size:16px;
+    font-weight:bold;
+    color:#707070;
+}
+
+#drop_file a {
+    background-color:#FF9933;
+    padding:12px 26px;
+    color:#fff;
+    font-size:14px;
+    border-radius:2px;
+    cursor:pointer;
+    display:inline-block;
+    margin-top:12px;
+    line-height:1;
+}
+
+#drop_file a:hover {
+    background-color:#FFB972;
+    text-decoration:none;
+}
+
+#drop_file input {
+    display:none;
+}
+
+#form-offline_update ul {
+    list-style:none;
+    margin:0 -30px;
+    border-top:1px solid #2b2e31;
+    border-bottom:1px solid #3d4043;
+}
+
+#form-offline_update ul li {
+
+    background-color:#333639;
+
+    background-image:-webkit-linear-gradient(top, #333639, #303335);
+    background-image:-moz-linear-gradient(top, #333639, #303335);
+    background-image:linear-gradient(top, #333639, #303335);
+	
+    border-top:1px solid #3d4043;
+    border-bottom:1px solid #2b2e31;
+    padding:15px;
+    height: 52px;
+
+    position: relative;
+}
+
+#form-offline_update ul li input {
+	left: 68px;
+    position: absolute;
+}
+
+#form-offline_update ul li p {
+    overflow: hidden;
+    white-space: nowrap;
+    color: #EEE;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: 12px;
+    left: 95px;
+}
+
+#form-offline_update ul li i {
+    font-weight: normal;
+    font-style:normal;
+    color:#7f7f7f;
+    display:block;
+}
+
+#form-offline_update ul li canvas {
+    top: 15px;
+    left: 13px;
+    position: absolute;
+}
+
+#form-offline_update ul li span {
+    width: 15px;
+    height: 12px;
+    background: url('../../images/check-cross.png') no-repeat;
+    position: absolute;
+    top: 34px;
+    right: 13px;
+    cursor:pointer;
+}
+
+#form-offline_update ul li.working span {
+    height: 16px;
+    background-position: 0 -12px;
+}
+
+#form-offline_update ul li.error p {
+    color:red;
+}
+
+#log_zone {
+    background-color: #e6e6e6;
+    padding: 10px;
+    margin-bottom: 30px;
+    border: 20px solid rgba(0, 0, 0, 0);
+    border-radius: 3px;
+    text-align: left;
+
+    font-size:10px;
+    color:#707070;
+}

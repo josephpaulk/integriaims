@@ -1,3 +1,37 @@
+2013-10-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* index.php: Added the database schema updater execution and messages.
+	
+	* extras/migrate.sql: Added the last changes on the database schema.
+	
+	* general/footer.php: Added the minor release version to the integria
+	footer.
+	
+	* godmode/setup/incidents_setup.php: Now the admins can select if the
+	incident type of a created incident can be changed.
+	
+	* include/functions_db.mysql.php: Added the functions
+	"db_process_sql_begin", "db_process_sql_commit",
+	"db_process_sql_rollback", "db_run_sql_file",
+	"db_run_sql_file_pdo" and "db_update_schema".
+	
+	* include/functions_incidents.php: Modified the function
+	"incidents_search_result" to show the incident type fields data of the
+	incidents type fields with the 'show in list' option checked.
+	
+	* include/styles/integria.css: Added some rules to deal with the
+	offline uploader form.
+	
+	* operation/side_menu.php: Added the offline uploader section.
+	
+	* operation/incidents/incident_detail.php: Now is possible to change
+	the incident type of a created incident if this option is cheched in
+	the setup.
+	
+	* operation/incidents/incident_type_field.php,
+	  operation/incidents/type_detail.php: Now is possible to check the
+	  incident type fields that should appear in the incident list. 
+	
 2013-10-14  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/languages/ar.mo
@@ -55,7 +89,7 @@
 	  include/languages/zh_TW.po
 	  include/languages/zh_TW.mo: Updated translations.
 
-2013-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
+2013-10-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/constants.php: Added new constants for the inventory
 	tracking.

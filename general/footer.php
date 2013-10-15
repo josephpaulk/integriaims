@@ -23,7 +23,10 @@ if ($config["enteprise"] == 1)
 else
 	$enterprise = "OpenSource Edition";
 
-echo 'Integria IMS <b>'.$enterprise.' '.$config["version"].' Build '.$config["build_version"].'</b><br>';
+if (!$config["minor_release"])
+	$config["minor_release"] = 0;
+
+echo 'Integria IMS <b>'.$enterprise.' '.$config["version"].' Build '.$config["build_version"].' MR'.$config["minor_release"].'</b><br>';
 
 if (isset($_SESSION['id_usuario'])) {
 	

@@ -2085,17 +2085,28 @@ function incidents_search_result ($filter, $ajax=false) {
 			echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
 			echo "<span style='font-size:11px;font-style:italic'>";
 			echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
-			$show_in_list = get_db_value("show_in_list", "tincident_type", "id", $incident["id_incident_type"]);
+			
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field
+							WHERE id_incident_type = %d", $incident["id_incident_type"]);
+			$type_fields = get_db_all_rows_sql($sql);
+			
 			$type_fields_values_text = "";
-			if ($show_in_list == 1) {
-				$type_fields_values = incident_get_type_field_values($incident["id_incidencia"], "textarea");
-				foreach ($type_fields_values as $type_field => $type_field_value) {
-					if ($type_field_value) {
-						$type_fields_values_text .= " <div title='$type_field' style='display: inline-block;'>[$type_field_value]</div>";
+			if ($type_fields) {
+				foreach ($type_fields as $type_field) {
+					if ($type_field["show_in_list"]) {
+						$field_data = get_db_value_filter("data", "tincident_field_data", array ("id_incident" => $incident["id_incidencia"], "id_incident_field" => $type_field["id"]));
+						if ($field_data) {
+							if ($type_field["type"] == "textarea") {
+								$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
+							}
+							$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[$field_data]</div>";
+						}
 					}
 				}
 			}
 			echo "&nbsp;$type_fields_values_text";
+			
 			echo '</span></td>';
 			echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
 			if ($config["show_creator_incident"] == 1){	
