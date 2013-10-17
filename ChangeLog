@@ -1,3 +1,21 @@
+2013-10-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/setup/offline_update.php: Added file. This is a new
+	section where is possible to upload packages and update integria
+	with it.
+	
+	* include/styles/integria.css: Added new style rules for the
+	uploader form.
+	
+	* images/check-cross.png: Added image.
+	
+	* include/js/jquery.iframe-transport.js,
+	  include/js/jquery.fileupload.js,
+	  include/js/jquery.knob.js: Added new fancy plugins to upload
+	  files and show an amazing progress bar.
+	
+	* include/functions.php: Added the function "delete_directory".
+	
 2013-10-16  Sancho Lerena <slerena@artica.es>
 
 	* extras/mr: Create missing directory.

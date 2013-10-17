@@ -2582,8 +2582,30 @@ p.pagination {
     background-position: 0 -12px;
 }
 
+#form-offline_update ul li.loading span {
+    height: 16px;
+    background: url('../../images/spinner.gif') no-repeat;
+    background-position: 0 0px;
+}
+
+#form-offline_update ul li.suc span {
+    height: 12px;
+    background: url('../../images/check-cross.png') no-repeat;
+    background-position: 0 0px;
+}
+
+#form-offline_update ul li.suc p {
+    color: #5a8629;
+}
+
+#form-offline_update ul li.error span {
+    height: 16px;
+    background: url('../../images/check-cross.png') no-repeat;
+    background-position: 0 -12px;
+}
+
 #form-offline_update ul li.error p {
-    color:red;
+    color: #FF3333;
 }
 
 #log_zone {
@@ -2594,6 +2616,6 @@ p.pagination {
     border-radius: 3px;
     text-align: left;
 
-    font-size:10px;
+    font-size:12px;
     color:#707070;
 }

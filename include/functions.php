@@ -1129,6 +1129,29 @@ function delete_all_files_in_dir ($tmp_path){
 	closedir($handle); 
 }
 
+
+// This function deletes all files and directories recursively
+
+function delete_directory ($dirname) {
+	if (is_dir($dirname))
+		$dir_handle = opendir($dirname);
+	if (!$dir_handle)
+		return false;
+	
+	while ($file = readdir($dir_handle)) {
+		if ($file != "." && $file != "..") {
+			if (!is_dir($dirname."/".$file))
+				unlink($dirname."/".$file);
+			else
+				um_delete_directory($dirname . '/' . $file);
+		}
+	}
+	closedir($dir_handle);
+	rmdir($dirname);
+	
+	return true;
+}
+
 // Writes string in integria log file (at integria.log)
 
 function integria_logwrite ($string){
