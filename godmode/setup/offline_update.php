@@ -116,7 +116,6 @@ if (defined ('AJAX')) {
 					// Tries to move the old file to the directory backup inside the extracted package
 					rename($config["homedir"]."/".$line, $package."/backup/".$line);
 					// Tries to move the new file to the Integria directory
-					debugPrint($package."/".$line, true);debugPrint($config["homedir"]."/".$line, true);
 					copy($package."/".$line, $config["homedir"]."/".$line);
 					if (rename($package."/".$line, $config["homedir"]."/".$line)) {
 						

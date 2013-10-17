@@ -156,7 +156,6 @@ CREATE TABLE `tincident_type` (
   `description` text NULL default NULL,
   `id_wizard` mediumint(8) unsigned NULL,
   `id_group` int(10) NOT NULL default '0',
-  `show_in_list` tinyint(3) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -917,6 +916,7 @@ CREATE TABLE `tincident_type_field` (
   `label` varchar(100) NOT NULL default '', 
   `type` enum ('textarea', 'text', 'combo') default 'text',
   `combo_value` text default NULL,
+  `show_in_list` tinyint(1) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

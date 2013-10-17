@@ -29,6 +29,9 @@ else
 // Set specific session name for this instance
 session_name (md5($config["build"].$config["REMOTE_ADDR"].$config["dbpass"].$config["dbname"]));
 
+if (! defined ('EXTENSIONS_DIR'))
+	define ('EXTENSIONS_DIR', 'extensions');
+
 if (! defined ('ENTERPRISE_DIR'))
 	define ('ENTERPRISE_DIR', 'enterprise', FALSE);
 

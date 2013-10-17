@@ -1,5 +1,15 @@
 2013-10-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* integria_db.sql, integria_demo.sql: Added the last database
+	changes.
+	
+	* godmode/setup/offline_update.php: Deleted debug traces.
+	
+	* include/config_process.php: Added a new define for the future
+	extensions folder.
+	
+2013-10-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* godmode/setup/offline_update.php: Added file. This is a new
 	section where is possible to upload packages and update integria
 	with it.

@@ -284,7 +284,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_type` WRITE;
 /*!40000 ALTER TABLE `tincident_type` DISABLE KEYS */;
-INSERT INTO `tincident_type` VALUES (1,'Software&#x20;issues','This&#x20;kind&#x20;of&#x20;incidents&#x20;are&#x20;for&#x20;software&#x20;&#40;bugs,&#x20;feature&#x20;lack&#x20;reports,&#x20;etc&#41;',NULL,0,0);
+INSERT INTO `tincident_type` VALUES (1,'Software&#x20;issues','This&#x20;kind&#x20;of&#x20;incidents&#x20;are&#x20;for&#x20;software&#x20;&#40;bugs,&#x20;feature&#x20;lack&#x20;reports,&#x20;etc&#41;',NULL,0);
 /*!40000 ALTER TABLE `tincident_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,7 +294,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_type_field` WRITE;
 /*!40000 ALTER TABLE `tincident_type_field` DISABLE KEYS */;
-INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4'),(2,1,'Base&#x20;OS','text',''),(3,1,'Way&#x20;to&#x20;reproduce','textarea',''),(4,1,'Expected&#x20;behaviour','textarea','');
+INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0),(2,1,'Base&#x20;OS','text','',0),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0),(4,1,'Expected&#x20;behaviour','textarea','',0);
 /*!40000 ALTER TABLE `tincident_type_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
