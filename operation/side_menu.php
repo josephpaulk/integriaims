@@ -19,6 +19,7 @@ if (!isset($config["id_user"]))
 global $show_projects;
 global $show_incidents;
 global $show_inventory;
+global $show_customers;
 global $show_kb;
 global $show_file_releases;
 global $show_people;

@@ -1,3 +1,13 @@
+2013-10-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_extensions.php: Improved the functions
+	"extensions_add_godmode_side_menu_option" and
+	"extensions_print_side_menu_subsection".
+	
+	* index.php: Fixed an error on the call of the extension functions.
+	
+	* operation/side_menu.php: Little error fix.
+
 2013-10-18  Dario Rodriguez <dario@artica.es>
 
 	* operation/download/browse.php: Fixed a bug related to public url

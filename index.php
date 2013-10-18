@@ -459,9 +459,9 @@ if ($clean_output == 0) {
 							require ($sec2.".php");
 						} else {
 							if ($sec != "godmode") {
-								extensions_call_main_function (basename ($page));
+								extensions_call_main_function (basename ($sec2.".php"));
 							} else {
-								extensions_call_godmode_function (basename ($page));
+								extensions_call_godmode_function (basename ($sec2.".php"));
 							}
 						}
 					} else {
@@ -492,9 +492,9 @@ if ($clean_output == 0) {
 				require ($sec2.".php");
 			} else {
 				if ($sec != "godmode") {
-					extensions_call_main_function (basename ($page));
+					extensions_call_main_function (basename ($sec2.".php"));
 				} else {
-					extensions_call_godmode_function (basename ($page));
+					extensions_call_godmode_function (basename ($sec2.".php"));
 				}
 			}
 		} else {

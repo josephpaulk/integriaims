@@ -130,7 +130,7 @@ function extensions_add_side_menu_option ($name, $sec) {
  * @param string name Name of the extension in the Godmode menu  
  * @param string acl User ACL level required to see this extension in the godmode menu
  */
-function extensions_add_godmode_side_menu_option ($name, $acl) {
+function extensions_add_godmode_side_menu_option ($name) {
 	global $config;
 	global $extension_file;
 	
@@ -138,11 +138,11 @@ function extensions_add_godmode_side_menu_option ($name, $acl) {
 	$config['extension_file'] is set in extensions_load_extensions(),
 	since that function must be called before any function the extension
 	call, we are sure it will be set. */
-	$option_menu['acl'] = $acl;
-	$option_menu['name'] = $name;
+	$option_side_menu['name'] = $name;
 	$extension = &$config['extensions'][$extension_file];
-	$option_menu['sec2'] = $extension['dir'] . '/' . mb_substr ($extension_file, 0, -4);
-	$extension['godmode_side_menu'] = $option_menu;
+	$option_side_menu['sec'] = 'godmode';
+	$option_side_menu['sec2'] = $extension['dir'] . '/' . mb_substr ($extension_file, 0, -4);
+	$extension['godmode_side_menu'] = $option_side_menu;
 }
 
 
@@ -237,8 +237,9 @@ function extensions_call_godmode_function ($filename) {
 function extensions_print_side_menu_subsection ($sec, $sec2) {
 	global $config;
 	global $show_projects, $show_incidents, $show_inventory,
-			$show_kb, $show_file_releases, $show_people, $show_todo,
-			$show_agenda, $show_setup, $show_wiki;
+			$show_customers, $show_kb, $show_file_releases,
+			$show_people, $show_todo, $show_agenda, $show_setup,
+			$show_wiki;
 	
 	switch ($sec) {
 		case "projects":
@@ -278,10 +279,20 @@ function extensions_print_side_menu_subsection ($sec, $sec2) {
 		
 		foreach ($config["extensions"] as $extension) {
 			
-			if ($extension["side_menu"] == '') {
+			if ($extension["side_menu"] == '' && $extension["godmode_side_menu"] == '') {
 				continue;
 			}
-			if ($sec == $extension["side_menu"]["sec"]) {
+			if ($sec == "godmode" && $sec == $extension["godmode_side_menu"]["sec"]) {
+				$has_extensions = true;
+				
+				if ($sec2 == $extension["godmode_side_menu"]["sec2"])
+					$content .= "<li id='sidesel'>";
+				else
+					$content .= "<li>";
+				$content .= "<a href='index.php?sec=".$extension["godmode_side_menu"]["sec"]."&sec2=".$extension["godmode_side_menu"]["sec2"]."'>"
+					.$extension["godmode_side_menu"]["name"]."</a></li>";
+				
+			} else if ($sec == $extension["side_menu"]["sec"]) {
 				$has_extensions = true;
 				
 				if ($sec2 == $extension["side_menu"]["sec2"])
