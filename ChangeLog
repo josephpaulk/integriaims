@@ -1,3 +1,8 @@
+2013-10-18  Dario Rodriguez <dario@artica.es>
+
+	* operation/download/browse.php: Fixed a bug related to public url
+	for file releases. 
+
 2013-10-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* extensions/: Added folder.

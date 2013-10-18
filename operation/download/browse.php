@@ -449,7 +449,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			// Public URL
 			echo "<td>";
 			if ($row["public"]){
-				$url = $config["base_url"] . "/index.php?external_download_id=".$row["external_id"];
+				$url = $config["base_url"] . "/operation/common/download_file.php?type=external_release&id_attachment=".$row["external_id"];
 				echo "<a href='$url'><img src='images/world.png'></a>";
 			}
 		}
