@@ -1,3 +1,28 @@
+2013-10-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* extensions/: Added folder.
+	
+	* include/functions_extensions.php: Added file. Added the functions
+	"extensions_get_extensions", "extensions_load_extensions",
+	"extensions_is_extension", "extensions_add_side_menu_option",
+	"extensions_add_godmode_side_menu_option", "extensions_add_tab_agent",
+	"extensions_add_main_function", "extensions_call_main_function",
+	"extensions_add_godmode_function", "extensions_call_godmode_function",
+	"extensions_print_side_menu_subsection".
+	
+	* index.php: Added calls to a functions that load the extensions
+	and its main and godmode functions.
+	
+	* include/config_process.php: Added a call to a function that loads
+	the extensions info into the $config variable.
+	
+	* godmode/setup/offline_update.php: Visual changes in the package
+	uploader.
+	
+	* operation/side_menu.php: Little html fix. Added a call to a
+	function that prints the extensions subsection if there are any
+	extension for that section.
+
 2013-10-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* integria_db.sql, integria_demo.sql: Added the last database

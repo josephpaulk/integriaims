@@ -345,15 +345,17 @@ echo "<h1>".__("Offline update")."</h1>";
 					
 					// Transform the file input zone to show messages
 					$('#drop_file').prop('id', 'log_zone');
-					$('#log_zone').slideDown(400, function() {
-						$('#log_zone').height(75);
-						$('#log_zone').css("overflow", "auto");
-					});
 					
 					// Success messages
 					$('#log_zone').html("<div><?php echo __('The package has been uploaded successfully.') ?></div>");
 					$('#log_zone').append("<div><?php echo __('Remember that this package will override the actual Integria IMS files and it is recommended to do a backup before continue with the update.') ?></div>");
 					$('#log_zone').append("<div><?php echo __('Click on the file below to begin.') ?></div>");
+					
+					// Show messages
+					$('#log_zone').slideDown(400, function() {
+						$('#log_zone').height(75);
+						$('#log_zone').css("overflow", "auto");
+					});
 					
 					// Bind the the begin of the installation to the package li
 					ul.find('li').css("cursor", "pointer");
@@ -386,13 +388,15 @@ echo "<h1>".__("Offline update")."</h1>";
 					
 					// Transform the file input zone to show messages
 					$('#drop_file').prop('id', 'log_zone');
+					
+					// Error messages
+					$('#log_zone').html("<div>"+res.message+"</div>");
+					
+					// Show error messages
 					$('#log_zone').slideDown(400, function() {
 						$('#log_zone').height(75);
 						$('#log_zone').css("overflow", "auto");
 					});
-					
-					// Error messages
-					$('#log_zone').html("<div>"+res.message+"</div>");
 				}
 			}
 

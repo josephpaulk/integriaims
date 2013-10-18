@@ -400,7 +400,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 			echo "</li>";
 		}
 	}
-	echo "</ul>";
+	echo "</ul></div>";
 }
 
 // INCIDENTS
@@ -1225,6 +1225,8 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 	echo "</div>";
 }
 
+// EXTENSIONS
+extensions_print_side_menu_subsection($sec, $sec2);
 
 // Calendar box
 $month = get_parameter ("month", date ('n'));

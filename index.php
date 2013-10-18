@@ -74,6 +74,9 @@ if (file_exists ("enterprise/include/functions_login.php")) {
 	require_once ("enterprise/include/functions_login.php");
 }
 
+/* Load the basic configurations of extension and add extensions into menu. */
+extensions_load_extensions ($config["extensions"]);
+
 // Update user password
 $change_pass = get_parameter('renew_password', 0);
 
@@ -452,7 +455,15 @@ if ($clean_output == 0) {
 				// Page loader / selector
 				if ($sec2 != "") {
 					if (file_exists ($sec2.".php")) {
-						require ($sec2.".php");
+						if (! extensions_is_extension ($sec2.".php")) {
+							require ($sec2.".php");
+						} else {
+							if ($sec != "godmode") {
+								extensions_call_main_function (basename ($page));
+							} else {
+								extensions_call_godmode_function (basename ($page));
+							}
+						}
 					} else {
 						echo "<h3 class='error'>".__('Page not found')."</h3>";
 					}
@@ -477,7 +488,15 @@ if ($clean_output == 0) {
 	// clean output
 	if ($sec2 != "") {
 		if (file_exists ($sec2.".php")) {
-			require ($sec2.".php");
+			if (! extensions_is_extension ($sec2.".php")) {
+				require ($sec2.".php");
+			} else {
+				if ($sec != "godmode") {
+					extensions_call_main_function (basename ($page));
+				} else {
+					extensions_call_godmode_function (basename ($page));
+				}
+			}
 		} else {
 			echo "<br><b class='error'>".__('Page not found')."</b>";
 		}

@@ -29,9 +29,6 @@ else
 // Set specific session name for this instance
 session_name (md5($config["build"].$config["REMOTE_ADDR"].$config["dbpass"].$config["dbname"]));
 
-if (! defined ('EXTENSIONS_DIR'))
-	define ('EXTENSIONS_DIR', 'extensions');
-
 if (! defined ('ENTERPRISE_DIR'))
 	define ('ENTERPRISE_DIR', 'enterprise', FALSE);
 
@@ -43,6 +40,13 @@ if (file_exists($config["homedir"]."/".ENTERPRISE_DIR."/include/functions_db.php
 	$config["enteprise"] = 1;
 else
 	$config["enteprise"] = 0;
+
+if (! defined ('EXTENSIONS_DIR'))
+	define ('EXTENSIONS_DIR', 'extensions');
+
+require_once ($config["homedir"]."/include/functions_extensions.php");
+// Fill an array with data of the extensions
+$config["extensions"] = extensions_get_extensions ();
 
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
