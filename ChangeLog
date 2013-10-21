@@ -1,3 +1,19 @@
+2013-10-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_extensions.php: Added the functions
+	"extensions_add_tab_function", "extensions_call_tab_function"
+	and "get_tab_extensions". Improved the functions
+	"extensions_get_extensions" and "extensions_add_tab_option".
+	
+	* include/styles/integria.css: Fixed the background attribute
+	on 'input.pdfreport'.
+	
+	* operation/incidents/incident_dashboard_detail.php: Now the
+	linked extensions appear on the main tabs and can be triggered.
+	
+	* extensions/incident_summary.php: Added extension. This extension
+	shows a summary of the incident and is possible to export it to pdf.
+	
 2013-10-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_extensions.php: Improved the functions

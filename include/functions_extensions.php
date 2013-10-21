@@ -55,6 +55,7 @@ function extensions_get_extensions ($enterprise = false) {
 		$extension['tab'] = '';
 		$extension['main_function'] = '';
 		$extension['godmode_function'] = '';
+		$extension['tab_function'] = '';
 		$extension['enterprise'] = $enterprise;
 		$extension['dir'] = $dir;
 		$extensions[$file] = $extension;
@@ -127,8 +128,7 @@ function extensions_add_side_menu_option ($name, $sec) {
 /**
  * This function adds a link to the extension with the given name in Godmode menu.
  *
- * @param string name Name of the extension in the Godmode menu  
- * @param string acl User ACL level required to see this extension in the godmode menu
+ * @param string name Name of the extension in the Godmode menu
  */
 function extensions_add_godmode_side_menu_option ($name) {
 	global $config;
@@ -147,24 +147,30 @@ function extensions_add_godmode_side_menu_option ($name) {
 
 
 /**
- * Add in the header tabs in Godmode agent menu the extension tab. 
+ * Add a extension to a tab list
  * 
- * @param tabId Id of the extension tab   
+ * @param tabId Id of the extension tab
  * @param tabName Name of the extension tab
- * @param tabIcon Path to the image icon 
- * @param tabFunction Name of the function to execute when this extension is called
+ * @param sec2 Section where the extension will appear
+ * @param tabIcon Path to the image icon from the extensions dir
+ * @param tabsId In case of the page has more than one tab list, you should specify its id
  */
-function extensions_add_tab_agent ($tabId, $tabName, $tabIcon, $tabFunction, $version="N/A") {
+function extensions_add_tab_option ($tabId, $tabName, $sec2, $tabIcon = "", $tabsId = "") {
 	global $config;
 	global $extension_file;
 	
 	$extension = &$config['extensions'][$extension_file];
-	$extension['extension_god_tab'] = array();
-	$extension['extension_god_tab']['id'] = $tabId;
-	$extension['extension_god_tab']['name'] = $tabName;
-	$extension['extension_god_tab']['icon'] = $tabIcon;
-	$extension['extension_god_tab']['function'] = $tabFunction;
-	$extension['extension_god_tab']['version'] = $version;
+	$option_side_menu['id'] = $tabId;
+	$option_side_menu['name'] = $tabName;
+	$option_side_menu['sec2'] = $sec2;
+	if ($extension['enterprise']) {
+		$tabIcon = ENTERPRISE_DIR.'/'.EXTENSIONS_DIR.'/'.$tabIcon;
+	} else {
+		$tabIcon = EXTENSIONS_DIR.'/'.$tabIcon;
+	}
+	$option_side_menu['icon'] = $tabIcon;
+	$option_side_menu['tabsId'] = $tabsId;
+	$extension['tab'] = $option_side_menu;
 }
 
 
@@ -224,6 +230,44 @@ function extensions_call_godmode_function ($filename) {
 	if ($extension['godmode_function'] != '') {
 		$params = array ();
 		call_user_func_array ($extension['godmode_function'], $params);
+	}
+}
+
+
+/**
+ * Add the function to call when user clicks on the tab extension
+ *
+ * @param string $function_name Callback function name
+ */
+function extensions_add_tab_function ($function_name) {
+	global $config;
+	global $extension_file;
+	
+	$extension = &$config['extensions'][$extension_file];
+	$extension['tab_function'] = $function_name;
+}
+
+
+/**
+ * Callback function for tab extensions
+ *
+ * @param tabId Id of the extension tab
+ * @param sec2 Section where the extension will appear
+ * @param tabsId In case of the page has more than one tab list, you should specify its id
+ */
+function extensions_call_tab_function ($tabId, $sec2, $tabsId = "") {
+	global $config;
+	
+	$extensions = &$config['extensions'];
+	foreach ($extensions as $extension) {
+		if ($extension['tab'] != '') {
+			if ($extension['tab']['id'] == $tabId && $extension['tab']['sec2'] == $sec2) {
+				if ($extension['tab_function'] != '') {
+					$params = array ();
+					call_user_func_array ($extension['tab_function'], $params);
+				}
+			}
+		}
 	}
 }
 
@@ -313,5 +357,30 @@ function extensions_print_side_menu_subsection ($sec, $sec2) {
 			echo "</div>";
 		}
 	}
+}
+
+
+/**
+ * Get tab extensions
+ *
+ * @param sec2 Section where the extension will appear
+ * @param tabsId In case of the page has more than one tab list, you should specify its id
+ */
+function get_tab_extensions ($sec2, $tabsId = "") {
+	global $config;
+	
+	$extension_tabs = array();
+	$extensions = &$config['extensions'];
+	foreach ($extensions as $extension) {
+		if ($extension['tab'] != '') {
+			if ($extension['tab']['sec2'] == $sec2) {
+				if ($extension['tab']['tabsId'] == '' || ($extension['tab']['tabsId'] != '' && $extension['tab']['tabsId'] == $tabsId)) {
+					$extension_tabs[] = $extension;
+				}
+			}
+		}
+	}
+	
+	return $extension_tabs;
 }
 ?>

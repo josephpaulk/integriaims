@@ -440,12 +440,28 @@ echo '</li>';
 echo '<li>';
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
 echo '</li>';
-echo '<li>';
+
+$tab_extensions = get_tab_extensions($sec2, "indicent-details-view");
+foreach ($tab_extensions as $tab_extension) {
+	echo '<li>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab='.$tab_extension['tab']['id'].'">'.print_image($tab_extension['tab']['icon'], true, array("title" => __($tab_extension['tab']['name']))).'</a>';
+	echo '</li>';
+}
+
+echo '<li class="ui-tabs">';
 echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image ("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
 echo '</li>';
 echo "</ul>";
 echo "</div>";
 echo "</h1>";
+
+$tab = get_parameter("tab", "");
+foreach ($tab_extensions as $tab_extension) {
+	if ($tab == $tab_extension['tab']['id']) {
+		extensions_call_tab_function($tab, $sec2, "indicent-details-view");
+		return;
+	}
+}
 
 print_table($table);
 

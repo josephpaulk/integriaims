@@ -831,7 +831,7 @@ input.zoom {
 
 input.pdfreport {
 	padding-right: 25px;
-	background: url(../../images/input_pdf.png) no-repeat 90% 8px #FFFFFF;			
+	background: url(../../images/page_white_acrobat.png) no-repeat 90% 0px #FFFFFF;			
 }
 
 input.xml {
