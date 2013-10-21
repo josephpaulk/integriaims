@@ -1,3 +1,13 @@
+2013-10-21  Sancho lerena <slerena@artica.es>
+
+	* include/integria_cron.php,
+	* include/functions_incidents.php: Tabs replace spaces.
+
+	* include/languages/es.po,
+	  include/languages/es.mo: Updated spanish language strings.
+
+	* operation/invoices/invoice_detail.php: Added PDF output.
+
 2013-10-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/companies/company_detail.php: Fixed an error related

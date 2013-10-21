@@ -131,6 +131,8 @@ function filter_incidents ($filters, $count=false) {
 		$order_by_array = $filters['order_by'];
 	}
 	$order_by = "";
+
+	if ($order_by_array)
 	foreach ($order_by_array as $key => $value) {
 		if ($value) {
 			$order_by .= " $key $value, ";

@@ -195,11 +195,11 @@ function run_daily_check () {
 	run_project_check ();
 	run_task_check ();
 	run_autowu();
-    run_auto_incident_close();
+	run_auto_incident_close();
 	synchronize_pandora_inventory();
 	delete_tmp_files();
 	delete_old_audit_data();
-    delete_old_event_data();
+	delete_old_event_data();
 	delete_old_incidents();
 	delete_old_wu_data();
 	delete_old_wo_data();
