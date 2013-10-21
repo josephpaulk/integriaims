@@ -1,5 +1,13 @@
 2013-10-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/companies/company_detail.php: Fixed an error related
+	with the companies last updates.
+	
+	* operation/workorders/wo.php: Fixed an error on the creator
+	autocomplete.
+	
+2013-10-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_extensions.php: Added the functions
 	"extensions_add_tab_function", "extensions_call_tab_function"
 	and "get_tab_extensions". Improved the functions

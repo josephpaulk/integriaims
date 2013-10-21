@@ -779,6 +779,8 @@ $(document).ready (function () {
 		};
 		bindAutocomplete ("#text-user", idUser, false, changeHandler);
 		validate_user ("#form-search_wo", "#text-user", "<?php echo __('Invalid user')?>");
+		bindAutocomplete ("#text-user2", idUser, false, changeHandler);
+		validate_user ("#form-search_wo", "#text-user2", "<?php echo __('Invalid user')?>");
 	}
 	
 });

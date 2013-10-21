@@ -337,6 +337,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$id_parent = $company["id_parent"];
 		$manager = $company["manager"];
 		$last_update = $company["last_update"];
+		if ($last_update == "0000-00-00 00:00:00" || $last_update == "") {
+			$last_update = get_db_sql ("SELECT MAX(date) FROM tcompany_activity WHERE id_company = ". $company["id"]);
+		}
 	} else {
 		$name = "";
 		$address = "";
@@ -1015,7 +1018,7 @@ if ((!$id) AND ($new_company == 0)){
 			$data[5] = $company["country"];
 			
 			// get last activity date for this company record
-			$last_activity = get_db_sql ("SELECT date FROM tcompany_activity WHERE id_company = ". $company["id"]);
+			$last_activity = get_db_sql ("SELECT MAX(date) FROM tcompany_activity WHERE id_company = ". $company["id"]);
 
 			$data[6] = human_time_comparation ($last_activity);
 
