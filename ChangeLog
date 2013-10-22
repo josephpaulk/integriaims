@@ -2,6 +2,9 @@
 
 	* integria_db.sql: Fixed typo in tinvoice table
 	definition (that makes installer crash).
+
+	* integria_demo.sql: Fixed another small problem
+	in demo data load.
 	
 2013-10-22  Dario Rodriguez <dario@artica.es>
 
