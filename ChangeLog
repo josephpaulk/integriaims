@@ -1,3 +1,8 @@
+2013-10-22  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/projects/role_user_global.php: Fixed an error that
+	appeared when an admin saw the another admin's tasks.
+	
 2013-10-21  Sancho lerena <slerena@artica.es>
 
 	* include/integria_cron.php,

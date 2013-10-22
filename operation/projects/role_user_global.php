@@ -197,13 +197,13 @@ echo "<th>".__("WU");
 echo "<th>".__("WU/Tsk");
 echo "<th align='center'>".__("Delete")."</th>";
 
-$sql = get_projects_query ($id_user);
+$sql = get_projects_query ($id_user, "", 0, true);
 
 $new = true;
 $color=1;
 while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
 	
-	$sql = get_tasks_query ($id_user, $project['id']);
+	$sql = get_tasks_query ($id_user, $project['id'], "", 0, true);
 	$new = true;
 	
 	$project_access = get_project_access ($config['id_user'], $project['id']);
