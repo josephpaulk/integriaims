@@ -1,3 +1,7 @@
+2013-10-22  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_dashboard_detail.php: Fixed an error.
+
 2012-10-22  Sancho Lerena <slerena@artica.es>
 
 	* integria_db.sql: Fixed typo in tinvoice table

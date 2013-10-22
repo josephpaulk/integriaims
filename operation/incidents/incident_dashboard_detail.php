@@ -429,7 +429,7 @@ echo "<ul>";
 //Only incident manager and user with IR flag which are owners and admin can edit incidents
 $check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
 
-if ($check_acl !== ENTERPRISE_NOT_HOOK && $check_acl) {
+if ($check_acl === ENTERPRISE_NOT_HOOK || $check_acl) {
 	echo "<li>";
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
 	echo "</li>";
