@@ -1,3 +1,8 @@
+2012-10-22  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql: Fixed typo in tinvoice table
+	definition (that makes installer crash).
+	
 2013-10-22  Dario Rodriguez <dario@artica.es>
 
 	* include/integria_cron.php: Fixed an error handling an array

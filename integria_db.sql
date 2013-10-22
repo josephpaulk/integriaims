@@ -459,7 +459,7 @@ CREATE TABLE `tinvoice` (
   `id_user` varchar(60) default NULL,
   `id_task` int(10) unsigned NULL default NULL,
   `id_company` int(10) unsigned NULL default NULL,  
-  `bill_id` tinytext NOT NULL DEFAULT '';
+  `bill_id` tinytext NOT NULL DEFAULT '',
   `concept1` mediumtext DEFAULT NULL,
   `concept2` mediumtext DEFAULT NULL,
   `concept3` mediumtext DEFAULT NULL,
