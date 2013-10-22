@@ -567,16 +567,17 @@ function run_mail_queue () {
 	
 	if ($mails)
 	foreach ($mails as $email){
-		
+			
 		// Use local mailer if host not provided - Attach not supported !!
-
-        //Headers must be comma separated
-        if (isset($email["extra_headers"])) {
-        	$extra_headers = explode(",", $email["extra_headers"]);
-        }		
+        	//Headers must be comma separated
+        	if (isset($email["extra_headers"])) {
+        		$extra_headers = explode(",", $email["extra_headers"]);
+        	} else {
+			$extra_headers = array();
+		}		
 
 		if ($config["smtp_host"] == ""){
-
+			
 			// Use internal mail() function
                         $headers   = array();
                         $headers[] = "MIME-Version: 1.0";
@@ -608,8 +609,7 @@ function run_mail_queue () {
                         }
 
 		} else {
-		
-		// Use swift mailer library to connect to external SMTP
+			// Use swift mailer library to connect to external SMTP
 	
 			try {	
 				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
@@ -660,7 +660,6 @@ function run_mail_queue () {
 				//Check if the email was sent at least once
 				if ($mailer->send($message) >= 1)
 					process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
-
 			// SMTP error management!
 			} catch (Exception $e) {
 				$retries = $email["attempts"] + 1;
