@@ -76,6 +76,7 @@ if ($update) {
 	$config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
 	$config["want_chat"] = get_parameter ("want_chat", 0);
 	$config["incident_type_change"] = (int) get_parameter ("incident_type_change", 0);
+	$config["change_incident_datetime"] = (int) get_parameter ("change_incident_datetime", 0);
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
 	update_config_token ("mask_emails", $config["mask_emails"]);
@@ -89,6 +90,7 @@ if ($update) {
 	update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
 	update_config_token ("want_chat", $config["want_chat"]);
 	update_config_token ("incident_type_change", $config["incident_type_change"]);
+	update_config_token ("change_incident_datetime", $config["change_incident_datetime"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -233,6 +235,8 @@ echo "</tr>";
 
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the incident type'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
 echo "</tr>";
 
 echo "<tr>";

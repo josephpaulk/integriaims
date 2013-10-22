@@ -301,6 +301,8 @@ if ($action == "insert" && !$id) {
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
 	$email_copy = get_parameter ("email_copy", "");
+	$creation_date = get_parameter ("creation_date", "");
+	$creation_time = get_parameter ("creation_time", "");
 	
 	//Get notify flag from group if the user doesn't has IM flag
 	if (! give_acl ($config['id_user'], $id_grupo, "IW")) {
@@ -339,7 +341,11 @@ if ($action == "insert" && !$id) {
 		// DONT use MySQL NOW() or UNIXTIME_NOW() because 
 		// Integria can override localtime zone by a user-specified timezone.
 		
-		$timestamp = print_mysql_timestamp();
+		if ($config["change_incident_datetime"] && $creation_date && $creation_time) {
+			$timestamp = "$creation_date $creation_time";
+		} else {
+			$timestamp = print_mysql_timestamp();
+		}
 		
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
@@ -739,6 +745,12 @@ if (!$create_incident){
 	}
 	$table->data[2][2] .= user_print_autocomplete_input($params_closed);
 	$table->data[2][2] .= "</div>";
+} else if ($create_incident && $config["change_incident_datetime"]) {
+	$date = date('Y-m-d');
+	$time = date('H:m');
+	$table->data[2][2] = print_input_text ('creation_date', $date, '', 10, 100, true, __('Creation date'));
+	$table->data[2][2] .= print_input_text ('creation_time', $time, '', 10, 100, true, __('Creation time'))
+		.print_help_tip (__("The format should be hh:mm"), true);
 }
 
 $table->colspan[4][0] = 3;		
@@ -935,12 +947,15 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script  type="text/javascript">
+
+add_datepicker("#text-creation_date");
 
 $(document).ready (function () {
 	
