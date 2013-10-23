@@ -52,14 +52,6 @@ foreach ($incidents as $incident) {
 	$incidents_by_user[] = $row;
 }
 
-if (empty($incidents_by_user)) {
-	ui_print_error_message(__('There are not incidents with this filter.'));
-	
-	return;
-}
-
-print_bubble_incidents_per_user_graph($incidents_by_user);
-
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="search_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=search" style="clear: both">';
 foreach ($filter as $key => $value) {
@@ -67,4 +59,12 @@ foreach ($filter as $key => $value) {
 }
 print_input_hidden ("offset", get_parameter("offset"));
 echo "</form>";
+
+
+if (empty($incidents_by_user)) {
+	ui_print_error_message(__('There are not incidents with this filter.'));
+	//return;
+} else {
+	print_bubble_incidents_per_user_graph($incidents_by_user);
+}
 ?>

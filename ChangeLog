@@ -1,5 +1,12 @@
 2013-10-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/incidents/incident_statistics.php,
+	  operation/incidents/incident_graph.php: Fixed an error that made
+	  impossible to go back to the incident search from the incident
+	  statistics or graphs when there was no incidents.
+
+2013-10-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* operation/incidents/incident_search.php,
 	  operation/incidents/incident_search_logic.php,
 	  include/functions_form.php,

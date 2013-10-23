@@ -34,11 +34,6 @@ echo "</h1>";
 
 $incidents = filter_incidents ($filter);
 
-if ($incidents == false) {
-	echo __('Nothing was found');
-	return;
-}
-
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="search_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=search" style="clear: both">';
 foreach ($filter as $key => $value) {
@@ -68,6 +63,12 @@ print_input_hidden ('clean_output', 1);
 print_input_hidden ('pdf_output', 1);
 echo '</div></form>';
 
-print_incidents_stats ($incidents);
+
+if ($incidents == false) {
+	echo __('Nothing was found');
+	//return;
+} else {
+	print_incidents_stats ($incidents);
+}
 
 ?>
