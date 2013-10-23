@@ -79,11 +79,11 @@ function print_incident () {
 	
 	echo "<div style='padding-left:7px;'>";
 	
-	echo "<table style='font: 1em Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif; width:620px; text-align:left;'>";
+	echo "<table style='font: 1em Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif; color:#505050; width:620px; text-align:left;'>";
 	
 	if ($pdf_output) {
 		echo "	<tr>";
-		echo "		<td style='text-align:center; font-size:14px; color:black;'>";
+		echo "		<td style='text-align:center; font-size:14px; color:#505050;'>";
 		echo "			<h1>#".$incident["id_incidencia"]."&nbsp;&nbsp;".$incident["titulo"]."</h1><br><br>";
 		echo "		</td>";
 		echo "	</tr>";
@@ -91,42 +91,42 @@ function print_incident () {
 	
 	if ($incident["id_creator"]) {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Creator')."</b> - ".$incident["id_creator"];
 		echo "		</td>";
 		echo "	</tr>";
 	}
 	if ($incident["id_usuario"]) {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Owner')."</b> - ".$incident["id_usuario"];
 		echo "		</td>";
 		echo "	</tr>";
 	}
 	if ($incident["estado"]) {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Status')."</b> - ".incidents_get_incident_status_text ($incident["id_incidencia"]);
 		echo "		</td>";
 		echo "	</tr>";
 	}
 	if ($incident["inicio"] != "0000-00-00 00:00:00") {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Created on')."</b> - ".strftime("%e %B %Y (%H:%M)", strtotime($incident["inicio"]));
 		echo "		</td>";
 		echo "	</tr>";
 	}
 	if ($incident["cierre"] != "0000-00-00 00:00:00") {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Closed on')."</b> - ".strftime("%e %B %Y (%H:%M)", strtotime($incident["cierre"]));
 		echo "		</td>";
 		echo "	</tr>";
 	}
 	if ($incident["descripcion"]) {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Description')."</b>";
 		echo "			<div style='width:620px; word-wrap:break-word;'>".$incident["descripcion"]."</div>";
 		echo "		</td>";
@@ -134,7 +134,7 @@ function print_incident () {
 	}
 	if ($incident["epilog"]) {
 		echo "	<tr>";
-		echo "		<td>";
+		echo "		<td style='font-size:16px; color:#505050;'>";
 		echo "			<b>".__('Epilog')."</b>";
 		echo "			<div style='width:620px; word-wrap:break-word;'>".$incident["epilog"]."</div>";
 		echo "		</td>";

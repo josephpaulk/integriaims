@@ -19,6 +19,60 @@ check_login ();
 
 require_once ('include/functions_incidents.php');
 
+if (defined ('AJAX')) {
+	ob_clean();
+	$get_type_fields_table = (boolean) get_parameter("get_type_fields_table");
+
+	if ($get_type_fields_table) {
+
+		$id_incident_type = (int) get_parameter("id_incident_type");
+
+		$table_type_fields = new stdclass;
+		$table_type_fields->width = "100%";
+		$table_type_fields->class = "search-table";
+		$table_type_fields->data = array();
+
+		if ($id_incident_type) {
+
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field
+							WHERE id_incident_type = %d", $id_incident_type);
+			$config['mysql_result_type'] = MYSQL_ASSOC;
+			$type_fields = process_sql($sql);
+
+			$column = 0;
+			$row = 0;
+			if ($type_fields) {
+				foreach ($type_fields as $key => $type_field) {
+
+					if ($type_field['type'] == "text" || $type_field['type'] == "textarea") {
+						$input = print_input_text('search_type_field_'.$type_field['id'], '', '', 30, 30, true, $type_field['label']);
+					} else if ($type_field['type'] == "combo") {
+						$combo_values = explode(",", $type_field['combo_value']);
+						$values = array();
+						foreach ($combo_values as $value) {
+							$values[$value] = $value;
+						}
+						$input = print_select ($values, 'search_type_field_'.$type_field['id'], '', '', __('Any'), '', true, false, false, $type_field['label']);
+					}
+
+					$table_type_fields->data[$row][$column] = $input;
+					if ($column >= 3) {
+						$column = 0;
+						$row++;
+					} else {
+						$column++;
+					}
+				}
+				if ($table_type_fields->data) {
+					print_table($table_type_fields);
+				}
+			}
+		}
+	}
+	return;
+}
+
 echo "<div id='incident-search-content'>";
 echo "<h1>" .__('Incident search');
 echo "<div id='button-bar-title'>";
@@ -323,5 +377,16 @@ function show_search_inventory(search_free, id_object_type_search, owner_search,
 	});
 }
 
-
+// Change the type fields table
+function change_type_fields_table() {
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_search_logic&get_type_fields_table=1&id_incident_type="+$("#search_id_incident_type").val(),
+		dataType: "html",
+		success: function(data) {
+			$("#table_type_fields").html (data);
+		}
+	});
+}
 </script>

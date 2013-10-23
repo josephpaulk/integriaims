@@ -33,11 +33,25 @@ $filter['serial_number'] = (string) get_parameter ('search_serial_number');
 $filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
 $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
-$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_creator'] = (string) get_parameter ('search_creator', '');
 $filter['editor'] = (string) get_parameter ('search_editor', '');
 $filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
 $filter['order_by'] = get_parameter ('search_order_by', '');
+
+if ($filter['id_incident_type']) {
+
+	$sql = sprintf("SELECT *
+					FROM tincident_type_field
+					WHERE id_incident_type = %d", $filter["id_incident_type"]);
+	$config['mysql_result_type'] = MYSQL_ASSOC;
+	$type_fields = process_sql($sql);
+
+	if ($type_fields) {
+		foreach ($type_fields as $type_field) {
+			$filter['type_field_'.$type_field['id']] = (string) get_parameter ('search_type_field_'.$type_field['id']);
+		}
+	}
+}
 
 switch ($option) {
 	case "search":

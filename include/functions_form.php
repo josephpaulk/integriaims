@@ -885,6 +885,20 @@ function form_search_incident ($return = false, $filter=false) {
 		$month_ago = date('Y-m-d',strtotime($date_end) - 2592000);
 		
 		$date_ini = get_parameter("search_first_date", $month_ago);
+
+		if ($search_id_incident_type) {
+
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field
+							WHERE id_incident_type = %d", $search_id_incident_type);
+			$config['mysql_result_type'] = MYSQL_ASSOC;
+			$type_fields = get_db_all_rows_sql($sql);
+
+			$search_type_field = array();
+			foreach ($type_fields as $key => $type_field) {
+				$search_type_field[$type_field['id']] = (string) get_parameter ('search_type_field_'.$type_field['id']);
+			}
+		}
 	}
 	else {
 		$search_string = (string) $filter['string'];
@@ -900,6 +914,22 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_creator = (string) $filter['id_creator'];
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
+
+		if ($search_id_incident_type) {
+
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field
+							WHERE id_incident_type = %d", $search_id_incident_type);
+			$config['mysql_result_type'] = MYSQL_ASSOC;
+			$type_fields = get_db_all_rows_sql($sql);
+
+			$search_type_field = array();
+			if ($type_fields) {
+				foreach ($type_fields as $key => $type_field) {
+					$search_type_field[$type_field['id']] = (string) $filter['type_field_'.$type_field['id']];
+				}
+			}
+		}
 	}
 	
 	/* No action is set, so the form will be sent to the current page */
@@ -924,6 +954,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
+	$table->colspan[5][0] = 4;
 	$table->colspan[6][1] = 3;
 	
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
@@ -1003,7 +1034,53 @@ function form_search_incident ($return = false, $filter=false) {
 			$id_company, '', __('All'), 0, true, false, false, __('Company'));
 			
 	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
-		$search_id_incident_type, '', __('All'), 0, true, false, false, __('Incident type'));
+		$search_id_incident_type, 'javascript:change_type_fields_table();', __('All'), 0, true, false, false, __('Incident type'));
+
+	$table_type_fields = new stdclass;
+	$table_type_fields->width = "100%";
+	$table_type_fields->class = "search-table";
+	$table_type_fields->data = array();
+
+	if ($search_id_incident_type) {
+
+		$sql = sprintf("SELECT *
+						FROM tincident_type_field
+						WHERE id_incident_type = %d", $search_id_incident_type);
+		$config['mysql_result_type'] = MYSQL_ASSOC;
+		$type_fields = process_sql($sql);
+
+		$column = 0;
+		$row = 0;
+		if ($type_fields) {
+			foreach ($type_fields as $key => $type_field) {
+				$data = $search_type_field[$type_field['id']];
+
+				if ($type_field['type'] == "text" || $type_field['type'] == "textarea") {
+					$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+				} else if ($type_field['type'] == "combo") {
+					$combo_values = explode(",", $type_field['combo_value']);
+					$values = array();
+					foreach ($combo_values as $value) {
+						$values[$value] = $value;
+					}
+					$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, '', __('Any'), '', true, false, false, $type_field['label']);
+				}
+
+				$table_type_fields->data[$row][$column] = $input;
+				if ($column >= 3) {
+					$column = 0;
+					$row++;
+				} else {
+					$column++;
+				}
+			}
+		}
+	}
+	if ($table_type_fields->data) {
+		$table_type_fields_html = print_table($table_type_fields, true);
+	}
+
+	$table->data[5][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
 	
 	$table->data[6][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" href="#">'.__('Advanced search').' >></a></div>';
 	$table->data[6][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);

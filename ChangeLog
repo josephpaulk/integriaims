@@ -1,3 +1,18 @@
+2013-10-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/incidents/incident_search.php,
+	  operation/incidents/incident_search_logic.php,
+	  include/functions_form.php,
+	  include/functions_incidents.php: Now is possible to filter incidents
+	  by the fields of incidents types and save searches with those new
+	  filters.
+
+	* extensions/incident_summary.php: Improved a bit the pdf styles.
+
+	* extras/import_users_from_csv.php: Fixed an error on a path.
+
+	* extras/migrate.sql: Deleted an unused line.
+
 2013-10-22  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_dashboard_detail.php: Fixed an error.

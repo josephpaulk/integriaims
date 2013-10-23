@@ -93,6 +93,23 @@ function filter_incidents ($filters, $count=false) {
 		//Incident type 0 means all and incident type -1 means without type
 		if ($filters["id_incident_type"] != -1) {
 			$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
+
+			$incident_fields = array();
+			foreach ($filters as $key => $value) {
+				// If matchs an incident field, ad an element to the array with their real id and its data
+				if (preg_match("/^type_field_/", $key)) {
+					$incident_fields[preg_replace("/^type_field_/", "", $key)] = $value;
+				}
+			}
+			foreach ($incident_fields as $id => $data) {
+				if ($data !== "") {
+					$sql_clause .= sprintf (' AND id_incidencia = ANY (SELECT id_incident
+																		FROM tincident_field_data
+																		WHERE id_incident_field = "%s"
+																			AND data LIKE "%%%s%%")', $id, $data);
+				}
+			}
+
 		} else {
 			$sql_clause .=  ' AND (id_incident_type = 0 OR id_incident_type IS NULL)';
 		}
@@ -318,7 +335,6 @@ function attach_incident_file ($id, $file_temp, $file_description, $email_notify
  * @param array/string filter for the query
  * @param bool only names or all the incidents
  *
-
  */
  
 function get_incidents ($filter = array(), $only_names = false) {
@@ -412,10 +428,7 @@ function get_incident_full_workunits ($id_incident) {
  * Return an array with statistics of a given list of incidents.
  *
  * @param array List of incidents to get stats.
- #
- *
-
- */
+ * */
 function get_incidents_stats ($incidents) {
     global $config;
 
@@ -2091,6 +2104,7 @@ function incidents_search_result ($filter, $ajax=false) {
 			$sql = sprintf("SELECT *
 							FROM tincident_type_field
 							WHERE id_incident_type = %d", $incident["id_incident_type"]);
+			$config['mysql_result_type'] = MYSQL_ASSOC;
 			$type_fields = get_db_all_rows_sql($sql);
 			
 			$type_fields_values_text = "";

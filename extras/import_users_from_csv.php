@@ -23,7 +23,7 @@ function print_help() {
 function parse_config ($config_file) {
 	
 	if (file_exists($config_file)) {
-		$fp = fopen("/home/vanessa/code/integria-code/extras/".$config_file, 'r');
+		$fp = fopen($config['homedir']."/extras/".$config_file, 'r');
 		
 		$connection = array();
 		if ($fp != false) {
