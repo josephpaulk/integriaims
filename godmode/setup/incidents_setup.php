@@ -74,7 +74,6 @@ if ($update) {
 	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
 	$config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
 	$config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
-	$config["want_chat"] = get_parameter ("want_chat", 0);
 	$config["incident_type_change"] = (int) get_parameter ("incident_type_change", 0);
 	$config["change_incident_datetime"] = (int) get_parameter ("change_incident_datetime", 0);
 	
@@ -88,7 +87,6 @@ if ($update) {
 	update_config_token ("auto_incident_close", $config["auto_incident_close"]);
 	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
 	update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
-	update_config_token ("want_chat", $config["want_chat"]);
 	update_config_token ("incident_type_change", $config["incident_type_change"]);
 	update_config_token ("change_incident_datetime", $config["change_incident_datetime"]);
 	
@@ -229,9 +227,6 @@ echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on incident creation'))."</td>";
-
-echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "want_chat", $config["want_chat"], '','','',true, 0, true, __('Enable incident chat window'))."</td>";
-echo "</tr>";
 
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the incident type'))."</td>";

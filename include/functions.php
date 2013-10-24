@@ -1247,13 +1247,15 @@ function check_last_cron_execution($get_mins = false) {
 }
 
 function check_email_queue ($get_count = false) {
+
+	global $config;
 	
 	$sql = "SELECT COUNT(*) FROM tpending_mail";
 	
 	$count_aux = process_sql ($sql);
 	
 	$count = $count_aux[0][0];
-	
+
 	if ($get_count) {
 		return $count;
 	}

@@ -1,5 +1,10 @@
 2013-10-24  Sancho Lerena <slerena@artica.es>
 
+	* include/functions.php: Fixed check_mail_queue function.
+
+	* godmode/setup/incidents_setup.php: removed chat setup option
+	chat is no more available in 4.x version.
+
 	* extras/migrate.sql: Dropping an inexistant field can break
 	things. Dropping the drop :)
 
