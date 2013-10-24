@@ -401,12 +401,7 @@ if ($create) {
 	if($name == '') {
 		$err_message .= ". ".__('Name cannot be empty').".";
 		$id = false;
-	}
-	else if ($inventory_id !== false) {
-		$err_message .= ". ".__('Duplicate name').".";
-		$id = false;
-	}
-	else {
+	} else {
 
 		$sql = sprintf ('INSERT INTO tinventory (name, description,
 				id_contract, id_parent, id_manufacturer, owner, public, id_object_type, last_update, status, receipt_date, issue_date)
@@ -792,20 +787,9 @@ var rules, messages;
 // Rules: #text-name
 rules = {
 	required: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-			page: "include/ajax/remote_validations",
-			search_existing_object: 1,
-			object_name: function() { return $('#text-name').val() },
-			object_id: "<?php echo $id?>"
-        }
-	}
 };
 messages = {
 	required: "<?php echo __('Name required')?>",
-	remote: "<?php echo __('This object already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 

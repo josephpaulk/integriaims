@@ -1119,7 +1119,7 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', 
 }
 
 
-function inventories_show_list($sql_search, $params='', $last_update = 0) {
+function inventories_show_list($sql_search, $sql_count, $params='', $last_update = 0) {
 	global $config;
 
 	$is_enterprise = false;
@@ -1129,27 +1129,34 @@ function inventories_show_list($sql_search, $params='', $last_update = 0) {
 	}
 
 	$params .="&mode=list";	
-	
-	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data";
-		
-	if ($sql_search) {	
-		$sql .= " WHERE 1=1 $sql_search";
-	}
-
-	$sql .= " GROUP BY tinventory.`id`";
 			
 	if ($last_update) {
-		$sql .= " ORDER BY last_update DESC";
+		$sql_search .= " ORDER BY last_update DESC";
 	}
 
-	$inventories_aux = get_db_all_rows_sql($sql);
+	$clean_output = get_parameter("clean_output");
+
+	if ($clean_output) {
+		$block_limit = 5000;
+	} else {
+		$block_limit = $config["block_size"];
+	}
+
+	$sql_search .= " LIMIT ".$block_limit;
+
+	$offset = get_parameter("offset", 0);	
+
+	$sql_search .= " OFFSET $offset";
 	
-	if ($is_enterprise) {
+	$inventories_aux = get_db_all_rows_sql($sql_search);
+	$count_inv = get_db_value_sql($sql_count);
+	
+	/*if ($is_enterprise) {
 		$inventories = inventory_get_user_inventories($config['id_user'], $inventories_aux);
 	} else {
 		$inventories = $inventories_aux;
-	}
-
+	}*/
+	$inventories = $inventories_aux;
 	if ($inventories === false) {
 		echo __("No inventories");
 	} else {
@@ -1157,16 +1164,17 @@ function inventories_show_list($sql_search, $params='', $last_update = 0) {
 
 		$table->id = 'inventory_list';
 		$table->class = 'listing';
-		$table->width = '98%';
+		$table->width = '100%';
 		$table->data = array ();
 		$table->head = array ();
-		
+		$table->colspan = array();
 		$table->head[0] = __('Id');
 		$table->head[1] = __('Name');
 		$table->head[2] = __('Owner');
-		$table->head[3] = __('Object type');
-		$table->head[4] = __('Manufacturer');
-		$table->head[5] = __('Contract');
+		$table->head[3] = __("Parent object");
+		$table->head[4] = __('Object type');
+		$table->head[5] = __('Manufacturer');
+		$table->head[6] = __('Contract');
 		
 		if ($result_check) {
 			
@@ -1178,13 +1186,20 @@ function inventories_show_list($sql_search, $params='', $last_update = 0) {
 				$i++;
 			}
 		} else {
-			$table->head[6] = __('Actions');
+			if (!$clean_output) {
+				$table->head[7] = __('More info');
+			}
 		}
 		
-		//We need this auxiliar variable to use later for footer pagination
-		$inventories_aux = $inventories;
+		$count = $count_inv;
 
-		$inventories = print_array_pagination ($inventories_aux, "index.php?sec=inventory&sec2=operation/inventories/inventory_search".$params);
+		$url = "index.php?sec=inventory&sec2=operation/inventories/inventory".$params;
+		$offset = get_parameter("offset");
+
+		if(!$clean_output) {
+
+			pagination ($count, $url, $offset);
+		}
 
 		$idx = 0;
 
@@ -1205,26 +1220,33 @@ function inventories_show_list($sql_search, $params='', $last_update = 0) {
 			else 
 				$name_owner = '--';
 			$data[2] = "<a href=".$url.">".$name_owner.'</a>';
+
+			if ($inventory["id_parent"] != 0)
+				$name_parent = get_db_value('name', 'tinventory', 'id', $inventory['id_parent']);
+			else 
+				$name_parent = '--';
+			$data[3] = "<a href=".$url.">".$name_parent.'</a>';
 			
 			if ($inventory['id_object_type'] != 0)
 				$name_object = get_db_value('name', 'tobject_type', 'id', $inventory['id_object_type']);
 			else 
 				$name_object = '--';
-			$data[3] = "<a href=".$url.">".$name_object.'</a>';
+			$data[4] = "<a href=".$url.">".$name_object.'</a>';
 			
 			if ($inventory['id_manufacturer'] != '')
 				$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $inventory['id_manufacturer']);
 			else 
 				$name_manufacturer = '--';
-			$data[4] = "<a href=".$url.">".$name_manufacturer.'</a>';
+			$data[5] = "<a href=".$url.">".$name_manufacturer.'</a>';
 			
 			if ($inventory['id_contract'] != '')
 				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
 			else 
 				$name_contract = '--';
-			$data[5] = "<a href=".$url.">".$name_contract.'</a>';
+			$data[6] = "<a href=".$url.">".$name_contract.'</a>';
 			
 			if ($result_check) {
+
 				$result_object_fields = inventories_get_all_type_field ($result_check, $inventory['id'], true);
 				
 				$i = 6;
@@ -1233,56 +1255,70 @@ function inventories_show_list($sql_search, $params='', $last_update = 0) {
 					$i++;
 				}
 			} else {
-				$data[6] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
-				$data[6] .= print_image ("images/information.png", true,
-					array ("title" => __('Show object type fields')));
-				$data[6] .= '</a>&nbsp;';
+				if (!$clean_output) {
+					$data[7] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
+					$data[7] .= print_image ("images/information.png", true,
+						array ("title" => __('Show object type fields')));
+					$data[7] .= '</a>&nbsp;';
+				}
 				
 			}
 			$table->rowclass[$idx] = 'inventory_info_' . $inventory["id"];
 			
-			$idx++;
 			
-			array_push ($table->data, $data);
+
+				$idx++;
+				
+				array_push ($table->data, $data);
 			
-			$data_info = array();
-			
-			$table_info->width = '98%';
-			$table_info->class = 'databox_color_without_line';
-			
-			$table_info->size = array ();
-			$table_info->style = array();
-			$table_info->data = array();
-			
-			$res_obj_fields = inventories_get_all_type_field ($inventory['id_object_type'], $inventory['id'], false);
-			
-			if (empty($res_obj_fields)) {
-				$table_info->data[0][0] = '<b>'.__('No data to show').'</b>';
-			} else {
-				$j = 0;
-				foreach ($res_obj_fields as $k => $ob_field) {
-					if (isset($ob_field['label'])) {
-						$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
-						$table_info->data[$j][$j] .= ' : '.'</b>';
-						$table_info->data[$j][$j] .= $ob_field['data'];
-						$j++;
+			if (!$clean_output) {
+
+				$data_info = array();
+				
+				$table_info->width = '98%';
+				$table_info->class = 'databox_color_without_line';
+				
+				$table_info->size = array ();
+				$table_info->style = array();
+				$table_info->data = array();
+				
+				$res_obj_fields = inventories_get_all_type_field ($inventory['id_object_type'], $inventory['id'], false);
+				
+				if (empty($res_obj_fields)) {
+					$table_info->data[0][0] = '<b>'.__('No data to show').'</b>';
+				} else {
+					$j = 0;
+					foreach ($res_obj_fields as $k => $ob_field) {
+						if (isset($ob_field['label'])) {
+							$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
+							$table_info->data[$j][$j] .= ' : '.'</b>';
+							$table_info->data[$j][$j] .= $ob_field['data'];
+							$j++;
+						}
 					}
 				}
+				
+				$data_info['row_info'] = print_table($table_info, true);
+				
+				$table_info->colspan[0][0] = 6;
+				
+				$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
+				$table->rowstyle[$idx] = 'display: none;';
+				$table->colspan[$idx]["row_info"] = 8;
+
+		
+				
+				array_push ($table->data, $data_info);
+				
+				$idx++;
 			}
-			
-			$data_info['row_info'] = print_table($table_info, true);
-			
-			$table_info->colspan[0][0] = 6;
-			
-			$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
-			$table->rowstyle[$idx] = 'display: none;';
-			
-			array_push ($table->data, $data_info);
-			
-			$idx++;
 		}
 		
 		print_table($table);
+
+		if(!$clean_output) {
+			pagination ($count, $url, $offset, true);
+		}
 	}
 }
 

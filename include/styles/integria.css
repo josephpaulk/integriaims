@@ -821,8 +821,14 @@ input.search {
 
 input.csv {
 	padding-right: 25px;
-	background: url(../../images/input_csv.png) no-repeat 90% 8px #FFFFFF;			
+	background: url(../../images/input_csv.png) no-repeat 92% 6px #FFFFFF;			
 }
+
+input.pdf {
+	padding-right: 25px;
+	background: url(../../images/page_white_acrobat.png) no-repeat 95% 1px #FFFFFF;			
+}
+
 
 input.zoom {
 	padding-right: 25px;

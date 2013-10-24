@@ -138,7 +138,7 @@ if ($delete_object_type_field) {
 // List fields
 //**********************************************************************
 
-$objects_type_fields = get_db_all_rows_field_filter ('tobject_type_field', 'id_object_type', $id_object_type,'label, type');
+$objects_type_fields = get_db_all_rows_field_filter ('tobject_type_field', 'id_object_type', $id_object_type, 'id');
 
 $table->width = '99%';
 

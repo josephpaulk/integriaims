@@ -1,3 +1,17 @@
+2013-10-24  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css: Fixed some css issues and new
+	style created for export to PDF button
+	* include/export_csv.php: New feature to export inventory
+	information to CSV.
+	* operation/inventories/manage_objects_types_list.php,
+	* operation/inventories/inventory_search.php,
+	* operation/inventories/inventory.php,
+	* include/functions_inventories.php: Rewrited function to display
+	inventory list.
+	* operation/inventories/inventory_detail.php: Removed validation rule
+	that checks for existing inventory objects with the same name.
+
 2013-10-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/incidents/incident_statistics.php,

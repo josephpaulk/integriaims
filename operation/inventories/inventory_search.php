@@ -340,133 +340,158 @@ $id_contract = get_parameter ('id_contract', 0);
 $fields_selected = (array)get_parameter('object_fields_search');
 $mode = get_parameter('mode', 'list');
 $last_update = (bool) get_parameter ('last_update');
+$clean_output = get_parameter("clean_output");
 
 if (isset($_POST['listview']))
 	$mode = 'list';
 if (isset($_POST['treeview']))
 	$mode = 'tree';
 
-
-echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_search">';
-	$table_search->class = 'search-table';
-	$table_search->width = '98%';
-	$table_search->data = array ();
-	
-	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
-	
-	$objects_type = get_object_types ();
-	$table_search->data[0][1] = print_label (__('Object type'), '','',true);
-	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
-	
-	$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
-	
-	$object_fields = array();
-	
-	if ($fields_selected[0] != '') {
-		foreach ($fields_selected as $selected) {
-			$label_field = get_db_value('label', 'tobject_type_field', 'id', $selected);
-			$object_fields[$selected] = $label_field;
-		}
-	}
-
-	$table_search->data[0][2] .= print_select($object_fields, 'object_fields_search[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
-	
-	$params_assigned['input_id'] = 'text-owner';
-	$params_assigned['input_name'] = 'owner';
-	$params_assigned['input_value'] = $owner;
-	$params_assigned['title'] = 'Owner';
-	$params_assigned['return'] = true;
-
-	$table_search->data[1][0] = user_print_autocomplete_input($params_assigned);
-	
-	$contracts = get_contracts ();
-	$manufacturers = get_manufacturers ();
-	
-	$table_search->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
-		'', __('None'), 0, true, false, false, __('Contract'), '', 'width: 200px;');
-
-	$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
-		$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'), '','width: 200px;');
-	
-	$table_search->data[1][3] = print_checkbox_extended ('last_update', 1, $last_update,
-	false, '', '', true, __('Last updated'));
-
-	$buttons = '<div style=" text-align: right;">';
-	$buttons .= print_input_hidden ('search', 1, true);
-	$buttons .= print_input_hidden ('mode', $mode, true);
-	$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+$object_fields = array();
 		
-	if ($mode == 'tree') {
-		$buttons .= print_submit_button (__('List view'), 'listview', false, 'class="sub next"', true);
-	} else {
-		$buttons .= print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"', true);
+if ($fields_selected[0] != '') {
+	foreach ($fields_selected as $selected) {
+		$label_field = get_db_value('label', 'tobject_type_field', 'id', $selected);
+		$object_fields[$selected] = $label_field;
 	}
-		
-	$buttons .= '</div>';
-	
-	$table_search->data[2][0] = $buttons;
-	$table_search->colspan[2][0] = 4;
-	
-	print_table($table_search);
-echo '</form>';
+}
+
+$sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
+$sql_search_count = 'SELECT COUNT(tinventory.id) FROM tinventory WHERE 1=1';
 
 if ($search) {
-	$sql_search = '';
+	
 	$params = '&search=1';
 	
-	if ($id_object_type != 0) { //búsqueda de texto libre en nombre, descripción de inventario y en contenido de campo personalizado
-		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
-		
-		$params .= "&id_object_type_search=$id_object_type";
-		
-		if (!empty($object_fields)) {
-			$j = 0;
-			foreach ($object_fields as $k=>$f) {
-				if ($j == 0) 
-					$string_fields = "$k";
-				else
-					$string_fields .= ",$k";
-				$j++;
-			}
+	//If object type and fields were selected an there is a free search string.
+	//Then we search for this text in the object field data.
+	if ($id_object_type != 0 && !empty($object_fields) && $search_free != '') {
 
+		$j = 0;
+		foreach ($object_fields as $k=>$f) {
+			if ($j == 0) 
+				$string_fields = "$k";
+			else
+				$string_fields .= ",$k";
+			$j++;
+		}		
 
-			$sql_search .= " AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`
-							AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
-							
-			$params .= "&object_fields_search=$string_fields";
-						
-			if ($search_free != '') {
-				/*
-				$sql_search .= "AND (tobject_field_data.`data`LIKE '%$search_free%' OR tinventory.name LIKE '%$search_free%'
-					OR tinventory.description LIKE '%$search_free%')";
-				 */
-				$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
-				
-				$params .= "&search_free=$search_free";
-			}			
-		}
+		$params .= "&object_fields_search=$string_fields";
+		$params .= "&search_free=$search_free";
+
+		//Compound sub select
+		$sql_search = "SELECT tinventory.*
+							FROM tinventory, tobject_type, tobject_field_data WHERE 
+							tinventory.id_object_type = tobject_type.id AND
+							 `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+
+		$sql_search .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";					
+		$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
+
+		$sql_search_count = "SELECT COUNT(tinventory.id)
+							FROM tinventory, tobject_type, tobject_field_data WHERE 
+							tinventory.id_object_type = tobject_type.id AND
+							 `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+
+		$sql_search_count .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
+		$sql_search_count .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
+			
 	} else { //búsqueda solo en nombre y descripción de inventario
 		if ($search_free != '') {
 			$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
+			$sql_search_count .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
 			
 			$params .= "&search_free=$search_free";
 		}
 	}
-	
+
+	if ($id_object_type) {
+		$params .= "&id_object_type_search=$id_object_type";
+		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
+		$sql_search_count .= " AND tinventory.id_object_type = $id_object_type";
+	}
+
 	if ($owner != '') {
 		$sql_search .= " AND tinventory.owner = '$owner'";
+		$sql_search_count .= " AND tinventory.owner = '$owner'";
 		$params .= "&owner=$owner";
 	}
 	if ($id_manufacturer != 0) {
 		$sql_search .= " AND tinventory.id_manufacturer = $id_manufacturer";
+		$sql_search_count .= " AND tinventory.id_manufacturer = $id_manufacturer";
 		$params .= "&id_manufacturer=$id_manufacturer";
 	}
 	if ($id_contract != 0) {
 		$sql_search .= " AND tinventory.id_contract = $id_contract";
+		$sql_search_count .= " AND tinventory.id_contract = $id_contract";
 		$params .= "&id_contract=$id_contract";
 	}
-	
 } 
+
+
+if (!$clean_output) {
+	$export_buttons = "<div style='float: right; margin-top: 5px; margin-bottom: 5px;'>";
+	$export_buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1&where_clause=' . str_replace('"', "\'", $sql_search).'\')', 'class="sub csv"', true);
+	$export_buttons .= print_button(__('Export to PDF'), '', false, 'window.open(\'' . 'index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&pdf_output=1&clean_output=1&search=1&params='.$params.'\')', 'class="sub pdf"', true);
+	$export_buttons .= "</div>";
+
+	echo $export_buttons;
+
+	echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		$table_search->class = 'search-table';
+		$table_search->width = '98%';
+		$table_search->data = array ();
+		
+		$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
+		
+		$objects_type = get_object_types ();
+		$table_search->data[0][1] = print_label (__('Object type'), '','',true);
+		$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
+		
+		$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
+		
+		$table_search->data[0][2] .= print_select($object_fields, 'object_fields_search[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
+		
+		$params_assigned['input_id'] = 'text-owner';
+		$params_assigned['input_name'] = 'owner';
+		$params_assigned['input_value'] = $owner;
+		$params_assigned['title'] = 'Owner';
+		$params_assigned['return'] = true;
+
+		$table_search->data[1][0] = user_print_autocomplete_input($params_assigned);
+		
+		$contracts = get_contracts ();
+		$manufacturers = get_manufacturers ();
+		
+		$table_search->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
+			'', __('None'), 0, true, false, false, __('Contract'), '', 'width: 200px;');
+
+		$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
+			$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'), '','width: 200px;');
+		
+		$table_search->data[1][3] = print_checkbox_extended ('last_update', 1, $last_update,
+		false, '', '', true, __('Last updated'));
+
+		$buttons = '<div style=" text-align: right;">';
+		$buttons .= print_input_hidden ('search', 1, true);
+		$buttons .= print_input_hidden ('mode', $mode, true);
+		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+			
+		if ($mode == 'tree') {
+			$buttons .= print_submit_button (__('List view'), 'listview', false, 'class="sub next"', true);
+		} else {
+			$buttons .= print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"', true);
+		}
+			
+		$buttons .= '</div>';
+		
+		$table_search->data[2][0] = $buttons;
+		$table_search->colspan[2][0] = 4;
+		
+		print_table($table_search);
+	echo '</form>';
+
+}
 
 $page = (int)get_parameter('page', 1);
 switch ($mode) {
@@ -474,10 +499,10 @@ switch ($mode) {
 		inventories_print_tree($sql_search);
 		break;
 	case 'list':
-		inventories_show_list($sql_search, $params, $last_update);
+		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
 		break;
 	default:
-		inventories_show_list($sql_search, $params, $last_update);
+		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
 		break;
 }
 	

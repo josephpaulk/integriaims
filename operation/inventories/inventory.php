@@ -83,39 +83,11 @@ object').'</h3>';
 	
 }
 
-/* Tabs code */
-echo '<div id="tabs">';
-
-/* Tabs list */
-/*
-echo '<ul class="ui-tabs-nav">';
-if ($id) {
-	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
-	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/inventories/inventory_detail&id='.$id.'"><span>'.__('Details').'</span></a></li>';
-	echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Extra').'</span></a></li>';
-} else {
-	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
-	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
-	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Extra').'</span></a></li>';
-}
-
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Incidents').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contracts').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contacts').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tree').'</span></a></li>';
-echo '</ul>';
-*/
-
-/* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' : 'block').';">';
-
 echo '<div class="result"></div>';
 
 require_once ('inventory_search.php');
 
 echo '<div id="inventories-stats"></div>';
-echo '</div>';
 
 ?>
 

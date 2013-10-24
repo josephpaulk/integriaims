@@ -31,6 +31,7 @@ $export_csv_companies = get_parameter('export_csv_companies', 0);
 $export_csv_contacts = get_parameter('export_csv_contacts', 0);
 $export_csv_contracts = get_parameter('export_csv_contracts', 0);
 $export_csv_invoices = get_parameter('export_csv_invoices', 0);
+$export_csv_inventory = get_parameter('export_csv_inventory', 0);
 
 if ($export_csv_invoices) {
 	
@@ -44,13 +45,6 @@ if ($export_csv_invoices) {
 	$rows = crm_get_all_invoices (clean_output($where_clause));
 	
 	$filename = clean_output ('invoices_export').'-'.date ("YmdHi");
-
-	ob_end_clean();
-
-	// CSV Output
-
-	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-	header ('Content-Type: text/css; charset=utf-8');
 	
 	if ($rows === false)
 		return;
@@ -72,13 +66,6 @@ if ($export_csv_contracts) {
 	}
 	
 	$filename = clean_output ('contracts_export').'-'.date ("YmdHi");
-
-	ob_end_clean();
-
-	// CSV Output
-
-	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-	header ('Content-Type: text/css; charset=utf-8');
 	
 	if ($rows === false)
 		return;
@@ -96,13 +83,6 @@ if ($export_csv_contacts) {
 	$rows = crm_get_all_contacts (clean_output($where_clause));
 	
 	$filename = clean_output ('contacts_export').'-'.date ("YmdHi");
-
-	ob_end_clean();
-
-	// CSV Output
-
-	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-	header ('Content-Type: text/css; charset=utf-8');
 	
 	if ($rows === false)
 		return;
@@ -121,12 +101,6 @@ if ($export_csv_companies) {
 	
 	$filename = clean_output ('company_export').'-'.date ("YmdHi");
 
-	ob_end_clean();
-
-	// CSV Output
-	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-	header ('Content-Type: text/css; charset=utf-8');
-
 	$rows = crm_get_companies_list(clean_output($where_clause), $date);
 	
 	if ($rows === false)
@@ -144,18 +118,80 @@ if ($export_csv_leads) {
 
 	$filename = clean_output ('lead_export').'-'.date ("YmdHi");
 
-	ob_end_clean();
-
-	// CSV Output
-
-	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-	header ('Content-Type: text/css; charset=utf-8');
-
 	$rows = crm_get_all_leads (clean_output($where_clause));
 	
 	if ($rows === false)
 		return;
 }
+
+if ($export_csv_inventory) {
+	$where_clause = get_parameter('where_clause');
+	
+	$rows = get_db_all_rows_sql(clean_output($where_clause));
+
+	if ($rows === false)
+		return;	
+
+	$filename = clean_output ('inventory_export').'-'.date ("YmdHi");	
+
+	$aux_rows = array();
+
+	//Add additional information to raw csv
+	foreach ($rows as $r) {
+		$aux = array();
+
+		$aux["id"] = $r["id"];
+		$aux["name"] = $r["name"];
+
+		$aux["id_object_type"] = $r["id_object_type"];
+		$aux["object_type_name"] = "";
+		
+		if ($aux["id_object_type"]) {
+			$aux["object_type_name"] = get_db_value("name", "tobject_type", "id", $r["id_object_type"]);;
+		}
+
+		$aux["description"] = $r["description"];
+
+		$aux["id_contract"] = $r["id_contract"];
+		$aux["contract_name"] = "";
+
+		if ($aux["id_contract"]) {
+			$aux["contract_name"] = get_db_value("name", "tcontract", "id", $r["id_contract"]);
+		}
+
+		$aux["id_manufacturer"] = $r["id_manufacturer"];
+		$aux["manufacturer_name"] = "";
+
+		if ($aux["id_manufacturer"]) {
+			$aux["manufacturer_name"] = get_db_value("name", "tmanufacturer", "id", $r["id_manufacturer"]);
+		}
+
+		$aux["id_parent"] = $r["id_parent"];
+		$aux["parent_name"] = "";
+
+		if ($aux["id_parent"]) {
+			$aux["parent_name"] = get_db_value("name", "tinventory", "id", $r["id_parent"]);
+		}
+
+		$aux["owner"] = $r["owner"];
+		$aux["public"] = $r["public"];
+		$aux["show_list"] = $r["show_list"];
+		$aux["last_update"] = $r["last_update"];
+		$aux["status"] = $r["status"];
+		$aux["receipt_date"] = $r["receipt_date"];
+		$aux["issue_date"] = $r["issue_date"];
+
+		array_push($aux_rows, $aux);
+	}
+
+	$rows = $aux_rows;
+}
+
+ob_end_clean();
+
+// CSV Output
+header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
+header ('Content-Type: text/css; charset=utf-8');	
 
 // Header
 echo safe_output (implode (',', array_keys ($rows[0])))."\n";
