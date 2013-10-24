@@ -485,5 +485,4 @@ ALTER TABLE `tnewsletter_content` ADD `id_campaign` int(10) unsigned NOT NULL de
 ALTER TABLE `tinvoice` ADD `reference` text NOT NULL default "";
 
 /* 11/10/2013 */
-ALTER TABLE `tincident_type` DROP `show_in_list`;
 ALTER TABLE `tincident_type_field` ADD `show_in_list` tinyint(1) unsigned NOT NULL default 0;

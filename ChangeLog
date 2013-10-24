@@ -1,3 +1,8 @@
+2013-10-24  Sancho Lerena <slerena@artica.es>
+
+	* extras/migrate.sql: Dropping an inexistant field can break
+	things. Dropping the drop :)
+
 2013-10-24  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css: Fixed some css issues and new
