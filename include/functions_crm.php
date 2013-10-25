@@ -2,8 +2,8 @@
 
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
-// ==================================================
-// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
+// ======================================================
+// Copyright (c) 2007-2013 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or

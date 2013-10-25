@@ -1,4 +1,18 @@
 <?php
+<?php
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008-2013 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
 global $config;
 
@@ -194,10 +208,8 @@ if ($update_agenda_entry) {
 		unlink ($full_filename);
 		if ($id == -1) {
 			echo "<h3 class='suc'>".__('The event was added to calendar')."</h3>";
-			insert_event ("INSERTED CALENDAR EVENT", 0, 0, $title);
 		} else {
 			echo "<h3 class='suc'>".__('The event was updated')."</h3>";
-			insert_event ("UPDATED CALENDAR EVENT", 0, 0, $title);
 		}
 		echo "<br>";
 		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');

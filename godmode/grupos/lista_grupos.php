@@ -86,6 +86,7 @@ if ($create_group) {
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
 	else {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Group management", "Created group $name");
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
 	}
 	$id = 0;
@@ -133,17 +134,21 @@ if ($update_group) {
 
 	if ($result === false)
 		echo '<h3 class="error">'.__('There was a problem modifying group').'</h3>';
-	else
+	else {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Group management", "Modified group now called '$name'");
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+	}
 }
 
 // Delete group
 if ($delete_group) {
+	$name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = $id");
 	$sql = sprintf ('DELETE FROM tgrupo WHERE id_grupo = %d', $id);
 	$result = process_sql ($sql);
 	if ($result === false) {
 		echo '<h3 class="error">'.__('There was a problem deleting group').'</h3>'; 
 	} else {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Group management", "Deleted group '$name'");
 		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	}
 }
