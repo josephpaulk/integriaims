@@ -1,5 +1,11 @@
 2013-10-28  Dario Rodriguez <dario@artica.es>
 
+	* operation/inventories/manage_objects.php: Added new field
+	to inventory object's management view to configure if the type
+	will be displayed as a root type in tree view.
+
+2013-10-28  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css,
 	include/js/integria_inventory.js,
 	include/functions_inventories.php,

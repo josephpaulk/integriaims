@@ -76,10 +76,11 @@ if ($insert_object) {
 	$icon = (string) get_parameter ("icon");
 	$min_stock = (int) get_parameter ("min_stock");
 	$description = (string) get_parameter ("description");
+	$show_in_list = (int) get_parameter("show_in_list");
 	
-	$sql = sprintf ('INSERT INTO tobject_type (name, description, icon, min_stock) 
-			VALUES ("%s", "%s", "%s", %d)',
-			$name, $description, $icon, $min_stock);
+	$sql = sprintf ('INSERT INTO tobject_type (name, description, icon, min_stock, show_in_list)
+			VALUES ("%s", "%s", "%s", %d, %d)',
+			$name, $description, $icon, $min_stock, $show_in_list);
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
 		echo '<h3 class="error">'.__('Could not be created').'</h3>';
@@ -96,11 +97,11 @@ if ($update_object) {
 	$icon = (string) get_parameter ("icon");
 	$min_stock = (int) get_parameter ("min_stock");
 	$description = (string) get_parameter ("description");
+	$show_in_list = (int) get_parameter("show_in_list");
 	
 	$sql = sprintf ('UPDATE tobject_type SET name = "%s", icon = "%s", min_stock = %d,
-		description = "%s"
-		WHERE id = %s',
-		$name, $icon, $min_stock, $description, $id);
+		description = "%s", show_in_list = %d WHERE id = %s',
+		$name, $icon, $min_stock, $description, $show_in_list, $id);
 		
 	$result = process_sql ($sql);
 	if (! $result) {
@@ -138,12 +139,14 @@ if ($create || $id) {
 		$name = "";
 		$id = -1;
 		$min_stock = 0;
+		$show_in_tree = 0;
 	} else {
 		$object = get_db_row ("tobject_type", "id", $id);
 		$description = $object["description"];
 		$name = $object["name"];
 		$icon = $object["icon"];
 		$min_stock = $object["min_stock"];
+		$show_in_list = $object["show_in_list"];
 	}
 
 	/*if ($id == -1) {
@@ -155,18 +158,25 @@ if ($create || $id) {
 	$table->width = '99%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
-	$table->colspan[0][0] = 2;
+	
 	$table->colspan[3][0] = 2;
 	$table->data = array ();
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 45, 100, true, __('Name'));
+
+	$table->data[0][1] = '<label>' . __('Show in tree view') . print_help_tip(__('If this value is checked this object type will appear as a root inside inventory\'s tree view.'), true) . '</label>';
+	$table->data[0][1] .= print_checkbox ('show_in_list', 1, $show_in_list, __('Show in tree view'));	
 	
 	$files = list_files ('images/objects/', "png", 1, 0);
 	$table->data[1][0] = print_select ($files, 'icon', $icon, '', __('None'), "", true, false, false, __('Icon'));
 	$table->data[1][0] .= objects_get_icon ($id, true);
-	$table->data[2][0] = print_input_text ('min_stock', $min_stock, '', 45, 100, true, __('Min. stock'));
-	$table->data[3][0] = print_textarea ('description', 10, 50, $description, '',
+
+	$table->data[1][1] = print_input_text ('min_stock', $min_stock, '', 45, 100, true, __('Min. stock'));
+
+	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
+	$table->colspan[2][0] = 2;
+
 	
 	if ($id == -1) {
 		$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true);
@@ -177,7 +187,7 @@ if ($create || $id) {
 		$button .= print_input_hidden ('update_object', 1, true);
 	}
 	
-	$table->data[4][0] = $button;
+	$table->data[3][0] = $button;
 	
 	echo '<form id="form-manage_objects" method="post">';
 	print_table ($table);
