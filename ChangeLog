@@ -1,3 +1,61 @@
+2013-10-28  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/languages/ar.mo
+	  include/languages/ar.po
+	  include/languages/bn.mo
+	  include/languages/bn.po
+ 	  include/languages/cs.mo
+	  include/languages/cs.po
+	  include/languages/da.mo
+	  include/languages/da.po
+	  include/languages/de.mo
+	  include/languages/de.po
+	  include/languages/el.mo
+	  include/languages/el.po
+	  include/languages/en_GB.mo
+	  include/languages/en_GB.po
+	  include/languages/es.mo
+	  include/languages/es.po
+	  include/languages/ar.mo
+	  include/languages/fe.po
+	  include/languages/fe.mo
+	  include/languages/fr.po
+	  include/languages/fr.mo
+	  include/languages/gl.po
+	  include/languages/gl.mo
+	  include/languages/he.po
+	  include/languages/he.mo
+	  include/languages/hi.po
+	  include/languages/hi.mo
+	  include/languages/it.po
+	  include/languages/it.mo
+	  include/languages/ja.po
+	  include/languages/ja.mo
+	  include/languages/ko.po
+	  include/languages/ko.mo
+	  include/languages/nl.po
+	  include/languages/nl.mo
+	  include/languages/pl.po
+	  include/languages/pl.mo
+	  include/languages/pt.po
+	  include/languages/pt.mo
+	  include/languages/pt_BR.po
+	  include/languages/pt_BR.mo
+	  include/languages/ru.po
+	  include/languages/ru.mo
+	  include/languages/sk.po
+	  include/languages/sk.mo
+	  include/languages/sl.po
+	  include/languages/sl.mo
+	  include/languages/sv.po
+	  include/languages/sv.mo
+	  include/languages/tr.po
+	  include/languages/tr.mo
+	  include/languages/zh_CN.mo
+	  include/languages/zh_TW.po
+	  include/languages/zh_TW.mo: Updated translations.
+
+
 2013-10-25  Sancho lerena <slerena@artica.es>
 
 	* include/functions_crm.php: Header update. 

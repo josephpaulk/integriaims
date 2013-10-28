@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: integria-ims\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-30 10:55+0200\n"
+"POT-Creation-Date: 2013-10-14 10:44+0200\n"
 "PO-Revision-Date: 2013-07-12 05:41+0000\n"
 "Last-Translator: pandora-drivers <Unknown>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-14 08:32+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-28 08:24+0000\n"
+"X-Generator: Launchpad (build 16818)\n"
 "Language: da\n"
 
 #: ../../godmode/usuarios/import_from_csv.php:20
@@ -154,8 +154,8 @@ msgstr ""
 #: ../../operation/leads/lead_detail.php:200
 #: ../../operation/newsletter/newsletter_definition.php:98
 #: ../../operation/newsletter/issue_definition.php:92
-#: ../../operation/invoices/invoices.php:205
-#: ../../operation/users/user_edit.php:105
+#: ../../operation/invoices/invoices.php:208
+#: ../../operation/users/user_edit.php:135
 #: ../../operation/download/manage_cat.php:65
 #: ../../operation/download/manage_data.php:88
 #: ../../operation/download/browse.php:123
@@ -253,7 +253,7 @@ msgstr "Kunne ikke oprettes"
 #: ../../operation/newsletter/queue_manager.php:75
 #: ../../operation/newsletter/newsletter_definition.php:68
 #: ../../operation/newsletter/issue_definition.php:66
-#: ../../operation/invoices/invoices.php:114
+#: ../../operation/invoices/invoices.php:115
 #: ../../operation/download/manage_cat.php:43
 #: ../../operation/download/manage_perms.php:43
 #: ../../operation/download/manage_data.php:46
@@ -291,7 +291,7 @@ msgstr "Opdatér bruger"
 #: ../../operation/leads/lead_history.php:52
 #: ../../operation/user_report/report_monthly.php:112
 #: ../../operation/user_report/report_weekly.php:59
-#: ../../operation/users/user_edit.php:125
+#: ../../operation/users/user_edit.php:155
 msgid "User ID"
 msgstr "Bruger ID"
 
@@ -342,20 +342,20 @@ msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:295
 #: ../../operation/users/user_search.php:97
-#: ../../operation/users/user_edit.php:127
-#: ../../operation/users/user_edit.php:129
+#: ../../operation/users/user_edit.php:157
+#: ../../operation/users/user_edit.php:159
 msgid "Real name"
 msgstr "Rigtigt navn"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:298
 #: ../../mobile/include/user.class.php:155
 #: ../../mobile/include/user.class.php:156 ../../general/login_page.php:84
-#: ../../operation/users/user_edit.php:184
+#: ../../operation/users/user_edit.php:222
 msgid "Password"
 msgstr "Adgangskode"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:300
-#: ../../operation/users/user_edit.php:185
+#: ../../operation/users/user_edit.php:223
 msgid "Password confirmation"
 msgstr "Adgangskode bekræftet"
 
@@ -372,8 +372,8 @@ msgstr "Adgangskode bekræftet"
 #: ../../operation/leads/lead_detail.php:600
 #: ../../operation/leads/lead_forward.php:75
 #: ../../operation/newsletter/address_definition.php:175
-#: ../../operation/users/user_edit.php:153
-#: ../../operation/users/user_edit.php:166
+#: ../../operation/users/user_edit.php:191
+#: ../../operation/users/user_edit.php:204
 #: ../../operation/incidents/incident_inventory_contacts.php:224
 #: ../../include/ajax/incidents.php:127 ../../include/newsletter.php:65
 #: ../../include/newsletter.php:143
@@ -381,13 +381,13 @@ msgid "Email"
 msgstr "E-mail"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:309
-#: ../../operation/users/user_edit.php:131
+#: ../../operation/users/user_edit.php:162
 msgid "Avatar"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:318
-#: ../../operation/users/user_edit.php:155
-#: ../../operation/users/user_edit.php:167
+#: ../../operation/users/user_edit.php:193
+#: ../../operation/users/user_edit.php:205
 msgid "Telephone"
 msgstr "Telefon"
 
@@ -425,13 +425,13 @@ msgstr "Telefon"
 #: ../../operation/leads/lead_detail.php:598
 #: ../../operation/leads/lead_detail.php:620
 #: ../../operation/leads/lead_forward.php:71
-#: ../../operation/invoices/invoices.php:292
-#: ../../operation/invoices/invoices.php:302
+#: ../../operation/invoices/invoices.php:296
+#: ../../operation/invoices/invoices.php:305
 #: ../../operation/invoices/invoice_detail.php:163
 #: ../../operation/user_report/report_monthly.php:114
-#: ../../operation/users/user_edit.php:138
-#: ../../operation/users/user_edit.php:142
-#: ../../operation/users/user_edit.php:145
+#: ../../operation/users/user_edit.php:176
+#: ../../operation/users/user_edit.php:180
+#: ../../operation/users/user_edit.php:183
 #: ../../operation/incidents/incident.php:133
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 #: ../../operation/incidents/incident_inventory_contacts.php:251
@@ -455,7 +455,7 @@ msgid "Company"
 msgstr "Firma"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:322
-#: ../../godmode/setup/setup_crm.php:99
+#: ../../godmode/setup/setup_crm.php:97
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:36
 #: ../../enterprise/include/functions_setup.php:44
 #: ../../mobile/operation/incident.php:289
@@ -475,9 +475,9 @@ msgstr "Firma"
 #: ../../operation/leads/lead_detail.php:505
 #: ../../operation/leads/lead_detail.php:561
 #: ../../operation/leads/lead_detail.php:664
-#: ../../operation/agenda/entry.php:51
+#: ../../operation/agenda/entry.php:52
 #: ../../operation/newsletter/issue_creation.php:107
-#: ../../operation/users/user_edit.php:141
+#: ../../operation/users/user_edit.php:179
 #: ../../operation/download/manage_cat.php:123
 #: ../../operation/incidents/incident_detail.php:789
 #: ../../operation/incidents/incident_report.php:95
@@ -507,7 +507,7 @@ msgid "None"
 msgstr "Ingen"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:324
-#: ../../operation/users/user_edit.php:150
+#: ../../operation/users/user_edit.php:188
 msgid "Location"
 msgstr ""
 
@@ -539,7 +539,7 @@ msgstr ""
 #: ../../operation/leads/lead_detail.php:626
 #: ../../operation/leads/lead_detail.php:830
 #: ../../operation/leads/lead_forward.php:74
-#: ../../operation/users/user_edit.php:157
+#: ../../operation/users/user_edit.php:195
 #: ../../operation/download/manage_data.php:201
 msgid "Language"
 msgstr "Sprog"
@@ -547,7 +547,7 @@ msgstr "Sprog"
 #: ../../godmode/usuarios/configurar_usuarios.php:357
 #: ../../godmode/setup/setup_visual.php:106
 #: ../../godmode/setup/setup_visual.php:108
-#: ../../operation/users/user_edit.php:157
+#: ../../operation/users/user_edit.php:195
 msgid "Default"
 msgstr "Standard"
 
@@ -558,8 +558,8 @@ msgstr "Standard"
 #: ../../operation/companies/company_detail (copia).php:482
 #: ../../operation/leads/lead_forward.php:77
 #: ../../operation/users/user_search.php:98
-#: ../../operation/users/user_edit.php:161
-#: ../../operation/users/user_edit.php:169
+#: ../../operation/users/user_edit.php:199
+#: ../../operation/users/user_edit.php:207
 msgid "Comments"
 msgstr "Kommentarer"
 
@@ -615,7 +615,7 @@ msgstr ""
 #: ../../godmode/setup/setup_maintenance.php:77
 #: ../../godmode/setup/setup_bk.php:270
 #: ../../godmode/setup/setup_pandora.php:101 ../../godmode/setup/setup.php:167
-#: ../../godmode/setup/setup_crm.php:155
+#: ../../godmode/setup/setup_crm.php:147
 #: ../../godmode/setup/setup_auth.php:143 ../../godmode/setup/links.php:101
 #: ../../godmode/setup/setup_mail.php:202
 #: ../../godmode/perfiles/lista_perfiles.php:155
@@ -659,14 +659,14 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:248
 #: ../../operation/leads/template_manager.php:151
 #: ../../operation/leads/lead_detail.php:575
-#: ../../operation/agenda/entry.php:76
+#: ../../operation/agenda/entry.php:77
 #: ../../operation/newsletter/newsletter_creation.php:85
 #: ../../operation/newsletter/issue_creation.php:118
-#: ../../operation/invoices/invoices.php:346
+#: ../../operation/invoices/invoices.php:351
 #: ../../operation/user_report/report_weekly.php:53
 #: ../../operation/users/user_spare_workunit.php:474
-#: ../../operation/users/user_edit.php:175
-#: ../../operation/users/user_edit.php:189
+#: ../../operation/users/user_edit.php:213
+#: ../../operation/users/user_edit.php:227
 #: ../../operation/download/manage_cat.php:128
 #: ../../operation/download/manage_perms.php:101
 #: ../../operation/download/manage_data.php:247
@@ -761,7 +761,7 @@ msgstr "Opdatér"
 #: ../../operation/leads/template_manager.php:212
 #: ../../operation/leads/lead_detail.php:579
 #: ../../operation/leads/lead_detail.php:954
-#: ../../operation/agenda/entry.php:74
+#: ../../operation/agenda/entry.php:75
 #: ../../operation/newsletter/queue_manager.php:148
 #: ../../operation/newsletter/address_creation.php:47
 #: ../../operation/newsletter/newsletter_definition.php:210
@@ -822,7 +822,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:572
 #: ../../operation/leads/template_manager.php:244
 #: ../../operation/leads/lead_detail.php:1000
-#: ../../operation/users/user_edit.php:241
+#: ../../operation/users/user_edit.php:317
 #: ../../operation/download/manage_cat.php:220
 #: ../../operation/download/browse.php:503
 #: ../../operation/incidents/type_detail.php:382
@@ -841,7 +841,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:503
 #: ../../operation/slas/sla_detail.php:310
 #: ../../operation/leads/lead_detail.php:1001
-#: ../../operation/users/user_edit.php:242
+#: ../../operation/users/user_edit.php:318
 #: ../../operation/incidents/type_detail.php:383
 msgid "This name already exists"
 msgstr ""
@@ -1230,7 +1230,7 @@ msgstr "Profil"
 #: ../../operation/newsletter/queue_manager.php:177
 #: ../../operation/newsletter/newsletter_definition.php:177
 #: ../../operation/newsletter/issue_definition.php:165
-#: ../../operation/invoices/invoices.php:278
+#: ../../operation/invoices/invoices.php:283
 #: ../../operation/invoices/invoice_detail.php:233
 #: ../../operation/download/manage_cat.php:147
 #: ../../operation/download/manage_perms.php:117
@@ -1324,8 +1324,8 @@ msgstr ""
 #: ../../operation/newsletter/issue_definition.php:197
 #: ../../operation/newsletter/address_definition.php:206
 #: ../../operation/newsletter/address_definition.php:212
-#: ../../operation/invoices/invoices.php:272
 #: ../../operation/invoices/invoices.php:277
+#: ../../operation/invoices/invoices.php:282
 #: ../../operation/invoices/invoice_detail.php:226
 #: ../../operation/invoices/invoice_detail.php:232
 #: ../../operation/download/manage_cat.php:182
@@ -1456,7 +1456,6 @@ msgstr "Rolle"
 #: ../../operation/companies/company_role.php:100
 #: ../../operation/companies/company_role.php:151
 #: ../../operation/companies/company_detail_bk_ayer.php:752
-#: ../../operation/companies/company_detail.php:696
 #: ../../operation/companies/company_role_fuu.php:112
 #: ../../operation/companies/company_role_fuu.php:163
 #: ../../operation/companies/company_files.php:106
@@ -1467,9 +1466,9 @@ msgstr "Rolle"
 #: ../../operation/leads/lead_detail.php:572
 #: ../../operation/leads/lead_detail.php:631
 #: ../../operation/leads/lead_files.php:107
-#: ../../operation/agenda/entry.php:69
+#: ../../operation/agenda/entry.php:70
 #: ../../operation/newsletter/newsletter_creation.php:75
-#: ../../operation/invoices/invoices.php:334
+#: ../../operation/invoices/invoices.php:339
 #: ../../operation/users/user_spare_workunit.php:468
 #: ../../operation/download/browse.php:325
 #: ../../operation/incidents/incident_detail.php:864
@@ -1537,7 +1536,7 @@ msgstr "Omkostning"
 #: ../../enterprise_bk/godmode/usuarios/menu_visibility_manager.php:144
 #: ../../operation/workorders/wo_notes.php:74
 #: ../../operation/workorders/wo_workunits.php:124
-#: ../../operation/invoices/invoices.php:350
+#: ../../operation/invoices/invoices.php:355
 #: ../../operation/users/user_spare_workunit.php:478
 #: ../../operation/users/user_spare_workunit.php:517
 #: ../../operation/incidents/incident_detail.php:813
@@ -1726,6 +1725,7 @@ msgstr ""
 
 #: ../../godmode/updatemanager/main.php:258
 #: ../../operation/contacts/contact_files.php:129
+#: ../../operation/users/user_edit.php:255
 #: ../../operation/incidents/incident_attach_file.php:53
 #: ../../operation/incidents/incident_files.php:165
 #: ../../operation/incidents_simple/incident.php:130
@@ -1852,7 +1852,7 @@ msgid "Project WU Default time"
 msgstr ""
 
 #: ../../godmode/setup/setup_project.php:81
-#: ../../operation/invoices/invoices.php:331
+#: ../../operation/invoices/invoices.php:336
 msgid "Currency"
 msgstr "Valuta"
 
@@ -2240,7 +2240,7 @@ msgstr ""
 #: ../../operation/campaign/campaign_editor.php:108
 #: ../../operation/workorders/wo.php:330
 #: ../../operation/reporting/inventories_html.php:124
-#: ../../operation/agenda/entry.php:38
+#: ../../operation/agenda/entry.php:39
 #: ../../operation/download/manage_data.php:195
 #: ../../operation/download/manage_data.php:283
 #: ../../operation/incidents/incident_detail.php:633
@@ -2274,7 +2274,7 @@ msgstr ""
 #: ../../operation/reporting/incidents_html.php:47
 #: ../../operation/companies/company_files.php:108
 #: ../../operation/leads/lead_files.php:109
-#: ../../operation/agenda/entry.php:66
+#: ../../operation/agenda/entry.php:67
 #: ../../operation/newsletter/queue_manager.php:170
 #: ../../operation/newsletter/issue_definition.php:161
 #: ../../operation/newsletter/address_definition.php:178
@@ -2382,7 +2382,7 @@ msgstr ""
 msgid "Enable this option to activate the newsletter feature of Integria IMS"
 msgstr ""
 
-#: ../../godmode/setup/setup_bk.php:254 ../../godmode/setup/setup_crm.php:121
+#: ../../godmode/setup/setup_bk.php:254 ../../godmode/setup/setup_crm.php:113
 msgid "Lead company filter IDs"
 msgstr ""
 
@@ -2392,7 +2392,7 @@ msgid ""
 "The ids of the roles should be divided whith commas. Example: 1, 34, 4"
 msgstr ""
 
-#: ../../godmode/setup/setup_bk.php:259 ../../godmode/setup/setup_crm.php:124
+#: ../../godmode/setup/setup_bk.php:259 ../../godmode/setup/setup_crm.php:116
 msgid "Days to warn on inactive leads"
 msgstr ""
 
@@ -2532,49 +2532,45 @@ msgstr ""
 msgid "Incident"
 msgstr "Hændelse"
 
-#: ../../godmode/setup/setup_crm.php:97
+#: ../../godmode/setup/setup_crm.php:95
 msgid "Invoice generation parameters"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:99
+#: ../../godmode/setup/setup_crm.php:97
 msgid "Invoice header logo"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:100
+#: ../../godmode/setup/setup_crm.php:98
 msgid ""
 "You can submit your own logo in \"images/custom_logo\" folder using the file "
 "uploader"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:106
-msgid "Invoice header logo alignment"
-msgstr ""
-
-#: ../../godmode/setup/setup_crm.php:108
+#: ../../godmode/setup/setup_crm.php:100
 msgid "Invoice tax name"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:109
+#: ../../godmode/setup/setup_crm.php:101
 msgid "For example: VAT"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:112
+#: ../../godmode/setup/setup_crm.php:104
 msgid "Invoice header"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:115
+#: ../../godmode/setup/setup_crm.php:107
 msgid "Invoice footer"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:118
+#: ../../godmode/setup/setup_crm.php:110
 msgid "Lead parameters"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:127
+#: ../../godmode/setup/setup_crm.php:119
 msgid "Lead progress defintion"
 msgstr ""
 
-#: ../../godmode/setup/setup_crm.php:141
+#: ../../godmode/setup/setup_crm.php:133
 msgid "This status means that lead is closed"
 msgstr ""
 
@@ -2846,7 +2842,7 @@ msgstr ""
 #: ../../operation/newsletter/queue_manager.php:212
 #: ../../operation/newsletter/issue_definition.php:186
 #: ../../operation/newsletter/issue_creation.php:100
-#: ../../operation/invoices/invoices.php:308
+#: ../../operation/invoices/invoices.php:313
 #: ../../operation/projects/task_planning.php:288
 #: ../../operation/projects/task_planning.php:497
 #: ../../include/functions_crm.php:779 ../../include/functions_crm.php:793
@@ -3103,7 +3099,7 @@ msgstr "Side ikke fundet"
 msgid "Integria IMS invoice"
 msgstr ""
 
-#: ../../index.php:495
+#: ../../index.php:492
 msgid "Automated Integria IMS report"
 msgstr ""
 
@@ -4163,7 +4159,7 @@ msgstr ""
 #: ../../enterprise/include/functions_reporting_pdf.php:478
 #: ../../mobile/include/ui.class.php:802
 #: ../../enterprise_bk/include/functions_reporting_pdf.php:478
-#: ../../operation/agenda/entry.php:185 ../../operation/agenda/entry.php:193
+#: ../../operation/agenda/entry.php:186 ../../operation/agenda/entry.php:194
 msgid "OK"
 msgstr ""
 
@@ -4315,6 +4311,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:358
 #: ../../include/functions_inventories.php:1167
 #: ../../include/functions_inventories_bk.php:1172
+#: ../../include/ajax/inventories.php:149
 msgid "Object type"
 msgstr ""
 
@@ -5009,7 +5006,8 @@ msgstr ""
 msgid "This action cannot be undone."
 msgstr ""
 
-#: ../../mobile/include/ui.class.php:768 ../../operation/agenda/entry.php:71
+#: ../../mobile/include/ui.class.php:768 ../../operation/agenda/entry.php:72
+#: ../../operation/users/user_edit.php:257
 msgid "Cancel"
 msgstr ""
 
@@ -5453,8 +5451,8 @@ msgstr "Ingen beskrivelse tilgængelig"
 
 #: ../../operation/contacts/contact_files.php:61
 #: ../../operation/kb/manage_data.php:121 ../../operation/kb/browse.php:126
-#: ../../operation/invoices/invoices.php:91
-#: ../../operation/invoices/invoices.php:161
+#: ../../operation/invoices/invoices.php:92
+#: ../../operation/invoices/invoices.php:163
 #: ../../operation/download/manage_data.php:109
 #: ../../operation/incidents/incident_files.php:81
 #: ../../operation/projects/task_cost.php:91
@@ -5589,7 +5587,7 @@ msgstr "Ikke tilgængelig"
 #: ../../operation/newsletter/newsletter_definition.php:96
 #: ../../operation/newsletter/issue_definition.php:90
 #: ../../operation/newsletter/address_definition.php:104
-#: ../../operation/users/user_edit.php:107
+#: ../../operation/users/user_edit.php:137
 #: ../../operation/download/manage_cat.php:63
 #: ../../operation/download/manage_data.php:86
 #: ../../operation/download/browse.php:121
@@ -5663,7 +5661,7 @@ msgstr ""
 
 #: ../../operation/contacts/contact_manage.php:338
 #: ../../operation/leads/lead_detail.php:1021
-#: ../../operation/users/user_edit.php:261
+#: ../../operation/users/user_edit.php:337
 msgid "Email required"
 msgstr ""
 
@@ -5675,7 +5673,7 @@ msgstr ""
 #: ../../operation/leads/lead_forward.php:126
 #: ../../operation/leads/lead_forward.php:136
 #: ../../operation/leads/lead_forward.php:144
-#: ../../operation/users/user_edit.php:262
+#: ../../operation/users/user_edit.php:338
 msgid "Invalid email"
 msgstr ""
 
@@ -6354,7 +6352,7 @@ msgstr ""
 
 #: ../../operation/workorders/wo_workunits.php:118
 #: ../../operation/contracts/contract_detail.php:458
-#: ../../operation/agenda/entry.php:39
+#: ../../operation/agenda/entry.php:40
 #: ../../operation/users/user_spare_workunit.php:454
 #: ../../operation/download/browse.php:278
 #: ../../operation/incidents/incident_create_work.php:55
@@ -6597,7 +6595,6 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:655
 #: ../../operation/incidents_simple/incident_new.php:55
 #: ../../include/functions_form.php:1006
-#: ../../include/ajax/inventories.php:149
 msgid "Incident type"
 msgstr "Hændelsestype"
 
@@ -6864,7 +6861,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:737
 #: ../../operation/companies/company_detail (copia).php:790
 #: ../../operation/companies/company_detail (copia).php:883
-#: ../../operation/invoices/invoices.php:268
+#: ../../operation/invoices/invoices.php:273
 #: ../../operation/invoices/invoice_detail.php:214
 msgid "Export to PDF"
 msgstr ""
@@ -6885,7 +6882,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:745
 #: ../../operation/companies/company_detail (copia).php:798
 #: ../../operation/companies/company_detail (copia).php:891
-#: ../../operation/invoices/invoices.php:273
+#: ../../operation/invoices/invoices.php:278
 #: ../../operation/invoices/invoice_detail.php:222
 msgid "Lock"
 msgstr ""
@@ -6893,9 +6890,9 @@ msgstr ""
 #: ../../operation/companies/company_detail_bk_ayer.php:753
 #: ../../operation/companies/company_detail.php:697
 #: ../../operation/companies/company_detail (copia).php:841
-#: ../../operation/invoices/invoices.php:318
+#: ../../operation/invoices/invoices.php:323
 #: ../../operation/invoices/invoice_detail.php:165
-#: ../../operation/invoices/invoice_template.php:51
+#: ../../operation/invoices/invoice_template.php:77
 #: ../../operation/projects/task_cost.php:138
 #: ../../operation/projects/task_cost.php:180
 msgid "Amount"
@@ -7149,7 +7146,7 @@ msgid "Lead search statistics"
 msgstr ""
 
 #: ../../operation/leads/lead_statistics.php:200
-#: ../../operation/invoices/invoice_template.php:102
+#: ../../operation/invoices/invoice_template.php:128
 msgid "Total amount"
 msgstr ""
 
@@ -7445,12 +7442,12 @@ msgid "This lead email already exists"
 msgstr ""
 
 #: ../../operation/leads/lead_detail.php:1029
-#: ../../operation/invoices/invoices.php:395
-#: ../../operation/invoices/invoices.php:399
-#: ../../operation/invoices/invoices.php:403
-#: ../../operation/invoices/invoices.php:407
-#: ../../operation/invoices/invoices.php:411
-#: ../../operation/invoices/invoices.php:415
+#: ../../operation/invoices/invoices.php:400
+#: ../../operation/invoices/invoices.php:404
+#: ../../operation/invoices/invoices.php:408
+#: ../../operation/invoices/invoices.php:412
+#: ../../operation/invoices/invoices.php:416
+#: ../../operation/invoices/invoices.php:420
 msgid "Invalid number"
 msgstr ""
 
@@ -7515,58 +7512,58 @@ msgstr ""
 msgid "Prev"
 msgstr "Foregående"
 
-#: ../../operation/agenda/entry.php:44
+#: ../../operation/agenda/entry.php:45
 msgid "Duration in hours"
 msgstr "Varighed i timer"
 
-#: ../../operation/agenda/entry.php:47
+#: ../../operation/agenda/entry.php:48
 msgid "One hour"
 msgstr "En time"
 
-#: ../../operation/agenda/entry.php:48
+#: ../../operation/agenda/entry.php:49
 msgid "Two hours"
 msgstr "To timer"
 
-#: ../../operation/agenda/entry.php:49
+#: ../../operation/agenda/entry.php:50
 msgid "Four hours"
 msgstr "Fire timer"
 
-#: ../../operation/agenda/entry.php:50
+#: ../../operation/agenda/entry.php:51
 msgid "One day"
 msgstr "En dag"
 
-#: ../../operation/agenda/entry.php:52
+#: ../../operation/agenda/entry.php:53
 msgid "Alarm"
 msgstr "Alarm"
 
-#: ../../operation/agenda/entry.php:67
+#: ../../operation/agenda/entry.php:68
 #: ../../include/functions_update_manager.ajax.php:217
 #: ../../include/functions_incidents.php:929
 #: ../../include/functions_incidents.php:959
 msgid "Time"
 msgstr "Tid"
 
-#: ../../operation/agenda/entry.php:161 ../../operation/agenda/entry.php:171
+#: ../../operation/agenda/entry.php:162 ../../operation/agenda/entry.php:172
 msgid "New calendar event"
 msgstr ""
 
-#: ../../operation/agenda/entry.php:163 ../../operation/agenda/entry.php:173
+#: ../../operation/agenda/entry.php:164 ../../operation/agenda/entry.php:174
 msgid "Updated calendar event"
 msgstr ""
 
-#: ../../operation/agenda/entry.php:178
+#: ../../operation/agenda/entry.php:179
 msgid "The event was added to calendar"
 msgstr ""
 
-#: ../../operation/agenda/entry.php:181
+#: ../../operation/agenda/entry.php:182
 msgid "The event was updated"
 msgstr ""
 
-#: ../../operation/agenda/entry.php:188
+#: ../../operation/agenda/entry.php:189
 msgid "An error ocurred. Event not inserted."
 msgstr ""
 
-#: ../../operation/agenda/entry.php:190
+#: ../../operation/agenda/entry.php:191
 msgid "An error ocurred. Event not updated."
 msgstr ""
 
@@ -7800,65 +7797,70 @@ msgstr "Ingen data tilgængelige"
 msgid "File is missing in disk storage. Please contact the administrator"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:116
+#: ../../operation/invoices/invoices.php:117
 msgid "There was a problem creating the invoice"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:207
+#: ../../operation/invoices/invoices.php:210
 msgid "There was a problem updating the invoice"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:262
+#: ../../operation/invoices/invoices.php:267
 msgid "Add new invoice"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:265
+#: ../../operation/invoices/invoices.php:270
 msgid "Update invoice"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:305
+#: ../../operation/invoices/invoices.php:308
+#: ../../operation/invoices/invoice_template.php:58
+msgid "Reference"
+msgstr ""
+
+#: ../../operation/invoices/invoices.php:310
 #: ../../operation/projects/task_cost.php:177
 msgid "Bill ID"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:309
+#: ../../operation/invoices/invoices.php:314
 msgid "Paid"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:310
+#: ../../operation/invoices/invoices.php:315
 msgid "Cancelled"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:312
+#: ../../operation/invoices/invoices.php:317
 msgid "Invoice status"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:314
+#: ../../operation/invoices/invoices.php:319
 msgid "Invoice creation date"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:315
+#: ../../operation/invoices/invoices.php:320
 msgid "Invoice effective payment date"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:317
-#: ../../operation/invoices/invoice_template.php:48
+#: ../../operation/invoices/invoices.php:322
+#: ../../operation/invoices/invoice_template.php:74
 msgid "Concept"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:330
+#: ../../operation/invoices/invoices.php:335
 msgid "Taxes (%)"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:337
+#: ../../operation/invoices/invoices.php:342
 msgid "Attachment"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:389
+#: ../../operation/invoices/invoices.php:394
 msgid "Bill ID required"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:390
+#: ../../operation/invoices/invoices.php:395
 msgid "This bill ID already exists"
 msgstr ""
 
@@ -7878,36 +7880,36 @@ msgstr ""
 msgid "Name can't be empty"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:4
+#: ../../operation/invoices/invoice_template.php:14
 msgid "Invoice"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:9
+#: ../../operation/invoices/invoice_template.php:19
+msgid "Customer address"
+msgstr ""
+
+#: ../../operation/invoices/invoice_template.php:30
 msgid "Invoice ID"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:15
+#: ../../operation/invoices/invoice_template.php:38
 #: ../../operation/inventories/inventory_detail.php:634
 msgid "Issue date"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:20
+#: ../../operation/invoices/invoice_template.php:48
 msgid "Payment date"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:36
-msgid "Customer"
-msgstr ""
-
-#: ../../operation/invoices/invoice_template.php:96
+#: ../../operation/invoices/invoice_template.php:122
 msgid "Total amount without taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_view.php:7
+#: ../../operation/invoices/invoice_view.php:10
 msgid "The invoice number is required"
 msgstr ""
 
-#: ../../operation/invoices/invoice_view.php:12
+#: ../../operation/invoices/invoice_view.php:15
 msgid "This invoice does not exists"
 msgstr ""
 
@@ -8605,29 +8607,41 @@ msgstr ""
 msgid "User details"
 msgstr "Brugerdetaljer"
 
-#: ../../operation/users/user_edit.php:83
-#: ../../operation/users/user_edit.php:268
+#: ../../operation/users/user_edit.php:80
+msgid "Avatar successfully uploaded"
+msgstr ""
+
+#: ../../operation/users/user_edit.php:82
+msgid "The avatar could not be uploaded"
+msgstr ""
+
+#: ../../operation/users/user_edit.php:113
+#: ../../operation/users/user_edit.php:344
 msgid "Passwords don't match"
 msgstr "Adgangskoder stemmer ikke"
 
-#: ../../operation/users/user_edit.php:154
+#: ../../operation/users/user_edit.php:170
+msgid "Upload new avatar"
+msgstr ""
+
+#: ../../operation/users/user_edit.php:192
 msgid "You can write multiple emails divided by commas"
 msgstr ""
 
-#: ../../operation/users/user_edit.php:159
+#: ../../operation/users/user_edit.php:197
 msgid "Total incidents opened"
 msgstr ""
 
-#: ../../operation/users/user_edit.php:163
-#: ../../operation/users/user_edit.php:164
+#: ../../operation/users/user_edit.php:201
+#: ../../operation/users/user_edit.php:202
 msgid "Not provided"
 msgstr "Ikke oplyst"
 
-#: ../../operation/users/user_edit.php:187
+#: ../../operation/users/user_edit.php:225
 msgid "Change password"
 msgstr "Ændre adgangskode"
 
-#: ../../operation/users/user_edit.php:263
+#: ../../operation/users/user_edit.php:339
 msgid "This email already exists"
 msgstr ""
 
@@ -9082,7 +9096,6 @@ msgid "Type name"
 msgstr ""
 
 #: ../../operation/incidents/type_detail.php:217
-#: ../../include/ajax/inventories.php:153
 msgid "Incident fields"
 msgstr ""
 
@@ -9642,6 +9655,7 @@ msgid "Select inventory"
 msgstr ""
 
 #: ../../operation/inventories/inventory_search.php:361
+#: ../../include/ajax/inventories.php:153
 msgid "Object fields"
 msgstr ""
 
