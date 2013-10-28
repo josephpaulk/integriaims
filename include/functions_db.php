@@ -2188,8 +2188,15 @@ function return_user_report_types ($type){
 	}
 }
 
-function get_object_types ($only_names = true) {
-	$types = get_db_all_rows_in_table ('tobject_type');
+function get_object_types ($only_names = true, $only_show=false) {
+
+	if ($only_show) {
+		$sql = "SELECT * FROM tobject_type WHERE show_in_list = 1";
+		$types = get_db_all_rows_sql ($sql);
+	} else {
+		$types = get_db_all_rows_in_table ('tobject_type');
+	}
+
 	if ($types == false)
 		return array ();
 	

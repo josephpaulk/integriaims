@@ -534,7 +534,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tobject_type` WRITE;
 /*!40000 ALTER TABLE `tobject_type` DISABLE KEYS */;
-INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2);
+INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,1);
 /*!40000 ALTER TABLE `tobject_type` ENABLE KEYS */;
 UNLOCK TABLES;
 

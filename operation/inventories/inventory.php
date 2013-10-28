@@ -24,7 +24,24 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 	exit;
 }
 
-echo '<h1>' . __('Inventory overview') . '</h1>';
+echo '<h1>' . __('Inventory overview');
+
+if (!$clean_output) {
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+	echo "<a id='listview_form_submit' href='#'>" .
+		print_image ("images/list_view.png", true, array("title" => __("List view"))) .
+		"</a>";
+	echo "</li>";
+	echo "<li>";
+	echo "<a id='treeview_form_submit' href='#'>" .
+		print_image ("images/tree_view.png", true, array("title" => __("Tree view"))) .
+		"</a>";
+	echo "</li>";
+	echo "</ul>";
+}
+echo '</h1>';
 
 $id = (int) get_parameter ('id');
 

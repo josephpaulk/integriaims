@@ -101,8 +101,8 @@ INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer',''
 
 INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
-INSERT INTO tobject_type (id, name, description, icon) VALUES 
-(1,'Pandora agents','Imported agents from Pandora FMS','pandora.png');
+INSERT INTO tobject_type (id, name, description, icon, show_in_list) VALUES 
+(1,'Pandora agents','Imported agents from Pandora FMS','pandora.png', 1);
 
 INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES 
 (1,1,'OS','text'),

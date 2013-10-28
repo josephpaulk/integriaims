@@ -30,36 +30,46 @@ if (defined ('AJAX')) {
 	$lessBranchs = get_parameter('less_branchs');
 	$type = get_parameter('type');
 	$id_father = get_parameter('id_father');
-	$sql_search = base64_decode(get_parameter('sql_search', ''));
+	$sql_search = get_parameter('sql_search', '');
+	$id_object_type = get_parameter("id_object_type");
+	$end = get_parameter("end");
 
-	
+	$ref_tree = (string)get_parameter("ref_tree");
+
 	if ($type == 'object_types') {
 
-		$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
-				WHERE `id_object_type`=$id_item
-				AND tinventory.id_object_type = tobject_type.id $sql_search
-				GROUP BY tinventory.`id`";
+		$sql = base64_decode($sql_search);
+	
+		$sql .= " AND tinventory.id_object_type = $id_item";
 
-		if ($id_item == 0) {
-			$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory
-				WHERE `id_object_type` is null $sql_search
-				GROUP BY tinventory.`id`";
+		//If there is a father the just print the object (we only filter in first level)
+		if ($id_father) {
+
+			$sql = "SELECT * FROM tinventory WHERE tinventory.id_object_type = $id_item";
+
+			$sql .= " AND id_parent = $id_father";
 		}
 		
 		$cont_aux = get_db_all_rows_sql($sql);
 
-		$countRows = count($cont_aux);
+		$count_blanks = strlen($ref_tree);		
+
+		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_aux));
+		if ($cont === ENTERPRISE_NOT_HOOK) {
+			$cont = $cont_aux;
+		}
+
+		if (!$cont) {
+			$cont = array();
+		}
+		
+		$countRows = count($cont);
 
 		//Empty Branch
 		if ($countRows == 0) {
 
 			echo "<ul style='margin: 0; padding: 0;'>\n";
 			echo "<li style='margin: 0; padding: 0;'>";
-			if ($lessBranchs == 1)
-				echo print_image ("images/tree/no_branch.png", true, array ("style" => 'vertical-align: middle;'));
-			else
-				echo print_image ("images/tree/branch.png", true, array ("style" => 'vertical-align: middle;'));
-			
 			echo "<i>" . __("Empty") . "</i>";
 			echo "</li>";
 			echo "</ul>";
@@ -72,41 +82,46 @@ if (defined ('AJAX')) {
 		$count = 0;
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
-		$sql_search = base64_encode($sql_search);
-		
-		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_aux));
-		if ($cont === ENTERPRISE_NOT_HOOK) {
-			$cont = $cont_aux;
-		}
-			
-		foreach ($cont as $key => $row) {
+		$cont_size = count($cont);
 
+		$end = 1;
+
+		foreach ($cont as $row) {
+
+			if ($row != end($cont)) {
+				$end = 0;
+			}
+
+			$aux_ref_tree = $ref_tree."".$count;
+			
 			$new = false;
 			$count++;
-		
+
 			$less = $lessBranchs;
 			if ($count != $countRows)
-				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_inventory_" . $row["id"], "pos_tree" => "2"));
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $aux_ref_tree. "_inventory_" . $row["id"], "pos_tree" => "2"));
 			else {
 				$less = $less + 2; // $less = $less or 0b10
-				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_inventory_" . $row["id"], "pos_tree" => "3"));
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $aux_ref_tree. "_inventory_" . $row["id"], "pos_tree" => "3"));
 			}
 			echo "<li style='margin: 0; padding: 0;'>";
+
+	
 			
 			echo "<a onfocus='JavaScript: this.blur()'
-						href='javascript: loadTable(\"inventory\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
+						href='javascript: loadTable(\"inventory\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\",  \"" . $sql_search . "\", \"". $aux_ref_tree ."\", \"". $end ."\")'>";
 			
-			if ($lessBranchs == 1) {
-				print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-			} else {
-				print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-			}
 			echo $img;
 			
-			echo $row["name"]. '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
+			echo $row["name"]. '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/application_edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
 			
 			echo "</a>";
-			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div" . $id_item . "_inventory_" . $row["id"] . "'></div>";
+
+			if ($end) {
+				echo "<div hiddenDiv='1' loadDiv='0' class='tree_view' id='tree_div" . $aux_ref_tree . "_inventory_" . $row["id"] . "'></div>";
+			} else {
+				echo "<div hiddenDiv='1' loadDiv='0' class='tree_view tree_view_branch' id='tree_div" . $aux_ref_tree . "_inventory_" . $row["id"] . "'></div>";
+			}
 			echo "</li>";
 			
 		} 
@@ -115,42 +130,31 @@ if (defined ('AJAX')) {
 			
 	//TERCER NIVEL DEL ARBOL.
 	if ($type == 'inventory') {
+	
+		$sql = "SELECT id FROM tinventory WHERE `id_parent`=$id_item";
 
-		$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
-				WHERE `id_parent`=$id_item
-				AND tinventory.id_object_type = tobject_type.id $sql_search
-				GROUP BY tinventory.`id`";
-		
 		$cont_invent = get_db_all_rows_sql($sql);
-
-		$countRows = count($cont_invent);
 		
-		if ($countRows === false)
+		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_invent));
+		
+		if ($cont === ENTERPRISE_NOT_HOOK) {
+			$cont = $cont_invent;
+		}
+
+		if (!$cont) {
+			$cont = array();
+		}
+
+		$countRows = count($cont);
+
+		$count_blanks = strlen($ref_tree);
+	
+		if ($countRows == false)
 			$countRows = 0;
 	
 		if ($countRows == 0) {
 			echo "<ul style='margin: 0; padding: 0;'>\n";
 			echo "<li style='margin: 0; padding: 0;'>";
-			
-			switch ($lessBranchs) {
-				case 0:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 1:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 2:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 3:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-			}
-			
 			echo "<i>" . __("Empty") . "</i>";
 			echo "</li>";
 			echo "</ul>";
@@ -160,169 +164,68 @@ if (defined ('AJAX')) {
 		//Branch with items
 		$new = true;
 		$count = 0;
-		echo "<ul style='margin: 0; padding: 0;'>\n";
 
-		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_invent));
-		if ($cont === ENTERPRISE_NOT_HOOK) {
-			$cont = $cont_invent;
+
+		$clause = "";
+		if ($cont) {
+			
+			foreach ($cont as $c) {
+				$clause .= $c["id"].",";
+			}
+
+			$clause = substr($clause,0,-1);
+
+			$clause = " AND tinventory.id IN ($clause)";
 		}
-		
-		foreach ($cont as $key => $row) {
 
+		$sql = "SELECT DISTINCT(tinventory.id_object_type), tobject_type.* FROM tinventory, tobject_type 
+				WHERE tinventory.id_object_type = tobject_type.id".$clause;
+		
+		$cont = get_db_all_rows_sql($sql);
+
+		echo "<ul style='margin: 0; padding: 0;'>\n";
+		
+		$cont_size = count($cont);
+
+		$end = 1;
+		foreach ($cont as $row) {
+
+			if ($row != end($cont)) {
+				$end = 0;
+			}
+
+			$aux_ref_tree = $ref_tree."".$count;
+			
 			$new = false;
 			$count++;
 
-			$less = $lessBranchs;
-			if ($count != $countRows) {
-				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child_" . $row["id"], "pos_tree" => "2"));
-			} else {
-				$less = $less + 2; // $less = $less or 0b10
-				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child_" . $row["id"], "pos_tree" => "3"));
-			}
-
-
 			echo "<li style='margin: 0; padding: 0;'>";
 
-			echo "<a onfocus='JavaScript: this.blur()'
-						href='javascript: loadTable(\"child\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
-
-			switch ($lessBranchs) {
-				case 0:
-
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-
-					break;
-				case 1:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 2:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 3:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
+			$less = $lessBranchs;
+			if ($count != $countRows) {
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $aux_ref_tree. "_object_types_" . $row["id"], "pos_tree" => "2"));
+			} else {
+				$less = $less + 2; // $less = $less or 0b10
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $aux_ref_tree. "_object_types_" . $row["id"], "pos_tree" => "3"));
 			}
+			
+			echo "<a onfocus='JavaScript: this.blur()'
+						href='javascript: loadTable(\"object_types\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\",  \"" . $sql_search . "\", \"". $aux_ref_tree ."\", \"". $end ."\")'>";
+
 			echo $img;
-
-			echo $row["name"]. '&nbsp;&nbsp;'.'<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
-
+			echo "<img src='images/objects/".$row["icon"]."' style='vertical-align: middle'>";
+			echo '&nbsp;'.$row["name"];
 			echo "</a>";
-			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$id_item."' id='tree_div" . $id_item . "_child_" . $row["id"] . "'></div>";
+			
+			if ($end) {
+				echo "<div hiddenDiv='1' loadDiv='0' class='tree_view' id='tree_div" . $aux_ref_tree . "_object_types_" . $row["id"] . "'></div>";
+			} else {
+				echo "<div hiddenDiv='1' loadDiv='0' class='tree_view tree_view_branch' id='tree_div" . $aux_ref_tree . "_object_types_" . $row["id"] . "'></div>";
+			}
 			echo "</li>";
 		}
 		echo "</ul>\n";
 
-	}
-	
-	//CUARTO NIVEL DEL ARBOL.
-	if ($type == 'child') {
-
-		$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
-				WHERE `id_parent`=$id_item
-				$sql_search
-				GROUP BY tinventory.`id`";
-		
-		$cont_invent = get_db_all_rows_sql($sql);
-		
-		$countRows = count($cont_invent);
-		
-		if ($countRows === false)
-			$countRows = 0;
-	
-		if ($countRows == 0) {
-			echo "<ul style='margin: 0; padding: 0;'>\n";
-			echo "<li style='margin: 0; padding: 0;'>";
-			
-			switch ($lessBranchs) {
-				case 0:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 1:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 2:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 3:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-			}
-			
-			print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;'));
-			echo "<i>" . __("Empty") . "</i>";
-			echo "</li>";
-			echo "</ul>";
-			return;
-		}
-		
-		$new = true;
-		$count = 0;
-		echo "<ul style='margin: 0; padding: 0;'>\n";
-		
-		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_invent));
-		if ($cont === ENTERPRISE_NOT_HOOK) {
-			$cont = $cont_invent;
-		}
-/*
-		if ($is_enterprise) {
-			$cont = inventory_get_user_inventories($config['id_user'], $cont_invent);
-		} else {
-			$cont = $cont_invent;
-		}
-*/
-	
-		foreach ($cont as $key => $row) {
-
-			$new = false;
-			$count++;
-			echo "<li style='margin: 0; padding: 0;'><span style='min-width: 300px; display: inline-block;'>";
-			
-			switch ($lessBranchs) {
-				case 0:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 1:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 2:
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-				case 3:
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-					break;
-			}
-			
-			if ($countRows != $count)
-				print_image ("images/tree/leaf.png", false, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child2_" . $row["id"], "pos_tree" => "1"));
-			else
-				print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child2_" . $row["id"], "pos_tree" => "2"));
-			
-/*
-			echo "<a onfocus='JavaScript: this.blur()'
-						href='javascript: loadTable(\"child2\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
-*/
-						
-			echo $row["name"]. '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
-			
-			echo "</li>";
-			
-			echo "</a>";
-		}
-
-		echo "</ul>";
-		
 	}
 	
 return;
@@ -358,6 +261,7 @@ if ($fields_selected[0] != '') {
 
 $sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
 $sql_search_count = 'SELECT COUNT(tinventory.id) FROM tinventory WHERE 1=1';
+$sql_search_obj_type = "";
 
 if ($search) {
 	
@@ -395,6 +299,13 @@ if ($search) {
 
 		$sql_search_count .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
 		$sql_search_count .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
+
+
+		$sql_search_obj_type = "SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE 
+								tobject_type.show_in_list = 1 AND tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+
+		$sql_search_obj_type .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
+		$sql_search_obj_type .= "AND tobject_field_data.`data` LIKE '%$search_free%'";						
 			
 	} else { //búsqueda solo en nombre y descripción de inventario
 		if ($search_free != '') {
@@ -430,13 +341,7 @@ if ($search) {
 
 
 if (!$clean_output) {
-	$export_buttons = "<div style='float: right; margin-top: 5px; margin-bottom: 5px;'>";
-	$export_buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1&where_clause=' . str_replace('"', "\'", $sql_search).'\')', 'class="sub csv"', true);
-	$export_buttons .= print_button(__('Export to PDF'), '', false, 'window.open(\'' . 'index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&pdf_output=1&clean_output=1&search=1&params='.$params.'\')', 'class="sub pdf"', true);
-	$export_buttons .= "</div>";
-
-	echo $export_buttons;
-
+	
 	echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		$table_search->class = 'search-table';
 		$table_search->width = '98%';
@@ -476,18 +381,16 @@ if (!$clean_output) {
 		$buttons .= print_input_hidden ('search', 1, true);
 		$buttons .= print_input_hidden ('mode', $mode, true);
 		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
-			
-		if ($mode == 'tree') {
-			$buttons .= print_submit_button (__('List view'), 'listview', false, 'class="sub next"', true);
-		} else {
-			$buttons .= print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"', true);
-		}
-			
+		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1&where_clause=' . str_replace('"', "\'", $sql_search).'\')', 'class="sub csv"', true);
+		$buttons .= print_button(__('Export to PDF'), '', false, 'window.open(\'' . 'index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&pdf_output=1&clean_output=1&search=1&params='.$params.'\')', 'class="sub pdf"', true);
 		$buttons .= '</div>';
-		
-		$table_search->data[2][0] = $buttons;
+
+		$table_search->data[2][0] = "&nbsp;";
 		$table_search->colspan[2][0] = 4;
-		
+
+		$table_search->data[3][0] = $buttons;
+		$table_search->colspan[3][0] = 4;
+
 		print_table($table_search);
 	echo '</form>';
 
@@ -496,7 +399,7 @@ if (!$clean_output) {
 $page = (int)get_parameter('page', 1);
 switch ($mode) {
 	case 'tree':
-		inventories_print_tree($sql_search);
+		inventories_print_tree($sql_search, $sql_search_obj_type);
 		break;
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
@@ -511,6 +414,34 @@ echo '<div id="sql_search_hidden" style="display:none;">';
 	print_input_text('sql_search_hidden', $sql_search);
 echo '</div>';
 
+/* Add a form to carry filter between treeview and listview */
+echo '<form id="tree_view_inventory" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory" style="clear: both">';
+	print_input_hidden ("search_free", $search_free);
+	print_input_hidden ("id_object_type_search", $id_object_type);
+	print_input_hidden ("object_fields_search[]", $object_fields);
+	print_input_hidden ("owner", $owner);
+	print_input_hidden ("id_contract", $id_contract);
+	print_input_hidden ("id_manufacturer", $id_manufacturer);
+	print_input_hidden ("last_update", $last_update);
+	print_input_hidden ('search', 1);
+	print_input_hidden ('mode', 'tree');
+	print_input_hidden ("offset", get_parameter("offset"));
+echo "</form>";
+
+/* Add a form to carry filter between treeview and listview */
+echo '<form id="list_view_inventory" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory" style="clear: both">';
+	print_input_hidden ("search_free", $search_free);
+	print_input_hidden ("id_object_type_search", $id_object_type);
+	print_input_hidden ("object_fields_search[]", $object_fields);
+	print_input_hidden ("owner", $owner);
+	print_input_hidden ("id_contract", $id_contract);
+	print_input_hidden ("id_manufacturer", $id_manufacturer);
+	print_input_hidden ("last_update", $last_update);
+	print_input_hidden ('search', 1);
+	print_input_hidden ('mode', 'list');
+	print_input_hidden ("offset", get_parameter("offset"));
+echo "</form>";
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
@@ -519,6 +450,16 @@ echo '</div>';
 <script type="text/javascript">
 
 $(document).ready (function () {
+
+	$("#listview_form_submit").click(function (event) {
+		event.preventDefault();
+		$("#list_view_inventory").submit();
+	});
+
+	$("#treeview_form_submit").click(function (event) {
+		event.preventDefault();
+		$("#tree_view_inventory").submit();
+	});		
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
 	

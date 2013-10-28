@@ -2625,3 +2625,28 @@ p.pagination {
     font-size:12px;
     color:#707070;
 }
+
+div.tree_view {
+	margin: 0px; 
+	padding: 0px;
+	padding-left: 23px;
+}
+
+div.tree_view_branch {
+	background: url("../../images/tree/branch.png"); 
+	background-repeat: repeat-y;	
+}
+
+img.inventory_table_edit {
+	float: right;
+	margin-right: 10px;
+	margin-top: 2px;	
+}
+
+table.inv_details_table tr:last-child td:first-child {
+	border-bottom-left-radius: 10px;
+}
+
+table.inv_details_table tr:last-child td:last-child {
+	border-bottom-right-radius: 10px;	
+}

@@ -934,6 +934,7 @@ CREATE TABLE `tobject_type` (
   `description` text NULL default NULL,
   `icon` text null default null,
   `min_stock` int(5) NOT NULL default 0,
+  `show_in_list` tinyint(1) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

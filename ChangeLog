@@ -1,3 +1,20 @@
+2013-10-28  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css,
+	include/js/integria_inventory.js,
+	include/functions_inventories.php,
+	include/functions_db.php,
+	integria_dbdata.sql,
+	operation/inventories/inventory.php,
+	operation/inventories/inventory_search.php,
+	integria_demo.sql,
+	images/tree_view.png,
+	images/list_view.png,
+	images/application_edit_white.png,
+	integria_db.sql: Rewritten inventory tree view.
+	* include/ajax/inventories.php: Fixed incident search
+	pop up.
+
 2013-10-28  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/languages/ar.mo
