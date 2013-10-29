@@ -1,3 +1,12 @@
+2013-10-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/incidents/incident_search.php: Fixed an error that made
+	impossible to filter the incidents by its start or end date.
+
+	* include/functions_db.php: Fixed an error on the function
+	"create_custom_search" that made impossible to unserialize the data
+	string under certain circunstances.
+
 2013-10-28  Dario Rodriguez <dario@artica.es>
 
 	*  include/functions_incidents.php: Now pagitation function

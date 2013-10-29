@@ -1650,10 +1650,15 @@ function print_user_avatar ($id_user = "", $small = false, $return = false) {
 function create_custom_search ($name, $section, $search_values) {
 	global $config;
 	
+	// It is needed to remove the html entities before serialize the array because
+	// the different string lenght can cause an error when unserialize
+	foreach ($search_values as $key => $search_value) {
+		$search_value = clean_output($search_value);
+	}
+
 	$sql = sprintf ('INSERT INTO tcustom_search (section, name, id_user,
 		form_values) VALUES ("%s", "%s", "%s", \'%s\')', 
-		$section, $name, $config['id_user'],
-		clean_output (serialize ($search_values)));
+		$section, $name, $config['id_user'], serialize ($search_values));
 	return process_sql ($sql, 'insert-id');
 }
 
