@@ -105,7 +105,11 @@ foreach ($inventories as $inventory) {
 }
 
 //Get emails from notify by email incident's field
-$emails = explode(',', $inc_info["email_copy"]);
+$emails = array();
+
+if ($inc_info["email_copy"]) {
+	$emails = explode(',', $inc_info["email_copy"]);
+}
 
 foreach ($emails as $email) {
 	//Search for users

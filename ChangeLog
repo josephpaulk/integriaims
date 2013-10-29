@@ -1,5 +1,10 @@
 2013-10-29  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_inventory_contacts.php: Fixed an error
+	retrieving contacts from mail associated to incidents.
+
+2013-10-29  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_crm.php: Added links to top 10 estimated sales.
 	* operation/leads/lead_statistics.php: Added tip for conversion ratio
 	explanation.
@@ -13,7 +18,7 @@
 	"create_custom_search" that made impossible to unserialize the data
 	string under certain circunstances.
 
-2013-10-28  Dario Rodriguez <dario@artica.es>
+2013-10-29  Dario Rodriguez <dario@artica.es>
 
 	*  include/functions_incidents.php: Now pagitation function
 	shows incident for last year as a tip.
@@ -24,7 +29,7 @@
  	* operation/group/group.php: Now incident limit is based on the 
  	last year.
 
-2013-10-28  Dario Rodriguez <dario@artica.es>
+2013-10-29  Dario Rodriguez <dario@artica.es>
 	
 	* operation/incidents/incident_detail.php: Fixed an error 
 	with incident limit creating and modifying incidents.
