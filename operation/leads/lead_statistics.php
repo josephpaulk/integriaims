@@ -204,7 +204,10 @@ $leads_conversion_rate .= "</tr>";
 $leads_conversion_rate .= "</table>";
 
 $leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
-$table->data[0][1] = print_container('conversion_rate', __('Conversion ratio'), $leads_conversion_rate, 'no', true, '10px');
+
+$container_title = __('Conversion ratio')."&nbsp;".print_help_tip(__("Conversion ratio is calculated using closed leads (keep in mind that closed leads don't appear in search by default)"),true);
+
+$table->data[0][1] = print_container('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, '10px');
 
 //COUNTRIES
 $leads_country = crm_get_total_leads_country($where_clause);

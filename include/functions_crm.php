@@ -550,14 +550,14 @@ function crm_get_data_lead_user_graph($leads) {
 function crm_get_total_sales_lead($where_clause = false) {
 	
 	if ($where_clause) {
-		$sql = "SELECT company, country, estimated_sale FROM tlead
+		$sql = "SELECT id, company, country, estimated_sale FROM tlead
 			WHERE id IN (SELECT id FROM tlead
 					$where_clause)
 			AND estimated_sale<>0
 			ORDER BY estimated_sale DESC
 			";
 	} else {
-		$sql = "SELECT company, country, estimated_sale FROM tlead
+		$sql = "SELECT id, company, country, estimated_sale FROM tlead
 			WHERE estimated_sale<>0
 			ORDER BY estimated_sale DESC
 			";
@@ -581,13 +581,14 @@ function crm_print_estimated_sales_leads($leads) {
 	$table->head[2] = __('Total');
 	
 	$i = 0;
+
 	foreach ($leads as $key=>$lead) {
 	
 		if ($i < 10) {
 			$data = array();
-			$data[0] = $lead['company'];
-			$data[1] = $lead['country'];
-			$data[2] = $lead['estimated_sale'];
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".$lead["id"]."'>".$lead['company']."</a>";
+			$data[1] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".$lead["id"]."'>".$lead['country']."</a>";
+			$data[2] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".$lead["id"]."'>".$lead['estimated_sale']."</a>";
 
 			array_push ($table->data, $data);
 		}
