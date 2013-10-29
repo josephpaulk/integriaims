@@ -45,14 +45,21 @@ if (defined ('AJAX')) {
 	else {
 		
 		$external = get_db_value ("nivel", "tusuario", "id_usuario", $id_user);
-		
+
+		$now = print_mysql_timestamp();
+		$year_in_seconds = 3600 * 24 * 365;
+
+		$year_ago_unix = time() - $year_in_seconds;
+
+		$year_ago = date("Y-m-d H:i:s", $year_ago_unix);
+
 		//If external user check for group and user's incidents
 		if ($external == -1) {
 		
 			$countOpen = get_db_all_rows_sql('SELECT COUNT(*) AS c
-				FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
+				FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '" AND inicio <= "' . $now . '" AND inicio >= "' . $year_ago . '"');
 			$countAll = get_db_all_rows_sql('SELECT COUNT(*) AS c
-				FROM tincidencia WHERE id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
+				FROM tincidencia WHERE id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '" AND inicio <= "' . $now . '" AND inicio >= "' . $year_ago . '"');
 			$countOpen = $countOpen[0]['c'];
 			$countAll = $countAll[0]['c'];
 			
@@ -60,9 +67,9 @@ if (defined ('AJAX')) {
 			//If not external check only for group's incidents
 			
 			$countOpen = get_db_all_rows_sql('SELECT COUNT(*) AS c
-				FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group);
+				FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group . ' AND inicio <= "' . $now . '" AND inicio >= "' . $year_ago . '"');
 			$countAll = get_db_all_rows_sql('SELECT COUNT(*) AS c
-				FROM tincidencia WHERE id_grupo = ' . $id_group);
+				FROM tincidencia WHERE id_grupo = ' . $id_group . ' AND inicio <= "' . $now . '" AND inicio >= "' . $year_ago . '"');
 			$countOpen = $countOpen[0]['c'];
 			$countAll = $countAll[0]['c'];
 		}
@@ -72,7 +79,7 @@ if (defined ('AJAX')) {
 			echo "//";
 			echo __('Limit of incidents reached'); //title
 			echo "//";
-			echo __('You have reached the limit of incidents for this group') . "(".$group['hard_limit'] . "). ". __('You cannot create more incidents.'); //content
+			echo __('You have reached the limit of incidents for this group for a year') . "(".$group['hard_limit'] . "). ". __('You cannot create more incidents.'); //content
 			echo "//";
 			echo "disable_button";
 		}
@@ -81,7 +88,7 @@ if (defined ('AJAX')) {
 			echo "//";
 			echo __('Warning: Soft limit reached'); //title
 			echo "//";
-			echo __('You have ') . $countOpen . __(' opened incidents') . ".". __("Soft limit for this group is "). " ( ".$group['soft_limit'] . " ) ". __(' incidents'). ".". __("Please close some incidents before create more"); //content
+			echo __('You have ') . $countOpen . __(' opened incidents') . ".". __("Soft limit for a year for this group is "). " ( ".$group['soft_limit'] . " ) ". __(' incidents'). ".". __("Please close some incidents before create more"); //content
 			
 			if ($group['enforce_soft_limit'] == 0) {
 				echo "//";

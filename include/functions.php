@@ -410,7 +410,7 @@ function byte_convert ($bytes) {
 	return sprintf ('%.2f '.$symbol[$exp], $converted_value );
 }
 
-function pagination ($count, $url, $offset, $print_result_count=false) {
+function pagination ($count, $url, $offset, $print_result_count=false, $aux_text='') {
 	global $config;
 	
 	$block_size = $config["block_size"];
@@ -455,6 +455,11 @@ function pagination ($count, $url, $offset, $print_result_count=false) {
 		if ($print_result_count) {
 			echo "<span style='font-size: 10px'>";
 			echo sprintf(__('Results found:  %d'), $count);
+
+			if ($aux_text) {
+				echo "&nbsp;".$aux_text;
+			}
+
 			echo "</span>";
 		}
 		echo "<p class='pagination'>";

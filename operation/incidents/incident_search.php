@@ -37,7 +37,8 @@ $filter['id_creator'] = (string) get_parameter ('search_creator', '');
 $filter['editor'] = (string) get_parameter ('search_editor', '');
 $filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
 $filter['order_by'] = get_parameter ('search_order_by', '');
-
+$filter['first_date'] = get_parameter('search_first_date', '');
+$filter['last_date'] = get_parameter('search_last_date', '');
 if ($filter['id_incident_type']) {
 
 	$sql = sprintf("SELECT *

@@ -1,4 +1,15 @@
 2013-10-28  Dario Rodriguez <dario@artica.es>
+
+	*  include/functions_incidents.php: Now pagitation function
+	shows incident for last year as a tip.
+	include/functions.php: Added additional text
+	to pagination function.
+ 	* operation/incidents/incident_search.php: Fixed support for search
+ 	using date fields.
+ 	* operation/group/group.php: Now incident limit is based on the 
+ 	last year.
+
+2013-10-28  Dario Rodriguez <dario@artica.es>
 	
 	* operation/incidents/incident_detail.php: Fixed an error 
 	with incident limit creating and modifying incidents.

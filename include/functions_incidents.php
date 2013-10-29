@@ -69,6 +69,8 @@ function filter_incidents ($filters, $count=false) {
 	$filters['editor'] = isset ($filters['editor']) ? $filters['editor'] : '';
 	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
+	$filter['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
+	$filter['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -1984,6 +1986,26 @@ function incidents_search_result ($filter, $ajax=false) {
 	}
 
 	$count = filter_incidents ($filter, true);
+
+	//Only show incident for last year if there isn't a search by dates
+	if (!$filter['first_date'] && !$filter['last_date']) {
+
+		$filter_year = $filter;
+
+		$now = print_mysql_timestamp();
+		$year_in_seconds = 3600 * 24 * 365;
+
+		$year_ago_unix = time() - $year_in_seconds;
+
+		$year_ago = date("Y-m-d H:i:s", $year_ago_unix);
+		$filter_year['first_date'] = $year_ago;
+		$filter_year['last_date'] = $now;
+
+		$count_this_year = filter_incidents($filter_year, true);
+
+		$aux_text = "(".$count_this_year.")".print_help_tip(__("Incidents created last year"),true);
+	}
+
 	$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
 	$offset = get_parameter("offset");
 	pagination ($count, $url, $offset);
@@ -2180,7 +2202,7 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo "</tbody>";
 	echo "</table>";
 
-	pagination ($count, $url, $offset, true);
+	pagination ($count, $url, $offset, true, $aux_text);
 
 	echo "<br>";	
 }
