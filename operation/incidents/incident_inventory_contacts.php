@@ -21,7 +21,7 @@ if (check_login () != 0) {
 require_once ('include/functions_inventories.php');
 require_once ('include/functions_incidents.php');
 
-$id_incident = (int) get_parameter ('id');
+$id_incident = $id;
 
 $inventories = get_inventories_in_incident ($id_incident, false);
 
@@ -43,8 +43,7 @@ $table->data = array ();
 $table_data = array();
 
 //Add key incident users (owner, editor, closed by, creator)
-
-$inc_info = get_incidents(array("id_incidencia", $id_incident));
+$inc_info = get_incidents("id_incidencia = ". $id_incident);
 
 $inc_info = $inc_info[0];
 
