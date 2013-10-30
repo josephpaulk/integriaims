@@ -1021,7 +1021,7 @@ function api_create_lead ($return_type, $user, $params){
 	// Invalid lead information, abort
 	if (($fullname == "") OR ($email == "") ){
 			$result = 0;
-	} 
+	} else { 
 
 		if ($duped == 1){
 			$fullname = $fullname . " (DUPED LEAD!)";
@@ -1042,7 +1042,7 @@ function api_create_lead ($return_type, $user, $params){
 		} else {
 			$result = 0;
 		}
-	
+	}
 
 	switch($return_type) {
 		case "xml": 
