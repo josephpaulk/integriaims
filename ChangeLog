@@ -1,3 +1,8 @@
+2013-10-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/users/user_edit.php: Fixed an error that made
+	impossible to change the user password.
+
 2013-10-30  Sancho Lerena <slerena@artica.es>
 
 	* extras/migrate.sql: tobject_type missing show_in_field

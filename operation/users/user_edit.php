@@ -255,7 +255,7 @@ if ($has_permission) {
 	
 	echo '<h1>'.__('Change password').'</h1>';
 	
-	$data = print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"', true);
+	$data = print_submit_button (__('Update'), 'pass_upd_btn', false, 'class="upd sub"', true);
 	$data .= print_input_hidden ('update_user', 1, true);
 	$data .= print_input_hidden ('id', $user["id_usuario"], true);
 	
@@ -295,9 +295,15 @@ $(document).ready (function () {
 	
 	$("#submit-upd_btn").click(function() {
 		$("#hidden-upload_avatar").val(0);
+		$("#hidden-update_user").val(1);
+	});
+	$("#submit-pass_upd_btn").click(function() {
+		$("#hidden-upload_avatar").val(0);
+		$("#hidden-update_user").val(1);
 	});
 	$("#submit-upload_avatar").click(function() {
 		$("#hidden-update_user").val(0);
+		$("#hidden-upload_avatar").val(1);
 	});
 	
 	$("#avatar").change (function () {
