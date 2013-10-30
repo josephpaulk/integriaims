@@ -1,3 +1,9 @@
+2013-10-30  Dario Rodriguez <dario@artica.es>
+
+	* integria_dbdata.sql,
+	integria_demo.sql: Updated SQL data to create object types
+	and object type fields.
+	
 2013-10-30  Sancho lerena <slerena@artica.es>
 	
 	* integria.centos.spec,

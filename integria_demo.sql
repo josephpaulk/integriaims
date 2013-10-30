@@ -534,7 +534,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tobject_type` WRITE;
 /*!40000 ALTER TABLE `tobject_type` DISABLE KEYS */;
-INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,1);
+INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,0),(2,'Pandora&#x20;agents','Imported&#x20;agents&#x20;from&#x20;Pandora&#x20;FMS','pandora.png',0,1),(3,'CDROM','','cd-dvd.png',0,0),(4,'NIC','','network.png',0,0),(5,'Software','','box.png',0,0),(6,'RAM','','memory-card.png',0,0),(7,'Service','','engine.png',0,0),(8,'CPU','','server.png',0,0),(9,'HD','','harddisk.png',0,0),(10,'Video','','system-monitor.png',0,0),(11,'Patches','','attachment.png',0,0);
 /*!40000 ALTER TABLE `tobject_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -544,7 +544,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tobject_type_field` WRITE;
 /*!40000 ALTER TABLE `tobject_type_field` DISABLE KEYS */;
-INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0,1),(2,1,'CPU','text','','','',0,0,1),(3,1,'Memory','text','','','',0,0,1),(4,1,'IP&#x20;Address','text','','','',1,0,1),(5,1,'MAC&#x20;Address','text','','','',1,0,1),(6,1,'Users','text','','','', 0, 0, 0),(7,1,'File&#x20;system', 'text', '','','',0,0,0);
+INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0,1),(2,1,'CPU','text','','','',0,0,1),(3,1,'Memory','text','','','',0,0,1),(4,1,'IP&#x20;Address','text','','','',1,0,1),(5,1,'MAC&#x20;Address','text','','','',1,0,1),(6,1,'Users','text','','','',0,0,0),(7,1,'File&#x20;system','text','','','',0,0,0),(8,NULL,'OS','text',NULL,NULL,NULL,0,0,1),(9,NULL,'IP Address','text',NULL,NULL,NULL,0,0,1),(10,NULL,'URL Address','text',NULL,NULL,NULL,0,0,1),(11,NULL,'ID Agent','text',NULL,NULL,NULL,0,0,1),(12,2,'OS','text',NULL,NULL,NULL,0,0,1),(13,2,'IP Address','text',NULL,NULL,NULL,0,0,1),(14,2,'URL Address','text',NULL,NULL,NULL,0,0,1),(15,2,'ID Agent','text',NULL,NULL,NULL,0,0,1),(16,2,'Users','text',NULL,NULL,NULL,0,0,1),(17,2,'File system','text',NULL,NULL,NULL,0,0,1),(19,3,'Description','text','','','',0,0,0),(20,3,'Mount&#x20;point','text','','','',0,0,0),(22,4,'MAC','text','','','',1,0,0),(23,4,'IP&#x20;Address','text','','','',0,0,0),(26,5,'Version','text','','','',0,0,0),(27,6,'Size','text','','','',0,0,0),(28,6,'Type','text','','','',0,0,0),(29,7,'Path','text','','','',0,0,0),(30,7,'Status','text','','','',0,0,0),(31,8,'Speed','text','','','',0,0,0),(32,8,'Model','text','','','',0,0,0),(33,9,'Capacity','text','','','',0,0,0),(34,9,'Name','text','','','',0,0,0),(35,10,'Memory','text','','','',0,0,0),(36,10,'Type','text','','','',0,0,0),(37,11,'Description','text','','','',0,0,0),(38,11,'Extra','text','','','',0,0,0),(39,11,'Internal&#x20;Code','text','','','',0,0,0);
 /*!40000 ALTER TABLE `tobject_type_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
