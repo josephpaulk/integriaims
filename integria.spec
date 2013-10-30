@@ -3,7 +3,7 @@
 #
 %define name        IntegriaIMS
 %define version     4.0
-%define httpd_name      httpd
+%define httpd_name  httpd
 # User and Group under which Apache is running
 %define httpd_name  apache2
 %define httpd_user  wwwrun
@@ -34,7 +34,7 @@ Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a enterprise software for project management, CRM, incident ticketing system inventory, file distribution and time tracking management. Integria is multiuser, with an integrated email reporting and notification system.
+Integria IMS is a management software for SME. It includes a complete approach to project management, CRM, incident management/ticketing, CMDB/Inventory, file distribution, time tracking management, knowledgue base, integrated WIKI and Agenda. Integria is a multiuser WEB Application, with an integrated email reporting and notification system. There is a companion Android/iPhone front end app.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
@@ -90,5 +90,4 @@ fi
 %defattr(0644,%{httpd_user},%{httpd_group},0755)
 %{prefix}/integria
 
-%changelog
 

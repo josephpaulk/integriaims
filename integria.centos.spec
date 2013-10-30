@@ -2,14 +2,13 @@
 # Integria IMS	
 #
 %define name        IntegriaIMS
-%define version     4.0dev
-%define httpd_name      httpd
+%define version     4.0
+%define httpd_name  httpd
 # User and Group under which Apache is running
-%define httpd_name  httpd2
 %define httpd_user  apache
 %define httpd_group apache
 
-Summary:            Integria IMS	
+Summary:            Integria IMS
 Name:               %{name}
 Version:            %{version}
 Release:            1
@@ -27,11 +26,10 @@ Requires:           httpd
 Requires:           php >= 5.1.0
 Requires:           php, php-cli, php-gd, php-intl, curl, php-ldap, php-imap
 Requires:           php-mysql, php-mbstring, php
-Requires:           graphviz
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a enterprise software for project management, CRM, incident ticketing system inventory, file distribution and time tracking management. Integria is multiuser, with an integrated email reporting and notification system.
+Integria IMS is a management software for SME. It includes a complete approach to project management, CRM, incident management/ticketing, CMDB/Inventory, file distribution, time tracking management, knowledgue base, integrated WIKI and Agenda. Integria is a multiuser WEB Application, with an integrated email reporting and notification system. There is a companion Android/iPhone front end app.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
@@ -86,6 +84,3 @@ fi
 %files
 %defattr(0644,%{httpd_user},%{httpd_group},0755)
 %{prefix}/integria
-
-%changelog
-
