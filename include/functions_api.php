@@ -194,7 +194,7 @@ function api_get_incidents ($return_type, $user, $params){
 	$filter['string'] = $params[0];
 	$filter['status'] = $params[1];
 	$filter['id_group'] = $params[2];
-	
+	$filter["limit"] = 5000;
 	// If the user is admin, all the incidents are showed
 	if(!get_admin_user ($user)) {
 		$filter['id_user_or_creator'] = $user;

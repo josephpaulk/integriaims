@@ -1,5 +1,12 @@
 2013-10-30  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_api.php,
+	include/functions_incidents.php: Fixed a bug with pagination
+	and incident returned by API. NOW INCIDENTS RETRIEVED BY API
+	IS LIMITED TO 5000.
+
+2013-10-30  Dario Rodriguez <dario@artica.es>
+
 	* integria_dbdata.sql,
 	integria_demo.sql: Updated SQL data to create object types
 	and object type fields.

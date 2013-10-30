@@ -149,6 +149,12 @@ function filter_incidents ($filters, $count=false) {
 	} else {
 		$order_by_array = $filters['order_by'];
 	}
+
+	//Use config block size if no other was given
+	if (empty ($filters["limit"])) {
+		$filters["limit"] = $config["block_size"];
+	}
+
 	$order_by = "";
 
 	if ($order_by_array)
@@ -187,7 +193,7 @@ function filter_incidents ($filters, $count=false) {
 			ORDER BY %s actualizacion DESC
 			LIMIT %d OFFSET %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $order_by, $config['block_size'], $filters["offset"]);
+			$filters['string'],$filters['string'], $filters['string'], $order_by, $filters["limit"], $filters["offset"]);
 		
 		$incidents = get_db_all_rows_sql ($sql);
 
