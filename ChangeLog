@@ -7,6 +7,11 @@
 
 2013-10-30  Dario Rodriguez <dario@artica.es>
 
+	* operation/leads/lead_statistics.php: Fixed an error creating
+	lead statistics report using custom search.
+
+2013-10-30  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_api.php: Fixed an error which creates leads
 	without name and email address. 
 

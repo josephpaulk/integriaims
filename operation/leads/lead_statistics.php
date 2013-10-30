@@ -93,7 +93,7 @@ if ($country) {
 	$where_clause .= sprintf (' AND country LIKE "%%%s%%"', $country);
 }
 
-if ($progress_minor_than >= 0) {
+if ($progress_minor_than > 0) {
 	$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 }
 
@@ -246,16 +246,17 @@ $leads_user_content = '<br><div class="pie_frame">' . $leads_user_content . '</d
 $table->data[1][1] = print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, '10px');
 
 //TOP 10 ESTIMATED SALES
-$leads_sales = crm_get_total_sales_lead($where_clause);
+$where_clause_top10 = $where_clause." AND progress < 100";
+$leads_sales = crm_get_total_sales_lead($where_clause_top10);
 
 if ($read && $enterprise) {
 	$leads_sales = crm_get_user_leads($config['id_user'], $leads_sales);
 }
 
-if ($leads_sales !== false) {
+if ($leads_sales != false) {
 	$leads_sales_content = print_table(crm_print_estimated_sales_leads($leads_sales), true);
 } else {
-	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
+	$leads_sales_content = '<br><div class="pie_frame">' . __('No data to show') . '</div>';
 }
 
 $table->data[2][0] = print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, '10px');
