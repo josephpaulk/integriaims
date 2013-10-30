@@ -144,7 +144,7 @@ class Workorders {
 			while ( $workorder = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
 				$new = false;
 				$html .= "<li>";
-				$html .= "<a href='$href&id_workorder=".$workorder['id']."' class='ui-link-inherit'>";
+				$html .= "<a href='$href&id_workorder=".$workorder['id']."' class='ui-link-inherit' data-ajax='false'>";
 					//$html .= $ui->getPriorityFlagImage($workorder['priority']);
 					$html .= print_priority_flag_image ($workorder['priority'], true, "../", "priority-list ui-li-icon");
 					$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
@@ -335,7 +335,7 @@ class Workorders {
 		// Foooter buttons
 		// New
 		$button_new = "<a href='index.php?page=workorder' data-role='button'
-							data-icon='plus'>".__('New')."</a>\n";
+							data-ajax='false' data-icon='plus'>".__('New')."</a>\n";
 		// Pagination
 		//~ $filter = "";
 		//~ if ($this->filter_search != '') {

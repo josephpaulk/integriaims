@@ -29,13 +29,20 @@ class Home {
 		// Header
 		$logo = "<img src='../images/integria_logo_header.png' style='border:0px;' alt='Home' >";
 		$title = "<div style='text-align:center;'>$logo</div>";
-		$left_button = $ui->createHeaderButton(
+
+		$hide_logout = $system->getRequest("hide_logout", false);
+		if ($hide_logout) {
+			$left_button = "";
+		} else {
+			$left_button = $ui->createHeaderButton(
 				array('icon' => 'back',
 					'pos' => 'left',
 					'text' => __('Exit'),
 					'href' => 'index.php?action=logout'
 					)
 				);
+		}
+		
 		$ui->createHeader($title, $left_button, null, "logo");
 		$ui->showFooter();
 		$ui->beginContent();

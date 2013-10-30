@@ -1,3 +1,20 @@
+2013-10-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/invoices/invoice_view.php: Now the name of the exported
+	pdf is invoice_[bill_id].
+
+	* operation/workorders/wo.php: Fixed an error on the pagination.
+
+	* mobile/operation/home.php,
+	  mobile/operation/incident.php,
+	  mobile/operation/incidents.php,
+	  mobile/operation/workorder.php,
+	  mobile/operation/workorders.php,
+	  mobile/operation/workunit.php,
+	  mobile/operation/workunits.php,
+	  mobile/include/ui.class.php,
+	  mobile/include/user.class.php: Visual changes.
+
 2013-10-30  Dario Rodriguez <dario@artica.es>
 
 	* index.php: Fixed an error cleaning output buffer

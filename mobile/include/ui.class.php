@@ -216,6 +216,8 @@ class Ui {
 		
 		if (isset($options['data-ajax'])) {
 			$return .= ' data-ajax="' . $options['data-ajax'] . '" ';
+		} else {
+			$return .= ' data-ajax="false" ';
 		}
 		$return .= '>';
 		
@@ -891,25 +893,25 @@ class Ui {
 	public function getPaginationControgroup ($page, $offset = 1, $numPages = 1) {
 		
 		if ($offset <= 1) {
-			$button_first = "<a class='ui-disabled' data-role='button'
+			$button_first = "<a class='ui-disabled' data-role='button' data-ajax='false'
 							data-icon='back' data-theme='b' data-iconpos='notext'>".__('First')."</a>\n";
-			$button_back = "<a class='ui-disabled' data-role='button'
+			$button_back = "<a class='ui-disabled' data-role='button' data-ajax='false'
 							data-icon='arrow-l' data-theme='b' data-iconpos='notext'>".__('Back')."</a>\n";
 		} else {
-			$button_first = "<a href='index.php?page=$page&offset=1' data-role='button'
+			$button_first = "<a href='index.php?page=$page&offset=1' data-role='button' data-ajax='false'
 							data-icon='back' data-theme='b' data-iconpos='notext'>".__('First')."</a>\n";
 			$button_back = "<a href='index.php?page=$page&offset=".($offset -1)."' data-role='button'
 							data-icon='arrow-l' data-theme='b' data-iconpos='notext'>".__('Back')."</a>\n";
 		}
 		if ($offset >= $numPages) {
-			$button_last = "<a class='ui-disabled' data-role='button'
+			$button_last = "<a class='ui-disabled' data-role='button' data-ajax='false'
 							data-icon='forward' data-theme='b' data-iconpos='notext'>".__('Last')."</a>\n";
-			$button_forward = "<a class='ui-disabled' data-role='button'
+			$button_forward = "<a class='ui-disabled' data-role='button' data-ajax='false'
 								data-icon='arrow-r' data-theme='b' data-iconpos='notext'>".__('Forward')."</a>\n";
 		} else {
-			$button_last = "<a href='index.php?page=$page&offset=".$numPages."' data-role='button'
+			$button_last = "<a href='index.php?page=$page&offset=".$numPages."' data-role='button' data-ajax='false'
 							data-icon='forward' data-theme='b' data-iconpos='notext'>".__('Last')."</a>\n";
-			$button_forward = "<a href='index.php?page=$page&offset=".($offset +1)."' data-role='button'
+			$button_forward = "<a href='index.php?page=$page&offset=".($offset +1)."' data-role='button' data-ajax='false'
 								data-icon='arrow-r' data-theme='b' data-iconpos='notext'>".__('Forward')."</a>\n";
 		}
 		
@@ -1027,14 +1029,14 @@ class Ui {
 				}
 			}
 		}
-		//~ echo "<script type='text/javascript'>
-			//~ $(document).bind('mobileinit', function(){
-				//~ //Disable ajax link
-				//~ $('.disable-ajax').click(function(event){
-					//~ $.mobile.ajaxFormsEnabled = false;
-				//~ });
-			//~ });
-			//~ </script>";
+		echo "<script type='text/javascript'>
+			$(document).bind('mobileinit', function(){
+				//Disable ajax link
+				$('.disable-ajax').click(function(event){
+					$.mobile.ajaxFormsEnabled = false;
+				});
+			});
+			</script>";
 		echo "<script type='text/javascript'>
 				$(document).bind('mobileinit', function () {
 					$.mobile.ajaxEnabled = false;

@@ -457,7 +457,7 @@ if ($operation == "") {
 	$search_priority = get_parameter ("search_priority", -1);
 	$need_validation =get_parameter("need_validation",0);
 
-	$params = "&search_priority=$search_priority&search_tatus=$search_status&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&id_project=$id_project&need_validation=$need_validation";
+	$params = "&search_priority=$search_priority&search_status=$search_status&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&id_project=$id_project&need_validation=$need_validation";
 
 	$where_clause = "WHERE 1=1 ";
 	

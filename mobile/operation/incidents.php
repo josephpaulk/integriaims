@@ -145,7 +145,7 @@ class Incidents {
 					$background_color = "";
 				}
 				$html .= "<li class=\"$background_color\">";
-				$html .= "<a href='index.php?page=incident&id_incident=".$incident['id_incidencia']."' class='ui-link-inherit'>";
+				$html .= "<a href='index.php?page=incident&id_incident=".$incident['id_incidencia']."' class='ui-link-inherit' data-ajax='false'>";
 					//$html .= $ui->getPriorityFlagImage($incident['prioridad']);
 					$html .= print_priority_flag_image ($incident['prioridad'], true, "../", "priority-list ui-li-icon");
 					$html .= "<h3 class='ui-li-heading'>#".$incident['id_incidencia'];
@@ -268,7 +268,7 @@ class Incidents {
 		// Foooter buttons
 		// New
 		$button_new = "<a href='index.php?page=incident' data-role='button'
-							data-icon='plus'>".__('New')."</a>\n";
+							data-ajax='false' data-icon='plus'>".__('New')."</a>\n";
 		// Pagination
 		$filter = "";
 		if ($this->filter_search != '') {

@@ -95,12 +95,18 @@ class User {
 		}
 		
 		if (!empty($user) && !empty($password)) {
-			if (process_user_login($user, $password) !== false) {
-				$this->logged = true;
-				$this->user = $user;
-				$this->errorLogin = false;
-			}
-			else {
+			global $config;
+			if (include_once($system->getConfig("homedir")."/include/auth/mysql.php")) {
+				if (process_user_login($user, $password) !== false) {
+					$this->logged = true;
+					$this->user = $user;
+					$this->errorLogin = false;
+				}
+				else {
+					$this->logged = false;
+					$this->errorLogin = true;
+				}
+			} else {
 				$this->logged = false;
 				$this->errorLogin = true;
 			}

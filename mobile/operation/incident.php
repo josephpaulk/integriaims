@@ -477,7 +477,7 @@ class Incident {
 		// Delete
 		if ($this->id_incident > 0) {
 			$button_delete = "<a href='index.php?page=incidents&operation=delete_incident&id_incident=".$this->id_incident."'
-									data-role='button' data-icon='delete'>".__('Delete')."</a>\n";
+									data-role='button' data-ajax='false' data-icon='delete'>".__('Delete')."</a>\n";
 		}
 		$ui->createFooter("<div data-type='horizontal' data-role='controlgroup'>$button_add"."$button_delete</div>");
 		$ui->showFooter();
@@ -771,7 +771,7 @@ class Incident {
 			while ( $file = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
 				$new = false;
 				$html .= "<li>";
-				$html .= "<a href='../operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
+				$html .= "<a data-ajax='false' href='../operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
 					$html .= "<h3 class='ui-li-heading'><img src='../images/attach.png'>&nbsp;".$file['filename']."</img></h3>";
 					$html .= "<p class='ui-li-desc'>".$file['description']."</p>";
 					$html .= "<span class=\"ui-li-aside\">".round($file['size']/1024,2)."&nbsp;KB</span>";

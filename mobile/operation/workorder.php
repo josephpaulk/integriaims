@@ -331,7 +331,7 @@ class Workorder {
 		if ($this->id_workorder > 0
 				&& ( dame_admin($system->getConfig('id_user')) || $system->getConfig('id_user') == $workorder_creator ) ) {
 			$button_delete = "<a href='index.php?page=workorders&operation=delete&id_workorder=".$this->id_workorder."
-									&filter_status=0&filter_owner=".$system->getConfig('id_user')."'
+									&filter_status=0&filter_owner=".$system->getConfig('id_user')."' data-ajax='false'
 									data-role='button' data-icon='delete'>".__('Delete')."</a>\n";
 		}
 		$ui->createFooter("<div data-type='horizontal' data-role='controlgroup'>$button_add"."$button_delete</div>");

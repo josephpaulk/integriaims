@@ -126,7 +126,7 @@ class Workunits {
 			while ( $workunit = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
 				$new = false;
 				$html .= "<li>";
-				$html .= "<a href='$href&id_workunit=".$workunit['id']."' class='ui-link-inherit'>";
+				$html .= "<a href='$href&id_workunit=".$workunit['id']."' class='ui-link-inherit' data-ajax='false'>";
 					$date = strtotime($workunit['timestamp']);
 					$html .= "<h3 class='ui-li-heading'>".date ("Y-m-d", $date)."</h3>";
 					$html .= "<p class='ui-li-desc'><strong>".$workunit['id_user']."</strong></p>";
@@ -247,7 +247,7 @@ class Workunits {
 		// Foooter buttons
 		// New
 		$button_new = "<a href='index.php?page=workunit' data-role='button'
-							data-icon='plus'>".__('New')."</a>\n";
+							data-ajax='false' data-icon='plus'>".__('New')."</a>\n";
 		// Pagination
 		//$paginationCG = $ui->getPaginationControgroup("workunits", $this->offset, $this->getNumPages());
 		$ui->createFooter($button_new);
