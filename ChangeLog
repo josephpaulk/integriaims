@@ -1,3 +1,8 @@
+2013-10-30  Dario Rodriguez <dario@artica.es>
+
+	* operation/inventories/inventory_search.php: Fixed and error
+	carrying parameter between list and tree inventory views. 
+
 2013-10-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/users/user_edit.php: Fixed an error that made

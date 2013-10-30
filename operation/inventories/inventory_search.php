@@ -272,7 +272,9 @@ if ($search) {
 	if ($id_object_type != 0 && !empty($object_fields) && $search_free != '') {
 
 		$j = 0;
+		
 		foreach ($object_fields as $k=>$f) {
+			
 			if ($j == 0) 
 				$string_fields = "$k";
 			else
@@ -418,7 +420,9 @@ echo '</div>';
 echo '<form id="tree_view_inventory" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory" style="clear: both">';
 	print_input_hidden ("search_free", $search_free);
 	print_input_hidden ("id_object_type_search", $id_object_type);
-	print_input_hidden ("object_fields_search[]", $object_fields);
+	foreach ($object_fields as $k=>$v) {
+		print_input_hidden ("object_fields_search[]", $k);
+	}
 	print_input_hidden ("owner", $owner);
 	print_input_hidden ("id_contract", $id_contract);
 	print_input_hidden ("id_manufacturer", $id_manufacturer);
@@ -432,7 +436,9 @@ echo "</form>";
 echo '<form id="list_view_inventory" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory" style="clear: both">';
 	print_input_hidden ("search_free", $search_free);
 	print_input_hidden ("id_object_type_search", $id_object_type);
-	print_input_hidden ("object_fields_search[]", $object_fields);
+	foreach ($object_fields as $k=>$v) {
+                print_input_hidden ("object_fields_search[]", $k);
+        }
 	print_input_hidden ("owner", $owner);
 	print_input_hidden ("id_contract", $id_contract);
 	print_input_hidden ("id_manufacturer", $id_manufacturer);
