@@ -1,3 +1,10 @@
+2013-10-30 Vanessa Gil <vanessa.gil@artica.es>
+
+	* index.php
+	  general/login_page.php
+	  include/styles/integria.css: Improved layout
+	of password policy.
+
 2013-10-30  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_api.php: Fixed an error which creates leads

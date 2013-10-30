@@ -243,6 +243,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 			case 1: //first change
 			case 2: //pass expired
 				$expired_pass = true;
+				$_GET['no_login'] = 1;
 				login_change_password($nick);
 				break;
 			case 0:

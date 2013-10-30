@@ -14,6 +14,7 @@
 // GNU General Public License for more details.
 
 echo '<div class="databox_login" id="login">';
+$no_login = get_parameter('no_login', 0);
 ?>
 
 <?php 
@@ -100,6 +101,11 @@ echo '<div class="databox_login" id="login">';
 	echo '</td></tr>';
 	echo "</table>";
 	echo "</div>";
+
+//show object hidden
+echo '<div id="show_login_hidden" style="display:none;">';
+print_input_text('show_login', $no_login);
+echo '</div>';
 	
 ?>
 		</form>
@@ -113,7 +119,12 @@ echo "</div>";
 
 ?>
 
-
 <script type="text/javascript" language="javascript">
-document.getElementById('nick').focus();
+	document.getElementById('nick').focus();
+	
+	if ($("#text-show_login").val() == 1) {
+		$("#login_form_data").css("display", "none");
+		$("#login_form_data_fail").css("display", "none");
+	}	
+
 </script>
