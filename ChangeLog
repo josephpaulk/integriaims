@@ -1,3 +1,8 @@
+2013-10-30  Dario Rodriguez <dario@artica.es>
+
+	* index.php: Fixed an error cleaning output buffer
+	before creating pdfs.
+
 2013-10-30 Vanessa Gil <vanessa.gil@artica.es>
 
 	* index.php

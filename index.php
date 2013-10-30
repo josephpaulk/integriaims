@@ -52,6 +52,12 @@ if (! ($perms & 0600) && ! ($perms & 0660) && ! ($perms & 0640)) {
 	exit;
 }
 
+// Buffer the following html with PHP so we can store it to a variable later
+if (($_POST["pdf_output"] == 1) OR ($_POST["raw_output"] == 1)) {
+	ob_start();
+	$config["flash_charts"] = 0;
+}
+
 require_once ('include/config.php');
 require_once ('include/functions.php');
 require_once ('include/functions_db.php');
@@ -131,11 +137,6 @@ $pdf_output = get_parameter ("pdf_output", 0);
 $pdf_filename = get_parameter ("pdf_filename", "");
 $raw_output = get_parameter ("raw_output", 0);
 $expired_pass = false;
-if (($pdf_output == 1) OR ($raw_output == 1)) {
-	// Buffer the following html with PHP so we can store it to a variable later
-	ob_start();
-    $config["flash_charts"] = 0;
-}
 
 echo $html_header;
 echo "<title>" . $config["sitename"] . "</title>";
@@ -562,4 +563,3 @@ if (($raw_output == 0) AND ($pdf_output == 0)){
     echo '</body></html>';
 }
 ?>
-
