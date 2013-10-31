@@ -1,3 +1,9 @@
+2013-10-31  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_inventories.php: Added information icon
+	and feature to display information using hidden fields for 
+	search with items of the same object type. 
+
 2013-10-30  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_api.php,

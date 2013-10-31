@@ -1216,9 +1216,13 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			
 			$i = 6;
 			foreach ($res_object_fields as $key => $object_field) {
-				$table->head[$i] = $object_field['label'];
-				$i++;
+				
+				if (isset($object_field["label"])) {
+					$table->head[$i] = $object_field['label'];
+					$i++;
+				}
 			}
+			$table->head[$i] = __('More info');
 		} else {
 			if (!$clean_output) {
 				$table->head[7] = __('More info');
@@ -1285,9 +1289,19 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				$i = 6;
 				foreach ($result_object_fields as $k => $ob_field) {
-					$data[$i] = $ob_field['data'];
-					$i++;
+					if (isset($ob_field["label"])) {
+						$data[$i] = $ob_field['data'];
+						$i++;
+					}
 				}
+				
+				if (!$clean_output) {
+					$data[$i] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
+					$data[$i] .= print_image ("images/information.png", true,
+						array ("title" => __('Show object type fields')));
+					$data[$i] .= '</a>&nbsp;';
+				}
+
 			} else {
 				if (!$clean_output) {
 					$data[7] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
