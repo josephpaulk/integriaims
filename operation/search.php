@@ -80,6 +80,8 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 		$table->head[3] = __('Status');
 		$table->head[4] = __('WU time (hr)');
 
+		$statuses = get_indicent_status ();
+
 		foreach ($incidents as $incident) {
 			$data = array ();
 			if ((user_belong_incident ($config["id_user"], $incident["id_incidencia"]))
@@ -88,7 +90,7 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 				$data[0] = $incident["id_incidencia"];
 				$data[1] = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"]."'>".$incident["titulo"]."</a>";
 				$data[2] = $incident["inicio"];
-				$data[3] = $incident["estado"];
+				$data[3] = $statuses[$incident['estado']];
 				$data[4] = get_incident_workunit_hours($incident["id_incidencia"]);
 				array_push ($table->data, $data);
 			}

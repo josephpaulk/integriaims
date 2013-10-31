@@ -1,5 +1,11 @@
 2013-10-31  Dario Rodriguez <dario@artica.es>
 
+	* operation/search.php: Fixed a bug diplaying incident status
+	in global search, now it shows the name of the status instead
+	the number.
+
+2013-10-31  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_inventories.php: Added information icon
 	and feature to display information using hidden fields for 
 	search with items of the same object type. 
