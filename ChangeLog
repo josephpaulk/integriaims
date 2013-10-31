@@ -1,5 +1,11 @@
 2013-10-31  Dario Rodriguez <dario@artica.es>
 
+	* operation/inventories/inventory_detail.php: Fixed a bug
+	updating inventory object which didn't allow you to change
+	object type for object without type after creation.
+
+2013-10-31  Dario Rodriguez <dario@artica.es>
+
 	* operation/search.php: Fixed a bug diplaying incident status
 	in global search, now it shows the name of the status instead
 	the number.

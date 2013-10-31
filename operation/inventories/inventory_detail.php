@@ -237,6 +237,7 @@ if ($update) {
 			$aditional_data['new'] = $inventory_status;
 			inventory_tracking($id, INVENTORY_STATUS_CHANGED, $aditional_data);
 		}
+
 		if ($id_object_type != $old_inventory['id_object_type']) {
 			$aditional_data = array();
 			$aditional_data['old'] = $old_inventory['id_object_type'];
@@ -702,7 +703,6 @@ if ($id && !$inventory_name) {
 		if ($id) {
 			$button = print_input_hidden ('update_inventory', 1, true);
 			$button .= print_input_hidden ('id', $id, true);
-			$button .= print_input_hidden ('id_object_type', $id_object_type, true);
 			$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
 		} else {
 			$button = print_input_hidden ('create_inventory', 1, true);
