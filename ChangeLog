@@ -1,5 +1,11 @@
 2013-10-31  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_detail.php: Fixed a bug which
+	doesn't close inventory picker popup (incident editor) after 
+	click on one item.
+
+2013-10-31  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_workunits.php: Fixed a bug which display
 	different roles in single workunit and multiple workunit mode
 	inside "Add spare workunit view".

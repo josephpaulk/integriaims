@@ -1199,7 +1199,7 @@ function loadInventory(id_inventory) {
 	
 	$('#incident_status_form').append ($('<input type="hidden" value="'+id_inventory+'" class="selected-inventories" name="inventories[]" />'));
 
-	$("#inventory_search_modal").dialog('close');
+	$("#inventory_search_window").dialog('close');
 
 	$.ajax({
 		type: "POST",
@@ -1208,6 +1208,7 @@ function loadInventory(id_inventory) {
 		dataType: "text",
 		success: function (name) {
 			$('#incident_inventories').append($('<option></option>').html(name).attr("value", id_inventory));
+			
 		}
 	});
 }
