@@ -135,7 +135,11 @@ function create_new_table_multiworkunit ($number=false) {
 	echo "</td>";
 	
 	echo "<td>";
-	echo combo_roles (true, 'id_profile_'.$number, __("Role"), true);
+	if (dame_admin ($config['id_user'])) {
+		echo combo_roles (true, 'iid_profile_'.$number, __('Role'), true);
+	} else {
+		echo combo_user_task_profile ($id_task, 'id_profile_'.$number, 0, false, true);
+	}	
 	echo "</td>";
 	
 	echo "<td>";

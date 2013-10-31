@@ -1,5 +1,11 @@
 2013-10-31  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_workunits.php: Fixed a bug which display
+	different roles in single workunit and multiple workunit mode
+	inside "Add spare workunit view".
+
+2013-10-31  Dario Rodriguez <dario@artica.es>
+
 	* operation/inventories/inventory_detail.php: Fixed a bug
 	updating inventory object which didn't allow you to change
 	object type for object without type after creation.
