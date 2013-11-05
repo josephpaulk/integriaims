@@ -1,5 +1,11 @@
 2013-11-05  Dario Rodriguez <dario@artica.es>
 
+	*  include/newsletter.php,
+ 	operation/newsletter/newsletter_definition.php: Created new mode
+	for newsleter subscribe and unsubscribe form.
+
+2013-11-05  Dario Rodriguez <dario@artica.es>
+
 	* operation/agenda/entry.php: Fixed a typo in file.
 	* operation/inventories/inventory_detail.php: Fixed a bug which 
 	replaces object type when it was defined.

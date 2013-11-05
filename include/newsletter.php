@@ -20,6 +20,7 @@ ini_set("display_errors", 0);
 
 $operation = get_parameter ("operation", "");
 $id = get_parameter ("id", "");
+$clean = get_parameter("clean");
 
 if ($operation == "")
 	return;
@@ -50,14 +51,16 @@ if ($operation == "subscribe") {
 	
 	$now = date ("Y-m-d H:i:s");
 	echo "<form method=post action='".$config["base_url"]."/include/newsletter.php'>";
-	echo "<h3>";
-	echo __("Subscription form for "). " ". $newsletter["name"];
-	echo "</h3>";
-	
-	echo "<p style='width: 500px'><i>";
-	echo $newsletter["description"];
-	echo "</p></i>";
-	
+
+	if (!$clean) {
+		echo "<h3>";
+		echo __("Subscription form for "). " ". $newsletter["name"];
+		echo "</h3>";	
+		
+		echo "<p style='width: 500px'><i>";
+		echo $newsletter["description"];
+		echo "</p></i>";
+	}
 	echo "<table class=databox width=500>";
 	echo "<tr><td>".__("Name (optional)");
 	echo "<td>";
@@ -128,17 +131,19 @@ if ($operation == "desubscribe") {
 	
 	$now = date ("Y-m-d H:i:s");
 	echo "<form method=post action='".$config["base_url"]."/include/newsletter.php'>";
-	echo "<h3>";
-	echo __("De-subscription form for "). " ". $newsletter["name"];
-	echo "</h3>";
 	
-	echo "<p style='width: 500px'><i>";
-	echo $newsletter["description"];
-	echo "</p></i>";
-	echo "<p style='width: 500px'>";
-	echo __("Please enter here the email address which you're registered on this newsletter");
-	echo "</p>";
+	if (!$clean) {
+		echo "<h3>";
+		echo __("De-subscription form for "). " ". $newsletter["name"];
+		echo "</h3>";
 		
+		echo "<p style='width: 500px'><i>";
+		echo $newsletter["description"];
+		echo "</p></i>";
+		echo "<p style='width: 500px'>";
+		echo __("Please enter here the email address which you're registered on this newsletter");
+		echo "</p>";
+	}	
 	echo "<table class=databox width=500>";
 	echo "<tr><td>".__("Email");
 	echo "<td>";
