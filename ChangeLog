@@ -1,3 +1,9 @@
+2013-11-05  Dario Rodriguez <dario@artica.es>
+
+	* operation/agenda/entry.php: Fixed a typo in file.
+	* operation/inventories/inventory_detail.php: Fixed a bug which 
+	replaces object type when it was defined.
+
 2013-10-31  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed a bug which

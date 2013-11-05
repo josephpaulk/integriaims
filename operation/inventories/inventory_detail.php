@@ -181,6 +181,11 @@ if ($update) {
 	
 	$old_inventory = get_db_row('tinventory', 'id', $id);
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
+
+	//Preserve old inventory type if any
+	if ($old_inventory["id_object_type"]) {
+		$id_object_type = $old_inventory["id_object_type"];
+	}
 	
 	$last_update = date ("Y/m/d", get_system_time());
 	if ($inventory_status != 'issued') {
