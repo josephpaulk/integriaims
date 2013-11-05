@@ -1,3 +1,8 @@
+2013-11-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/api.php: Now is possible to check the integria
+	version with the parameter "info=version".
+
 2013-11-05  Dario Rodriguez <dario@artica.es>
 
 	*  include/newsletter.php,

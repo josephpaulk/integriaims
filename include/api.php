@@ -32,6 +32,19 @@ $pass = get_parameter('pass', '');
 $user_pass = get_parameter('user_pass', '');
 $return_type = get_parameter('return_type', 'csv');
 
+$info = get_parameter('info', false);
+if ($info == "version") {
+	if ($config["enteprise"] == 1)
+		$enterprise = "Enterprise Edition";
+	else
+		$enterprise = "OpenSource Edition";
+	if (!$config["minor_release"])
+		$config["minor_release"] = 0;
+
+	echo "Integria IMS $enterprise ".$config["version"]." Build ".$config["build_version"]." MR".$config["minor_release"];
+	exit;
+}
+
 $api_password = get_db_value_filter('value', 'tconfig', array('token' => 'api_password'));
 
 $correct_login = false;
@@ -48,6 +61,7 @@ else {
 }
 
 if(!$correct_login) {
+	sleep(15);
 	exit;
 }
 
@@ -179,5 +193,6 @@ switch ($op){
 	default: 
 	{
 	}
+	sleep(15);
 }
 ?>
