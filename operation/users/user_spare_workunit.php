@@ -246,7 +246,7 @@ if ($operation == 'insert') {
 	
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Inserted PWU. Task: $id_task. Desc: $description");
 	}
-}
+
 
 if ($operation == "delete") {
 	$success = delete_task_workunit ($id_workunit);
