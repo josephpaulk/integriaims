@@ -42,7 +42,7 @@ if ($create_building) {
 		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-		insert_event ("BUILDING CREATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Building", "Created building $id - $name");
 	}
 	$id = 0;
 }
@@ -61,7 +61,7 @@ if ($update_building) {
 		echo '<h3 class="error">'.__('Building cannot be updated').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
-		insert_event ("BUILDING", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Building", "Updated building $id - $name");
 	}
 	$id = 0;
 }
@@ -71,7 +71,7 @@ if ($delete_building) {
 	$name = get_db_value ('name', 'tbuilding', 'id', $id);
 	$sql = sprintf ('DELETE FROM tbuilding WHERE id = %d', $id);
 	process_sql ($sql);
-	insert_event ("BUILDING DELETED", $id, 0, "$name");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Building", "Deleted building $id - $name");
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }

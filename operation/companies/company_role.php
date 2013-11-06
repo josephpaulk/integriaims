@@ -46,7 +46,7 @@ if ($create_role) {
 		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		insert_event ("COMPANY ROLE CREATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Created company role $name");
 	}
 	$id = 0;
 }
@@ -65,7 +65,7 @@ if ($update_role) {
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		insert_event ("COMPANY ROLE", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Updated company role $name");
 	}
 	$id = 0;
 }
@@ -75,7 +75,7 @@ if ($delete_role) {
 	$name = get_db_value ('name', 'tcompany_role', 'id', $id);
 	$sql = sprintf ('DELETE FROM tcompany_role WHERE id = %d', $id);
 	$result = process_sql ($sql);
-	insert_event ("COMPANY ROLE DELETED", $id, 0, $name);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company role $name");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }

@@ -55,7 +55,8 @@ if ($insert_product) {
 		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	} else {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-		insert_event ("PRODUCT CREATED", $id, 0, $name);
+		//insert_event ("PRODUCT CREATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created product $id - $name");
 	}
 	$id = 0;
 }
@@ -74,7 +75,8 @@ if ($update_product) {
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	} else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		insert_event ("PRODUCT UPDATED", $id, 0, $name);
+		//insert_event ("PRODUCT UPDATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated product $id - $name");
 	}
 }
 

@@ -244,7 +244,8 @@ if ($operation == 'insert') {
 		set_task_completion ($id_task);
 	}
 	
-	insert_event ("PWU INSERT", $id_task, 0, $description);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Inserted PWU. Task: $id_task. Desc: $description");
+	}
 }
 
 if ($operation == "delete") {
@@ -295,7 +296,7 @@ if ($operation == 'update') {
             $result = process_sql ($sql, 'insert_id');
 	}
 	$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
-	insert_event ("PWU UPDATED", 0, 0, $description);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Updated PWU. $description");
 	
 	if ($result !== false) {
 		set_task_completion ($id_task);

@@ -85,7 +85,7 @@ if (($create_company) OR ($update_company)) {
 			echo "<h3 class='error'>".__('Could not be created')."</h3>";
 		else {
 			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-			insert_event ("COMPANY CREATED", $id, 0, $name);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Created company $name");
 		}
 	} else {
 
@@ -113,7 +113,8 @@ if (($create_company) OR ($update_company)) {
 			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 		else {
 			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-			insert_event ("COMPANY", $id, 0, $name);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Updated company $name");
+			
 		}
 	}
 }
@@ -134,7 +135,7 @@ if ($delete_company) { // if delete
 	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
 
 	process_sql ($sql);
-	insert_event ("COMPANY DELETED", $id, 0, $name);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company $name");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 

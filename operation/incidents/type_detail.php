@@ -122,7 +122,7 @@ if ($create_type) {
 		} else {
 			$show_fields = true;
 			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-			insert_event ("INCIDENT TYPE CREATED", $id, 0, $values['name']);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Created incident type $id - ".$values['name']);
 		}
 	} else {
 		echo '<h3 class="error">'.__('Type name empty').'</h3>';
@@ -145,7 +145,7 @@ if ($update_type) {
 			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 		else {
 			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
-			insert_event ("INCIDENT TYPE", $id, 0, $name);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Updated incident type $id - $name");
 			$show_fields = true;
 		}
 	} else {
@@ -160,7 +160,7 @@ if ($delete_type) {
 	$name = get_db_value ('name', 'tincident_type', 'id', $id);
 	$sql = sprintf ('DELETE FROM tincident_type WHERE id = %d', $id);
 	process_sql ($sql);
-	insert_event ("INCIDENT TYPE DELETED", $id, 0, $name);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Deleted incident type $id - $name");
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }

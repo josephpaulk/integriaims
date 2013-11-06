@@ -597,7 +597,7 @@ function borrar_incidencia ($id_incident) {
 			WHERE id_incident = %d', $id_incident);
 	process_sql ($sql);
 
-	insert_event ('INCIDENT_DELETED', 0,0, $incident_title);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Deleted incident $incident_title");
 }
 
 /**
@@ -978,7 +978,7 @@ function delete_project ($id_project){
 	mysql_query($query);
 	$query = "DELETE FROM tproject WHERE id = $id_project";
 	mysql_query($query);
-	insert_event ('PROJECT_DELETED', 0,0, $project_name);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project Management", "Deleted project $project_name");
 }
 
 function delete_task ($id_task){
@@ -1005,7 +1005,8 @@ function delete_task ($id_task){
 	
 	process_sql($query);
 	
-	insert_event ('TASK_DELETED', 0,0, $task["name"]);
+	//insert_event ('TASK_DELETED', 0,0, $task["name"]);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Task Management", "Deleted task ".$task["name"]);
 }
 
 function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg = "") {

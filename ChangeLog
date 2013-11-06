@@ -1,3 +1,30 @@
+2013-11-06 Vanessa Gil <vanessa.gil@artica.es>
+
+	* general/password_recovery.php
+	  include/functions_db.php
+	  include/functions_workunits.php
+	  operation/building/building_detail.php
+	  operation/companies/company_detail.php
+	  operation/companies/company_role.php
+	  operation/download/browse.php
+	  operation/download/manage_cat.php
+	  operation/download/manage_data.php
+	  operation/incidents/type_detail.php
+	  operation/inventories/manage_objects.php
+	  operation/inventories/manage_objects_type_list.php
+	  operation/inventories/manage_prod.php
+	  operation/kb/browse.php
+	  operation/kb/manage_cat.php
+	  operation/kb/manage_data.php
+	  operation/manufacturers/manufacturer_detail.php
+	  operation/newsletter/issue_definition.php
+	  operation/newsletter/newsletter_definition.php
+	  operation/projects/project_group_detail.php
+	  operation/projects/task_workunit.php
+	  operation/users/user_spare_workunit.php
+	  operation/workorders/wo_workunits.php: Changed 'insert_event'
+	by 'audit_db' function.
+
 2013-11-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/api.php: Now is possible to check the integria

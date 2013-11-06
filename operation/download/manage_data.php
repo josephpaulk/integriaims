@@ -45,7 +45,8 @@ if (isset($_GET["create2"])){ // Create group
 	else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		$id_data = mysql_insert_id();
-		insert_event ("KB ITEM CREATED", $id_data, 0, $title);
+		//insert_event ("KB ITEM CREATED", $id_data, 0, $title);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Created kb item $id_data - $title");
 	}
 	
 }
@@ -60,7 +61,8 @@ if (isset($_GET["delete_attach"])){
 	$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 	mysql_query($sql);
 	unlink ($nombre_archivo);
-	insert_event ("KB ITEM UPDATED", $id_kb, 0, "File ".$attach_row["filename"]." deleted");
+	//insert_event ("KB ITEM UPDATED", $id_kb, 0, "File ".$attach_row["filename"]." deleted");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Deleted kb item $id_kb - ".$attach_row["filename"]);
 	echo "<h3 class='suc'>".__('Attach deleted ok')."</h3>";
 	unset ($id_kb);
 }
@@ -86,7 +88,8 @@ if (isset($_GET["update2"])){ // if modified any parameter
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		insert_event ("KB ITEM UPDATED", $id, 0, $title);
+		//insert_event ("KB ITEM UPDATED", $id, 0, $title);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Updated kb item $id - $title");
 	}
 
 	if ( $_FILES['userfile']['name'] != "" ){ //if file
@@ -112,7 +115,8 @@ if (isset($_GET["update2"])){ // if modified any parameter
 			unlink ($_FILES['userfile']['tmp_name']);
 		} else {
 			// Delete temporal file
-			insert_event ("KB ITEM UPDATED", $id, 0, "File $filename added");
+			//insert_event ("KB ITEM UPDATED", $id, 0, "File $filename added");
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Created kb item $id - $filename");
 		}
 		echo $result_msg;
 
@@ -136,7 +140,8 @@ if (isset($_GET["delete_data"])){ // if delete
 		$sql = " DELETE FROM tattachment WHERE id_kb = ".$id;
 		mysql_query($sql);
 	}
-	insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
+	//insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Deleted kb item $id - $kb_title");
 	echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
 }
 

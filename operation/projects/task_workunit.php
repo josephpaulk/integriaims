@@ -100,7 +100,7 @@ if ($operation == "workunit") {
 				$id_task, $id_workunit);
 			process_sql ($sql);
 			$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
-			insert_event ("PWU INSERT", 0, 0, $description);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Inserted PWU. $description");
 			task_tracking ($id_task, TASK_WORKUNIT_ADDED, $id_workunit);
 
 			/* Autocomplete task progress */
@@ -120,7 +120,7 @@ if ($operation == "workunit") {
 		} else {
 			mail_project (1, $config['id_user'], $id_workunit, $id_task);
 			$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
-			insert_event ("PWU UPDATED", 0, 0, $description);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Updated PWU. $description");
 		}
 		
 	} else {

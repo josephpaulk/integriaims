@@ -280,7 +280,7 @@ function create_single_workunit ($number) {
 		set_task_completion ($id_task);
 	}
 	
-	insert_event ("PWU INSERT", $id_task, 0, $description);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU INSERT", "Task $id_task. Desc: $description");
 	
 	$return = array("task" => $id_task,
 					"date" => $timestamp,

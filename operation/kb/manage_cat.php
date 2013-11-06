@@ -41,7 +41,8 @@ if (isset($_GET["create2"])){ // Create group
 	else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		$id_cat = mysql_insert_id();
-		insert_event ("CATEGORY CREATED", $id_cat, 0, $name);
+		//insert_event ("CATEGORY CREATED", $id_cat, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Created category $id_cat - $name");
 	}
 	
 }
@@ -63,7 +64,8 @@ if (isset($_GET["update2"])){ // if modified any parameter
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		insert_event ("CATEGORY UPDATED", $id, 0, $name);
+		//insert_event ("CATEGORY UPDATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Updated category $id - $name");
 	}
 }
 

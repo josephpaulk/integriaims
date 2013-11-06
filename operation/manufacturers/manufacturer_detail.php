@@ -50,7 +50,7 @@ if ($create_manufacturer) {
 		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		insert_event ("MANUFACTURER CREATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Created manufacturer $name");
 	}
 	$id = 0;
 }
@@ -73,8 +73,9 @@ if ($update_manufacturer) {
 		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
-		insert_event ("MANUFACTURER", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Updated manufacturer $name");
 	}
+}
 	$id = 0;
 }
 
@@ -84,7 +85,8 @@ if ($delete_manufacturer) {
 	$name = get_db_value ('name', 'tmanufacturer', 'id', $id);
 	$sql = sprintf ('DELETE FROM tmanufacturer WHERE id = %d', $id);
 	process_sql ($sql);
-	insert_event ("MANUFACTURER DELETED", $id, 0, "$name");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Deleted manufacturer $name");
+	}
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }

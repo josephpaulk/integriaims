@@ -123,7 +123,7 @@ if ($delete) { // if delete
 	$sql= sprintf ('DELETE FROM tnewsletter_queue_data WHERE id_newsletter = %d', $id);
 	process_sql ($sql);
 	
-	insert_event ("NEWSLETTER DELETED", $id, 0, $name);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Newsletter Management", "Deleted newsletter $name");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }

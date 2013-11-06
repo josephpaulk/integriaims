@@ -79,7 +79,8 @@ if (isset($_GET["create2"])){ // Create group
 		else {
 			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 			$id_data = mysql_insert_id();
-			insert_event ("DOWNLOAD ITEM CREATED", $id_data, 0, $name);
+			//insert_event ("DOWNLOAD ITEM CREATED", $id_data, 0, $name);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Created download item $id_data - $name");
 		}
 	}
 }
@@ -121,7 +122,8 @@ if (isset($_GET["update2"])){ // if modified any parameter
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		insert_event ("DOWNLOAD ITEM UPDATED", $id, 0, $name);
+		//insert_event ("DOWNLOAD ITEM UPDATED", $id, 0, $name);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Updated download item $id - $name");
 	}
 }
 
@@ -158,7 +160,8 @@ if (isset($_GET["delete_data"])){ // if delete
 	$sql_delete= "DELETE FROM tdownload_tracking WHERE id_download = $id";		
 	$result=mysql_query($sql_delete);
 
-	insert_event ("DOWNLOAD ITEM DELETED", $id, 0, "Deleted Download $download_title");
+	//insert_event ("DOWNLOAD ITEM DELETED", $id, 0, "Deleted Download $download_title");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Deleted download item  $download_title");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
 }
 

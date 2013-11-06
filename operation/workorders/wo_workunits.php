@@ -88,7 +88,7 @@ if ($insert_workunit) {
 		set_task_completion ($id_task);
 	}
 	
-	insert_event ("PWU INSERT", $id_task, 0, $description);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU INSERT", "Task $id_task. Desc: $description");
 
 	echo $result_msg;
 }

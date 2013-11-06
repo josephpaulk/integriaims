@@ -91,7 +91,8 @@ switch ($action_db) {
 				echo '<h3 class="error">'.__('Could not be created').'</h3>';
 			} else {
 				echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-				insert_event ("OBJECT TYPE CREATED", $id_object_type_field, $id_object_type, $label);
+				//insert_event ("OBJECT TYPE CREATED", $id_object_type_field, $id_object_type, $label);
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created object type $id_object_type_field - $label");
 			}
 								
 			break;
@@ -111,7 +112,8 @@ switch ($action_db) {
 				echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 			} else {
 				echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-				insert_event ("OBJECT TYPE UPDATED", $id_object_type_field, $id_object_type, $label);
+				//insert_event ("OBJECT TYPE UPDATED", $id_object_type_field, $id_object_type, $label);
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated object type $id_object_type_field - $label");
 			}
 	
 			break;

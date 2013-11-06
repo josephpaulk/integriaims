@@ -38,7 +38,7 @@ echo    '</h3>';
 if (($recover == "") AND ($hash == "")){
     // This NEVER should happen. Anyway, a nice msg for hackers ;)
     echo __("Don't try to hack this form. All information is sent to the user by mail");
-	insert_event ('HACK_ATTEMPT', 0,0, "Something dirty happen in password recovery");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "HACK_ATTEMPT", "Something dirty happen in password recovery");
 }
 elseif ($hash == ""){
 
@@ -48,7 +48,7 @@ elseif ($hash == ""){
     $text = "Integria has received a request for password reset from IP Address ".$_SERVER['REMOTE_ADDR'].". Enter this validation code for reset your password: $randomhash";
 
     if ($email != ""){    
-		insert_event ('PASSWD_RECOVERY', 0,0, "User: $recover");
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PASSWD_RECOVERY", "User: $recover");
         integria_sendmail ($email, $subject, $text);
         process_sql ("UPDATE tusuario SET pwdhash = '$randomhash' WHERE id_usuario = '$recover'");
     }
