@@ -1,5 +1,11 @@
 2013-11-07  Dario Rodriguez <dario@artica.es>
 
+	* include/js/integria_inventory.js: Fixed a problem 
+	with external table popup which doesn't update 
+	inventory information.
+
+2013-11-07  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_detail.php,
 	operation/incidents/incident_dashboard_detail.php: Fixed a 
 	style bug related to incident title.

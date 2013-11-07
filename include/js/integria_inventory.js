@@ -73,12 +73,11 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 }
 
 function refresh_external_id(id_object_type_field, id_inventory, id_value) {
-	value_id = $('#'+id_value).val();
 
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+value_id, 
+		data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+id_value, 
 		dataType: "html",
 		success: function(data){
 			show_fields();
@@ -88,15 +87,11 @@ function refresh_external_id(id_object_type_field, id_inventory, id_value) {
 }
 
 function enviar(data, element_name, id_object_type_field) {
-
 	$('#'+element_name).val(data);
 	
 	id_inventory = $('#text-id_object_hidden').val();
 	
-	if (id_inventory != 0) {
-		refresh_external_id(id_object_type_field, id_inventory, element_name);
-		//$("#external_table_window").dialog('close');
-	}
+	refresh_external_id(id_object_type_field, id_inventory, data);
 	
 	$("#external_table_window").dialog('close');
 } 
@@ -228,6 +223,7 @@ function show_fields() {
 					//element.id=i;
 					//element.id=value['label_enco'];
 					element.name=value['label_enco'];
+					
 					element.value=value['data'];
 					if ((value['type'] == 'text') || (value['type'] == 'external')) {
 						element.type='text';
