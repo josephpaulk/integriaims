@@ -541,7 +541,7 @@ if ($id) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Incident').' #'.$id.' - '.$incident['titulo'];
+	echo __('Incident').' #'.$id.' - '.ui_print_truncate_text($incident['titulo'],50);
 	
     if (give_acl($config["id_user"], 0, "IM")){
         if ($incident["score"] > 0){

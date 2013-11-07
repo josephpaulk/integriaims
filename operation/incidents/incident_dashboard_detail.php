@@ -422,7 +422,7 @@ $table->data[0][1] = $right_side;
 
 echo "<div id='indicent-details-view'>";
 
-echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.$incident['titulo'];
+echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.ui_print_truncate_text($incident['titulo'], 50);
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 
