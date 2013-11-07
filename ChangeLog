@@ -1,3 +1,8 @@
+2013-11-07  Dario Rodriguez <dairo@artica.es>
+
+	* index.php: Fixed a problem generating PDFs
+	for invoices.
+
 2013-11-06  Dario Rodriguez <dario@artica.es>
 
 	* operation/users/user_spare_workunit.php: Fixed an typo.
