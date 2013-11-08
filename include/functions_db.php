@@ -2399,7 +2399,7 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			break;
 		
 		case INVENTORY_ISSUE_DATE_CHANGED:
-			$description = __('Issue date changed') . " -> ";
+			$description = __('Removal date changed') . " -> ";
 			if ($aditional_data['old'] && $aditional_data['old'] != '0000-00-00') {
 				$description .= "Old: '" . __($aditional_data['old']) . "'";
 			}

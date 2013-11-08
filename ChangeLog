@@ -1,5 +1,10 @@
 2013-11-08  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_db.php: Fixed a wrong
+	translation related to inventory change auditory.
+
+2013-11-08  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_inventories.php,
 	operation/inventories/inventory_detail.php: Fixed a 
 	wrong translation.
