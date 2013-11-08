@@ -686,7 +686,7 @@ if ($id && !$inventory_name) {
 	
 	$table->data[3][1] = print_input_text ('receipt_date', $receipt_date, '', 15, 15, true, __('Receipt date'));
 
-	$table->data[3][2] = print_input_text ('issue_date', $issue_date, '', 15, 15, true, __('Issue date'));
+	$table->data[3][2] = print_input_text ('issue_date', $issue_date, '', 15, 15, true, __('Removal date'));
 
 	/* Fourth row */
 	$table->colspan[4][0] = 3;		

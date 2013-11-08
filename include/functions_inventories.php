@@ -1554,7 +1554,7 @@ function inventories_get_inventory_status () {
 	$inventory_status['new'] = __('New');
 	$inventory_status['inuse'] = __('In use');
 	$inventory_status['unused'] = __('Unused');
-	$inventory_status['issued'] = __('Issued');
+	$inventory_status['issued'] = __('Removed');
 	
 	return $inventory_status;
 }
