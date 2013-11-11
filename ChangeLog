@@ -1,5 +1,12 @@
 2013-11-11  Dario Rodriguez <dario@artica.es>
 
+	* operation/projects/project_report.php,
+	operation/projects/project_detail.php: Created a new
+	report for projects, this is the first version and
+	needs a lot of improvements.
+
+2013-11-11  Dario Rodriguez <dario@artica.es>
+
 	* images/products/*
 	images/objects/*: Replaced icons with new style.
 

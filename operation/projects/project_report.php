@@ -65,36 +65,6 @@ if ($id_project && !$project_access['read']) {
 	no_permission();
 }
 
-
-// Update project
-if ($action == 'update') {
-	// ACL - To update an existing project, project manager permission is required
-	if ($id_project && !$project_access['manage']) {
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update the project $id_project");
-		no_permission();
-	}
-	$user = get_parameter('id_owner');
-	$name = get_parameter ("name");
-	$description = get_parameter ('description');
-	$start_date = get_parameter ('start_date');
-	$end_date = get_parameter ('end_date');
-	$id_project_group = get_parameter ("id_project_group");
-	$sql = sprintf ('UPDATE tproject SET 
-			name = "%s", description = "%s", id_project_group = %d,
-			start = "%s", end = "%s", id_owner = "%s"
-			WHERE id = %d',
-			$name, $description, $id_project_group,
-			$start_date, $end_date, $user, $id_project);
-	$result = process_sql ($sql);
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project updated", "Project $name");
-	if ($result !== false) {
-		project_tracking ($id_project, PROJECT_UPDATED);
-		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
-	} else {
-		$result_output = '<h3 class="error">'.__('Could not update project').'</h3>';
-	}
-}
-
 // Edition / View mode
 if ($id_project) {
 	$project = get_db_row ('tproject', 'id', $id_project);
@@ -106,53 +76,36 @@ if ($id_project) {
 	$owner = $project["id_owner"];
 	$id_project_group = $project["id_project_group"];
 } 
-
-
-// Show result of previous operations
-echo $result_output;
-
-// Create project form
-if ($create_project) {
-	$email_notify = 0;
-	$iduser_temp = $_SESSION['id_usuario'];
-	$titulo = "";
-	$prioridad = 0;
-	$id_grupo = 0;
-	$grupo = dame_nombre_grupo (1);
-	$owner = $config["id_user"];
-	$estado = 0;
-	$actualizacion = date ("Y/m/d H:i:s");
-	$inicio = $actualizacion;
-	$id_creator = $iduser_temp;
-	$create_mode = 1;
-	$id_project_group = 0;
-} 
-
-if ($id_project)
-	echo '<form method="post" id="form-new_project">';
-else
-	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project&action=insert">';
+	
 // Main project table
 
-if ($create_mode == 0){
-	echo "<h1>".__('Project management')." &raquo; " . get_db_value ("name", "tproject", "id", $id_project);
 
-	if (!$clean_output) {
-		echo "<div id='button-bar-title'>";
-		echo "<ul>";
-		echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project'>" .
-			print_image ("images/chart_bar_dark.png", true, array("title" => __("Project report"))) .
-			"</a>";
-		echo "</li>";
-		echo "</ul>";
-		echo "</div>";
-	}
-	echo "</h1>";
+echo "<h1>".__('Project report')." &raquo; " . get_db_value ("name", "tproject", "id", $id_project);
+
+if (!$clean_output) {
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>" .
+		print_image ("images/go-previous.png", true, array("title" => __("Back to project editor"))) .
+		"</a>";
+	echo "</li>";
+	echo "<li>";
+	echo "<a target='_blank' href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project&clean_output=1'>" .
+		print_image ("images/html.png", true, array("title" => __("HTML report"))) .
+		"</a>";
+	echo "</li>";
+	echo "<li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project&clean_output=1&pdf_output=1'>" .
+		print_image ("images/page_white_acrobat.png", true, array("title" => __("PDF report"))) .
+		"</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
 }
-else {
-	echo "<h1>".__('Create project')."</h1>";
-}
+echo "</h1>";
+
+
 
 
 
@@ -172,7 +125,7 @@ $project_info = '<table class="search-table-button" style="margin-top: 0px;">';
 
 // Name
 $project_info .= '<tr><td class="datos" colspan=3><b>'.__('Name').' </b><br>';
-$project_info .= '<input type="text" name="name" size=70 value="'.$name.'">';
+$project_info .= $name;
 
 $project_info .= '<td colspan=1>';
 //Only show project progress if there is a project created
@@ -188,50 +141,25 @@ $project_info .= "</tr>";
 
 // start and end date
 $project_info .= '<tr><td width="25%"><b>'.__('Start').' </b><br>';
-$project_info .= print_input_text ('start_date', $start_date, '', 10, 20, true);
+$project_info .= $start_date;
 
 $project_info .= '<td width="25%"><b>'.__('End').' </b><br>';
-$project_info .= print_input_text ('end_date', $end_date, '', 10, 20, true);
+$project_info .= $end_date;
 
 $id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
 $project_info .= '<td width="25%">';
 $project_info .= "<b>".__('Project manager')." </b><br>";
-$project_info .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
-			'', true, '','');
+$project_info .= get_db_value ("nombre_real", "tusuario", "id_usuario", $owner);
 
 $project_info .= '<td width="25%"><b>';
 $project_info .= __('Project group') . "</b><br>";
 
-if (!$clean_output) {
-	$project_info .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
-		"id_project_group", $id_project_group, "", __('None'), '0',
-		true, false, true, false);
-} else {
-	$project_info .= get_db_value ("name", "tproject_group", "id", $id_project_group);
-}
+$project_info .= get_db_value ("name", "tproject_group", "id", $id_project_group);
 
 // Description
-$project_info .= "<tr><td colspan=4><b>".__("Description")."</b><br>";
-$project_info .= '<textarea name="description" style="height: 40px;">';
+$project_info .= "<tr><td style='text-align: left;' colspan=4><b>".__("Description")."</b><br>";
 $project_info .= $description;
-$project_info .= "</textarea></td></tr>";
-
-if (!$clean_output)  {
-	$project_info .= "<tr><td colspan=4>";
-	$project_info .= '<div style="width:100%; text-align: right;">';
-	
-	if ($id_project && $project_access['manage']) {
-		$project_info .= print_input_hidden ('id_project', $id_project, true);
-		$project_info .= print_input_hidden ('action', 'update', true);
-		$project_info .= print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
-	} elseif (!$id_project) {
-		$project_info .= print_input_hidden ('action', 'insert');
-		$project_info .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-	}
-	
-	$project_info .= '</div>';
-	$project_info .= "</td></tr>";
-}
+$project_info .= "</td></tr>";
 
 $project_info .= "</table>";
 
@@ -243,7 +171,7 @@ if ($id_project) {
 	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
 	if ($project_activity) {
 		$project_activity = '<div class="graph_frame">' . $project_activity . '</div>';
-		$table->data[0][0] .= print_container('project_activity', __('Project activity'), $project_activity, 'closed');
+		$table->data[0][0] .= print_container('project_activity', __('Project activity'), $project_activity);
 	}
 	// Calculation
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
@@ -403,50 +331,4 @@ if ($id_project) {
 
 print_table($table);
 
-
-echo "</form>";
-
 ?>
-<script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
-<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
-<script type="text/javascript" src="include/js/integria_date.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
-
-<script type="text/javascript">
-
-add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
-
-$(document).ready (function () {
-	$("textarea").TextAreaResizer ();
-	
-	var idUser = "<?php echo $config['id_user'] ?>";
-	bindAutocomplete ("#text-id_owner", idUser);	
-});
-
-// Form validation
-trim_element_on_submit('input[name="name"]');
-validate_form("#form-new_project");
-// #text-id_owner
-validate_user ("#form-new_project", "#text-id_owner", "<?php echo __('Invalid user')?>");
-var rules, messages;
-// Rules: input[name="name"]
-rules = {
-	required: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-          page: "include/ajax/remote_validations",
-          search_existing_project: 1,
-          project_name: function() { return $('input[name="name"]').val() },
-          project_id: <?php echo $id_project; ?>
-        }
-	}
-};
-messages = {
-	required: "<?php echo __('Name required'); ?>",
-	remote: "<?php echo __('This project already exists'); ?>"
-};
-add_validate_form_element_rules('input[name="name"]', rules, messages);
-
-</script>
