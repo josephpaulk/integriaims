@@ -668,7 +668,7 @@ if ($id || $new) {
 		$table->data[0][0] .= '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&delete_custom_search=1&saved_searches='.$id_search.'">';
 		$table->data[0][0] .= '<img src="images/cross.png" title="' . __('Delete') . '"/></a>';
 	} else {
-		$table->data[0][1] = print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
+		$table->data[0][1] = print_input_text ('search_name', '', '', 40, 60, true, __('Save current search'));
 		$table->data[0][2] = print_submit_button (__('Save'), 'save_search', false, 'class="sub save" style="margin-top: 13px;"', true);
 	}
 

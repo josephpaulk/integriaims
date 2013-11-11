@@ -17,6 +17,7 @@ global $config;
 
 include_once ('include/functions.php');
 include_once ('include/functions_ui.php');
+include_once ('include/functions_calendar.php');
 
 $get_alerts = get_parameter ('get_alerts', 0);
 
@@ -30,13 +31,13 @@ if ($get_alerts) {
 	$alerts = '';
 	
 	if ($minutes_last_exec == '') {
-		$alerts .= ui_print_error_message(__('Crontask not installed. Please check documentation!'), '', '', 'h4');
+		$alerts .= ui_print_error_message(__('Crontask not installed. Please check documentation!'), '', '', 'h4', false);
 	}
 	if (!$check_cron) {
-		$alerts .= ui_print_error_message (__('Last time Crontask was executed was ').$minutes_last_exec.__(' minutes ago'), '', '', 'h4'); 
+		$alerts .= ui_print_error_message (__('Last time Crontask was executed was ').calendar_seconds_to_humand($minutes_last_exec).__(' ago'), '', '', 'h4', false); 
 	}
 	if (!$check_emails) {
-		$alerts .= ui_print_error_message(__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration'), '', '', 'h4'); 
+		$alerts .= ui_print_error_message(__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration'), '', '', 'h4', false); 
 	}
 	
 	echo $alerts;

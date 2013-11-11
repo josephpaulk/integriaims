@@ -1,3 +1,26 @@
+2013-11-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/setup/offline_update.php: Fixed some errors.
+
+	* include/functions_incidents.php: Now the incidents can
+	be sorted by priority.
+
+	* operation/incidents/incident_search_logic.php: Fixed an
+	input. Improved the javascript function "changeIncidentOrder".
+
+	* operation/search.php: Now the global search shows the
+	invoices.
+
+	* operation/leads/lead_detail.php: Fixed an input.
+
+	* include/ajax/header.php: Now the crontask alert has a
+	better formatting.
+
+	* include/functions_ui.php: Updated the functions
+	"ui_print_message", "ui_print_error_message",
+	"ui_print_success_message" and "ui_print_result_message"
+	with an option to enable or disable the cancel button.
+
 2013-11-08  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_db.php: Fixed a wrong

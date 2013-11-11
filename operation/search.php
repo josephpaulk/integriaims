@@ -326,6 +326,67 @@ if ( check_crm_acl('company', 'cr') && $show_customers != MENU_HIDDEN ){
 	}
 }
 
+// Invoices
+if ( check_crm_acl('company', 'cr') && $show_customers != MENU_HIDDEN ){
+
+        $where_clause = " bill_id LIKE '%".$search_string."%' ";
+        $invoices = crm_get_all_invoices ($where_clause);
+
+        if ($invoices) {
+
+            echo "<h3>";
+            echo __("Invoices");
+            echo "</h3>";
+
+            $table->width = "80%";
+			$table->class = "listing";
+			$table->data = array ();
+			$table->size = array ();
+			$table->style = array ();
+			$table->colspan = array ();
+			$table->head[0] = __('ID');
+			$table->head[1] = __('Company');
+			$table->head[2] = __('Amount');
+			$table->head[3] = __('Status');
+			$table->head[5] = __('Creation');
+
+            foreach ($invoices as $invoice) {
+                    $data = array ();
+
+                    $id_title = $invoice["concept1"];
+					$data[0] = "<a title='$id_title' href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
+
+                    if ($invoice["id_company"] != 0){
+						$company_name = get_db_value ("name", "tcompany", "id", $invoice["id_company"]);
+						$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$company_name."</a>";
+					} else {
+						$data[1] = __("N/A");
+					}
+					
+					$partial = get_invoice_amount ($invoice["id"]);
+					
+					if (isset($total[$invoice["currency"]]))
+						$total[$invoice["currency"]] = $total[$invoice["currency"]] + $partial;
+					else
+						$total[$invoice["currency"]] = $partial;
+
+					$data[2] = format_numeric($partial). " " . strtoupper ($invoice["currency"]);
+
+					$tax = get_invoice_tax ($invoice["id"]);
+					$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
+					if ($tax != 0 && $tax_amount > 0)
+						$data[2] .= print_help_tip (__("With taxes"). ": ".format_numeric($tax_amount)." ".strtoupper($invoice["currency"]), true);
+
+					$data[3] = __($invoice["status"]);
+					$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
+
+                    array_push ($table->data, $data);
+            }
+
+            print_table ($table);
+        }
+}
+
 // Leads
 if ( check_crm_acl('lead', 'cr') && $show_customers != MENU_HIDDEN ){
 

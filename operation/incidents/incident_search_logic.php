@@ -200,7 +200,7 @@ if ($id_search) {
 	$table->data[0][0] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_search&delete_custom_search=1&saved_searches='.$id_search.'">';
 	$table->data[0][0] .= '<img src="images/cross.png" title="' . __('Delete') . '"/></a>';
 }
-$table->data[0][1] = print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
+$table->data[0][1] = print_input_text ('search_name', '', '', 40, 60, true, __('Save current search'));
 $table->data[0][2] = print_submit_button (__('Save'), 'save-search', false, 'class="sub save" style="margin-top: 13px;"', true);
 
 echo '<div id="custom_search" style="display: none;">';
@@ -336,8 +336,8 @@ $(document).ready(function () {
 	
 });
 
-function changeIdIncidentOrder(order) {
-	$('#hidden-search_order_by').val('{ "id_incidencia" : "'+order+'" }');
+function changeIncidentOrder(element, order) {
+	$('#hidden-search_order_by').val('{ "'+element+'" : "'+order+'" }');
 	$('#saved-searches-form').submit();
 }
 

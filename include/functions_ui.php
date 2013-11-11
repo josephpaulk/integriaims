@@ -99,12 +99,18 @@ function debug ($var, $backtrace = true) {
  * @param bool Whether to output the string or return it
  * @param string What tag to use (you could specify something else than
  * h3 like div or h2)
+ * @param boolean Add a cancel button or not
  *
  * @return string HTML code if return parameter is true.
  */
-function ui_print_message ($message, $class = '', $attributes = '', $return = false, $tag = 'h3') {
+function ui_print_message ($message, $class = '', $attributes = '', $return = false, $tag = 'h3', $cancel_button = true) {
 	$id = uniqid();
-	$cancel_button = '<a href="javascript:cancel_msg(\''.$id.'\');"><img src="images/cancel.gif" border=0></a>';
+
+	if ($cancel_button) {
+		$cancel_button = '<a href="javascript:cancel_msg(\''.$id.'\');"><img src="images/cancel.gif" border=0></a>';
+	} else {
+		$cancel_button = "";
+	}
 	
 	$output = '<'.$tag.(empty ($class) ? '' : ' id="msg_'.$id.'" class="'.$class.'" ').$attributes.'>'.$message.' '.$cancel_button.'</'.$tag.'>';
 		
@@ -121,11 +127,12 @@ function ui_print_message ($message, $class = '', $attributes = '', $return = fa
  * @param bool Whether to output the string or return it
  * @param string What tag to use (you could specify something else than
  * h3 like div or h2)
+ * @param boolean Add a cancel button or not
  *
  * @return string HTML code if return parameter is true.
  */
-function ui_print_error_message ($message, $attributes = '', $return = false, $tag = 'h3') {
-	return ui_print_message ($message, 'error', $attributes, $return, $tag);
+function ui_print_error_message ($message, $attributes = '', $return = false, $tag = 'h3', $cancel_button = true) {
+	return ui_print_message ($message, 'error', $attributes, $return, $tag, $cancel_button);
 }
 
 /** 
@@ -136,11 +143,12 @@ function ui_print_error_message ($message, $attributes = '', $return = false, $t
  * @param bool Whether to output the string or return it
  * @param string What tag to use (you could specify something else than
  * h3 like div or h2)
+ * @param boolean Add a cancel button or not
  *
  * @return string HTML code if return parameter is true.
  */
-function ui_print_success_message ($message, $attributes = '', $return = false, $tag = 'h3') {
-	return ui_print_message ($message, 'suc', $attributes, $return, $tag);
+function ui_print_success_message ($message, $attributes = '', $return = false, $tag = 'h3', $cancel_button = true) {
+	return ui_print_message ($message, 'suc', $attributes, $return, $tag, $cancel_button);
 }
 
 /** 
@@ -154,10 +162,11 @@ function ui_print_success_message ($message, $attributes = '', $return = false, 
  * @param bool Whether to output the string or return it
  * @param string What tag to use (you could specify something else than
  * h3 like div or h2)
+ * @param boolean Add a cancel button or not
  *
  * @return string HTML code if return parameter is true.
  */
-function ui_print_result_message ($result, $good = '', $bad = '', $attributes = '', $return = false, $tag = 'h3') {
+function ui_print_result_message ($result, $good = '', $bad = '', $attributes = '', $return = false, $tag = 'h3', $cancel_button = true) {
 	if ($good == '' || $good === false)
 		$good = __('Request successfully processed');
 	
@@ -165,9 +174,9 @@ function ui_print_result_message ($result, $good = '', $bad = '', $attributes = 
 		$bad = __('Error processing request');
 	
 	if (empty ($result)) {
-		return ui_print_error_message ($bad, $attributes, $return, $tag);
+		return ui_print_error_message ($bad, $attributes, $return, $tag, $cancel_button);
 	}
-	return ui_print_success_message ($good, $attributes, $return, $tag);
+	return ui_print_success_message ($good, $attributes, $return, $tag, $cancel_button);
 }
 
 /**

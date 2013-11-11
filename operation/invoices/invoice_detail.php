@@ -134,35 +134,35 @@ if ($clean_output == 0){
 	echo "<td>";
 	$invoice_status_ar = array();
 	$invoice_status_ar['']= __("Any");
-$invoice_status_ar['pending']= __("Pending");
-$invoice_status_ar['paid']= __("Paid");
-$invoice_status_ar['cancel']= __("Cancelled");
-echo print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, false, 0, false, __('Invoice status'));
-echo "</td>";
+	$invoice_status_ar['pending']= __("Pending");
+	$invoice_status_ar['paid']= __("Paid");
+	$invoice_status_ar['cancel']= __("Cancelled");
+	echo print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, false, 0, false, __('Invoice status'));
+	echo "</td>";
 
-echo "<td>";
-echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('From'));
-echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-echo "</td>";
+	echo "<td>";
+	echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('From'));
+	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+	echo "</td>";
 
-echo "<td>";
-echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('To'));
-echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
-echo "</td>";
+	echo "<td>";
+	echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('To'));
+	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
+	echo "</td>";
 
-echo "<td valign=bottom align='right'>";
-echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-// Delete new lines from the string
-$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+	echo "<td valign=bottom align='right'>";
+	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	// Delete new lines from the string
+	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+	echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
 
-echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail&clean_output=1&pdf_output=1&$search_params'><img src='images/page_white_acrobat.png'></a>";
+	echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail&clean_output=1&pdf_output=1&$search_params'><img src='images/page_white_acrobat.png'></a>";
 
-echo "</td>";
-echo "</tr>";
+	echo "</td>";
+	echo "</tr>";
 
-echo "</table>";
-echo '</form>';
+	echo "</table>";
+	echo '</form>';
 }
 
 $invoices = crm_get_all_invoices ($where_clause);
@@ -225,8 +225,8 @@ if ($invoices !== false) {
 		$data[2] = format_numeric($partial);
 
 		$tax = get_invoice_tax ($invoice["id"]);
-                $tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
-                if (($tax != 0) && ($clean_output == 0))
+		$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
+		if (($tax != 0) && ($clean_output == 0))
 			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount), true);
 
 		$data[3] = strtoupper ($invoice["currency"]);

@@ -157,10 +157,11 @@ function filter_incidents ($filters, $count=false) {
 
 	$order_by = "";
 
-	if ($order_by_array)
-	foreach ($order_by_array as $key => $value) {
-		if ($value) {
-			$order_by .= " $key $value, ";
+	if ($order_by_array) {
+		foreach ($order_by_array as $key => $value) {
+			if ($value) {
+				$order_by .= " $key $value, ";
+			}
 		}
 	}
 	
@@ -2032,12 +2033,21 @@ function incidents_search_result ($filter, $ajax=false) {
 	}
 	if ($order_by["id_incidencia"] != "") {
 		if ($order_by["id_incidencia"] == "DESC") {
-			$id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"ASC\")'><img src='images/arrow_down_orange.png'></a>";
+			$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
 		} else {
-			$id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"\")'><img src='images/arrow_up_orange.png'></a>";
+			$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"\")'><img src='images/arrow_up_orange.png'></a>";
 		}
 	} else {
-		$id_order_image = "&nbsp;<a href='javascript:changeIdIncidentOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
+		$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"DESC\")'><img src='images/block_orange.png'></a>";
+	}
+	if ($order_by["prioridad"] != "") {
+		if ($order_by["prioridad"] == "DESC") {
+			$priority_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"prioridad\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
+		} else {
+			$priority_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"prioridad\", \"\")'><img src='images/arrow_up_orange.png'></a>";
+		}
+	} else {
+		$priority_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"prioridad\", \"DESC\")'><img src='images/block_orange.png'></a>";
 	}
 	
 	// ----------------------------------------
@@ -2065,7 +2075,7 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo __('Status')."<br><i>".__('Resolution')."</i>";
 	echo "</th>";
 	echo "<th>";
-	echo __('Priority');
+	echo __('Priority') . $priority_order_image;
 	echo "</th>";
 	echo "<th style='width: 70px;'>";
 	echo __('Updated')."<br><i>".__('Started')."</i>";

@@ -38,7 +38,7 @@ if (defined ('AJAX')) {
 			if (strtolower($extension) === "oum") {
 				
 				$path = $_FILES['upfile']['tmp_name'];
-				// The package files will be saved in /tmp/integria_oum/package_name
+				// The package files will be saved in [user temp dir]/integria_oum/package_name
 				$destination = sys_get_temp_dir()."/integria_oum/".$_FILES['upfile']['name'];
 				// files.txt will have the names of every file of the package
 				if (file_exists($destination."/files.txt")) {
@@ -50,14 +50,16 @@ if (defined ('AJAX')) {
 				if ($zip->open($path) === true) {
 					// The files will be extracted one by one
 					for($i = 0; $i < $zip->numFiles; $i++) {
-						if ($zip->extractTo($destination, array($zip->getNameIndex($i)))) {
+						$filename = $zip->getNameIndex($i);
+
+						if ($zip->extractTo($destination, array($filename))) {
 							// Creates a file with the name of the files extracted
-							file_put_contents ($destination."/files.txt", $zip->getNameIndex($i)."\n", FILE_APPEND | LOCK_EX);
+							file_put_contents ($destination."/files.txt", $filename."\n", FILE_APPEND | LOCK_EX);
 						} else {
 							// Deletes the entire extraction directory if a file can not be extracted
 							delete_directory($destination);
 							$return["status"] = "error";
-							$return["message"] = __("There was an error extracting the file '".$zip->getNameIndex($i)."' from the package.");
+							$return["message"] = __("There was an error extracting the file '".$filename."' from the package.");
 							echo json_encode($return);
 							return;
 						}
@@ -96,6 +98,7 @@ if (defined ('AJAX')) {
 		ob_clean();
 		
 		$package = (string) get_parameter("package");
+		$package = trim($package);
 		
 		// All files extracted
 		$files_total = $package."/files.txt";
@@ -113,57 +116,81 @@ if (defined ('AJAX')) {
 				
 				while ($line = stream_get_line($files_h, 65535, "\n")) {
 					$line = trim($line);
+					
+					if (is_dir($package."/".$line)) {
+						//continue;
+					}
+
 					// Tries to move the old file to the directory backup inside the extracted package
-					rename($config["homedir"]."/".$line, $package."/backup/".$line);
+					if (file_exists($config["homedir"]."/".$line)) {
+						rename($config["homedir"]."/".$line, $package."/backup/".$line);
+					}
 					// Tries to move the new file to the Integria directory
-					copy($package."/".$line, $config["homedir"]."/".$line);
-					if (rename($package."/".$line, $config["homedir"]."/".$line)) {
-						
-						// Append the moved file to the copied files txt
-						if (!file_put_contents($files_copied, $line."\n", FILE_APPEND | LOCK_EX)) {
+					$dirname = dirname($line);
+					if (!file_exists($config["homedir"]."/".$dirname)) {
+						$dir_array = explode("/", $dirname);
+						$temp_dir = "";
+						foreach ($dir_array as $dir) {
+							$temp_dir .= "/".$dir;
+							if (!file_exists($config["homedir"].$temp_dir)) {
+								mkdir($config["homedir"].$temp_dir);
+							}
+						}
+					}
+					if (is_dir($package."/".$line)) {
+						if (!file_exists($config["homedir"]."/".$line)) {
+							mkdir($config["homedir"]."/".$line);
+							file_put_contents($files_copied, $line."\n", FILE_APPEND | LOCK_EX);
+						}
+					} else {
+						if (rename($package."/".$line, $config["homedir"]."/".$line)) {
+							
+							// Append the moved file to the copied files txt
+							if (!file_put_contents($files_copied, $line."\n", FILE_APPEND | LOCK_EX)) {
+								
+								// If the copy process fail, this code tries to restore the files backed up before
+								if ($files_copied_h = fopen($files_copied, "r")) {
+									while ($line_c = stream_get_line($files_copied_h, 65535, "\n")) {
+										$line_c = trim($line_c);
+										if (!rename($package."/backup/".$line, $config["homedir"]."/".$line_c)) {
+											$backup_status = __("Some of your files might not be recovered.");
+										}
+									}
+									if (!rename($package."/backup/".$line, $config["homedir"]."/".$line)) {
+										$backup_status = __("Some of your files might not be recovered.");
+									}
+									fclose($files_copied_h);
+								} else {
+									$backup_status = __("Some of your old files might not be recovered.");
+								}
+								
+								fclose($files_h);
+								$return["status"] = "error";
+								$return["message"]= __("Line '$line' not copied to the progress file.")."&nbsp;".$backup_status;
+								echo json_encode($return);
+								return;
+							}
+						} else {
 							
 							// If the copy process fail, this code tries to restore the files backed up before
 							if ($files_copied_h = fopen($files_copied, "r")) {
 								while ($line_c = stream_get_line($files_copied_h, 65535, "\n")) {
 									$line_c = trim($line_c);
-									if (!rename($package."/backup/".$line, $config["homedir"]."/".$line_c)) {
-										$backup_status = __("Some of your files might not be recovered.");
+									if (!rename($package."/backup/".$line, $config["homedir"]."/".$line)) {
+										$backup_status = __("Some of your old files might not be recovered.");
 									}
-								}
-								if (!rename($package."/backup/".$line, $config["homedir"]."/".$line)) {
-									$backup_status = __("Some of your files might not be recovered.");
 								}
 								fclose($files_copied_h);
 							} else {
-								$backup_status = __("Some of your old files might not be recovered.");
+								$backup_status = __("Some of your files might not be recovered.");
 							}
 							
 							fclose($files_h);
 							$return["status"] = "error";
-							$return["message"]= __("Line '$line' not copied to the progress file.")."&nbsp;".$backup_status;
+							$return["message"]= __("File '$line' not copied.")."&nbsp;".$backup_status;
 							echo json_encode($return);
 							return;
 						}
-					} else {
-						
-						// If the copy process fail, this code tries to restore the files backed up before
-						if ($files_copied_h = fopen($files_copied, "r")) {
-							while ($line_c = stream_get_line($files_copied_h, 65535, "\n")) {
-								$line_c = trim($line_c);
-								if (!rename($package."/backup/".$line, $config["homedir"]."/".$line)) {
-									$backup_status = __("Some of your old files might not be recovered.");
-								}
-							}
-							fclose($files_copied_h);
-						} else {
-							$backup_status = __("Some of your files might not be recovered.");
-						}
-						
-						fclose($files_h);
-						$return["status"] = "error";
-						$return["message"]= __("File '$line' not copied.")."&nbsp;".$backup_status;
-						echo json_encode($return);
-						return;
 					}
 				}
 				fclose($files_h);
@@ -218,7 +245,7 @@ if (defined ('AJAX')) {
 		$return['info'] = (string) implode("<br />", $files);
 		$return['progress'] = $progress;
 		
-		if ($progress == 100) {
+		if ($progress >= 100) {
 			unlink($files_total);
 			unlink($files_num);
 			unlink($files_copied);
