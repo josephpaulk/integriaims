@@ -1,3 +1,8 @@
+2013-11-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/pdf_translator.php, index.php: Added a new
+	option for the pdf output.
+
 2013-11-13  Sancho Lerena <slerena@artica.es>
 
 	* * DEBIAN/control,
@@ -12,7 +17,7 @@
 	extras/build_vars.sh,
 	extras/build_rpm_redhat.sh: Scripts for the automated
 	release system. Updated strings on data files.
-	
+
 2013-11-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* index.php: Fixed the fix.

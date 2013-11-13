@@ -166,6 +166,7 @@ $html_header = '<!--[if !IE]> -->
 $clean_output = get_parameter ("clean_output", 0);
 $pdf_output = get_parameter ("pdf_output", 0);
 $pdf_filename = get_parameter ("pdf_filename", "");
+$pdf_path = get_parameter ("pdf_path", "");
 $raw_output = get_parameter ("raw_output", 0);
 $expired_pass = false;
 
@@ -239,7 +240,7 @@ if ($recover != ""){
 }
 
 // Check request from IP's allowed in the API ACL list. Special request to generate PDF on crontask
-$ip_origin = $_SERVER['REMOTE_ADDR'];
+$ip_origin = $_SERVER['REMOTE_ADDR'];debugPrint($ip_origin, true);
 if (ip_acl_check ($ip_origin)) {
 	// Only to see PDF reports!
 	if (($pdf_output == 1) AND ($pdf_filename != "")){
@@ -580,10 +581,16 @@ if ($pdf_output == 1){
 	
 	$pdfObject->addHTML($html);
 	
-	if ($pdf_filename != "")
-		$pdfObject->writePDFfile ($pdf_filename); //$pdfObject->writePDFfile ($config["homedir"]."/attachment/tmp/".$pdf_filename);
-	else
+	if ($pdf_filename != "") {
+		if ($pdf_path != "") {
+			$pdfObject->writePDFfile ($pdf_filename, $pdf_path);
+		} else {
+			$pdfObject->writePDFfile ($pdf_filename);
+		}
+	}	
+	else {
 		$pdfObject->showPDF();
+	}
 
     // Dirty thing, just for testing, do not use it
     // system ("rm /tmp/integria_graph_serialize_*");

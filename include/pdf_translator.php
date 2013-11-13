@@ -44,7 +44,7 @@ class PDFTranslator {
 		$this->writePDFfile();
 	}
 	
-	public function writePDFfile($file = null) {
+	public function writePDFfile($file = null, $path = null) {
 		$this->setupPDF();
 		
         $default_filename = "integria_report_".date("Y-m-d_His").".pdf";
@@ -52,8 +52,10 @@ class PDFTranslator {
 		if (!isset($file)) {
 			$this->mpdf->Output($default_filename , "D");
 		}
-		else {
+		else if (!isset($path)) {
 			$this->mpdf->Output($file , "I");
+		} else {
+			$this->mpdf->Output($path.$file , "F");
 		}
 	}
 	
