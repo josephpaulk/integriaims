@@ -2058,6 +2058,7 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo '<thead>';
 	echo "<tr>";
 	echo "<th>";
+	echo print_checkbox ('incidentcb-all', "", false, true);
 	echo "</th>";
 	echo "<th>";
 	echo __('ID') . $id_order_image;

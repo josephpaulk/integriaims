@@ -16,23 +16,34 @@
 require_once ('include/functions_incidents.php');
 
 $filter = array ();
-$filter['string'] = (string) get_parameter ('search_string');
-$filter['status'] = (int) get_parameter ('status', -10 ); // By default, not closed
-$filter['priority'] = (int) get_parameter ('search_priority', -1);
-$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
-$filter['status'] = (int) get_parameter ('search_status', -10); // by default not closed
-$filter['id_product'] = (int) get_parameter ('search_id_product');
-$filter['id_company'] = (int) get_parameter ('search_id_company');
-$filter['id_inventory'] = (int) get_parameter ('search_id_inventory');
-$filter['serial_number'] = (string) get_parameter ('search_serial_number');
-$filter['id_building'] = (int) get_parameter ('search_id_building');
-$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
-$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-$filter['first_date'] = (string) get_parameter ('search_first_date');
-$filter['last_date'] = (string) get_parameter ('search_last_date');
+
+$custom_search = (int) get_parameter ('custom_search');
+if ($custom_search) {
+
+	$search = get_custom_search ($custom_search, 'incidents');
+	if ($search && $search["form_values"]) { 
+		$filter = unserialize($search["form_values"]);
+	}
+
+} else {
+	$filter['string'] = (string) get_parameter ('search_string');
+	$filter['status'] = (int) get_parameter ('status', -10 ); // By default, not closed
+	$filter['priority'] = (int) get_parameter ('search_priority', -1);
+	$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
+	$filter['status'] = (int) get_parameter ('search_status', -10); // by default not closed
+	$filter['id_product'] = (int) get_parameter ('search_id_product');
+	$filter['id_company'] = (int) get_parameter ('search_id_company');
+	$filter['id_inventory'] = (int) get_parameter ('search_id_inventory');
+	$filter['serial_number'] = (string) get_parameter ('search_serial_number');
+	$filter['id_building'] = (int) get_parameter ('search_id_building');
+	$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
+	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
+	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
+	$filter['first_date'] = (string) get_parameter ('search_first_date');
+	$filter['last_date'] = (string) get_parameter ('search_last_date');
+}
 
 $statuses = get_indicent_status ();
 $resolutions = get_incident_resolutions ();

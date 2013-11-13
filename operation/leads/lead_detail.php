@@ -70,6 +70,11 @@ $id_search = (int) get_parameter ('saved_searches');
 $create_custom_search = (bool) get_parameter ('save_search');
 $delete_custom_search = (bool) get_parameter ('delete_custom_search');
 
+$massive_leads_update = (bool) get_parameter("massive_leads_update");
+$total_result = array();
+$num_loop = (int) get_parameter("massive_leads_num_loop");
+$total_result["num_loop"] = $num_loop;
+
 // Create
 if ($create) {
 	
@@ -134,9 +139,14 @@ if ($make_owner){
 		require ("general/noaccess.php");
 		exit;
 	}
+
+	$id_user = get_parameter("id_user", -1);
+	if (!$id_user || $id_user == -1) {
+		$id_user = $config["id_user"];
+	}
 	
 	// Get company of current user
-	$id_company = get_db_value  ('id_company', 'tusuario', 'id_usuario', $config["id_user"]);
+	$id_company = get_db_value  ('id_company', 'tusuario', 'id_usuario', $id_user);
 	
 	if ($id_company == false){
 		$id_company = 0;
@@ -145,15 +155,18 @@ if ($make_owner){
 	// Update lead with current user/company to take ownership of the lead.
 	$sql = sprintf ('UPDATE tlead
 		SET id_company = %d, owner = "%s" WHERE id = %d',
-		$id_company, $config["id_user"], $id);
+		$id_company, $id_user, $id);
 	$result = process_sql ($sql);
 
 	// Add tracking info.
 	$datetime =  date ("Y-m-d H:i:s");
-	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Take ownership of lead");
+	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $id_user, $datetime, "Take ownership of lead");
 	process_sql ($sql);
 	$make_owner = 0;
 	
+	if ($result && $massive_leads_update && defined ('AJAX')) {
+		$total_result['assigned'] = true;
+	}
 }
 
 // Update
@@ -217,6 +230,31 @@ if ($update) { // if modified any parameter
 	}
 }
 
+// Close
+if ($close) {
+
+	if (!$write_permission && !$manage_permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to close a lead");
+		require ("general/noaccess.php");
+		exit;
+	}
+
+	$sql = sprintf ('UPDATE tlead SET progress = 100 WHERE id = %d', $id);
+	$result = process_sql ($sql);
+
+	if ($result > 0) {
+		$datetime =  date ("Y-m-d H:i:s");	
+		$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Lead closed");
+
+		echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
+		$id = 0;
+
+		if ($massive_leads_update && defined ('AJAX')) {
+			$total_result['closed'] = true;
+		}
+	}
+}
+
 // Delete
 if ($delete) {
 	
@@ -237,27 +275,22 @@ if ($delete) {
 	$sql = sprintf ('DELETE FROM tlead_history WHERE id_lead = %d', $id);
 	process_sql ($sql);
 
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
-	$id = 0; // Force go listing page.
+	$sql = sprintf ('SELECT id FROM tlead WHERE id = %d', $id);
+	$result = process_sql ($sql);
+	if (!$result) {
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		$id = 0; // Force go listing page.
+
+		if ($massive_leads_update && defined ('AJAX')) {
+			$total_result['deleted'] = true;
+		}
+	}
 }
 
-// Close
-if ($close) {
-
-	if (!$write_permission && !$manage_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to close a lead");
-		require ("general/noaccess.php");
-		exit;
-	}
-
-	$sql = sprintf ('UPDATE tlead SET progress = 100 WHERE id = %d', $id);
-	process_sql ($sql);
-
-	$datetime =  date ("Y-m-d H:i:s");	
-	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Lead closed");
-
-	echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
-	$id = 0;
+if (defined ('AJAX') && $massive_leads_update) {
+	ob_clean();
+	echo json_encode($total_result);
+	return;
 }
 
 // Filter for custom search
@@ -852,19 +885,20 @@ if ($id || $new) {
 
 		$table->style[0] = 'font-weight: bold';
 		$table->head = array ();
-		$table->head[0] = __('#');
-		$table->head[1] = __('Product');
-		$table->head[2] = __('Full name');
-		$table->head[3] = __('Managed by');
-		$table->head[4] = __('Progress');
-		$table->head[5] = __('Est. Sale');
-		$table->head[6] = __('L.');
-		$table->head[7] = __('Country');
-		$table->head[8] = __('Created')."<br>".__('Updated');
-		$table->head[9] = __('Op.');
-		$table->size[5] = '80px;';
-		$table->size[4] = '130px;';
-		$table->size[9] = '40px;';
+		$table->head[0] = print_checkbox ('leadcb-all', "", false, true);
+		$table->head[1] = __('#');
+		$table->head[2] = __('Product');
+		$table->head[3] = __('Full name');
+		$table->head[4] = __('Managed by');
+		$table->head[5] = __('Progress');
+		$table->head[6] = __('Est. Sale');
+		$table->head[7] = __('L.');
+		$table->head[8] = __('Country');
+		$table->head[9] = __('Created')."<br>".__('Updated');
+		$table->head[10] = __('Op.');
+		$table->size[6] = '80px;';
+		$table->size[5] = '130px;';
+		$table->size[10] = '40px;';
 
 		$lead_warning_time = $config["lead_warning_time"] * 86400;
 		
@@ -879,51 +913,53 @@ if ($id || $new) {
 				$table->rowclass[] = "";
 			}
 
-			$data[0] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
+			$data[0] = print_checkbox_extended ('leadcb-'.$lead['id'], $lead['id'], false, '', '', 'class="cb_lead"', true);
+
+			$data[1] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."'>#".$lead['id']."</a></b>";
 
 
-			$data[1] = print_product_icon ($lead['id_category'], true);
+			$data[2] = print_product_icon ($lead['id_category'], true);
 
 
- 			$data[2] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
+ 			$data[3] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."'>".$lead['fullname']."</a><br>";
-				$data[2] .= "<span style='font-size: 9px'><i>".$lead["company"]."</i></span>";
+				$data[3] .= "<span style='font-size: 9px'><i>".$lead["company"]."</i></span>";
 
 
-			$data[3] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
+			$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
 			if ($lead["owner"] != "")
-				$data[3] .= "<br><i>" . $lead["owner"] . "</i>";
+				$data[4] .= "<br><i>" . $lead["owner"] . "</i>";
 
-			$data[4] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
+			$data[5] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
 			
 			if ($lead['estimated_sale'] != 0)
-				$data[5] = format_numeric($lead['estimated_sale']);
+				$data[6] = format_numeric($lead['estimated_sale']);
 			else
-				$data[5] = "--";
+				$data[6] = "--";
 		
-			$data[6] = "<img src='images/lang/".$lead["id_language"].".png'>"; 
+			$data[7] = "<img src='images/lang/".$lead["id_language"].".png'>"; 
 	
-			$data[7] =  ucfirst(strtolower($lead['country']));
-			$data[8] = "<span style='font-size: 9px' title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
-			$data[8] .= "<br><span style='font-size: 9px'>". human_time_comparation ($lead['modification']). "</span>";
+			$data[8] =  ucfirst(strtolower($lead['country']));
+			$data[9] = "<span style='font-size: 9px' title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
+			$data[9] .= "<br><span style='font-size: 9px'>". human_time_comparation ($lead['modification']). "</span>";
 
 			if ($lead['progress'] < 100 && $lead['owner'] == "")
-				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
+				$data[10] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."&make_owner=1&offset=$offset'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>&nbsp;";
 			else
-				$data[9] = "";
+				$data[10] = "";
 
 
 			// Close that lead
 			if ($lead['progress'] < 100 && ((($config["id_user"] == $lead["owner"] && ($section_write_permission || $section_manage_permission)) || dame_admin($config["id_user"])))) {
-				$data[9] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
+				$data[10] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."&close=1&offset=$offset'><img src='images/lock.png' title='".__('Close this lead')."'></a>";
 			}
 
 			// Show delete control if its owned by the user
 			if (($config["id_user"] == $lead["owner"] && ($section_write_permission || $section_manage_permission)) || dame_admin($config["id_user"])) {
-				$data[9] .= '<a href="index.php?sec=customers&
+				$data[10] .= '<a href="index.php?sec=customers&
 								sec2=operation/leads/lead&tab=search&
 								delete=1&id='.$lead["id"].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -932,7 +968,7 @@ if ($id || $new) {
 			} else {
 				if ($lead["owner"] == ""){
 					if ($section_write_permission || $section_manage_permission) {
-						$data[9] .= '<a href="index.php?sec=customers&
+						$data[10] .= '<a href="index.php?sec=customers&
 										sec2=operation/leads/lead&tab=search&
 										delete=1&id='.$lead["id"].'&offset='.$offset.'"
 										onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -954,8 +990,27 @@ if ($id || $new) {
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 		print_input_hidden ('new', 1);
 		echo '</div>';
-		echo '</form>';
+		echo '</form><br>';
 	}
+
+	unset($table);
+	$table->class = 'search-table-button';
+	$table->width = '99%';
+	$table->id = 'lead_massive';
+	$table->data = array();
+	$table->style = array ();
+
+	$table->data[0][0] = print_checkbox ('mass_delete_leads', false, false, true, __('Delete'));
+	$table->data[0][1] = print_checkbox ('mass_close_leads', false, false, true, __('Close'));
+	$visible_users = get_user_visible_users ($config['id_user']);
+	$table->data[0][2] = print_select($visible_users, 'mass_assigned_user_leads', '0', '', __('Select'), -1, true, false, true, __('Assigned user'));
+
+	$table->data[1][0] = print_submit_button (__('Update'), 'massive_leads_update', false, 'class="sub next"', true);
+	$table->colspan[1][0] = 4;
+
+	$massive_oper_leads = print_table ($table, true);
+
+	echo print_container('massive_oper_leads', __('Massive operations over selected items'), $massive_oper_leads, 'closed', true, '20px');
 }
 
 ?>
@@ -1047,6 +1102,19 @@ $(document).ready (function () {
 	$("#saved_searches").change(function() {
 		$("#form-saved_searches").submit();
 	});
+
+	//JS for massive operations
+	$("#checkbox-leadcb-all").change(function() {
+		$(".cb_lead").prop('checked', $("#checkbox-leadcb-all").prop('checked'));
+	});
+
+	$(".cb_lead").click(function(event) {
+		event.stopPropagation();
+	});
+	
+	$("#submit-massive_leads_update").click(function(event) {
+		process_massive_leads_update();
+	});
 	
 	$("#textarea-description").TextAreaResizer ();
 	
@@ -1121,6 +1189,111 @@ function changeAllowDuplicatedLeads () {
 			}
 		});
 	}
+}
+
+function process_massive_leads_update () {
+	var checked_ids = new Array();
+	var delete_leads;
+	var close_leads;
+	var assigned_user;
+
+	$(".cb_lead").each(function() {
+		id = this.id.split ("-").pop ();
+		checked = $(this).prop('checked');
+		if(checked) {
+			$(this).prop('checked', false);
+			checked_ids.push(id);
+		}
+	});
+
+	if(checked_ids.length == 0) {
+		alert(__("No items selected"));
+	}
+	else {
+		delete_leads = $("#checkbox-mass_delete_leads").prop("checked");
+		close_leads = $("#checkbox-mass_close_leads").prop("checked");
+		assigned_user = $("#mass_assigned_user_leads").val();
+		if(delete_leads == false && close_leads == false && assigned_user == -1) {
+			alert(__("Nothing to update"));
+		}
+		else {
+			var deleted = 0;
+			var closed = 0;
+			var assigned = 0;
+
+			for(var i = 0; i < checked_ids.length; i++) {
+				values = Array ();
+				values.push ({
+					name: "massive_leads_update",
+					value: true
+				});
+				values.push ({
+					name: "massive_leads_num_loop",
+					value: i
+				});
+				values.push ({
+					name: "page",
+					value: "operation/leads/lead_detail"
+				});
+				values.push ({
+					name: "id",
+					value: checked_ids[i]
+				});
+				if(assigned_user != -1) {
+					values.push ({
+						name: "id_user",
+						value: assigned_user
+					});
+					values.push ({
+						name: "make_owner",
+						value: true
+					});
+				}
+				if(close_leads == true) {
+					values.push ({
+						name: "close",
+						value: true
+					});
+				}
+				if(delete_leads == true) {
+					values.push ({
+						name: "delete", 
+						value: true
+					});
+				}
+				$.ajax ({
+					url: "ajax.php",
+					data: values,
+					success: function (data) {
+								
+								if (data.assigned) {
+									assigned += 1;
+								}
+								if (data.closed) {
+									closed += 1;
+								}
+								if (data.deleted) {
+									deleted += 1;
+								}
+								
+								if ((assigned > 0 || closed > 0 || deleted > 0) && data.num_loop >= checked_ids.length -1) {
+									// if(assigned_user != -1 && assigned < checked_ids.length) {
+									// 	alert(checked_ids.length - assigned + " <?php echo __('leads were not assigned') ?>");
+									// }
+									// if(close_leads == true && closed < checked_ids.length) {
+									// 	alert(checked_ids.length - closed + " <?php echo __('leads were not closed') ?>");
+									// }
+									// if(delete_leads == true && deleted < checked_ids.length) {
+									// 	alert(checked_ids.length - deleted + " <?php echo __('leads were not deleted') ?>");
+									// }
+									location.reload();
+								}
+							},
+					dataType: "json"
+				});
+			}
+		}
+	}	
 }
 
 </script>

@@ -33,29 +33,57 @@ if ($result === ENTERPRISE_NOT_HOOK) {
 	}
 }
 
-$search_text = (string) get_parameter ('search_text');
-$id_company = (int) get_parameter ('id_company_search');
-$start_date = (string) get_parameter ('start_date_search');
-$end_date = (string) get_parameter ('end_date_search');
-$country = (string) get_parameter ('country_search');
-$id_category = (int) get_parameter ('product');
-$progress_major_than = (int) get_parameter ('progress_major_than_search');
-$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
-$owner = (string) get_parameter ("owner_search");
-$show_100 = (int) get_parameter ("show_100_search");
-$id_language = (string) get_parameter ("id_language", "");
-$est_sale = (int) get_parameter ("est_sale_search", 0);
+$custom_search = (int) get_parameter ('custom_search');
+
+if ($custom_search) {
+	$search = get_custom_search ($custom_search, 'leads');
+}
+
+if ($search && $search["form_values"]) {
+
+	$filter = unserialize($search["form_values"]);
+
+	$search_text = $filter["search_text"];
+	$id_company = $filter["id_company_search"];
+	$start_date = $filter["start_date_search"];
+	$end_date = $filter["end_date_search"];
+	$country = $filter["country_search"];
+	$id_category = $filter["id_category"];
+	$progress_major_than = $filter["progress_major_than_search"];
+	$progress_minor_than = $filter["progress_minor_than_search"];
+	$owner = $filter["owner_search"];
+	$show_100 = $filter["show_100_search"];
+	$id_language = $filter["id_language"];
+	$est_sale = $filter["est_sale_search"];
+
+} else {
+
+	$search_text = (string) get_parameter ('search_text');
+	$id_company = (int) get_parameter ('id_company_search');
+	$start_date = (string) get_parameter ('start_date_search');
+	$end_date = (string) get_parameter ('end_date_search');
+	$country = (string) get_parameter ('country_search');
+	$id_category = (int) get_parameter ('product');
+	$progress_major_than = (int) get_parameter ('progress_major_than_search');
+	$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
+	$owner = (string) get_parameter ("owner_search");
+	$show_100 = (int) get_parameter ("show_100_search");
+	$id_language = (string) get_parameter ("id_language", "");
+	$est_sale = (int) get_parameter ("est_sale_search", 0);
+}
 
 $params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 echo "<div id='incident-search-content'>";
 echo "<h1>".__('Lead search statistics');
 echo "<div id='button-bar-title'>";
-echo "<ul>";
-echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
-echo "</li>";
-echo "</ul>";
+if ($clean_output != 1) {
+	echo "<ul>";
+	echo "<li>";
+	echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
+	echo "</li>";
+	echo "</ul>";
+}
 echo "</div>";
 echo "</h1>";
 

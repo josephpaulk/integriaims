@@ -470,7 +470,7 @@ ALTER TABLE tinvoice MODIFY `bill_id` tinytext NOT NULL DEFAULT '';
 CREATE TABLE `tcampaign` (
    `id` int(10) unsigned NOT NULL auto_increment,
   `start_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',m
   `title` mediumtext DEFAULT NULL,
   `description` mediumtext DEFAULT NULL,
   `expenses` mediumint NULL default 0,
@@ -486,3 +486,11 @@ ALTER TABLE `tinvoice` ADD `reference` text NOT NULL default "";
 
 /* 11/10/2013 */
 ALTER TABLE `tobject_type` ADD `show_in_list` tinyint(1) unsigned NOT NULL default 0;
+
+/* 12/11/2013 */
+ALTER TABLE `tuser_report` MODIFY `report_type` mediumint(8) unsigned DEFAULT 0;
+ALTER TABLE `tuser_report` DROP COLUMN `id_group`;
+ALTER TABLE `tuser_report` ADD COLUMN `email` varchar(100) NOT NULL;
+ALTER TABLE `tuser_report` ADD COLUMN `id_project` int(11) DEFAULT 0;
+ALTER TABLE `tuser_report` ADD COLUMN `id_incidents_custom_search` mediumint(8) unsigned DEFAULT 0;
+ALTER TABLE `tuser_report` ADD COLUMN `id_leads_custom_search` mediumint(8) unsigned DEFAULT 0;

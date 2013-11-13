@@ -1,3 +1,31 @@
+2013-11-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/leads/lead_detail.php: Added massive
+	operations to the lead list (assign, close and delete).
+	
+	* extras/migrate.sql, integria_db.sql: Changes on the
+	table `tuser_report`.
+	
+	* godmode/setup/setup_mail.php: Fixed an error on the
+	pending emails table.
+	
+	* include/functions_db.php: Added the functions
+	"get_user_report_types" and "get_user_report_type".
+	
+	* operation/incidents/incident_dashboard.php: Fixed an
+	error that caused the custom searches of leads appear
+	with the incident custom searches.
+	
+	* operation/incidents/incident_search_logic.php,
+	  include/functions_incidents.php: Now is possible to
+	  select all the checkboxes of the incident list by
+	  clicking the checkbox that appear on the title.
+	  
+	* operation/leads/lead_statistics.php,
+	  operation/reporting/incidents_html.php: Now is
+	  possible to filter the items with the custom search id
+	  passed as parameter.
+
 2013-11-11  Dario Rodriguez <dario@artica.es>
 
 	* images/groups_small: Replaced icons with

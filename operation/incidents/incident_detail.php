@@ -689,7 +689,7 @@ else {
 
 $table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true);
 
-//If IW creator enabled flag is up the user can change creatro also.
+//If IW creator enabled flag is enabled, the user can change the creator
 if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 
 	$params_creator['input_id'] = 'text-id_creator';

@@ -2194,6 +2194,22 @@ function return_user_report_types ($type){
 	}
 }
 
+function get_user_report_types () {
+	$types = array();
+	$types[1] = __("Custom report");
+	$types[2] = __("Project report");
+	$types[3] = __("Incident report");
+	$types[4] = __("Incident global report");
+	$types[5] = __("Lead report");
+
+	return $types;
+}
+
+function get_user_report_type ($type){
+	$types = get_user_report_types();
+	return $types[$type];
+}
+
 function get_object_types ($only_names = true, $only_show=false) {
 
 	if ($only_show) {

@@ -805,12 +805,15 @@ CREATE TABLE `tuser_report` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `id_user` varchar(60) NOT NULL default '',
   `name` text default NULL,
-  `report_type` text default NULL,
+  `email` varchar(100) NOT NULL,
+  `report_type` mediumint(8) unsigned default 0,
   `interval_days` integer unsigned NOT NULL default 7,
   `lenght` integer unsigned NOT NULL default 7,
   `last_executed` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_external` mediumint(8) unsigned NOT NULL,
-  `id_group` mediumint(8) unsigned NOT NULL,
+  `id_project` int(11) default 0,
+  `id_incidents_custom_search` mediumint(8) unsigned default 0,
+  `id_leads_custom_search` mediumint(8) unsigned default 0,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON DELETE CASCADE

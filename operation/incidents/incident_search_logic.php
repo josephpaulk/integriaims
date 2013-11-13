@@ -306,6 +306,10 @@ $(document).ready(function () {
 	});
 	
 	//JS for massive operations
+	$("#checkbox-incidentcb-all").change(function() {
+		$(".cb_incident").prop('checked', $("#checkbox-incidentcb-all").prop('checked'));
+	});
+
 	$(".cb_incident").click(function(event) {
 		event.stopPropagation();
 	});

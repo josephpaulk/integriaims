@@ -165,35 +165,38 @@ $total_pending = get_db_sql ("SELECT COUNT(*) from tpending_mail");
 
 $table->data[14][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
 
-$table->colspan[15][0] = 2;
+if ($total_pending > 0) {
 
-$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
-$mail_queue .= "<table width=100% class=listing>";
-$mail_queue .= "<tr><th>". __("Date"). "<th>" . __("Recipient") . "<th>" . __("Subject") . "<th>" . __("Attempts")."<th>". __("Status")."</tr>";
+	$table->colspan[15][0] = 2;
 
-$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail LIMIT 1000");
+	$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
+	$mail_queue .= "<table width=100% class=listing>";
+	$mail_queue .= "<tr><th>". __("Date"). "<th>" . __("Recipient") . "<th>" . __("Subject") . "<th>" . __("Attempts")."<th>". __("Status")."</tr>";
+
+	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail LIMIT 1000");
 
 
-foreach ($mails as $mail) {
-	$mail_queue .=  "<tr>";
-	$mail_queue .=  "<td style='font-size: 9px;'>";
-	$mail_queue .=  $mail["date"];
-	$mail_queue .=  "<td>";
-	$mail_queue .=  $mail["recipient"];
-	$mail_queue .=  "<td style='font-size: 9px;'>";
-	$mail_queue .=  $mail["subject"];
-	$mail_queue .=  "<td>";
-	$mail_queue .=  $mail["attempts"];
-	if ($mail["status"] == 1)
-		$mail_queue .=  "<td>".__("Bad mail");
-	else
-		$mail_queue .=  "<td>".__("Pending");
-	$mail_queue .=  "</tr>";
+	foreach ($mails as $mail) {
+		$mail_queue .=  "<tr>";
+		$mail_queue .=  "<td style='font-size: 9px;'>";
+		$mail_queue .=  $mail["date"];
+		$mail_queue .=  "<td>";
+		$mail_queue .=  $mail["recipient"];
+		$mail_queue .=  "<td style='font-size: 9px;'>";
+		$mail_queue .=  $mail["subject"];
+		$mail_queue .=  "<td>";
+		$mail_queue .=  $mail["attempts"];
+		if ($mail["status"] == 1)
+			$mail_queue .=  "<td>".__("Bad mail");
+		else
+			$mail_queue .=  "<td>".__("Pending");
+		$mail_queue .=  "</tr>";
+	}
+
+	$mail_queue .= "<tr></tr></table></div>";
+
+	$table->data[15][0] = $mail_queue;
 }
-
-$mail_queue .= "<tr><td> </td></tr></table></div>";
-
-$table->data[15][0] = $mail_queue;
 
 $button = print_input_hidden ('update', 1, true);
 

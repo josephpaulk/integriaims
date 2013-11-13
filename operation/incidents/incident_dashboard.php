@@ -41,7 +41,7 @@ $table->style [1] = "vertical-align: top";
 
 $custom = '';
 
-$custom_searches = get_db_all_rows_filter ("tcustom_search", array("id_user" => $config["id_user"]));
+$custom_searches = get_db_all_rows_filter ("tcustom_search", array("id_user" => $config["id_user"], "section" => "incidents"));
 
 $counter = 0;
 $max_per_file = 5;
