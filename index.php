@@ -53,23 +53,40 @@ if (! ($perms & 0600) && ! ($perms & 0660) && ! ($perms & 0640)) {
 }
 
 // Buffer the following html with PHP so we can store it to a variable later
+$buffer_html = false;
 if (isset($_POST["clean_output"])) {
 	if ($_POST["clean_output"] == 1) {
-		ob_start();
-		$config["flash_charts"] = 0;
-
-	} else if (isset($_POST["pdf_output"])) {
-		if ($_POST["pdf_output"] == 1) {
-			ob_start();
-			$config["flash_charts"] = 0;
-
-		} else if (isset($_POST["raw_output"])) {
-			if ($_POST["raw_output"] == 1) {
-				ob_start();
-				$config["flash_charts"] = 0;
-			}
-		}
+		$buffer_html = true;
 	}
+}
+if (isset($_GET["clean_output"])) {
+	if ($_GET["clean_output"] == 1) {
+		$buffer_html = true;
+	}
+}
+if (isset($_POST["pdf_output"])) {
+	if ($_POST["pdf_output"] == 1) {
+		$buffer_html = true;
+	}
+}
+if (isset($_GET["pdf_output"])) {
+	if ($_GET["pdf_output"] == 1) {
+		$buffer_html = true;
+	}
+}
+if (isset($_POST["raw_output"])) {
+	if ($_POST["raw_output"] == 1) {
+		$buffer_html = true;
+	}
+}
+if (isset($_GET["raw_output"])) {
+	if ($_GET["raw_output"] == 1) {
+		$buffer_html = true;
+	}
+}
+if ($buffer_html) {
+	ob_start();
+	$config["flash_charts"] = 0;
 }
 
 require_once ('include/config.php');
