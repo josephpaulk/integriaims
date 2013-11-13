@@ -1,3 +1,18 @@
+2013-11-13  Sancho Lerena <slerena@artica.es>
+
+	* * DEBIAN/control,
+	include/config_process.php,
+	integria.centos.spec,
+	integria.spec,
+	integria_dbdata.sql,
+	extras/build_src.sh,
+	extras/integria_update_version.sh,
+	extras/build_deb.sh,
+	extras/build_rpm.sh,
+	extras/build_vars.sh,
+	extras/build_rpm_redhat.sh: Scripts for the automated
+	release system. Updated strings on data files.
+	
 2013-11-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* index.php: Fixed the fix.

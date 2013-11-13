@@ -3,6 +3,7 @@
 #
 %define name        IntegriaIMS
 %define version     4.0
+%define release     131113
 %define httpd_name  httpd
 # User and Group under which Apache is running
 %define httpd_user  apache
@@ -11,7 +12,7 @@
 Summary:            Integria IMS
 Name:               %{name}
 Version:            %{version}
-Release:            1
+Release:            %{release}
 License:            GPL2
 Vendor:             Artica ST <info@artica.es>
 Source0:            %{name}-%{version}.tar.gz
