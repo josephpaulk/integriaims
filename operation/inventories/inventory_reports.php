@@ -43,40 +43,49 @@ if ($delete) {
 
 $reports = get_db_all_rows_in_table ('tinventory_reports');
 if ($reports === false) {
+
 	echo '<h2 class="error">'.__('No reports were found').'</h2>';
-	return;
+
+} else {
+
+	$table->width = '99%';
+	$table->class = 'listing';
+	$table->data = array ();
+	$table->head = array ();
+	$table->head[0] = __('Name/Edit');
+	$table->head[1] = __('View');
+	$table->head[2] = __('PDF');
+	$table->head[3] = __('CSV');
+	$table->head[4] = __('Delete');
+	$table->size = array ();
+
+	foreach ($reports as $report) {
+		$data = array ();
+		
+		$data[0] = '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
+		$data[0] .= $report['name'];
+		$data[0] .= '</a>';
+			
+			
+		
+		$data[1] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&clean_output=0&id=".$report['id']."'><img src='images/page_white_text.png'></a>";
+		$data[2] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&pdf_output=1&clean_output=1&id=".$report['id']."'><img src='images/page_white_acrobat.png'></a>";
+		
+		$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.png'></a>";
+		$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
+		$data[4] .= '<img src="images/cross.png">';
+		$data[4] .= '</a>';
+		
+		array_push ($table->data, $data);
+	}
+
+	print_table ($table);
 }
 
-$table->width = '99%';
-$table->class = 'listing';
-$table->data = array ();
-$table->head = array ();
-$table->head[0] = __('Name/Edit');
-$table->head[1] = __('View');
-$table->head[2] = __('PDF');
-$table->head[3] = __('CSV');
-$table->head[4] = __('Delete');
-$table->size = array ();
+echo '<form method="post" action="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">';
+echo '<div class="button" style="width: 99%">';
+print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
+echo '</div>';
+echo '</form>';
 
-foreach ($reports as $report) {
-	$data = array ();
-	
-	$data[0] = '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
-	$data[0] .= $report['name'];
-	$data[0] .= '</a>';
-		
-		
-	
-	$data[1] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&clean_output=0&id=".$report['id']."'><img src='images/page_white_text.png'></a>";
-	$data[2] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&pdf_output=1&clean_output=1&id=".$report['id']."'><img src='images/page_white_acrobat.png'></a>";
-	
-	$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.png'></a>";
-	$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
-	$data[4] .= '<img src="images/cross.png">';
-	$data[4] .= '</a>';
-	
-	array_push ($table->data, $data);
-}
-
-print_table ($table);
 ?>

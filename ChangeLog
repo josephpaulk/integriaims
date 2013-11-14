@@ -1,3 +1,15 @@
+2013-11-14  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/inventories/inventory_reports.php: Now is
+	posssible to export the reports of the list to php and
+	create new reports from this view.
+
+	* operation/side_menu.php: Deleted the 'Create report'
+	section. Now the reports can be created from its list.
+
+	* include/ajax/header.php: Fixed an error on the contask
+	alert.
+
 2013-11-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/pdf_translator.php, index.php: Added a new

@@ -1077,18 +1077,11 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 	}
 	
 	if (dame_admin ($config['id_user'])) {
-		if ($sec2 == "operation/inventories/inventory_reports")
+		if ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
-		echo '</li>';
-			
-		if ($sec2 == "operation/inventories/inventory_reports_detail")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
 		echo '</li>';
 
 		enterprise_hook ('show_programmed_reports', array($sec2));

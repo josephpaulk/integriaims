@@ -26,6 +26,7 @@ if ($get_alerts) {
 	$check_cron = check_last_cron_execution ();
 	$check_emails = check_email_queue ();
 	$minutes_last_exec = check_last_cron_execution (true);
+	$seconds_last_exec = $minutes_last_exec * 60;
 	$queued_emails = check_email_queue (true);
 	
 	$alerts = '';
@@ -34,7 +35,7 @@ if ($get_alerts) {
 		$alerts .= ui_print_error_message(__('Crontask not installed. Please check documentation!'), '', '', 'h4', false);
 	}
 	if (!$check_cron) {
-		$alerts .= ui_print_error_message (__('Last time Crontask was executed was ').calendar_seconds_to_humand($minutes_last_exec).__(' ago'), '', '', 'h4', false); 
+		$alerts .= ui_print_error_message (__('Last time Crontask was executed was ').calendar_seconds_to_humand($seconds_last_exec).__(' ago'), '', '', 'h4', false); 
 	}
 	if (!$check_emails) {
 		$alerts .= ui_print_error_message(__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration'), '', '', 'h4', false); 
