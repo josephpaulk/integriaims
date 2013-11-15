@@ -18,7 +18,17 @@ class PDFTranslator {
 	private $mpdf;
 	private $breakPageCount;
 	private $header;
-	
+	private $mode = '';
+	private $format = "A4";
+	private $default_font_size = '';
+	private $default_font = '';
+	private $margin_left = 15;
+	private $margin_right = 15;
+	private $margin_top = 20;
+	private $margin_bottom = 16;
+	private $margin_header = 0;
+	private $margin_footer = 9;
+
     public $custom_font = "default";
 
 	public function __construct() {
@@ -34,7 +44,16 @@ class PDFTranslator {
 
 		require_once($config["homedir"] . '/include/mpdf51/mpdf.php');
 		
-		$this->mpdf=new mPDF();
+		$this->mpdf=new mPDF($this->mode, 
+							$this->format,
+							$this->default_font_size,
+							$this->default_font, 
+							$this->margin_left,
+							$this->margin_right,
+							$this->margin_top,
+							$this->margin_bottom,
+							$this->margin_header,
+							$this->margin_footer);
 		
 		// FOR DEBUG
 		// $this->mpdf->showImageErrors = true; 

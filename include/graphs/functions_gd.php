@@ -179,7 +179,7 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
 		$text = ImageColorAllocate($image,74,74,74);
 		$red = ImageColorAllocate($image,255,60,75);
 		$green = ImageColorAllocate($image,50,205,50);
-		$blue = ImageColorAllocate($image,44,81,120);
+		$blue = ImageColorAllocate($image,255,127,0);
 		
 		$soft_green = ImageColorAllocate($image,176, 255, 84);
 		$soft_yellow = ImageColorAllocate($image,255, 230, 84);

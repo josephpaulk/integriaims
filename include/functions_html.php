@@ -17,7 +17,7 @@
 
 global $config;
 
-/**
+/**r
  * Prints the print_r with < pre > tags
  */
 function debugPrint ($var, $file = '') {
@@ -1017,7 +1017,7 @@ function integria_help ($help_id, $return = false) {
 }
 
 
-function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true) {
+function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '') {
 	$container_div_style = '';
 	$container_style = '';
 	$h2_style = '';
@@ -1045,14 +1045,13 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 		$margin = (int) $margin;
 		$h2_style .= 'padding-left: ' . $margin . 'px; height: 22px;';
 		$container_style = 'padding-left: 0px; padding-bottom: 3px; font-size: 0.90em; min-height: 0px;';
-		$container_div_style .= 'padding-left: ' . $margin . 'px;';
 	}
 	
 	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
-	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . '" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' '.$h2_clases.'" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';
-	$container .= '<div id="' . $id . '_div" class="container_div" style="' . $container_div_style . '">';
+	$container .= '<div id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
 	$container .= $content;
 	$container .= '</div>';
 	$container .= '</div>'; // container

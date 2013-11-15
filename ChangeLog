@@ -1,3 +1,26 @@
+2013-11-15  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_html.php: Improved function print_container.
+	* include/styles/integria.css,
+	include/styles/integria_clean.css: Adapted CSS report.
+	* include/graphs/functions_gd.php: Changed color for
+	progress graph.
+	* include/functions_projects.php: created new function 
+	"project_number_task_user".
+	* include/pdf_translator.php: Added support for margins
+	to pdf functions.
+	* include/functions_incidents.php,
+	operation/incidents/incident_statistics.php,
+	* operation/reporting/incidents_html.php: Rewritten 
+	incident report.
+	* index.php: Added cover to pdf report.
+	* operation/leads/lead_statistics.php: Rewritten leads
+	report.
+	* operation/projects/project_report.php: Rewritten project
+	report.
+	* operation/inventories/inventory_reports_detail.php: Fixed some
+	style bugs with custom reports.
+
 2013-11-14  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/inventories/inventory_reports.php: Now is

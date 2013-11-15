@@ -230,8 +230,9 @@ $sec2 = get_parameter ('sec2');
 $recover = get_parameter('recover','');
 $not_show_menu = 0;
 
-if ($clean_output == 1)
-    echo '<link rel="stylesheet" href="include/styles/integria_clean.css" type="text/css" />';
+if ($clean_output == 1) {
+	echo '<link rel="stylesheet" href="include/styles/integria_clean.css" type="text/css" />';
+}
 
 // Password recovery
 if ($recover != ""){
@@ -572,8 +573,27 @@ if ($pdf_output == 1){
 	} else {
 		$pdfObject->setMetadata(safe_output("Integria IMS PDF Report", 'Integria IMS Report', 'Integria IMS', __("Automated Integria IMS report")));
 
-		$pdfObject->setFooterHTML("Integria IMS Report", true);
-		$pdfObject->setHeaderHTML("<p align=right style='border-bottom: 1px solid #666;'> Integria IMS Report - ".date("D F d, Y H:i:s", $time).'</p>', true);
+		$html_header = '<table style="width: 100%; margin-bottom: 30px; border-bottom: 3px solid #FF7F00; background: #404040; color: #fff;">
+					<tr>
+						<td align="left" style="padding: 10px 20px 10px 10px;"><img src="images/'.$config["header_logo"].'" /></td>
+					</tr></table>';
+		
+	
+		$pdfObject->setHeaderHTML($html_header);
+		$pdfObject->setFooterHTML("Integria IMS Report - ".date("D F d, Y H:i:s", $time));
+
+		$html_cover = '<table style="width: 100%; margin-bottom: 30px; background: #404040; color: #fff;">
+					<tr>
+						<td align="center" style="padding: 10px 20px 10px 10px;"><img src="images/'.$config["header_logo"].'" /></td>
+					</tr></table>';
+
+		$report_name = urldecode(get_parameter("report_name", __("Integria IMS report")));
+		$html_cover .= '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
+		$html_cover .= '<div style="font-size: 36pt;text-align:center">'.$report_name.'</div>';
+		$html_cover .= '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
+		$html_cover .= '<div style="font-size: 18pt; text-align:right; font-style: italic">'.date("D F d, Y H:i:s", $time).'</div>';
+		$pdfObject->addHTML($html_cover);
+		$pdfObject->newPage();
 	}
 	
 	// Clean all html entities before render to PDF

@@ -688,8 +688,9 @@ function print_incidents_stats ($incidents, $return = false) {
     // Get avg. scoring
     if ($scoring_valid > 0){
         $scoring_avg = format_numeric($scoring_sum / $scoring_valid);
-    } else 
+    } else {
         $scoring_avg = "N/A";
+    }
 
 	// Get incident SLA compliance
 	$sla_compliance = get_sla_compliance ($incidents);
@@ -705,8 +706,10 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	
 	if(empty($most_active_users)) {
-		$users_label = graphic_error(false);
-		$users_label .= "<br/>N/A";
+		$users_label = "<div class='container_adaptor_na_graphic2'>";
+		$users_label .= graphic_error(false);
+		$users_label .= __("N/A");
+		$users_label .="</div>";
 	}
 	else {
 		arsort($users_data);
@@ -726,15 +729,16 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	
 	if(empty($most_active_incidents)) {
-		$incidents_label = graphic_error(false);
-		$incidents_label .= "<br/>N/A";
+		$incidents_label .= graphic_error(false);
+		$incidents_label .= __("N/A");
+		$incidents_label = "<div class='container_adaptor_na_graphic'>".$incidents_label."</div>";
 	}
 	else {
 		arsort($incidents_data);
 		$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		$incidents_label = "<div class='container_adapt_graphic'>".$incidents_label."</div>";
 	}
 
-	
 	// TOP X creator users
 	
 	$creator_assigned_data = array();
@@ -744,7 +748,10 @@ function print_incidents_stats ($incidents, $return = false) {
 	}	
 	
 	if(empty($creator_assigned_data)) {
-		$submitter_label .= "<br/>N/A";
+		$submitter_label = "<div style='width:300px; height:150px;'>";
+		$submitter_label .= graphic_error(false);
+		$submitter_label .= __("N/A");
+		$submitter_label .="</div>";
 	}
 	else {
 		arsort($creator_assigned_data);
@@ -760,7 +767,9 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	
 	if(empty($top5_scoring)) {
-		$scoring_label .= "<br/>N/A";
+		$scoring_label .= graphic_error(false);
+		$scoring_label .= __("N/A");
+		$scoring_label = "<div class='container_adaptor_na_graphic2'>".$scoring_label."</div>";
 	}
 	else {
 		arsort($scoring_data);
@@ -776,7 +785,10 @@ function print_incidents_stats ($incidents, $return = false) {
 	}	
 	
 	if(empty($user_assigned_data)) {
-		$user_assigned_label .= "<br/>N/A";
+		$user_assigned_label = "<div style='width:300px; height:150px;'>";
+		$user_assigned_label .= graphic_error(false);
+		$user_assigned_label .= __("N/A");
+		$user_assigned_label .="</div>";
 	}
 	else {
 		arsort($user_assigned_data);
@@ -808,60 +820,62 @@ function print_incidents_stats ($incidents, $return = false) {
 	arsort($incident_group_data2);
 	
 	//Print first table
-    $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0 >";
-    $output .= "<tr>";
-    $output .= "<td valign=top align=left  colspan=2>";
-		$output .= "<table width=190px border=1 cellspacing=4 cellpadding=0 border=0 >";
-		$output .= "<tr>";
-		$output .= "<th align=center>".__('Total incidents')."</th>";
-		$output .= "<th align=center>".__('Avg. life time')."</th>";
-		$output .= "</tr><tr>";
-		$output .= "<td valign=top align=center>";
-		$output .= $total;
-		$output .= "</td><td valign=top align=center>";
-		$output .= format_numeric ($mean_lifetime / 86400 , 2). " ". __("Days");
-		$output .= "</td>";
-		$output .= "<tr>";
-		$output .= "<th align=center>";
-		$output .= __('Avg. work time');
-		$output .= "</th>";
-		$output .= "<th align=center>";
-		$output .= __('Avg. Scoring');
-		$output .= "</th>";
-		$output .= "</tr><tr>";
-		$output .= "<tr>";
-		$output .= "<td align=center>".$mean_work.' '.__('Hours')."</td>";
-		$output .= "<td align=center>".$scoring_avg."</td>";	
-		$output .= "<tr>";
-		$output .= "<th align=center>";
-		$output .= __('Total work time');
-		$output .= "</th>";
-		$output .= "<th align=center>";
-		$output .= __('Total work units');
-		$output .= "</th>";
-		$output .= "</tr><tr>";
-		$output .= "<tr>";
-		
-		$output .= "<td align=center>".$total_hours . " " . __("Hours")."</td>";
-		$output .= "<td align=center>".$total_workunits."</td>";
-		$output .= "</tr></table>";
-		
-		
+	$output .= "<table class='listing' width=190px border=0 cellspacing=0 cellpadding=0 border=0 >";
+	$output .= "<tr>";
+	$output .= "<th>".__("Metric")."</th>";
+	$output .= "<th>".__("Value")."</th>";
+	$output .= "</tr>";
+	$output .= "<tr>";
+	$output .= "<td align=center><strong>".__('Total incidents')."</strong></td>";
+	$output .= "<td valign=top align=center>";
+	$output .= $total;
 	$output .= "</td>";
-    $output .= "<td valign=top  colspan=2>";
-    $output .= print_label (__('Top 5 active incidents'), '', '', true, $incidents_label);
-    $output .= "</td>";
-	$output .= "<td valign=top>";
-	$output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
-    $output .= graph_incident_statistics_sla_compliance($incidents, 300, 150, $ttl);    
-    $output .= "</td>";
-    $output .= "</tr>";
-    $output .= "<tr>";
-    
-        
-    $status_aux = print_label (__('Incident by status'), '', '', true);    
-    
-    $status_aux .= "<table style='width: 420px; margin: 10px auto;'>";
+	$output .= "</tr>";
+	$output .= "<tr>";
+	$output .= "<td align=center><strong>".__('Avg. life time')."</strong></td>";
+	$output .= "<td valign=top align=center>";
+	$output .= format_numeric ($mean_lifetime / 86400 , 2). " ". __("Days");
+	$output .= "</td>";
+	$output .= "</tr>";
+	$output .= "<tr>";
+	$output .= "<td align=center><strong>";
+	$output .= __('Avg. work time');
+	$output .= "</strong></td>";
+	$output .= "<td align=center>".$mean_work.' '.__('Hours')."</td>";
+	$output .= "</tr>";
+	$output .= "<tr>";
+	$output .= "<td align=center><strong>";
+	$output .= __('Avg. Scoring');
+	$output .= "</strong></td>";
+	$output .= "<td align=center>".$scoring_avg."</td>";	
+	$output .= "<tr>";
+	$output .= "<td align=center><strong>";
+	$output .= __('Total work time');
+	$output .= "</strong></td>";
+	$output .= "<td align=center>".$total_hours . " " . __("Hours")."</td>";
+	$output .= "</tr>";
+	$output .= "<tr>";
+	$output .= "<td align=center><strong>";
+	$output .= __('Total work units');
+	$output .= "</strong></td>";
+	$output .= "<td align=center>".$total_workunits."</td>";
+	$output .= "</tr></table>";
+
+	$container_title = __("Incidents statistics");
+	$container_incident_statistics = print_container('container_incident_statistics', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");
+
+	$output = "<div class='pie_frame'>".$incidents_label."</div>";
+	$container_title = __("Top 5 active incidents");
+	$container_top5_incidents = print_container('container_top5_incidents', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");
+
+	$output = graph_incident_statistics_sla_compliance($incidents, 300, 150, $ttl);    
+	$output = "<div class='container_adaptor_graphic'>".$output."</div>";
+	$output = "<div class='pie_frame'>".$output."</div>";
+
+	$container_title = __("SLA compliance");
+	$container_sla_compliance = print_container('container_sla_compliance', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+    $status_aux .= "<table class='listing' style='width: 420px; margin: 10px auto;' cellspacing=0 cellpadding=0 border=0>";
 	$status_aux .= "<tr>";
 	$status_aux .= "<th style='text-align:center;'><strong>".__("Status")."</strong></th>";
 	$status_aux .= "<th style='text-align:center;'><strong>".__("Number")."</strong></th>";
@@ -879,10 +893,11 @@ function print_incidents_stats ($incidents, $return = false) {
 		}
 		
     $status_aux .= "</table>";
-    
-	$priority_aux = print_label (__('Incidents by priority'), '', '', true);
-		
-	$priority_aux .= "<table style='width: 420px; margin: 10px auto;'>";
+
+	$container_title = __("Incident by status");
+    $container_status_incidents = print_container('container_status_incidents', $container_title, $status_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+	$priority_aux .= "<table class='listing table_priority_report' style='width: 420px;' cellspacing=0 cellpadding=0 border=0>";
 	
 	$priority_aux .= "<tr>";
 	$priority_aux .= "<th style='text-align:center;'><strong>".__("Priority")."</strong></th>";
@@ -897,146 +912,195 @@ function print_incidents_stats ($incidents, $return = false) {
 		}
 
 	$priority_aux .= "</table>";
+
+
+	$priority_aux = $priority_aux;
+
+	$container_title = __("Incidents by priority");
+    $container_priority_incidents = print_container('container_priority_incidents', $container_title, $priority_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
     
-    $output .= "<td colspan=3 valign=top>".$status_aux."</td>";
-    $output .= "<td colspan=3 valign=top>".$priority_aux."</td>";
-   
-	$output .= "<tr>";
-	$output .= "<td valign=top colspan=2>";
-	$output .= print_label (__('Longest closed incident'), '', '', true);
 	if ($oldest_incident) {
 		
         $oldest_incident_time = get_incident_workunit_hours  ($oldest_incident["id_incidencia"]);
-		$output .= '<strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.
-			$oldest_incident['id_incidencia'].'">Incident #'.$oldest_incident['id_incidencia']. " : ".$oldest_incident['titulo']. "</strong></a>";
-        $output .= "<br>".__("Worktime hours"). " : ".$oldest_incident_time. " ". __("Hours");
-		$output .= "<br>".__("Lifetime"). " : ".format_numeric($max_lifetime/86400). " ". __("Days");
-            
+		$output = "<table class='listing' style='width: 80%; margin: 10px auto;'>";
+		$output .= "<th>";
+		$output .= __("Metric");
+		$output .= "</th>";
+		$output .= "<th>";
+		$output .= __("Value");
+		$output .= "</th>";
+		$output .= "</tr>";	
+		$output .= "<tr>";
+		$output .= "<td>";
+		$output .= "<strong>".__("Incident Id")."</strong>";
+		$output .= "</td>";
+		$output .= "<td>";
+		$output .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$oldest_incident['id_incidencia'].'">#'.$oldest_incident['id_incidencia']. "</strong></a>";
+		$output .= "</td>";
+		$output .= "</tr>";
+		$output .= "<tr>";
+		$output .= "<td>";
+		$output .= "<strong>".__("Incident title")."</strong>";
+		$output .= "</td>";
+		$output .= "<td>";
+		$output .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$oldest_incident['id_incidencia'].'">'.$oldest_incident['titulo']. "</strong></a>";				
+		$output .= "</td>";
+		$output .= "</tr>";
+		$output .= "<tr>";
+		$output .= "<td>";
+		$output .= "<strong>".__("Worktime hours")."</strong>";
+		$output .= "</td>";
+		$output .= "<td>";
+		$output .= $oldest_incident_time. " ". __("Hours");
+		$output .= "</td>";
+		$output .= "</tr>";
+		$output .= "<tr>";
+		$output .= "<td>";
+		$output .= "<strong>".__("Lifetime")."</strong>";
+		$output .= "</td>";
+		$output .= "<td>";
+		$output .= format_numeric($max_lifetime/86400). " ". __("Days");
+		$output .= "</td>";
+		$output .= "</tr>";		
+		$output .= "</table>";            
 	}	else  {
-		$output .= "<em>".__("N/A")."</em>";
+		
+		$output = graphic_error(false);
+		$output .= __("N/A");
+		
 	}
-	$output .= "</td>"; 
+
+	$output_aux = "<div style='width:100%; height:185px;'>";
+	$output_aux .= $output;
+	$output_aux .="</div>";
+
+	$container_title = __("Longest closed incident");
+    $container_longest_closed = print_container('container_longest_closed', $container_title, $output_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
 	
-	$output .= "<td valign=top colspan=2>";
 	$data = array (__('Open') => $opened, __('Closed') => $total - $opened);
 	$data = array (__('Close') => $total-$opened, __('Open') => $opened);
-    $output .= print_label (__('Open'), '', '', true, $opened.' ('.$opened_pct.'%)');
-    $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-	$output .= "</td>";
+
+	$output = pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	//$output = print_label (__('Open'), '', '', true, $opened.' ('.$opened_pct.'%)')."<br>".$output;
+	$output = "<div class='pie_frame'>".$output."</div>";
+    
+	$container_title = __("Open / Close incidents");
+    $container_openclose_incidents = print_container('container_openclose_incidents', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 	
-	$output .= "<td colspan=2></td>";
-    $output .= "</tr></table>";
- 
 	$clean_output = get_parameter("clean_output");
- 
-	if ($clean_output) {
-		echo '<h2>'.__("Incidents statistics").'</h2>';
-	} else {
-		echo '<h2 onclick="toggleDiv (\'inc-stats\')" class="incident_dashboard">'.__("Incidents statistics").'</h2>';
-	}
-    echo "<div id='inc-stats'>";
-	echo $output;
-	echo "</div>";	
-	
+
+	$container_title = __("Top active users");
+	$output = "<div class='pie_frame'>".$users_label."</div>";
+    $container_topactive_users = print_container('container_topactive_users', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+    $container_title = __("Top incident submitters");
+    $output = "<div class='pie_frame'>".$submitter_label."</div>";
+    $container_topincident_submitter = print_container('container_topincident_submitter', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+    $container_title = __("Top assigned users");
+    $output = "<div class='pie_frame'>".$user_assigned_label."</div>";
+    $container_user_assigned = print_container('container_user_assigned', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+   	$container_title = __("Incidents by group");
+   	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+    $output = "<div class='pie_frame'>".$output."</div>";
+    $container_incidents_group = print_container('container_incidents_group', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+   	$container_title = __("Incidents by creator group");
+   	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+    $output = "<div class='pie_frame'>".$output."</div>";
+    $container_incident_creator_group = print_container('container_incident_creator_group', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
+	$container_title = __("Top 5 average scoring by user");
+	$output = "<div class='pie_frame'>".$scoring_label."</div>";
+    $container_top5_scoring = print_container('container_top5_scoring', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+
 	//Print second table
-    $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0>";
-    $output .= "<tr>";	
-	$output .= "<td width=33% valign=top colspan=2>";
-	$output .= print_label (__('Top active users'), '', '', true, $users_label);
-	$output .= "</td>";
-	$output .= "<td width=33%  valign=top colspan=2>";
-	$output .= print_label (__('Top incident submitters'), '', '', true, $submitter_label );
-	
-	$output .= "</td>";
-	$output .= "<td width=33%  valign=top colspan=2>";
-	$output .= print_label (__('Top assigned users'), '', '', true, $user_assigned_label);	
-	$output .= "</td></tr>";
-	$output .= "<tr><td valign=top colspan=2>";
-	$output .= print_label (__('Incidents by group'), '', '', true);
-	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-	$output .= "</td>";
-	
-	$output .= "<td valign=top colspan=2>";
-	$output .= print_label (__('Incidents by creator group'), '', '', true);
-	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-	$output .= "</td>";
-
-	$output .= "<td valign=top colspan=2>";
-	$output .= print_label (__('Top 5 average scoring by user'), '', '', true, $scoring_label);
-	$output .= "</td>";
-	
+	$output = "<table class='listing' style='width: 420px; margin: 10px auto'>";
 	$output .= "<tr>";
-	$output .= "<td style='width: 50%' colspan=3>";
-		$output .= print_label (__('Top 5 group by time'), '', '', true);
-		$output .="<table style='width: 420px; margin: 10 auto'>";
+	$output .= "<th style='text-align:center;'><strong>".__("Group")."</strong></th>";
+	$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
+	$output .= "</tr>";
+	
+	$count = 1;
+	arsort($groups_time);
+	foreach ($groups_time as $key => $value) {
+		
+		//Only show first 5
+		if ($count == 5) {
+			break;
+		}
 		
 		$output .= "<tr>";
-		$output .= "<th style='text-align:center;'><strong>".__("Group")."</strong></th>";
-		$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
+		$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
+		$output .= "<td>".$group_name."</td>";
+		$output .= "<td style='text-align: center'>".give_human_time($value,true,true,true)."</td>";
 		$output .= "</tr>";
+		$count++;
+	}	
+	
+	$output .= "</table>";
 		
-		$count = 1;
-		arsort($groups_time);
-		foreach ($groups_time as $key => $value) {
-			
-			//Only show first 5
-			if ($count == 5) {
-				break;
-			}
-			
-			$output .= "<tr>";
-			$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
-			$output .= "<td>".$group_name."</td>";
-			$output .= "<td style='text-align: center'>".give_human_time($value,true,true,true)."</td>";
-			$output .= "</tr>";
-			$count++;
-		}	
-		
-		$output .= "</table>";
-		
-	$output .="</td>";
+	$container_title = __("Top 5 group by time");
+    $container_top5_group_time = print_container('container_top5_group_time', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
+	
 
-	$output .= "<td valign=top style='width: 50%' colspan=3>";
-		$output .= print_label (__('Top 5 users by time'), '', '', true);
-		$output .="<table style='width: 420px; margin: 10px auto;'>";
+	$output ="<table class='listing' style='width: 420px; margin: 10px auto;'>";
+	$output .= "<tr>";
+	$output .= "<th style='text-align:center;'><strong>".__("User")."</strong></th>";
+	$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
+	$output .= "</tr>";
+	
+	$count = 1;
+	arsort($users_time);
+	foreach ($users_time as $key => $value) {
+		
+		//Only show first 5
+		if ($count == 5) {
+			break;
+		}
 		
 		$output .= "<tr>";
-		$output .= "<th style='text-align:center;'><strong>".__("User")."</strong></th>";
-		$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
+		$user_real = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
+		$output .= "<td>".$user_real."</td>";
+		$output .= "<td style='text-align: center'>".give_human_time($value,true,true,true)."</td>";
 		$output .= "</tr>";
-		
-		$count = 1;
-		arsort($users_time);
-		foreach ($users_time as $key => $value) {
-			
-			//Only show first 5
-			if ($count == 5) {
-				break;
-			}
-			
-			$output .= "<tr>";
-			$user_real = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
-			$output .= "<td>".$user_real."</td>";
-			$output .= "<td style='text-align: center'>".give_human_time($value,true,true,true)."</td>";
-			$output .= "</tr>";
-			$count++;
-		}	
-		
-		$output .= "</table>";
+		$count++;
+	}	
+	
+	$output .= "</table>";
 
-	$output .= "</td>";
-	
-	$output .= "</tr></table>";
-	
-	if ($clean_output) {
-		echo '<h2>'.__("Users statistics").'</h2>';
-	} else {
-		echo '<h2 onclick="toggleDiv (\'user-stats\')" class="incident_dashboard">'.__("Users statistics").'</h2>';
-	}
-	
-    echo "<div id='user-stats'>";
-	echo $output;	
-	echo "</div>";
+	$output .= "</table>";
+		
+	$container_title = __("Top 5 users by time");
+    $container_top5_user_time = print_container('container_top5_user_time', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div"); 
+
+    //First row
+	echo $container_incident_statistics;
+	echo $container_top5_incidents;
+	echo $container_sla_compliance;
+
+	//Second row
+	echo $container_status_incidents;
+	echo $container_priority_incidents;
+
+	//Third row
+	echo $container_longest_closed;
+	echo $container_openclose_incidents;
+
+	//Fourth row
+	echo $container_topactive_users;
+	echo $container_topincident_submitter;
+	echo $container_user_assigned;
+
+	//Fifth row
+	echo $container_incidents_group;
+	echo $container_incident_creator_group;
+	echo $container_top5_scoring;
+
+	//Sixth row
+	echo $container_top5_group_time;
+	echo $container_top5_user_time;
 }
 
 /**

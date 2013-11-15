@@ -58,7 +58,7 @@ if ($render_html == 1){
 	if ($report === false)
 		return;
 	
-	echo "<h1>".$report['name'].' - '.date ("Y-m-d H-i")."</h1>";
+	echo "<h1>".__('Custom report')." &raquo; ".$report['name']."</h1>";
 
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
@@ -66,7 +66,7 @@ if ($render_html == 1){
 		return;
 	
 	// Get the header
-	echo "<table width=99% cellpadding=4 cellspacing=4 class=listing>";
+	echo "<table width=99% cellpadding=0 cellspacing=0 class=listing>";
 	echo "<tr>";
 	foreach (array_keys ($rows[0]) as $header_item){
 		echo "<th>".$header_item."</th>";

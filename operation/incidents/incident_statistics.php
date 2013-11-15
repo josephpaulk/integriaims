@@ -23,9 +23,6 @@ echo "<li>";
 echo "<a id='search_form_submit' href='#'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
 echo "<li>";
-echo "<a id='html_report_submit' href='#'>".print_image("images/html.png", true, array("title" => __("HTML report")))."</a>";
-echo "</li>";
-echo "<li>";
 echo "<a id='pdf_report_submit' href='javascript:submit_form()'>".print_image("images/page_white_acrobat.png", true, array( "title" => __("PDF report"), 'id'=>'img-click'))."</a>";
 echo "</li>";
 echo "</ul>";
@@ -45,7 +42,7 @@ echo "</form>";
 /* Add a form to generate HTML reports */
 echo '<form id="html_report_form" method="post" target="_blank" action="index.php" style="clear: both">';
 foreach ($filter as $key => $value) {
-	print_input_hidden ($key, $value);
+	print_input_hidden ("search_".$key, $value);
 }
 
 print_input_hidden ('sec2', 'operation/reporting/incidents_html');
@@ -55,12 +52,13 @@ echo "</form>";
 /* Add a form to generate HTML reports */
 echo '<form id="pdf_report_form" method="post" target="_blank" action="index.php" style="clear: both">';
 foreach ($filter as $key => $value) {
-	print_input_hidden ($key, $value);
+	print_input_hidden ("search_".$key, $value);
 }
 
 print_input_hidden ('sec2', 'operation/reporting/incidents_html');
 print_input_hidden ('clean_output', 1);
 print_input_hidden ('pdf_output', 1);
+print_input_hidden ('report_name', urlencode(__("Incident report")));
 echo '</div></form>';
 
 

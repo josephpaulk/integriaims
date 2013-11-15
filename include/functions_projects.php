@@ -162,4 +162,28 @@ function get_workorders ($where_clause = "", $order_by = "") {
 	return get_db_all_rows_sql ($sql);
 }
 
+function project_number_task_user ($id_project, $id_user) {
+
+	$sql = sprintf("SELECT id FROM ttask WHERE id_project= %d", $id_project);
+
+	$tasks = get_db_all_rows_sql($sql);
+
+	if ($tasks == false) {
+		return 0;
+	}
+
+	$clause = "";
+
+	foreach ($tasks as $t) {
+		$clause .= $t["id"].",";
+	}
+
+	$clause = "(".substr($clause,0,-1).")";
+
+
+	$sql = sprintf ('SELECT COUNT(id) FROM trole_people_task WHERE 
+					id_task IN %s AND id_user = "%s"', $clause, $id_user);
+
+	return (int) get_db_sql ($sql);
+}
 ?>

@@ -2650,3 +2650,112 @@ table.inv_details_table tr:last-child td:first-child {
 table.inv_details_table tr:last-child td:last-child {
 	border-bottom-right-radius: 10px;	
 }
+
+/* REPORTING CSS */
+div.incident_report_parameters_container,
+div.container_incident_statistics_container,
+div.container_top5_incidents_container,
+div.container_sla_compliance_container,
+div.container_status_incidents_container,
+div.container_priority_incidents_container,
+div.container_longest_closed_container,
+div.container_openclose_incidents_container,
+div.container_topactive_users_container,
+div.container_topincident_submitter_container,
+div.container_user_assigned_container,
+div.container_incidents_group_container,
+div.container_incident_creator_group_container,
+div.container_top5_scoring_container,
+div.container_top5_group_time_container,
+div.container_top5_user_time_container,
+div.funnel_container,
+div.conversion_rate_container,
+div.leads_per_country_container,
+div.users_per_lead_container,
+div.top_10_sales_container,
+div.new_leads_container,
+div.project_info_container,
+div.project_activity_container,
+div.project_labour_container,
+div.project_task_distribution_container,
+div.project_budget_container,
+div.project_workload_distribution_container {
+	float:left;
+	margin: 5px;
+}
+
+div.project_info_container,
+div.project_activity_container {
+	width: 96%;
+}
+
+div.container_incident_statistics_container,
+div.container_top5_incidents_container,
+div.container_sla_compliance_container,
+div.container_topactive_users_container,
+div.container_topincident_submitter_container,
+div.container_user_assigned_container,
+div.container_incidents_group_container,
+div.container_incident_creator_group_container,
+div.container_top5_scoring_container {
+	width:30%;
+}
+
+div.container_sla_compliance_container {
+	clear: right;
+}
+
+div.container_status_incidents_container,
+div.container_priority_incidents_container,
+div.container_longest_closed_container,
+div.container_openclose_incidents_container,
+div.container_top5_group_time_container,
+div.container_top5_user_time_container,
+div.funnel_container,
+div.conversion_rate_container,
+div.leads_per_country_container,
+div.users_per_lead_container,
+div.top_10_sales_container,
+div.new_leads_container ,
+div.project_labour_container,
+div.project_task_distribution_container,
+div.project_budget_container,
+div.project_workload_distribution_container {
+	width:46%;	
+}
+
+div.container_adaptor_na_graphic,
+container_adaptor_na_graphic2 {
+	width:300px;
+	margin-top: 87px;
+	margin-bottom: 87px;	
+}
+
+div.container_adaptor_na_graphic2 {
+	margin-top: 75px;
+	margin-bottom: 74px;		
+}
+
+div.container_adaptor_graphic {
+	width:300px; 
+	text-align: center; 
+	margin-top: 48px;
+}
+
+h2.container_simple_title {
+	padding-left: 0px;
+}
+
+div.container_simple_div {
+	padding-left: 0px;
+}
+
+div.container table.listing {
+	padding-top: 0px;
+}
+
+table.table_priority_report {
+	margin: 10px auto;
+	margin-bottom: 40px;
+}
+/* END REPORTING CSS */

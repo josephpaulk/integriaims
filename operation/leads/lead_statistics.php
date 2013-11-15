@@ -33,58 +33,51 @@ if ($result === ENTERPRISE_NOT_HOOK) {
 	}
 }
 
-$custom_search = (int) get_parameter ('custom_search');
+$search_text = (string) get_parameter ('search_text');
+$id_company = (int) get_parameter ('id_company_search');
+$start_date = (string) get_parameter ('start_date_search');
+$end_date = (string) get_parameter ('end_date_search');
+$country = (string) get_parameter ('country_search');
+$id_category = (int) get_parameter ('product');
+$progress_major_than = (int) get_parameter ('progress_major_than_search');
+$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
+$owner = (string) get_parameter ("owner_search");
+$show_100 = (int) get_parameter ("show_100_search");
+$id_language = (string) get_parameter ("id_language", "");
+$est_sale = (int) get_parameter ("est_sale_search", 0);
+$clean_output = (int) get_parameter ("clean_output");
+$pdf_output = (int) get_parameter ("pdf_output");
+$report_name = get_parameter("report_name");
 
-if ($custom_search) {
-	$search = get_custom_search ($custom_search, 'leads');
+if (!$report_name) {
+	$report_name = __("Leads report");
 }
 
-if ($search && $search["form_values"]) {
-
-	$filter = unserialize($search["form_values"]);
-
-	$search_text = $filter["search_text"];
-	$id_company = $filter["id_company_search"];
-	$start_date = $filter["start_date_search"];
-	$end_date = $filter["end_date_search"];
-	$country = $filter["country_search"];
-	$id_category = $filter["id_category"];
-	$progress_major_than = $filter["progress_major_than_search"];
-	$progress_minor_than = $filter["progress_minor_than_search"];
-	$owner = $filter["owner_search"];
-	$show_100 = $filter["show_100_search"];
-	$id_language = $filter["id_language"];
-	$est_sale = $filter["est_sale_search"];
-
-} else {
-
-	$search_text = (string) get_parameter ('search_text');
-	$id_company = (int) get_parameter ('id_company_search');
-	$start_date = (string) get_parameter ('start_date_search');
-	$end_date = (string) get_parameter ('end_date_search');
-	$country = (string) get_parameter ('country_search');
-	$id_category = (int) get_parameter ('product');
-	$progress_major_than = (int) get_parameter ('progress_major_than_search');
-	$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
-	$owner = (string) get_parameter ("owner_search");
-	$show_100 = (int) get_parameter ("show_100_search");
-	$id_language = (string) get_parameter ("id_language", "");
-	$est_sale = (int) get_parameter ("est_sale_search", 0);
+if ($pdf_output) {
+	$ttl = 2;
 }
 
 $params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
-echo "<div id='incident-search-content'>";
 echo "<h1>".__('Lead search statistics');
-echo "<div id='button-bar-title'>";
-if ($clean_output != 1) {
+
+if (!$clean_output) {
+
+	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
 	echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 	echo "</li>";
+	echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=statistics&$params&clean_output=1&pdf_output=1&report_name=$report_name'>" .
+		print_image ("images/page_white_acrobat.png", true, array("title" => __("PDF report"))) .
+		"</a>";
+	echo "</li>";
 	echo "</ul>";
+	echo "</div>";
+
 }
-echo "</div>";
+
 echo "</h1>";
 
 $where_clause = "WHERE (1=1 $where_group ";
@@ -191,7 +184,7 @@ if ($leads_funnel != false) {
 }
 
 $leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content . '</div>';
-$table->data[0][0] = print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, '10px');
+echo print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 
 //CONVERSION RATE
@@ -216,26 +209,49 @@ if (isset($data[200]["amount"])) {
 	$total_amount_success = $data[200]["amount"];
 }
 
+if (!$clean_output) {
 
-$leads_conversion_rate = "<table class='conversion_rate'>";
-$leads_conversion_rate .= "<tr>";
-$leads_conversion_rate .= "<td class='conversion_value'>";
-$leads_conversion_rate .= sprintf("%.2f %%",$conversion_rate);
-$leads_conversion_rate .= "</td>";
-$leads_conversion_rate .= "</tr>";
-$leads_conversion_rate .= "<tr>";
-$leads_conversion_rate .= "<td>";
-$leads_conversion_rate .= __("Total amount")."<br><br>";
-$leads_conversion_rate .= $total_amount_success." ".$config["currency"];
-$leads_conversion_rate .= "</td>";
-$leads_conversion_rate .= "</tr>";
-$leads_conversion_rate .= "</table>";
+	$leads_conversion_rate = "<table class='conversion_rate'>";
+	$leads_conversion_rate .= "<tr>";
+	$leads_conversion_rate .= "<td class='conversion_value'>";
+	$leads_conversion_rate .= sprintf("%.2f %%",$conversion_rate);
+	$leads_conversion_rate .= "</td>";
+	$leads_conversion_rate .= "</tr>";
+	$leads_conversion_rate .= "<tr>";
+	$leads_conversion_rate .= "<td>";
+	$leads_conversion_rate .= __("Total amount")."<br><br>";
+	$leads_conversion_rate .= $total_amount_success." ".$config["currency"];
+	$leads_conversion_rate .= "</td>";
+	$leads_conversion_rate .= "</tr>";
+	$leads_conversion_rate .= "</table>";
+
+} else {
+
+	$leads_conversion_rate = "<table style='width: 98%; margin: 0 auto;'>";
+	$leads_conversion_rate .= "<tr>";
+	$leads_conversion_rate .= "<td style='padding-top: 20px; font-size: 45pt; font-weight: bold; text-align:center'>";
+	$leads_conversion_rate .= sprintf("%.2f %%",$conversion_rate);
+	$leads_conversion_rate .= "</td>";
+	$leads_conversion_rate .= "</tr>";
+	$leads_conversion_rate .= "<tr>";
+	$leads_conversion_rate .= "<td style='padding-top: 36px; padding-bottom: 37px; font-size: 18pt; font-weight: bold; text-align: center;'>";
+	$leads_conversion_rate .= __("Total amount")."<br><br>";
+	$leads_conversion_rate .= $total_amount_success." ".$config["currency"];
+	$leads_conversion_rate .= "</td>";
+	$leads_conversion_rate .= "</tr>";
+	$leads_conversion_rate .= "</table>";
+
+}
 
 $leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
 
-$container_title = __('Conversion ratio')."&nbsp;".print_help_tip(__("Conversion ratio is calculated using closed leads (keep in mind that closed leads don't appear in search by default)"),true);
+$container_title = __('Conversion ratio');
 
-$table->data[0][1] = print_container('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, '10px');
+if (!$clean_output) {
+	$container_title .= "&nbsp;".print_help_tip(__("Conversion ratio is calculated using closed leads (keep in mind that closed leads don't appear in search by default)"),true);
+}
+
+echo print_container('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //COUNTRIES
 $leads_country = crm_get_total_leads_country($where_clause);
@@ -245,7 +261,7 @@ if ($read && $enterprise) {
 }
 $leads_country = crm_get_data_lead_country_graph($leads_country);
 
-if ($leads_country !== false) {
+if ($leads_country != false) {
 	$leads_country_content = pie3d_graph ($config['flash_charts'], $leads_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
 	$leads_country_content = __('No data to show');
@@ -253,7 +269,9 @@ if ($leads_country !== false) {
 
 $leads_country_content = '<br><div class="pie_frame">' . $leads_country_content . '</div>';
 
-$table->data[1][0] = print_container('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, '10px');
+echo "<div style='clear:both'></div>";
+
+echo print_container('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //USERS
 $leads_user = crm_get_total_leads_user($where_clause);
@@ -271,7 +289,7 @@ if ($leads_user !== false) {
 
 $leads_user_content = '<br><div class="pie_frame">' . $leads_user_content . '</div>';
 
-$table->data[1][1] = print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, '10px');
+echo print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //TOP 10 ESTIMATED SALES
 $where_clause_top10 = $where_clause." AND progress < 100";
@@ -287,7 +305,7 @@ if ($leads_sales != false) {
 	$leads_sales_content = '<br><div class="pie_frame">' . __('No data to show') . '</div>';
 }
 
-$table->data[2][0] = print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, '10px');
+echo print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //NEW LEADS
 $leads_creation = crm_get_total_leads_creation($where_clause);
@@ -299,16 +317,22 @@ if ($read && $enterprise) {
 $leads_creation = crm_get_data_lead_creation_graph($leads_creation);
 
 if ($leads_creation !== false) {
-	$leads_creation_content = area_graph(false, $leads_creation, 400, 250, "#2179B1", '', '', '');
+
+	$area_width = 400;
+	$area_height = 250;
+
+	if ($clean_output) {
+		$area_width = 240;
+		$area_height = 155;		
+	}
+
+	$leads_creation_content = area_graph(false, $leads_creation, $area_width, $area_height, "#2179B1", '', '', '', "", "", "", "", '', '', '', $ttl);
 } else {
 	$leads_creation_content = __('No data to show');
 }
 
 $leads_creation_content = '<br><div class="pie_frame"><br>' . $leads_creation_content . '</div>';
 
-$table->data[2][1] = print_container('new_leads', __('New leads'), $leads_creation_content, 'no', true, '10px');
-
-echo '<br>';
-print_table($table);
+echo print_container('new_leads', __('New leads'), $leads_creation_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 ?>
