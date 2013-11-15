@@ -850,12 +850,6 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type) {
 		$object_types = get_db_all_rows_sql($sql_search_obj_type);
 	}
 
-
-	if (!$object_types) {
-		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
-		return;
-	}
-	
 	$sql_search = base64_encode($sql_search);
 
 	if (empty($object_types)) {
@@ -885,15 +879,17 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type) {
 
 		$count_inventories = 0;
 
-		if ($enteprise_load !== ENTERPRISE_NOT_HOOK) {
-			$count_inventories = inventory_get_count_inventories($elem['id'], base64_decode($sql_search), $config['id_user']); //count
-		} else {
-			$count_inventories = inventories_get_count_inventories_for_tree($elem['id'], base64_decode($sql_search)); //count
-		}
+		// if ($enteprise_load !== ENTERPRISE_NOT_HOOK) {
+		// 	$count_inventories = inventory_get_count_inventories($elem['id'], base64_decode($sql_search), $config['id_user']); //count
+		// } else {
+		// 	$count_inventories = inventories_get_count_inventories_for_tree($elem['id'], base64_decode($sql_search)); //count
+		// }
 
-		if ($count_inventories) {
-			array_push($aux_elems, $elem);
-		}
+		// if ($count_inventories) {
+		// 	array_push($aux_elems, $elem);
+		// }
+
+		array_push($aux_elems, $elem);
 	}
 
 	$elements_type = $aux_elems;
@@ -1231,12 +1227,12 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		
 		$count = $count_inv;
 
-		$url = "index.php?sec=inventory&sec2=operation/inventories/inventory".$params;
+		$url_pag = "index.php?sec=inventory&sec2=operation/inventories/inventory".$params;
 		$offset = get_parameter("offset");
 
 		if(!$clean_output) {
 
-			pagination ($count, $url, $offset);
+			pagination ($count, $url_pag, $offset);
 		}
 
 		$idx = 0;
@@ -1365,7 +1361,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		print_table($table);
 
 		if(!$clean_output) {
-			pagination ($count, $url, $offset, true);
+			pagination ($count, $url_pag, $offset, true);
 		}
 	}
 }

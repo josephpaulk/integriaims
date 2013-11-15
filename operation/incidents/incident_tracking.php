@@ -62,12 +62,18 @@ if (!$clean_output) {
 	echo "<div style='clear: both; width: 99%; height: 20px; padding-top: 15px'>";
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
-	echo "<li>";
-	echo '<a href="#" onClick="document.getElementById(\'create_html_report\').submit();">'.print_image("images/html.png", true, array("title" => __("HTML report"))).'</a>';
-	echo "</li>";
-	echo '<li>';
-	echo '<a href="#" onClick="document.getElementById(\'create_pdf_report\').submit();">'.print_image("images/page_white_acrobat.png", true, array("title" => __("PDF report"))).'</a>';
-	echo '</li>';	
+	$html_report_image = print_html_report_image ("#", __("HTML report"), "", "onClick='document.getElementById(\"create_html_report\").submit();'");
+	if ($html_report_image) {
+		echo "<li>";
+		echo $html_report_image;
+		echo "</li>";
+	}
+	$report_image = print_report_image ("#", __("PDF report"), "", "onClick='document.getElementById(\"create_pdf_report\").submit();'");
+	if ($report_image) {
+		echo "<li>";
+		echo $report_image;
+		echo "</li>";
+	}
 	echo "</ul>";
 	echo "</div>";
 	echo "</div>";

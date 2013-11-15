@@ -115,9 +115,11 @@ echo "<h1>";
 echo __('Workunit personal report for user');
 echo " '". dame_nombre_real($id_user). "'.";
 
-echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&id=$id_user&id_task=$id_task&clean_output=1'>";
-echo "<img src='images/html.png'>";
-echo "</A>";
+$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&id=$id_user&id_task=$id_task", __("Report"));
+if ($html_report_image) {
+	echo "&nbsp;" . $html_report_image;
+}
+
 echo "</h1>";
 
 echo "<div class='under_tabs_info'>";

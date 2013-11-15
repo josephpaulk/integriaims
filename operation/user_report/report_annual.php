@@ -58,16 +58,18 @@
 
     echo "<h1>".__('Annual report for user')." ". $id_user_show;
     
-	if ($clean_output == 0){
+	if ($clean_output == 0) {
 		// link full screen
-		echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year&clean_output=1'>";
-		echo "<img src='images/html.png'>";
-		echo "</a>";
+		$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year", __("Full screen"));
+		if ($html_report_image) {
+			echo "&nbsp;&nbsp;" . $html_report_image;
+		}
 
 		// link PDF report
-		echo "&nbsp;&nbsp;<a title='PDF report' href='index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year&clean_output=1&pdf_output=1'>";
-		echo "<img src='images/page_white_acrobat.png'>";
-		echo "</a>";
+		$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year", __("PDF report"));
+		if ($report_image) {
+			echo "&nbsp;&nbsp;" . $report_image;
+		}
 	}
 	
 	echo "</h1>";

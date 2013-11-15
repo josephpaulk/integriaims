@@ -71,10 +71,12 @@ function print_incident () {
 		ob_clean();
 		$pdf_filename = "incident_$id.pdf";
 	} else {
-		echo "<div style='padding:7px; float:right;'>";
-		$url = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id&tab=summary&clean_output=1&pdf_output=1";
-		echo "<input type='button' class='sub pdfreport' onclick='javascript:window.open(\"$url\");' value='".__('Export')."' />";
-		echo "</div>";
+		$report_button = print_report_button ("index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id&tab=summary", __('Export'));
+		if ($report_button) {
+			echo "<div style='padding:7px; float:right;'>";
+			echo $report_button;
+			echo "</div>";
+		}
 	}
 	
 	echo "<div style='padding-left:7px;'>";

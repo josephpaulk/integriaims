@@ -555,13 +555,10 @@ $search_text = (string) get_parameter ('search_text', '');
 echo '<h1>'.$project['name'].' &raquo; '.__('Task management');
 
 if (!$clean_output) {
-	echo "&nbsp;&nbsp;<a title='" . _("Report") . "'" .
-		" href='index.php?" .
-		"sec=projects&" .
-		"sec2=operation/projects/task&" .
-		"id_project=$id_project&" .
-		"search_text=$search_text&" .
-		"clean_output=1'><img src='images/html.png'></a>";
+	$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_text=$search_text", __("Report"));
+	if ($html_report_image) {
+		echo "&nbsp;" . $html_report_image;
+	}
 }
 
 echo '</h1>';

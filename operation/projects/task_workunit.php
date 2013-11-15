@@ -180,8 +180,11 @@ if ($id_task != 0) {
 	echo '<h1>'.__('Workunit resume');
 	echo ' - '.$project_name.' - '.$task_name;
 
-    echo " <a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_task=$id_task&id_project=$id_project&pdf_output=1&clean_output=1'><img src='images/page_white_acrobat.png'></a></h1>";
-
+	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
+	if ($report_image) {
+		echo "&nbsp;" . $report_image;
+	}
+    
 } elseif ($id_project != 0) {
 	// Whole project
 	
@@ -210,8 +213,11 @@ if ($id_task != 0) {
 	echo '<h1>'.__('Workunit resume');
 	echo ' - '.$project_name.' - '. __('All tasks');
 
-    echo " <a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pdf_output=1&clean_output=1'><img src='images/page_white_acrobat.png'></a></h1>";
-
+	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project", __("PDF report"));
+	if ($report_image) {
+		echo "&nbsp;" . $report_image;
+	}
+    
 }
 
 

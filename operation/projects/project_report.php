@@ -36,11 +36,7 @@ $action = (string) get_parameter ('action');
 $id_project = (int) get_parameter ('id_project');
 
 $create_project = (bool) get_parameter ('create_project');
-$report_name = get_parameter("report_name");
 
-if (!$report_name) {
-	$report_name = urlencode(__("Project report"));
-}
 
 $graph_ttl = 1;
 
@@ -83,6 +79,7 @@ if ($id_project) {
 	
 // Main project table
 
+
 echo "<h1>".__('Project report')." &raquo; " . get_db_value ("name", "tproject", "id", $id_project);
 
 if (!$clean_output) {
@@ -93,19 +90,22 @@ if (!$clean_output) {
 		print_image ("images/go-previous.png", true, array("title" => __("Back to project editor"))) .
 		"</a>";
 	echo "</li>";
-	echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project&clean_output=1&pdf_output=1&report_name=".$report_name."'>" .
-		print_image ("images/page_white_acrobat.png", true, array("title" => __("PDF report"))) .
-		"</a>";
-	echo "</li>";
+	$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("HTML report"), "", "target='_blank'");
+	if ($html_report_image) {
+		echo "<li>";
+		echo $html_report_image;
+		echo "</li>";
+	}
+	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
+	if ($report_image) {
+		echo "<li>";
+		echo $report_image;
+		echo "</li>";
+	}
 	echo "</ul>";
 	echo "</div>";
 }
 echo "</h1>";
-
-
-
-
 
 // Right/Left Tables
 $table->width = '100%';
@@ -161,16 +161,16 @@ $project_info .= "</td></tr>";
 
 $project_info .= "</table>";
 
-echo print_container('project_info', __('Project info'), $project_info, 'no');
+$table->colspan[0][0] = 2;
+$table->data[0][0] = print_container('project_info', __('Project info'), $project_info, 'no');
 
 if ($id_project) {
 	// Project activity graph
-	$project_activity = project_activity_graph ($id_project, 650, 150, true, $graph_ttl, 50, true);
+	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
 	if ($project_activity) {
 		$project_activity = '<div class="graph_frame">' . $project_activity . '</div>';
-		echo print_container('project_activity', __('Project activity'), $project_activity, 'no');
+		$table->data[0][0] .= print_container('project_activity', __('Project activity'), $project_activity);
 	}
-
 	// Calculation
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
 	$total_hr = get_project_workunit_hours ($id_project);
@@ -224,7 +224,7 @@ if ($id_project) {
 	$labour .= "</td></tr>";
 	$labour .= "</table>";
 	
-	echo print_container('project_labour', __('Labour'), $labour, 'no');
+	$left_side .= print_container('project_labour', __('Labour'), $labour);
 	
 	// People involved
 	//Get users with tasks
@@ -247,7 +247,25 @@ if ($id_project) {
 	else {
 		$users_involved = array_unique($users_involved);
 	}
-		
+	
+	$people_involved = "<div style='padding-bottom: 20px;'>";
+	foreach ($users_involved as $u) {
+		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
+		if ($avatar != "") {
+			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
+			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 title='".$u."'/>";
+			$people_involved .= "</a>";
+		}
+	}
+	$people_involved .= "</div>";
+	
+	$left_side .= print_container('project_involved_people', __('People involved'), $people_involved);
+	
+	// Task distribution
+	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
+	
+	$left_side .= print_container('project_task_distribution', __('Task distribution'), $task_distribution);
+	
 	// RIGHT COLUMN
 	$right_side = '';
 	
@@ -298,129 +316,17 @@ if ($id_project) {
 	$budget .= "</td></tr>";
 	$budget .= "</table>";
 	
-	echo print_container('project_budget', __('Budget'), $budget, 'no');
-
-	// Task distribution
-	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
-	echo print_container('project_task_distribution', __('Task distribution'), $task_distribution, 'no');
+	$right_side .= print_container('project_budget', __('Budget'), $budget);
 	
 	// Workload distribution
 	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div>';
 	
-	echo print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution, 'no');
+	$right_side .= print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
 	
-}
-
-if ($clean_output) {
-	echo "<br><br><br><br>";
-}
-
-$sql = sprintf("SELECT * FROM ttask WHERE id_project= %d", $id_project);
-	
-$tasks = get_db_all_rows_sql($sql);
-
-unset ($table);
-
-$table = new stdClass;
-$table->width = '100%';
-$table->class = "listing";
-$table->size = array();
-$table->style = array();
-$table->data = array();
-$table->head = array();
-
-$table->size[2] = "50px";
-$table->size[2] = "70px";
-$table->size[3] = "90px";
-$table->size[4] = "90px";
-
-$table->align[1] = "center";
-$table->align[2] = "center";
-$table->align[6] = "center";
-$table->align[8] = "center";
-$table->align[9] = "center";
-
-$table->head[0] = __("Task");
-$table->head[1] = __("Priority");
-$table->head[2] = __("Completion");
-$table->head[3] = __("Start");
-$table->head[4] = __("End");
-$table->head[5] = __("Hours worked");
-$table->head[6] = __("Hours deviation");
-$table->head[7] = __("Total costs");
-$table->head[8] = __("Cost deviation");
-$table->head[9] = __("Cost per hour");
-
-foreach ($tasks as $t) {
-	
-	$aux = array();
-
-	$aux[0] = $t["name"];
-	$aux[1] = print_priority_flag_image ($t["priority"],1);
-	$aux[2] = sprintf("%d %%", $t["completion"]);
-	$aux[3] = $t["start"];
-	$aux[4] = $t["end"];
-
-	$hours_worked = get_task_workunit_hours($t["id"]);
-	$aux[5] = $hours_worked;
-
-
-	$hours_deviation = 0;
-	if ($t["hours"]) {
-		$hours_deviation = $hours_worked - $t["hours"];
-		$hours_deviation = ($hours_deviation / $t["hours"]) * 100;
-	}
-
-	$aux[6] = sprintf("%d %%",$hours_deviation);
-
-	$task_cost = task_workunit_cost($t["id"], false);
-	$aux[7] = sprintf("%.2f",$task_cost);
-
-	$cost_deviation = 0;
-	if((int)$t["estimated_cost"]) {
-		$cost_deviation = $task_cost - $t["estimated_cost"];
-		$cost_deviation = ($cost_deviation / $t["estimated_cost"]) * 100;
-	}
-
-	$aux[8] = sprintf("%d %%", $cost_deviation);
-
-	$avg_cost = $task_cost / $hours_worked;
-	$aux[9] = sprintf("%d", $avg_cost);
-
-	array_push($table->data, $aux);
-}
-echo "<h2>".__("Task report")."</h2>";
-print_table($table);
-
-echo "<h2>".__("Labour report")."</h2>";
-unset ($table);
-
-$table = new stdClass;
-$table->width = '100%';
-$table->class = "listing";
-$table->size = array();
-$table->style = array();
-$table->data = array();
-$table->head = array();
-
-$table->head[0] = __("Name");
-$table->head[1] = __("# Tasks");
-$table->head[2] = __("# Worked hours");
-
-foreach ($users_involved as $p) {
-	$aux = array();
-
-	$name = get_db_value("nombre_real", "tusuario", "id_usuario", $p);
-	$aux[0] = $name;
-
-	$tasks = project_number_task_user ($id_project, $p);
-	$aux[1] = $tasks;
-
-	$hours = get_project_workunits_hours_user($id_project, $p);
-	$aux[2] = $hours." (".($hours / $config["hours_perday"])." ".__("days").")";
-
-	array_push($table->data, $aux);
+	$table->data[1][0] = $left_side;
+	$table->data[1][1] = $right_side;
 }
 
 print_table($table);
+
 ?>

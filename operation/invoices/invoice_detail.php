@@ -156,8 +156,8 @@ if ($clean_output == 0){
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
 	echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
 
-	echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail&clean_output=1&pdf_output=1&$search_params'><img src='images/page_white_acrobat.png'></a>";
-
+	echo print_report_image ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __("PDF report"));
+	
 	echo "</td>";
 	echo "</tr>";
 

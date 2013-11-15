@@ -72,8 +72,11 @@ function dbmgr_main () {
 
     if ($clean_output == 0){
 	    echo "<h1>".__('Extensions'). " &raquo; ".__('Database interface');
-        echo "&nbsp;&nbsp;<a title='".__("Report")."'  href='index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql&clean_output=1'><img src='images/html.png'></a>";
-
+	    $html_report_image = print_html_report_image ("index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql", __("Report"));
+		if ($html_report_image) {
+			echo "&nbsp;&nbsp;" . $html_report_image;
+		}
+        
         echo "</h1>";
 	    echo '<div class="note_simple">';
 	    echo __("This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.");

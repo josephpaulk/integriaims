@@ -52,7 +52,11 @@ if ($kb_data["id_category"])
 
 echo '<h2>'.__('KB article review');
 
-echo "&nbsp;&nbsp; <a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=$id&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png' title=PDF></a>";
+$report_image = print_report_image ("index.php?sec=kb&sec2=operation/kb/browse_data&view=$id", __("PDF"));
+if ($report_image) {
+	echo "&nbsp;&nbsp;&nbsp;";
+	echo $report_image;
+}
 echo '</h2>';
 
 $avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $kb_data['id_user']);

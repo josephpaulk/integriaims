@@ -1,3 +1,31 @@
+2013-11-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_inventories.php: Error fixes.
+	
+	* include/functions_html.php: Added the functions
+	"print_report_image", "print_html_report_image",
+	"print_report_button" and "print_html_report_button".
+	
+	* operation/incidents/incident_report.php: File deleted.
+	
+	* extensions/incident_summary.php,
+	  godmode/setup/dbmanager.php,
+	  operation/incidents/incident_tracking.php,
+	  operation/inventories/inventory_incidents.php,
+	  operation/inventories/inventory_reports.php,
+	  operation/inventories/inventory_search.php,
+	  operation/invoices/invoice_detail.php,
+	  operation/kb/browse_data.php,
+	  operation/projects/project_report.php,
+	  operation/incidents/incident_statistics.php,
+	  operation/projects/task.php,
+	  operation/projects/task_workunit.php,
+	  operation/user_report/monthly.php,
+	  operation/user_report/report_annual.php,
+	  operation/user_report/report_full.php,
+	  operation/users/user_workunit_report.php: Changed the way
+	  the report buttons are showed.
+
 2013-11-15  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_html.php: Improved function print_container.

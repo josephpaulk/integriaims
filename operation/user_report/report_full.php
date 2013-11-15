@@ -124,15 +124,17 @@ if ($user_id != "") {
 }
 
 if ($clean_output == 0){
-    // link full screen
-    echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&user_id=$user_id&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects'>";
-    echo "<img src='images/html.png'>";
-    echo "</a>";
+	// link full screen
+	$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("Full screen"));
+	if ($html_report_image) {
+		echo "&nbsp;&nbsp;" . $html_report_image;
+	}
 
-    // link PDF report
-    echo "&nbsp;&nbsp;<a title='PDF report' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&pdf_output=1&user_id=$user_id&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects'>";
-    echo "<img src='images/page_white_acrobat.png'>";
-    echo "</a>";
+	// link PDF report
+	$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("PDF report"));
+	if ($report_image) {
+		echo "&nbsp;&nbsp;" . $report_image;
+	}
 }
 
 echo  "</h1>";
