@@ -1,3 +1,10 @@
+2013-11-15  Dario Rodriguez <dario@artica.es>
+
+        *  include/styles/integria_clean.css: Fixed some style errors
+        on PDF css.
+        * operation/reporting/incidents_html.php: Removed commented 
+        code.
+
 2013-11-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_inventories.php: Error fixes.

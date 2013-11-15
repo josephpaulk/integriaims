@@ -28,6 +28,10 @@ h2 {
 	margin-bottom: 10px;
 }
 
+h1,h2 {
+	letter-spacing: 1px;
+}
+
 h2.dashboard_h2 {
 	color: #FF7F00;
 	text-transform: none;
@@ -151,6 +155,7 @@ div.container_adaptor_na_graphic2 {
 
 div.incident_report_parameters_container {
 	width: 96%;
+	margin-top: -10px;
 }
 
 div.container_simple_incident_report_parameters{

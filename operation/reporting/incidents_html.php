@@ -55,61 +55,6 @@ $output_full = "";
 
 $output = '';
 
-/* Show search criterium */
-/*if (! empty ($filter['string'])) 
-	$output .= print_label (__('Containing').': ', '', '', true,
-		'"'.$filter['string'].'"').'<br />';
-if (! empty ($filter['status'])) {
-	
-	if ($filter['status'] == -10) {
-		$status_text = __("Not closed");
-	} else {
-		$status_text = $statuses[$filter['status']];
-	}
-	
-	$output .= print_label (__('Status').': ', '', '', true, $status_text).'<br />';	
-}
-if ($filter['priority'] != -1)
-	$output .= print_label (__('Priority').': ', '', '', true,
-		print_priority_flag_image ($filter['priority'], true)).'<br />';
-if ($filter['id_group'] != 1)
-	$output .= print_label (__('Group').': ', '', '', true,
-		get_db_value ('nombre', 'tgrupo', 'id_grupo', $filter['id_group'])).'<br />';
-if (! empty ($filter['sla_fired']))
-	$output .= print_label (__('SLA fired').': ', '', '', true, __('Yes')).'<br />';
-if (! empty ($filter['id_product']))
-	$output .= print_label (__('Product').': ', '', '', true, 
-		get_db_value ('name', 'tkb_product', 'id', $filter['id_product'])).'<br />';
-if (! empty ($filter['id_company']))
-	$output .= print_label (__('Company').': ', '', '', true,
-		get_db_value ('name', 'tinventory', 'id', $filter['id_company'])).'<br />';
-
-
-
-
-if (! empty ($filter['id_inventory']))
-	$output .= print_label (__('Inventory').': ', '', '', true,
-		get_inventory_name ($filter['id_inventory'])).'<br />';
-if (! empty ($filter['serial_number']))
-	$output .= print_label (__('Serial number').': ', '', '', true,
-		$filter['serial_number']).'<br />';
-if (! empty ($filter['id_building']))
-	$output .= print_label (__('Building').': ', '', '', true, 
-		get_db_value ('name', 'tbuilding', 'id', $filter['id_building'])).'<br />';
-if (! empty ($filter['id_user']))
-	$output .= print_label (__('User').': ', '', '', true,
-		$filter['id_user']).'<br />';
-if (! empty ($filter['id_incident_type']))
-	$output .= print_label (__('Incident type').': ', '', '', true,
-		get_db_value ('name', 'tincident_type', 'id',
-		$filter['id_incident_type'])).'<br />';
-if (! empty ($filter['first_date']))
-	$output .= print_label (__('From').': ', '', '', true,
-		$filter['first_date']).'<br />';
-if (! empty ($filter['last_date']))
-	$output .= print_label (__('To').': ', '', '', true,
-		$filter['last_date']).'<br />';
-*/
 $output = "<table>";
 $output .= "<tr>";
 $output .= "<td>";
