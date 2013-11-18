@@ -1,3 +1,8 @@
+2013-11-18  Dario Rodriguez <dario@artica.es>
+
+	* godmode/setup/filemgr.php: Fixed a problem
+	getting mimetype.
+
 2013-11-18  Dario Rodriguez <dari@artica.es>
 
 	* include/integria_cron.php: Adapted to use

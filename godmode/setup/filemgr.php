@@ -195,7 +195,15 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 		while (@count($result) > 0){
 			$temp = array_shift ($result);
 			$fullfilename = $current_directory.'/'.$temp;
-			$mimetype = mime_content_type($fullfilename);
+
+			$mimetype = "none";
+			if (function_exists("mime_content_tyep")) {
+				$mimetype = mime_content_type($fullfilename);
+			} else if (function_exists("finfo_open")) {
+				$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+    				$mimetype = finfo_file($finfo, $fullfilename);
+				finfo_close($finfo);	
+			}
 			if (($temp != "..") AND ($temp != ".")){
 				echo "<tr><td>";
 				if (!is_dir ($current_directory.'/'.$temp)){	
