@@ -721,11 +721,13 @@ function print_incidents_stats ($incidents, $return = false) {
 	$incidents_label = '';
 	foreach ($most_active_incidents as $incident) {
 		$incidents_data['#'.$incident['id_incidencia']] = $incident['worked_hours'];
-		$incidents_label .= '<a class="incident_link" id="incident_link_'.
+		if (!$pdf_output) {
+		//$incidents_label .= '<a class="incident_link" id="incident_link_'.
 			$incident['id_incidencia'].'"
 			href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
 			'#'.$incident['id_incidencia'].': '.$incident['titulo']."</a> (".$incident['worked_hours']." ".
 			__('Hr').") <br />";
+		}
 	}
 	
 	if(empty($most_active_incidents)) {
@@ -735,8 +737,8 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	else {
 		arsort($incidents_data);
-		$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-		$incidents_label = "<div class='container_adapt_graphic'>".$incidents_label."</div>";
+		$incidents_label .= pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		$incidents_label = "<div class='container_adaptor_graphic'>".$incidents_label."</div>";
 	}
 
 	// TOP X creator users
@@ -970,7 +972,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		
 	}
 
-	$output_aux = "<div style='width:100%; height:185px;'>";
+	$output_aux = "<div style='width:100%; height:170px;'>";
 	$output_aux .= $output;
 	$output_aux .="</div>";
 
@@ -981,7 +983,6 @@ function print_incidents_stats ($incidents, $return = false) {
 	$data = array (__('Close') => $total-$opened, __('Open') => $opened);
 
 	$output = pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-	//$output = print_label (__('Open'), '', '', true, $opened.' ('.$opened_pct.'%)')."<br>".$output;
 	$output = "<div class='pie_frame'>".$output."</div>";
     
 	$container_title = __("Open / Close incidents");

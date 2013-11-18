@@ -245,6 +245,10 @@ function load_config() {
 	if (!isset ($config["smtp_queue_retries"])) {
 		$config["smtp_queue_retries"] = 10;
 	}
+	
+	if (!isset ($config["newsletter_local_smtp"])) {
+		$config["newsletter_local_smtp"] = 1;
+	}
 
 }
 

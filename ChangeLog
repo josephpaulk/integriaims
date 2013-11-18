@@ -1,3 +1,14 @@
+2013-11-18  Dario Rodriguez <dari@artica.es>
+
+	* include/integria_cron.php: Adapted to use
+	new flag.
+	* include/functions_config.php,
+	godmode/setup/setup_mail.php: Added new flag
+	to select if newsletter will use local or 
+	remote smtp.
+	* include/functions_incidents.php: Fixed some
+	issues related to report style.
+
 2013-11-18  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/languages/ar.mo

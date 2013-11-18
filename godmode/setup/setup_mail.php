@@ -64,8 +64,9 @@ if ($update) {
 	$config["pop_port"] = (string) get_parameter ("pop_port");
 	$config["smtp_queue_retries"] = (int) get_parameter ("smtp_queue_retries", 10);
 	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
-	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);	
-		
+	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
+	$config["newsletter_local_smtp"] = get_parameter ("newsletter_local_smtp", 0);
+	
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
 	update_config_token ("FOOTER_EMAIL", $config["FOOTER_EMAIL"]);
 	update_config_token ("notification_period", $config["notification_period"]);
@@ -81,6 +82,7 @@ if ($update) {
 	update_config_token ("smtp_queue_retries", $config["smtp_queue_retries"]);
 	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
+	update_config_token ("newsletter_local_smtp", $config["newsletter_local_smtp"]);
 }
 
 $table->width = '99%';
@@ -96,7 +98,10 @@ $table->data[2][0] .= integria_help ("notification_period", true);
 $table->data[2][1] = print_input_text ("mail_from", $config["mail_from"], '',
 	30, 50, true, __('System mail from address'));
 
-$table->colspan[3][0] = 2;
+$table->data[2][2] = print_checkbox ("newsletter_local_smtp", 1, $config["newsletter_local_smtp"],
+                        true, __('Use local SMTP to send newsletters')); 
+
+$table->colspan[3][0] = 3;
 $table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", true). "</h4>";
 
 $table->data[4][0] = print_input_text ("smtp_host", $config["smtp_host"],
@@ -130,7 +135,7 @@ $table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsle
 $table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
 
 
-$table->colspan[8][0] = 2;
+$table->colspan[8][0] = 3;
 $table->data[8][1] = "<h4>".__("IMAP Parameters")."</h4>";
 
 $table->data[9][0] = print_input_text ("pop_host", $config["pop_host"],
@@ -152,8 +157,8 @@ $table->data[10][1] = print_input_text ("pop_pass", $config["pop_pass"],
 				
 $table->data[11][1] = "<h4>".__("Mail general texts")."</h4>";
 
-$table->colspan[13][0] = 2;
-$table->colspan[12][0] = 2;
+$table->colspan[13][0] = 3;
+$table->colspan[12][0] = 3;
 $table->data[12][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
 $table->data[13][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
@@ -167,7 +172,7 @@ $table->data[14][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4
 
 if ($total_pending > 0) {
 
-	$table->colspan[15][0] = 2;
+	$table->colspan[15][0] = 3;
 
 	$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
 	$mail_queue .= "<table width=100% class=listing>";
@@ -205,7 +210,7 @@ $button .= print_submit_button (__("Delete pending mails"), 'pending_delete', fa
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
 $table->data[16][0] = $button;
-$table->colspan[16][0] = 2;
+$table->colspan[16][0] = 3;
 
 echo "<form name='setup' method='post'>";
 print_table ($table);

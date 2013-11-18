@@ -719,10 +719,9 @@ function run_newsletter_queue () {
 		foreach ($addresses as $address){
 
 
-			// Use external SMTP if smtp_host is defined
+			// Use external SMTP if newsletter_local_smtp is not set
 			
-			if ($config["smtp_host"]!= ""){
-		
+			if (! $config["newsletter_local_smtp"]){
 				// Compose the mail for each valid address
 
 				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
