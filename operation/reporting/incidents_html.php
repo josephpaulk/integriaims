@@ -25,6 +25,13 @@ if ($custom_search) {
 		$filter = unserialize($search["form_values"]);
 	}
 
+	//Get report data range
+	$data_start = (string) get_parameter ('search_first_date');
+	$data_end = (string) get_parameter ('search_last_date');
+	if ($data_start && $data_end) {
+		$filter['first_date'] = $data_start;
+		$filter['last_date'] = $data_end;
+	}
 } else {
 	$filter['string'] = (string) get_parameter ('search_string');
 	$filter['status'] = (int) get_parameter ('status', -10 ); // By default, not closed
@@ -133,8 +140,10 @@ $table->data = array ();
 
 $incidents = filter_incidents ($filter);
 
-print_incidents_stats ($incidents);
-echo '<div style="clear: both"></div>';
+if ($incidents) {
+	print_incidents_stats ($incidents);
+	echo '<div style="clear: both"></div>';
+}
 
 if ($incidents === false) {
 	$table->colspan[0][0] = 9;

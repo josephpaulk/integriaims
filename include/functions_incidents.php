@@ -590,7 +590,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	
 	//Initialize groups time array
 	$groups_time = array();
-	
+
 	foreach ($incidents as $incident) {
 		
 		$inc_stats = incidents_get_incident_stats($incident["id_incidencia"]);
@@ -698,8 +698,12 @@ function print_incidents_stats ($incidents, $return = false) {
 	//Create second table
     	
 	// Find the 5 most active users (more hours worked)
-	$most_active_users = get_most_active_users (8, $incident_id_array);
-	
+	$most_active_users = array();
+
+	if ($incident_id_array) {
+		$most_active_users = get_most_active_users (8, $incident_id_array);
+	}
+
 	$users_label = '';
 	foreach ($most_active_users as $user) {
 		$users_data[$user['id_user']] = $user['worked_hours'];
@@ -870,7 +874,14 @@ function print_incidents_stats ($incidents, $return = false) {
 	$container_title = __("Top 5 active incidents");
 	$container_top5_incidents = print_container('container_top5_incidents', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");
 
-	$output = graph_incident_statistics_sla_compliance($incidents, 300, 150, $ttl);    
+	if ($incidents) { 
+		$output = graph_incident_statistics_sla_compliance($incidents, 300, 150, $ttl);    
+	} else {
+		$output = "<div style='width:300px; height:150px;'>";
+		$output .= graphic_error(false);
+		$output .= __("N/A");
+		$output .="</div>";
+	}
 	$output = "<div class='container_adaptor_graphic'>".$output."</div>";
 	$output = "<div class='pie_frame'>".$output."</div>";
 
