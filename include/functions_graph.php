@@ -34,22 +34,48 @@ elseif (file_exists("config.php")) {
 // =====================================================================
 function print_bubble_incidents_per_user_graph($incidents_by_user) {
 	$max_radius = 0;
+	$min_visual_radius = 0.5;
+	$adjust_visual = false;
 	
 	$data = array();
 	//debugPrint($incidents_by_user);
 	$id = 0;
+
+	//First we calculate max_radius to ensure a correct visualization
+	$incident_radius = array();
 	foreach ($incidents_by_user as $incident) {
+
 		$radius = $incident['hours'] + (0.1 * $incident['files']);
+                
+		if ($radius > $max_radius) {
+                        $max_radius = $radius;
+                }
+
+		$incident_radius[$id] = $radius;
+		
+		$id++;	
+	}
+
+	if ($max_radius < $min_visual_radius) {
+		$adjust_visual = true;
+		$max_radius = 3;
+	}
+	
+	$id = 0;
+
+	foreach ($incidents_by_user as $incident) {
 		
 		$content = '<b>' . __('Creator') . ':</b> ' . $incident['user_name'] . '<br>' .
 			'<b>' . __('Incident') . ':</b> ' . $incident['incident_name'] . '<br>' .
 			'<b>' . __('Hours') . ':</b> ' . $incident['hours'] . '<br>' .
 			'<b>' . __('Files') . ':</b> ' . $incident['files'];
 		
-		if ($radius > $max_radius) {
-			$max_radius = $radius;
+		if ($adjust_visual) {
+			$radius = 3;	
+		} else {
+			$radius = $incident_radius[$id];
 		}
-		
+	
 		$row = array();
 		$row['radius'] = $radius;
 		$row['id_creator'] = $incident['id_creator'];
