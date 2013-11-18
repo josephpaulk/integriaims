@@ -553,7 +553,7 @@ class Incident {
 			if ($incident['descripcion'] != "") {
 				$ui->contentBeginCollapsible(__('Description'));
 					$ui->contentCollapsibleAddItem($incident['descripcion']);
-				$description = $ui->getEndCollapsible("", "b", "c");
+				$description = $ui->getEndCollapsible("", "b", "c", false);
 				
 			}
 			
@@ -568,7 +568,7 @@ class Incident {
 					$custom_fields = $field["label"].":&nbsp;<strong>".$field["data"]."</strong>";
 					$ui->contentCollapsibleAddItem($custom_fields);
 				}
-				$custom_fields = $ui->getEndCollapsible("", "b", "c");
+				$custom_fields = $ui->getEndCollapsible("", "b", "c", false);
 			}
 			
 			// PEOPLE
@@ -764,6 +764,10 @@ class Incident {
 			$href = "index.php?page=incident&tab=file&id_incident=".$this->id_incident;
 		}
 		
+		session_start();
+		$_SESSION["id_usuario"] = $system->getConfig('id_user');
+		session_write_close();
+
 		$html = "<ul class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
 		if ($this->getCountFiles() > 0) {
 			$sql = $this->getFilesQuery();
@@ -771,7 +775,7 @@ class Incident {
 			while ( $file = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
 				$new = false;
 				$html .= "<li>";
-				$html .= "<a data-ajax='false' href='../operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
+				$html .= "<a data-ajax='false' target='_blank' href='../operation/common/download_file.php?type=incident&id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
 					$html .= "<h3 class='ui-li-heading'><img src='../images/attach.png'>&nbsp;".$file['filename']."</img></h3>";
 					$html .= "<p class='ui-li-desc'>".$file['description']."</p>";
 					$html .= "<span class=\"ui-li-aside\">".round($file['size']/1024,2)."&nbsp;KB</span>";

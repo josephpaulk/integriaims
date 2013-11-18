@@ -1,3 +1,12 @@
+2013-11-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/operation/incident.php: Fixed an error on the
+	file downloads. Now the description and custom type
+	collapsibles are open by default.
+
+	* mobile/include/style/main.css: Visual changes. Now many
+	items are orange instead of blue.
+
 2013-11-18  Dario Rodriguez <dario@artica.es>
 
 	* godmode/setup/filemgr.php: Fixed a problem
