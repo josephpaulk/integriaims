@@ -8,10 +8,9 @@ fi
 echo "Creating DEB packages in $RPMHOME/DEB"
 
 # Console
-cd $CODEHOME/DEBIAN && bash ./make_deb_package.sh && mv ../*.deb $RPMHOME/DEB || exit 1
+cd $CODEHOME/DEBIAN && bash ./make_deb_package.sh && mv /tmp/Integria*.deb $RPMHOME/DEB || exit 1
 
 # Enterprise console
-cd $PANDHOME_ENT/enterprise/DEBIAN && bash ./make_deb_package.sh && mv ../*.deb $RPMHOME/DEB || exit 1
-
+cd $PANDHOME_ENT/enterprise/DEBIAN && bash ./make_deb_package.sh && mv /tmp/Integria*.deb $RPMHOME/DEB || exit 1
 exit 0
 

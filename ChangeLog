@@ -1,3 +1,7 @@
+2013-11-20  Sancho Lerena <slerena@artica.es>
+
+	* build_deb.sh: Fixed script.
+
 2013-11-18  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css,
