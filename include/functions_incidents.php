@@ -724,7 +724,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$most_active_incidents = get_most_active_incidents (5, $incident_id_array);
 	$incidents_label = '';
 	foreach ($most_active_incidents as $incident) {
-		$inc_title = ui_print_truncate_text($incident['titulo'], 25, false);
+		$inc_title = substr(safe_output($incident['titulo']), 0, 20);
 		$incidents_data[$inc_title] = $incident['worked_hours'];
 	}
 	
