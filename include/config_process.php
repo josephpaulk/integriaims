@@ -17,7 +17,7 @@
 global $config;
 
 // Integria version
-$config["build"]="131113";
+$config["build"]="131119";
 $config["version"]="4.0";
 $config["build_version"] = $config["build"];
 

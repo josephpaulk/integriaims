@@ -7,3 +7,4 @@ RPMHOME=/usr/src/packages
 VERSION=4.0
 BUILD=`date +%y%m%d`
 X86_64=`uname -m | grep x86_64`
+
