@@ -724,14 +724,8 @@ function print_incidents_stats ($incidents, $return = false) {
 	$most_active_incidents = get_most_active_incidents (5, $incident_id_array);
 	$incidents_label = '';
 	foreach ($most_active_incidents as $incident) {
-		$incidents_data['#'.$incident['id_incidencia']] = $incident['worked_hours'];
-		if (!$pdf_output) {
-		//$incidents_label .= '<a class="incident_link" id="incident_link_'.
-			$incident['id_incidencia'].'"
-			href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
-			'#'.$incident['id_incidencia'].': '.$incident['titulo']."</a> (".$incident['worked_hours']." ".
-			__('Hr').") <br />";
-		}
+		$inc_title = ui_print_truncate_text($incident['titulo'], 25, false);
+		$incidents_data[$inc_title] = $incident['worked_hours'];
 	}
 	
 	if(empty($most_active_incidents)) {

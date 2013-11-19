@@ -130,12 +130,11 @@ $table->head = array ();
 $table->head[0] = __('ID');
 $table->head[1] = __('SLA');
 $table->head[2] = __('Incident');
-$table->head[3] = __('Group');
+$table->head[3] = __('Group')."<br><em>".__("Company")."</em>";
 $table->head[4] = __('Status')."<br /><em>".__('Resolution')."</em>";
 $table->head[5] = __('Priority');
 $table->head[6] = __('Updated')."<br /><em>".__('Started')."</em>";
-$table->head[7] = __('Work');
-$table->head[8] = __('Responsible');
+$table->head[7] = __('Responsible');
 $table->data = array ();
 
 $incidents = filter_incidents ($filter);
@@ -158,9 +157,17 @@ foreach ($incidents as $incident) {
 	$data[1] = '';
 	if ($incident["affected_sla_id"] != 0)
 		$data[1] = '<img src="images/exclamation.png" />';
-	$data[2] = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
+	$data[2] = '<a href="'.$config["base_url"].'/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
 		$incident['titulo'].'</a>';
 	$data[3] = get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
+		
+	if ($config["show_creator_incident"] == 1){	
+		$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
+		if($id_creator_company != 0) {
+			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
+			$data[3].= "<br><span style='font-style:italic'>$company_name</span>";
+		}
+	}
 	
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 	
@@ -171,14 +178,7 @@ foreach ($incidents as $incident) {
 	$data[6] .=  human_time_comparation ($incident["inicio"]);
 	$data[6] .= '</em>';
 	
-	$data[7] = '';
-	$workunits = get_incident_count_workunits ($incident["id_incidencia"]);
-	if ($workunits > 0) {
-		$data[7] = '<img src="images/award_star_silver_1.png" />';
-		$data[7] .= get_incident_workunit_hours ($incident["id_incidencia"]);
-	}
-	
-	$data[8] = $incident['id_usuario'];
+	$data[7] = $incident['id_usuario'];
 	
 	array_push ($table->data, $data);
 }

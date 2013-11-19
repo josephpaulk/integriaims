@@ -1,3 +1,11 @@
+2013-11-18  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria_clean.css,
+	include/functions_incidents.php,
+	operation/reporting/incidents_html.php: Fixed several
+	style bugs on pdf reports and improved information
+	shown in these reports.
+
 2013-11-18  Sancho Lerena <slerena@artica.es>
 
 	* DEBIAN/control,

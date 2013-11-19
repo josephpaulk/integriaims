@@ -40,6 +40,10 @@ h2.dashboard_h2 {
 	margin-bottom: 0px;
 }
 
+h2.container_simple_title {
+	color: #FF7F00;
+}
+
 table.search-table-button, div.container,
 div.container_div {
 	background-color: #fff;
