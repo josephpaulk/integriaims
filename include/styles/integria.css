@@ -2674,18 +2674,20 @@ div.leads_per_country_container,
 div.users_per_lead_container,
 div.top_10_sales_container,
 div.new_leads_container,
-div.project_info_container,
-div.project_activity_container,
-div.project_labour_container,
-div.project_task_distribution_container,
-div.project_budget_container,
-div.project_workload_distribution_container {
+div.project_info_report_container,
+div.project_activity_report_container,
+div.project_labour_report_container,
+div.project_task_distribution_report_container,
+div.project_budget_report_container,
+div.project_workload_distribution_report_container ,
+div.project_involved_people_report_container {
 	float:left;
 	margin: 5px;
 }
 
-div.project_info_container,
-div.project_activity_container {
+div.project_activity_report_container,
+div.project_info_report_container,
+div.project_involved_people_report_container {
 	width: 96%;
 }
 
@@ -2717,10 +2719,10 @@ div.leads_per_country_container,
 div.users_per_lead_container,
 div.top_10_sales_container,
 div.new_leads_container ,
-div.project_labour_container,
-div.project_task_distribution_container,
-div.project_budget_container,
-div.project_workload_distribution_container {
+div.project_labour_report_container,
+div.project_task_distribution_report_container,
+div.project_budget_report_container,
+div.project_workload_distribution_report_container  {
 	width:46%;	
 }
 

@@ -41,7 +41,7 @@ h2.dashboard_h2 {
 }
 
 h2.container_simple_title {
-	color: #FF7F00;
+	color: #FF7F00 !important;
 }
 
 table.search-table-button, div.container,
@@ -135,10 +135,10 @@ div.leads_per_country_container,
 div.users_per_lead_container,
 div.top_10_sales_container,
 div.new_leads_container,
-div.project_labour_container,
-div.project_task_distribution_container,
-div.project_budget_container,
-div.project_workload_distribution_container   {
+div.project_labour_report_container,
+div.project_task_distribution_report_container,
+div.project_budget_report_container,
+div.project_workload_distribution_report_container   {
 	width:45%;	
 }
 
@@ -149,7 +149,7 @@ table.table_priority_report {
 
 #container_openclose_incidents_div {
 	padding-top: 3px;
-	padding-bottom: 3px;
+	padding-bottom: 3px1
 }
 
 div.container_adaptor_na_graphic2 {
@@ -164,4 +164,8 @@ div.incident_report_parameters_container {
 
 div.container_simple_incident_report_parameters{
 	padding: 10px;
+}
+
+#project_task_distribution_report {
+	color: #FF7F00 !important;
 }

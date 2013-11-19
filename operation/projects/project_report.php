@@ -155,15 +155,14 @@ $project_info .= "</td></tr>";
 
 $project_info .= "</table>";
 
-$table->colspan[0][0] = 2;
-$table->data[0][0] = print_container('project_info', __('Project info'), $project_info, 'no');
+echo print_container('project_info_report', __('Project info'), $project_info, 'no', true, true, "container_simple_title", "container_simple_div");
 
 if ($id_project) {
 	// Project activity graph
-	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
+	$project_activity = project_activity_graph ($id_project, 650, 150, true, $graph_ttl, 50, true);
 	if ($project_activity) {
 		$project_activity = '<div class="graph_frame">' . $project_activity . '</div>';
-		$table->data[0][0] .= print_container('project_activity', __('Project activity'), $project_activity);
+		echo print_container('project_activity_report', __('Project activity'), $project_activity, 'no', true, true, "container_simple_title", "container_simple_div");
 	}
 	// Calculation
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
@@ -179,9 +178,6 @@ if ($id_project) {
 
 	$real = $real + get_incident_project_workunit_cost ($id_project);
 
-	// LEFT COLUMN
-	$left_side = '';
-	
 	// Labour
 	$labour = "<table class='advanced_details_table alternate'>";
 	$labour .= "<tr>";
@@ -212,7 +208,7 @@ if ($id_project) {
 	$labour .= "</td></tr>";
 	
 	$labour .= "<tr>";
-	$labour .= '<td><b>'.__('Proyect length deviation (days)').' </b>';
+	$labour .= '<td><b>'.__('Project length deviation (days)').' </b>';
 	$labour .= "</td><td>";
 	$labour .= abs($deviation/8). " ".__('Days');
 	$labour .= "</td></tr>";
@@ -253,15 +249,8 @@ if ($id_project) {
 	}
 	$people_involved .= "</div>";
 	
-	$left_side .= print_container('project_involved_people', __('People involved'), $people_involved);
-	
 	// Task distribution
 	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
-	
-	$left_side .= print_container('project_task_distribution', __('Task distribution'), $task_distribution);
-	
-	// RIGHT COLUMN
-	$right_side = '';
 	
 	// Budget
 	$budget = "<table class='advanced_details_table alternate'>";
@@ -310,17 +299,17 @@ if ($id_project) {
 	$budget .= "</td></tr>";
 	$budget .= "</table>";
 	
-	$right_side .= print_container('project_budget', __('Budget'), $budget);
-	
 	// Workload distribution
 	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div>';
-	
-	$right_side .= print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
-	
-	$table->data[1][0] = $left_side;
-	$table->data[1][1] = $right_side;
-}
 
-print_table($table);
+	//Print containers
+	echo print_container('project_labour_report', __('Labour'), $labour, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container('project_budget_report', __('Budget'), $budget, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container('project_involved_people_report', __('People involved'), $people_involved, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo "<br><br><br><br><br><br><br><br><br><br><br><br><br>";
+	echo print_container('project_task_distribution_report', __('Task distribution'), $task_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container('project_workload_distribution_report', __('Workload distribution'), $workload_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
+	
+}
 
 ?>

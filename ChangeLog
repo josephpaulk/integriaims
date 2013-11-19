@@ -1,5 +1,13 @@
 2013-11-18  Dario Rodriguez <dario@artica.es>
 
+	* include/styles/integria.css,
+	include/styles/integria_clean.css,
+	operation/projects/project_report.php,
+	operation/projects/project_detail.php: Fixed some
+	bugs related to project view and project report.
+
+2013-11-18  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_incidents.php: Fixed a problem
 	with Top 5 incident graph visualization.
 
