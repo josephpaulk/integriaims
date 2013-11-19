@@ -22,12 +22,6 @@ echo "<ul>";
 echo "<li>";
 echo "<a id='search_form_submit' href='#'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
-$html_report_image = print_html_report_image ("#", __("HTML report"), "html_report_submit");
-if ($html_report_image) {
-	echo "<li>";
-	echo $html_report_image;
-	echo "</li>";
-}
 $report_image = print_report_image ("javascript:submit_form()", __("PDF report"), "pdf_report_submit");
 if ($report_image) {
 	echo "<li>";

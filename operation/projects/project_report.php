@@ -90,12 +90,6 @@ if (!$clean_output) {
 		print_image ("images/go-previous.png", true, array("title" => __("Back to project editor"))) .
 		"</a>";
 	echo "</li>";
-	$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("HTML report"), "", "target='_blank'");
-	if ($html_report_image) {
-		echo "<li>";
-		echo $html_report_image;
-		echo "</li>";
-	}
 	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
 	if ($report_image) {
 		echo "<li>";

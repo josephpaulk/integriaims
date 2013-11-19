@@ -1,5 +1,11 @@
 2013-11-18  Dario Rodriguez <dario@artica.es>
 
+	*  operation/incidents/incident_statistics.php,
+ 	operation/projects/project_report.php: Removed html
+	reports from incidents and project views.
+
+2013-11-18  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria_clean.css,
 	include/functions_incidents.php,
 	operation/reporting/incidents_html.php: Fixed several
