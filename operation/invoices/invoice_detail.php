@@ -118,7 +118,7 @@ if ($search_date_begin != "") {
 	$where_clause .= sprintf (' AND invoice_create_date >= "%s"', $search_date_begin);
 }
 if ($search_date_end != "") {
-	$where_clause .= sprintf (' AND invoice_payment_date <= "%s"', $search_date_end);
+	$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
 }
 
 if ($clean_output == 0){
@@ -173,7 +173,7 @@ if ($clean_output == 1)
 
 $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail$search_params");
 
-if ($invoices !== false) {
+if ($invoices != false) {
 	
 	$table->width = "99%";
 	$table->class = "listing";
@@ -275,15 +275,18 @@ if ($invoices !== false) {
 		echo "- $key : ". format_numeric ($value);
 	}
 
-		
-	if (($write || $manage) AND ($clean_output == 0)) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices">';
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-		print_input_hidden ('new_invoice', 1);
-		echo '</div>';
-		echo '</form>';
-	}
+} else {
+	echo "<h3 class='no_result'>".__("No invoices")."</h3>";
+}
+
+
+if (($write || $manage) AND ($clean_output == 0)) {
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_invoice', 1);
+	echo '</div>';
+	echo '</form>';
 }
 
 ?>

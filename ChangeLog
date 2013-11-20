@@ -1,6 +1,12 @@
 2013-11-20  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css,
+	operation/invoices/invoice_detail.php: Fixed a bug
+	with invoice search form.
+
+2013-11-20  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css,
 	operation/campaign/campaign_stats.php: Fixed a style
 	bug related on campaign report.
 

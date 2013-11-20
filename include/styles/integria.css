@@ -1143,6 +1143,21 @@ h3.info {
 	background-color: #80BEE6;
 }
 
+h3.no_result {
+	height: 20px;
+	padding: 10px;
+	background-image: url('../../images/exclamation.png');
+	background-repeat: no-repeat;
+	padding-top: 40px;
+	margin: 25px auto;
+	width: 10%;
+	background-position-x: center;
+	background-position-y: 10px;
+	border: 1px solid #FF9933;
+	border-radius: 4px;
+	text-align: center;
+}
+
 h3.system {
 	background-color: #606060;
 }
