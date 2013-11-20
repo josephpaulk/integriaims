@@ -1,5 +1,10 @@
 2013-11-20  Dario Rodriguez <dario@artica.es>
 
+        * operation/slas/sla_detail.php: Fixed a wrong
+        link creating and deleting SLAs.
+
+2013-11-20  Dario Rodriguez <dario@artica.es>
+
 	* operation/invoices/invoice_stats.php: Changed titles
 	and ordered dates.
 

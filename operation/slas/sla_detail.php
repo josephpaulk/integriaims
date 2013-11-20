@@ -199,7 +199,7 @@ if ($id || $new_sla) {
 	$table->data[4][0] = $button;
 	$table->colspan[4][0] = 4;
 	
-	echo '<form id="form-sla_detail" method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
+	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	print_table ($table);
 	echo "</form>";
 } else {
@@ -260,7 +260,7 @@ if ($id || $new_sla) {
 			else
 				$data[5] = __("No");
 			$data[6] = get_db_value ('name', 'tsla', 'id', $sla['id_sla_base']);
-			$data[7] = '<a href="index.php?sec=inventory&
+			$data[7] = '<a href="index.php?sec=incidents&
 						sec2=operation/slas/sla_detail&
 						delete_sla=1&id='.$sla['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
