@@ -87,12 +87,16 @@ $inv_data_currency = array();
 $inv_total_currency = array();
 $inv_data_company = array();
 
-//Get all currency and company totals
+//Get all currency and company totals and legend
 foreach ($invoices as $inv) {
 
 	if (! isset($inv_total_currency[$inv["currency"]])) {
 		$inv_total_currency[$inv["currency"]] = 0;
 	}
+
+        if (! isset($legend[$inv["currency"]])) {
+                $legend[$inv["currency"]] = $inv["currency"];
+        }
 
 	$inv_total_currency[$inv["currency"]] = $inv_total_currency[$inv["currency"]] + $inv["total"];
 
@@ -101,7 +105,7 @@ foreach ($invoices as $inv) {
 		$inv_data_company[$comp_name] = 0;
 	}
 
-	$inv_data_company[$comp_name] = $inv_data_company[$inv["id_company"]] + $inv["total"];
+	$inv_data_company[$comp_name] = $inv_data_company[$comp_name] + $inv["total"];
 }
 
 //Get data for graphs
@@ -117,6 +121,8 @@ foreach ($invoices as $inv) {
 		
 	$inv_data_currency[$inv["invoice_create_date"]][$inv["currency"]] += $inv["total"];	
 }
+
+ksort($inv_data_currency);
 
 arsort($inv_data_company, SORT_NUMERIC);
 
@@ -145,17 +151,30 @@ foreach ($inv_total_currency as $curr => $val) {
 
 $currency_table = print_table($table, true);
 
-$container_title = __("Invoicing history");
-$invoicing_graph = stacked_area_graph($config["flash_chart"], $inv_data_currency, 650, 250, null, null, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl);
+$container_title = __("Billing history");
+$invoicing_graph = stacked_area_graph($config["flash_chart"], $inv_data_currency, 650, 250, null, $legend, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl);
 $container_invoicing_graph = '<div class="pie_frame">' .$invoicing_graph."</div>";
 echo print_container('history_invoiced', $container_title, $container_invoicing_graph, 'no', true, true, "container_simple_title", "container_simple_div");
 
-$container_title = __("Invoicing by currency");
-$companies_invoiced_graph = pie3d_graph ($config['flash_charts'], $inv_data_company, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $graph_ttl);
+//Transform data for companies invoiced graph
+$comp_invoiced_data = array();
+
+foreach ($inv_data_company as $comp => $val) {
+	$comp_name = safe_output($comp);
+	$comp_name = substr($comp_name, 0 ,15);
+
+	$val_aux = $val / 1000;
+	$val_aux = sprintf("%.2f k ", $val_aux);
+	$comp_name = $comp_name." (".$val_aux.")";
+	$comp_invoiced_data[$comp_name] = $val;
+}
+
+$container_title = __("Billing per company");
+$companies_invoiced_graph = pie3d_graph (false, $comp_invoiced_data, 400, 150, __('others'), "", "", $config['font'], $config['fontsize'], $graph_ttl);
 $companies_invoiced_graph = '<div class="pie_frame">' .$companies_invoiced_graph."</div>";
 echo print_container('companies_invoiced', $container_title, $companies_invoiced_graph, 'no', true, true, "container_simple_title", "container_simple_div");
 
-$container_title = __("Invoicing by currency");
+$container_title = __("Billing per currency");
 echo print_container('currency_invoiced', $container_title, $currency_table, 'no', true, true, "container_simple_title", "container_simple_div");
 
 ?>

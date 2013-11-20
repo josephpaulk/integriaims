@@ -1,5 +1,15 @@
 2013-11-20  Dario Rodriguez <dario@artica.es>
 
+	* operation/invoices/invoice_stats.php: Changed titles
+	and ordered dates.
+
+2013-11-20  Dario Rodriguez <dario@artica.es>
+
+	* operation/invoices/invoice_stats.php: Fixed
+	some errors related to invoce report.
+
+2013-11-20  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css,
 	include/styles/integria_clean.css,
 	operation/invoices/invoice_stats.php,
