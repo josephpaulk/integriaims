@@ -24,6 +24,14 @@ $id = (int) get_parameter ('id');
 $id_invoice = get_parameter ("id_invoice", "");
 $offset = get_parameter ('offset', 0);
 
+// Invoice listing
+$search_text = (string) get_parameter ('search_text');
+$search_invoice_status = (string) get_parameter ('search_invoice_status');
+$search_date_begin = get_parameter ('search_date_begin');
+$search_date_end = get_parameter ('search_date_end');
+
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
+
 include_once('include/functions_crm.php');
 
 $read = check_crm_acl ('company', 'cr');
@@ -34,7 +42,19 @@ if (!$read) {
 	exit;
 }
 
-echo "<h1>".__('Invoice listing')."</h1>";
+echo "<h1>".__('Invoice listing');
+
+echo "<div id='button-bar-title'>";
+		echo "<ul>";
+		echo "<li>";
+		echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_stats".$search_params."'>" .
+			print_image ("images/chart_bar_dark.png", true, array("title" => __("Invoices report"))) .
+			"</a>";
+		echo "</li>";
+		echo "</ul>";
+		echo "</div>";
+
+echo "</h1>";
 
 if ($id_invoice || $id) {
 	
@@ -95,14 +115,6 @@ if ($lock_invoice == 1 && $id_invoice) {
 		clean_cache_db();
 	}
 }
-
-// Invoice listing
-$search_text = (string) get_parameter ('search_text');
-$search_invoice_status = (string) get_parameter ('search_invoice_status');
-$search_date_begin = get_parameter ('search_date_begin');
-$search_date_end = get_parameter ('search_date_end');
-
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
 
 $where_clause = " 1 = 1 ";
 

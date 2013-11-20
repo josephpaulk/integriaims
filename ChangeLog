@@ -1,3 +1,11 @@
+2013-11-20  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css,
+	include/styles/integria_clean.css,
+	operation/invoices/invoice_stats.php,
+	operation/invoices/invoice_detail.php: Created a new
+	report for invocie section.
+
 2013-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* godmode/setup/offline_update.php: Fixed an error with

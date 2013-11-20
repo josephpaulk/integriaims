@@ -138,7 +138,9 @@ div.new_leads_container,
 div.project_labour_report_container,
 div.project_task_distribution_report_container,
 div.project_budget_report_container,
-div.project_workload_distribution_report_container   {
+div.project_workload_distribution_report_container,
+div.companies_invoiced_container,
+div.currency_invoiced_container   {
 	width:45%;	
 }
 

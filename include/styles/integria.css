@@ -2695,7 +2695,10 @@ div.project_labour_report_container,
 div.project_task_distribution_report_container,
 div.project_budget_report_container,
 div.project_workload_distribution_report_container ,
-div.project_involved_people_report_container {
+div.project_involved_people_report_container,
+div.companies_invoiced_container,
+div.currency_invoiced_container,
+div.history_invoiced_container {
 	float:left;
 	margin: 5px;
 }
@@ -2706,7 +2709,8 @@ div.funnel_container {
 
 div.project_activity_report_container,
 div.project_info_report_container,
-div.project_involved_people_report_container {
+div.project_involved_people_report_container,
+div.history_invoiced_container {
 	width: 96%;
 }
 
@@ -2741,7 +2745,9 @@ div.new_leads_container ,
 div.project_labour_report_container,
 div.project_task_distribution_report_container,
 div.project_budget_report_container,
-div.project_workload_distribution_report_container  {
+div.project_workload_distribution_report_container,
+div.companies_invoiced_container,
+div.currency_invoiced_container {
 	width:46%;	
 }
 
