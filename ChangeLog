@@ -1,3 +1,8 @@
+2013-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/setup/offline_update.php: Fixed an error with
+	the percentage of the install process.
+
 2013-11-20  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css,

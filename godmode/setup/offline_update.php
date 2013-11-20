@@ -117,10 +117,6 @@ if (defined ('AJAX')) {
 				while ($line = stream_get_line($files_h, 65535, "\n")) {
 					$line = trim($line);
 					
-					if (is_dir($package."/".$line)) {
-						//continue;
-					}
-
 					// Tries to move the old file to the directory backup inside the extracted package
 					if (file_exists($config["homedir"]."/".$line)) {
 						rename($config["homedir"]."/".$line, $package."/backup/".$line);
@@ -503,7 +499,11 @@ echo "<h1>".__("Offline update")."</h1>";
 				$("#log_zone").scrollTop($("#log_zone").prop("scrollHeight"));
 				
 				// Change the progress bar
-				$('#form-offline_update').find('ul').find('li').find('input').val(data['progress']).trigger('change');
+				if ($('#form-offline_update ul').find('li').hasClass('suc')) {
+					$('#form-offline_update').find('ul').find('li').find('input').val(100).trigger('change');
+				} else {
+					$('#form-offline_update').find('ul').find('li').find('input').val(data['progress']).trigger('change');
+				}
 				
 				// The class loading is present until the update ends
 				var isInstalling = $('#form-offline_update ul').find('li').hasClass('loading');
