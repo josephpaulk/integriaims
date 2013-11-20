@@ -85,12 +85,14 @@ if ($leads_funnel != false) {
 
 	$leads_funnel_content = funnel($data, $config["font"], $ttl);
 } else {
-	$leads_funnel_content = __('No data to show');
+	$leads_funnel_content = "<div style='padding-top: 151px; padding-bottom: 151px'>";
+	$leads_funnel_content .= __('No data to show');
+	$leads_funnel_content .= "</div>";
 }
 
 //Print lead's funnel
 $leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content . '</div>';
-$table->data[0][0] = print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, '10px');
+echo print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //ROI
 $total_revenue = 0;
@@ -117,7 +119,7 @@ $leads_conversion_rate .= "</tr>";
 $leads_conversion_rate .= "</table>";
 
 $leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
-$table->data[0][1] = print_container('conversion_rate', __('ROI'), $leads_conversion_rate, 'no', true, '10px');
+echo print_container('conversion_rate', __('ROI'), $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //Email statistics
 
@@ -129,7 +131,7 @@ $email_stats .= "<td>";
 $email_stats .= "<strong>".__("Emails sent")."</strong>";
 $email_stats .= "</td>";
 $email_stats .= "<td style='text-align:right'>";
-$email_stats .= $email_camp_stats["sent"];
+$email_stats .= sprintf("%d",$email_camp_stats["sent"]);
 $email_stats .= "</td>";
 $email_stats .= "</tr>";
 $email_stats .= "<tr>";
@@ -137,7 +139,7 @@ $email_stats .= "<td>";
 $email_stats .= "<strong>".__("Total reads")."</strong>";
 $email_stats .= "</td>";
 $email_stats .= "<td style='text-align:right'>";
-$email_stats .= $email_camp_stats["reads"];
+$email_stats .= sprintf("%d",$email_camp_stats["reads"]);
 $email_stats .= "</td>";
 $email_stats .= "</tr>";
 $email_stats .= "<tr>";
@@ -151,7 +153,7 @@ $email_stats .= "</tr>";
 $email_stats .= "</table>";
 
 $email_stats = '<br><div>' . $email_stats . '</div>';
-$table->data[1][0] = print_container('conversion_rate', __('Newsletter statistics'), $email_stats, 'no', true, '10px');
+echo print_container('conversion_rate', __('Newsletter statistics'), $email_stats, 'no', true, true, "container_simple_title", "container_simple_div");
 
 $lead_stats = "<table class='details_table alternate'>";
 $lead_stats .= "<tr>";
@@ -159,7 +161,7 @@ $lead_stats .= "<td>";
 $lead_stats .= "<strong>".__("Total leads")."</strong>";
 $lead_stats .= "</td>";
 $lead_stats .= "<td style='text-align:right'>";
-$lead_stats .= $total_leads;
+$lead_stats .= sprintf("%d",$total_leads);
 $lead_stats .= "</td>";
 $lead_stats .= "</tr>";
 $lead_stats .= "<tr>";
@@ -170,7 +172,7 @@ $lead_stats .= "<td style='text-align:right'>";
 
 $leads_success = $data[200]["total_leads"];
 
-$lead_stats .= $leads_success;
+$lead_stats .= sprintf("%d",$leads_success);
 $lead_stats .= "</td>";
 $lead_stats .= "</tr>";
 $lead_stats .= "<tr>";
@@ -179,7 +181,11 @@ $lead_stats .= "<strong>".__("Conversion rate")."</strong>";
 $lead_stats .= "</td>";
 $lead_stats .= "<td style='text-align:right'>";
 
-$conversion_rate = ($leads_success/$total_leads)*100;
+if ($total_leads) {
+	$conversion_rate = ($leads_success/$total_leads)*100;
+} else {
+	$conversion_rate = 0;
+}
 
 $lead_stats .= sprintf("%.2f %%",$conversion_rate);
 $lead_stats .= "</td>";
@@ -187,7 +193,7 @@ $lead_stats .= "</tr>";
 $lead_stats .= "</table>";
 
 $lead_stats = '<br><div style="padding-left: 20px;">' . $lead_stats . '</div>';
-$table->data[1][1] = print_container('conversion_rate', __('Lead statistics'), $lead_stats, 'no', true, '10px');
+echo print_container('conversion_rate', __('Lead statistics'), $lead_stats, 'no', true, true, "container_simple_title", "container_simple_div");
 
 
 print_table($table);
