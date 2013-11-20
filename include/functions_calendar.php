@@ -380,7 +380,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 
 			$url = "index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$idp;
 
-			array_push($cal_events, array("name" =>$pname, "start" => strtotime($pstart), "end" => strtotime($pend), "bgColor" => "#aa3333", "allDay" => true, "url" => $url));
+			array_push($cal_events, array("name" =>$pname, "start" => strtotime($pstart), "end" => strtotime($pend), "bgColor" => "#E46554", "allDay" => true, "url" => $url));
 		}
 	}
 
@@ -393,7 +393,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 
 			$url = "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=".$idt."&operation=view";
 
-			array_push($cal_events, array("name" =>$tname, "start" => strtotime($tstart), "end" => strtotime($tend), "bgColor" => "#33aa33", "allDay" => true, "url" => $url));	
+			array_push($cal_events, array("name" =>$tname, "start" => strtotime($tstart), "end" => strtotime($tend), "bgColor" => "#80D580", "allDay" => true, "url" => $url));	
 		}
 	}
 
@@ -405,7 +405,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 			$url = "index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$idwo;
 
 			$wopriority_img = print_priority_flag_image ($wopriority, true);
-			array_push($cal_events, array("name" =>$woname, "start" => strtotime($wostart), "end" => strtotime($woend), "bgColor" => "#3a3a3a", "allDay" => true, "url" => $url));	
+			array_push($cal_events, array("name" =>$woname, "start" => strtotime($wostart), "end" => strtotime($woend), "bgColor" => "#6A6D6D", "allDay" => true, "url" => $url));	
 		}
 	}
 
@@ -438,7 +438,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 
 	            	$url = "javascript: show_agenda_entry(".$row["id"].", '".$url_date."', '".$url_date."', true)";
 
-					array_push($cal_events, array("name" =>$row["title"], "start" => strtotime($row["timestamp"]),  "end" => $end_date, "bgColor" => "#3333aa", "allDay" => false, "url" => $url));    
+					array_push($cal_events, array("name" =>$row["title"], "start" => strtotime($row["timestamp"]),  "end" => $end_date, "bgColor" => "#8EC8DF", "allDay" => false, "url" => $url));    
 	            }
 			}
 		}
@@ -535,7 +535,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		$today_m = date('n',$time);
 		$today_style = "";
 		if (($today == $day) && ($today_m == $month))
-			$today_style .= " style='border: 1px solid #FF9933; font-weight: bold; color: #FF9933;'";		
+			$today_style .= " style='border: 1px solid #FF9933; color: #FF9933;'";		
 
 		if(isset($days[$day]) and is_array($days[$day])){
 			@list($link, $classes, $content, $tooltip) = $days[$day];

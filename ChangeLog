@@ -1,6 +1,13 @@
 2013-11-20  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css,
+	include/styles/calendar.css,
+	include/functions_calendar.php: Fixed several bugs
+	related to style and colors of calendar.
+
+2013-11-20  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css,
 	operation/invoices/invoice_detail.php: Fixed a bug
 	with invoice search form.
 
