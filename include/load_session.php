@@ -83,7 +83,7 @@ function mysql_session_gc ($maxlifetime = 300) {
 	        
 	$retval = process_sql("DELETE FROM tsessions_php 
 			WHERE last_active < $CutoffTime");         
-	return $retval;     
+	return $retval;
 } 
 
 session_set_save_handler ('mysql_session_open', 'mysql_session_close', 'mysql_session_read', 'mysql_session_write', 'mysql_session_destroy', 'mysql_session_gc'); 

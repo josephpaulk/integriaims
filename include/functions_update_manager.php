@@ -42,8 +42,17 @@ function update_manager_main() {
 	echo "<div class='progressbar' style='display: none;'><img class='progressbar_img' src='' /></div>";
 	echo "</div>";
 	
+	
+	$loginhash_data = md5($loginhash_user . $config["dbpass"]);
+	$loginhash_user = $config['id_user'];
+	
 	?>
 	<script type="text/javascript">
+		<?php
+		echo 'var loginhash_data = "' . $loginhash_data . '";' . "\n";
+		echo 'var loginhash_user = "' . $loginhash_user . '";' . "\n";
+		?>
+		
 		$(document).ready(function() {
 			check_online_packages();
 			
@@ -54,6 +63,8 @@ function update_manager_main() {
 			var parameters = {};
 			parameters['page'] = 'godmode/setup/update_manager';
 			parameters['check_online_free_packages'] = 1;
+			parameters['loginhash_data'] = loginhash_data;
+			parameters['loginhash_user'] = loginhash_user;
 			
 			jQuery.post(
 				"ajax.php",
@@ -76,6 +87,8 @@ function update_manager_main() {
 			parameters['page'] = 'godmode/setup/update_manager';
 			parameters['update_last_free_package'] = 1;
 			parameters['package'] = package;
+			parameters['loginhash_data'] = loginhash_data;
+			parameters['loginhash_user'] = loginhash_user;
 			
 			jQuery.post(
 				"ajax.php",
@@ -101,6 +114,8 @@ function update_manager_main() {
 			var parameters = {};
 			parameters['page'] = 'godmode/setup/update_manager';
 			parameters['check_update_free_package'] = 1;
+			parameters['loginhash_data'] = loginhash_data;
+			parameters['loginhash_user'] = loginhash_user;
 			
 			jQuery.post(
 				"ajax.php",

@@ -29,6 +29,28 @@ if (session_id() == '') {
 	session_start();
 }
 
+
+// Hash login process
+/*
+if (isset ($_GET["loginhash"])) {
+	
+	$loginhash_data = get_parameter("loginhash_data", "");
+	$loginhash_user = get_parameter("loginhash_user", "");
+	
+	if ($loginhash_data == md5($loginhash_user . $config["dbpass"])) {
+		
+		$_SESSION['id_usuario'] = $loginhash_user;
+		$config['id_user'] = $loginhash_user;
+	}
+	else {
+		require_once ('general/login_page.php');
+		
+		while (@ob_end_flush ());
+		exit ("</html>");
+	}
+}
+*/
+
 // Check user
 check_login ();
 
