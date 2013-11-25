@@ -1,3 +1,12 @@
+2013-11-25  Dario Rodriguez <dario@artica.es>
+
+	* include/config.inc.php,
+	install.php: Now we detect automatically the folder of integria
+	* operation/projects/project_report.php: Fixed a wrong parameter
+	printing project activity graph.
+	* godmode/setup/setup.php: Removed some
+	depreacted setup options
+
 2013-11-25  Sancho Lerena <slerena@artica.es>
 
 	* operation/newsletter/address_definition.php: Added filter to 

@@ -159,7 +159,7 @@ echo print_container('project_info_report', __('Project info'), $project_info, '
 
 if ($id_project) {
 	// Project activity graph
-	$project_activity = project_activity_graph ($id_project, 650, 150, $config["flash_charts"], $graph_ttl, 50, true);
+	$project_activity = project_activity_graph ($id_project, 650, 150, true, $graph_ttl, 50, true);
 	if ($project_activity) {
 		$project_activity = '<div class="graph_frame">' . $project_activity . '</div>';
 		echo print_container('project_activity_report', __('Project activity'), $project_activity, 'no', true, true, "container_simple_title", "container_simple_div");

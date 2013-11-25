@@ -178,12 +178,10 @@ $table->data[5][1] = print_input_text ("access_port", $config["access_port"], ''
 	10, 255, true, __('Access port'));
 $table->data[5][1] .= print_help_tip (__("Leave blank to use default port (80)"), true);
 
-$table->data[6][0] = print_input_text ('base_url_dir', $config["base_url_dir"], '', 40, 255, true, __('Base URL path. For example /integria'));
-
-$table->data[6][1] = print_input_text ("access_public", $config["access_public"],
+$table->data[6][0] = print_input_text ("access_public", $config["access_public"],
         '', 30, 50, true, __('Public access to server'));
 
-$table->data[6][1] .= print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true);
+$table->data[6][0] .= print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true);
 
 $table->data[7][0] = print_input_hidden ('update', 1, true);
 $table->data[7][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);

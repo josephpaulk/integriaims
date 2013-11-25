@@ -334,29 +334,9 @@ function install_step3() {
 				</div>
 				
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
-				</div>
-			
-				<div style='margin: 10px; margin-left: 0px;'>Full path to HTTP publication directory.<br>
-				<span class='f9b'>For example /var/www/integria/</span>
 				</div>";
-
-				
-				// if windows
-				if (PHP_OS == 'WINNT') {
-					$PATH = dirname (__FILE__);
-					$PATH2 = str_replace('\\','/',$PATH);
-					echo "<input type='text' name='path' style='width: 190px;' value='".$PATH2."/'>";
-				} else {
-					echo "<input type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>";
-				}
 				
 				echo "
-				<div style='margin: 10px; margin-left: 0px;'>URL path to Integria<br>
-				<span class='f9b'>For example /integria</span>
-				</div>				
-				<input type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF']) ."'>
-				<br><br>
-				
 				<div style='margin: 10px; margin-left: 0px;'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>
@@ -409,10 +389,10 @@ function install_step4() {
 			$url = $_POST["url"];
 		else
 			$url = "/integria";
-		if (isset($_POST["path"]))
+		/*if (isset($_POST["path"]))
 			$path = $_POST["path"];
 		else
-			$path = "/var/www/";
+			$path = "/var/www/";*/
 	}
 	$everything_ok = 0;
 	$step1=0;
@@ -484,11 +464,10 @@ function install_step4() {
 				$config_new = $config_new . '"'.$dbuser.'";' . "\n".
 					'$config["dbpass"]="'.$dbpassword.'";	// DB Password' . "\n";
 			}
-			$config_new = $config_new . "\n" . 
+				$config_new = $config_new . "\n" . 
 				'$config["dbname"]="'.$dbname.'";    // MySQL DataBase name' . "\n". 
 				'$config["dbhost"]="'.$dbhost.'";    // DB Host' . "\n".
-				'$config["homedir"]="'.$path.'";		// Config homedir' . "\n".
-				'$config["base_url_dir"]="'.$url.'";		// Public URL' . "\n".
+				'$config["base_url_dir"]="'.$url.'";		// Folder url' . "\n".
 				'// End of automatic config file' . "\n".
 				'?>';
 			//---END--- CONFIG FILE
