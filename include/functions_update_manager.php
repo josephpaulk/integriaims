@@ -16,6 +16,240 @@
 
 define ('FREE_USER', 'INTEGRIA-FREE');
 
+
+
+function update_manager_main() {
+	global $config;
+	
+	ui_toggle(
+		'<p>' .
+			__('We need a cool text.') .
+		'</p>' .
+		'<p>' .
+			__('For this header.') .
+		'</p>', 'info', __('Info'), false);
+		
+	echo "<h3>" . __('Online') . "</h3>";
+	
+	echo "<div id='box_online' style='width: 100%; background: #ccc; padding: 10px;'>";
+	echo "<div class='loading' style='width:100%; text-align: center;'>";
+	print_image("images/wait.gif");
+	echo "</div>";
+	echo "<div class='download_package' style='width:100%; text-align: center; display: none;'>";
+	echo __('Downloading the package.');
+	echo "</div>";
+	echo "<div class='content'></div>";
+	echo "<div class='progressbar' style='display: none;'><img class='progressbar_img' src='' /></div>";
+	echo "</div>";
+	
+	?>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			check_online_packages();
+			
+			
+		});
+		
+		function check_online_packages() {
+			var parameters = {};
+			parameters['page'] = 'godmode/setup/update_manager';
+			parameters['check_online_free_packages'] = 1;
+			
+			jQuery.post(
+				"ajax.php",
+				parameters,
+				function (data) {
+					$("#box_online .loading").hide();
+					$("#box_online .content").html(data);
+				},
+				"html"
+			);
+		}
+		
+		function update_last_package(package) {
+			$("#box_online .content").html("");
+			$("#box_online .loading").show();
+			$("#box_online .download_package").show();
+			
+			
+			var parameters = {};
+			parameters['page'] = 'godmode/setup/update_manager';
+			parameters['update_last_free_package'] = 1;
+			parameters['package'] = package;
+			
+			jQuery.post(
+				"ajax.php",
+				parameters,
+				function (data) {
+					if (data['in_progress']) {
+						$("#box_online .loading").hide();
+						$("#box_online .download_package").hide();
+						
+						$("#box_online .content").html(data['message']);
+						
+						check_progress_update();
+					}
+					else {
+						$("#box_online .content").html(data['message']);
+					}
+				},
+				"json"
+			);
+		}
+		
+		function check_progress_update() {
+			var parameters = {};
+			parameters['page'] = 'godmode/setup/update_manager';
+			parameters['check_update_free_package'] = 1;
+			
+			jQuery.post(
+				"ajax.php",
+				parameters,
+				function (data) {
+					if (data['correct']) {
+						if (data['end']) {
+							$("#box_online .content").html(data['message']);
+						}
+						else {
+							$("#box_online .progressbar").show();
+							
+							$("#box_online .progressbar .progressbar_img").attr('src',
+								data['progressbar']);
+							
+							setTimeout(check_progress_update, 1000);
+						}
+					}
+					else {
+						$("#box_online .content").html(data['message']);
+					}
+				},
+				"json"
+			);
+		}
+	</script>
+	<?php
+}
+
+/**
+ * The update copy entirire the tgz or fail (leave some parts copies and some part not).
+ * This does make any thing with the BD.
+ */
+function update_manager_starting_update() {
+	global $config;
+	
+	$path_package = $config['attachment_store'] .
+		"/downloads/last_package.tgz";
+	
+	try {
+		$phar = new PharData($path_package);
+		$phar->extractTo($config['attachment_store'] . "/downloads/temp_update");
+	}
+	catch (Exception $e) {
+		// handle errors
+		
+		process_sql_update('tconfig',
+			array('value' => json_encode(
+					array(
+						'status' => 'fail',
+						'message' => __('Failed the extracting of the package to temp directory.')
+					)
+				)
+			),
+			array('token' => 'progress_update_status'));
+	}
+	
+	process_sql_update('tconfig',
+		array('value' => 50),
+		array('token' => 'progress_update'));
+	
+	$full_path = $config['attachment_store'] . "/downloads/temp_update/trunk";
+	
+	$result = update_manager_recurse_copy($full_path, $config['homedir'],
+		array('install.php'));
+	
+	if (!$result) {
+		process_sql_update('tconfig',
+			array('value' => json_encode(
+					array(
+						'status' => 'fail',
+						'message' => __('Failed the copying of the files.')
+					)
+				)
+			),
+			array('token' => 'progress_update_status'));
+	}
+	else {
+		process_sql_update('tconfig',
+			array('value' => 100),
+			array('token' => 'progress_update'));
+		process_sql_update('tconfig',
+			array('value' => json_encode(
+					array(
+						'status' => 'end',
+						'message' => __('Successful the extrating the package.')
+					)
+				)
+			),
+			array('token' => 'progress_update_status'));
+	}
+}
+
+
+function update_manager_recurse_copy($src, $dst, $black_list) { 
+	$dir = opendir($src); 
+	@mkdir($dst);
+	@trigger_error("NONE");
+	
+	//debugPrint("mkdir(" . $dst . ")", true);
+	while (false !== ( $file = readdir($dir)) ) { 
+		if (( $file != '.' ) && ( $file != '..' ) && (!in_array($file, $black_list))) { 
+			if ( is_dir($src . '/' . $file) ) { 
+				if (!update_manager_recurse_copy($src . '/' . $file,$dst . '/' . $file, $black_list)) {
+					return false;
+				}
+			}
+			else { 
+				//debugPrint($src . '/' . $file.",".$dst . '/' . $file, true);
+				$result = copy($src . '/' . $file,$dst . '/' . $file);
+				debugPrint($result, true);
+				$error = error_get_last();
+				debugPrint($error, true);
+				
+				if (strstr($error['message'], "copy(") ) {
+					return false;
+				}
+			} 
+		} 
+	} 
+	closedir($dir);
+	
+	return true;
+} 
+
+function update_manager_count_files($path) {
+	$count = 0;
+	$black_list = array('.', '..');
+	$files = scandir($path);
+	
+	foreach ($files as $file) {
+		if (in_array($file, $black_list))
+			continue;
+		
+		if (is_dir(rtrim($path, '/') . '/' . $file)) {
+			$count += update_manager_count_files(rtrim($path, '/') . '/' . $file);
+		}
+		else {
+			$count++;
+		}
+	}
+	
+	return $count;
+}
+
+////////////////////////////////////////////////////////////////////////
+// OLD
+////////////////////////////////////////////////////////////////////////
+
 function get_user_key ($settings) {
 	global $config;
 	

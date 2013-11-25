@@ -268,6 +268,7 @@ function install_step2() {
 			$res += check_extension("gettext","PHP gettext extension");
 			$res += check_extension("imap","PHP IMAP extension");
 			$res += check_extension("gettext","PHP gettext extension");
+			$res += check_extension("Phar","PHP Phar extension");
 			//$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
             $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");

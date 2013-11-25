@@ -105,15 +105,16 @@ function debug ($var, $backtrace = true) {
  */
 function ui_print_message ($message, $class = '', $attributes = '', $return = false, $tag = 'h3', $cancel_button = true) {
 	$id = uniqid();
-
+	
 	if ($cancel_button) {
 		$cancel_button = '<a href="javascript:cancel_msg(\''.$id.'\');"><img src="images/cancel.gif" border=0></a>';
-	} else {
+	}
+	else {
 		$cancel_button = "";
 	}
 	
 	$output = '<'.$tag.(empty ($class) ? '' : ' id="msg_'.$id.'" class="'.$class.'" ').$attributes.'>'.$message.' '.$cancel_button.'</'.$tag.'>';
-		
+	
 	if ($return)
 		return $output;
 	echo $output;

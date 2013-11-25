@@ -130,5 +130,11 @@ require_once("include_graph_dependencies.php");
 
 include_graphs_dependencies($config['homedir'].'/');
 
+
+//UPDATE MANAGER WIP
+$config['license'] = '0123456789';
+$config['url_updatemanager'] = 'https://192.168.70.162/~ramon/update_manager/server.php';
+$config['current_package'] = 0;
+
 // Beware: DONT LET BLANK LINES AFTER PHP END CODE MARK BELOW !!
 ?>

@@ -241,7 +241,7 @@ if ($recover != ""){
 }
 
 // Check request from IP's allowed in the API ACL list. Special request to generate PDF on crontask
-$ip_origin = $_SERVER['REMOTE_ADDR'];debugPrint($ip_origin, true);
+$ip_origin = $_SERVER['REMOTE_ADDR'];
 if (ip_acl_check ($ip_origin)) {
 	// Only to see PDF reports!
 	if (($pdf_output == 1) AND ($pdf_filename != "")){

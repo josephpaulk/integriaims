@@ -48,30 +48,30 @@ if($id_graph && in_array($graph_type, $types)) {
 	
 	switch($graph_type) {
 		case 'histogram': 
-					gd_histogram ($graph['width'], 
-						$graph['height'], 
-						$graph['mode'], 
-						json_decode($graph['data'], true), 
-						$graph['max'], 
-						$graph['font'], 
-						$graph['title'],
-						$graph['fontsize']);				
-					break;
-		case 'progressbar':	
-					gd_progress_bar ($graph['width'], 
-						$graph['height'], 
-						$graph['progress'], 
-						$graph['title'], 
-						$graph['font'], 
-						$graph['out_of_lim_str'],
-						$graph['out_of_lim_image'], 
-						$graph['mode'],
-						$graph['fontsize']);	
-					break;
+			gd_histogram ($graph['width'], 
+				$graph['height'], 
+				$graph['mode'], 
+				json_decode($graph['data'], true), 
+				$graph['max'], 
+				$graph['font'], 
+				$graph['title'],
+				$graph['fontsize']);
+			break;
+		case 'progressbar':
+			gd_progress_bar ($graph['width'], 
+				$graph['height'], 
+				$graph['progress'], 
+				$graph['title'], 
+				$graph['font'], 
+				$graph['out_of_lim_str'],
+				$graph['out_of_lim_image'], 
+				$graph['mode'],
+				$graph['fontsize']);
+			break;
 		case 'funnel':
-				gd_funnel_chart ($graph['data'], 
-					$graph['font']);				
-				break;
+			gd_funnel_chart ($graph['data'], 
+				$graph['font']);
+			break;
 	}
 }
 

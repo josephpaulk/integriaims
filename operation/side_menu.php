@@ -903,7 +903,7 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Setup')."</h3>";
 	echo "<ul class='sidemenu'>";
-
+	
 	// Main Setup
 	if ($sec2 == "godmode/setup/setup")
 		echo "<li id='sidesel'>";
@@ -912,6 +912,13 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
 	
 	// Update Manager
+	if ($sec2 == "godmode/setup/update_manager")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".__('Update')."</a></li>";
+	
+	// Offline update manager
 	if ($sec2 == "godmode/setup/offline_update")
 		echo "<li id='sidesel'>";
 	else

@@ -1,3 +1,11 @@
+2013-11-25 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* godmode/setup/update_manager.php, include/config_process.php,
+	include/functions_update_manager.php, include/functions_ui.php,
+	include/graphs/functions_gd.php, install.php, index.php,
+	operation/side_menu.php: first version (and maybe buggy version) of
+	update manager. 
+
 2013-11-20  Dario Rodriguez <dario@artica.es>
 
         * operation/slas/sla_detail.php: Fixed a wrong
