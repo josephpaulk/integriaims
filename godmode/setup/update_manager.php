@@ -223,14 +223,14 @@ if (defined ('AJAX')) {
 		return;
 	}
 	
-	enterprise_hook('update_manager_ajax_enterprise');
+	enterprise_hook('update_manager_enterprise_ajax');
 	return;
 }
 
 
 echo "<h1>" . __("Update Manager") . "</h1>";
 
-$enterprise = enterprise_hook('update_manager_main_enterprise');
+$enterprise = enterprise_hook('update_manager_enterprise_main');
 
 if ($enterprise == ENTERPRISE_NOT_HOOK) {
 	//Open view
