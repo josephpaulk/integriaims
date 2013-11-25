@@ -33,9 +33,13 @@ $path2 = str_replace('\\','/',$path);
 $array_path = explode("/", $path2);
 $last = array_pop($array_path);
 
+$last = array_pop($array_path);
+
+$config["base_url_dir"]="/".$last."/";
+
 $config["homedir"] = join("/", $array_path);
 
-$config["homedir"] .= "/";
+$config["homedir"] .= $config["base_url_dir"];
 
 include ($config["homedir"]."/include/config_process.php");
 ?>

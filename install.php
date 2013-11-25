@@ -335,8 +335,9 @@ function install_step3() {
 				
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>";
-				
+					
 				echo "
+
 				<div style='margin: 10px; margin-left: 0px;'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>
@@ -385,14 +386,6 @@ function install_step4() {
 			$createuser = 0;
 		
 		$dbname = $_POST["dbname"];
-		if (isset($_POST["url"]))
-			$url = $_POST["url"];
-		else
-			$url = "/integria";
-		/*if (isset($_POST["path"]))
-			$path = $_POST["path"];
-		else
-			$path = "/var/www/";*/
 	}
 	$everything_ok = 0;
 	$step1=0;
@@ -467,7 +460,6 @@ function install_step4() {
 				$config_new = $config_new . "\n" . 
 				'$config["dbname"]="'.$dbname.'";    // MySQL DataBase name' . "\n". 
 				'$config["dbhost"]="'.$dbhost.'";    // DB Host' . "\n".
-				'$config["base_url_dir"]="'.$url.'";		// Folder url' . "\n".
 				'// End of automatic config file' . "\n".
 				'?>';
 			//---END--- CONFIG FILE

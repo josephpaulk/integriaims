@@ -55,7 +55,6 @@ if ($update) {
 	$config["first_day_week"] = get_parameter ("first_day_week", 0);
 	$config["access_protocol"] = get_parameter("access_protocol");
 	$config["access_port"] = get_parameter("access_port", "");
-	$config["base_url_dir"] = get_parameter("base_url_dir", "");
 	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_ADDR"]);
 
     if ($is_enterprise) {
@@ -87,7 +86,6 @@ if ($update) {
 
 	update_config_token ("access_protocol", $config["access_protocol"]);
 	update_config_token ("access_port", $config["access_port"]);	
-	update_config_token ("base_url_dir", $config["base_url_dir"]);
 	update_config_token ("access_public", $config["access_public"]);
 
     if ($is_enterprise) {

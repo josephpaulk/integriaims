@@ -1,6 +1,13 @@
 2013-11-25  Dario Rodriguez <dario@artica.es>
 
 	* include/config.inc.php,
+	install.php,
+	godmode/setup/setup.php: Fixed an error generating
+	base_url_dir for base_url variable.
+
+2013-11-25  Dario Rodriguez <dario@artica.es>
+
+	* include/config.inc.php,
 	install.php: Now we detect automatically the folder of integria
 	* operation/projects/project_report.php: Fixed a wrong parameter
 	printing project activity graph.
