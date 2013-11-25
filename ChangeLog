@@ -1,3 +1,8 @@
+2013-11-25  Sancho Lerena <slerena@artica.es>
+
+	* operation/newsletter/address_definition.php: Added filter to 
+	see disabled addresses on each newsletter.
+
 2013-11-25 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* godmode/setup/update_manager.php: continue with the work in the
