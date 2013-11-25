@@ -1,5 +1,10 @@
 2013-11-25 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* godmode/setup/update_manager.php: continue to work in the update
+	manager.
+
+2013-11-25 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* ajax.php, include/load_session.php,
 	include/functions_update_manager.php: continue to work in the
 	update manager.

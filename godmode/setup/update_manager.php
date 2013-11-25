@@ -65,12 +65,12 @@ if (defined ('AJAX')) {
 		debugPrint($http_status, true);
 		
 		//WORK AROUND FOR TO FIX THE RAMON LOST
-		$result=
-			json_encode(
-				array(
-					'http://sourceforge.net/projects/integria/files/Integria%20IMS/4.0/Beta//IntegriaIMS-4.0-131120.tar.gz'
-				));
-		$http_status = 200;
+		//~ $result=
+			//~ json_encode(
+				//~ array(
+					//~ 'http://sourceforge.net/projects/integria/files/Integria%20IMS/4.0/Beta//IntegriaIMS-4.0-131120.tar.gz'
+				//~ ));
+		//~ $http_status = 200;
 		////////////////////////////////////////////////////////////////
 		
 		if ($http_status == 500) {
