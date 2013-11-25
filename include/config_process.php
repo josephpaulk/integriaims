@@ -136,5 +136,29 @@ $config['license'] = '0123456789';
 $config['url_updatemanager'] = 'https://192.168.70.162/~ramon/update_manager/server.php';
 $config['current_package'] = 0;
 
+
+
+//Compound base url
+$protocol = "http";
+if ($config["access_protocol"]) {
+	$protocol = "https";
+}
+
+$port = "";
+
+if ($config["access_port"]) {
+	$port = ":".$config["access_port"];
+}
+
+$server_addr = "localhost";
+if (isset($_SERVER["SERVER_ADDR"])) {
+	$server_addr = $_SERVER["SERVER_ADDR"];
+}
+
+$config["base_url"] = $protocol."://".$server_addr.$port.$config["base_url_dir"];
+
+//Compound public url
+$config["public_url"] = $protocol."://".$config["access_public"].$port.$config["base_url_dir"];
+
 // Beware: DONT LET BLANK LINES AFTER PHP END CODE MARK BELOW !!
 ?>

@@ -1,3 +1,19 @@
+2013-11-25 Dario Rodriguez <dario@artica.es>
+
+	* include/config.inc.php: Added new parameter to allow
+	to change url after installation.
+	* include/integria_cron.php: Modify to support new changes on
+	public url.
+	* include/functions_config.phpi: Added new variables to configure
+	access url.
+	* include/config_process.php: Create new urls with those variables.
+	* install.php: Modify install to get only url path not ip.
+	* index.php: Fixed a problem disabling flash charts when creating pdf
+	reports.
+	* operation/projects/project_report.php: Added correct parameter to 
+	select static or flash charts.
+	* godmode/setup/setup.php: Added variables to configure new urls.
+
 2013-11-25 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* godmode/setup/update_manager.php: continue to work in the update

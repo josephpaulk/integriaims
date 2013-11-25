@@ -250,6 +250,18 @@ function load_config() {
 		$config["newsletter_local_smtp"] = 1;
 	}
 
+	if (!isset ($config["access_protocol"])) {
+		$config["access_protocol"] = false;
+	}
+
+	if (!isset ($config["access_port"])) {
+		$config["access_port"] = "";
+	}
+
+	if (!isset ($config["access_public"])) {
+		$config["access_public"] = $_SERVER["SERVER_ADDR"];
+		update_config_token ("access_public", $config["access_public"]);
+	}
 }
 
 function config_prepare_session() {

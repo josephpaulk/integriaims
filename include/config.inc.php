@@ -22,7 +22,7 @@ $config["dbuser"] = "integria";
 $config["dbpass"] = "integria"; // DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/integria/";      // Config homedir
-$config["base_url"] = "http://mydomain.net/integria";       // Public URL
+$config["base_url_dir"] = "/integria";      // Config url dir
 */
 
 // Display ALL errors until redirect to integria error log

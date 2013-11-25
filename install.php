@@ -268,7 +268,6 @@ function install_step2() {
 			$res += check_extension("gettext","PHP gettext extension");
 			$res += check_extension("imap","PHP IMAP extension");
 			$res += check_extension("gettext","PHP gettext extension");
-			$res += check_extension("Phar","PHP Phar extension");
 			//$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
             $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
@@ -352,10 +351,10 @@ function install_step3() {
 				}
 				
 				echo "
-				<div style='margin: 10px; margin-left: 0px;'>Full local URL to Integria<br>
-				<span class='f9b'>For example http://10.10.10.1/integria</span>
+				<div style='margin: 10px; margin-left: 0px;'>URL path to Integria<br>
+				<span class='f9b'>For example /integria</span>
 				</div>				
-				<input type='text' name='url' style='width: 250px;'  value='http://".$_SERVER["SERVER_NAME"].dirname ($_SERVER['PHP_SELF']) ."'>
+				<input type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF']) ."'>
 				<br><br>
 				
 				<div style='margin: 10px; margin-left: 0px;'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
@@ -409,7 +408,7 @@ function install_step4() {
 		if (isset($_POST["url"]))
 			$url = $_POST["url"];
 		else
-			$url = "http://localhost";
+			$url = "/integria";
 		if (isset($_POST["path"]))
 			$path = $_POST["path"];
 		else
@@ -489,7 +488,7 @@ function install_step4() {
 				'$config["dbname"]="'.$dbname.'";    // MySQL DataBase name' . "\n". 
 				'$config["dbhost"]="'.$dbhost.'";    // DB Host' . "\n".
 				'$config["homedir"]="'.$path.'";		// Config homedir' . "\n".
-				'$config["base_url"]="'.$url.'";		// Public URL' . "\n".
+				'$config["base_url_dir"]="'.$url.'";		// Public URL' . "\n".
 				'// End of automatic config file' . "\n".
 				'?>';
 			//---END--- CONFIG FILE

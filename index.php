@@ -86,7 +86,6 @@ if (isset($_GET["raw_output"])) {
 }
 if ($buffer_html) {
 	ob_start();
-	$config["flash_charts"] = 0;
 }
 
 require_once ('include/config.php');
@@ -98,6 +97,10 @@ require_once ('include/functions_calendar.php');
 require_once ('include/auth/mysql.php');
 require_once ('include/functions_db.mysql.php');
 require_once ('include/functions_api.php');
+
+if($buffer_html) {
+	$config["flash_charts"] = 0;
+}
 
 $is_enterprise = false;
 

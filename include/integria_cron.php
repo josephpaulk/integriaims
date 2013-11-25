@@ -703,8 +703,9 @@ function run_newsletter_queue () {
 		// Get issue and newsletter records
 		
 		$issue = get_db_row ("tnewsletter_content", "id", $queue["id_newsletter_content"]);
+
 		//Add void pixel to track campaings
-                $issue["html"] .= "<img src='".$config["base_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
+        $issue["html"] .= "<img src='".$config["public_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
 
 		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
 		

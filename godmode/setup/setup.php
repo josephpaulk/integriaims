@@ -53,6 +53,10 @@ if ($update) {
 	$config["max_file_size"] = get_parameter ("max_file_size", 1);
 	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
 	$config["first_day_week"] = get_parameter ("first_day_week", 0);
+	$config["access_protocol"] = get_parameter("access_protocol");
+	$config["access_port"] = get_parameter("access_port", "");
+	$config["base_url_dir"] = get_parameter("base_url_dir", "");
+	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_ADDR"]);
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -80,7 +84,12 @@ if ($update) {
     update_config_token ("error_log", $config["error_log"]);
     update_config_token ("enable_newsletter", $config["enable_newsletter"]);
     update_config_token ("first_day_week", $config["first_day_week"]);
-    
+
+	update_config_token ("access_protocol", $config["access_protocol"]);
+	update_config_token ("access_port", $config["access_port"]);	
+	update_config_token ("base_url_dir", $config["base_url_dir"]);
+	update_config_token ("access_public", $config["access_public"]);
+
     if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
 		update_config_token ("pass_size", $config["pass_size"]);
@@ -163,9 +172,22 @@ $table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>
 $days_of_week = get_days_of_week();
 $table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
 
-$table->data[5][0] = print_input_hidden ('update', 1, true);
-$table->data[5][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->colspan[5][0] = 2;
+$table->data[5][0] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
+
+$table->data[5][1] = print_input_text ("access_port", $config["access_port"], '',
+	10, 255, true, __('Access port'));
+$table->data[5][1] .= print_help_tip (__("Leave blank to use default port (80)"), true);
+
+$table->data[6][0] = print_input_text ('base_url_dir', $config["base_url_dir"], '', 40, 255, true, __('Base URL path. For example /integria'));
+
+$table->data[6][1] = print_input_text ("access_public", $config["access_public"],
+        '', 30, 50, true, __('Public access to server'));
+
+$table->data[6][1] .= print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true);
+
+$table->data[7][0] = print_input_hidden ('update', 1, true);
+$table->data[7][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
+$table->colspan[7][0] = 2;
 
 echo "<form name='setup' method='post'>";
 
