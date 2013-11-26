@@ -717,7 +717,8 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	else {
 		arsort($users_data);
-		$users_label = pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl) . "<br>".$users_label. "<br>";
+		$users_label = "<br>";
+		$users_label .= pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 	
 	// Find the 5 most active incidents (more worked hours)
@@ -735,7 +736,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	else {
 		arsort($incidents_data);
-		$incidents_label .= pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		$incidents_label .= pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 		$incidents_label = "<div class='container_adaptor_graphic'>".$incidents_label."</div>";
 	}
 
@@ -755,7 +756,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	else {
 		arsort($creator_assigned_data);
-		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 	
 	$scoring_label ="";
@@ -773,7 +774,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	else {
 		arsort($scoring_data);
-		$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 	
 	// TOP X assigned users
@@ -792,7 +793,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	else {
 		arsort($user_assigned_data);
-		$user_assigned_label .= "<br/>".pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		$user_assigned_label .= "<br/>".pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 
 	}
 	
@@ -987,7 +988,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$data = array (__('Open') => $opened, __('Closed') => $total - $opened);
 	$data = array (__('Close') => $total-$opened, __('Open') => $opened);
 
-	$output = pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	$output = pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	$output = "<div class='pie_frame'>".$output."</div>";
     
 	$container_title = __("Open / Close incidents");
@@ -1008,12 +1009,12 @@ function print_incidents_stats ($incidents, $return = false) {
     $container_user_assigned = print_container('container_user_assigned', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
    	$container_title = __("Incidents by group");
-   	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+   	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize']-1, $ttl);
     $output = "<div class='pie_frame'>".$output."</div>";
     $container_incidents_group = print_container('container_incidents_group', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
    	$container_title = __("Incidents by creator group");
-   	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+   	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize']-1, $ttl);
     $output = "<div class='pie_frame'>".$output."</div>";
     $container_incident_creator_group = print_container('container_incident_creator_group', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
@@ -1093,7 +1094,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	//Third row
 	echo $container_longest_closed;
 	echo $container_openclose_incidents;
-
+	echo "<br><br>";
 	//Fourth row
 	echo $container_topactive_users;
 	echo $container_topincident_submitter;

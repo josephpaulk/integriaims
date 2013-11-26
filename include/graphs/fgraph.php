@@ -85,7 +85,7 @@ function histogram($chart_data, $width, $height, $font, $max, $title, $mode, $tt
 	return "<img title='".$graph["title"]."' src='include/graphs/functions_gd.php?graph_type=histogram&ttl=".$ttl."&id_graph=".$id_graph."'>";
 }
 
-function funnel($data, $font, $ttl = 1) {
+function funnel($data, $font, $ttl = 1, $homedir="") {
 	$graph = array();
 	
 	$graph['font'] = $font;
@@ -93,7 +93,7 @@ function funnel($data, $font, $ttl = 1) {
 
 	$id_graph = serialize_in_temp($graph, null, $ttl);
 		
-	return "<img src='include/graphs/functions_gd.php?graph_type=funnel&ttl=".$ttl."&id_graph=".$id_graph."'>";
+	return "<img src='".$homedir."include/graphs/functions_gd.php?graph_type=funnel&ttl=".$ttl."&id_graph=".$id_graph."'>";
 }
 
 function progressbar($progress, $width, $height, $title, $font, $mode = 1, 
@@ -171,6 +171,8 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 	$long_index, $no_data_image, $xaxisname = "", $yaxisname = "", $homedir="",
 	$water_mark = "", $font = '', $font_size = '', $unit = '', $ttl = 1) {
 
+	global $config;
+
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -192,14 +194,13 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 		$graph['font_size'] = $font_size;
 				
 		$id_graph = serialize_in_temp($graph, null, $ttl);
-
 		return "<img src='".$homedir."include/graphs/functions_pchart.php?graph_type=area&ttl=".$ttl."&id_graph=" . $id_graph . "'>";
 	}	
 }
 
 function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color,
 	$legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "",
-	$water_mark = "", $font = '', $font_size = '', $unit = '', $ttl = 1) {
+	$water_mark = "", $font = '', $font_size = '', $unit = '', $ttl = 1, $homedir='') {
 
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
@@ -226,7 +227,7 @@ function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color,
 		
 		$id_graph = serialize_in_temp($graph, null, $ttl);
 		
-		return "<img src='include/graphs/functions_pchart.php?graph_type=stacked_area&ttl=".$ttl."&id_graph=" . $id_graph . "' />";
+		return "<img src='".$homedir."include/graphs/functions_pchart.php?graph_type=stacked_area&ttl=".$ttl."&id_graph=" . $id_graph . "' />";
 	}	
 }
 

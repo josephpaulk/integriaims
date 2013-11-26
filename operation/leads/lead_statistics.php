@@ -178,7 +178,7 @@ if ($leads_funnel != false) {
 		$data[$lf["progress"]]["amount"] = $lf["amount"];
 	}
 	
-	$leads_funnel_content = funnel($data, $config["font"], $ttl);
+	$leads_funnel_content = funnel($data, $config["font"], $ttl, $config["base_url"]);
 } else {
 	$leads_funnel_content = __('No data to show');
 }
@@ -262,7 +262,7 @@ if ($read && $enterprise) {
 $leads_country = crm_get_data_lead_country_graph($leads_country);
 
 if ($leads_country != false) {
-	$leads_country_content = pie3d_graph ($config['flash_charts'], $leads_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$leads_country_content = pie3d_graph ($config['flash_charts'], $leads_country, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
 	$leads_country_content = __('No data to show');
 }
@@ -282,7 +282,7 @@ if ($read && $enterprise) {
 $leads_user = crm_get_data_lead_user_graph($leads_user);
 
 if ($leads_user !== false) {
-	$leads_user_content = pie3d_graph ($config['flash_charts'], $leads_user, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$leads_user_content = pie3d_graph ($config['flash_charts'], $leads_user, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
 	$leads_user_content = __('No data to show');
 }
@@ -326,7 +326,7 @@ if ($leads_creation !== false) {
 		$area_height = 155;		
 	}
 
-	$leads_creation_content = area_graph(false, $leads_creation, $area_width, $area_height, "#2179B1", '', '', '', "", "", "", "", '', '', '', $ttl);
+	$leads_creation_content = area_graph(false, $leads_creation, $area_width, $area_height, "#2179B1", '', '', '', "", "", $config["base_url"], "", '', '', '', $ttl);
 } else {
 	$leads_creation_content = __('No data to show');
 }

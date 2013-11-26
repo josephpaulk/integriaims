@@ -661,7 +661,7 @@ function graph_workunit_project ($width, $height, $id_project, $ttl=1) {
 		return __("There is no data to show");
 	}
 	else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 }
 
@@ -789,7 +789,7 @@ function graph_workunit_project_user_single ($width, $height, $id_project, $ttl=
 	if ($data == NULL) {
 		return __("There is no data to show");
 	} else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 }
 
@@ -872,7 +872,7 @@ function graph_incident_statistics_sla_compliance($incidents, $width=200, $heigh
 	}
 	
 	if (isset($data))
-		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
+		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	else 
 		graphic_error();
 }
@@ -1040,7 +1040,7 @@ function graph_incident_user_activity ($incident, $width=200, $height=200, $ttl=
 	}
 		
 	if (isset($data))
-		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
+		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	else 
 		graphic_error();
 }
@@ -1189,9 +1189,9 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
    	$colors['graph']['alpha'] = 100;
 	
 	if ($area) {
-		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', '', __('Hours'), '', '', $config['font'], $config['fontsize'], '', $ttl);
+		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', '', __('Hours'), $config["base_url"], '', $config['font'], $config['fontsize'], '', $ttl);
 	} else {
-		$output .= vbar_graph ($config['flash_charts'], $chart2, $width, $height, $colors, array(), "", "", "", "", $config['font'], $config['fontsize'],true, $ttl);
+		$output .= vbar_graph ($config['flash_charts'], $chart2, $width, $height, $colors, array(), "", "", $config["base_url"], "", $config['font'], $config['fontsize'],true, $ttl);
 		$output .= "</div>";
 	}
 	

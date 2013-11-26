@@ -1,5 +1,14 @@
 2013-11-25  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_graph.php,
+	include/graphs/fgraph.php,
+	include/functions_incidents.php,
+	operation/invoices/invoice_stats.php,
+	operation/leads/lead_statistics.php: Adapted graphs and report
+	to user new base url which support http, https and ports.
+
+2013-11-25  Dario Rodriguez <dario@artica.es>
+
 	* include/config.inc.php,
 	install.php,
 	godmode/setup/setup.php: Fixed an error generating
