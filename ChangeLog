@@ -1,3 +1,8 @@
+2013-11-26 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* godmode/setup/setup.php, integria_dbdata.sql: set the default data
+	for the update manager.
+
 2013-11-26  Dario Rodriguez <dario@artica.es>
 
 	* include/config.inc.php,

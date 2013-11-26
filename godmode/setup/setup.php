@@ -170,20 +170,23 @@ $table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>
 $days_of_week = get_days_of_week();
 $table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
 
-$table->data[5][0] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
+$table->data[5][0] = print_input_text ("url_updatemanager", $config["url_updatemanager"], '',
+	60, 255, true, __('URL update manager'));
 
-$table->data[5][1] = print_input_text ("access_port", $config["access_port"], '',
+$table->data[6][0] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
+
+$table->data[6][1] = print_input_text ("access_port", $config["access_port"], '',
 	10, 255, true, __('Access port'));
-$table->data[5][1] .= print_help_tip (__("Leave blank to use default port (80)"), true);
+$table->data[6][1] .= print_help_tip (__("Leave blank to use default port (80)"), true);
 
 $table->data[6][0] = print_input_text ("access_public", $config["access_public"],
         '', 30, 50, true, __('Public access to server'));
 
 $table->data[6][0] .= print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true);
 
-$table->data[7][0] = print_input_hidden ('update', 1, true);
-$table->data[7][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->colspan[7][0] = 2;
+$table->data[8][0] = print_input_hidden ('update', 1, true);
+$table->data[8][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
+$table->colspan[8][0] = 2;
 
 echo "<form name='setup' method='post'>";
 
