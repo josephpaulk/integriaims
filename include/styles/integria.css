@@ -2666,6 +2666,26 @@ table.inv_details_table tr:last-child td:last-child {
 	border-bottom-right-radius: 10px;	
 }
 
+p.info_update {
+	padding: 5px 20px;
+}
+
+h3.update {
+	margin: 20px 20px 10px 20px;
+}
+
+h3.update_online {
+	margin-top: 20px;
+	maring-left: 5px;
+	margin-bottom: 10px;
+}
+
+#box_online {
+	width: 100%;
+	padding: 10px;
+	background-color: #e6e6e6;
+}
+
 /* REPORTING CSS */
 div.incident_report_parameters_container,
 div.container_incident_statistics_container,
