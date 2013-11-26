@@ -1,4 +1,9 @@
-2013-11-25  Dario Rodriguez <dario@artica.es>
+2013-11-26  Dario Rodriguez <dario@artica.es>
+
+	* include/config.inc.php: Removed comment to keep
+	comments up to date.
+
+2013-11-26  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_graph.php,
 	include/graphs/fgraph.php,

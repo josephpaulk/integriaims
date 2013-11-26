@@ -21,7 +21,6 @@ $config["dbname"] = "integria";         // MySQL DataBase name
 $config["dbuser"] = "integria";
 $config["dbpass"] = "integria"; // DB Password
 $config["dbhost"] = "localhost"; // DB Host
-$config["base_url_dir"] = "/integria";      // Config url dir
 */
 
 // Display ALL errors until redirect to integria error log
