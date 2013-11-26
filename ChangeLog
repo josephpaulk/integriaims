@@ -1,5 +1,11 @@
 2013-11-26  Dario Rodriguez <dario@artica.es>
 
+	* include/config.inc.php,
+	include/config_process.php: Moved code from 
+	config.inc.php to config_process.php
+
+2013-11-26  Dario Rodriguez <dario@artica.es>
+
 	* include/config.inc.php: Removed comment to keep
 	comments up to date.
 

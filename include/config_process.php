@@ -32,6 +32,20 @@ session_name (md5($config["build"].$config["REMOTE_ADDR"].$config["dbpass"].$con
 if (! defined ('ENTERPRISE_DIR'))
 	define ('ENTERPRISE_DIR', 'enterprise', FALSE);
 
+//Calculate homedir variable to allow the load of all libs
+$path = dirname (__FILE__);
+$path2 = str_replace('\\','/',$path);
+$array_path = explode("/", $path2);
+$last = array_pop($array_path);
+
+$last = array_pop($array_path);
+
+$config["base_url_dir"]="/".$last."/";
+
+$config["homedir"] = join("/", $array_path);
+
+$config["homedir"] .= $config["base_url_dir"];
+
 // Detect enterprise version
 // NOTE: If you override this value without enterprise code, you will break 
 // the code and get several problems!
