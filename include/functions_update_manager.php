@@ -48,6 +48,7 @@ function update_manager_main() {
 	
 	?>
 	<script type="text/javascript">
+		var version_update = "";
 		<?php
 		echo 'var loginhash_data = "' . $loginhash_data . '";' . "\n";
 		echo 'var loginhash_user = "' . $loginhash_user . '";' . "\n";
@@ -77,7 +78,9 @@ function update_manager_main() {
 			);
 		}
 		
-		function update_last_package(package) {
+		function update_last_package(package, version) {
+			version_update = version;
+			
 			$("#box_online .content").html("");
 			$("#box_online .loading").show();
 			$("#box_online .download_package").show();
@@ -89,6 +92,7 @@ function update_manager_main() {
 			parameters['package'] = package;
 			parameters['loginhash_data'] = loginhash_data;
 			parameters['loginhash_user'] = loginhash_user;
+			parameters['version'] = version;
 			
 			jQuery.post(
 				"ajax.php",

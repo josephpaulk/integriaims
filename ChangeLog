@@ -1,5 +1,11 @@
 2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* godmode/setup/update_manager.php,
+	include/functions_update_manager.php: fixed the check the newest
+	open package.
+
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* install.php: erased old code for old update manager and old
 	tables in the DB.
 

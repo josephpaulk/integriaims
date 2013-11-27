@@ -33,8 +33,8 @@ if (defined ('AJAX')) {
 		FROM tusuario
 		WHERE disabled = 0 AND login_blocked = 0;');
 	$users = $count[0][0];
-	$license = 'INTEGRIA-FREE'; //$config['license'];
-	$current_package = 41126; //$config['current_package'];
+	$license = $config['license'];
+	$current_package = $config['current_package'];
 	
 	
 	$check_online_free_packages = (bool)get_parameter('check_online_free_packages', 0);
@@ -82,8 +82,9 @@ if (defined ('AJAX')) {
 			$result = json_decode($result, true);
 			
 			if (!empty($result)) {
-				echo "<p>" . $result['package_description'] . "</p>";
-				echo "<a href='javascript: update_last_package(\"" . base64_encode($result[0]) . "\");'>" .
+				echo "<p>" . $result[0]['package_description'] . "</p>";
+				echo "<a href='javascript: update_last_package(\"" . base64_encode($result[0]["file_name"]) .
+					"\", \"" . $result[0]['version'] ."\");'>" .
 					__("Update to the last version") . "</a>";
 			}
 			else {
@@ -100,8 +101,10 @@ if (defined ('AJAX')) {
 	if ($update_last_free_package) {
 		
 		$package = get_parameter('package', '');
+		$version = get_parameter('version', '');
 		$package_url = base64_decode($package);
 		debugPrint($package_url, true);
+		debugPrint($version, true);
 		
 		$params = array('action' => 'get_package',
 			'license' => $license,
@@ -183,6 +186,12 @@ if (defined ('AJAX')) {
 			}
 			
 			update_manager_starting_update();
+			
+			
+			$sql_update = "UPDATE tconfig SET `value`='$version'
+				WHERE `token`='current_package'";
+			process_sql($sql_update);
+			$config['current_package'] = $version;
 		}
 		
 		return;
