@@ -1,5 +1,10 @@
 2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* godmode/setup/setup.php: restored the lost Dario's field, maybe
+	it is lost with some or my commits.
+
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* godmode/setup/update_manager.php: added new parameters required
 	for the update manager server.
 
