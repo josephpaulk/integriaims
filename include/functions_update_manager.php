@@ -23,10 +23,10 @@ function update_manager_main() {
 	
 
 	echo '<p class="info_update">' .
-			__('This is a automatilly update Pandora Console only. Be careful if you have changed any php file of console, please make a backup this modified files php. Because the update action ovewrite all php files in Pandora console.') .
+			__('This is a automatilly update Integria IMS. Be careful if you have changed any php file, please make a backup this modified files php. Because the update action ovewrite all php files in Integria IMS.') .
 		'</p>' .
 		'<p class="info_update">' .
-			__('Update Manager sends anonymous information about Pandora FMS usage (number of agents and modules running). To disable it, just delete extension or remove remote server address from Update Manager plug-in setup.') .
+			__('Update Manager sends anonymous information about Integria IMS usage (number of users). To disable it, just remove remote server address from Update Manager in main setup.') .
 		'</p>';
 		
 	echo "<h3 class='update_online'>" . __('Online') . "</h3>";

@@ -1,4 +1,9 @@
 2013-11-27  Dario Rodriguez <dario@artica.es>
+
+        * include/functions_update_manager.php: Fixed some strings
+	in update manager view.
+
+2013-11-27  Dario Rodriguez <dario@artica.es>
 	
 	* include/functions_update_manager.php: Fixed some strings
 	missed in update manager view.
