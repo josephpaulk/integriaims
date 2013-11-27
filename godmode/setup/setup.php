@@ -80,15 +80,15 @@ if ($update) {
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('incident_reporter', '".$config["incident_reporter"]."')");
 	update_config_token ("api_acl", $config["api_acl"]);
 	update_config_token ("api_password", $config["api_password"]);
-    update_config_token ("error_log", $config["error_log"]);
-    update_config_token ("enable_newsletter", $config["enable_newsletter"]);
-    update_config_token ("first_day_week", $config["first_day_week"]);
-
+	update_config_token ("error_log", $config["error_log"]);
+	update_config_token ("enable_newsletter", $config["enable_newsletter"]);
+	update_config_token ("first_day_week", $config["first_day_week"]);
+	
 	update_config_token ("access_protocol", $config["access_protocol"]);
 	update_config_token ("access_port", $config["access_port"]);	
 	update_config_token ("access_public", $config["access_public"]);
-
-    if ($is_enterprise) {
+	
+	if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
 		update_config_token ("pass_size", $config["pass_size"]);
 		update_config_token ("pass_needs_numbers", $config["pass_needs_numbers"]);
@@ -108,11 +108,13 @@ if ($update) {
 			$license_info_key = 'INTEGRIA-FREE';
 		}
 		
-		$sql_update = "UPDATE tupdate_settings SET `value`='$license_info_key'
-			WHERE `key`='customer_key'";
+		$sql_update = "UPDATE tconfig SET `value`='$license_info_key'
+			WHERE `token`='license'";
 		$update_manage_settings_result = process_sql($sql_update);
 	}
 	
+	$config["url_updatemanager"] = get_parameter ("url_updatemanager", $config["url_updatemanager"]);
+	update_config_token ("url_updatemanager", $config["url_updatemanager"]);
 }
 // Render SYSTEM language code, not current language.
 $table->width = '99%';
@@ -162,10 +164,7 @@ $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
 
 $table->data[4][0] = __('License information');
-$license_info = get_db_value ('value', 'tupdate_settings', '`key`', 'customer_key');
-if ($license_info === false)
-	$license_info = '';
-$table->data[4][0] = print_input_text ('license_info_key', $license_info, '', 40, 255, true, __('License key'));
+$table->data[4][0] = print_input_text ('license_info_key', $config['license'], '', 40, 255, true, __('License key'));
 $table->data[4][0] .= '&nbsp;<a id="dialog_license_info" title="'.__("License Info").'" href="javascript: show_license_info()">'.print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
 $table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>';	
 

@@ -1,5 +1,10 @@
 2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* godmode/setup/setup.php: fixed the update of values for
+	update manager.
+
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* integria_demo.sql, install.php, integria_dbdata.sql: set the
 	default values for the update manager.
 
