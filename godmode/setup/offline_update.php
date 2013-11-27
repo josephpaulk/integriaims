@@ -30,7 +30,8 @@ if (defined ('AJAX')) {
 	if ($upload_file) {
 		ob_clean();
 		$return = array();
-		if (isset($_FILES['upfile']) && $_FILES['upfiles']['error'] == 0) {
+		
+		if (isset($_FILES['upfile']) && $_FILES['upfile']['error'] == 0) {
 			
 			$extension = pathinfo($_FILES['upfile']['name'], PATHINFO_EXTENSION);
 			
