@@ -168,6 +168,19 @@ switch ($type) {
 		}
 
 		break;
+	case "project":
+
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+		$id_task = $data["id_task"];
+
+		$task_access = get_project_access ($config["id_user"], 0, $id_task, false, true);
+		if (! $task_access["read"]) {
+			audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to download project files withuot permission");
+			require ($general_error);
+			exit;
+		}
+
+		break;
 	default:
 }
 

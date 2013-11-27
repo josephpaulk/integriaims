@@ -183,9 +183,7 @@ if ($res = mysql_query($sql)) {
 		else
 			$filename = $row["filename"];
 
-//		$link = $config["base_url"]."/attachment/".$row["id_attachment"]."_".rawurlencode (w["filename"]);
-
-        $link = $config["base_url"]."/operation/projects/project_download_file.php?id_attachment=".$row["id_attachment"];
+        $link = $config["base_url"]."/operation/common/download_file.php?type=project&id_attachment=".$row["id_attachment"];
 
         $real_filename = $config["homedir"]."/attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
 

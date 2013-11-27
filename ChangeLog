@@ -1,3 +1,10 @@
+2013-11-27  Dario Rodriguez <dario@artica.es>
+
+	*  operation/common/download_file.php,
+ 	operation/projects/task_files.php: Unified file download for
+	project task files.
+	* operation/projects/project_download_file.php: File deleted.
+
 2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* godmode/setup/setup.php: fixed the set empty license.
