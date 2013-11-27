@@ -1,5 +1,10 @@
 2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* install.php: erased old code for old update manager and old
+	tables in the DB.
+
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/config_process.php: erased the default values for the
 	update manager.
 

@@ -478,19 +478,9 @@ function install_step4() {
 		}
 		
 		mysql_select_db($dbname);
-		$step8 = parse_mysql_dump("include/update_manager/sql/update_manager.sql");
-		check_generic ($step8, "Populating database with update manager");
-		
-		if ($step8) {
-			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . $dbhost . "' WHERE `key` = 'dbhost';");
-			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . $dbname . "' WHERE `key` = 'dbname';");
-			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . $random_password . "' WHERE `key` = 'dbpass';");
-			mysql_query("UPDATE um_tupdate_settings SET `value` = 'babel' WHERE `key` = 'dbuser';");
-			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . dirname ($_SERVER['SCRIPT_FILENAME']) . "' WHERE `key` = 'updating_code_path';");
-		}
 	}
 	
-	if (($step8 + $step7 + $step6 + $step5 + $step4 + $step3 + $step2 + $step1) == 8) {
+	if (($step7 + $step6 + $step5 + $step4 + $step3 + $step2 + $step1) == 7) {
 		$everything_ok = 1;
 	}
 	
