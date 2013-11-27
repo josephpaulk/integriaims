@@ -21,15 +21,15 @@ define ('FREE_USER', 'INTEGRIA-FREE');
 function update_manager_main() {
 	global $config;
 	
-	ui_toggle(
-		'<p>' .
-			__('We need a cool text.') .
+
+	echo '<p class="info_update">' .
+			__('This is a automatilly update Pandora Console only. Be careful if you have changed any php file of console, please make a backup this modified files php. Because the update action ovewrite all php files in Pandora console.') .
 		'</p>' .
-		'<p>' .
-			__('For this header.') .
-		'</p>', 'info', __('Info'), false);
+		'<p class="info_update">' .
+			__('Update Manager sends anonymous information about Pandora FMS usage (number of agents and modules running). To disable it, just delete extension or remove remote server address from Update Manager plug-in setup.') .
+		'</p>';
 		
-	echo "<h3>" . __('Online') . "</h3>";
+	echo "<h3 class='update_online'>" . __('Online') . "</h3>";
 	
 	echo "<div id='box_online' style='width: 100%; background: #ccc; padding: 10px;'>";
 	echo "<div class='loading' style='width:100%; text-align: center;'>";
@@ -166,7 +166,7 @@ function update_manager_starting_update() {
 			array('value' => json_encode(
 					array(
 						'status' => 'fail',
-						'message' => __('Failed the extracting of the package to temp directory.')
+						'message' => __('Failed extracting the package to temp directory.')
 					)
 				)
 			),
@@ -201,7 +201,7 @@ function update_manager_starting_update() {
 			array('value' => json_encode(
 					array(
 						'status' => 'end',
-						'message' => __('Successful the extrating the package.')
+						'message' => __('Package extracted successfully.')
 					)
 				)
 			),
