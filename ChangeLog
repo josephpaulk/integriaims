@@ -1,3 +1,8 @@
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* integria_demo.sql, install.php, integria_dbdata.sql: set the
+	default values for the update manager.
+
 2013-11-27  Dario Rodriguez <dario@artica.es>
 
 	*  operation/common/download_file.php,

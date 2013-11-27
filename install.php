@@ -38,7 +38,7 @@
 error_reporting(0);
 $integria_version = "v4.0 Build 130822";
 
-function check_extension ( $ext, $label ){
+function check_extension ( $ext, $label ) {
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
@@ -53,7 +53,7 @@ function check_extension ( $ext, $label ){
 	echo "</td></tr>";
 }
 
-function check_include ( $ext, $label ){
+function check_include ( $ext, $label ) {
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
@@ -68,7 +68,7 @@ function check_include ( $ext, $label ){
 	echo "</td></tr>";
 }
 
-function check_writable ($file, $label ){
+function check_writable ($file, $label ) {
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
@@ -84,7 +84,7 @@ function check_writable ($file, $label ){
 	echo "</td></tr>";
 }
 
-function check_exists ( $file, $label ){
+function check_exists ( $file, $label ) {
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
@@ -114,12 +114,12 @@ function check_generic ( $ok, $label ){
 	echo "</td></tr>";
 }
 
-function check_variable ( $var, $value, $label, $mode ){
+function check_variable ( $var, $value, $label, $mode ) {
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
 	if ($mode == 1) {
-		if ($var >= $value){
+		if ($var >= $value) {
 			echo " <img src='images/dot_green.gif'>";
 			return 0;
 		}
@@ -139,14 +139,14 @@ function check_variable ( $var, $value, $label, $mode ){
 	echo "</td></tr>";
 }
 
-function parse_mysql_dump($url){
+function parse_mysql_dump($url) {
 	if (file_exists($url)) {
 		$file_content = file($url);
 		$query = "";
-		foreach($file_content as $sql_line){
-			if(trim($sql_line) != "" && strpos($sql_line, "--") === false) {
+		foreach ($file_content as $sql_line){
+			if (trim($sql_line) != "" && strpos($sql_line, "--") === false) {
 				$query .= $sql_line;
-				if(preg_match("/;[\040]*\$/", $sql_line)){
+				if (preg_match("/;[\040]*\$/", $sql_line)) {
 					if (!$result = mysql_query($query)) {
 					 	echo mysql_error(); //Uncomment for debug
 						echo "<i><br>$query<br></i>";
@@ -161,7 +161,7 @@ function parse_mysql_dump($url){
 	else
 		return 0;
 }
-function random_name ($size){
+function random_name ($size) {
 	$temp = "";
 	for ($a=0;$a< $size;$a++)
 		$temp = $temp. chr(rand(122,97));
@@ -223,10 +223,11 @@ echo '
 			<p>For more information, please refer to our website at http://integriaims.com and contact us if you have any kind of question about the usage of Integria IMS</p>
 <p>If you dont accept the licence terms, please, close your browser and delete Integria IMS files.</p>';
 
-if (!file_exists("COPYING")){
+if (!file_exists("COPYING")) {
 		echo "<div class='warn'><b>Licence file 'COPYING' is not present in your distribution. This means you have some 'partial' Pandora FMS distribution. We cannot continue without accepting the licence file.";
 		echo "</div>";
-	} else {
+	}
+	else {
 		echo "<br>";
 		echo "<form method=post action='install.php?step=2'>";
 		echo "<textarea name='gpl2' cols=60 rows=19>";
@@ -235,8 +236,8 @@ if (!file_exists("COPYING")){
 		echo "<p>";
 		echo "<input type=submit value='Yes, I accept licence terms'>";
 	}
-    echo "</div>";
-    echo "<div class='box'>
+	echo "</div>";
+	echo "<div class='box'>
 			<img src='images/integria_white.png' alt=''>
 			<br><br>
 			<font size=1px>".$integria_version."</font>
@@ -251,7 +252,7 @@ if (!file_exists("COPYING")){
 function install_step2() {
 	global $integria_footertext;
 	global $integria_version;
-
+	
 	echo "
 	<div align='center'>
 	<div id='wizard' >
@@ -268,9 +269,10 @@ function install_step2() {
 			$res += check_extension("gettext","PHP gettext extension");
 			$res += check_extension("imap","PHP IMAP extension");
 			$res += check_extension("gettext","PHP gettext extension");
+			$res += check_extension("phar","PHP Phar extension");
 			//$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
-            $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
+			$res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
 			echo "</table>
 		</div>
 		<div class='box'>
@@ -288,7 +290,8 @@ function install_step2() {
 				could not finish your installation.
 				</p>
 				Ignore it. <a href='install.php?step=3'>Force install Step #3</a>";
-			} else {
+			}
+			else {
 				echo "<a href='install.php?step=3'><img align='right' src='images/arrow_next.png' alt=''></a>";
 			}
 			echo "</div></div>";
@@ -296,7 +299,7 @@ function install_step2() {
 
 function install_step3() {
 	global $integria_version;
-
+	
 	echo "
 	<div align='center'>
 	<div id='wizard'>
@@ -335,9 +338,9 @@ function install_step3() {
 				
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>";
-					
+				
 				echo "
-
+				
 				<div style='margin: 10px; margin-left: 0px;'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>

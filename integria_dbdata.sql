@@ -46,8 +46,8 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_session', 7),
 ('update_manager_installed', 1),
 ('current_package', 0),
-('url_updatemanager', ''),
-('license', '');
+('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
+('license', 'INTEGRIA-FREE');
 
 -- Default password is 'integria'
 
