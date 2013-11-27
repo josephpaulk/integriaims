@@ -104,13 +104,15 @@ if ($update) {
 	
 	if ($update_manager_installed == 1) {
 		$license_info_key = get_parameter('license_info_key', '');
-		if (!empty($license_info_key)) {
-			$sql_update = "UPDATE tupdate_settings SET `value`='$license_info_key'
-					WHERE `key`='customer_key'";
-			$update_manage_settings_result = process_sql($sql_update);
+		if (empty($license_info_key)) {
+			$license_info_key = 'INTEGRIA-FREE';
 		}
+		
+		$sql_update = "UPDATE tupdate_settings SET `value`='$license_info_key'
+			WHERE `key`='customer_key'";
+		$update_manage_settings_result = process_sql($sql_update);
 	}
-    
+	
 }
 // Render SYSTEM language code, not current language.
 $table->width = '99%';

@@ -1,5 +1,9 @@
 2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* godmode/setup/setup.php: fixed the set empty license.
+
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* godmode/setup/setup.php: restored the lost Dario's field, maybe
 	it is lost with some or my commits.
 
