@@ -1,3 +1,8 @@
+2013-11-27 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/config_process.php: erased the default values for the
+	update manager.
+
 2013-11-27  Dario Rodriguez <dario@artica.es>
 
         * include/functions_update_manager.php: Fixed some strings

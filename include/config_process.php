@@ -138,17 +138,11 @@ date_default_timezone_set($config["timezone"]);
 include_once ($config["homedir"]."/include/functions_html.php");
 include_once ($config["homedir"]."/include/functions_form.php");
 include_once ($config["homedir"]."/include/functions_calendar.php");
-			
+
 // Function include_graphs_dependencies() it's called in the code below
 require_once("include_graph_dependencies.php");
 
 include_graphs_dependencies($config['homedir'].'/');
-
-
-//UPDATE MANAGER WIP
-$config['license'] = '0123456789';
-$config['url_updatemanager'] = 'https://192.168.70.162/~ramon/update_manager/server.php';
-$config['current_package'] = 0;
 
 
 
