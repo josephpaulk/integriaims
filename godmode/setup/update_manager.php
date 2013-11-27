@@ -46,8 +46,10 @@ if (defined ('AJAX')) {
 		
 		$params = array('action' => 'newest_package',
 			'license' => $license,
-			'users' => $users,
-			'current_package' => $current_package);
+			'limit_count' => $users,
+			'current_package' => $current_package,
+			'version' => $config['version'],
+			'build' => $config['build']);
 		
 		$curlObj = curl_init();
 		curl_setopt($curlObj, CURLOPT_URL, $config['url_updatemanager']);
@@ -103,9 +105,11 @@ if (defined ('AJAX')) {
 		
 		$params = array('action' => 'get_package',
 			'license' => $license,
-			'users' => $users,
+			'limit_count' => $users,
 			'current_package' => $current_package,
-			'package' => $package);
+			'package' => $package,
+			'version' => $config['version'],
+			'build' => $config['build']);
 		
 		$curlObj = curl_init();
 		//curl_setopt($curlObj, CURLOPT_URL, $config['url_updatemanager']);
