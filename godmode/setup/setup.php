@@ -111,6 +111,7 @@ if ($update) {
 		$sql_update = "UPDATE tconfig SET `value`='$license_info_key'
 			WHERE `token`='license'";
 		$update_manage_settings_result = process_sql($sql_update);
+		$config["license"] = $license_info_key;
 	}
 	
 	$config["url_updatemanager"] = get_parameter ("url_updatemanager", $config["url_updatemanager"]);

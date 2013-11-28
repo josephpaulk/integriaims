@@ -1,3 +1,7 @@
+2013-11-28  Dario Rodriguez <dario@artica.es>
+
+	* godmode/setup/setup.php: Fixed a problem saving license.
+
 2013-11-27  Dario Rodriguez <dario@artica.es>
 
 	* godmode/setup/offline_update.php: Fixed a bug checking errors
