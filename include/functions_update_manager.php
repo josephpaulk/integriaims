@@ -42,6 +42,9 @@ function update_manager_main() {
 	echo "<div class='loading' style='width:100%; text-align: center;'>";
 	print_image("images/wait.gif");
 	echo "</div>";
+	echo "<div class='checking_package' style='width:100%; text-align: center; display: none;'>";
+	echo __('Checking for the newest package.');
+	echo "</div>";
 	echo "<div class='download_package' style='width:100%; text-align: center; display: none;'>";
 	echo __('Downloading the package.');
 	echo "</div>";
@@ -49,17 +52,10 @@ function update_manager_main() {
 	echo "<div class='progressbar' style='display: none;'><img class='progressbar_img' src='' /></div>";
 	echo "</div>";
 	
-	
-	$loginhash_data = md5($loginhash_user . $config["dbpass"]);
-	$loginhash_user = $config['id_user'];
-	
 	?>
 	<script type="text/javascript">
 		var version_update = "";
-		<?php
-		echo 'var loginhash_data = "' . $loginhash_data . '";' . "\n";
-		echo 'var loginhash_user = "' . $loginhash_user . '";' . "\n";
-		?>
+		var stop_check_progress = 0;
 		
 		$(document).ready(function() {
 			check_online_packages();
@@ -68,16 +64,18 @@ function update_manager_main() {
 		});
 		
 		function check_online_packages() {
+			$("#box_online .checking_package").show();
+			
 			var parameters = {};
 			parameters['page'] = 'godmode/setup/update_manager';
 			parameters['check_online_free_packages'] = 1;
-			parameters['loginhash_data'] = loginhash_data;
-			parameters['loginhash_user'] = loginhash_user;
 			
 			jQuery.post(
 				"ajax.php",
 				parameters,
 				function (data) {
+					$("#box_online .checking_package").hide();
+					
 					$("#box_online .loading").hide();
 					$("#box_online .content").html(data);
 				},
@@ -97,8 +95,6 @@ function update_manager_main() {
 			parameters['page'] = 'godmode/setup/update_manager';
 			parameters['update_last_free_package'] = 1;
 			parameters['package'] = package;
-			parameters['loginhash_data'] = loginhash_data;
-			parameters['loginhash_user'] = loginhash_user;
 			parameters['version'] = version;
 			
 			jQuery.post(
@@ -111,7 +107,8 @@ function update_manager_main() {
 						
 						$("#box_online .content").html(data['message']);
 						
-						check_progress_update();
+						install_package(package);
+						setTimeout(check_progress_update, 1000);
 					}
 					else {
 						$("#box_online .content").html(data['message']);
@@ -121,20 +118,53 @@ function update_manager_main() {
 			);
 		}
 		
-		function check_progress_update() {
+		function install_package(package) {
 			var parameters = {};
 			parameters['page'] = 'godmode/setup/update_manager';
-			parameters['check_update_free_package'] = 1;
-			parameters['loginhash_data'] = loginhash_data;
-			parameters['loginhash_user'] = loginhash_user;
+			parameters['install_package'] = 1;
+			parameters['package'] = package;
 			
 			jQuery.post(
 				"ajax.php",
 				parameters,
 				function (data) {
+					if (data["status"] == "success") {
+						$("#box_online .loading").hide();
+						$("#box_online .progressbar").hide();
+						$("#box_online .content").html(data['message']);
+						stop_check_progress = 1;
+					}
+					else {
+						$("#box_online .loading").hide();
+						$("#box_online .progressbar").hide();
+						$("#box_online .content").html(data['message']);
+						stop_check_progress = 1;
+					}
+				},
+				"json"
+			);
+		}
+		
+		function check_progress_update() {
+			if (stop_check_progress) {
+				return;
+			}
+			
+			var parameters = {};
+			parameters['page'] = 'godmode/setup/update_manager';
+			parameters['check_update_free_package'] = 1;
+			
+			jQuery.post(
+				"ajax.php",
+				parameters,
+				function (data) {
+					if (stop_check_progress) {
+						return;
+					}
+					
 					if (data['correct']) {
 						if (data['end']) {
-							$("#box_online .content").html(data['message']);
+							//$("#box_online .content").html(data['message']);
 						}
 						else {
 							$("#box_online .progressbar").show();
@@ -146,7 +176,7 @@ function update_manager_main() {
 						}
 					}
 					else {
-						$("#box_online .content").html(data['message']);
+						//$("#box_online .content").html(data['message']);
 					}
 				},
 				"json"

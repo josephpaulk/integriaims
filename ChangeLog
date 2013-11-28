@@ -1,3 +1,13 @@
+2013-11-28 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* godmode/updatemanager, godmode/updatemanager/settings.php,
+	godmode/updatemanager/main.php,
+	include/functions_update_manager.ajax.php: erased old code for
+	the old update manager.
+	
+	* godmode/setup/update_manager.php,
+	include/functions_update_manager.php: some fixes.
+
 2013-11-28  Sancho Lerena <slerena@artica.es>
 
 	* include/config_process.php: Fixed problem generating PDF

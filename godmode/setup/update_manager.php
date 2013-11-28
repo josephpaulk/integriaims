@@ -40,6 +40,7 @@ if (defined ('AJAX')) {
 	$check_online_free_packages = (bool)get_parameter('check_online_free_packages', 0);
 	$update_last_free_package = (bool)get_parameter('update_last_free_package', 0);
 	$check_update_free_package = (bool)get_parameter('check_update_free_package', 0);
+	$install_package = (bool)get_parameter('install_package', 0);
 	
 	if ($check_online_free_packages) {
 		
@@ -82,7 +83,7 @@ if (defined ('AJAX')) {
 			$result = json_decode($result, true);
 			
 			if (!empty($result)) {
-				echo "<p>" . $result[0]['package_description'] . "</p>";
+				echo "<p>There is a new version: " . $result[0]['version'] . "</p>";
 				echo "<a href='javascript: update_last_package(\"" . base64_encode($result[0]["file_name"]) .
 					"\", \"" . $result[0]['version'] ."\");'>" .
 					__("Update to the last version") . "</a>";
@@ -149,10 +150,12 @@ if (defined ('AJAX')) {
 				'in_progress' => true,
 				'message' => __('Starting to update to the last package.')));
 			
-			$progress_update = get_db_value ('value', 'tconfig',
-				'token', 'progress_update');
 			
-			if (empty($progress_update)) {
+			$progress_update_status = get_db_value(
+				'value', 'tconfig', 'token', 'progress_update_status');
+			
+			debugPrint($progress_update_status, true);
+			if (empty($progress_update_status)) {
 				process_sql_insert('tconfig',
 					array(
 						'value' => 0,
@@ -184,17 +187,27 @@ if (defined ('AJAX')) {
 					),
 					array('token' => 'progress_update_status'));
 			}
-			
-			update_manager_starting_update();
-			
-			
-			$sql_update = "UPDATE tconfig SET `value`='$version'
-				WHERE `token`='current_package'";
-			process_sql($sql_update);
-			$config['current_package'] = $version;
 		}
 		
 		return;
+	}
+	
+	if ($install_package) {
+		update_manager_starting_update();
+		
+		
+		$sql_update = "UPDATE tconfig SET `value`='$version'
+			WHERE `token`='current_package'";
+		process_sql($sql_update);
+		$config['current_package'] = $version;
+		
+		sleep(3);
+		
+		
+		
+		$return["status"] = "success";
+		$return["message"]= __("The package is installed.");
+		echo json_encode($return);
 	}
 	
 	if ($check_update_free_package) {
@@ -208,7 +221,7 @@ if (defined ('AJAX')) {
 		$progress_update_status = json_decode($progress_update_status, true);
 		
 		switch ($progress_update_status['status']) {
-			case 'progress_update':
+			case 'in_progress':
 				$correct = true;
 				$end = false;
 				break;
