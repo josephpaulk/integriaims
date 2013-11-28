@@ -193,6 +193,8 @@ if (defined ('AJAX')) {
 	}
 	
 	if ($install_package) {
+		$version = get_parameter('version', '');
+		
 		update_manager_starting_update();
 		
 		
