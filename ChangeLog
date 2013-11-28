@@ -1,5 +1,10 @@
 2013-11-28  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_update_manager.php: Fixed a typo in package
+	message.
+
+2013-11-28  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_update_manager.php: Now update manager open shows
 	the version for last package installed.
 

@@ -23,7 +23,7 @@ function update_manager_main() {
 	
 	echo "<p><b>";
 	if ($config['current_package'] == 0) 
-		echo "<h3 class='update'>".__('You do not have installed any updates of Integria IMS Enterprise')."</h3>";
+		echo "<h3 class='update'>".__('You do not have installed any updates of Integria IMS')."</h3>";
 	else
 		echo "<h3 class='update'>".__('Your Integria IMS Enterprise version number is') . ' ' .
 			$config['current_package']."</h3>";
