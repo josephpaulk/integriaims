@@ -21,7 +21,14 @@ define ('FREE_USER', 'INTEGRIA-FREE');
 function update_manager_main() {
 	global $config;
 	
-
+	echo "<p><b>";
+	if ($config['current_package'] == 0) 
+		echo "<h3 class='update'>".__('You do not have installed any updates of Integria IMS Enterprise')."</h3>";
+	else
+		echo "<h3 class='update'>".__('Your Integria IMS Enterprise version number is') . ' ' .
+			$config['current_package']."</h3>";
+	echo "</b></p>";
+	
 	echo '<p class="info_update">' .
 			__('This is a automatilly update Integria IMS. Be careful if you have changed any php file, please make a backup this modified files php. Because the update action ovewrite all php files in Integria IMS.') .
 		'</p>' .
