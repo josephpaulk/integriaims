@@ -101,7 +101,7 @@ if ($update) {
 	
 	# Update of Integria license 
 	$update_manager_installed = get_db_value('value', 'tconfig', 'token', 'update_manager_installed');
-	
+
 	if ($update_manager_installed == 1) {
 		$license_info_key = get_parameter('license_info_key', '');
 		if (empty($license_info_key)) {
@@ -112,10 +112,21 @@ if ($update) {
 			WHERE `token`='license'";
 		$update_manage_settings_result = process_sql($sql_update);
 		$config["license"] = $license_info_key;
+
+		$config["url_updatemanager"] = get_parameter ("url_updatemanager", $config["url_updatemanager"]);
+        	update_config_token ("url_updatemanager", $config["url_updatemanager"]);
+
+	} else {
+		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('update_manager_installed', '1');";
+		process_sql  ($sql_insert);
+		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('license', 'INTEGRIA-FREE');";
+                process_sql  ($sql_insert);
+		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('current_package', '0');";
+                process_sql  ($sql_insert);
+		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php');";
+                process_sql  ($sql_insert);	
 	}
 	
-	$config["url_updatemanager"] = get_parameter ("url_updatemanager", $config["url_updatemanager"]);
-	update_config_token ("url_updatemanager", $config["url_updatemanager"]);
 }
 // Render SYSTEM language code, not current language.
 $table->width = '99%';

@@ -1,5 +1,8 @@
 2013-11-28  Sancho Lerena <slerena@artica.es>
 
+	* godmode/setup/setup.php: Fixed problem in access to updatemanager
+	or licence settings if update manager was not installed.
+
         * extras/migrate.sql: Fixed typo.
 
 2013-11-28  Dario Rodriguez <dario@artica.es>
