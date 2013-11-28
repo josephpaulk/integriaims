@@ -158,7 +158,7 @@ if ($config["access_port"]) {
 	$port = ":".$config["access_port"];
 }
 
-$server_addr = "localhost";
+$server_addr = $config["access_public"]; 
 if (isset($_SERVER["SERVER_NAME"])) {
 	$server_addr = $_SERVER["SERVER_NAME"];
 }

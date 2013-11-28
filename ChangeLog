@@ -1,5 +1,8 @@
 2013-11-28  Sancho Lerena <slerena@artica.es>
 
+	* include/config_process.php: Fixed problem generating PDF
+	on localhost.
+
 	* include/functions_config.php: Fixed _again_ problems with 
 	missing licence field in tconfig. This should fix the problem. 
 
