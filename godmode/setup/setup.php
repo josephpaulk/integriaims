@@ -55,7 +55,7 @@ if ($update) {
 	$config["first_day_week"] = get_parameter ("first_day_week", 0);
 	$config["access_protocol"] = get_parameter("access_protocol");
 	$config["access_port"] = get_parameter("access_port", "");
-	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_ADDR"]);
+	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_NAME"]);
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);

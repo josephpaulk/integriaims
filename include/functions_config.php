@@ -259,7 +259,7 @@ function load_config() {
 	}
 
 	if (!isset ($config["access_public"])) {
-		$config["access_public"] = $_SERVER["SERVER_ADDR"];
+		$config["access_public"] = $_SERVER["SERVER_NAME"];
 		update_config_token ("access_public", $config["access_public"]);
 	}
 }

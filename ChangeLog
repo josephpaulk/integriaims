@@ -1,3 +1,14 @@
+2013-11-28  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_config.php,
+	include/config_process.php,
+	godmode/setup/setup.php: Updated behaviour of base_url variable.
+	In most setups now it should autodetect, and only for newsletter
+	maintain a separate variable (public_access) to create special
+	links outside the regular URL mechanism.
+
+	* disabled/incident_summary.php: Moved sample extension.
+
 2013-11-28  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_update_manager.php: Fixed a typo in package

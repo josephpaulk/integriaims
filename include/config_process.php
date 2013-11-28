@@ -159,8 +159,8 @@ if ($config["access_port"]) {
 }
 
 $server_addr = "localhost";
-if (isset($_SERVER["SERVER_ADDR"])) {
-	$server_addr = $_SERVER["SERVER_ADDR"];
+if (isset($_SERVER["SERVER_NAME"])) {
+	$server_addr = $_SERVER["SERVER_NAME"];
 }
 
 $config["base_url"] = $protocol."://".$server_addr.$port.$config["base_url_dir"];
