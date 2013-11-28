@@ -262,6 +262,11 @@ function load_config() {
 		$config["access_public"] = $_SERVER["SERVER_NAME"];
 		update_config_token ("access_public", $config["access_public"]);
 	}
+
+	if (!isset($config["license"])){
+		$config["license"]= "INTEGRIA-FREE";
+		update_config_token ("license", $config["license"]);
+	}
 }
 
 function config_prepare_session() {

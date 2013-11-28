@@ -1,5 +1,8 @@
 2013-11-28  Sancho Lerena <slerena@artica.es>
 
+	* include/functions_config.php: Fixed _again_ problems with 
+	missing licence field in tconfig. This should fix the problem. 
+
 	* include/functions_config.php,
 	include/config_process.php,
 	godmode/setup/setup.php: Updated behaviour of base_url variable.
