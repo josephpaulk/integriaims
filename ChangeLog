@@ -1,3 +1,7 @@
+2013-11-28  Sancho Lerena <slerena@artica.es>
+
+        * extras/migrate.sql: Fixed typo.
+
 2013-11-28  Dario Rodriguez <dario@artica.es>
 
 	* godmode/setup/setup.php: Fixed a problem saving license.

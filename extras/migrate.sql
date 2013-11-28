@@ -468,9 +468,9 @@ ALTER TABLE tinvoice MODIFY `bill_id` tinytext NOT NULL DEFAULT '';
 
 /* 23/09/2013 */
 CREATE TABLE `tcampaign` (
-   `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `start_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',m
+  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `title` mediumtext DEFAULT NULL,
   `description` mediumtext DEFAULT NULL,
   `expenses` mediumint NULL default 0,
