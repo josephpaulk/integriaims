@@ -1,3 +1,8 @@
+2013-11-29 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* godmode/setup/update_manager.php,
+	include/functions_update_manager.php: disabled the debug traces.
+
 2013-11-28 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* godmode/setup/update_manager.php,

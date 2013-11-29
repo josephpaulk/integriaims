@@ -63,9 +63,9 @@ if (defined ('AJAX')) {
 		$http_status = curl_getinfo($curlObj, CURLINFO_HTTP_CODE);
 		curl_close($curlObj);
 		
-		debugPrint($params, true);
-		debugPrint($result, true);
-		debugPrint($http_status, true);
+		//debugPrint($params, true);
+		//debugPrint($result, true);
+		//debugPrint($http_status, true);
 		
 		//WORK AROUND FOR TO FIX THE RAMON LOST
 		//~ $result=
@@ -104,8 +104,8 @@ if (defined ('AJAX')) {
 		$package = get_parameter('package', '');
 		$version = get_parameter('version', '');
 		$package_url = base64_decode($package);
-		debugPrint($package_url, true);
-		debugPrint($version, true);
+		//debugPrint($package_url, true);
+		//debugPrint($version, true);
 		
 		$params = array('action' => 'get_package',
 			'license' => $license,
@@ -128,7 +128,7 @@ if (defined ('AJAX')) {
 		
 		curl_close($curlObj);
 		
-		debugPrint("end", true);
+		//debugPrint("end", true);
 		
 		
 		//~ debugPrint($params, true);
@@ -154,7 +154,7 @@ if (defined ('AJAX')) {
 			$progress_update_status = get_db_value(
 				'value', 'tconfig', 'token', 'progress_update_status');
 			
-			debugPrint($progress_update_status, true);
+			//debugPrint($progress_update_status, true);
 			if (empty($progress_update_status)) {
 				process_sql_insert('tconfig',
 					array(

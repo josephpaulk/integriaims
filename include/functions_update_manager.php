@@ -268,9 +268,9 @@ function update_manager_recurse_copy($src, $dst, $black_list) {
 			else { 
 				//debugPrint($src . '/' . $file.",".$dst . '/' . $file, true);
 				$result = copy($src . '/' . $file,$dst . '/' . $file);
-				debugPrint($result, true);
+				//debugPrint($result, true);
 				$error = error_get_last();
-				debugPrint($error, true);
+				//debugPrint($error, true);
 				
 				if (strstr($error['message'], "copy(") ) {
 					return false;
