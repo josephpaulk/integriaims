@@ -1,3 +1,8 @@
+2013-12-02  Dario Rodriguez <dario@artica.es>
+
+	* integria.spec: Added new php5-phar dependence.
+	* extras/build_src.sh: Added new zip packages.
+
 2013-11-29 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* godmode/setup/update_manager.php,

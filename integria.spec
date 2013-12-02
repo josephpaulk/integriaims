@@ -3,7 +3,7 @@
 #
 %define name        IntegriaIMS
 %define version     4.0
-%define release     131119
+%define release     1
 %define httpd_name  httpd
 # User and Group under which Apache is running
 %define httpd_name  apache2
@@ -30,7 +30,7 @@ AutoReq:            0
 Requires:           apache2
 Requires:           php >= 4.3.0
 Requires:           php5-gd, php5-json, php5-gettext, curl, php5-ldap, php5-imap
-Requires:           php5-mysql, php5-ldap, php5-mbstring, php5, php5-ctype
+Requires:           php5-mysql, php5-ldap, php5-mbstring, php5, php5-ctype, php5-phar
 Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 
