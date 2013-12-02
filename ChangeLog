@@ -1,3 +1,11 @@
+2013-12-02  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db_data.sql
+	  extras/migrate.sql: Changed languages.
+	
+	* include/languages/index.pot: New strings to 
+	translate.
+
 2013-12-02  Dario Rodriguez <dario@artica.es>
 
 	* images/avatars/girl1.png,

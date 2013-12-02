@@ -494,3 +494,12 @@ ALTER TABLE `tuser_report` ADD COLUMN `email` varchar(100) NOT NULL;
 ALTER TABLE `tuser_report` ADD COLUMN `id_project` int(11) DEFAULT 0;
 ALTER TABLE `tuser_report` ADD COLUMN `id_incidents_custom_search` mediumint(8) unsigned DEFAULT 0;
 ALTER TABLE `tuser_report` ADD COLUMN `id_leads_custom_search` mediumint(8) unsigned DEFAULT 0;
+
+-- ---------------------------------------------------------------------
+-- Table tlanguage (02/12/2013)
+-- ---------------------------------------------------------------------
+
+DELETE FROM `tlanguage` WHERE id_language IN ('bn', 'da', 'el', 'ko', 'nl', 'tr');
+INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('zh_CN','简化字');
+INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('de','Deutch');
+INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('pl','Polski');

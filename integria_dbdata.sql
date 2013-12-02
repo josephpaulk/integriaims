@@ -61,14 +61,12 @@ INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (4
 
 INSERT INTO `tlanguage` VALUES ('en_GB','English');
 INSERT INTO `tlanguage` VALUES ('es','Español');
-INSERT INTO `tlanguage` VALUES ('bn', 'বাংলা');
-INSERT INTO `tlanguage` VALUES ('da','Dansk');
-INSERT INTO `tlanguage` VALUES ('el','Ελληνικά');
-INSERT INTO `tlanguage` VALUES ('fr','Français');
-INSERT INTO `tlanguage` VALUES ('ko','한국어');
-INSERT INTO `tlanguage` VALUES ('nl','Nederlands');
 INSERT INTO `tlanguage` VALUES ('ru','Русский');
-INSERT INTO `tlanguage` VALUES ('tr','Türkçe');
+INSERT INTO `tlanguage` VALUES ('fr','Français');
+INSERT INTO `tlanguage` VALUES ('zh_CN','简化字');
+INSERT INTO `tlanguage` VALUES ('de','Deutch');
+INSERT INTO `tlanguage` VALUES ('pl','Polski');
+
 
 INSERT INTO `tlink` VALUES  (1,'Integria Project','http://integria.sourceforge.net'), (2,'Artica ST','http://www.artica.es'), (3, 'Report a bug', 'https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
 
