@@ -1,5 +1,12 @@
 2013-12-02  Dario Rodriguez <dario@artica.es>
 
+	* images/avatars/girl1.png,
+	images/avatars/girl2.png,
+	images/avatars/girl3.png,
+	images/avatars/girl4.png: Added new girl avatars.
+
+2013-12-02  Dario Rodriguez <dario@artica.es>
+
 	* integria.spec: Added new php5-phar dependence.
 	* extras/build_src.sh: Added new zip packages.
 
