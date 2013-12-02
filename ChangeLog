@@ -1,4 +1,8 @@
-2013-12-02  Dario Rodriguez <dario@artia.es>
+2013-12-02  Dario Rodriguez <dario@artica.es>
+
+	* DEBIAN/control: Added php5-curl dependence.
+	
+2013-12-02  Dario Rodriguez <dario@artica.es>
 
 	* install.php: Updated build.
  	* extras/build_src.sh: Fixed a problem creating zip file.
