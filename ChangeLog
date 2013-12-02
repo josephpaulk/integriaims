@@ -1,3 +1,8 @@
+2013-12-02  Dario Rodriguez <dario@artia.es>
+
+	* install.php: Updated build.
+ 	* extras/build_src.sh: Fixed a problem creating zip file.
+
 2013-12-02  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/languages/zh_CN.mo: Updated translations.
