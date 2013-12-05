@@ -3,7 +3,7 @@
 #
 %define name        IntegriaIMS
 %define version     4.0
-%define release     1
+%define release     131205
 %define httpd_name  httpd
 # User and Group under which Apache is running
 %define httpd_name  apache2
@@ -40,7 +40,7 @@ Integria IMS is a management software for SME. It includes a complete approach t
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n integria
+%setup -q -n trunk
 
 %build
 

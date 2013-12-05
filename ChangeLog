@@ -1,3 +1,7 @@
+2013-12-05  Sancho Lerena <slerena@artica.es>
+
+	* integria.spec: Fixed SUSE spec, was broken.
+
 2013-12-02  Dario Rodriguez <dario@artica.es>
 
 	* DEBIAN/control: Added php5-curl dependence.
