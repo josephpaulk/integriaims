@@ -1,3 +1,9 @@
+2013-12-05  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_crm.php
+	  operation/companies/company_detail.php: Fixed bug
+	listing company's contracts.
+
 2013-12-05  Sancho Lerena <slerena@artica.es>
 
 	* integria.spec: Fixed SUSE spec, was broken.

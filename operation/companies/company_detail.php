@@ -528,8 +528,11 @@ elseif ($op == "activities") {
 
 elseif ($op == "contracts") {
 	
-	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
-	$contracts = crm_get_user_contracts($config['id_user'], $contracts);
+	//$contracts = get_contracts(false, "id_company = $id ORDER BY name");
+	//$contracts = crm_get_user_contracts($config['id_user'], $contracts);
+	$where_clause = "WHERE id_company=$id";
+	$contracts = crm_get_all_contracts ($where_clause, 'name');
+	
 	
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 	
