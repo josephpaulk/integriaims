@@ -1,3 +1,8 @@
+2013-12-09  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/invoices/invoices.php: Fixed bug
+	listing cancelled invoices.
+
 2013-12-05  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_crm.php

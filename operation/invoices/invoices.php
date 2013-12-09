@@ -313,7 +313,7 @@ $table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, _
 $invoice_status_ar = array();
 $invoice_status_ar['pending']= __("Pending");
 $invoice_status_ar['paid']= __("Paid");
-$invoice_status_ar['cancel']= __("Cancelled");
+$invoice_status_ar['canceled']= __("Canceled");
 $table->data[1][1] = print_select ($invoice_status_ar, 'invoice_status',
 	$invoice_status, '','', 0, true, false, false, __('Invoice status'));
 
