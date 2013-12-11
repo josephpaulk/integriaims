@@ -1,3 +1,8 @@
+2013-12-11  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_update_manager.php: Fixed a problem
+	unpacking open updates.
+
 2013-12-09  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/invoices/invoices.php: Fixed bug

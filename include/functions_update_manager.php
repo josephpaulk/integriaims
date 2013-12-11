@@ -187,6 +187,21 @@ function update_manager_main() {
 	<?php
 }
 
+
+//Function to remove dir and files inside
+ function rrmdir($dir) {
+   if (is_dir($dir)) {
+     $objects = scandir($dir);
+     foreach ($objects as $object) {
+       if ($object != "." && $object != "..") {
+         if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object);
+       }
+     }
+     reset($objects);
+     rmdir($dir);
+   }
+ }
+
 /**
  * The update copy entirire the tgz or fail (leave some parts copies and some part not).
  * This does make any thing with the BD.
@@ -199,6 +214,7 @@ function update_manager_starting_update() {
 	
 	try {
 		$phar = new PharData($path_package);
+		rrmdir($config['attachment_store'] . "/downloads/temp_update/trunk");
 		$phar->extractTo($config['attachment_store'] . "/downloads/temp_update");
 	}
 	catch (Exception $e) {
