@@ -791,3 +791,16 @@ INSERT INTO `tworkunit_task` VALUES (1,3,2),(2,-1,3),(3,-1,4),(4,-1,5),(5,-1,6),
 UNLOCK TABLES;
 
 INSERT INTO `tupdate_settings` VALUES ('customer_key', 'INTEGRIA-FREE'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('dbport', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
+
+INSERT INTO tlead_progress (id,name) VALUES
+(0,'New'),
+(20,'Meeting arranged'),
+(40,'Needs discovered'),
+(60,'Proposal delivered'),
+(80,'Offer accepted'),
+(100,'Closed, not response or dead'),
+(101,'Closed, lost'),
+(102,'Closed, invalid or N/A'),
+(200,'Closed successfully');
+
+UPDATE tlead_progress SET `id`=0 WHERE `id`=1;
