@@ -1,3 +1,10 @@
+2013-12-13 Miguel de Dios <miguel.dedios@artica.es>
+	
+	* AndroidManifest.xml: changed the android version support for to
+	show the option button.
+	
+	* bin/AndroidManifest.xml: removed the mistacle file.
+
 2013-12-12 Miguel de Dios <miguel.dedios@artica.es>
 	
 	* *: first version copied from the "pandora android console" from
