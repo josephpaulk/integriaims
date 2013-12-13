@@ -27,8 +27,12 @@ if (!$permission) {
 } // ACL
 
 $company_from = get_user_company ($invoice["id_user"], $only_name = false);
-if ($company_from == array())
+if ($company_from == array()) {
+        audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to an invoice view without permission");
+        no_permission();
 	exit;
+}
+
 $company_to = get_db_row ("tcompany", "id", $invoice["id_company"]);
 
 $amount = get_invoice_amount ($id_invoice);
