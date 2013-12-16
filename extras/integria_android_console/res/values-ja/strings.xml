@@ -2,15 +2,15 @@
 <resources>
     
 	<string name="const_string_preferences">INTEGROID_CONSOLE_PREFERENCES</string>
-	<string name="app_name">Integria Android Console</string>
+	<string name="app_name">Integria IMS</string>
 	<string name="options_label_str">オプション</string>
 	<string name="help_label_str">Help</string>
 	<string name="refresh_label_str">Refresh</string>
 	<string name="exit_label_str">Exit</string>
 	<string name="integria_logo_description">Integria\'s logo</string>
 	<string name="dont_show_again">Don\'t show again</string>
-	<string name="integroid_info_txt">Configure these parameters to access your Integria installation.</string>
-	<string name="integroid_info_long_txt">This application allows you to see all the information from Integria in your mobile phone.</string>
+	<string name="integroid_info_txt">Configure these parameters to access your Integria IMS installation.</string>
+	<string name="integroid_info_long_txt">This application allows you to see all the information from Integria IMS in your mobile phone.</string>
 	<string name="url_option">URL:</string>
 	<string name="user_option">User:</string>
 	<string name="password_option">Password:</string>
