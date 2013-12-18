@@ -153,7 +153,7 @@ $email_stats .= "</tr>";
 $email_stats .= "</table>";
 
 $email_stats = '<br><div>' . $email_stats . '</div>';
-echo print_container('conversion_rate', __('Newsletter statistics'), $email_stats, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container('newsletter_rate', __('Newsletter statistics'), $email_stats, 'no', true, true, "container_simple_title", "container_simple_div");
 
 $lead_stats = "<table class='details_table alternate'>";
 $lead_stats .= "<tr>";
@@ -193,7 +193,7 @@ $lead_stats .= "</tr>";
 $lead_stats .= "</table>";
 
 $lead_stats = '<br><div style="padding-left: 20px;">' . $lead_stats . '</div>';
-echo print_container('conversion_rate', __('Lead statistics'), $lead_stats, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container('lead_rate', __('Lead statistics'), $lead_stats, 'no', true, true, "container_simple_title", "container_simple_div");
 
 
 print_table($table);

@@ -2705,6 +2705,7 @@ div.container_top5_group_time_container,
 div.container_top5_user_time_container,
 div.funnel_container,
 div.conversion_rate_container,
+div.lead_rate_container,
 div.leads_per_country_container,
 div.users_per_lead_container,
 div.top_10_sales_container,
@@ -2725,6 +2726,12 @@ div.history_invoiced_container {
 
 div.funnel_container {
 	clear: left;
+}
+
+div.newsletter_rate_container {	
+	float: right !important;
+	margin: 5px;
+	margin-right: 20px;
 }
 
 div.project_activity_report_container,
@@ -2758,6 +2765,8 @@ div.container_top5_group_time_container,
 div.container_top5_user_time_container,
 div.funnel_container,
 div.conversion_rate_container,
+div.newsletter_rate_container,
+div.lead_rate_container,
 div.leads_per_country_container,
 div.users_per_lead_container,
 div.top_10_sales_container,
