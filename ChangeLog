@@ -1,3 +1,9 @@
+2013-12-30  Sancho Lerena <slerena@artica.es>
+
+	* operation/invoices/invoices.php: Added a hint on 
+	latest invoice ID generated as help to create new 
+	ones.
+
 2013-12-18  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css

@@ -310,6 +310,11 @@ $table->data[0][1] = print_input_text ('reference', $reference, '', 25, 100, tru
 
 $table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
+if ($bill_id == ""){ // let's show the latest Invoice ID generated in the system
+	$last_invoice_generated = get_db_sql ("SELECT bill_id FROM tinvoice ORDER by invoice_create_date DESC LIMIT 1");
+	$table->data[1][0] .= "<span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span>";;
+}
+
 $invoice_status_ar = array();
 $invoice_status_ar['pending']= __("Pending");
 $invoice_status_ar['paid']= __("Paid");
