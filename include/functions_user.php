@@ -153,4 +153,47 @@ function user_get_projects($id_user) {
 	else
 		return $return;
 }
+
+function user_get_task_roles ($id_user, $id_task) {
+	
+	if (dame_admin ($id_user)) {
+		$sql = "SELECT id, name FROM trole";
+	} else {
+		$sql = "SELECT trole.id, trole.name 
+			FROM trole, trole_people_task
+			WHERE id_task=$id_task and id_user='$id_user'
+			AND trole.id = trole_people_task.id_role";
+	}
+	
+	$roles = get_db_all_rows_sql($sql);
+	
+	return $roles;
+}
+
+function user_delete_user($id_user) {
+	global $config;
+	
+	// Delete user
+	// Delete cols from table tgrupo_usuario
+	if ($config["enteprise"] == 1){
+		$query_del1 = "DELETE FROM tusuario_perfil WHERE id_usuario = '".$id_user."'";
+		$resq1 = mysql_query($query_del1);
+	}
+
+	// Delete trole_people_task entries 
+	mysql_query("DELETE FROM trole_people_task WHERE id_user = '$id_user'");
+
+	// Delete trole_people_project entries
+	mysql_query ("DELETE FROM trole_people_project WHERE id_user = '$id_user'");	
+
+	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$id_user."'";
+	$resq2 = mysql_query($query_del2);
+
+	if (! $resq2) 
+		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
+	else
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	
+	return;
+}
 ?>

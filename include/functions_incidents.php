@@ -2053,8 +2053,8 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 	return $slas;
 }
 
-/*Filters and display result for incident search*/
-function incidents_search_result ($filter, $ajax=false) {
+/*Filters or display result for incident search*/
+function incidents_search_result ($filter, $ajax=false, $return_incidents = false) {
 	global $config;
 	
 	$params = "";
@@ -2092,6 +2092,10 @@ function incidents_search_result ($filter, $ajax=false) {
 	$filter["offset"] = $offset;
 
 	$incidents = filter_incidents($filter);
+	
+	if ($return_incidents) {
+			return $incidents;
+	}
 	
 	$statuses = get_indicent_status ();
 	$resolutions = get_incident_resolutions ();

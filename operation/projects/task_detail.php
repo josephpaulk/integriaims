@@ -326,6 +326,7 @@ $table->data[6][0] .= ' '.$config['currency'];
 
 $external_cost = 0;
 $external_cost = task_cost_invoices ($id_task);
+
 $table->data[6][0] .= print_label (__("External costs"), '', '', true);
 $table->data[6][0] .= $external_cost . " " . $config["currency"];
 
@@ -342,7 +343,23 @@ if ($id_task != -1) {
 		
 	$total_cost = $external_cost + task_workunit_cost ($id_task, 0) + $incident_cost;
 	
-	$table->data[6][1] .= print_label (__('Total costs'), '', '', true,
+	if ($total_cost != 0) {
+		$roles_task = get_db_all_rows_sql("SELECT distinct(id_role), name FROM trole_people_task, trole 
+			WHERE id_task = $id_task AND id_role = trole.id");
+		if ($roles_task != 0) {
+			$output_total = '';
+			foreach ($roles_task as $role) {
+				$total_role = projects_get_cost_task_by_profile ($id_task, $role['id_role']);
+				if ($total_role) {
+					$output_total .= __($role['name'])." = ".format_numeric($total_role)." ". $config["currency"]."\n";
+				}
+			}
+		}
+	} else {
+			$output_total = __('No cost');	
+	}
+
+	$table->data[6][1] .= print_label (__('Total costs').print_help_tip($output_total, true), '', '', true,
 		$total_cost . $incident_cost_label. $config['currency']);
 	
 	$avg_hr_cost = format_numeric ($total_cost / $worked_time, 2);

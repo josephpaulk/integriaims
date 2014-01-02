@@ -43,59 +43,10 @@ if (defined ('AJAX')) {
 	$install_package = (bool)get_parameter('install_package', 0);
 	
 	if ($check_online_free_packages) {
-		
-		
-		$params = array('action' => 'newest_package',
-			'license' => $license,
-			'limit_count' => $users,
-			'current_package' => $current_package,
-			'version' => $config['version'],
-			'build' => $config['build']);
-		
-		$curlObj = curl_init();
-		curl_setopt($curlObj, CURLOPT_URL, $config['url_updatemanager']);
-		curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curlObj, CURLOPT_POST, true);
-		curl_setopt($curlObj, CURLOPT_POSTFIELDS, $params);
-		curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, false);
-		
-		$result = curl_exec($curlObj);
-		$http_status = curl_getinfo($curlObj, CURLINFO_HTTP_CODE);
-		curl_close($curlObj);
-		
-		//debugPrint($params, true);
-		//debugPrint($result, true);
-		//debugPrint($http_status, true);
-		
-		//WORK AROUND FOR TO FIX THE RAMON LOST
-		//~ $result=
-			//~ json_encode(
-				//~ array(
-					//~ 'http://sourceforge.net/projects/integria/files/Integria%20IMS/4.0/Beta//IntegriaIMS-4.0-131120.tar.gz'
-				//~ ));
-		//~ $http_status = 200;
-		////////////////////////////////////////////////////////////////
-		
-		if ($http_status == 500) {
-			echo __("There is a error with the update server.");
-		}
-		else {
-			$result = json_decode($result, true);
-			
-			if (!empty($result)) {
-				echo "<p>There is a new version: " . $result[0]['version'] . "</p>";
-				echo "<a href='javascript: update_last_package(\"" . base64_encode($result[0]["file_name"]) .
-					"\", \"" . $result[0]['version'] ."\");'>" .
-					__("Update to the last version") . "</a>";
-			}
-			else {
-				echo __("None update.");
-			}
-		}
-		
+
+		update_manager_check_online_free_packages ();
 		
 		return;
-		
 		
 	}
 	

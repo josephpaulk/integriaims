@@ -62,47 +62,63 @@ function group_get_groups ($filter = false) {
 	return $return;
 }
 
+//Get users by group
+function groups_get_users($id_group) {
+	
+	$sql = "SELECT * FROM tusuario_perfil, tusuario
+		WHERE tusuario_perfil.id_grupo=$id_group
+		AND tusuario_perfil.id_usuario=tusuario.id_usuario
+		ORDER BY tusuario.id_usuario";
+	
+	$users_info = get_db_all_rows_sql($sql);
+	
+	return $users_info;
+}
+
 function print_groups_table ($groups) {
 	
 	enterprise_include("include/functions_groups.php");
 	$return = enterprise_hook ('print_groups_table_extra', array($groups));
 	if ($return === ENTERPRISE_NOT_HOOK){
-		$table->width = '99%';
-		$table->class = 'listing';
-		$table->head = array ();
-		$table->head[0] = __('Icon');
-		$table->head[1] = __('Name');
-		$table->head[2] = __('Parent');
-		$table->head[3] = __('Delete');
-		$table->data = array ();
-		$table->align = array ();
-		$table->align[3] = 'center';
-		$table->style = array ();
-		$table->style[1] = 'font-weight: bold';
-		$table->size = array ();
-		$table->size[0] = '40px';
-		$table->size[3] = '40px';
-		
+
+		echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="listing" id="table1">';
+		echo '<thead>';
+		echo 	'<tr>';
+		echo 		'<th class="header c0" scope="col">'.__('Users').'</th>';
+		echo 		'<th class="header c1" scope="col">'.__('Icon').'</th>';
+		echo 		'<th class="header c2" scope="col">'.__('Name').'</th>';
+		echo 		'<th class="header c3" scope="col">'.__('Parent').'</th>';
+		echo 		'<th class="header c4" scope="col">'.__('Delete').'</th>';
+		echo 	'</tr>';
+		echo '</thead>';
+		$count = 0;
 		if ($groups === false)
 			$groups = array ();
 			foreach ($groups as $group) {
 			$data = array ();
 			
-			$data[0] = '';
+			$num_users = get_db_value ("COUNT(id_usuario)", "tusuario_perfil", "id_grupo", $group["id_grupo"]);
+			if ($num_users > 0) {
+				$users_icon = '<a href="javascript:"><img src="images/group.png" title="'.__('Show and hide the user list').'" /></a>';
+			} else {
+				$users_icon = '';
+			}
+			
+			$icon = '';
 			if ($group['icon'] != '')
-				$data[0] = '<img src="images/groups_small/'.$group['icon'].'" />';
+				$icon = '<img src="images/groups_small/'.$group['icon'].'" />';
 				
 			if ($group["id_grupo"] != 1) {
-				$data[1] = '<a href="index.php?sec=users&sec2=godmode/grupos/configurar_grupo&id='.
+				$group_name = '<a href="index.php?sec=users&sec2=godmode/grupos/configurar_grupo&id='.
 					$group['id_grupo'].'">'.$group['nombre'].'</a>';
 			} else {
-				$data[1] = $group["nombre"];
+				$group_name = $group["nombre"];
 			}
-			$data[2] = dame_nombre_grupo ($group["parent"]);
+			$parent = dame_nombre_grupo ($group["parent"]);
 			
 			//Group "all" is special not delete and no update
 			if ($group["id_grupo"] != 1) {
-				$data[3] = '<a href="index.php?sec=users&
+				$delete_button = '<a href="index.php?sec=users&
 						sec2=godmode/grupos/lista_grupos&
 						id_grupo='.$group["id_grupo"].'&
 						delete_group=1&id='.$group["id_grupo"].
@@ -110,11 +126,60 @@ function print_groups_table ($groups) {
 						return false;">
 						<img src="images/cross.png"></a>';
 			} else {
-				$data[3] = "";
+				$delete_button = "";
 			}
-			array_push ($table->data, $data);
+			
+			echo '<tr id="table1-'.$count.'" style="border:1px solid #505050;" class="datos2">';
+			echo 	'<td id="table1-'.$count.'-0" style="text-align:center; width:40px;" class="datos2">'.$users_icon.'</td>';
+			echo 	'<td id="table1-'.$count.'-1" style="width:40px;" class="datos2">'.$icon.'</td>';
+			echo 	'<td id="table1-'.$count.'-2" style=" font-weight: bold;" class="datos2">'.$group_name.'</td>';
+			echo 	'<td id="table1-'.$count.'-3" style="" class="datos2">'.$parent.'</td>';
+			echo 	'<td id="table1-'.$count.'-4" style=" text-align:center; width:40px;" class="datos2">'.$delete_button.'</td>';
+			echo '</tr>';
+			echo '<tr id="table1-'.$count.'-users" style="display:none;">';
+			echo 	'<td colspan="5" style="text-align:center; background-color:#e6e6e6;">';
+			echo 		'<table width="99%" cellpadding="0" cellspacing="0" border="0px" id="table_users_'.$count.'">';
+			echo 			'<tr style="text-align:center;">';
+			if ($num_users > 0) {
+				$users_sql = "SELECT * FROM tusuario_perfil WHERE id_grupo =".$group["id_grupo"]." ORDER BY id_usuario"; 
+
+				$count_users = 0;
+				$new = true;
+				while ($user = get_db_all_row_by_steps_sql($new, $result_users, $users_sql)) {
+					$new = false;
+					if ($count_users >= 4) {
+						$count_users = 0;
+						echo '</tr>';
+						echo '<tr style="text-align:center;">';
+					}
+					$user_name = "<a href=\"index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$user['id_usuario']."\"><strong>".$user['id_usuario']."</strong></a>";
+					$user_real_name = get_db_value("nombre_real", "tusuario", "id_usuario", $user['id_usuario']);
+					$delete_icon = '<a href="index.php?sec=users&sec2=godmode/grupos/lista_grupos&delete_user=1&id_user_delete='.$user['id_usuario'].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+
+					$user_name = "$user_name&nbsp;($user_real_name)&nbsp;".$delete_icon;
+					echo 		'<td style="background-color:#e6e6e6;"">'.$user_name.'</td>';
+					$count_users++;
+				}
+			} else {
+				echo 			'<td style="background-color:#e6e6e6;"">'.__('There are no users').'</td>';
+			}
+			
+			echo 			'</tr>';
+			echo 		'</table>';
+			echo 	'</td>';
+			echo '</tr>';
+			
+			echo "<script type=\"text/javascript\">
+				  $(document).ready (function () {
+					  $(\"#table1-$count-0\").click(function() {
+						  $(\"#table1-$count-users\").toggle();
+					  });
+				  });
+				  </script>";	
+			
+			$count++;
 		}
-		print_table ($table);
+		echo '</table>';
 	}
 }
 

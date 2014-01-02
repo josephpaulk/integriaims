@@ -24,31 +24,14 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 	require ("general/noaccess.php");
 	exit;
 }
-	
+
+include_once('include/functions_user.php');
+
 if (isset($_GET["borrar_usuario"])){ // if delete user
+
 	$nombre = safe_input ($_GET["borrar_usuario"]);
+	user_delete_user($nombre);
 	
-	// Delete user
-	// Delete cols from table tgrupo_usuario
-
-	if ($config["enteprise"] == 1){
-		$query_del1 = "DELETE FROM tusuario_perfil WHERE id_usuario = '".$nombre."'";
-		$resq1 = mysql_query($query_del1);
-	}
-
-	// Delete trole_people_task entries 
-	mysql_query("DELETE FROM trole_people_task WHERE id_user = '$nombre'");
-
-	// Delete trole_people_project entries
-	mysql_query ("DELETE FROM trole_people_project WHERE id_user = '$nombre'");	
-
-	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
-	$resq2 = mysql_query($query_del2);
-
-	if (! $resq2) 
-		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
-	else
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 }
 
 $offset = get_parameter ("offset", 0);

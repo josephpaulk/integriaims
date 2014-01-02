@@ -351,6 +351,18 @@ function show_license_info() {
 	});
 }
 
+function toggleUsersInfo(id_group) {
+
+	display = $('.group_more_info_' + id_group).css('display');
+	
+	if (display != 'none') {
+		$('.group_more_info_' + id_group).css('display', 'none');
+	}
+	else {
+		$('.group_more_info_' + id_group).css('display', '');
+	}
+}
+
 $(document).ready (function () {
 	
 

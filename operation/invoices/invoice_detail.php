@@ -30,7 +30,9 @@ $search_invoice_status = (string) get_parameter ('search_invoice_status');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
+$order_by = get_parameter ('order_by', '');
+
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by";
 
 include_once('include/functions_crm.php');
 
@@ -177,7 +179,7 @@ if ($clean_output == 0){
 	echo '</form>';
 }
 
-$invoices = crm_get_all_invoices ($where_clause);
+$invoices = crm_get_all_invoices ($where_clause, $order_by);
 
 // NO pagination for PDF output
 if ($clean_output == 1)
@@ -186,6 +188,22 @@ if ($clean_output == 1)
 $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail$search_params");
 
 if ($invoices != false) {
+	
+		$url_id_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=bill_id';
+		$url_create_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=invoice_create_date';
+		switch ($order_by) {
+			case "bill_id":
+				$id_img = "&nbsp;<a href='$url_id_order'><img src='images/arrow_down_orange.png'></a>";
+				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/block_orange.png'></a>";
+				break;
+			case "invoice_create_date":
+				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
+				$id_img = "&nbsp;<a href='$url_id_order'><img src='images/block_orange.png'></a>";
+				break;
+			case '':
+				$id_img = "&nbsp;<a href='$url_id_order'><img src='images/block_orange.png'></a>";
+				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
+		}
 	
 	$table->width = "99%";
 	$table->class = "listing";
@@ -197,11 +215,11 @@ if ($invoices != false) {
 	$table->style = array ();
 	$table->colspan = array ();
 	$table->head[0] = __('Company');
-	$table->head[1] = __('ID');
+	$table->head[1] = __('ID').$id_img;
 	$table->head[2] = __('Amount');
 	$table->head[3] = __('Currency');
 	$table->head[4] = __('Status');
-	$table->head[5] = __('Creation');
+	$table->head[5] = __('Creation').$date_img;
 	if ($clean_output == 0)
 		$table->head[6] = __('Options');
 	$counter = 0;

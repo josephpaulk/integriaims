@@ -6,6 +6,82 @@ check_login ();
 
 require_once ('include/functions_workunits.php');
 include_once ("include/functions_projects.php");
+include_once ("include/functions_user.php");
+
+if (defined ('AJAX')) {
+	$multiple_delete_wu = get_parameter('multiple_delete_wu', 0);
+	$multiple_update_wu = get_parameter('multiple_update_wu', 0);
+	
+	if ($multiple_delete_wu) {
+		$ids = get_parameter('ids');
+		
+		if ($ids == '') {
+			return;
+		}
+		
+		
+		$result_ids = explode(',', $ids);
+		$result = '';
+		foreach ($result_ids as $id) {
+			$success = delete_task_workunit ($id);
+		}
+
+		echo json_encode($result);
+		return;
+	}
+	
+	if ($multiple_update_wu) {
+
+		$ids = get_parameter('ids');
+		
+		if ($ids == '') {
+			return;
+		}
+		
+		$id_profile = get_parameter('id_profile');
+		$id_task = get_parameter('id_task');
+		$have_cost = get_parameter('have_cost');
+		$public = get_parameter('public');
+		$keep_cost = get_parameter('keep_cost');
+		$keep_public = get_parameter('keep_public');
+		
+		$result_ids = explode(',', $ids);
+		$result = '';
+	
+		foreach ($result_ids as $id) {
+
+			$values = array();
+			
+			$wu_data = get_db_row_filter('tworkunit', array('id'=>$id));
+			
+			$values['id_profile'] = $id_profile;
+			$values['have_cost'] = $have_cost;
+			$values['public'] = $public;
+			
+			if ($id_profile == -1) { //No change option
+				$values['id_profile'] = $wu_data['id_profile'];
+			}
+			if ($keep_cost) {
+				$values['have_cost'] = $wu_data['have_cost'];
+			}
+			if ($keep_public) {
+				$values['public'] = $wu_data['public'];
+			}
+			
+			$result = db_process_sql_update('tworkunit', $values, array('id'=>$id));
+
+			$id_workunit_task = get_db_sql ("SELECT id_task FROM tworkunit_task WHERE id_workunit = $id");
+			$values_task['id_task'] = $id_task;
+			if ($id_task == 0) { //No change option
+				$values_task['id_task'] = $id_workunit_task;
+			}
+			$result_task = db_process_sql_update('tworkunit_task', $values_task, array('id_workunit'=>$id)); 
+		}
+		echo json_encode('ok');
+		return;
+		
+	}
+}
 
 $id_project = (int) get_parameter ("id_project");
 $id_task = (int) get_parameter ("id_task");
@@ -182,7 +258,7 @@ if ($id_task != 0) {
 
 	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
 	if ($report_image) {
-		echo "&nbsp;" . $report_image;
+		echo "&nbsp;" . $report_image.'</h1>';
 	}
     
 } elseif ($id_project != 0) {
@@ -215,7 +291,7 @@ if ($id_task != 0) {
 
 	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project", __("PDF report"));
 	if ($report_image) {
-		echo "&nbsp;" . $report_image;
+		echo "&nbsp;" . $report_image.'</h1>';
 	}
     
 }
@@ -227,6 +303,49 @@ if ($workunits) {
 		show_workunit_user ($workunit['id']);
 	}
 }
+
+echo '<div id="show_multiple_edit">';
+
+echo '<br><h2>'.__('Massive operations over selected items').'</h2>';
+$table = new StdClass;
+$table->class = 'search-table-button';
+$table->width = '99%';
+$table->data = array ();
+$table->colspan = array ();
+
+// Profile or role
+if (dame_admin ($config['id_user'])) {
+	$table->data[0][0] = combo_roles (false, 'id_profile', __('Role'), true, true, '', true);
+}
+else {
+	$table->data[0][0] = combo_user_task_profile ($id_task, 'id_profile', $id_profile, false, true, true);
+}
+
+// Show task combo if none was given.
+if (! $id_task) {
+	$table->data[0][1] = combo_task_user_participant ($config['id_user'], true, 0, true, __('Task'), false, false, false, '', true);
+}
+else {
+	$table->data[0][1] = combo_task_user_participant ($config['id_user'], true, $id_task, true, __('Task'), false, false, false, true);
+}
+
+// Various checkboxes
+
+$table->data[2][0] = print_checkbox ('have_cost', 1, '', true, __('Have cost'));
+
+$table->data[2][1] = print_checkbox ('keep_cost', 1, '', true, __('Keep cost'));
+
+$table->data[3][0] = print_checkbox ('public', 1, '', true, __('Public'));
+
+$table->data[3][1] = print_checkbox ('keep_public', 1, '', true, __('Keep public'));
+
+$table->colspan[5][0] = 2;
+$table->data[5][0] = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+$table->data[5][0] .= print_submit_button(__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
+
+print_table ($table);	
+
+echo '</div>';	
 ?>
 
 <script type="text/javascript">
@@ -274,6 +393,67 @@ $(document).ready (function () {
 			},
 			"html");
 		return false;
+	});
+	
+	//WU Multiple delete
+	$("#submit-delete_btn").click (function () {
+				
+		if (! confirm ("<?php echo __('Are you sure?')?>"))
+			return false;
+
+		var checkboxValues = "";
+		$('input[name="op_multiple[]"]:checked').each(function() {
+			if (checkboxValues == "")
+				checkboxValues += this.value;
+			else 
+				checkboxValues += ","+this.value;
+		});	
+
+		$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=<?php echo $_GET['sec2']; ?>&multiple_delete_wu=1&ids=" + checkboxValues,
+		dataType: "json",
+		success: function (data, status) {
+			var checkboxArray = checkboxValues.split(',');
+			checkboxArray.forEach(function(item) {
+				var div = document.getElementById("wu_"+item);
+				div.remove();
+			});
+		}
+		});
+	});
+
+	$("#submit-update_btn").click (function () {
+		
+		if (! confirm ("<?php echo __('Are you sure?')?>"))
+			return false;
+
+		var checkboxValues = "";
+		$('input[name="op_multiple[]"]:checked').each(function() {
+			if (checkboxValues == "")
+				checkboxValues += this.value;
+			else 
+				checkboxValues += ","+this.value;
+		});	
+
+		var id_profile = $("#id_profile").val();
+		var id_task = $("#id_task").val();
+		var have_cost = $("#checkbox-have_cost").val();
+		var is_public = $("#checkbox-public").val();
+		var keep_cost = $("#checkbox-keep_cost").val();
+		var keep_public = $("#checkbox-keep_public").val();
+		
+		$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=<?php echo $_GET['sec2']; ?>&multiple_update_wu=1&ids="+checkboxValues+"&id_profile="+id_profile+
+			"&id_task="+id_task+"&have_cost="+have_cost+"&public="+is_public+"&keep_cost="+keep_cost+"&keep_public="+keep_public,
+		dataType: "json",
+		success: function (data, status) {
+			location.reload();
+		}
+		});
 	});
 });
 </script>

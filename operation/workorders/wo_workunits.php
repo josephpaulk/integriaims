@@ -43,6 +43,8 @@ if (!$id_task) {
 	return;
 }
 
+$assigned_user = get_db_value ("assigned_user", "ttodo", "id", $id_workorder);
+
 $task_permission = get_project_access ($config['id_user'], false, $id_task, false, true);
 if (!$task_permission['read']) {
 	audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to workorder #".$id_workorder);
@@ -93,6 +95,7 @@ if ($insert_workunit) {
 	echo $result_msg;
 }
 
+$roles = workunits_get_user_role ($assigned_user, $id_workorder);
 //Add workunit form
 //echo "<h3>".__('Add workunit')."</h3>";
 
@@ -112,7 +115,8 @@ $table->style[4] = 'vertical-align: top;';
 $table->style[5] = 'vertical-align: top;';
 $table->data[0][0] = print_image('images/calendar_orange.png', true) . '&nbsp' . print_mysql_timestamp(0, "Y-m-d");
 $table->data[0][1] = print_image('images/clock_orange.png', true) . '&nbsp' . print_mysql_timestamp(0, "H:i:s");
-$table->data[0][2] = combo_roles (1, 'id_profile', __('Profile'), true);
+//$table->data[0][2] = combo_roles (1, 'id_profile', __('Profile'), true);
+$table->data[0][2] = print_select($roles, 'id_profile', '', '', '', '', true, false, true, __('Profile'));
 $table->data[0][3] = print_input_text ("duration", $config["pwu_defaultime"], '', 7,  10, true, __('Time used'));
 $table->data[0][4] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
 $table->data[0][5] = print_checkbox ('public', 1, true, true, __('Public'));

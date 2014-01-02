@@ -56,8 +56,25 @@ if ($custom_searches === false) {
 		$custom .= "</table>";
 } else {
 	foreach ($custom_searches as $cs) {
+		
+		$c_search = get_custom_search ($cs['id'], 'incidents');
+		
+		if ($c_search) { 
+			if ($c_search["form_values"]) {
+				$filter_search = unserialize($c_search["form_values"]);
+			}
+		}
+		
+		$result_search = incidents_search_result ($filter_search, false, true);
+		
+		if ($result_search) {
+			$count_cs = count($result_search);
+		} else {
+			$count_cs = 0;
+		}
+		
 		$custom .="<div class='custom_search'>";
-		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]."</a><br>";
+		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]." ". "(". $count_cs.")" . "</a><br>";
 		$custom .="</div>";
 	}
 	$custom .= "<div style='clear:both;'></div>";

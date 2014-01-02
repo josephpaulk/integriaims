@@ -365,11 +365,37 @@ if ($id_project) {
 		$budget .= "<span title='External costs to the project'> ($external)</span>";	
 	$budget .= "</td></tr>";
 	
+	$total_per_profile = projects_get_cost_by_profile ($id_project, false);
+	
+	if (!empty($total_per_profile)) {
+		foreach ($total_per_profile as $name=>$total_profile) {
+			if ($total_profile) {
+				$budget .= "<tr>";
+				$budget .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;'.__($name).'</td>';
+				$budget .= '<td>'.format_numeric($total_profile)." ". $config["currency"].'</td>';
+				$budget .= "</tr>";
+			}
+		}
+	}
+	
 	$budget .= "<tr>";
 	$budget .= '<td><b>'.__('Charged to customer').' </b>';
 	$budget .= "</td><td>";
 	$budget .= format_numeric($total) . " ". $config["currency"];
 	$budget .= "</td></tr>";
+	
+	$total_per_profile_havecost = projects_get_cost_by_profile ($id_project, true);
+	
+	if (!empty($total_per_profile_havecost)) {
+		foreach ($total_per_profile_havecost as $name=>$total_profile) {
+			if ($total_profile) {
+				$budget .= "<tr>";
+				$budget .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;'.__($name).'</td>';
+				$budget .= '<td>'.format_numeric($total_profile)." ". $config["currency"].'</td>';
+				$budget .= "</tr>";
+			}
+		}
+	}
 	
 	$budget .= "<tr>";
 	$budget .= '<td><b>'.__('Average Cost per Hour').' </b>';

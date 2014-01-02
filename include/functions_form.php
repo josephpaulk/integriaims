@@ -64,10 +64,16 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 
 // Returns a combo with valid profiles for CURRENT user in this task
 // ----------------------------------------------------------------------
-function combo_user_task_profile ($id_task, $form_name = "work_profile", $selected = "", $id_user = false, $return = false) {
+function combo_user_task_profile ($id_task, $form_name = "work_profile", $selected = "", $id_user = false, $return = false, $no_change = false) {
 	global $config;
 	
 	$output = '';
+	
+	if ($no_change) {
+		$nothing = __('No change');
+	} else {
+		$nothing = '';
+	}
 	
 	if (! $id_user)
 		$id_user = $config['id_user'];
@@ -83,7 +89,7 @@ function combo_user_task_profile ($id_task, $form_name = "work_profile", $select
 		AND id_user = "%s"
 		ORDER BY name',
 		$where_clause, $id_user);
-	$output .= print_select_from_sql ($sql, $form_name, $selected, '', '', '',
+	$output .= print_select_from_sql ($sql, $form_name, $selected, '', $nothing, '',
 		true, false, false, __('Role'));
 	
 	if ($return)
@@ -428,7 +434,7 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false, $script = '', $no_change=false) {
 	$output = '';
 	$values = array ();
 	
@@ -446,9 +452,17 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 					AND trole_people_task.id_user = "%s" 
 					ORDER BY tproject.name, ttask.name', $id_user);
 	
-	if (dame_admin ($id_user) && $multiple) {
+	//if (dame_admin ($id_user) && $multiple) {
+	if (dame_admin ($id_user)) {
+/*
 		$sql = 'SELECT ttask.id, tproject.name, ttask.name 
 				FROM ttask, trole_people_task, tproject
+				WHERE ttask.id_project = tproject.id
+					AND tproject.disabled = 0
+				ORDER BY tproject.name, ttask.name';
+*/
+		$sql = 'SELECT ttask.id, tproject.name, ttask.name 
+				FROM ttask, tproject
 				WHERE ttask.id_project = tproject.id
 					AND tproject.disabled = 0
 				ORDER BY tproject.name, ttask.name';
@@ -471,8 +485,12 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	} else {
 		$nothing = '';
 	}
+	
+	if ($no_change) {
+		$nothing = __('No change');
+	}
 
-	$output .= print_select ($values, $name, $actual, '', $nothing, '0', true,
+	$output .= print_select ($values, $name, $actual, $script, $nothing, '0', true,
 		$multiple, false, $label);
 
 	if ($return)
@@ -554,7 +572,7 @@ function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label
 
 // Returns a combo with the available roles
 // ----------------------------------------------------------------------
-function combo_roles ($include_na = false, $name = 'role', $label = '', $return = false, $manager = true) {
+function combo_roles ($include_na = false, $name = 'role', $label = '', $return = false, $manager = true, $selected = '', $no_change=false) {
 	global $config;
 	
 	$output = '';
@@ -565,12 +583,16 @@ function combo_roles ($include_na = false, $name = 'role', $label = '', $return 
 		$nothing = __('N/A');
 		$nothing_value = 0;
 	}
+	if ($no_change) {
+		$nothing = __('No change');
+		$nothing_value = -1;
+	}
 	if ($manager) {
 		$output .= print_select_from_sql ('SELECT id, name FROM trole',
-			$name, '', '', $nothing, $nothing_value, true, false, false, $label);
+			$name, $selected, '', $nothing, $nothing_value, true, false, false, $label);
 	} else {
 		$output .= print_select_from_sql ('SELECT id, name FROM trole WHERE id<>1',
-			$name, '', '', $nothing, $nothing_value, true, false, false, $label);
+			$name, $selected, '', $nothing, $nothing_value, true, false, false, $label);
 	}
 	
 	if ($return)
@@ -696,7 +718,6 @@ function show_workunit_data ($workunit, $title) {
 	echo "</div>";
 }
 
-
 function show_workunit_user ($id_workunit, $full = 0) {
 	global $config;
 	
@@ -720,6 +741,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
 	}
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	$id_profile = get_db_value ("id_profile", "tworkunit", "id", $id_workunit);
 	$task_title = get_db_value ("name", "ttask", "id", $id_task);
 	if (! $id_task) {
 		$incident_title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
@@ -738,7 +760,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		}
 	}
 
-
+echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_workunit'>";
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
 	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
@@ -789,6 +811,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "</b>";
 	echo "<td>";
 	echo " : ".$cost;
+	echo "</td>";
+	echo "<td>";
+	echo print_checkbox_extended ('op_multiple[]', $id_workunit, false, false, '', '', true);
+	echo "</td>";
 
 
 	echo "<tr>";
@@ -803,9 +829,11 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo " : ".get_db_value ("name", "trole", "id", $profile);
 	echo "</table>";
 	echo "</div>";
+echo "</form>";
 
 	// Body
-	echo "<div class='notebody'>";
+	//echo "<div class='notebody'>";
+	echo "<div class='notebody' id='wu_$id_workunit'>";
 	echo "<table width='100%'  class='blank'>";
 	echo "<tr><td valign='top'>";
 
@@ -840,7 +868,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], 0, "UM")) )) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
+		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&id_profile=$id_profile'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
 		echo "</td>";
 	}
 
@@ -861,7 +889,6 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "</tr></table>";
 	echo "</div>";
 }
-
 
 function form_search_incident ($return = false, $filter=false) {
 	include_once ("functions_user.php");

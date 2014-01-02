@@ -1275,4 +1275,40 @@ function check_email_queue ($get_count = false) {
 	return false;
 }
 
+function check_alarm_calendar ($count=true, $id=false) {
+	global $config;
+	
+	$now = strtotime(date('Y-m-d H:i:s'));
+
+	if ($count) {
+		$sql = "SELECT count(`id`) as num_alarms FROM tagenda 
+			WHERE id_user='".$config['id_user']."'
+			AND alarm <> 0
+			AND ((UNIX_TIMESTAMP(`timestamp`) - $now) > 0)
+			AND ((UNIX_TIMESTAMP(`timestamp`) - (`alarm` * 60)) <= $now)";
+		
+		$alarms = get_db_value_sql($sql);
+		
+	} else if (!$count && !$id) {
+		$sql = "SELECT * FROM tagenda 
+			WHERE id_user='".$config['id_user']."'
+			AND alarm <> 0
+			AND ((UNIX_TIMESTAMP(`timestamp`) - $now) > 0)
+			AND ((UNIX_TIMESTAMP(`timestamp`) - (`alarm` * 60)) <= $now)";
+		
+		$alarms = get_db_all_rows_sql($sql);
+		
+	} else {
+		$sql = "SELECT * FROM tagenda 
+			WHERE id_user='".$config['id_user']."'
+			AND alarm <> 0
+			AND id=$id
+			AND ((UNIX_TIMESTAMP(`timestamp`) - $now) > 0)
+			AND ((UNIX_TIMESTAMP(`timestamp`) - (`alarm` * 60)) <= $now)";
+			
+		$alarms = get_db_row_sql($sql);
+	}
+
+	return $alarms;
+}
 ?>

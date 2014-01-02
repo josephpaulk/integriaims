@@ -20,14 +20,19 @@ include_once ('include/functions_ui.php');
 include_once ('include/functions_calendar.php');
 
 $get_alerts = get_parameter ('get_alerts', 0);
+$get_alert_popup = get_parameter('get_alert_popup', 0);
+$check_alarms_popup = get_parameter('check_alarms_popup', 0);
+$set_alarm_checked = get_parameter('set_alarm_checked', 0);
 
 if ($get_alerts) {
-	
+
 	$check_cron = check_last_cron_execution ();
 	$check_emails = check_email_queue ();
 	$minutes_last_exec = check_last_cron_execution (true);
 	$seconds_last_exec = $minutes_last_exec * 60;
 	$queued_emails = check_email_queue (true);
+	$update_manager_msg = get_parameter ('update_manager_msg', '');
+	$check_alarm_calendar = check_alarm_calendar();
 	
 	$alerts = '';
 	
@@ -40,8 +45,71 @@ if ($get_alerts) {
 	if (!$check_emails) {
 		$alerts .= ui_print_error_message(__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration'), '', '', 'h4', false); 
 	}
+	if ($update_manager_msg != '') {
+/*
+		$update_manager_msg .= "<br><a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".
+							__("Go to Update Manager")."</a>";
+*/
+		$update_manager_msg .= "<br><a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".
+							__("Go to Update Manager")."</a>";
+							
+		$alerts .= ui_print_message($update_manager_msg);
+
+	}
+	if ($check_alarm_calendar) {
+		$alarm_calendar_msg = '';
+		$alarms = check_alarm_calendar(false);
+
+		if ($alarms) {
+			foreach ($alarms as $alarm) {
+				$time = substr($alarm['timestamp'], 11, 5);
+				$msg = '<h3>'.__('Calendar alert: ').'</h3><h4><a href="index.php?sec=agenda&sec2=operation/agenda/agenda">'.$time.' '. __($alarm['title']).'</a></h4><h5>'.$alarm['description'].'</h5>';
+				$alarm_calendar_msg .= $msg;
+			}
+			$alerts .= $alarm_calendar_msg;
+		}
+	}
 	
 	echo $alerts;
+	return;	
+}
+
+if ($get_alert_popup) {
+	$id = get_parameter('id');
+	
+	$alarm_calendar_msg = '';
+	$alarm = check_alarm_calendar(false, $id);
+	$time = substr($alarm['timestamp'], 11, 5);
+	//$alarm_calendar_msg = '<h4>'.$time.' '. __($alarm['title']).'</h4>';
+	$alarm_calendar_msg = '<h3><a href="index.php?sec=agenda&sec2=operation/agenda/agenda">'.$time.' '. __($alarm['title']).'</a></h3><h4>'.$alarm['description'].'</h4>';
+	
+	echo $alarm_calendar_msg;
+	return;
+		
+}
+	
+if ($check_alarms_popup) {
+
+	$alarms = check_alarm_calendar(false);
+	$i = 0;
+	foreach ($alarms as $alarm) {
+		$file_path = $config["homedir"]."/attachment/calendar/alarm_".$alarm['id']."_".$alarm['timestamp'].".txt";
+		if (!file_exists($file_path)) {
+			$result[$i]['id'] = $alarm['id'];
+			$i++;
+		}
+	}
+	echo json_encode($result);
+	return;
+}
+
+// TO DO: Create a field 'checked' in tagenda
+if ($set_alarm_checked) {
+	$id = get_parameter('id');
+	$timestamp = get_db_value('timestamp', 'tagenda', 'id', $id);
+	$full_path = $config["homedir"]."/attachment/calendar/alarm_".$id."_".$timestamp.".txt";
+	$file = fopen ($full_path, "w");
+	fclose($file);
 	return;
 }
 

@@ -17,8 +17,16 @@ global $config;
 
 check_login();
 
+include_once('include/functions_user.php');
+
 $get_group_details = (bool) get_parameter ('get_group_details');
 $id = (int) get_parameter ('id');
+$delete_user = get_parameter('delete_user', 0);
+
+if ($delete_user) {
+	$id_user_delete = get_parameter('id_user_delete');
+	user_delete_user($id_user_delete);
+}
 
 if ($get_group_details) {
 	if (! give_acl ($config["id_user"], $id, "IR"))

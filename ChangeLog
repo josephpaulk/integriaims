@@ -1,3 +1,32 @@
+2014-01-02  Vanessa Gil <vanessa.gil@artica.es>
+
+	* index.php
+	  general/header.php
+	  godmode/grupos/lista_grupos.php
+	  godmode/setup/update_manager.php
+	  godmode/usuarios/lista_usuarios.php
+	  include/functions.php
+	  include/functions_crm.php
+	  include/functions_form.php
+	  include/functions_groups.php
+	  include/functions_incidents.php
+	  include/functions_projects.php
+	  include/functions_update_manager.php
+	  include/functions_user.php
+	  include/functions_workunits.php
+	  include/ajax/header.php
+	  include/js/integria.js
+	  include/js/integria_header.js
+	  operation/companies/company_detail.php
+	  operation/incidents/incident_dashboard.php
+	  operation/invoices/invoice_detail.php
+	  operation/projects/project_report.php
+	  operation/projects/task_detail.php
+	  operation/projects/task_workunit.php
+	  operation/users/user_spare_workunit.php
+	  operation/workorders/wo_workunits.php: Added minor releases.
+	  
+
 2013-12-30  Sancho Lerena <slerena@artica.es>
 
 	* operation/invoices/invoices.php: Added a hint on 

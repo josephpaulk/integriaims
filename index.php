@@ -98,6 +98,9 @@ require_once ('include/auth/mysql.php');
 require_once ('include/functions_db.mysql.php');
 require_once ('include/functions_api.php');
 
+enterprise_include("include/functions_update_manager.php");
+include_once("include/functions_update_manager.php");
+
 if($buffer_html) {
 	$config["flash_charts"] = 0;
 }

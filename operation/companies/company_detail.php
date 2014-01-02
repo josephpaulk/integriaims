@@ -26,6 +26,7 @@ $id = (int) get_parameter ('id');
 $section_read_permission = check_crm_acl ('company', 'cr');
 $section_write_permission = check_crm_acl ('company', 'cw');
 $section_manage_permission = check_crm_acl ('company', 'cm');
+
 if (!$section_read_permission && !$section_write_permission && !$section_manage_permission) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to the company section");
 	include ("general/noaccess.php");
@@ -397,7 +398,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
 		$button .= print_input_hidden ('update_company', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
-	} elseif ($section_write_permission || $section_manage_permission) {
+	} elseif ($write_permission || $manage_permission) {
 		$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
 		$button .= print_input_hidden ('create_company', 1, true);
 	}

@@ -29,7 +29,20 @@ if (defined ('AJAX')) {
 	global $config;
 
 	$get_task_roles = (bool) get_parameter ('get_task_roles');
+	$get_user_task_roles = (bool) get_parameter ('get_user_task_roles');
 	
+	//Get only user roles
+	if ($get_user_task_roles) {
+
+		$id_user = get_parameter ('id_user');
+		$id_task = get_parameter ('id_task');
+		
+		$roles = user_get_task_roles ($id_user, $id_task);
+		
+		echo json_encode($roles);
+
+		return;
+	}
 
  	// Get the roles assigned to user in the project of a given task
 	if ($get_task_roles) {
@@ -411,23 +424,23 @@ $table->data[0][0] = print_input_text ('start_date', $start_date, '', 10, 20,
 
 // Profile or role
 if (dame_admin ($config['id_user'])) {
-	$table->data[0][1] = combo_roles (true, 'id_profile', __('Role'), true);
+	$table->colspan[1][0] = 3;
+	$table->data[1][0] = combo_roles (true, 'id_profile', __('Role'), true, true, $id_profile);
 	//$table->data[0][1] = combo_roles_people_task ($id_task, $config['id_user'], __('Role'));
 }
 else {
-	$table->data[0][1] = combo_user_task_profile ($id_task, 'id_profile',
+	$table->colspan[1][0] = 3;
+	$table->data[1][0] = combo_user_task_profile ($id_task, 'id_profile',
 		$id_profile, false, true);
 }
 
 // Show task combo if none was given.
 if (! $id_task) {
-	$table->colspan[1][0] = 3;
-	$table->data[1][0] = combo_task_user_participant ($wu_user,
+	$table->data[0][1] = combo_task_user_participant ($wu_user,
 		true, 0, true, __('Task'));
 }
 else {
-	$table->colspan[1][0] = 3;
-	$table->data[1][0] = combo_task_user_participant ($wu_user,
+	$table->data[0][1] = combo_task_user_participant ($wu_user,
 	true, $id_task, true, __('Task'));
 }
 
@@ -622,6 +635,71 @@ function del_wu_button () {
 	});
 }
 
+function show_task_role () {
+	
+	id_task = $("#id_task").val();
+	
+	if ($("#text-id_username").val() == undefined) {
+		id_user = "<?php echo $config['id_user']; ?>";
+	} else {
+		id_user = $("#text-id_username").val();
+	}
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=<?php echo $_GET['sec2']; ?>&get_user_task_roles=1&id_task=" + id_task + "&id_user=" + id_user,
+		dataType: "json",
+		success: function (data, status) {
+				$("#id_profile").hide ().empty ();
+				
+				if(data != false) {
+					$(data).each (function () {
+						$("#id_profile").append ($('<option value="'+this.id+'">'+this.name+'</option>'));
+					});
+				} else {
+					$("#id_profile").append ($('<option value="0"><?php echo __('N/A'); ?></option>'));
+				}
+				
+				$("#id_profile").show ();
+			}
+		});
+}
+
+function check_multiplewu_task () {
+
+	id_task = $("select[id^='id_task_']").attr("id");
+	number =  id_task.slice(8, id_task.length);
+	
+	if ($("#text-id_username_"+number).val() == undefined) {
+		id_user = "<?php echo $config['id_user']; ?>";
+	} else {
+		id_user = $("#text-id_username_"+number).val();
+	}
+	
+	id_task_value = $("#id_task_"+number).val();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=<?php echo $_GET['sec2']; ?>&get_user_task_roles=1&id_task=" + id_task_value + "&id_user=" + id_user,
+		dataType: "json",
+		success: function (data, status) {
+			$("#id_profile_"+number).hide ().empty ();
+			
+			if(data != false) {
+				$(data).each (function () {
+					$("#id_profile_"+number).append ($('<option value="'+this.id+'">'+this.name+'</option>'));
+				});
+			} else {
+				$("#id_profile_"+number).append ($('<option value="0"><?php echo __('N/A'); ?></option>'));
+			}
+			$("#id_profile_"+number).show ();
+		}
+	});	
+}
+
+
 $(document).ready (function () {
 	//Configure calendar datepicker
 	datepicker_hook();
@@ -630,35 +708,6 @@ $(document).ready (function () {
 	username_hook();
 	
 	$("#textarea-description").TextAreaResizer ();
-
-		
-	$("#id_task").change(function() {
-		id_task = $(this).val();
-		
-		values = Array ();
-		values.push ({name: "page",
-					value: "operation/users/user_spare_workunit"});
-		values.push ({name: "get_task_roles",
-			value: 1});
-		values.push ({name: "id_task",
-			value: id_task});
-		values.push ({name: "id_user",
-			value: "<?php echo $config['id_user']; ?>"});
-		jQuery.get ("ajax.php",
-			values,
-			function (data, status) {
-				$("#id_profile").hide ().empty ();
-				$("#id_profile").append ($('<option value="0"><?php echo __('N/A'); ?></option>'));
-				if(data != false) {
-					$(data).each (function () {
-						$("#id_profile").append ($('<option value="'+this.id+'">'+this.name+'</option>'));
-					});
-				}
-				$("#id_profile").show ();
-			},
-			"json"
-		);
-	});
 	
 	////////Configure menu tab interaction///////
 	$('#tabmenu1').not('.ui-tabs-disabled').click (function (e){
@@ -736,6 +785,10 @@ $(document).ready (function () {
 				"html"
 			);		
 		}
+	});
+	
+	$("#id_task").change(function () {
+		show_task_role();
 	});
 });
 

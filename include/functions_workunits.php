@@ -131,12 +131,12 @@ function create_new_table_multiworkunit ($number=false) {
 	echo"</td>";
 	
 	echo "<td colspan='2'>";
-	echo combo_task_user_participant ($wu_user,true, 0, true, __("Task"), 'id_task_'.$number);
+	echo combo_task_user_participant ($wu_user,true, 0, true, __("Task"), 'id_task_'.$number,true,false,'check_multiplewu_task();');
 	echo "</td>";
 	
 	echo "<td>";
 	if (dame_admin ($config['id_user'])) {
-		echo combo_roles (true, 'iid_profile_'.$number, __('Role'), true);
+		echo combo_roles (true, 'id_profile_'.$number, __('Role'), true);
 	} else {
 		echo combo_user_task_profile ($id_task, 'id_profile_'.$number, 0, false, true);
 	}	
@@ -375,3 +375,18 @@ function print_single_workunit_report ($mwur) {
 	echo "</table>";	
 }
 
+//get user roles of a workunit with a task assigned in a workorder
+function workunits_get_user_role ($id_user, $id_wo) {
+	
+	$roles = false;
+	$id_task = get_db_value ('id_task', 'ttodo', 'id', $id_wo);
+	if ($id_task) {
+		$roles = user_get_task_roles ($id_user, $id_task);
+	}
+	
+	if (!$roles) {
+		$roles[0] = __('N/A');
+	}
+	
+	return $roles;
+}

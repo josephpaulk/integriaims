@@ -318,4 +318,69 @@ function update_manager_count_files($path) {
 	
 	return $count;
 }
+
+function update_manager_check_online_free_packages ($is_ajax=true) {
+	global $config;
+	
+	$update_message = '';
+	
+	$count = get_db_all_rows_sql(
+		'SELECT COUNT(*)
+		FROM tusuario
+		WHERE disabled = 0 AND login_blocked = 0;');
+	$users = $count[0][0];
+	$license = $config['license'];
+	$current_package = $config['current_package'];
+	
+	$params = array('action' => 'newest_package',
+			'license' => $license,
+			'limit_count' => $users,
+			'current_package' => $current_package,
+			'version' => $config['version'],
+			'build' => $config['build']);
+		
+	$curlObj = curl_init();
+	curl_setopt($curlObj, CURLOPT_URL, $config['url_updatemanager']);
+	curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curlObj, CURLOPT_POST, true);
+	curl_setopt($curlObj, CURLOPT_POSTFIELDS, $params);
+	curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, false);
+	
+	$result = curl_exec($curlObj);
+	$http_status = curl_getinfo($curlObj, CURLINFO_HTTP_CODE);
+	curl_close($curlObj);
+	
+		
+	if ($http_status == 500) {
+		if ($is_ajax) {
+			echo __("There is a error with the update server.");
+		} else {
+			$update_message = __("There is a error with the update server.");
+		}
+	}
+	else {
+		if ($is_ajax) {
+			$result = json_decode($result, true);
+			
+			if (!empty($result)) {
+				echo "<p>There is a new version: " . $result[0]['version'] . "</p>";
+				echo "<a href='javascript: update_last_package(\"" . base64_encode($result[0]["file_name"]) .
+					"\", \"" . $result[0]['version'] ."\");'>" .
+					__("Update to the last version") . "</a>";
+			}
+			else {
+				echo __("None update.");
+			}
+			return;
+		} else {
+			if (!empty($result)) {
+				$result = json_decode($result, true);
+				$update_message = "There is a new version: " . $result[0]['version'];
+			}
+
+			return $update_message;
+		}
+	}
+		
+}
 ?>
