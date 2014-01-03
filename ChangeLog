@@ -1,3 +1,10 @@
+2014-01-03  Vanessa Gil <vanessa.gil@artica.es>
+
+	* index.php
+	  godmode/setup/update_manager.php
+	  include/wiki/plugins/wkp_AdminPages.php: Fixed
+	bug loading 'Wiki' section.
+
 2014-01-02  Vanessa Gil <vanessa.gil@artica.es>
 
 	* index.php

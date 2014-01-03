@@ -24,7 +24,6 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-enterprise_include("include/functions_update_manager.php");
 include_once("include/functions_update_manager.php");
 
 if (defined ('AJAX')) {
