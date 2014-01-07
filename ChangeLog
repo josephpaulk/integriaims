@@ -1,5 +1,10 @@
 2014-01-07  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operaton/companies/company_detail.php: Fixed bug
+	creating companies.
+
+2014-01-07  Vanessa Gil <vanessa.gil@artica.es>
+
 	* godmode/setup/setup_mail.php
 	  include/functions_config.php
 	  include/integria_cron.php: Added newsletter

@@ -398,7 +398,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
 		$button .= print_input_hidden ('update_company', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
-	} elseif ($write_permission || $manage_permission) {
+	} elseif ( $id == 0 && $section_write_permission || $section_manage_permission) {
 		$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
 		$button .= print_input_hidden ('create_company', 1, true);
 	}
