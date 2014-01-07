@@ -110,7 +110,7 @@ $table->colspan[3][0] = 3;
 $table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", true). "</h4>";
 
 $table->data[4][0] = print_input_text ("smtp_host", $config["smtp_host"],
-	'', 25, 30, true, __('SMTP Host'));
+	'', 35, 200, true, __('SMTP Host'));
 
 $table->data[4][0] .= print_help_tip (__("Left it blank if you want to use your local mail, instead an external SMTP host"), true);
 
@@ -119,10 +119,10 @@ $table->data[4][1] = print_input_text ("smtp_port", $config["smtp_port"],
 	'', 5, 10, true, __('SMTP Port'));
 
 $table->data[5][0] = print_input_text ("smtp_user", $config["smtp_user"],
-	'', 15, 30, true, __('SMTP User'));
+	'', 25, 200, true, __('SMTP User'));
 
 $table->data[5][1] = print_input_text ("smtp_pass", $config["smtp_pass"],
-	'', 15, 30, true, __('SMTP Password'));
+	'', 25, 200, true, __('SMTP Password'));
 
 $table->data[6][0] = print_input_text ("smtp_queue_retries", $config["smtp_queue_retries"],
         '', 5, 10, true, __('SMTP Queue retries'));
@@ -163,16 +163,16 @@ $table->data[10][1] = print_input_text ("pop_pass", $config["pop_pass"],
 $table->data[11][1] = "<h4>".__("Newsletter SMTP Parameters")."</h4>";
 
 $table->data[12][0] = print_input_text ("news_smtp_host", $config["news_smtp_host"],
-	'', 25, 30, true, __('SMTP Host'));
+	'', 35, 200, true, __('SMTP Host'));
 
 $table->data[12][1] = print_input_text ("news_smtp_port", $config["news_smtp_port"],
 	'', 5, 10, true, __('SMTP Port'));
 
 $table->data[13][0] = print_input_text ("news_smtp_user", $config["news_smtp_user"],
-	'', 15, 30, true, __('SMTP User'));
+	'', 25, 200, true, __('SMTP User'));
 
 $table->data[13][1] = print_input_text ("news_smtp_pass", $config["news_smtp_pass"],
-	'', 15, 30, true, __('SMTP Password'));
+	'', 25, 200, true, __('SMTP Password'));
 
 
 $table->data[14][0] = print_input_text ("news_batch_newsletter", $config["news_batch_newsletter"], '',

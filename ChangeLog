@@ -1,3 +1,12 @@
+2014-01-07  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Fixed a bad URL in notification
+	messages from calendar.
+
+	* godmode/setup/setup_mail.php: Form input max size was too short
+	for some SMTP credential and hostname. Now have until 200 characters.
+
+[root@popeyeNG integria]# svn diff include/integria_cron.php 
 2014-01-07  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operaton/companies/company_detail.php: Fixed bug

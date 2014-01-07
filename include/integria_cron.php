@@ -339,7 +339,7 @@ function run_project_check () {
 		$nombre = $user['nombre_real'];
 		$email = $user['direccion'];
 		$mail_description = "There is an Integria project ending today ($pend): $pname. \n\nUse this link to review the project information:\n";
-		$mail_description .= $config["base_url"]. "/index.php?sec=projects&sec2=operation/projects/task&id_project=$idp\n";
+		$mail_description .= $config["base_url"]. "index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$idp\n";
 
 		integria_sendmail ($email, "[".$config["sitename"]."] Project ends today ($pname)",  $mail_description );
 	}
@@ -363,7 +363,7 @@ function run_task_check () {
 		$email = $user_row['direccion'];
 		
 		$mail_description = "There is a task ending today ($tend) : $pname / $tname \n\nUse this link to review the project information:\n";
-		$mail_description .= $config["base_url"]. "/index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view\n";
+		$mail_description .= $config["base_url"]. "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view\n";
 
 		integria_sendmail ($email, "[".$config["sitename"]."] Task ends today ($tname)",  $mail_description );
 	}
@@ -448,7 +448,7 @@ function check_sla_min ($incident) {
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['min_response']*60*60);
 
-	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+	$MACROS["_access_url_"] = $config["base_url"]."index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time_subject.tpl", $MACROS);
@@ -496,7 +496,7 @@ function check_sla_max ($incident) {
 	$MACROS["_incident_id_"] = $incident["id_incidencia"];
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['max_response']*3600);
-	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+	$MACROS["_access_url_"] = $config["base_url"]."index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time_subject.tpl", $MACROS);
@@ -541,7 +541,7 @@ function check_sla_inactivity ($incident) {
 	$MACROS["_incident_id_"] = $incident["id_incidencia"];
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['max_inactivity']*3600);
-	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+	$MACROS["_access_url_"] = $config["base_url"]."index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time_subject.tpl", $MACROS);
