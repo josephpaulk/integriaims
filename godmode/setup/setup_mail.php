@@ -58,6 +58,10 @@ if ($update) {
 	$config["smtp_pass"] = (string) get_parameter ("smtp_pass");
 	$config["smtp_host"] = (string) get_parameter ("smtp_host");
 	$config["smtp_port"] = (string) get_parameter ("smtp_port");
+	$config["news_smtp_user"] = (string) get_parameter ("news_smtp_user");
+	$config["news_smtp_pass"] = (string) get_parameter ("news_smtp_pass");
+	$config["news_smtp_host"] = (string) get_parameter ("news_smtp_host");
+	$config["news_smtp_port"] = (string) get_parameter ("news_smtp_port");
 	$config["pop_user"] = (string) get_parameter ("pop_user");
 	$config["pop_pass"] = (string) get_parameter ("pop_pass");
 	$config["pop_host"] = (string) get_parameter ("pop_host");
@@ -65,7 +69,7 @@ if ($update) {
 	$config["smtp_queue_retries"] = (int) get_parameter ("smtp_queue_retries", 10);
 	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
 	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
-	$config["newsletter_local_smtp"] = get_parameter ("newsletter_local_smtp", 0);
+	$config["news_batch_newsletter"] = get_parameter ("news_batch_newsletter", 0);
 	
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
 	update_config_token ("FOOTER_EMAIL", $config["FOOTER_EMAIL"]);
@@ -75,6 +79,10 @@ if ($update) {
 	update_config_token ("smtp_host", $config["smtp_host"]);
 	update_config_token ("smtp_user", $config["smtp_user"]);
 	update_config_token ("smtp_pass", $config["smtp_pass"]);
+	update_config_token ("news_smtp_port", $config["news_smtp_port"]);
+	update_config_token ("news_smtp_host", $config["news_smtp_host"]);
+	update_config_token ("news_smtp_user", $config["news_smtp_user"]);
+	update_config_token ("news_smtp_pass", $config["news_smtp_pass"]);
 	update_config_token ("pop_host", $config["pop_host"]);
 	update_config_token ("pop_user", $config["pop_user"]);
 	update_config_token ("pop_pass", $config["pop_pass"]);
@@ -82,7 +90,7 @@ if ($update) {
 	update_config_token ("smtp_queue_retries", $config["smtp_queue_retries"]);
 	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
-	update_config_token ("newsletter_local_smtp", $config["newsletter_local_smtp"]);
+	update_config_token ("news_batch_newsletter", $config["news_batch_newsletter"]);
 }
 
 $table->width = '99%';
@@ -97,9 +105,6 @@ $table->data[2][0] .= integria_help ("notification_period", true);
 
 $table->data[2][1] = print_input_text ("mail_from", $config["mail_from"], '',
 	30, 50, true, __('System mail from address'));
-
-$table->data[2][2] = print_checkbox ("newsletter_local_smtp", 1, $config["newsletter_local_smtp"],
-                        true, __('Use local SMTP to send newsletters')); 
 
 $table->colspan[3][0] = 3;
 $table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", true). "</h4>";
@@ -155,24 +160,45 @@ $table->data[10][0] = print_input_text ("pop_user", $config["pop_user"],
 $table->data[10][1] = print_input_text ("pop_pass", $config["pop_pass"], 
 	'', 15, 30, true, __('IMAP Password'));
 				
-$table->data[11][1] = "<h4>".__("Mail general texts")."</h4>";
+$table->data[11][1] = "<h4>".__("Newsletter SMTP Parameters")."</h4>";
 
-$table->colspan[13][0] = 3;
-$table->colspan[12][0] = 3;
-$table->data[12][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+$table->data[12][0] = print_input_text ("news_smtp_host", $config["news_smtp_host"],
+	'', 25, 30, true, __('SMTP Host'));
+
+$table->data[12][1] = print_input_text ("news_smtp_port", $config["news_smtp_port"],
+	'', 5, 10, true, __('SMTP Port'));
+
+$table->data[13][0] = print_input_text ("news_smtp_user", $config["news_smtp_user"],
+	'', 15, 30, true, __('SMTP User'));
+
+$table->data[13][1] = print_input_text ("news_smtp_pass", $config["news_smtp_pass"],
+	'', 15, 30, true, __('SMTP Password'));
+
+
+$table->data[14][0] = print_input_text ("news_batch_newsletter", $config["news_batch_newsletter"], '',
+        4, 255, true, __('Max. emails sent per execution'));
+
+
+$table->data[14][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
+
+$table->data[15][1] = "<h4>".__("Mail general texts")."</h4>";
+
+$table->colspan[16][0] = 3;
+$table->colspan[17][0] = 3;
+$table->data[16][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
-$table->data[13][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+$table->data[17][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
 	'', true, __('Email footer'));
 
-$table->data[14][1] = "<h4>".__("Mail queue control");
+$table->data[18][1] = "<h4>".__("Mail queue control");
 
 $total_pending = get_db_sql ("SELECT COUNT(*) from tpending_mail");
 
-$table->data[14][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
+$table->data[18][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
 
 if ($total_pending > 0) {
 
-	$table->colspan[15][0] = 3;
+	$table->colspan[19][0] = 3;
 
 	$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
 	$mail_queue .= "<table width=100% class=listing>";
@@ -200,7 +226,7 @@ if ($total_pending > 0) {
 
 	$mail_queue .= "<tr></tr></table></div>";
 
-	$table->data[15][0] = $mail_queue;
+	$table->data[19][0] = $mail_queue;
 }
 
 $button = print_input_hidden ('update', 1, true);
@@ -209,8 +235,8 @@ $button .= print_submit_button (__("Reactivate pending mails"), 'pending_ok', fa
 $button .= print_submit_button (__("Delete pending mails"), 'pending_delete', false, 'class="sub delete"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data[16][0] = $button;
-$table->colspan[16][0] = 3;
+$table->data[20][0] = $button;
+$table->colspan[20][0] = 3;
 
 echo "<form name='setup' method='post'>";
 print_table ($table);

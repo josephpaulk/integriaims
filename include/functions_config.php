@@ -245,10 +245,6 @@ function load_config() {
 	if (!isset ($config["smtp_queue_retries"])) {
 		$config["smtp_queue_retries"] = 10;
 	}
-	
-	if (!isset ($config["newsletter_local_smtp"])) {
-		$config["newsletter_local_smtp"] = 1;
-	}
 
 	if (!isset ($config["access_protocol"])) {
 		$config["access_protocol"] = false;
@@ -266,6 +262,25 @@ function load_config() {
 	if (!isset($config["license"])){
 		$config["license"]= "INTEGRIA-FREE";
 		update_config_token ("license", $config["license"]);
+	}
+	
+	if (!isset ($config["news_smtp_host"])){
+		$config["news_smtp_host"] = "";
+	}
+	
+	if (!isset ($config["news_smtp_user"])){
+		$config["news_smtp_user"] = "";
+	}
+	
+	if (!isset ($config["news_smtp_pass"])){
+		$config["news_smtp_pass"] = "";
+	}
+	
+	if (!isset ($config["news_smtp_port"])){
+		$config["news_smtp_port"] = "";
+	}
+	if (!isset($config["news_batch_newsletter"])) {
+		$config["news_batch_newsletter"] = "";
 	}
 }
 

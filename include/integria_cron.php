@@ -677,9 +677,6 @@ function run_mail_queue () {
 	}
 }
 
-// This will send mails on the newsletters queue. Will have a global parameter to control how 
-// many emails can sent in a single execution, to avoid SMTP servers overload or SPAM protection
-
 function run_newsletter_queue () {
 
 	global $config;
@@ -687,7 +684,11 @@ function run_newsletter_queue () {
 	include_once ($config["homedir"] . "/include/functions.php");	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 	
-	$total = $config["batch_newsletter"];
+	if (isset($config['news_stmp_host'])) { //If Newsletters STMP parameters are not empty
+		$total = $config["news_batch_newsletter"];
+	} else {
+		$total = $config["batch_newsletter"];
+	}
 	
    	$utimestamp = date("U");
 	$current_date = date ("Y/m/d H:i:s");
@@ -719,69 +720,57 @@ function run_newsletter_queue () {
 		else 
 		foreach ($addresses as $address){
 
-
-			// Use external SMTP if newsletter_local_smtp is not set
-			
-			if (! $config["newsletter_local_smtp"]){
+			if (!isset($config["news_smtp_host"])){ //If Newsletters STMP parameters are empty
+				
 				// Compose the mail for each valid address
 
 				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
 				$transport->setUsername($config["smtp_user"]);
 				$transport->setPassword($config["smtp_pass"]);
-				$mailer = Swift_Mailer::newInstance($transport);
 			
-				$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
-				$message->setFrom($newsletter["from_address"]);
-				$dest_email = trim(safe_output($address['email']));
-			
-				$message->setTo($dest_email);
-
-				// TODO: replace names on macros in the body / HTML parts.
-
-				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
-
-				$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
-
-				if (!$mailer->send($message, $failures)) {
-					integria_logwrite ("Trouble with address ".$failures[0]);
-
-					// TODO: 
-					// Do something like error count to disable invalid addresses after a 
-					// number of invalid counts
-					// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
-				
-					process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
-				
-				} else {
-					process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
-				}
 			} else {
+				
+				// Compose the mail for each valid address
 
-				// Use internal mail() function
-				$headers   = array();
-				$headers[] = "MIME-Version: 1.0";
-				$headers[] = "Content-type: text/html; charset=utf-8";
-				$headers[] = "From: ".safe_output($newsletter["from_desc"]). " <".safe_output($newsletter["from_address"]).">";
-				//$headers[] = "Bcc: JJ Chong <bcc@domain2.com>";
-				$headers[] = "Subject: ". safe_output($issue["email_subject"]);
-				$headers[] = "X-Mailer: PHP/".phpversion();
-
-				$dest_email = trim(safe_output($address['email']));
-				$email = safe_output($issue['html']);
-				$error = mail($dest_email, safe_output($issue["email_subject"]), $email, implode("\r\n", $headers));
-				if (!$error) {
-					process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
-				} else {
-					process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
-				}
+				$transport = Swift_SmtpTransport::newInstance($config["news_smtp_host"], $config["news_smtp_port"]);
+				$transport->setUsername($config["news_smtp_user"]);
+				$transport->setPassword($config["news_smtp_pass"]);
+			
 			}	
 
+			$mailer = Swift_Mailer::newInstance($transport);
+			$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
+			$message->setFrom($newsletter["from_address"]);
+			$dest_email = trim(safe_output($address['email']));
+		
+			$message->setTo($dest_email);
+
+			// TODO: replace names on macros in the body / HTML parts.
+
+			$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
+
+			$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
+
+			if (!$mailer->send($message, $failures)) {
+				integria_logwrite ("Trouble with address ".$failures[0]);
+
+				// TODO: 
+				// Do something like error count to disable invalid addresses after a 
+				// number of invalid counts
+				// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
+			
+				process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
+			
+			} else {
+				process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
+			}
+				
 			$total = $total - 1;
 		
 			if ($total <= 0)
 					return;
 		
-			} // end of loop for each address in the queue		
+		} // end of loop for each address in the queue		
 
 	} // end of main loop
 	

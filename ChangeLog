@@ -1,3 +1,10 @@
+2014-01-07  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/setup/setup_mail.php
+	  include/functions_config.php
+	  include/integria_cron.php: Added newsletter
+	SMTP parameters in setup and cron.
+
 2014-01-03  Vanessa Gil <vanessa.gil@artica.es>
 
 	* index.php
