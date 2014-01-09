@@ -99,7 +99,7 @@ echo "<div id='task_editor'></div>";
 <script type="text/javascript">
 
 //Get data for this project
-var id_project = <? echo $id_project?>;
+var id_project = <?php echo $id_project?>;
 var show_actual = <?php echo $show_actual?>;
 var scale = "<?php echo $scale?>";
 

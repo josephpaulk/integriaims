@@ -1,5 +1,10 @@
 2014-01-09  Dario Rodriguez <dario@artica.es>
 
+	* operation/projects/gantt.php: Fixed a bug
+	calling php code within JS code.
+
+2014-01-09  Dario Rodriguez <dario@artica.es>
+
 	* integria_dbdata.sql
 	integria_demo.sql
 	extras/mr/1.sql: Preparing version for first minor
