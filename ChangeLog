@@ -1,3 +1,8 @@
+2014-01-09  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_db.php: Fixes a problem firing SLA mathcing
+	min response time.
+
 2014-01-07  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Fixed a bad URL in notification

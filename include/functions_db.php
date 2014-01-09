@@ -1741,17 +1741,15 @@ function check_incident_sla_min_response ($id_incident) {
 	/* Check wheter it was updated before, so there's no need to check SLA */
 	$update = strtotime ($incident['actualizacion']);
 
-
     // Check SLA here.
 	foreach ($slas as $sla) {
-
 		if ($now < ($start + $sla['min_response'] * 3600))
 			 continue;
 
         // Incident owner is the last workunit author ?, then SKIP
     	$last_wu = get_incident_lastworkunit ($id_incident);
-
-		if ($last_wu["id_user"] != $incident["id_creator"]){
+	
+	if ($last_wu && ($last_wu["id_user"] != $incident["id_creator"])){
                 return false;
         }
 
