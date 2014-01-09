@@ -1,3 +1,10 @@
+2014-01-09  Dario Rodriguez <dario@artica.es>
+
+	* integria_dbdata.sql
+	integria_demo.sql
+	extras/mr/1.sql: Preparing version for first minor
+	release.
+
 2014-01-09  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
