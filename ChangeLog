@@ -1,5 +1,27 @@
 2014-01-09  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_graph.php
+	include/styles/integria.css
+	include/graphs/gantt 
+	include/functions_tasks.php
+	include/functions_projects.php
+	include/js/integria_projects.js
+	include/ajax/projects.php
+	include/functions_db.php
+	operation/projects/task_report.php
+	operation/projects/gantt.php
+	operation/projects/task_detail.php
+	images/mas_gris.png
+	images/star_white.png
+	images/mas_gris_oscuro.png
+	integria_db.sql: New gantt library and several enhancements
+	in gantt UI.
+	
+	* godmode/grupos/configurar_grupo.php: Fixed combo which shows
+	sla associated to a group. 
+
+2014-01-09  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_db.php: Fixes a problem firing SLA mathcing
 	min response time.
 

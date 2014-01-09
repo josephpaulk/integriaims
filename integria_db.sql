@@ -1123,3 +1123,11 @@ CREATE TABLE `tcampaign` (
   `expenses` mediumint NULL default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ttask_link` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `source` int(10) NOT NULL default 0,
+  `target` int(10) NOT NULL default 0,
+  `type` int(1) NOT NULL default 0,
+  PRIMARY KEY  (`id`, `source`, `target`, `type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -988,9 +988,9 @@ function delete_task ($id_task){
 		$query = "UPDATE tworkunit_task SET id_task = ".$task["id_parent_task"]." WHERE id_task = $id_task";
 		mysql_query($query);
 		$query = "DELETE FROM trole_people_task WHERE id_task = $id_task";
-				mysql_query($query);
+		mysql_query($query);
 		$query = "DELETE FROM ttask WHERE id = $id_task";
-				mysql_query($query);
+		mysql_query($query);
 	} else {
 		$query = "DELETE FROM trole_people_task WHERE id_task = $id_task";
 		mysql_query($query);
@@ -999,6 +999,10 @@ function delete_task ($id_task){
 		$query = "DELETE FROM ttask WHERE id = $id_task";
 		mysql_query($query);
 	}
+
+	//Remove task links
+	$query = "DELETE FROM ttask_link WHERE source = $id_task OR target = $id_task";
+	mysql_query($query);		
 	
 	//Set childs parent to 0 because if not the child task are missing.
 	$query = sprintf("UPDATE ttask SET id_parent_task = 0 WHERE id_parent_task = %d", $id_task);

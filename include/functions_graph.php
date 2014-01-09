@@ -607,7 +607,7 @@ function incident_peruser ($width, $height) {
 // Draw a simple pie graph with reported workunits for a specific TASK
 // =====================================================================
 
-function graph_workunit_task ($width, $height, $id_task) {
+function graph_workunit_task ($width, $height, $id_task, $return = false) {
 	global $config;
 	$data = array();
 	$legend = array();
@@ -626,7 +626,12 @@ function graph_workunit_task ($width, $height, $id_task) {
 	}
 	
 	if ($data == NULL) {
-		echo __("There is no data to show");
+		$msg = __("There is no data to show");
+		if ($return) {
+			return $msg;
+		} else {
+			echo $msg;
+		}
 	}
 	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);

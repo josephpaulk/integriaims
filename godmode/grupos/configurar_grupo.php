@@ -139,7 +139,17 @@ $table->data[4][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limi
 
 $table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Incident Hard limit'));
 
-$table->data[5][1] = print_select_from_sql ("SELECT id, name FROM tsla ORDER BY name",
+$slas_aux = get_db_all_rows_sql("SELECT id, name FROM tsla ORDER BY name");
+
+$slas = array();
+
+$slas[0] = __("None");
+
+foreach ($slas_aux as $s) {
+	$slas[$s["id"]] = $s["name"];
+}
+
+$table->data[5][1] = print_select ($slas,
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Incident SLA'));
 	
 $table->data[6][0] = print_input_text ('id_inventory', $id_inventory,'', 7, 0, true, __('Default Inventory object'), false);	

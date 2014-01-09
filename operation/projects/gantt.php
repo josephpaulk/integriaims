@@ -15,83 +15,6 @@
 
 include_once ("include/functions_graph.php");
 include_once ("include/functions_projects.php");
-
-// Returns 'date' in the format 'dd/mm/yyyy'
-function fix_date ($date, $default='') {
-	$date_array = preg_split ('/[\-\s]/', $date);
-	if (sizeof($date_array) < 3) {
-		return false;
-	}
-
-	if ($default != '' && $date_array[0] == '0000') {
-		return $default;
-	}
-		
-	return sprintf ('%02d/%02d/%04d', $date_array[2], $date_array[1], $date_array[0]);
-}
-
-// Get project tasks
-function get_tasks (&$tasks, $project_id, $project_start, $project_end, $parent_id = 0, $depth = 0) {
-	global $config;
-
-	$id_user = $config["id_user"];
-    $result = mysql_query ('SELECT * FROM ttask 
-                            WHERE id_parent_task = ' . $parent_id
-                            . ' AND id_project = ' . $project_id);
-    if ($result === false) {
-    	return;
-    }
-
-	$indent = '';
-	for ($i = 0; $i < $depth; $i++) {
-		$indent .= '>';
-	}
-
-    while ($row = mysql_fetch_array ($result)) {
-		
-		// ACL Check for this task
-		// This user can see this task?	
-		$task_access = get_project_access ($config["id_user"], $project_id, $row['id'], false, true);
-		if ($task_access["read"]) {
-			
-			$task['id'] = $row['id'];
-			$task['name'] = $indent . $row['name'];
-			$task['parent'] = $parent_id;
-			$task['link'] = 'index.php?sec=projects&sec2=operation/projects/task_detail&id_project=' . $project_id .'&id_task=' . $row['id'] .'&operation=view';
-			// start > end
-			$task['start'] = fix_date ($row['start'], $project_start);
-			$task['end'] = fix_date ($row['end'], $project_end);
-			if (date_to_epoch ($task['start']) > date_to_epoch ($task['end'])) {
-				$temp = $task['start'];
-				$task['start'] = $task['end'];
-				$task['end'] = $temp;
-			}
-			$task['real_start'] = fix_date (get_db_sql ('SELECT MIN(timestamp) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_task = ' . $row['id']), $task['start']);
-			$task['real_end'] = fix_date (get_db_sql ('SELECT MAX(timestamp) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_task = ' . $row['id']), $task['start']);
-			$task['completion'] = $row['completion'];
-			array_push ($tasks, $task);
-	
-			get_tasks (&$tasks, $project_id, $project_start, $project_end, $task['id'], $depth + 1);
-		}
-    }
-}
-
-// Get project milestones
-function get_milestones (&$milestones, $project_id, $parent_id = 0, $depth = 0) {
-    $result = mysql_query ('SELECT * FROM tmilestone 
-                            WHERE id_project = ' . $project_id);
-    if ($result === false) {
-    	return;
-    }
-    
-    while ($row = mysql_fetch_array ($result)) {
-    	$milestone['id'] = $row['id'];
-    	$milestone['name'] = $row['name'];
-    	$milestone['description'] = $row['description'];
-    	$milestone['date'] = fix_date ($row['timestamp']);
-    	array_push ($milestones, $milestone);
-	}
-}
 	
 // Real start
 global $config;
@@ -104,6 +27,9 @@ if (!isset($config["base_url"]))
 
 $id_user = $_SESSION['id_usuario'];
 $id_project = get_parameter ("id_project", -1);
+$scale = get_parameter("scale", "month");
+$show_actual = get_parameter("show_actual", 0);
+
 if ($id_project != -1)
 	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 else
@@ -117,84 +43,91 @@ if ($id_project != -1 && !$project_access['read']) {
 	no_permission();
 }
 
-echo "<h1>".$project_name." &raquo; ".__('Gantt graph')."</h1>";
-
-$tasks = array ();
-$milestones = array ();
-$project_start =  fix_date (get_db_value ("start", "tproject", "id", $id_project));
-$project_end = fix_date (get_db_value ("end", "tproject", "id", $id_project));
-
-// Get start/end dates for the chart
-$from = $project_start;
-$to = $project_end;
-
-// Minimum date from project/tasks/workunits
-$min_start = fix_date (get_db_sql ('SELECT MIN(start) FROM ttask WHERE start <> \'0000-00-00\' AND id_project = ' . $id_project));
-
-if ($min_start !== false && (date_to_epoch ($min_start) < date_to_epoch ($from) || $from == '00/00/0000')) {
-	$from = $min_start;
-}
-
-$min_timestamp = fix_date (get_db_sql ('SELECT MIN(timestamp) FROM ttask, tworkunit, tworkunit_task WHERE ttask.id = tworkunit_task.id_task AND tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_project = ' . $id_project));
-if ($min_timestamp !== false && (date_to_epoch ($min_timestamp) < date_to_epoch ($from) || $from == '00/00/0000')) {
-	$from = $min_timestamp;
-}
-
-// Minimum date from project/tasks/workunits
-$max_end = fix_date (get_db_sql ('SELECT MAX(end) FROM ttask WHERE end <> \'0000-00-00\' AND id_project = ' . $id_project));
-if ($max_end !== false && date_to_epoch ($max_end) > date_to_epoch ($to)) {
-	$to = $max_end;
-}
-
-$max_timestamp = fix_date (get_db_sql ('SELECT MAX(timestamp) FROM ttask, tworkunit, tworkunit_task WHERE ttask.id = tworkunit_task.id_task AND tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_project = ' . $id_project));
-if ($max_timestamp !== false && date_to_epoch ($max_timestamp) > date_to_epoch ($to)) {
-	$to = $max_timestamp;
-}
-
-// Fix undefined start/end dates
-if ($from == '00/00/0000') {
-	$from = date ('d/m/Y');
-}
-
-if ($to == '00/00/0000') {
-	$to = date ('d/m/Y');
-}
-
-get_tasks (&$tasks, $id_project, $from, $to);
-get_milestones (&$milestones, $id_project);
-
-if ($project_start != '00/00/0000') {
-	array_push ($milestones, array ('id' => 'start', 'name' => __('Start'), 'date' => $project_start));
-}
-if ($project_end != '00/00/0000') {
-	array_push ($milestones, array ('id' => 'end', 'name' => __('End'), 'date' => $project_end));
-}
-
-// Calculate chart width
-if ($clean_output) {
-	$width = 950;
-} else {
-	$width = 780;
-}
-
-// Calculate chart height
-$num_tasks = sizeof ($tasks);
-if ($num_tasks > 20) {
-	$height = 850;
-} else {
-	$height = 150 + 35 * $num_tasks;
-}
-
-// Print the Gantt chart
-echo '<div style="margin: 0px auto; width: '. $width . 'px">';
-echo fs_gantt_chart ($project_name, $from, $to, $tasks, $milestones, $width, $height);
-echo '</div>';
-
-//print gantt_graph ($project_name, $from, $to, $tasks, $milestones, $width, $height);
+echo "<h1>".$project_name." &raquo; ".__('Gantt graph');
 
 if (!$clean_output) {
-	echo "<br><br>";
-	echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project&clean_output=1'>".__('Full screen')."</a>";
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+		echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project&clean_output=1'>".
+		print_image ("images/chart_bar_dark.png", true, array("title" => __("Full screen"))) .
+		"</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
 }
+echo"</h1>";
+
+$scales = array ("month" => __("Month"), "day" => __("Day"));
+$op_actual = array(0 => __("No"), 1 => __("Yes"));
+
+echo '<div id="msg_box"></div>';
+
+echo "<form id='gantt_form' method='post'>";
+echo "<table class='gantt_buttons'>";
+echo "<tr>";
+echo "<td>";
+echo __("Show real planning").": ";
+echo "</td>";
+echo "<td>";
+echo print_select ($op_actual, "show_actual", $show_actual, '', '', 0, true, 0, false, '', false, "width: 50px");
+echo "</td>";
+echo "<td>";
+echo __("Scale").": ";
+echo "</td>";
+echo "<td>";
+echo print_select ($scales, "scale", $scale, '', '', 0, true, 0, false, '', false, "width: 70px");
+echo "</td>";
+echo "</tr>";
+echo "</table>";
+echo "</form>";
+
+echo '	<div id="gantt_here" style="width:98%; height:490px; margin: 40px auto"></div>';
+
+echo '<div id="milestone_explanation" class="gantt_tooltip" style="display:none"></div>';
+
+echo "<div id='task_editor'></div>";
 
 ?>
+
+<script src="include/graphs/gantt/dhtmlxgantt.js" type="text/javascript" charset="utf-8"></script>
+<script src="include/graphs/gantt/ext/dhtmlxgantt_tooltip.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="include/graphs/gantt/dhtmlxgantt.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script src="include/graphs/gantt/gantt_chart.js" type="text/javascript" charset="utf-8"></script>
+<script src="include/js/integria_projects.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+
+//Get data for this project
+var id_project = <? echo $id_project?>;
+var show_actual = <?php echo $show_actual?>;
+var scale = "<?php echo $scale?>";
+
+//Get data
+var conf = get_gantt_data(id_project, show_actual, scale);
+
+var tasks = conf.tasks;
+var milestones = conf.milestones;
+var min_scale = conf.min_scale;
+var max_scale = conf.max_scale;
+
+//Configure gantt graph
+configure_gantt(scale, min_scale, max_scale, task_tooltip_gantt, show_task_editor_gantt, task_creation_gantt, validate_link_gantt);
+
+//Init gantt and fill the graph
+gantt.init("gantt_here");
+gantt.parse(tasks);
+gantt_open_branches(tasks);
+
+bind_event_gantt(tasks);
+
+$(document).ready(function () {
+	load_milestone_tooltip_generator();
+
+	$("#show_actual, #scale").change (function (){
+		$("#gantt_form").submit();
+	});
+	
+});
+
+</script>

@@ -187,99 +187,56 @@ function project_number_task_user ($id_project, $id_user) {
 	return (int) get_db_sql ($sql);
 }
 
-function projects_get_cost_task_by_profile ($id_task, $id_profile=false, $have_cost=false) {
-	if ($id_profile) {
-		if ($have_cost) {
-			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
-					WHERE tworkunit_task.id_task = $id_task 
-					AND id_profile= $id_profile
-					AND have_cost = 1
-					AND tworkunit_task.id_workunit = tworkunit.id 
-					GROUP BY id_profile";
-		} else {
-			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
-					WHERE tworkunit_task.id_task = $id_task 
-					AND id_profile= $id_profile
-					AND tworkunit_task.id_workunit = tworkunit.id 
-					GROUP BY id_profile";
-		}
-	} else { //all profiles
-		if ($have_cost) {
-			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
-					WHERE tworkunit_task.id_task = $id_task 
-					AND have_cost = 1
-					AND tworkunit_task.id_workunit = tworkunit.id 
-					GROUP BY id_profile";
-		} else {
-			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
-					WHERE tworkunit_task.id_task = $id_task 
-					AND tworkunit_task.id_workunit = tworkunit.id 
-					GROUP BY id_profile";
-		}
-	}
+function projects_get_task_links ($id_project, $id_task, $type) {
 
-	$duration = get_db_row_sql ($sql);
+	$sql = sprintf("SELECT T.id, T.name FROM ttask T, ttask_link TL WHERE 
+			T.id = TL.source AND TL.type = %d AND T.id_project = %d AND T.id != %d AND TL.target = %d",
+			$type, $id_project, $id_task, $id_task);
 
-	$total = 0;
+	$tasks = get_db_all_rows_sql($sql);
 	
-	if ($duration != false) {
-			$role_info = get_db_row_sql ("SELECT name, cost FROM trole WHERE id = ".$duration['id_profile']);
-
-			if ($role_info != false) {
-				$cost_per_hour = $role_info['cost'];
-				$profile_name = $role_info['name'];
-				$total = $cost_per_hour * $duration['total_duration'];
-			}
+	$task_aux = array();
+	foreach ($tasks as $t) {
+		$task_aux[$t["id"]] = $t["name"];
 	}
-	return $total;
+
+	return $task_aux;
 }
 
-function projects_get_project_profiles ($id_project) {
-	
-	$project_profiles = get_db_all_rows_sql ("SELECT distinct(id_role), trole.name 
-			FROM trole_people_project, trole
-			WHERE id_project=$id_project
-			AND trole.id=trole_people_project.id_role");
-			
-	$task_profiles = get_db_all_rows_sql ("SELECT distinct(id_role), trole.name 
-			FROM trole_people_task, trole
-			WHERE trole_people_task.id_task IN (SELECT id FROM ttask WHERE id_project=$id_project)
-			AND trole.id=trole_people_task.id_role");
-	
-	if ($project_profiles == false) {
-		$project_profiles = array();
+function projects_get_task_available_links ($id_project, $id_task, $type) {
+
+	$sql = sprintf("SELECT * FROM ttask WHERE id_project = %d AND 
+			id != %d AND id NOT IN (SELECT source FROM ttask_link WHERE type = %d AND target = %d)",
+			$id_project, $id_task, $type, $id_task);
+
+	$tasks = get_db_all_rows_sql($sql);
+
+	$task_aux = array();
+	foreach ($tasks as $t) {
+		$task_aux[$t["id"]] = $t["name"];
 	}
-	if ($task_profiles == false) {
-		$task_profiles = array();
-	}
-	
-	$results = array_merge($project_profiles, $task_profiles);
-	
-	if (!empty($results)) {
-		foreach ($results as $result) {
-			$all_profiles[$result['id_role']]['id_role'] = $result['id_role'];
-			$all_profiles[$result['id_role']]['name'] = $result['name'];
-		}
-	}
-	
-	return $all_profiles;
-	
+
+	return $task_aux;
 }
 
-function projects_get_cost_by_profile ($id_project, $have_cost=false) {
-	
-	$total_per_profile = array();
-	
-	$project_profiles = projects_get_project_profiles ($id_project);		
-	$project_tasks = get_db_all_rows_sql("SELECT * FROM ttask WHERE id_project = $id_project");
-	
-	if ($project_profiles) {
-		foreach ($project_profiles as $profile) {
-			foreach ($project_tasks as $task) {
-				$total_per_profile[$profile['name']] += projects_get_cost_task_by_profile ($task['id'], $profile['id_role'], $have_cost);
-			}
+function projects_update_task_links ($id_task, $links, $type, $delete_previous=true) {
+
+	//Delete links
+	if ($delete_previous) {
+		$sql = sprintf("DELETE FROM ttask_link WHERE type = %d AND target = %d", $type, $id_task);
+
+		$ret = process_sql($sql);
+	}
+
+	foreach ($links as $l) {
+		$sql = sprintf ("INSERT INTO ttask_link (`source`, `target`, `type`) VALUES (%d, %d, %d)", $l, $id_task, $type);
+		$ret = process_sql($sql);
+
+		if (!$ret) {
+			break;
 		}
 	}
-	return $total_per_profile;
+	
+	return $ret;
 }
 ?>

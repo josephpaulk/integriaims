@@ -26,6 +26,7 @@ include_once ("include/functions_tasks.php");
 $id_project = get_parameter ('id_project', -1);
 $id_task = get_parameter ('id_task', -1);
 $operation = (string) get_parameter ('operation');
+$gantt_editor = (int) get_parameter("gantt_editor");
 
 $hours = 0;
 $estimated_cost = 0;
@@ -151,6 +152,15 @@ if ($operation == "insert") {
 		}
 		task_tracking ($id_task, TASK_CREATED);
 		project_tracking ($id_project, PROJECT_TASK_ADDED);
+
+
+		//Update task links
+		$links_0 = get_parameter("links_0");
+		$links_1 = get_parameter("links_1");
+		$links_2 = get_parameter("links_2");
+		projects_update_task_links ($id_task, $links_0, 0);
+		projects_update_task_links ($id_task, $links_1, 1);
+		projects_update_task_links ($id_task, $links_2, 2);
 	} else {
 		$update_mode = 0;
 		$create_mode = 1;
@@ -194,6 +204,14 @@ if ($operation == "update") {
 		$result = false;
 	}
 
+	//Update task links
+	$links_0 = get_parameter("links_0");
+	$links_1 = get_parameter("links_1");
+	$links_2 = get_parameter("links_2");
+	projects_update_task_links ($id_task, $links_0, 0);
+	projects_update_task_links ($id_task, $links_1, 1);
+	projects_update_task_links ($id_task, $links_2, 2);
+
 	if ($result !== false) {
 		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
@@ -203,10 +221,15 @@ if ($operation == "update") {
 		
 		// ONLY recalculate the complete if count hours flag is activated
 		if($count_hours) {
-			set_task_completion ($id_task);
+			$hours = set_task_completion ($id_task);
 		}
 	} else {
 		$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
+	}
+
+	if ($gantt_editor) {
+		echo $result_output;
+		exit;
 	}
 }
 
@@ -236,173 +259,131 @@ echo $result_output;
 // Show forms
 // ********************************************************************************************************
 
-echo '<h1>'.__('Task management').'</h1>';
+if (!$gantt_editor) {
 
-if ($id_task > 0) {
-    // Task activity graph
-	$task_activity = task_activity_graph ($id_task, 600, 150, true, true);
-	if ($task_activity) {
-		$table->width = '100%';
-		$table->class = 'none';
-		$table->style[0] = 'padding-left: 5px';
-		$table->colspan = array();
-		$table->data = array ();
-		$task_activity = '<div class="graph_frame">' . $task_activity . '</div>';
-		$table->data[0][0] = print_container('task_activity', __('Task activity'), $task_activity, 'closed');
-		print_table ($table);
+	echo '<h1>'.__('Task management')."  &raquo ".$task_name;;
+	if ($id_task != -1) {
+		echo "<div id='button-bar-title'>";
+		echo "<ul>";
+		echo "<li>";
+			echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/task_report&id_project=$id_project&id_task=$id_task'>".
+			print_image ("images/chart_bar_dark.png", true, array("title" => __("Statistics"))) .
+			"</a>";
+		echo "</li>";
+		echo "</ul>";
+		echo "</div>";
 	}
-}
-
-if ($operation == "create") {
-	$estimated_cost = 0;
-	$priority = 0;
-	$parent = 0;
-	$hours = 8;
-	$start = date ("Y-m-d");
-	$end = date ("Y-m-d");
-	$periodicity = "none";
+	echo '</h1>';
+} else {
+	echo "<div id='button-bar-title' style='margin-top: 5px; margin-bottom: 9px;'>";
+	echo "<ul>";
+	echo "<li>";
+		echo "<a target='top' onclick='toggle_editor_gantt($id_project, $id_task, \"stats\")'>".
+		print_image ("images/chart_bar_dark.png", true, array("title" => __("Statistics"))) .
+		"</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";	
 }
 
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
 $table->colspan = array ();
-$table->colspan[0][0] = 2;
-$table->colspan[8][0] = 3;
 $table->style = array ();
-$table->style[0] = 'vertical-align: top';
-$table->style[1] = 'vertical-align: top';
-$table->style[2] = 'vertical-align: top';
+$table->style[0] = 'vertical-align: top; width: 30%';
+$table->style[1] = 'vertical-align: top; width: 30%';
+$table->style[2] = 'vertical-align: top; width: 30%';
 $table->data = array ();
-$table->data[0][0] = print_input_text ('name', $name, '', 50, 240, true, __('Name'));
+$table->cellspacing = 2;
+$table->cellpadding = 2;
 
-if ($id_task != -1) {
-	$table->rowspan[0][2] = 4;
+$table->data[0][0] = print_input_text ('name', $name, '', 60, 240, true, __('Name'));
 
-	$image = graph_workunit_task (200, 170, $id_task);
-
-	// Small hack to have a better graph here
-	$image = "<div style='border: 1px solid #cfcfcf; background: #ffffff'>" . $image . "</div>";
-	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
-}
+$table->data[0][1] = print_select (get_priorities (), 'priority', $priority,
+	'', '', '', true, false, false, __('Priority'));
 
 if ($project_permission['manage'] || $operation == "view") {
 	$combo_none = __('None');
 } else {
 	$combo_none = false;
 }
-$table->data[1][0] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
-$table->data[1][1] = print_select (get_priorities (), 'priority', $priority,
-	'', '', '', true, false, false, __('Priority'));
 
-$table->data[3][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
-$table->data[3][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
+$table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
 
-$table->data[4][0] = print_select (get_periodicities (), 'periodicity',
+$table->data[1][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
+$table->data[1][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
+
+$table->data[1][2] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
+
+$table->data[2][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
+
+$table->data[2][1] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
+	11, true, __('Estimated cost'));
+$table->data[2][1] .= ' '.$config['currency'];
 	
-$table->data[4][1] = print_checkbox_extended ('count_hours', 1, $count_hours,
+$table->data[2][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
 	        false, '', '', true, __('Completion based on hours'))
 	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
 
-$table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
+$table->colspan[3][0] = 3;
 
-if ($id_task != -1) {
-	$worked_time =  get_task_workunit_hours ($id_task);
-	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, $worked_time.' '.__('Hrs'));
+$completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
 
-	$subtasks = task_duration_recursive ($id_task);
-	if ($subtasks > 0)
-		$table->data[5][1] .= "<span title='Subtasks WU/Hr'> ($subtasks)</span>";
+$table->data[3][0] = print_label ($completion_label, '', '', true,
+	'<div id="slider" style="margin-top: 5px;"><div class="ui-slider-handle"></div></div>');
+$table->data[3][0] .= print_input_hidden ('completion', $completion, true);
 
-	$incident_wu = get_incident_task_workunit_hours ($id_task);
-	if ($incident_wu > 0)
-		$table->data[5][1] .= "<span title='Incident'>($incident_wu)</span>";
-}
+//////TABLA ADVANCED
+$table_advanced->width = '98%';
+$table_advanced->class = 'search-table';
+$table_advanced->size = array ();
+$table_advanced->size[0] = '33%';
+$table_advanced->size[1] = '33%';
+$table_advanced->size[2] = '33%';
+$table_advanced->style = array();
+$table_advanced->data = array ();
 
-$table->data[6][0] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
-	11, true, __('Estimated cost'));
-$table->data[6][0] .= ' '.$config['currency'];
+$links_1 = projects_get_task_links ($id_project, $id_task, 1);
 
-$external_cost = 0;
-$external_cost = task_cost_invoices ($id_task);
+$hint = print_help_tip (__("The task cannot start before all tasks in this section start"), true);
+$table_advanced->data[0][0] = print_select ($links_1, 'link_1', NULL,
+								'', '', '', true, false, false, __('Start to start').$hint);
+$table_advanced->data[0][0] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(1,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced->data[0][0] .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
-$table->data[6][0] .= print_label (__("External costs"), '', '', true);
-$table->data[6][0] .= $external_cost . " " . $config["currency"];
+$links_0 = projects_get_task_links ($id_project, $id_task, 0);
 
-if ($id_task != -1) {
-	$table->data[6][1] = print_label (__('Imputable costs'), '', '', true,
-		task_workunit_cost ($id_task, 1).' '.$config['currency']);
-		
-		
-	$incident_cost = get_incident_task_workunit_cost ($id_task);
-	if ($incident_cost > 0)
-		$incident_cost_label = "<span title='".__("Incident costs")."'> ($incident_cost) </span>";
-	else
-		$incident_cost_label = "";
-		
-	$total_cost = $external_cost + task_workunit_cost ($id_task, 0) + $incident_cost;
-	
-	if ($total_cost != 0) {
-		$roles_task = get_db_all_rows_sql("SELECT distinct(id_role), name FROM trole_people_task, trole 
-			WHERE id_task = $id_task AND id_role = trole.id");
-		if ($roles_task != 0) {
-			$output_total = '';
-			foreach ($roles_task as $role) {
-				$total_role = projects_get_cost_task_by_profile ($id_task, $role['id_role']);
-				if ($total_role) {
-					$output_total .= __($role['name'])." = ".format_numeric($total_role)." ". $config["currency"]."\n";
-				}
-			}
-		}
-	} else {
-			$output_total = __('No cost');	
-	}
+$hint = print_help_tip (__("The task cannot start before all tasks in this section end"), true);
+$table_advanced->data[0][1] = print_select ($links_0, 'link_0', NULL,
+								'', '', '', true, false, false, __('Finish to start').$hint);
+$table_advanced->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(0,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
-	$table->data[6][1] .= print_label (__('Total costs').print_help_tip($output_total, true), '', '', true,
-		$total_cost . $incident_cost_label. $config['currency']);
-	
-	$avg_hr_cost = format_numeric ($total_cost / $worked_time, 2);
-	$table->data[6][1] .= print_label (__('Average Cost per hour'), '', '', true,
-		$avg_hr_cost .' '.$config['currency']);
-	
-	$table->rowspan[5][2] = 5;
-	
-	// Abbreviation for "Estimated"
-	$labela = __('Est.');
-	$labelb = __('Real');
-	$a = round ($hours);
-	$b = round (get_task_workunit_hours ($id_task));
+$links_2 = projects_get_task_links ($id_project, $id_task, 2);
 
-	$image = histogram_2values($a, $b, $labela, $labelb);
-	$table->data[5][2] = print_label (__('Estimated hours'), '', '', true, $image);
-	
-	$labela = __('Total');
-	$labelb = __('Imp');
-	$a = round (task_workunit_cost ($id_task, 0));
-	$b = round (task_workunit_cost ($id_task, 1));
-	$image = histogram_2values($a, $b, $labela, $labelb);
-	$table->data[5][2] .= print_label (__('Imputable estimation'), '', '', true, $image);	
-	
-	$labela = __('Est.');
-	$labelb = __('Real');
-	$a = $estimated_cost;
-	$b = round (task_workunit_cost ($id_task, 1));
-	$image = histogram_2values($a, $b, $labela, $labelb);
-	$table->data[5][2] .= print_label (__('Cost estimation'), '', '', true, $image);
-}
+$hint = print_help_tip (__("The task cannot end before all tasks in this section end, although it may end later"), true);
+$table_advanced->data[0][2] = print_select ($links_2, 'link_2', NULL,
+								'', '', '', true, false, false, __('Finish to finish').$hint);
+$table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(2,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
-$table->colspan[7][0] = 3;
-$table->data[7][0] = print_label (__('Completion'), '', '', true,
-	'<div id="slider"><div class="ui-slider-handle"></div></div><span id="completion">'.$completion.'%</span>');
-$table->data[7][0] .= print_input_hidden ('completion', $completion, true);
-$table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
+$table->colspan['row_links'][0] = 3;
+$table->data['row_links'][0] = print_container('task_links', __('Task links'), print_table($table_advanced, true), 'open', true, false);
+
+$table->colspan[4][0] = 3;
+$table->data[4][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
-	
+
 $button = '';
 
 if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
 	if ($operation != "create") {
+
+		if ($gantt_editor) {
+			$button .= print_submit_button (__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
+		}
 		$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
 		$button .= print_input_hidden ('operation', 'update', true);
 	} else {
@@ -417,18 +398,37 @@ $table->data['button'][0] = $button;
 $table->colspan['button'][0] = 3;
 
 echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
-print_table ($table);
-echo '</form>';
 
+print_table ($table);
+
+//Print input hidden for task links which actually exist
+foreach ($links_0 as $k => $l) {
+	print_input_hidden('links_0[]', $k);
+}
+
+foreach ($links_1 as $k => $l) {
+	print_input_hidden('links_1[]', $k);
+}
+
+foreach ($links_2 as $k => $l) {
+	print_input_hidden('links_2[]', $k);
+}
+echo '</form>';
+echo "<div id='task_search_modal'></div>";
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/integria_projects.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
+
+var gantt_editor = <?php echo $gantt_editor;?>;
+var count_hours = <?php echo $count_hours;?>;
+var id_task = <?php echo $id_task;?>;
 
 // Datepicker
 add_ranged_datepicker ("#text-start_date", "#text-end_date", function (datetext) {
@@ -458,6 +458,26 @@ $(document).ready (function () {
 		change: function (event, ui) {
 			$("#hidden-completion").attr ("value", ui.value);
 		}
+	});
+
+	if (gantt_editor) {
+		$("#submit-update_btn").click(function () {
+			submit_task_editor_form_gantt();
+			return false;
+		});
+
+		$("#submit-delete_btn").click(function(){
+			delete_task_editor_form_gantt();
+			return false;
+		})
+	}
+
+	if (count_hours) {
+		$('#slider').slider( "option", "disabled", true );
+	}
+
+	$("#checkbox-count_hours").change(function (e) {
+		toggle_count_hours_checkbox (id_task);
 	});
 });
 
@@ -489,3 +509,4 @@ messages = {
 add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>
+

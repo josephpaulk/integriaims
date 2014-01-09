@@ -23,12 +23,30 @@
 function set_task_completion ($id_task) {
 	$hours_worked = get_task_workunit_hours ($id_task);
 	$hours_estimated = get_db_value ('hours', 'ttask', 'id', $id_task);
-	if($hours_worked > $hours_estimated) {
-		return -1;
+
+	if($hours_estimated == 0) {
+		return 0;
 	}
 	
 	$percentage_completed = ($hours_worked*100)/$hours_estimated;
 	process_sql_update ('ttask', array('completion' => $percentage_completed), array('id' => $id_task));
+
+	return $percentage_completed;
+}
+
+function get_task_completion ($id_task) {
+	$hours_worked = get_task_workunit_hours ($id_task);
+	$hours_estimated = get_db_value ('hours', 'ttask', 'id', $id_task);
+
+	if($hours_estimated == 0) {
+		return 0;
+	}
+	
+	$percentage_completed = ($hours_worked*100)/$hours_estimated;
+
+	$percentage_completed = round($percentage_completed);
+
+	return $percentage_completed;
 }
 
 /**
