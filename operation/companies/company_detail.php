@@ -713,9 +713,11 @@ elseif ($op == "invoices") {
 			$table->head[0] = __('ID');
 			//$table->head[1] = __('Description');
 			$table->head[2] = __('Amount');
-			$table->head[3] = __('Status');
-			$table->head[4] = __('Creation');
-			$table->head[5] = __('Options');
+			$table->head[3] = __('Type');
+			$table->head[4] = __('Status');
+			$table->head[5] = __('Creation');
+			$table->head[6] = __('Payment');
+			$table->head[7] = __('Options');
 			
 			$counter = 0;
 		
@@ -743,10 +745,12 @@ elseif ($op == "invoices") {
 
 				if ($tax != 0)
 					$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount), true);
-
-				$data[3] = __($invoice["status"]);
-				$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
-				$data[5] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+				
+				$data[3] = __($invoice["invoice_type"]);
+				$data[4] = __($invoice["status"]);
+				$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
+				$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_payment_date"]. "</span>";
+				$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 					&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
 					<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 				if ($lock_permission) {
@@ -758,19 +762,19 @@ elseif ($op == "invoices") {
 						$lock_image = 'lock_open.png';
 						$title = __('Lock');
 					}
-					$data[5] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
+					$data[7] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
 						&lock_invoice=1&id='.$invoice["id_company"].'&op=invoices&id_invoice='.$invoice["id"].'" 
 						onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 						<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
 				}
 				if (!$is_locked) {
-					$data[5] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
+					$data[7] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
 						&delete_invoice=1&id='.$id.'&op=invoices&id_invoice='.$invoice["id"].'
 						&offset='.$offset.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 				} else {
 					if ($locked_id_user) {
-						$data[5] .= ' <img src="images/administrator_lock.png" width="18" height="18"
+						$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18"
 						title="'.__('Locked by '.$locked_id_user).'">';
 					}
 				}

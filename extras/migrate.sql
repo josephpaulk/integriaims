@@ -503,3 +503,9 @@ DELETE FROM `tlanguage` WHERE id_language IN ('bn', 'da', 'el', 'ko', 'nl', 'tr'
 INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('zh_CN','简化字');
 INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('de','Deutch');
 INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('pl','Polski');
+
+-- ---------------------------------------------------------------------
+-- Table tinvoice (07/01/2014)
+-- ---------------------------------------------------------------------
+ALTER TABLE tinvoice ADD invoice_type enum ('Submitted', 'Received') default 'Submitted';
+ALTER TABLE tinvoice ADD `id_language` varchar(6) NOT NULL default '';

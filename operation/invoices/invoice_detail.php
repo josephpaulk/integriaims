@@ -29,10 +29,11 @@ $search_text = (string) get_parameter ('search_text');
 $search_invoice_status = (string) get_parameter ('search_invoice_status');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
+$search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
 
 $order_by = get_parameter ('order_by', '');
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type";
 
 include_once('include/functions_crm.php');
 
@@ -134,6 +135,9 @@ if ($search_date_begin != "") {
 if ($search_date_end != "") {
 	$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
 }
+if ($search_invoice_type != "") {
+	$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
+}
 
 if ($clean_output == 0){
 
@@ -146,21 +150,26 @@ if ($clean_output == 0){
 	echo "</td>";
 
 	echo "<td>";
+	$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
+	echo print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, false, 0, false, __('Invoice type'), false, 'width:150px;');
+	echo "</td>";
+	
+	echo "<td>";
 	$invoice_status_ar = array();
 	$invoice_status_ar['']= __("Any");
 	$invoice_status_ar['pending']= __("Pending");
 	$invoice_status_ar['paid']= __("Paid");
 	$invoice_status_ar['cancel']= __("Cancelled");
-	echo print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, false, 0, false, __('Invoice status'));
+	echo print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, false, 0, false, __('Invoice status'), false, 'width:150px;');
 	echo "</td>";
-
+	
 	echo "<td>";
-	echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('From'));
+	echo print_input_text ('search_date_begin', $search_date_begin, '', 12, 20, true, __('From'));
 	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
 	echo "</td>";
 
 	echo "<td>";
-	echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('To'));
+	echo print_input_text ('search_date_end', $search_date_end, '', 12, 20, true, __('To'));
 	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
 	echo "</td>";
 
@@ -220,8 +229,9 @@ if ($invoices != false) {
 	$table->head[3] = __('Currency');
 	$table->head[4] = __('Status');
 	$table->head[5] = __('Creation').$date_img;
+	$table->head[6] = __('Payment');
 	if ($clean_output == 0)
-		$table->head[6] = __('Options');
+		$table->head[7] = __('Options');
 	$counter = 0;
 
 	$total=array();
@@ -262,10 +272,11 @@ if ($invoices != false) {
 		$data[3] = strtoupper ($invoice["currency"]);
 		$data[4] = __($invoice["status"]);
 		$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
+		$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_payment_date"]. "</span>";
 
 		if ($clean_output == 0){
 
-			$data[6] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+			$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 			&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
 			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 			if ($lock_permission) {
@@ -277,19 +288,19 @@ if ($invoices != false) {
 					$lock_image = 'lock_open.png';
 					$title = __('Lock');
 				}
-				$data[6] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
+				$data[7] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
 				&lock_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'&offset='.$offset.$search_params.'" 
 				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 				<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
 			}
 			if (!$is_locked) {
-				$data[6] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
+				$data[7] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
 				&delete_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'
 				&offset='.$offset.$search_params.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 			} else {
 				if ($locked_id_user) {
-					$data[6] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
+					$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
 					title="'.__('Locked by '.$locked_id_user).'">';
 				}
 			}

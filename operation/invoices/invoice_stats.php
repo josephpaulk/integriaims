@@ -23,6 +23,7 @@ $search_text = (string) get_parameter ('search_text');
 $search_invoice_status = (string) get_parameter ('search_invoice_status');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
+$search_invoice_type = (string) get_parameter ('search_invoice_type');
 
 $pdf_report = get_parameter("pdf_output");
 
@@ -31,7 +32,7 @@ if ($pdf_report) {
 	$graph_ttl = 2;
 }
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_invoice_type=$search_invoice_type";
 
 $read = check_crm_acl ('company', 'cr');
 
@@ -80,6 +81,9 @@ if ($search_date_begin != "") {
 if ($search_date_end != "") {
 	$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
 }
+if ($search_invoice_type != "") {
+	$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
+}
 
 $invoices = crm_get_all_invoices($where_clause);
 
@@ -89,6 +93,8 @@ $inv_data_company = array();
 
 //Get all currency and company totals and legend
 foreach ($invoices as $inv) {
+
+	$inv["total"] = crm_get_amount_total_invoice($inv);
 
 	if (! isset($inv_total_currency[$inv["currency"]])) {
 		$inv_total_currency[$inv["currency"]] = 0;
@@ -110,7 +116,9 @@ foreach ($invoices as $inv) {
 
 //Get data for graphs
 foreach ($invoices as $inv) {
-
+	
+	$inv["total"] = crm_get_amount_total_invoice($inv);
+	
 	if (! isset($inv_data_currency[$inv["invoice_create_date"]])) {
 		$inv_data_currency[$inv["invoice_create_date"]] = array();
 
@@ -151,7 +159,18 @@ foreach ($inv_total_currency as $curr => $val) {
 
 $currency_table = print_table($table, true);
 
-$container_title = __("Billing history");
+switch ($search_invoice_type) {
+	case 'Submitted':
+		$container_title = __("Submitted billing history");
+		break;
+	case 'Received':
+		$container_title = __("Received billing history");
+		break;
+	default:
+		$container_title = __(" Submitted billing history");
+		break;
+}
+
 $invoicing_graph = stacked_area_graph($config["flash_chart"], $inv_data_currency, 650, 250, null, $legend, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl, $config["base_url"]);
 $container_invoicing_graph = '<div class="pie_frame">' .$invoicing_graph."</div>";
 echo print_container('history_invoiced', $container_title, $container_invoicing_graph, 'no', true, true, "container_simple_title", "container_simple_div");
@@ -169,12 +188,34 @@ foreach ($inv_data_company as $comp => $val) {
 	$comp_invoiced_data[$comp_name] = $val;
 }
 
-$container_title = __("Billing per company");
+switch ($search_invoice_type) {
+	case 'Submitted':
+		$container_title = __("Submitted billing per company");
+		break;
+	case 'Received':
+		$container_title = __("Received billing per company");
+		break;
+	default:
+		$container_title = ("Submitted billing per company");
+		break;
+}
+
 $companies_invoiced_graph = pie3d_graph ($config["flash_chart"], $comp_invoiced_data, 400, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $graph_ttl);
 $companies_invoiced_graph = '<div class="pie_frame">' .$companies_invoiced_graph."</div>";
 echo print_container('companies_invoiced', $container_title, $companies_invoiced_graph, 'no', true, true, "container_simple_title", "container_simple_div");
 
-$container_title = __("Billing per currency");
+switch ($search_invoice_type) {
+	case 'Submitted':
+		$container_title = __("Submitted billing per currency");
+		break;
+	case 'Received':
+		$container_title = __("Received billing per currency");
+		break;
+	default:
+		$container_title = __("Submitted billing per currency");
+		break;
+}
+
 echo print_container('currency_invoiced', $container_title, $currency_table, 'no', true, true, "container_simple_title", "container_simple_div");
 
 ?>

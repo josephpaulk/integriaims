@@ -927,4 +927,11 @@ function crm_get_campaign_email_stats($id_campaign) {
 
 	return $stats;
 }
+
+function crm_get_amount_total_invoice($field_invoice) {
+	
+	$total = $field_invoice['amount1']+$field_invoice['amount2']+$field_invoice['amount3']+$field_invoice['amount4']+$field_invoice['amount5'];
+	return $total;
+}
+
 ?>

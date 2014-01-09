@@ -264,25 +264,33 @@ if ($delete) {
 		exit;
 	}
 
-	$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
-	$sql = sprintf ('DELETE FROM tlead WHERE id = %d', $id);
-	process_sql ($sql);
-	audit_db ($config['id_user'], $REMOTE_ADDR, "Lead deleted", "Lead named '$fullname' has been deleted");
+	//check if lead exists
+	$exists = get_db_value  ('id', 'tlead', 'id', $id);
 
-	$sql = sprintf ('DELETE FROM tlead_activity WHERE id_lead = %d', $id);
-	process_sql ($sql);
-
-	$sql = sprintf ('DELETE FROM tlead_history WHERE id_lead = %d', $id);
-	process_sql ($sql);
-
-	$sql = sprintf ('SELECT id FROM tlead WHERE id = %d', $id);
-	$result = process_sql ($sql);
-	if (!$result) {
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	if (!$exists) {
+		echo "<h3 class='error'>".__('Error deleting lead')."</h3>";
 		$id = 0; // Force go listing page.
+	} else {
+		$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
+		$sql = sprintf ('DELETE FROM tlead WHERE id = %d', $id);
+		process_sql ($sql);
+		audit_db ($config['id_user'], $REMOTE_ADDR, "Lead deleted", "Lead named '$fullname' has been deleted");
 
-		if ($massive_leads_update && defined ('AJAX')) {
-			$total_result['deleted'] = true;
+		$sql = sprintf ('DELETE FROM tlead_activity WHERE id_lead = %d', $id);
+		process_sql ($sql);
+
+		$sql = sprintf ('DELETE FROM tlead_history WHERE id_lead = %d', $id);
+		process_sql ($sql);
+
+		$sql = sprintf ('SELECT id FROM tlead WHERE id = %d', $id);
+		$result = process_sql ($sql);
+		if (!$result) {
+			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+			$id = 0; // Force go listing page.
+
+			if ($massive_leads_update && defined ('AJAX')) {
+				$total_result['deleted'] = true;
+			}
 		}
 	}
 }

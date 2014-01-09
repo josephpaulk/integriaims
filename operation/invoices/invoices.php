@@ -76,6 +76,10 @@ if ($operation_invoices == "add_invoice"){
 	$tax = get_parameter ("tax", 0.00);
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
+	$invoice_type = get_parameter ("invoice_type", "Submitted");
+	$create_calendar_event = get_parameter('calendar_event');
+	$language = get_parameter('id_language', $config['language_code']);
+	
 	
 	if ($filename != ""){
 		$file_temp = sys_get_temp_dir()."/$filename";
@@ -105,14 +109,27 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
+	amount4, amount5, reference, invoice_type, id_language) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
+		if ($create_calendar_event) { 
+			$now = date('Y-m-d H:i:s');
+			$time = substr($now, 11, 18);
+			$title = __('Reminder: Invoice ').$bill_id.__(' payment date'); 
+
+			$sql_event ="INSERT INTO tagenda (public, alarm, timestamp, id_user,
+				title, duration, description)
+				VALUES (0, '1440', '$invoice_payment_date $time', '".$config['id_user']."', '$title',
+				0, '')";
+
+			$result = process_sql ($sql_event);
+
+		}
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 	} else {
 		echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
@@ -144,6 +161,8 @@ if ($operation_invoices == "update_invoice"){
 	$tax = get_parameter ("tax", 0.00);
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
+	$invoice_type = get_parameter ("invoice_type", "Submitted");
+	$language = get_parameter('id_language', $config['language_code']);
 
 	// If no file input, the file doesnt change
 	if ($filename != ""){
@@ -201,6 +220,9 @@ if ($operation_invoices == "update_invoice"){
 	$values['invoice_create_date'] = $invoice_create_date;
 	$values['invoice_payment_date'] = $invoice_payment_date;
 	
+	$values['invoice_type'] = $invoice_type;
+	$values['id_language'] = $language;
+	
 	$where = array('id' => $id_invoice);
 	
 	$ret = process_sql_update ('tinvoice', $values, $where);
@@ -237,6 +259,8 @@ if ($id_invoice > 0){
 	$tax = $invoice["tax"];
 	$currency = $invoice["currency"];
 	$invoice_status = $invoice["status"];
+	$invoice_type = $invoice['invoice_type'];
+	$language = $invoice['id_language'];
 
 } else {
 	
@@ -261,6 +285,8 @@ if ($id_invoice > 0){
 	$tax = 0;
 	$currency = "EUR";
 	$invoice_status = "pending";
+	$invoice_type = "Submitted";
+	$language = $config['language_code'];
 }
 
 echo "<h3>";
@@ -270,7 +296,7 @@ if ($id_invoice == "-1") {
 else {
 	echo __('Update invoice'). " #$id_invoice";
 	echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
-				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1">
+				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1&language='.$language.'">
 				<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 	if ($lock_permission) {
 		echo ' <a href="?sec=customers&sec2=operation/companies/company_detail
@@ -306,46 +332,72 @@ if ($id_company > 0) {
 	$table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
 }
 
-$table->data[0][1] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
+$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
+$table->data[0][1] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'));
 
-$table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
+$table->data[1][0] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
+
+$table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
 if ($bill_id == ""){ // let's show the latest Invoice ID generated in the system
 	$last_invoice_generated = get_db_sql ("SELECT bill_id FROM tinvoice ORDER by invoice_create_date DESC LIMIT 1");
-	$table->data[1][0] .= "<span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span>";;
+	//$table->data[1][1] .= "<span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span>";
+	$table->data[1][1] .= "<div id='last_id'><span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span></div>";
 }
 
 $invoice_status_ar = array();
 $invoice_status_ar['pending']= __("Pending");
 $invoice_status_ar['paid']= __("Paid");
 $invoice_status_ar['canceled']= __("Canceled");
-$table->data[1][1] = print_select ($invoice_status_ar, 'invoice_status',
+$table->data[2][0] = print_select ($invoice_status_ar, 'invoice_status',
 	$invoice_status, '','', 0, true, false, false, __('Invoice status'));
 
-$table->data[2][0] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
-$table->data[2][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
+$table->data[2][1] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
+$table->data[3][0] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
+if ($id_invoice != -1) {
+	$disabled = true;
+} else {
+	$disabled = false;
+}
 
-$table->data[3][0] = "<h4>".__('Concept')."</h4>";
-$table->data[3][1] = "<h4>".__('Amount')."</h4>";
-$table->data[4][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
-$table->data[4][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
-$table->data[5][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
-$table->data[5][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
-$table->data[6][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
-$table->data[6][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
-$table->data[7][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
-$table->data[7][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
-$table->data[8][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
-$table->data[8][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
+if ($id_invoice == -1) {
+	$table->data[3][0] .= print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
+}
 
-$table->data[9][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
-$table->data[9][1] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+$table->data[3][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
+	$language, '', '', '', true, false, false, __('Language'));
 
-$table->colspan[10][0] = 2;
-$table->data[10][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+$table->data[4][0] = "<h4>".__('Concept')."</h4>";
+$table->data[4][1] = "<h4>".__('Amount')."</h4>";
+$table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
+$table->data[5][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
+$table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
+$table->data[6][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
+$table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
+$table->data[7][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
+$table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
+$table->data[8][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
+$table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
+$table->data[9][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
 
-$table->colspan[11][0] = 2;
-$table->data[11][0] = print_input_file ('upfile', 20, false, '', true, __('Attachment'));
+$table->data[10][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
+$table->data[10][1] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+
+if ($id_invoice != -1) {
+	$amount = get_invoice_amount ($id_invoice);
+	$tax = get_invoice_tax ($id_invoice);
+	$tax_amount = $amount * ($tax/100);
+	$total = round($amount + $tax_amount, 2);
+	
+	$table->data[11][0] = print_label(__('Total amount: ').format_numeric($total).' '.$invoice['currency'], 'total_amount', 'text', true);
+	$table->data[11][1] = print_label(__('Total amount without taxes: ').format_numeric($amount).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+}
+
+$table->colspan[13][0] = 2;
+$table->data[13][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+
+$table->colspan[14][0] = 2;
+$table->data[14][0] = print_input_file ('upfile', 20, false, '', true, __('Attachment'));
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail
@@ -372,6 +424,8 @@ echo '</form>';
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 
+<script type="text/javascript" src="include/js/agenda.js"></script>
+
 <script type="text/javascript">
 	
 // Datepicker
@@ -382,6 +436,7 @@ trim_element_on_submit('#text-bill_id');
 
 validate_form("#form-invoice");
 var rules, messages;
+
 // Rules: #text-bill_id
 rules = {
 	required: true,
@@ -391,6 +446,7 @@ rules = {
         data: {
           page: "include/ajax/remote_validations",
           search_existing_invoice: 1,
+		  invoice_type: function() { return $('#invoice_type').val() },
           bill_id: function() { return $('#text-bill_id').val() },
           invoice_id: <?php echo $id_invoice ?>
         }
@@ -400,7 +456,9 @@ messages = {
 	required: "<?php echo __('Bill ID required'); ?>",
 	remote: "<?php echo __('This bill ID already exists'); ?>"
 };
+
 add_validate_form_element_rules('#text-bill_id', rules, messages);
+
 // Rules: #text-tax
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
@@ -426,4 +484,14 @@ rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
 add_validate_form_element_rules('input[name="amount5"]', rules, messages);
 
+
+$(document).ready (function () {
+	$("#invoice_type").click (function () {
+		if ($("#invoice_type").val() == 'Received') {
+			$("#last_id").css('display', 'none');
+		} else {
+			$("#last_id").css('display', '');
+		}
+	});
+});
 </script>

@@ -427,6 +427,13 @@ if ($search_existing_project) {
 	$bill_id = (string) get_parameter ('bill_id');
 	$invoice_id = get_parameter ('invoice_id', 0);
 	$old_bill_id = -1;
+	$invoice_type = get_parameter ('invoice_type');
+	
+	if ($invoice_type == 'Received') {
+		// Don't check Bill ID
+		echo json_encode(true);
+		return;
+	}
 	
 	if ($invoice_id) {
 		$old_bill_id = get_db_value("bill_id", "tinvoice", "id", $invoice_id);

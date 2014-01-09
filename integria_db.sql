@@ -479,7 +479,9 @@ CREATE TABLE `tinvoice` (
   `invoice_create_date` date NOT NULL DEFAULT '0000-00-00',
   `invoice_payment_date` date DEFAULT NULL,
   `status` enum ('pending', 'paid', 'canceled') default 'pending',
+  `invoice_type` enum ('Submitted', 'Received') default 'Submitted',
   `reference` text NOT NULL default '',
+  `id_language` varchar(6) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)

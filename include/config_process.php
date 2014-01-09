@@ -123,6 +123,10 @@ if (isset ($_SESSION['id_usuario'])){
         $config['language_code'] = $temp;
 }
 
+if (isset ($_GET['language'])){
+    $config['language_code'] = $_GET['language'];
+}
+
 if (file_exists ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo')) {
 	$l10n = new gettext_reader (new CachedFileReader ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo'));
 	$l10n->load_tables ();
