@@ -1,5 +1,12 @@
 2014-01-09  Dario Rodriguez <dario@artica.es>
 
+	* include/graphs/gantt/gantt_chart.js
+	include/js/integria_projects.js
+	operation/projects/gantt.php: Improved tooltip which
+	shows information about a task in gantt chart.
+
+2014-01-09  Dario Rodriguez <dario@artica.es>
+
 	* operation/projects/gantt.php: Fixed a bug
 	calling php code within JS code.
 

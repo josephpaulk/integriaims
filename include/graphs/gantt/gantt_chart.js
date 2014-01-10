@@ -92,7 +92,8 @@ function gantt_milestones_explanation (date) {
 }
 
 //This function configure chart grids
-function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_editor, fn_task_creation, fn_link_validation) {
+function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_editor, 
+						fn_task_creation, fn_link_validation) {
 
 	//Configure scale
 	gantt.config.scale_unit = scale;
@@ -153,9 +154,6 @@ function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_ed
 		return gantt_mark_milestone (date, milestones, "scale", scale);
 	};
 
-	//Add tooltip format
-	gantt.templates.tooltip_text = fn_tooltip_msg;
-
 	//Color task based on priority
 	gantt.templates.task_class  = function(start, end, task){
 		if (task.actual_data) {
@@ -174,6 +172,8 @@ function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_ed
 	gantt.attachEvent("onTaskCreated", fn_task_creation);
 
 	gantt.attachEvent("onLinkValidation", fn_link_validation);
+
+	gantt.attachEvent("onMouseMove", fn_tooltip_msg);
 }
 
 //Binds jquery actions to show and hide milestone tooltip 

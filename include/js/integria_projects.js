@@ -402,31 +402,55 @@ function bind_event_gantt (tasks) {
 }
 
 
-function task_tooltip_gantt (start,end,task){
+function task_tooltip_gantt (id, e){
 
-	var text = "";
+	if (id) {
+		var task = gantt.getTask(id);
 
-	if (start && end) {
+		var text = "";
+
+		if (task) {
+			
+			var progress = task.progress * 100;
+
+			progress = Math.round(progress);
+
+			var auxDate = new Date(task.start_date);
+			var start = auxDate.getFullYear()+"-"+(auxDate.getMonth()+1)+"-"+auxDate.getDate();
+
+			var auxDate = new Date(task.end_date);
+			var end = auxDate.getFullYear()+"-"+(auxDate.getMonth()+1)+"-"+auxDate.getDate();
+
+			text = "<b>"+__("Task")+":</b> "+task.text+
+				"<br/><b>Start date:</b> "+start+ 
+	    		"<br/><b>"+__("End date")+":</b> "+end+
+	    		"<br><b>"+__("Estamated hours")+":</b> "+task.estimated_hours+" "+__("hours")+
+	    		"<br><b>"+__("Worked hours")+":</b> "+task.worked_hours+" "+__("hours")+
+	    		"<br><b>"+__("Progress")+":</b> "+progress+" %"+
+
+	    		"<br><b>"+__("People involved")+":</b> ";
 		
-		var progress = task.progress * 100;
+			task.people.forEach(function (item) {
+				text += "<br>&nbsp;&nbsp;&nbsp;"+item.name+" <em>("+item.role+")</em>";
+			});
+		}
 
-		progress = Math.round(progress);
+		$("#task_tooltip").html(text);
+		
+		$("div[task_id='"+id+"'] > .gantt_task_content, div[task_id='"+id+"'] > .gantt_task_drag").mousemove(function() {
+			var left = event.pageX + 10;
+			var top = event.pageY + 10;
 
-		text = "<b>"+__("Task")+":</b> "+task.text+"<br/><b>Start date:</b> " + 
-   			gantt.templates.tooltip_date_format(start)+ 
-    		"<br/><b>"+__("End date")+":</b> "+gantt.templates.tooltip_date_format(end)+
-    		"<br><b>"+__("Estamated hours")+":</b> "+task.estimated_hours+" "+__("hours")+
-    		"<br><b>"+__("Worked hours")+":</b> "+task.worked_hours+" "+__("hours")+
-    		"<br><b>"+__("Progress")+":</b> "+progress+" %"+
+			$("#task_tooltip").css("position", "absolute");
+			$("#task_tooltip").css("left", left);
+			$("#task_tooltip").css("top", top);
+			$("#task_tooltip").show();
+		});
 
-    		"<br><b>"+__("People involved")+":</b> ";
-	
-		task.people.forEach(function (item) {
-			text += "<br>&nbsp;&nbsp;&nbsp;"+item.name+" <em>("+item.role+")</em>";
+		$("div[task_id='"+id+"'] > .gantt_task_content, div[task_id='"+id+"'] > .gantt_task_drag").mouseout(function() {
+			$("#task_tooltip").css("display", "none");
 		});
 	}
-
-	return text;
 };
 
 function show_task_link_selector(type, id_project, id_task) {

@@ -86,12 +86,13 @@ echo '	<div id="gantt_here" style="width:98%; height:490px; margin: 40px auto"><
 
 echo '<div id="milestone_explanation" class="gantt_tooltip" style="display:none"></div>';
 
+echo '<div id="task_tooltip" class="gantt_tooltip" style="display:none"></div>';
+
 echo "<div id='task_editor'></div>";
 
 ?>
 
 <script src="include/graphs/gantt/dhtmlxgantt.js" type="text/javascript" charset="utf-8"></script>
-<script src="include/graphs/gantt/ext/dhtmlxgantt_tooltip.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="include/graphs/gantt/dhtmlxgantt.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <script src="include/graphs/gantt/gantt_chart.js" type="text/javascript" charset="utf-8"></script>
 <script src="include/js/integria_projects.js" type="text/javascript" charset="utf-8"></script>
@@ -112,7 +113,8 @@ var min_scale = conf.min_scale;
 var max_scale = conf.max_scale;
 
 //Configure gantt graph
-configure_gantt(scale, min_scale, max_scale, task_tooltip_gantt, show_task_editor_gantt, task_creation_gantt, validate_link_gantt);
+configure_gantt(scale, min_scale, max_scale, task_tooltip_gantt, show_task_editor_gantt, 
+				task_creation_gantt, validate_link_gantt);
 
 //Init gantt and fill the graph
 gantt.init("gantt_here");
