@@ -141,13 +141,13 @@ if ($action == 'update') {
 	
 	$old_incident = get_incident ($id);
 	
-	$user = get_parameter('id_user');
+	$user = get_parameter('id_user', $old_incident['id_usuario']);
 	
 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 	
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
-	$sla_disabled = (bool) get_parameter ('sla_disabled'); //Get SLA given on submit
+	$sla_disabled = (bool) get_parameter ('sla_disabled', $old_incident['sla_disabled']); //Get SLA given on submit
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
@@ -156,12 +156,13 @@ if ($action == 'update') {
 	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
 	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
-	$id_parent = (int) get_parameter ('id_parent');
+	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
-	$email_copy = get_parameter ('email_copy', '');
+	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
 
-	if ($id_incident_type != 0) {
+	if (($id_incident_type != 0) && ($massive_number_loop == -1)) {	//in the massive operations no change id_incident_type
+
 		$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
 		$labels = get_db_all_rows_sql($sql_label);
 		

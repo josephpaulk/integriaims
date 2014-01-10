@@ -1,3 +1,13 @@
+2014-01-10  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/ajax/remote_validation.php
+	  operation/contracts/contract_detail.php: Fixed bug:
+	can't create contracts with the same name.
+	
+	* operation/incidents/incident_detail.php: Fixed bug
+	in massive operations.
+	
+
 2014-01-09  Dario Rodriguez <dario@artica.es>
 
 	* include/graphs/gantt/gantt_chart.js

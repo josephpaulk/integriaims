@@ -220,17 +220,14 @@ if ($id || $new_contract) {
 		
 		$table->class = 'search-table-button';
 		
-		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
-		$table->data[0][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);
+		$companies = crm_get_companies_list ("", false, "ORDER BY name", true);		
+		$table->data[0][0] =  print_select ($companies, 'id_company', $id_company, '', '', '', true, 0, false,  __('Company'));
+		$table->data[0][1] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
 		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
-		
+		$table->data[1][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);		
 			
 		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
-		
-		$companies = crm_get_companies_list ("", false, "ORDER BY name", true);
-	
-		$table->data[3][0] =  print_select ($companies, 'id_company', $id_company, '', '', '', true, 0, false,  __('Company'));
 		
 		if ($id_company) {
 			$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
@@ -560,6 +557,7 @@ rules = {
         data: {
 			page: "include/ajax/remote_validations",
 			search_existing_contract: 1,
+			id_company: function() { return $('#id_company').val() },
 			contract_name: function() { return $('#text-name').val() },
 			contract_id: "<?php echo $id?>"
         }

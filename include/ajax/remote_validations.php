@@ -456,6 +456,7 @@ if ($search_existing_project) {
 	require_once ('include/functions_db.php');
 	$contract_name = get_parameter ('contract_name');
 	$contract_id = get_parameter ('contract_id', 0);
+	$id_company = get_parameter('id_company', 0);
 	$old_contract_name = "";
 	
 	if ($contract_id) {
@@ -463,7 +464,7 @@ if ($search_existing_project) {
 	}
 	
 	// Checks if the contract is in the db
-	$query_result = get_db_value("name", "tcontract", "name", $contract_name);
+	$query_result = get_db_value_filter('name', 'tcontract', array('name'=>$contract_name, 'id_company'=>$id_company));
 	if ($query_result) {
 		if ($contract_name != $old_contract_name) {
 			// Exists. Validation error
