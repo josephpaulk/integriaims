@@ -86,7 +86,7 @@
     echo get_user_worked_days ($id_user_show, $year). "</td>";
 
     echo "<td style='text-align:right; padding-left: 35px;'>";
-    echo __('Days worked (incidents)');
+    echo __('Days worked (ticket)');
     echo "<td class='day_worked_incidents day_legend' day_legend'>";
     echo get_user_incident_worked_days ($id_user_show, $year). "</td>";
 

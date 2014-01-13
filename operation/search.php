@@ -66,7 +66,7 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 
 
 		echo "<h3>";
-		echo __("Incident management");
+		echo __("Ticket management");
 		echo "</h3>";
 		
 		$table->width = '80%';
@@ -162,7 +162,7 @@ if (give_acl($config["id_user"], 0, "UM")){
 		$table->head[1] = __('Full report');
 		$table->head[2] = __('Monthly report');
 		$table->head[3] = __('Assigned WO\'s');
-		$table->head[4] = __('Assigned Incidents');	
+		$table->head[4] = __('Assigned tickets');	
 		foreach ($users as $user) {
 
 			$data = array ();

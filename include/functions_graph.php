@@ -66,7 +66,7 @@ function print_bubble_incidents_per_user_graph($incidents_by_user) {
 	foreach ($incidents_by_user as $incident) {
 		
 		$content = '<b>' . __('Creator') . ':</b> ' . $incident['user_name'] . '<br>' .
-			'<b>' . __('Incident') . ':</b> ' . $incident['incident_name'] . '<br>' .
+			'<b>' . __('Ticket') . ':</b> ' . $incident['incident_name'] . '<br>' .
 			'<b>' . __('Hours') . ':</b> ' . $incident['hours'] . '<br>' .
 			'<b>' . __('Files') . ':</b> ' . $incident['files'];
 		

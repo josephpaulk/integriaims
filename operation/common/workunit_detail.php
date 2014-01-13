@@ -18,7 +18,7 @@
 global $config;
 
 if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
+	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }

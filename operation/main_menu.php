@@ -137,7 +137,7 @@ if ($incidents_acl){
     else
 	    echo "<li class='incident'>";
 		
-	echo "<a href='" . $incidents_link . "'>".__('Incidents')."</a></li>";
+	echo "<a href='" . $incidents_link . "'>".__('Tickets')."</a></li>";
 }
 
 // KB

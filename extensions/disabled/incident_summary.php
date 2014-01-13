@@ -23,10 +23,10 @@ function check_incident_access ($id) {
 		if ($incident !== false) {
 			$id_grupo = $incident['id_grupo'];
 		} else {
-			echo "<h1>".__("Incident")."</h1>";
-			echo "<h3 class='error'>".__("There is no information for this incident")."</h3>";
+			echo "<h1>".__("Ticket")."</h1>";
+			echo "<h3 class='error'>".__("There is no information for this ticket")."</h3>";
 			echo "<br>";
-			echo "<a style='margin-left: 90px' href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__("Try the search form to find the incident")."</a>";
+			echo "<a style='margin-left: 90px' href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__("Try the search form to find the ticket")."</a>";
 			return false;
 		}
 	}
@@ -39,18 +39,18 @@ function check_incident_access ($id) {
 		if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
 
 			// Doesn't have access to this page
-			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);
 			include ("general/noaccess.php");
 			return false;
 		}
 	} else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
 		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
 		include ("general/noaccess.php");
 		return false;
 	} else {
 		//No incident but ACLs enabled
-		echo "<h3 class='error'>".__("The incident doesn't exist")."</h3>";
+		echo "<h3 class='error'>".__("The ticket doesn't exist")."</h3>";
 		return false;
 	}
 	
@@ -146,6 +146,6 @@ function print_incident () {
 	echo "</div>";
 }
 
-extensions_add_tab_option ('summary', __('Incident summary'), "operation/incidents/incident_dashboard_detail", "../images/note.png", "indicent-details-view");
+extensions_add_tab_option ('summary', __('Ticket summary'), "operation/incidents/incident_dashboard_detail", "../images/note.png", "indicent-details-view");
 extensions_add_tab_function ('print_incident');
 ?>

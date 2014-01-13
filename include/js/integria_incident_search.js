@@ -687,7 +687,7 @@ function parent_search_form(filter) {
 
 function update_parent(id_parent) {
 
-	var str_parent = __('Incident') +" #"+id_parent;
+	var str_parent = __('Ticket') +" #"+id_parent;
 	
 	$("#text-search_parent").attr("value", str_parent); 
 	

@@ -221,7 +221,7 @@ function run_auto_incident_close () {
 
     	// For each incident
 	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4,5) AND actualizacion < '$limit'");
-    	$mailtext = __("This incident has been closed automatically by Integria after waiting confirmation to close this incident for 
+    	$mailtext = __("This ticket has been closed automatically by Integria after waiting confirmation to close this ticket for 
 ").$config["auto_incident_close"]."  ".__("days");
 
     	if ($incidents)
@@ -1068,8 +1068,8 @@ foreach ($slas as $sla) {
 			if (! isset ($noticed_groups[$incident['id_grupo']])) {
 				$noticed_groups[$incident['id_grupo']] = 1;
 				$group_name = dame_nombre_grupo ($incident['id_grupo']);
-				$subject = "[".$config['sitename']."] Openened incident limit reached ($group_name)";
-				$body = "Opened incidents limit for this group has been exceeded. Please check opened incidentes.\n";
+				$subject = "[".$config['sitename']."] Openened ticket limit reached ($group_name)";
+				$body = "Opened ticket limit for this group has been exceeded. Please check open tickets.\n";
 				send_group_email ($incident['id_grupo'], $subject, $body);
 				insert_event ('SLA_MAX_OPENED_INCIDENTS_NOTIFY',
 					$incident['id_grupo']);

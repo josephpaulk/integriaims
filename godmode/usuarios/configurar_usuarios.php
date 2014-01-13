@@ -365,7 +365,7 @@ print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', __('Default
 
 <?php
 
-echo '<tr><td class="datos2">'.__('Total incidents');
+echo '<tr><td class="datos2">'.__('Total tickets');
 echo '<td class="datos2"><b>';
 echo get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$update_user."'");
 echo "</b></td></tr>";

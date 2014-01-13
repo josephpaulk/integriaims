@@ -24,7 +24,7 @@ $incident_creator = get_db_value ("id_creator", "tincidencia", "id_incidencia", 
 if (! give_acl($config["id_user"], 0, "IW")
 	&& $config['id_user'] != $incident_creator) {
 	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident #".$id);
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket #".$id);
 	include ("general/noaccess.php");
 	return;
 }

@@ -13,7 +13,7 @@
 // GNU General Public License for more details.
 
 if (check_login () != 0) {
-	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
+	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -277,7 +277,7 @@ if ($config['incident_reporter'] == 1){
 		array_push ($table->data, $data);
 	}
 
-	echo '<h4>'.__('Contacts who reported this incident').'</h4>';
+	echo '<h4>'.__('Contacts who reported this ticket').'</h4>';
 	print_table ($table);
 }
 

@@ -29,14 +29,14 @@ $external_check = enterprise_hook("manage_external", array($incident));
 if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
  	// Doesn't have access to this page
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
-		'Trying to access files of incident #'.$id." '".$titulo."'");
+		'Trying to access files of ticket #'.$id." '".$titulo."'");
 	include ("general/noaccess.php");
 	exit;
 }
 
 if (!$id) {
 	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation",
-		"Trying to access files of incident #".$id);
+		"Trying to access files of ticket #".$id);
 	include ("general/noaccess.php");
 	exit;
 }

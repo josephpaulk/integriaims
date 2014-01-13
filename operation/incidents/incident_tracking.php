@@ -39,7 +39,7 @@ $check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
 $external_check = enterprise_hook("manage_external", array($incident));
 
 if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident #".$id);
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to ticket #".$id);
 	include ("general/noaccess.php");
 	exit;
 }
@@ -70,7 +70,7 @@ if (!$stats) {
 	echo "<table width='99%'>";
 		echo "<tr>";
 			echo "<td style='vertical-align:top; width: 33%;'>";
-			echo __("There isn't statistics for this incident");
+			echo __("There isn't statistics for this ticket");
 			echo "</td>";
 		echo "</tr>";
 	echo "</table>";

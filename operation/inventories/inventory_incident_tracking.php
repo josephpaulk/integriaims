@@ -33,7 +33,7 @@ if (! $id) {
 	exit;
 }
 
-echo '<h3>'.__('Incidents affecting inventory object').' #'.$id.'</h3>';
+echo '<h3>'.__('Tickets affecting inventory object').' #'.$id.'</h3>';
 
 //**********************************************************************
 // Tabs
@@ -46,8 +46,8 @@ echo '<ul class="ui-tabs-nav">';
 echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '"><span>'.__('Details').'</span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incident_tracking&id=' . $id . '"><span>'.__('Incidents Tracking').'</span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Tickets').'</span></a></li>';
+echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incident_tracking&id=' . $id . '"><span>'.__('Tickets Tracking').'</span></a></li>';
 
 echo '</ul>';
 echo '</div>';
@@ -65,7 +65,7 @@ foreach ($incidents as $key=>$incident) {
 
 	if ($trackings !== false) {
 		
-		echo '<h4>'.__('Incident').' #'.$incident['id_incidencia'].'</h4>';
+		echo '<h4>'.__('Ticket').' #'.$incident['id_incidencia'].'</h4>';
 		
 		$table->width = "98%";
 		$table->class = 'listing';

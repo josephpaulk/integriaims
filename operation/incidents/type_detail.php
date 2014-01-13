@@ -19,7 +19,7 @@ global $config;
 check_login ();
 
 if (! give_acl ($config["id_user"], 0, "IM")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket type section");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -122,7 +122,7 @@ if ($create_type) {
 		} else {
 			$show_fields = true;
 			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Created incident type $id - ".$values['name']);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Created ticket type $id - ".$values['name']);
 		}
 	} else {
 		echo '<h3 class="error">'.__('Type name empty').'</h3>';
@@ -145,7 +145,7 @@ if ($update_type) {
 			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 		else {
 			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Updated incident type $id - $name");
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Updated ticket type $id - $name");
 			$show_fields = true;
 		}
 	} else {
@@ -160,12 +160,12 @@ if ($delete_type) {
 	$name = get_db_value ('name', 'tincident_type', 'id', $id);
 	$sql = sprintf ('DELETE FROM tincident_type WHERE id = %d', $id);
 	process_sql ($sql);
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Deleted incident type $id - $name");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Deleted ticket type $id - $name");
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
 
-echo '<h1>'.__('Incident types').'</h1>';
+echo '<h1>'.__('Ticket types').'</h1>';
 
 // FORM (Update / Create)
 if ($id || $new_type) {
@@ -217,7 +217,7 @@ if ($id || $new_type) {
 	
 	if ($show_fields) {
 		//FIELD MANAGEMENT
-		echo "<h1>".__("Incident fields")."</h1>";
+		echo "<h1>".__("Ticket fields")."</h1>";
 		
 		//INCIDENT FIELDS
 		$incident_fields = get_db_all_rows_filter ("tincident_type_field", array("id_incident_type" => $id));

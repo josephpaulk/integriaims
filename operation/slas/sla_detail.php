@@ -168,10 +168,10 @@ if ($id || $new_sla) {
 		5, 100, true, __('Max. resolution time (in hours)'));
 
 	$table->data[1][2] = print_input_text ("max_incidents", $max_incidents, '',
-		5, 100, true, __('Max. incidents at the same time'));
+		5, 100, true, __('Max. tickets at the same time'));
 	
 	$table->data[1][3] = print_input_text ("max_inactivity", $max_inactivity, '',
-		5, 100, true, __('Max. incident inactivity'));
+		5, 100, true, __('Max. ticket inactivity'));
 		
 
 	$table->data[2][0] = print_input_text ('time_from', $time_from, '',
@@ -240,7 +240,7 @@ if ($id || $new_sla) {
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Max.Response');
 		$table->head[2] = __('Max.Resolution');
-		$table->head[3] = __('Max.Incidents');
+		$table->head[3] = __('Max.Tickets');
 		$table->head[4] = __('Max.Inactivity');
 		$table->head[5] = __('Enforced');
 		$table->head[6] = __('Parent');

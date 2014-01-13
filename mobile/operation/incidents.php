@@ -168,7 +168,7 @@ class Incidents {
 			}
 		} else {
 			$html .= "<li>";
-			$html .= "<h3 class='error'>".__('There is no incidents')."</h3>";
+			$html .= "<h3 class='error'>".__('There is no tickets')."</h3>";
 			$html .= "</li>";
 		}
 		$html .= "</ul>";
@@ -184,7 +184,7 @@ class Incidents {
 		$ui->createPage();
 		
 		$back_href = 'index.php?page=home';
-		$ui->createDefaultHeader(__("Incidents"),
+		$ui->createDefaultHeader(__("Tickets"),
 			$ui->createHeaderButton(
 				array('icon' => 'back',
 					'pos' => 'left',
@@ -299,7 +299,7 @@ class Incidents {
 						$this->id_incident = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";
 					} else {
-						$message = "<h2 class='error'>".__('An error ocurred while deleting the incident')."</h2>";
+						$message = "<h2 class='error'>".__('An error ocurred while deleting the ticket')."</h2>";
 					}
 					break;
 			}
@@ -314,7 +314,7 @@ class Incidents {
 		$system = System::getInstance();
 		
 		audit_db ($system->getConfig('id_user'), $REMOTE_ADDR, "ACL Violation",
-			"Trying to access to incidents section");
+			"Trying to access to tickets section");
 		if (! $error) {
 			$error['title_text'] = __('You don\'t have access to this page');
 			$error['content_text'] = __('Access to this page is restricted to 

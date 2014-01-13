@@ -660,11 +660,11 @@ function print_inventory_stats ($inventories, $return = false) {
 	$table->data = array ();
 	
 	$table->data[0][0] = print_label (__('Total objects'), '', '', true, $total);
-	$data = array(__('With incidents') => $inventory_incidents, __('Without incidents')=> $total - $inventory_incidents);
+	$data = array(__('With tickets') => $inventory_incidents, __('Without tickets')=> $total - $inventory_incidents);
 	$table->data[0][1] = pie3d_chart ($config['flash_charts'], $data, 200, 150);
-	$table->data[1][0] = print_label (__('Total objects with incidents'), '', '', true,
+	$table->data[1][0] = print_label (__('Total objects with tickets'), '', '', true,
 		$inventory_incidents.' ('.$incidents_pct.'%)');
-	$table->data[2][0] = print_label (__('Total objects with opened incidents'),
+	$table->data[2][0] = print_label (__('Total objects with opened tickets'),
 		'', '', true, $inventory_opened.' ('.$incidents_opened_pct.'%)');
 	
 	$output .= print_table ($table, true);
@@ -1608,7 +1608,7 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 			break;
 		case 'incidents':
 			$incidents_class = 'ui-tabs-selected';
-			$title = strtoupper(__('Incidents'));
+			$title = strtoupper(__('Tickets'));
 			break;
 		case 'relationships':
 			$relationship_class = 'ui-tabs-selected';
@@ -1619,7 +1619,7 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 	echo '<ul class="ui-tabs-nav">';
 	echo '<li class="' . $tracking_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
 	echo '<li class="' . $contacts_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
-	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
+	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Tickets').'</span></a></li>';
 	echo '<li class="' . $relationship_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
 	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '"><span>'.__('Details').'</span></a></li>';
 	echo '<li class="ui-tabs-title">' . $title . '</h1></li>';

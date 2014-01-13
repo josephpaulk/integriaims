@@ -22,7 +22,7 @@ global $config;
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -43,11 +43,11 @@ if (isset ($_POST["quick_delete"])) {
 		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			borrar_incidencia($id_inc);
 
-			echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$config['id_user']." deleted incident #".$id_inc);
+			echo "<h3 class='suc'>".__('Ticket successfully deleted')."</h3>";
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Ticket deleted","User ".$config['id_user']." deleted ticket #".$id_inc);
 		} else {
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete incident");
-			echo "<h3 class='error'>".__('There was a problem deleting incident')."</h3>";
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete ticket");
+			echo "<h3 class='error'>".__('There was a problem deleting ticketticket')."</h3>";
 			no_permission();
 		}
 	}
@@ -62,7 +62,7 @@ echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span><img src="images/z
 echo '<li class="ui-tabs"><a href="index.php"><span><img src="images/chart_bar.png" title="'.__('Statistics').'"></span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span valign=bottom><img src="images/bug.png" title="'.__('Details').'"></span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/hourglass.png" title="'.__('Tracking').'"></span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/page_white_text.png"  title="'.__('Incident report').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/page_white_text.png"  title="'.__('Ticket report').'"></span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/chart_organisation.png"  title="'.__('Inventory').'"></span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/user_comment.png"  title="'.__('Contacts').'"></span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/award_star_silver_1.png"  title="'.__("Workunits").'"></span></a></li>';
@@ -76,7 +76,7 @@ if (!$id) {///
 	/* Tabs first container is manually set, so it loads immediately */
 	echo '<div id="incident-search" class="ui-tabs-panel">';
 
-	echo "<h1>".__('Incident search');
+	echo "<h1>".__('Ticket search');
 	echo "<div class='button-bar-title'>";
 	echo "<a href='#incident-operations' onClick='toggleDiv(\"incident-search\");toggleDiv(\"incident-stats\");'>".__("Search statistics")."</a>";
 	echo "</div>";
@@ -119,8 +119,8 @@ if (!$id) {///
 	echo '... <img src="images/wait.gif" /></div>';
 
 	echo "<br>";
-	echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
-	echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
+	echo sprintf(__('Max tickets shown: %d'),$config['limit_size']);
+	echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. tickets by search")."</b>", true));
 
 	$table->class = 'hide result_table listing';
 	$table->width = '99%';
@@ -129,7 +129,7 @@ if (!$id) {///
 	$table->head[0] = '';
 	$table->head[1] = __('ID');
 	$table->head[2] = __('SLA');
-	$table->head[3] = __('Incident');
+	$table->head[3] = __('Ticket');
 	$table->head[4] = __('Group')."<br><i>".__('Company')."</i>";
 	$table->head[5] = __('Status')."<br><i>".__('Resolution')."</i>";
 	$table->head[6] = __('Priority');
@@ -254,7 +254,7 @@ function check_incident (id) {
 				show_incident_details (id);
 			}
 			else {
-				result_msg_error ("<?php echo __('Unable to load incident')?> #" + id);
+				result_msg_error ("<?php echo __('Unable to load ticket')?> #" + id);
 			}
 		},
 		"html"

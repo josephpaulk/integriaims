@@ -132,12 +132,12 @@ $table->data[3][0] .= '</span>';
 $banners = list_files ('images/group_banners/', 'png', 0, true);
 $table->data[3][1] = print_select ($banners, "banner", $banner, '', 'None', '', true, false, false, __('Banner'));
 
-$table->data[4][0] = print_input_text ('soft_limit', $soft_limit, '', 10, 0, true , __('Incident Soft limit'));
+$table->data[4][0] = print_input_text ('soft_limit', $soft_limit, '', 10, 0, true , __('Tickets Soft limit'));
 
 
 $table->data[4][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
 
-$table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Incident Hard limit'));
+$table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Tickets Hard limit'));
 
 $slas_aux = get_db_all_rows_sql("SELECT id, name FROM tsla ORDER BY name");
 
@@ -150,7 +150,7 @@ foreach ($slas_aux as $s) {
 }
 
 $table->data[5][1] = print_select ($slas,
-	'id_sla', $id_sla, '', '', 0, true, false, false, __('Incident SLA'));
+	'id_sla', $id_sla, '', '', 0, true, false, false, __('Ticket SLA'));
 	
 $table->data[6][0] = print_input_text ('id_inventory', $id_inventory,'', 7, 0, true, __('Default Inventory object'), false);	
 $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";

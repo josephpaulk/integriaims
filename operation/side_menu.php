@@ -329,7 +329,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_incidents&id_project=$id_project&id_task=$id_task'>".__('Incidents');
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_incidents&id_project=$id_project&id_task=$id_task'>".__('Tickets');
 			echo " ($task_incidents / $task_incidents_wu ".__('Hours').")";
 			echo "</a></li>";
 		}
@@ -415,7 +415,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('My incidents')."</a></li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('My tickets')."</a></li>";
 		
 		// New ticket
 		if (give_acl ($config['id_user'], 0, "IW")) {
@@ -437,14 +437,14 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Incidents overview')."</a></li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
 		
 		
 		if ($sec2 == "operation/incidents/incident")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('Search incidents')."</a></li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('Search tickets')."</a></li>";
 
 		if (give_acl ($config['id_user'], 0, "IW")) {
 			// Incident creation
@@ -452,7 +452,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create incident')."</a></li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create ticket')."</a></li>";
 		}
 
 		if ($sec2 == 'operation/incidents/incident' || $sec2 == 'operation/incidents/incident_dashboard'
@@ -462,7 +462,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li id='sidesel'>";
 			else
 				echo '<li>';
-			echo '<a href="" onclick="return false">'.__('Incident #').'&nbsp;</a>';
+			echo '<a href="" onclick="return false">'.__('Ticket #').'&nbsp;</a>';
 			echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
 			print_input_text ('id', $id_incident ? $id_incident : '', '', 4, 10);
 			echo '</form>';
@@ -473,7 +473,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		// Incident type and SLA management only PM
 		if (give_acl ($config['id_user'], 0, "IM")) {
 			echo "<div class='portlet'>";
-			echo "<h3 class='admin'>".__('Incident types')."</h3>";
+			echo "<h3 class='admin'>".__('Ticket types')."</h3>";
 			echo "<ul class='sidemenu'>";
 
 		
@@ -481,7 +481,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__('Incident types')."</a></li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__('Ticket types')."</a></li>";
 
 			echo "</ul>";
 			echo "</div>";	
@@ -550,7 +550,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 
 	echo "<ul class='sidemenu'>";
 	echo '<li>';
-	echo '<a id="inventory-create-incident" href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_inventory='.$id_inventory.'">'.__('Create incident').'</a>';
+	echo '<a id="inventory-create-incident" href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_inventory='.$id_inventory.'">'.__('Create ticket').'</a>';
 
 	echo '</li>';
 
@@ -1303,7 +1303,7 @@ echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
 if (give_acl ($config["id_user"], 0, "IR")) {
 	echo "&nbsp;";
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
-	echo '<img src="images/incident.png" title="'.__('My incidents').'"></a>';
+	echo '<img src="images/incident.png" title="'.__('My tickets').'"></a>';
 }
 if (give_acl ($config["id_user"], 0, "PR")) {
 	// Link to Work user spare inster

@@ -59,7 +59,7 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ("max_days_events", $config["max_days_events"], '', 4, 4, true, __('Days to delete events'));
 $table->data[0][0] .= integria_help ("old_events", true);
-$table->data[0][1] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete  incidents'));
+$table->data[0][1] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete tickets'));
 $table->data[0][1] .= integria_help ("old_incidents", true);
 
 $table->data[1][0] = print_input_text ("max_days_wu", $config["max_days_wu"], '', 4, 4, true, __('Days to delete work units'));

@@ -197,8 +197,8 @@ class Incident {
 			}
 			
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
-				"Incident created",
-				"User ".$config['id_user']." created incident #".$id_incident);
+				"Ticket created",
+				"User ".$config['id_user']." created ticket #".$id_incident);
 			
 			incident_tracking ($id_incident, INCIDENT_CREATED);
 
@@ -439,7 +439,7 @@ class Incident {
 		$ui->createPage();
 		
 		$back_href = "index.php?page=incidents";
-		$ui->createDefaultHeader(__("New incident"),
+		$ui->createDefaultHeader(__("New ticket"),
 			$ui->createHeaderButton(
 				array('icon' => 'back',
 					'pos' => 'left',
@@ -490,7 +490,7 @@ class Incident {
 		
 		$incident = get_db_row ("tincidencia", "id_incidencia", $this->id_incident);
 		if (! $incident) {
-			$html = "<h2 class=\"error\">".__('Incident not found')."</h2>";
+			$html = "<h2 class=\"error\">".__('Ticket not found')."</h2>";
 		} else {
 			include_once ($system->getConfig('homedir')."/include/functions_incidents.php");
 			
@@ -923,7 +923,7 @@ class Incident {
 		$ui->createPage();
 		
 		// Header options
-		$header_title = __("Incident")."&nbsp;#".$this->id_incident;
+		$header_title = __("Ticket")."&nbsp;#".$this->id_incident;
 		$left_href = "index.php?page=incidents";
 		$header_left_button = $ui->createHeaderButton(
 				array('icon' => 'back',
@@ -1104,7 +1104,7 @@ class Incident {
 						
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
-						$message = "<h2 class='error'>".__('An error ocurred while creating the incident')."</h2>";
+						$message = "<h2 class='error'>".__('An error ocurred while creating the ticket')."</h2>";
 					}
 					$incidents = new Incidents();
 					$incidents->show($message);
@@ -1170,7 +1170,7 @@ class Incident {
 						$this->id_incident = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";
 					} else {
-						$message = "<h2 class='error'>".__('An error ocurred while deleting the incident')."</h2>";
+						$message = "<h2 class='error'>".__('An error ocurred while deleting the ticket')."</h2>";
 					}
 					$this->showIncidentSimpleForm($message);
 					break;
@@ -1194,7 +1194,7 @@ class Incident {
 		$system = System::getInstance();
 		
 		audit_db ($system->getConfig('id_user'), $REMOTE_ADDR, "ACL Violation",
-			"Trying to access to incident section");
+			"Trying to access to ticket section");
 		if (! $error) {
 			$error['title_text'] = __('You don\'t have access to this page');
 			$error['content_text'] = __('Access to this page is restricted to 

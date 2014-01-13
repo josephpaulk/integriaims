@@ -77,9 +77,9 @@ if (defined ('AJAX')) {
 		if (($group['hard_limit'] != 0) && ($group['hard_limit'] <= $countAll)) {
 			echo "incident_limit"; //type
 			echo "//";
-			echo __('Limit of incidents reached'); //title
+			echo __('Limit of tickets reached'); //title
 			echo "//";
-			echo __('You have reached the limit of incidents for this group for a year') . "(".$group['hard_limit'] . "). ". __('You cannot create more incidents.'); //content
+			echo __('You have reached the limit of tickets for this group for a year') . "(".$group['hard_limit'] . "). ". __('You cannot create more tickets.'); //content
 			echo "//";
 			echo "disable_button";
 		}
@@ -88,14 +88,14 @@ if (defined ('AJAX')) {
 			echo "//";
 			echo __('Warning: Soft limit reached'); //title
 			echo "//";
-			echo __('You have ') . $countOpen . __(' opened incidents') . ".". __("Soft limit for a year for this group is "). " ( ".$group['soft_limit'] . " ) ". __(' incidents'). ".". __("Please close some incidents before create more"); //content
+			echo __('You have ') . $countOpen . __(' opened tickets') . ".". __("Soft limit for a year for this group is "). " ( ".$group['soft_limit'] . " ) ". __(' tickets'). ".". __("Please close some tickets before create more"); //content
 			
 			if ($group['enforce_soft_limit'] == 0) {
 				echo "//";
 				echo "enable_button";
 			}
 			else {
-				echo ".<br><br> ". __('You cannot create more incidents in this group until you close an active incident.');
+				echo ".<br><br> ". __('You cannot create more tickets in this group until you close an active ticket.');
 				echo "//";
 				echo "disable_button";
 			}

@@ -258,7 +258,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
 		
 			if ($wu_incidents > 0)
-			$time_used .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents)</span>";
+			$time_used .= "<span title='".__("Time spent in related tickets")."'> ($wu_incidents)</span>";
 			
 			// People
 			$people = combo_users_task ($task['id'], 1, true);
@@ -270,7 +270,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			
 			// New WO / Incident
 			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
-			$incident_icon = print_image ("images/incident.png", true, array ("style" => 'vertical-align: middle; height:19px; width:20px;', "id" => "incident_icon", "title" => __('Incident')));;
+			$incident_icon = print_image ("images/incident.png", true, array ("style" => 'vertical-align: middle; height:19px; width:20px;', "id" => "incident_icon", "title" => __('Ticket')));;
 			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create&id_task=".$task['id']."'>$wo_icon</a>";
 			$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
 			$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;

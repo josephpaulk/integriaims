@@ -25,7 +25,7 @@ $contact = get_db_row ('tcompany_contact', 'id', $id);
 
 $read = check_crm_acl ('other', 'cr', $config['id_user'], $contact['id_company']);
 if (!$read) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to contact incidents without permission");
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to contact tickets without permission");
 	include ("general/noaccess.php");
 	exit;
 }
@@ -37,13 +37,13 @@ $email = safe_input($email);
 $incidents = incidents_get_by_notified_email ($email);
 
 if (!$incidents) {
-        echo '<h3 class="error">'.__("This contact doesn't have any incident associated").'</h3>';
+        echo '<h3 class="error">'.__("This contact doesn't have any ticket associated").'</h3>';
 } else {
 
 	$table->class = "listing";
 	$table->width = "99%";
 	$table->head[0] = __("ID");
-	$table->head[1] = __("Incident");
+	$table->head[1] = __("Ticket");
 	$table->head[2] = __("Status");
 	$table->head[3] = __("Priority");
 	$table->head[4] = __("Updated");

@@ -22,7 +22,7 @@ global $config;
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -36,22 +36,22 @@ if (is_numeric($id))
 
 // Security checks
 if (!isset($incident)){
-	echo "<h3 class='error'>".__("Invalid incident ID")."</h3>";
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Incident score hack", "Trying to access incident score on a invalid incident");
+	echo "<h3 class='error'>".__("Invalid ticket ID")."</h3>";
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Ticket score hack", "Trying to access ticket score on a invalid ticket");
 	no_permission();
 	return;
 }
 
 if ($incident["id_creator"] != $config["id_user"]){
-	echo "<h3 class='error'>".__("Non authorized incident score review")."</h3>";
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Incident score hack", "Trying to access incident score on a non-authorship incident");
+	echo "<h3 class='error'>".__("Non authorized ticket score review")."</h3>";
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Ticket score hack", "Trying to access ticket score on a non-authorship ticket");
 	no_permission();
 	return;
 }
 
 if (($incident["estado"] !=6) AND ($incident["estado"] != 7)){
-	echo "<h3 class='error'>".__("Incident cannot be scored until be closed")."</h3>";
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Incident score hack", "Trying to access incident score before closing incident");
+	echo "<h3 class='error'>".__("Ticket cannot be scored until be closed")."</h3>";
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Ticket score hack", "Trying to access ticket score before closing ticket");
 	no_permission();
 	return;
 }
@@ -60,7 +60,7 @@ if (($incident["estado"] !=6) AND ($incident["estado"] != 7)){
 $sql = "UPDATE tincidencia SET score = $score WHERE id_incidencia = $id";
 process_sql ($sql);
 
-echo "<h1>".__("Incident scoring")."</h1>";
+echo "<h1>".__("Ticket scoring")."</h1>";
 echo "<br><br>";
 echo __("Thanks for your feedback, this help us to keep improving our job");
 

@@ -597,7 +597,7 @@ function borrar_incidencia ($id_incident) {
 			WHERE id_incident = %d', $id_incident);
 	process_sql ($sql);
 
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident Management", "Deleted incident $incident_title");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Deleted ticket $incident_title");
 }
 
 /**
@@ -933,7 +933,7 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		break;
 	}
 	$fecha = print_mysql_timestamp();	
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $description);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket updated", $description);
 	$sql = sprintf ('INSERT INTO tincident_track (id_user, id_incident,
 		timestamp, state, id_aditional, description)
 		VALUES ("%s", %d, "%s", %d, "%s", "%s")',
@@ -2190,7 +2190,7 @@ function return_user_report_types ($type){
 				break;
 		case 3: return __("User activity detailed");
 				break;
-		case 4: return __("Incident global report");
+		case 4: return __("Ticket global report");
 				break;
 
 	}
@@ -2200,8 +2200,8 @@ function get_user_report_types () {
 	$types = array();
 	$types[1] = __("Custom report");
 	$types[2] = __("Project report");
-	$types[3] = __("Incident report");
-	$types[4] = __("Incident global report");
+	$types[3] = __("Ticket report");
+	$types[4] = __("Ticket global report");
 	$types[5] = __("Lead report");
 
 	return $types;
@@ -2250,7 +2250,7 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			break;
 			
 		case INVENTORY_INCIDENT_ADDED:
-			$description = __('inventory object in incident');
+			$description = __('inventory object in ticket');
 			$description .= " -> ".get_db_value ("titulo", "tincidencia", "id_incidencia", $aditional_data);
 			break;
 		

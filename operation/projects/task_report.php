@@ -152,14 +152,14 @@ if ($subtasks > 0)
 
 $incident_wu = get_incident_task_workunit_hours ($id_task);
 if ($incident_wu > 0)
-	$table_advanced->data[0][0] .= "<span title='Incident'>($incident_wu)</span>";
+	$table_advanced->data[0][0] .= "<span title='Ticket'>($incident_wu)</span>";
 
 $table_advanced->data[0][0] .= print_label (__('Imputable costs'), '', '', true,
 	task_workunit_cost ($id_task, 1).' '.$config['currency']);
 
 $incident_cost = get_incident_task_workunit_cost ($id_task);
 if ($incident_cost > 0)
-	$incident_cost_label = "<span title='".__("Incident costs")."'> ($incident_cost) </span>";
+	$incident_cost_label = "<span title='".__("Ticket costs")."'> ($incident_cost) </span>";
 else
 	$incident_cost_label = "";
 	

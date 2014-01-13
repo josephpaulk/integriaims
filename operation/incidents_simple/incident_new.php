@@ -21,7 +21,7 @@ global $config;
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -36,7 +36,7 @@ $priorities = get_priorities();
 // GET INCIDENT TYPES
 $types = get_incident_types();
 
-echo "<h1>".__('CREATE INCIDENT')."</h1>";
+echo "<h1>".__('CREATE TICKET')."</h1>";
 echo "<div id=msg-str></div>";
 // NEW INCIDENT FORM
 echo "<div id='form_file'>";
@@ -52,7 +52,7 @@ $table->colspan[2][0] = 2;
 
 $table->data[0][0] = print_input_text ('title', '', '', 100, 0, true, __('Title'));
 $table->data[1][0] = print_select ($priorities, 'priority_form', 2, '', '', '', true, false, false, __('Priority'));
-$table->data[1][1] = print_select($types, 'id_incident_type', '', 'javascript: show_incident_type_fields(1);', 'Select', '', true, 0, true, __('Incident type'));
+$table->data[1][1] = print_select($types, 'id_incident_type', '', 'javascript: show_incident_type_fields(1);', 'Select', '', true, 0, true, __('Ticket type'));
 $table->data[2][0] = print_textarea ('description', 9, 80, '', '', true, __('Description'));
 
 $action = 'index.php?sec=incidents&sec2=operation/incidents_simple/incidents';

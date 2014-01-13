@@ -74,7 +74,7 @@ if (defined ('AJAX')) {
 }
 
 echo "<div id='incident-search-content'>";
-echo "<h1>" .__('Incident search');
+echo "<h1>" .__('Ticket search');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";

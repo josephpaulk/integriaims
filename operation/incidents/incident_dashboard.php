@@ -25,7 +25,7 @@ if (!empty($first_start)) {
 }
 
 echo "<h1>";
-echo __("Incidents overview");
+echo __("Tickets overview");
 echo "</h1>";
 
 /* Users affected by the incident */
@@ -217,7 +217,7 @@ $search_by_type = "<table>";
 if (!$rows) {
 	$search_by_type .="<tr>";
 	$search_by_type .="<td>";
-	$search_by_type .="<em>".__("There aren't incident types defined")."</em>";
+	$search_by_type .="<em>".__("There aren't ticket types defined")."</em>";
 	$search_by_type .="</td>";
 	$search_by_type .="</tr>";
 

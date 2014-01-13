@@ -21,14 +21,14 @@ check_login ();
 $width = '99%';
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
 $incident_id = get_parameter('incident_id', 0);
 if($incident_id == 0) {
-	ui_print_error_message(__('Unable to load incident'));
+	ui_print_error_message(__('Unable to load ticket'));
 	exit;
 }
 

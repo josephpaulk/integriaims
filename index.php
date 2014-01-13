@@ -186,7 +186,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <meta name="distribution" content="global" />
 <meta name="website" content="http://integriaims.com" />
 <meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2012" />
-<meta name="keywords" content="ticketing, management, project, incident, tracking, ITIL" />
+<meta name="keywords" content="ticketing, management, project, ticket, tracking, ITIL" />
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria_mini_logo.png" type="image/png" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
@@ -366,11 +366,11 @@ load_menu_visibility();
 	"Search inventory object" : "<?php echo __('Search inventory object')?>",
 	"Already added" : "<?php echo __('Already added')?>",
 	"Added" : "<?php echo __('Added')?>",
-	"Search parent incident" : "<?php echo __('Search parent incident')?>",
+	"Search parent incident" : "<?php echo __('Search parent ticket')?>",
 	"User search" : "<?php echo __('User search')?>",
 	"There's no affected inventory object" : "<?php echo __('There\'s no affected inventory object')?>",
 	"There's no affected object" : "<?php echo __('There\'s no affected object')?>",
-	"Create incident" : "<?php echo __('Create incident')?>",
+	"Create incident" : "<?php echo __('Create ticket')?>",
 	"Add workunit" : "<?php echo __('Add workunit')?>",
 	"Submitting" : "<?php echo __('Submitting')?>",
 	"Upload file" : "<?php echo __('Upload file')?>",

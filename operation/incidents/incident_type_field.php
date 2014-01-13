@@ -46,7 +46,7 @@ if ($id_field) {
 
 }
 
-echo '<h1>'.__('Incident fields management').'</h1>';
+echo '<h1>'.__('Ticket fields management').'</h1>';
 
 $table->width = "99%";
 $table->class = "search-table-button";
@@ -57,7 +57,7 @@ $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('F
 $types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'));
 $table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
 $table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
-$table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the incidents list'));
+$table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'));
 
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
 

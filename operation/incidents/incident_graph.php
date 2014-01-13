@@ -20,7 +20,7 @@ global $config;
 check_login ();
 
 echo "<h1>";
-echo __("Incident graph");
+echo __("Ticket graph");
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
@@ -62,7 +62,7 @@ echo "</form>";
 
 
 if (empty($incidents_by_user)) {
-	ui_print_error_message(__('There are not incidents with this filter.'));
+	ui_print_error_message(__('There are not tickets with this filter.'));
 	//return;
 } else {
 	print_bubble_incidents_per_user_graph($incidents_by_user);

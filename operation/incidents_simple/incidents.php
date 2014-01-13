@@ -22,7 +22,7 @@ check_login ();
 include_once('include/functions_workunits.php');
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -36,7 +36,7 @@ if($create_incident) {
 	if (!give_acl ($config['id_user'], 0, "IW")) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
 			"ACL Forbidden",
-			"User ".$config["id_user"]." try to create incident");
+			"User ".$config["id_user"]." try to create ticket");
 		no_permission ();
 		exit;
 	}
@@ -96,11 +96,11 @@ if($create_incident) {
 		update_incident_inventories ($id, array($id_inventory));
 		
 		$result_msg = ui_print_success_message(__('Successfully created').' (id #'.$id.')', '', true);
-		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents_simple/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
+		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents_simple/incident&id='.$id.'">'.__('Please click here to continue working with ticket #').$id."</a></h4>";
 
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
-			"Incident created",
-			"User ".$config['id_user']." created incident #".$id);
+			"Ticket created",
+			"User ".$config['id_user']." created ticket #".$id);
 		
 		incident_tracking ($id, INCIDENT_CREATED);
 
@@ -155,7 +155,7 @@ if($create_incident) {
 	
 }
 
-echo '<h1>'.__('My incidents').'</h1>';
+echo '<h1>'.__('My tickets').'</h1>';
 
 $statuses = get_indicent_status ();
 $statuses[-10] = __("Not closed");
@@ -202,7 +202,7 @@ $table->width = '98%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
 $table->head[0] = __('ID');
-$table->head[1] = __('Incident');
+$table->head[1] = __('Ticket');
 $table->head[2] = __('Status')."<br /><em>".__('Resolution')."</em>";
 $table->head[3] = __('Priority');
 $table->head[4] = __('Updated')."<br /><em>".__('Started')."</em>";

@@ -119,7 +119,7 @@ function api_create_incident ($return_type, $user, $params){
 	if (! give_acl ($user, $group, "IW")){
 		audit_db ($user,  $_SERVER['REMOTE_ADDR'],
 			"ACL Forbidden from API",
-			"User ".$user." try to create incident");
+			"User ".$user." try to create ticket");
 		exit;
 	}
 
@@ -163,7 +163,7 @@ function api_create_incident ($return_type, $user, $params){
 
 		audit_db ($id_creator, $_SERVER['REMOTE_ADDR'],
 			"Incident created (From API)",
-			"User ".$id_creator." created incident #".$id);
+			"User ".$id_creator." created ticket #".$id);
 		
 		incident_tracking ($id, INCIDENT_CREATED);
 

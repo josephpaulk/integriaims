@@ -56,7 +56,7 @@ $statuses = get_indicent_status ();
 $resolutions = get_incident_resolutions ();
 
 echo '<div style="width: 950px;">';
-echo '<h1>'.__('Incidents report').'</h1>';
+echo '<h1>'.__('Tickets report').'</h1>';
 
 $output_full = "";
 
@@ -103,7 +103,7 @@ $output .= "<td>";
 $output .= "<strong>".__('User').': </strong>'.$filter['id_user'];
 $output .= "</td>";
 $output .= "<td>";
-$output .= "<strong>".__('Incident type').': </strong>'.get_db_value ('name', 'tincident_type', 'id', $filter['id_incident_type']);
+$output .= "<strong>".__('Ticket type').': </strong>'.get_db_value ('name', 'tincident_type', 'id', $filter['id_incident_type']);
 $output .= "</td>";
 $output .= "<td>";
 $output .= "<strong>".__('From').': </strong>'.$filter['first_date'];
@@ -116,10 +116,10 @@ $output .= "</table>";
 
 	
 if (!$output) {
-	$output = __('All incidents');
+	$output = __('All tickets');
 }
 
-$container_title = __("Incident report parameters");
+$container_title = __("Ticket report parameters");
 echo print_container('incident_report_parameters', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_incident_report_parameters ");  
 
 $table->class = 'listing';
@@ -129,7 +129,7 @@ $table->style[0] = 'font-weight: bold';
 $table->head = array ();
 $table->head[0] = __('ID');
 $table->head[1] = __('SLA');
-$table->head[2] = __('Incident');
+$table->head[2] = __('Ticket');
 $table->head[3] = __('Group')."<br><em>".__("Company")."</em>";
 $table->head[4] = __('Status')."<br /><em>".__('Resolution')."</em>";
 $table->head[5] = __('Priority');
@@ -183,7 +183,7 @@ foreach ($incidents as $incident) {
 	array_push ($table->data, $data);
 }
 
-echo '<h2>'.__('Incident list').'</h2>';
+echo '<h2>'.__('Ticket list').'</h2>';
 
 print_table ($table);
 

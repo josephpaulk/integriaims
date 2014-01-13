@@ -205,31 +205,31 @@ echo "<table width='99%' class='search-table-button
 '>";
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',
-	5, 5, true, __('Incident WU Default time'))."</td>";
+	5, 5, true, __('Ticket WU Default time'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, __('Send email on every incident update')).
-	print_help_tip (__("Enabling this, you will get emails on file attachs also. If left disabled, you only get notifications only in major events on incidents"), true)."</td>";
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, __('Send email on every ticket update')).
+	print_help_tip (__("Enabling this, you will get emails on file attachs also. If left disabled, you only get notifications only in major events on tickets"), true)."</td>";
 
-echo "<td style='vertical-align: top;'>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. Incidents by search')).
+echo "<td style='vertical-align: top;'>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. tickets by search')).
 	integria_help ("limit_size", true)."</td>";
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show incident owner'))."</td>";	
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show ticket owner'))."</td>";	
 
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show incident creator'))."</td>";
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show ticket creator'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto incident close')).
+echo "<td style='vertical-align: top;'>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto ticket close')).
 	integria_help ("auto_incident_close", true)."</td>";
 echo "</tr>";
 
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on incident creation'))."</td>";
+echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on ticket creation'))."</td>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the incident type'))."</td>";
+echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticketticket type'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
 echo "</tr>";

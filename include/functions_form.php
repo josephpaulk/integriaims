@@ -772,7 +772,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		echo __('Task')." </b> : ";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$id_task&operation=view'>$task_title</A>";
 	} else  {
-		echo __('Incident')." </b> : ";
+		echo __('Ticket')." </b> : ";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>$incident_title</A>";
 	}
 	echo "<td width='13%'>";
@@ -1061,7 +1061,7 @@ function form_search_incident ($return = false, $filter=false) {
 			$id_company, '', __('All'), 0, true, false, false, __('Company'));
 			
 	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
-		$search_id_incident_type, 'javascript:change_type_fields_table();', __('All'), 0, true, false, false, __('Incident type'));
+		$search_id_incident_type, 'javascript:change_type_fields_table();', __('All'), 0, true, false, false, __('Ticket type'));
 
 	$table_type_fields = new stdclass;
 	$table_type_fields->width = "100%";

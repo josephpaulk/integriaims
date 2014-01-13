@@ -225,7 +225,7 @@ if ($has_permission) {
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 		'language_code', $lang, '', __('Default'), '', true, false, false, __('Language'));
 
-	$table->data[4][1] = "<b>".__('Total incidents opened'). "</b><br><input type=text readonly size=5 value='". get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$id_user."'"). "'>";
+	$table->data[4][1] = "<b>".__('Total tickets opened'). "</b><br><input type=text readonly size=5 value='". get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$id_user."'"). "'>";
 
 	$table->data[5][0] = print_textarea ('comments', 8, 55, $comments, '', true, __('Comments'));
 } else {

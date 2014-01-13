@@ -80,7 +80,7 @@ if (isset($incident)) {
 
 	if ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) {
 	 	// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket  (External user) ".$id);
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -88,7 +88,7 @@ if (isset($incident)) {
 else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
 	// Doesn't have access to this page
 	
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
 	include ("general/noaccess.php");
 	exit;
 }
@@ -124,11 +124,11 @@ if ($quick_delete) {
 		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			borrar_incidencia($id_inc);
 
-			echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$config['id_user']." deleted incident #".$id_inc);
+			echo "<h3 class='suc'>".__('Ticket successfully deleted')."</h3>";
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Ticket deleted","User ".$config['id_user']." deleted ticket #".$id_inc);
 		} else {
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete incident");
-			echo "<h3 class='error'>".__('There was a problem deleting incident')."</h3>";
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete ticket");
+			echo "<h3 class='error'>".__('There was a problem deleting ticket')."</h3>";
 			no_permission();
 		}
 	}
@@ -253,7 +253,7 @@ if ($action == 'update') {
 	}
 
 
-	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
+	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id);
 
 	$old_incident_inventories = array_keys(get_inventories_in_incident($id));
 	
@@ -263,9 +263,9 @@ if ($action == 'update') {
 	update_incident_inventories ($id, get_parameter ('inventories', $incident_inventories));
 	
 	if ($result === false)
-		$result_msg = "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
+		$result_msg = "<h3 class='error'>".__('There was a problem updating ticket')."</h3>";
 	else
-		$result_msg = "<h3 class='suc'>".__('Incident successfully updated')."</h3>";
+		$result_msg = "<h3 class='suc'>".__('Ticket successfully updated')."</h3>";
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
@@ -370,7 +370,7 @@ if ($action == "insert" && !$id) {
 			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
-				"Incident created",
+				"Ticket created",
 				"User ".$config['id_user']." created incident #".$id);
 				
 			//Add traces and statistic information	
@@ -542,7 +542,7 @@ if ($id) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Incident').' #'.$id.' - '.ui_print_truncate_text($incident['titulo'],50);
+	echo __('Ticket').' #'.$id.' - '.ui_print_truncate_text($incident['titulo'],50);
 	
     if (give_acl($config["id_user"], 0, "IM")){
         if ($incident["score"] > 0){
@@ -598,7 +598,7 @@ if ($id) {
             echo "<table width=98% cellpadding=4 cellspacing=4><tr><td>";
             echo "<img src='images/award_star_silver_1.png' width=32>&nbsp;";
             echo "</td><td>";
-            echo __('Please, help to improve the service and give us a score for the resolution of this incident. People assigned to this incident will not view directly your scoring.');
+            echo __('Please, help to improve the service and give us a score for the resolution of this ticket. People assigned to this ticket will not view directly your scoring.');
             echo "</td><td>";
             echo "<select name=score>";
             echo "<option value=10>".__("Very good, excellent !")."</option>";
@@ -618,7 +618,7 @@ if ($id) {
 
 } else {
 	if (! defined ('AJAX'))
-		echo "<h1>".__('Create incident')."</h1>";
+		echo "<h1>".__('Create ticket')."</h1>";
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
@@ -658,7 +658,7 @@ $groups = get_user_groups ($config['id_user'], "IW");
 $table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group')) . "<div id='group_spinner'></div>";
 
 $types = get_incident_types ();
-$table->data[0][2] = print_label (__('Incident type'), '','',true);
+$table->data[0][2] = print_label (__('Ticket type'), '','',true);
 
 //Disabled incident type if any, type changes not allowed
 if ($id <= 0 || $config["incident_type_change"] == 1) {
@@ -718,7 +718,7 @@ if ($has_im) {
 	$params_assigned['input_name'] = 'id_user';
 	$params_assigned['input_value'] = $assigned_user_for_this_incident;
 	$params_assigned['title'] = __('Owner');
-	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user");
+	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
@@ -734,7 +734,7 @@ if (!$create_incident){
 	$params_closed['input_name'] = 'closed_by';
 	$params_closed['input_value'] = $closed_by;
 	$params_closed['title'] = __('Closed by');
-	$params_closed['help_message'] = __("User assigned here is user that will be responsible to close incident.");
+	$params_closed['help_message'] = __("User assigned here is user that will be responsible to close the ticket.");
 	$params_closed['return'] = true;
 	$params_closed['return_help'] = true;
 
@@ -798,10 +798,10 @@ if ($has_im){
 	$table_advanced->data[1][0] = print_input_hidden ('email_notify', 1, true);
 }
 
-$parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
+$parent_name = $id_parent ? (__('Ticket').' #'.$id_parent) : __('None');
 
 if ($has_im) {
-	$table_advanced->data[3][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent incident'));
+	$table_advanced->data[3][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'));
 	$table_advanced->data[3][0] .= print_input_hidden ('id_parent', $id_parent, true);
 	$table_advanced->data[3][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 }
@@ -940,7 +940,7 @@ echo '</div>';
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."' id='inventory_search_window'></div>";
 
-echo "<div class= 'dialog ui-dialog-content' title='".__("Incidents")."' id='parent_search_window'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='contact_search_window'></div>";
 
@@ -1253,7 +1253,7 @@ rules = {
 };
 messages = {
 	required: "<?php echo __('Title required')?>",
-	remote: "<?php echo __('This incident already exists')?>"
+	remote: "<?php echo __('This ticket already exists')?>"
 };
 add_validate_form_element_rules('#text-titulo', rules, messages);
 

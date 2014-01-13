@@ -47,7 +47,7 @@ if (isset($_GET["id"])){
 	$id_user=$_SESSION['id_usuario'];
 	if (give_acl($iduser_temp, $id_grupo, "IR") != 1){
 	 	// Doesn't have access to this page
-		audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+		audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to ticket ".$id_inc." '".$titulo."'");
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -115,7 +115,7 @@ if (isset($_GET["id"])){
 
 
 } else {
-	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to ticket ".$id_inc." '".$titulo."'");
 		include ("general/noaccess.php");
 		exit;
 }
@@ -127,7 +127,7 @@ if (isset($_GET["id"])){
 
 echo $result_msg;
 echo "<br>";
-$title = __('Notes attached to incident')." #$id_inc '".get_incident_title($id_inc)."'";
+$title = __('Notes attached to ticket')." #$id_inc '".get_incident_title($id_inc)."'";
 echo "<h3>$title</h3>";
 
 $sql4='SELECT * FROM tworkunit_incident WHERE id_incident = '.$id_inc.' ORDER BY id_workunit ASC';

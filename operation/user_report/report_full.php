@@ -164,17 +164,17 @@ if ($clean_output == 0){
 
     echo "<tr><td>";
     echo print_checkbox ('only_projects', 1, $only_projects, true, __('Project search'));
-    print_help_tip (__("If selected, will render all project info. If not, will show only time spent in incidents related to proyects"), false);
+    print_help_tip (__("If selected, will render all project info. If not, will show only time spent in tickets related to proyects"), false);
 
     echo "<td>";
-    echo print_checkbox ('only_incidents', 1, $only_incidents, true, __('Show incident summary'));
+    echo print_checkbox ('only_incidents', 1, $only_incidents, true, __('Show ticket summary'));
 
     echo "<td>";
     echo print_checkbox ('only_summary', 1, $only_summary, true, __('Show only summary'));
     print_help_tip (__("If not selected, will skip the data tables with information and render only totals in hours and working days"), false);
 
     echo "<tr><td>";
-    echo print_label (__("Incident creator"), '', true);
+    echo print_label (__("Ticket creator"), '', true);
     
 	$params_creator['input_id'] = 'text-user_id2';
 	$params_creator['input_name'] = 'author';
@@ -185,7 +185,7 @@ if ($clean_output == 0){
 	user_print_autocomplete_input($params_creator);
 
     echo "<td>";
-    echo print_label (__("Incident editor"), '', true);
+    echo print_label (__("Ticket editor"), '', true);
 
 	$params_editor['input_id'] = 'text-user_id3';
 	$params_editor['input_name'] = 'editor';
@@ -235,7 +235,7 @@ if ($do_search == 0){
 } else {
 
 	if ($only_projects == 0)
-		echo "<h3>".__("Project activity related to incidents")."</h3>";
+		echo "<h3>".__("Project activity related to ticket")."</h3>";
 	else
 		echo "<h3>".__("Project activity")."</h3>";
 
@@ -489,7 +489,7 @@ if ($do_search == 0){
 
 	// Incident report
 	if ($only_incidents == 1){
-		echo "<h3>".__("Incident report")."</h3>";
+		echo "<h3>".__("Ticket report")."</h3>";
 
 
 		if ($user_id != ""){
@@ -517,7 +517,7 @@ if ($do_search == 0){
 			echo '<table width="99%" class="listing"><tr>';
 			if ($only_summary == 0) {
 				echo "<th>".__('#')."</th>";
-				echo "<th>".__('Incident'). "<br>".__("Task")."</th>";
+				echo "<th>".__('Ticket'). "<br>".__("Task")."</th>";
 				echo "<th>".__('Group')."<i><br>".__("Creator group")."</i></th>";
 				echo "<th>".__('Owner')."<i><br>".__('Creator')."</i></th>";
 				echo "<th>".__('Status')."<br>". __("Resolution")."</th>";
@@ -616,7 +616,7 @@ if ($do_search == 0){
 				echo "<td><b>".__("Totals")."</b></td>";
 				echo "<td colspan=8>";
 
-				echo "<b>".__("Number of incidents"). " </b>: ". $incident_count;
+				echo "<b>".__("Number of tickets"). " </b>: ". $incident_count;
 				echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>";
 				echo __('Total worktime'). " </b>: ". $incident_totals.__("hr")." ( ". format_numeric(get_working_days ($incident_totals)). " ".__("Working days").")";
 				
@@ -624,17 +624,17 @@ if ($do_search == 0){
 			echo "</table>";
 			
 			if ($incident_graph){
-				echo "<h3>". __("Incident graph report")."</h3>";
+				echo "<h3>". __("Ticket graph report")."</h3>";
 				echo "<div>";
 				echo pie3d_graph ($config['flash_charts'], $incident_graph, 500, 280, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 				echo "</div>";
 
-				echo "<h3>". __("Incident by group")."</h3>";
+				echo "<h3>". __("Ticket by group")."</h3>";
 				echo "<div>";
 				echo pie3d_graph ($config['flash_charts'], $incident_group_data, 500, 280, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 				echo "</div>";
 
-				echo "<h3>". __("Incident by creator group")."</h3>";
+				echo "<h3>". __("Ticket by creator group")."</h3>";
 				echo "<div>";
 				echo pie3d_graph ($config['flash_charts'], $incident_group_data2, 500, 280, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 				echo "</div>";

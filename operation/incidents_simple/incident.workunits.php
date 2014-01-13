@@ -21,14 +21,14 @@ check_login ();
 $width = '99%';
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
 $incident_id = get_parameter('incident_id', 0);
 if($incident_id == 0) {
-	ui_print_error_message(__('Unable to load incident'));
+	ui_print_error_message(__('Unable to load ticket'));
 	exit;
 }
 
@@ -54,7 +54,7 @@ $row = 0;
 
 if(empty($incident['workunits'])) {
 	$table->colspan[$row][0] = 2;
-	$table->data[$row][0] = '<i>'.__('No workunit was done in this incident').'</i>';
+	$table->data[$row][0] = '<i>'.__('No workunit was done in this ticket').'</i>';
 }
 
 foreach($incident['workunits'] as $k => $workunit) {
@@ -86,7 +86,7 @@ unset($table);
 
 // Add the description of the incident under the first workunit for usability
 $description = get_db_value('descripcion','tincidencia','id_incidencia',$incident_id);
-echo "<h3>".__("Incident details")."</h3>";
+echo "<h3>".__("Ticket details")."</h3>";
 echo "<div style='width: 98%' class='incident_details'><p>";
 echo clean_output_breaks ($description);
 echo "</div>";

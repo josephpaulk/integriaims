@@ -1,6 +1,6 @@
-Incident #_incident_id_ ((_incident_title_)) has been UPDATED.  
+Ticket #_incident_id_ ((_incident_title_)) has been UPDATED.  
 
-You can reply to this mail to add a Workunit to this incident. You also could track this incident in the following URL (need to use your credentials):
+You can reply to this mail to add a Workunit to this ticket. You also could track this ticket in the following URL (need to use your credentials):
 
    _access_url_
 

@@ -827,7 +827,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output .= "<th>".__("Value")."</th>";
 	$output .= "</tr>";
 	$output .= "<tr>";
-	$output .= "<td align=center><strong>".__('Total incidents')."</strong></td>";
+	$output .= "<td align=center><strong>".__('Total tickets')."</strong></td>";
 	$output .= "<td valign=top align=center>";
 	$output .= $total;
 	$output .= "</td>";
@@ -862,11 +862,11 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output .= "<td align=center>".$total_workunits."</td>";
 	$output .= "</tr></table>";
 
-	$container_title = __("Incidents statistics");
+	$container_title = __("Tickets statistics");
 	$container_incident_statistics = print_container('container_incident_statistics', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");
 
 	$output = "<div class='pie_frame'>".$incidents_label."</div>";
-	$container_title = __("Top 5 active incidents");
+	$container_title = __("Top 5 active tickets");
 	$container_top5_incidents = print_container('container_top5_incidents', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");
 
 	if ($incidents) { 
@@ -902,7 +902,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		
     $status_aux .= "</table>";
 
-	$container_title = __("Incident by status");
+	$container_title = __("Ticket by status");
     $container_status_incidents = print_container('container_status_incidents', $container_title, $status_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
 
 	$priority_aux .= "<table class='listing table_priority_report' style='width: 420px;' cellspacing=0 cellpadding=0 border=0>";
@@ -924,7 +924,7 @@ function print_incidents_stats ($incidents, $return = false) {
 
 	$priority_aux = $priority_aux;
 
-	$container_title = __("Incidents by priority");
+	$container_title = __("Tickets by priority");
     $container_priority_incidents = print_container('container_priority_incidents', $container_title, $priority_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
     
 	if ($oldest_incident) {
@@ -940,7 +940,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$output .= "</tr>";	
 		$output .= "<tr>";
 		$output .= "<td>";
-		$output .= "<strong>".__("Incident Id")."</strong>";
+		$output .= "<strong>".__("Ticket Id")."</strong>";
 		$output .= "</td>";
 		$output .= "<td>";
 		$output .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$oldest_incident['id_incidencia'].'">#'.$oldest_incident['id_incidencia']. "</strong></a>";
@@ -948,7 +948,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		$output .= "</tr>";
 		$output .= "<tr>";
 		$output .= "<td>";
-		$output .= "<strong>".__("Incident title")."</strong>";
+		$output .= "<strong>".__("Ticket title")."</strong>";
 		$output .= "</td>";
 		$output .= "<td>";
 		$output .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$oldest_incident['id_incidencia'].'">'.$oldest_incident['titulo']. "</strong></a>";				
@@ -982,7 +982,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output_aux .= $output;
 	$output_aux .="</div>";
 
-	$container_title = __("Longest closed incident");
+	$container_title = __("Longest closed ticket");
     $container_longest_closed = print_container('container_longest_closed', $container_title, $output_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
 	
 	$data = array (__('Open') => $opened, __('Closed') => $total - $opened);
@@ -991,7 +991,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output = pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	$output = "<div class='pie_frame'>".$output."</div>";
     
-	$container_title = __("Open / Close incidents");
+	$container_title = __("Open / Close ticket");
     $container_openclose_incidents = print_container('container_openclose_incidents', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 	
 	$clean_output = get_parameter("clean_output");
@@ -1000,7 +1000,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output = "<div class='pie_frame'>".$users_label."</div>";
     $container_topactive_users = print_container('container_topactive_users', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
-    $container_title = __("Top incident submitters");
+    $container_title = __("Top ticket submitters");
     $output = "<div class='pie_frame'>".$submitter_label."</div>";
     $container_topincident_submitter = print_container('container_topincident_submitter', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
@@ -1008,12 +1008,12 @@ function print_incidents_stats ($incidents, $return = false) {
     $output = "<div class='pie_frame'>".$user_assigned_label."</div>";
     $container_user_assigned = print_container('container_user_assigned', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
-   	$container_title = __("Incidents by group");
+   	$container_title = __("Tickets by group");
    	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize']-1, $ttl);
     $output = "<div class='pie_frame'>".$output."</div>";
     $container_incidents_group = print_container('container_incidents_group', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
-   	$container_title = __("Incidents by creator group");
+   	$container_title = __("Tickets by creator group");
    	$output = "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize']-1, $ttl);
     $output = "<div class='pie_frame'>".$output."</div>";
     $container_incident_creator_group = print_container('container_incident_creator_group', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
@@ -2081,7 +2081,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 
 		$count_this_year = filter_incidents($filter_year, true);
 
-		$aux_text = "(".$count_this_year.")".print_help_tip(__("Incidents created last year"),true);
+		$aux_text = "(".$count_this_year.")".print_help_tip(__("Tickets created last year"),true);
 	}
 
 	$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
@@ -2142,7 +2142,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	echo __('SLA');
 	echo "</th>";
 	echo "<th>";
-	echo __('Incident');
+	echo __('Ticket');
 	echo "</th>";
 	echo "<th>";
 	echo __('Group')."<br><i>".__('Company')."</i>";

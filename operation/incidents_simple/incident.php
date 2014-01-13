@@ -26,7 +26,7 @@ $width = '100%';
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -38,7 +38,7 @@ $incident_id = (int) get_parameter('id', 0);
 $active_tab = get_parameter('active_tab', 'details');
 
 if($incident_id == 0) {
-	ui_print_error_message(__('Incident not found'));
+	ui_print_error_message(__('Ticket not found'));
 	exit;
 }
 
@@ -95,7 +95,7 @@ $incident = get_full_incident($incident_id);
 	<li class="ui-tabs-title">
 		<?php
 			// PRINT INCIDENT
-			echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:load_tab(\"current\");'><img src='images/refresh.png'></a></h1>";
+			echo "<h1>".__('Ticket')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:load_tab(\"current\");'><img src='images/refresh.png'></a></h1>";
 		?>
 	</li>
 </ul>

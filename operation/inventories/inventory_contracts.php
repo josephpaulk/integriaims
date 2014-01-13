@@ -70,7 +70,7 @@ foreach ($contracts as $contract) {
 	$table->data[4][2] = __('Maximun response');
 	$table->data[4][3] = $sla['max_response'].' '.__('Hours');
 	
-	$table->data[5][0] = __('Maximun incidents');
+	$table->data[5][0] = __('Maximun tickets');
 	$table->data[5][1] = $sla['max_incidents'];
 	
 	print_table ($table);

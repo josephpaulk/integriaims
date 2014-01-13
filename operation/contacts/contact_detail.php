@@ -74,7 +74,7 @@ if ($id != 0) {
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=incidents"><span>'.__("Incidents").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=incidents"><span>'.__("Tickets").'</span></a></li>';
 
 	if ($op == "activity")
 		echo '<li class="ui-tabs-selected">';
@@ -100,7 +100,7 @@ if ($id != 0) {
 			echo strtoupper(__('Contact details'));
 			break;
 		case "incidents":
-			echo strtoupper(__('Incidents'));
+			echo strtoupper(__('Tickets'));
 			break;
 		case "inventory":
 			echo strtoupper(__('Inventory'));

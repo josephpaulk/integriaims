@@ -22,7 +22,7 @@ $delete_file = (bool) get_parameter ('delete_file');
 
 if (!$id_incident) {
 	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation",
-		"Trying to access chat of incident #".$id_incident);
+		"Trying to access chat of ticket #".$id_incident);
 	include ("general/noaccess.php");
 	exit;
 }
@@ -34,12 +34,12 @@ if (! give_acl ($config["id_user"], $incident['id_grupo'], "IR")
 	&& ($incident['id_creator'] != $config['id_user'])) {
  	// Doesn't have access to this page
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
-		'Trying to access chat of incident #'.$id_incident." '".$titulo."'");
+		'Trying to access chat of ticket #'.$id_incident." '".$titulo."'");
 	include ("general/noaccess.php");
 	exit;
 }
 
-echo '<h3>'.__('Incident').' #'.$id_incident.' - '.$incident['titulo'].'</h3>';
+echo '<h3>'.__('Ticket').' #'.$id_incident.' - '.$incident['titulo'].'</h3>';
 
 echo '<div class="result"></div>';
 

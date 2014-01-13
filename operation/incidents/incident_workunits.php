@@ -147,7 +147,7 @@ echo "</form>";
 $workunits = get_incident_workunits ($id_incident);
 
 if (!$workunits) {
-	echo '<h4>'.__('No workunit was done in this incident').'</h4>';
+	echo '<h4>'.__('No workunit was done in this ticket').'</h4>';
 	return;
 }
 

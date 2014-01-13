@@ -39,7 +39,7 @@ if (isset($_GET["id_inc"])){
 	$id_user = $_SESSION['id_usuario'];
 	if (give_acl ($iduser_temp, $id_grupo, "IR") != 1){
 	 	// Doesn't have access to this page
-		audit_db ($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+		audit_db ($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to ticket ".$id_inc." '".$titulo."'");
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -48,7 +48,7 @@ if (isset($_GET["id_inc"])){
 
 	// Incident main
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".__('Incident')." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".__('Ticket')." </a>";
 	echo "</li>";
 
 	// Tracking
@@ -79,7 +79,7 @@ if (isset($_GET["id_inc"])){
 	echo "<div style='height: 25px'> </div>";
 
 } else {
-	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to ticket ".$id_inc." '".$titulo."'");
 	include ("general/noaccess.php");
 	exit;
 }
@@ -89,7 +89,7 @@ $cabecera=0;
 $sql4 = "SELECT tworkunit.timestamp, tworkunit.duration, tworkunit.id_user, tworkunit.description FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident= $id_inc AND tworkunit.id = tworkunit_incident.id_workunit";
 
 $color = 0;
-echo "<h3>".__('Incident workunits tracking')."</h3>";
+echo "<h3>".__('Ticket workunits tracking')."</h3>";
 echo "<table cellpadding='3' cellspacing='3' border='0' width=740 class='databox'>";
 
 if ($res4=mysql_query($sql4)){

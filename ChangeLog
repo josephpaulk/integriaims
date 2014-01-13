@@ -1,5 +1,74 @@
 2014-01-13  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_graph.php
+	include/functions_tasks.php
+	include/integria_cron.php
+	include/js/integria_incident_search.js
+	include/functions_form.php
+	include/functions_inventories.php
+	include/functions_api.php
+	include/help/en/help_auto_incident_close.php
+	include/help/en/help_sla.php
+	include/functions_incidents.php
+	include/mailtemplates/incident_update.tpl
+	include/mailtemplates/incident_update_wu.tpl
+	include/functions_db.php
+	index.php
+	extensions/disabled/incident_summary.php
+	operation/incidents/incident_inventory_detail.php
+	operation/incidents/incident_chat.php
+	operation/incidents/incident.php
+	operation/incidents/incident_search_logic.php
+	operation/incidents/incident_work.php
+	operation/incidents/incident_type_field.php
+	operation/incidents/type_detail.php
+	operation/incidents/incident_dashboard.php
+	operation/incidents/incident_notes.php
+	operation/incidents/incident_inventory_contacts.php
+	operation/incidents/incident_graph.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_tracking.php
+	operation/incidents/incident_files.php
+	operation/incidents/incident_attach_file.php
+	operation/incidents/incident_create_work.php
+	operation/incidents/incident_workunits.php
+	operation/incidents/incident_dashboard_detail.php
+	operation/incidents/incident_notes_detail.php
+	operation/incidents/incident_score.php
+	operation/common/workunit_detail.php
+	operation/projects/task_report.php
+	operation/projects/task.php
+	operation/incidents_simple/incident.php
+	operation/incidents_simple/incident.files.php
+	operation/incidents_simple/incidents.php
+	operation/incidents_simple/incident.details.php
+	operation/incidents_simple/incident.workunits.php
+	operation/incidents_simple/incident_new.php
+	operation/search.php
+	operation/group/group.php
+	operation/main_menu.php
+	operation/side_menu.php
+	operation/users/user_edit.php
+	operation/slas/sla_detail.php
+	operation/inventories/inventory_incident_tracking.php
+	operation/inventories/inventory_contracts.php
+	operation/reporting/incidents_html.php
+	operation/user_report/report_annual.php
+	operation/user_report/report_full.php
+	operation/contacts/contact_incidents.php
+	operation/contacts/contact_detail.php
+	mobile/operation/incident.php
+	mobile/operation/incidents.php
+	general/home.php
+	godmode/grupos/configurar_grupo.php
+	godmode/setup/incidents_setup.php
+	godmode/setup/setup_maintenance.php
+	godmode/setup/event.php
+	godmode/usuarios/configurar_usuarios.php: Changed word "Incident" by
+	"Ticket" in order to follow standar notation.
+
+2014-01-13  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css
 	include/styles/integria_clean.css
 	operation/incidents/incident_tracking.php

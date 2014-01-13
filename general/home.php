@@ -287,7 +287,7 @@ if ($info) {
 		$result_2 = mysql_query($sql_2);
 		if ($result_2){
 			$incidents_home .= "<table width=100% class='landing_incidents listing'>";
-			$incidents_home .= "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Incident")."</th><th>".__("Last WU")."</th></tr>";
+			$incidents_home .= "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Ticket")."</th><th>".__("Last WU")."</th></tr>";
 		}
 		while ($row_2 = mysql_fetch_array($result_2)){
 			$idi = $row_2["id_incidencia"];
