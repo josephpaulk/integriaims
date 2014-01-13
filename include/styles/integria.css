@@ -1165,7 +1165,8 @@ h3.system {
 .notetitle {
 	border:1px solid #eeeeee;
 	padding: 7px 10px 7px 10px;
-	margin: 15px 10px 0px 0px;
+	margin: 15px auto;
+	margin-bottom: 0px;
 	background-color:#eeeeee;
 	color:#000;
 	width:97%;
@@ -1186,7 +1187,7 @@ h3.system {
 }
 
 .notebody {
-	margin: 0px 15px 5px 0px;
+	margin: 0 auto;
 	padding: 15px 10px 15px 10px;
 	border-bottom:1px solid #eeeeee;
 	border-right:1px solid #eeeeee;

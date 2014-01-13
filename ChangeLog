@@ -1,5 +1,16 @@
 2014-01-13  Dario Rodriguez <dario@artica.es>
 
+	* include/styles/integria.css
+	include/styles/integria_clean.css
+	operation/incidents/incident_tracking.php
+	operation/incidents/incident_files.php
+	operation/incidents/incident_workunits.php
+	operation/incidents/incident_dashboard_detail.php: Created
+	new html report to show all details about incidents in the
+	same screen with a clean layout.
+
+2014-01-13  Dario Rodriguez <dario@artica.es>
+
 	* include/graphs/gantt/gantt_chart.js
 	include/ajax/projects.php
 	operation/projects/gantt.php: New feature to represent

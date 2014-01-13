@@ -171,3 +171,19 @@ div.container_simple_incident_report_parameters{
 #project_task_distribution_report {
 	color: #FF7F00 !important;
 }
+
+#details_table {
+	border: 0px !important;
+}
+
+td.advanced_details_icons {
+	background: #fff !important;
+}
+
+div.incident_description_container {
+	max-width: 100% !important;
+}
+
+h1.ticket_clean_report_title {
+	margin-top: 20px;
+}

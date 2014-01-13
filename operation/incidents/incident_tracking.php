@@ -44,43 +44,9 @@ if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== 
 	exit;
 }
 
-/* Add a button to generate HTML reports */
-if (!$clean_output) {
-	echo '<form id="create_html_report" method="post" target="_blank" action="index.php">';
-	print_input_hidden ('id', $id);
-	print_input_hidden ('sec2', 'operation/incidents/incident_tracking');
-	print_input_hidden ('clean_output', 1);
-	echo "</form>";
-	
-	echo '<form id="create_pdf_report" method="post" target="_blank" action="index.php">';
-	print_input_hidden ('id', $id);
-	print_input_hidden ('sec2', 'operation/incidents/incident_tracking');
-	print_input_hidden ('clean_output', 1);
-	print_input_hidden ('pdf_output', 1);
-	echo '</form>';	
-	
-	echo "<div style='clear: both; width: 99%; height: 20px; padding-top: 15px'>";
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	$html_report_image = print_html_report_image ("#", __("HTML report"), "", "onClick='document.getElementById(\"create_html_report\").submit();'");
-	if ($html_report_image) {
-		echo "<li>";
-		echo $html_report_image;
-		echo "</li>";
-	}
-	$report_image = print_report_image ("#", __("PDF report"), "", "onClick='document.getElementById(\"create_pdf_report\").submit();'");
-	if ($report_image) {
-		echo "<li>";
-		echo $report_image;
-		echo "</li>";
-	}
-	echo "</ul>";
-	echo "</div>";
-	echo "</div>";
-} else {
-	//Clean output we need to print incident title header :)
-	
-	echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.$incident['titulo']."</h1>";
+//Clean output we need to print incident title header :)
+if ($clean_output) {
+	echo '<h1 class="ticket_clean_report_title">'.__("Statistics")."</h1>";
 }
 
 $a_day = 24*3600;

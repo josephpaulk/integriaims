@@ -143,36 +143,43 @@ if ($delete_file) {
 	echo $result_msg;
 }
 
-echo '<div id="upload_result"></div>';
+if (!$clean_output) {
+	echo '<div id="upload_result"></div>';
 
-//echo "<h3>".__('Add file')."</h3>";
+	//echo "<h3>".__('Add file')."</h3>";
 
-echo "<div id='upload_control' style='width: 80%;margin: 0 auto;'>";
+	echo "<div id='upload_control' style='width: 80%;margin: 0 auto;'>";
 
-$table->width = '100%';
-$table->data = array ();
-
-
-$table->data[0][0] = "<strong>".__("File formats supported")."</strong>";
-$table->data[0][0] .= print_help_tip (__("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"), true);
-$table->data[1][0] = print_textarea ('file_description', 8, 1, '', "style='resize:none'", true, __('Description'));
+	$table->width = '100%';
+	$table->data = array ();
 
 
-$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations';
+	$table->data[0][0] = "<strong>".__("File formats supported")."</strong>";
+	$table->data[0][0] .= print_help_tip (__("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"), true);
+	$table->data[1][0] = print_textarea ('file_description', 8, 1, '', "style='resize:none'", true, __('Description'));
 
-$into_form = print_table ($table, true);
-$into_form .= '<div class="button" style="width: '.$table->width.'">';
-$into_form .= print_button (__('Upload'), 'upload', false, '', 'class="sub next"', true);
-$into_form .= '</div>';
-$into_form .= print_input_hidden ('id', $id, true);
-$into_form .= print_input_hidden ('upload_file', 1, true);
 
-// Important: Set id 'form-add-file' to form. It's used from ajax control
-print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub', 'button-upload');
+	$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations';
 
-echo '</div>';
+	$into_form = print_table ($table, true);
+	$into_form .= '<div class="button" style="width: '.$table->width.'">';
+	$into_form .= print_button (__('Upload'), 'upload', false, '', 'class="sub next"', true);
+	$into_form .= '</div>';
+	$into_form .= print_input_hidden ('id', $id, true);
+	$into_form .= print_input_hidden ('upload_file', 1, true);
 
-echo "<h3>".__('Files')."</h3>";
+	// Important: Set id 'form-add-file' to form. It's used from ajax control
+	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub', 'button-upload');
+
+	echo '</div>';
+}
+
+
+if ($clean_output) {
+	echo '<h1 class="ticket_clean_report_title">'.__("Files")."</h1>";
+} else {
+	echo "<h3>".__('Files')."</h3>";
+}
 
 // Files attached to this incident
 $files = get_incident_files ($id);
@@ -182,14 +189,14 @@ if ($files === false) {
 }
 
 echo "<div style='width: 90%; margin: 0 auto;'>";
-echo "<table class=listing cellpadding=4 cellspacing=4 width='100%'>";
+echo "<table class=listing cellpadding=0 cellspacing=0 width='100%'>";
 echo "<tr>";
 echo "<th>".__('Filename');
 echo "<th>".__('Timestamp');
 echo "<th>".__('Description');
 echo "<th>".__('Size');
 
-if (give_acl ($config['id_user'], $incident['id_grupo'], "IM")) {
+if (give_acl ($config['id_user'], $incident['id_grupo'], "IM") && !$clean_output) {
 	echo "<th>".__('Delete');
 }
 
@@ -210,7 +217,7 @@ foreach ($files as $file) {
     echo "<td valign=top>". byte_convert ($file['size']);
 
 	// Delete attachment
-	if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM')) {
+	if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM') && !$clean_output) {
 		    echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files&id_attachment='.$file["id_attachment"].'&delete_file=1#incident-operations">
 			<img src="images/cross.png"></a>';
 	}

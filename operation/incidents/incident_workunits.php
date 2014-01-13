@@ -124,6 +124,8 @@ $button .= '</div>';
 
 $table->data[2][0] = $button;
 
+if (!$clean_output) {
+
 echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">';
 
 echo "<div style='width: 98%;'>";
@@ -132,11 +134,14 @@ echo "</div>";
 
 echo "</form>";
 
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-title">';
-echo "<h2>".__('Workunits')."</h2>";
-echo '</li>';
-echo '</ul>';
+	echo '<ul class="ui-tabs-nav">';
+	echo '<li class="ui-tabs-title">';
+	echo "<h2>".__('Workunits')."</h2>";
+	echo '</li>';
+	echo '</ul>';
+} else {
+	echo "<h1 class='ticket_clean_report_title'>".__('Workunits')."</h1>";
+}
 
 // Workunit view
 $workunits = get_incident_workunits ($id_incident);

@@ -423,146 +423,166 @@ $table->data[0][1] = $right_side;
 echo "<div id='indicent-details-view'>";
 
 echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.ui_print_truncate_text($incident['titulo'], 50);
-echo "<div id='button-bar-title'>";
-echo "<ul>";
 
-//Only incident manager and user with IR flag which are owners and admin can edit incidents
-$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
 
-if ($check_acl === ENTERPRISE_NOT_HOOK || $check_acl) {
-	echo "<li>";
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
-	echo "</li>";
-}
-echo '<li>';
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/star_dark.png", true, array("title" => __('Workunits'))).'</a>';
-echo '</li>';
-echo '<li>';
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
-echo '</li>';
+if (!$clean_output) {
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
 
-$tab_extensions = get_tab_extensions($sec2, "indicent-details-view");
-foreach ($tab_extensions as $tab_extension) {
-	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab='.$tab_extension['tab']['id'].'">'.print_image($tab_extension['tab']['icon'], true, array("title" => __($tab_extension['tab']['name']))).'</a>';
-	echo '</li>';
-}
+	//Only incident manager and user with IR flag which are owners and admin can edit incidents
+	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
 
-echo '<li class="ui-tabs">';
-echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image ("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
-echo '</li>';
-echo "</ul>";
-echo "</div>";
-echo "</h1>";
-
-$tab = get_parameter("tab", "");
-foreach ($tab_extensions as $tab_extension) {
-	if ($tab == $tab_extension['tab']['id']) {
-		extensions_call_tab_function($tab, $sec2, "indicent-details-view");
-		return;
+	if ($check_acl === ENTERPRISE_NOT_HOOK || $check_acl) {
+		echo "<li>";
+		echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
+		echo "</li>";
 	}
+	echo '<li>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/star_dark.png", true, array("title" => __('Workunits'))).'</a>';
+	echo '</li>';
+	echo '<li>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
+	echo '</li>';
+	echo '<li>';
+	echo '<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&clean_output=1">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Files'))).'</a>';
+	echo '</li>';
+
+	$tab_extensions = get_tab_extensions($sec2, "indicent-details-view");
+	foreach ($tab_extensions as $tab_extension) {
+		echo '<li>';
+		echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab='.$tab_extension['tab']['id'].'">'.print_image($tab_extension['tab']['icon'], true, array("title" => __($tab_extension['tab']['name']))).'</a>';
+		echo '</li>';
+	}
+
+	echo '<li class="ui-tabs">';
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image ("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
+	echo '</li>';
+	echo "</ul>";
+	echo "</div>";
+	echo "</h1>";
+
+	$tab = get_parameter("tab", "");
+	foreach ($tab_extensions as $tab_extension) {
+		if ($tab == $tab_extension['tab']['id']) {
+			extensions_call_tab_function($tab, $sec2, "indicent-details-view");
+			return;
+		}
+	}
+} else {
+	//Close title
+	echo "</h1>";
 }
 
 print_table($table);
 
-echo "<a name='incident-operations'></a>";
+//Display a minimal version for a report view
+if ($clean_output) {
 
-echo "<div id='tab' class='ui-tabs-panel'>";
-$tab = get_parameter("tab", "workunits");
+	include("incident_tracking.php");
+	include("incident_files.php");
+	include("incident_workunits.php");
 
-//Print lower menu tab
-echo '<ul class="ui-tabs-nav">';
-
-if ($tab === "contacts") {
-	echo '<li class="ui-tabs-selected">';
 } else {
-	echo '<li class="ui-tabs">';
+
+	echo "<a name='incident-operations'></a>";
+
+	echo "<div id='tab' class='ui-tabs-panel'>";
+	$tab = get_parameter("tab", "workunits");
+
+	//Print lower menu tab
+	echo '<ul class="ui-tabs-nav">';
+
+	if ($tab === "contacts") {
+		echo '<li class="ui-tabs-selected">';
+	} else {
+		echo '<li class="ui-tabs">';
+	}
+
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=contacts#incident-operations"><span>'.__('Contacts').'</span></a>';
+	echo '</li>';
+
+	if ($tab === "inventory") {
+		echo '<li class="ui-tabs-selected">';
+	} else {
+		echo '<li class="ui-tabs">';
+	}
+
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=inventory#incident-operations"><span>'.__('Inventory').'</span></a>';
+	echo '</li>';
+
+	if ($tab === "tracking") {
+		echo '<li class="ui-tabs-selected">';
+	} else {
+		echo '<li class="ui-tabs">';
+	}
+
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tracking#incident-operations"><span>'.__('Tracking').'</span></a>';
+	echo '</li>';
+
+	if ($tab === "files") {
+		echo '<li class="ui-tabs-selected">';
+	} else {
+		echo '<li class="ui-tabs">';
+	}
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
+	echo '</li>';
+
+	if ($tab === "workunits") {
+		echo '<li class="ui-tabs-selected">';
+	} else {
+		echo '<li class="ui-tabs">';
+	}
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Workunits').'</span></a>';
+	echo '</li>';
+
+	echo '<li class="ui-tabs-title">';
+	switch ($tab) {
+		case "workunits":
+			echo "<h2>".__('Add workunit')."</h2>";
+			break;
+		case "files":
+			echo "<h2>".__('Add file')."</h2>";
+			break;
+		case "inventory":
+			echo "<h2>".__('Inventory objects')."</h2>";
+			break;
+		case "contacts":
+			echo "<h2>".__('Contacts')."</h2>";
+			break;
+		case "tracking":
+			echo "<h2>".__('Tracking')."</h2>";
+			break;
+		default:
+			break;
+	}
+	echo '</li>';
+
+	echo '</ul>';
+
+	switch ($tab) {
+		case "workunits":
+			include("incident_workunits.php");
+			break;
+		case "files":
+			include("incident_files.php");
+			break;
+		case "inventory":
+			include("incident_inventory_detail.php");
+			break;
+		case "contacts":
+			include("incident_inventory_contacts.php");
+			break;
+		case "tracking":
+			include("incident_tracking.php");
+			break;
+		default:
+			break;
+	}
+
+	echo "</div>";
+
+	echo "</div>";
 }
-
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=contacts#incident-operations"><span>'.__('Contacts').'</span></a>';
-echo '</li>';
-
-if ($tab === "inventory") {
-	echo '<li class="ui-tabs-selected">';
-} else {
-	echo '<li class="ui-tabs">';
-}
-
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=inventory#incident-operations"><span>'.__('Inventory').'</span></a>';
-echo '</li>';
-
-if ($tab === "tracking") {
-	echo '<li class="ui-tabs-selected">';
-} else {
-	echo '<li class="ui-tabs">';
-}
-
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tracking#incident-operations"><span>'.__('Tracking').'</span></a>';
-echo '</li>';
-
-if ($tab === "files") {
-	echo '<li class="ui-tabs-selected">';
-} else {
-	echo '<li class="ui-tabs">';
-}
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
-echo '</li>';
-
-if ($tab === "workunits") {
-	echo '<li class="ui-tabs-selected">';
-} else {
-	echo '<li class="ui-tabs">';
-}
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Workunits').'</span></a>';
-echo '</li>';
-
-echo '<li class="ui-tabs-title">';
-switch ($tab) {
-	case "workunits":
-		echo "<h2>".__('Add workunit')."</h2>";
-		break;
-	case "files":
-		echo "<h2>".__('Add file')."</h2>";
-		break;
-	case "inventory":
-		echo "<h2>".__('Inventory objects')."</h2>";
-		break;
-	case "contacts":
-		echo "<h2>".__('Contacts')."</h2>";
-		break;
-	case "tracking":
-		echo "<h2>".__('Tracking')."</h2>";
-		break;
-	default:
-		break;
-}
-echo '</li>';
-
-echo '</ul>';
-
-switch ($tab) {
-	case "workunits":
-		include("incident_workunits.php");
-		break;
-	case "files":
-		include("incident_files.php");
-		break;
-	case "inventory":
-		include("incident_inventory_detail.php");
-		break;
-	case "contacts":
-		include("incident_inventory_contacts.php");
-		break;
-	case "tracking":
-		include("incident_tracking.php");
-		break;
-	default:
-		break;
-}
-
-echo "</div>";
-
-echo "</div>";
 
 ?>
 
