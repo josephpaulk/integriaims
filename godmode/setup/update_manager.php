@@ -25,6 +25,7 @@ if (! dame_admin ($config["id_user"])) {
 }
 
 include_once("include/functions_update_manager.php");
+enterprise_include("include/functions_update_manager.php");
 
 if (defined ('AJAX')) {
 	$count = get_db_all_rows_sql(
@@ -200,6 +201,7 @@ if (defined ('AJAX')) {
 		
 		return;
 	}
+	
 	
 	enterprise_hook('update_manager_enterprise_ajax');
 	return;
