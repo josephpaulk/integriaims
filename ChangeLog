@@ -1,5 +1,10 @@
 2014-01-13 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* include/functions_update_manager.php: change the style to show
+	the new open packages for update.
+
+2014-01-13 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* godmode/setup/update_manager.php: fixed the call to enterprise
 	functions.
 
