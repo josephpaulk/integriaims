@@ -1,3 +1,10 @@
+2014-01-13  Dario Rodriguez <dario@artica.es>
+
+	* include/graphs/gantt/gantt_chart.js
+	include/ajax/projects.php
+	operation/projects/gantt.php: New feature to represent
+	gantt using week as scale.
+
 2014-01-10  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/ajax/remote_validation.php

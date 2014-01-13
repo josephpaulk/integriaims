@@ -259,10 +259,20 @@ if ($project_tasks) {
 
 	$milestones_day = array();
 	$milestones_month = array();
+	$milestones_week = array();
 	
 	foreach ($milestones as $m) {
 
 		$date_array = split("/", $m["date"]);
+
+		$date_aux = mktime(0, 0, 0, $date_array[1], $date_array[0],$date_array[2]);
+		$week = (int)date('W', $date_aux);
+		
+		if (!isset ($milestones_week[$week])) {
+			$milestones_week[$week] = array();
+		}
+
+		array_push($milestones_week[$week], array("name" => safe_output($m["name"]), "date" => $m["date"]));
 
 		if (!isset ($milestones_month[$date_array[1]])) {
 			$milestones_month[$date_array[1]] = array();
@@ -277,7 +287,7 @@ if ($project_tasks) {
 		array_push($milestones_day[$m["date"]], array("name" => safe_output($m["name"]), "desc" => safe_output($m["description"])));
 	}
 	
-	$milestones_array = array("month" => $milestones_month, "day" => $milestones_day);
+	$milestones_array = array("month" => $milestones_month, "day" => $milestones_day, "week" => $milestones_week);
 
 	$aux_date = str_replace ("/", "-", $min_start);
 	$min_start_sec = strtotime($aux_date);

@@ -58,7 +58,7 @@ if (!$clean_output) {
 }
 echo"</h1>";
 
-$scales = array ("month" => __("Month"), "day" => __("Day"));
+$scales = array ("month" => __("Month"), "week" => __("Week"), "day" => __("Day"));
 $op_actual = array(0 => __("No"), 1 => __("Yes"));
 
 echo '<div id="msg_box"></div>';

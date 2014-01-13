@@ -1,5 +1,12 @@
+//Adding prototype for date objects, this code is from
+//http://javascript.about.com/library/blweekyear.htm
+Date.prototype.getWeek = function() {
+var onejan = new Date(this.getFullYear(),0,1);
+return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+}
+
 // This function detects if a day has a milestone
-function gantt_has_milestone (date, milestones, return_values) {
+function gantt_has_milestone (scale, date, milestones, return_values) {
 	var day = date.getDate();
 
 	return_values = return_values || false; //This command adds a default value for return_values if this variable is undefined
@@ -22,7 +29,21 @@ function gantt_has_milestone (date, milestones, return_values) {
 
    	var dateStr = day+"/"+month+"/"+year;
    	
-   	if (scale == "day") {
+   	if (scale == "week") {
+		
+		var week = date.getWeek();
+
+   		if (milestones.week.hasOwnProperty(week)) {
+
+   			if (return_values) {
+   				return milestones.week[week];
+   			} else {
+   				return true;
+   			}
+   		}
+
+
+   	} else if (scale == "day") {
 
    		if (milestones.day.hasOwnProperty(dateStr)) {
 
@@ -47,9 +68,9 @@ function gantt_has_milestone (date, milestones, return_values) {
 }
 
 //Marks a cell as a milestone
-function gantt_mark_milestone (date, milestones, type) {
+function gantt_mark_milestone (scale, date, milestones, type) {
 
-	var hasMilestone = gantt_has_milestone(date, milestones);
+	var hasMilestone = gantt_has_milestone(scale, date, milestones);
    	
    	if (hasMilestone) {
    		return "gantt_"+type+"_cell_milestone";
@@ -61,19 +82,20 @@ function gantt_mark_milestone (date, milestones, type) {
 //Prints a tip with milestone information
 function gantt_milestones_explanation (date) {
 
-	var hasMilestone = gantt_has_milestone(date, milestones, true);
+	var hasMilestone = gantt_has_milestone(scale, date, milestones, true);
 
 	var scale = gantt.config.scale_unit;
 	
 	if (hasMilestone) {
-		if (scale == "month") {
+		if (scale == "month" || scale == "week") {
 			var values = "";
 			hasMilestone.forEach (function (e){
 				values += "<b>"+e.date+":</b> "+e.name+"<br>";
 			});
 
 			return "<img class='milestone_info' src='images/star_white.png' style='width:15px; margin-top:2px;'><span style='display:none'>"+values+"</span></a>";
-		} else {
+
+		} else if(scale == "day") {
 			var values = "";
 			hasMilestone.forEach (function (e){
 				values += "<b>"+e.name+"</b><br>";
@@ -84,7 +106,7 @@ function gantt_milestones_explanation (date) {
 				}
 			});
 
-			return "<img class='milestone_info' src='images/star_dark.png' style='width:15px; margin-top:2px;'><span style='display:none'>"+values+"</span></a>";
+			return "<img class='milestone_info' src='images/star_white.png' style='width:15px; margin-top:2px;'><span style='display:none'>"+values+"</span></a>";
 		}
 	}
 
@@ -104,7 +126,15 @@ function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_ed
 		];
 
 		gantt.config.date_scale = "%F"; 
-	} else {
+	} else if(scale == "week") {
+
+		gantt.config.subscales = [
+			{unit:"month", step:1, date: "%M, %Y", css:function() {return "";}},
+    		{unit:"week", step:1, template:gantt_milestones_explanation}
+		];
+
+		gantt.config.date_scale = "%M, %j"; 
+	} else if(scale == "day") {
 
 		gantt.config.subscales = [
 			{unit:"month", step:1, date: "%M, %Y", css:function() {return "";}},
@@ -143,7 +173,7 @@ function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_ed
 
 		var scale = gantt.config.scale_unit;
 
-		return gantt_mark_milestone (date, milestones, "task", scale);
+		return gantt_mark_milestone (scale, date, milestones, "task", scale);
 	};
 
 	//Marks milestone for scale cells
@@ -151,7 +181,7 @@ function configure_gantt(scale, min_scale, max_scale, fn_tooltip_msg, fn_task_ed
 
 		var scale = gantt.config.scale_unit;
 
-		return gantt_mark_milestone (date, milestones, "scale", scale);
+		return gantt_mark_milestone (scale, date, milestones, "scale", scale);
 	};
 
 	//Color task based on priority
