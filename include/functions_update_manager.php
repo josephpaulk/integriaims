@@ -333,7 +333,7 @@ function update_manager_check_online_free_packages ($is_ajax=true) {
 	$current_package = $config['current_package'];
 	
 	$params = array('action' => 'newest_package',
-			'license' => $license,
+			'license' => "INTEGRIA-FREE",
 			'limit_count' => $users,
 			'current_package' => $current_package,
 			'version' => $config['version'],

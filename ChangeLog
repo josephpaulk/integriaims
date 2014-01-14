@@ -1,3 +1,8 @@
+2014-01-14 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_update_manager.php: fixed the update manager
+	when the user goes from enterprise to open.
+
 2014-01-13 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_update_manager.php: change the style to show
