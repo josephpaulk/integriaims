@@ -1,3 +1,8 @@
+2014-01-15 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* integria_demo.sql: set enterprise_installed as 0 in the default
+	install.
+
 2014-01-15  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_dbdata.sql: Fixed bug #508.
