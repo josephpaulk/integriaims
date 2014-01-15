@@ -282,6 +282,9 @@ function load_config() {
 	if (!isset($config["news_batch_newsletter"])) {
 		$config["news_batch_newsletter"] = "";
 	}
+	if (!isset($config["enabled_ticket_editor"])){
+		$config["enabled_ticket_editor"] = 0;
+	}
 }
 
 function config_prepare_session() {

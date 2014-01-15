@@ -45,7 +45,8 @@ if ($create) {
 	$status = get_parameter ("status");
 	$html = get_parameter ("html");
 	$plain = get_parameter ("plain");
-	$datetime = get_parameter ("datetime"); 
+	$date = get_parameter("issue_date");
+	$time = get_parameter("issue_time");
 	$id_newsletter = get_parameter ("id_newsletter"); 
 	$campaign = get_parameter("campaign");
 		
@@ -56,7 +57,7 @@ if ($create) {
 	}
 
 	$sql = sprintf ('INSERT INTO tnewsletter_content (id_newsletter, email_subject, status, datetime, html, plain, id_campaign) 
-					VALUES (%d, "%s", "%s", "%s", "%s", "%s", %d)', $id_newsletter, $email_subject, $status, $datetime, 
+					VALUES (%d, "%s", "%s", "%s %s", "%s", "%s", %d)', $id_newsletter, $email_subject, $status, $date, $time, 
 					$html, $plain, $campaign);
 
 	$id = process_sql ($sql, 'insert_id');
@@ -77,14 +78,15 @@ if ($update) {
 	$status = get_parameter ("status");
 	$html = get_parameter ("html");
 	$plain = get_parameter ("plain");
-	$datetime = get_parameter ("datetime"); 
+	$date = get_parameter("issue_date");
+	$time = get_parameter("issue_time");
 	$id_newsletter = get_parameter ("id_newsletter"); 
 	$campaign = get_parameter("campaign");
 
 	$sql = sprintf ('UPDATE tnewsletter_content SET id_newsletter = %d, email_subject = "%s", html = "%s",
-		plain = "%s", status = "%s",datetime = "%s", id_campaign = %d WHERE id = %d',
-		$id_newsletter, $email_subject, $html, $plain, $status, $datetime, $campaign, $id);
-
+		plain = "%s", status = "%s",datetime = "%s %s", id_campaign = %d WHERE id = %d',
+		$id_newsletter, $email_subject, $html, $plain, $status, $date, $time, $campaign, $id);
+	
 	$result = mysql_query ($sql);
 	if ($result === false)
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";

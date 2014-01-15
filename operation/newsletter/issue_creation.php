@@ -63,7 +63,8 @@ if ($create == 1) {
 	$html = "";
 	$plain = "";
 	$id_newsletter = 0;
-	$datetime = date ("Y-m-d H:i:s");
+	$date = date("Y-m-d");
+	$time = date("H:i:s");
 	$campaign = 0;
 	
 	echo "<h2>".__("Issue creation")."</h2>";
@@ -73,7 +74,8 @@ if ($create == 1) {
 	$html = $issue["html"];
 	$plain = $issue["plain"];
 	$id_newsletter = $issue["id_newsletter"];
-	$datetime = $issue["datetime"];
+	$date = substr($issue['datetime'], 0, 10);
+	$time = substr($issue['datetime'], 11, 18);
 	$status = $issue["status"];
 	$email_subject = $issue["email_subject"];
 	$campaign = $issue["id_campaign"];
@@ -84,14 +86,14 @@ $table->class = 'databox';
 $table->colspan = array ();
 $table->colspan[3][0] = 3;
 $table->colspan[4][0] = 3;
-$table->colspan[0][1] = 2;
 $table->data = array ();
 
 
 $table->data[0][0] = print_input_text ('email_subject', $email_subject, '', 40, 100, true, __('Email subject'));
 
-
-$table->data[0][1] = print_input_text ('datetime', $datetime, '', 12, 100, true, __('Date time'));
+	
+$table->data[0][1] = print_input_text ('issue_date', $date, '', 10, 20, true, __('Date'));
+$table->data[0][2] = print_input_text ('issue_time', $time, '', 10, 20, true, __('Time'));
 
 $table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
 	'id_newsletter', $id_newsletter, '', '', '', true, false, false,__('Newsletter'));
@@ -106,7 +108,6 @@ $campaigns = crm_get_campaigns_combo_list();
 
 $table->data[1][2] = print_select ($campaigns, "campaign", $campaign, '', __("None"), 0,true,0,true, __('Campaign'));
 
-//$table->data[3][0] = print_textarea ("plain", 10, 1, $plain, '', true, "<br>".__('Plain ascii'));
 $table->data[4][0] = print_textarea ("html", 10, 1, $html, '', true, "<br>".__('HTML'));
 
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/issue_definition">';
@@ -118,12 +119,22 @@ if ($id) {
 		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
 		print_input_hidden ('id', $id);
 		print_input_hidden ('update', 1);
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
-		print_input_hidden ('create', 1);
-	}
-	echo "</div>";
+} else {
+	print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
+	print_input_hidden ('create', 1);
+}
+echo "</div>";
 
 echo "</form>";
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
+
+<script>
+
+add_datepicker ("#text-issue_date");
+
+</script>

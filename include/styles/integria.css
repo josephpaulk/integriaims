@@ -1883,6 +1883,10 @@ h2#incidents_home {
 	background-image: url('../../images/incidents_home.png');
 }
 
+h2#ticket_editor {
+	background-image: url('../../images/incident_details.png');
+}
+
 div.system_dashboard_home_container {
 	height: 100%;
 }

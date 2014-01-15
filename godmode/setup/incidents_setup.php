@@ -76,6 +76,7 @@ if ($update) {
 	$config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
 	$config["incident_type_change"] = (int) get_parameter ("incident_type_change", 0);
 	$config["change_incident_datetime"] = (int) get_parameter ("change_incident_datetime", 0);
+	$config["enabled_ticket_editor"] = get_parameter ("enabled_ticket_editor", 0);
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
 	update_config_token ("mask_emails", $config["mask_emails"]);
@@ -89,6 +90,7 @@ if ($update) {
 	update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
 	update_config_token ("incident_type_change", $config["incident_type_change"]);
 	update_config_token ("change_incident_datetime", $config["change_incident_datetime"]);
+	update_config_token ("enabled_ticket_editor", $config["enabled_ticket_editor"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -201,6 +203,9 @@ $incident_reporter_options[1] = __('Enabled');
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
 
+$ticket_options[0] = __('Disabled');
+$ticket_options[1] = __('Enabled');
+
 echo "<table width='99%' class='search-table-button
 '>";
 echo "<tr>";
@@ -227,6 +232,8 @@ echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on ticket creation'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_select ($ticket_options, "enabled_ticket_editor", $config["enabled_ticket_editor"], '','','',true, 0, true, __('Enable quick edit mode'))."</td>";
 
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticketticket type'))."</td>";

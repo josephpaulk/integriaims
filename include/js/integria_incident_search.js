@@ -845,3 +845,62 @@ function loadContactEmail(email) {
 
 	$("#contact_search_window").dialog("close");
 }
+
+function setPriority(id_ticket) {
+	
+	var id_priority = $('#priority_editor').val();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&set_priority=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority,
+		dataType: "text",
+		success: function (data) {
+			location.reload();
+		}
+	});	
+}
+
+function setResolution(id_ticket) {
+	
+	var id_resolution = $('#incident_resolution').val();
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&set_resolution=1&id_ticket="+ id_ticket +"&id_resolution=" + id_resolution,
+		dataType: "text",
+		success: function (data) {
+			location.reload();
+		}
+	});	
+}
+
+function setStatus(id_ticket) {
+	
+	var id_status = $('#incident_status').val();
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&set_status=1&id_ticket="+ id_ticket +"&id_status=" + id_status,
+		dataType: "text",
+		success: function (data) {
+			location.reload();
+		}
+	});	
+}
+
+function setOwner(id_ticket) {
+	var id_user = $('#text-owner_editor').val();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&set_owner=1&id_ticket="+ id_ticket +"&id_user=" + id_user,
+		dataType: "text",
+		success: function (data) {
+			location.reload();
+		}
+	});	
+}

@@ -1,3 +1,26 @@
+2014-01-15  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_dbdata.sql: Fixed bug #508.
+
+	* godmode/setup/incidents_setup.php
+	  include/functions_config.php
+	  include/functions_form.php
+	  include/js/integria_incident_search.js
+	  include/ajax/incidents.php
+	  include/styles/integria.css
+	  operation/incidents/incident_dashboard_detail.php: Feature #504.
+
+	* include/functions_inventories.php: Fixed bug #484.
+	
+	* operation/invoices/invoice_view.php: Fixed bug #510.
+
+	* operation/newsletter/issue_creation.php
+	  operation/newsletter/issue_definition.php: Fixed bug #457.
+
+	* operation/newsletter/queue_manager.php:  Fixed bug #425.
+
+	* operation/projects/milestones.php: Fixed bug #441.
+
 2014-01-14 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_update_manager.php: fixed the update manager

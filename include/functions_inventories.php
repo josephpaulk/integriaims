@@ -1127,7 +1127,7 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', 
 	if ($id_item == 0) { //no type
 		$sql_search .= " AND tinventory.id_object_type IS NULL";
 	} else {
-		$sql_search .= " AND tinventory.id_object_type = tobject_type.id";
+		$sql_search .= " AND tinventory.id_object_type = $id_item";
 	}
 
 	$cont = get_db_all_rows_sql($sql_search);

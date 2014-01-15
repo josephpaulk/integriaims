@@ -26,12 +26,6 @@ if (!$permission) {
 	no_permission();
 } // ACL
 
-$company_from = get_user_company ($invoice["id_user"], $only_name = false);
-if ($company_from == array()) {
-        audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to an invoice view without permission");
-        no_permission();
-	exit;
-}
 
 $company_to = get_db_row ("tcompany", "id", $invoice["id_company"]);
 
@@ -44,7 +38,7 @@ $tax_amount = round($tax_amount, 2);
 
 $custom_pdf = true;
 $pdf_filename = "invoice_".$invoice["bill_id"].".pdf";
-$header_logo = "images/".$config["invoice_logo"];
+$header_logo = $config["invoice_logo"];
 $header_text = $config["invoice_header"];
 $footer_text= $config["invoice_footer"];
 

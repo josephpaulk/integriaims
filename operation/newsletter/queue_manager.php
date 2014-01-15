@@ -69,7 +69,6 @@ if ($create) {
 		foreach ($queue as $item) {
 			$sql = sprintf ('INSERT INTO tnewsletter_queue_data (id_queue, id_newsletter, id_newsletter_content, email, name, datetime, status) VALUES (%d, %d, %d, "%s", "%s", "%s", %d)', $id_queue, $newsletter["id"], $issue["id"], $item["email"], $item["name"], $datetime, 0);
 			process_sql ($sql);
-			echo ".";
 		}
 			
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";

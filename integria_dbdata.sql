@@ -12,7 +12,7 @@
 
 
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
-('language_code','en'),
+('language_code','en_GB'),
 ('block_size','25'),
 ('db_scheme_version','4.0'),
 ('db_scheme_build','131119'),
@@ -116,7 +116,7 @@ INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,0),
 (11,'Patches','','attachment.png',0,0);
 
 INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0,1),
-2,1,'CPU','text','','','',0,0,1),
+(2,1,'CPU','text','','','',0,0,1),
 (3,1,'Memory','text','','','',0,0,1),
 (4,1,'IP&#x20;Address','text','','','',1,0,1),
 (5,1,'MAC&#x20;Address','text','','','',1,0,1),

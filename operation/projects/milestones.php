@@ -101,7 +101,7 @@ if ($operation == "create") {
 	echo "<tr><td class='datos2'>".__('Timestamp');
 	echo "<td class='datos2'>";
     $ahora_date = date("Y-m-d");
-	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$ahora_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"timestamp\"),this);'> ";
+	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$ahora_date'>";
 
 	echo "<tr><td class='datos' valign='top'>".__('Description');
 	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
@@ -190,4 +190,5 @@ if ($operation == ""){
 // Form validation
 trim_element_on_submit('input[name="name"]');
 
+add_datepicker ("#timestamp");
 </script>

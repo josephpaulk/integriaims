@@ -16,7 +16,7 @@
 global $config;
 
 include_once ("include/functions_graph.php");
-
+include_once ("include/functions_user.php");
 
 //id could be passed by another view, if not, we try to get from parameters
 if(!$id) {
@@ -305,6 +305,61 @@ $incident_users .= "</tr>";
 $incident_users .= "</table>";
 
 $right_side = print_container('incident_users', __('People'), $incident_users);
+
+// Quick editor
+if ($config['enabled_ticket_editor']) {
+	
+	$has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
+	$has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
+
+	if ($has_iw) {
+		$incident_data = get_incident ($id);
+
+		$resolution = $incident_data['resolution'];
+		$priority = $incident_data['prioridad'];
+		$owner = $incident_data['id_usuario'];
+		$status = $incident['estado'];
+
+		$ticket_editor .= "<table style='width: 100%;'>";
+		$ticket_editor .= "<tr>";
+		$ticket_editor .= "<td>";
+		$ticket_editor .= print_select (get_priorities (true), 'priority_editor', $priority, "javascript: setPriority($id);", '','', true, false, false, __('Priority'), false, '');
+		$ticket_editor .= "</td>";
+		$ticket_editor .= "<td>";
+			
+		//If IW creator enabled flag is enabled, the user can change the creator
+		if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
+
+			$ticket_editor .= print_input_text ('owner_editor', $owner, '', 20, 128, true, __('Owner'));
+			$img = print_image("images/accept.png", true, array("title" => __("Update")));
+			$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setOwner($id);'>" . $img ."</a>";
+			
+		} else {
+			$ticket_editor .= print_label (__('Owner'), 'id_user', '', true, '<div id="plain-id_user">'.dame_nombre_real ($owner).'</div>');
+		}
+			
+		$ticket_editor .= "</td>";
+		$ticket_editor .= "</tr>";
+
+		$ticket_editor .= "<tr>";
+		$ticket_editor .= "<td>";
+
+		if ($has_im)
+			$ticket_editor .= combo_incident_resolution ($resolution, false, true, false, "javascript: setResolution($id);");
+		else {
+			$ticket_editor .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
+		}
+		$ticket_editor .= "</td>";
+		$ticket_editor .= "<td>";
+		$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "javascript: setStatus($id);");
+		$ticket_editor .= "</td>";
+		$ticket_editor .= "</tr>";
+
+		$ticket_editor .= "</table>";
+
+		$right_side .= print_container('ticket_editor', __('Quick edit'), $ticket_editor);
+	}
+}
 
 // Incident dates
 if ($incident["cierre"] == "0000-00-00 00:00:00") {

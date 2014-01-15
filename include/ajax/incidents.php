@@ -21,6 +21,10 @@ include_once("include/functions_incidents.php");
 $get_incidents_search = get_parameter('get_incidents_search', 0);
 $get_incident_name = get_parameter('get_incident_name', 0);
 $get_contact_search = get_parameter('get_contact_search',0);
+$set_priority = get_parameter('set_priority', 0);
+$set_resolution = get_parameter('set_resolution', 0);
+$set_status = get_parameter('set_status', 0);
+$set_owner = get_parameter('set_owner', 0);
 
 if ($get_incidents_search) {
 	
@@ -150,4 +154,35 @@ if ($get_contact_search) {
 	}		
 }
 
+if ($set_priority) {
+	$id_ticket = get_parameter('id_ticket');
+	$values['prioridad'] = get_parameter ('id_priority');
+	
+	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
+}
+
+if ($set_resolution) {
+	$id_ticket = get_parameter('id_ticket');
+	$values['resolution'] = get_parameter ('id_resolution');
+	
+	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
+}
+
+if ($set_status) {
+	$id_ticket = get_parameter('id_ticket');
+	$values['estado'] = get_parameter ('id_status');
+	
+	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
+}
+
+if ($set_owner) {
+	$id_ticket = get_parameter('id_ticket');
+	$values['id_usuario'] = get_parameter ('id_user');
+	
+	$exists = get_db_value('id_usuario', 'tusuario', 'id_usuario', $values['id_usuario']);
+	
+	if ($exists) {
+		$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
+	}
+}
 ?>
