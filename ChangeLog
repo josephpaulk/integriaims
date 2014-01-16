@@ -1,3 +1,7 @@
+2014-01-16  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/js/integria_inventory: Fixed bug #442.
+
 2014-01-15 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* integria_demo.sql: set enterprise_installed as 0 in the default
