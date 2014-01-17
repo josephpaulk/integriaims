@@ -1,5 +1,11 @@
 2014-01-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* mobile/operation/incidents.php: Now the incidents pages
+	load via ajax instead of use the manual pagination in the
+	integria mobile version.
+	
+2014-01-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/help/es/help_sla.php,
 	  include/help/es/help_macros.php,
 	  include/help/es/help_autocreate_blacklist.php,

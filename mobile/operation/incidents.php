@@ -124,11 +124,19 @@ class Incidents {
 		return $num_pages;
 	}
 	
-	public function getIncidentsList () {
+	public function getIncidentsList ($href = "", $ajax = false) {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
+
+		if ($href == "") {
+			$href = "index.php?page=incident";
+		}
+
+		$html = "";
 		
-		$html = "<ul class='ui-itemlistview' data-role='listview'>";
+		if (! $ajax) {
+			$html .= "<ul id='listview' class='ui-itemlistview' data-role='listview'>";
+		}
 		if ($this->getCountIncidents() > 0) {
 			$sql = $this->getIncidentsQuery();
 			$new = true;
@@ -145,7 +153,7 @@ class Incidents {
 					$background_color = "";
 				}
 				$html .= "<li class=\"$background_color\">";
-				$html .= "<a href='index.php?page=incident&id_incident=".$incident['id_incidencia']."' class='ui-link-inherit' data-ajax='false'>";
+				$html .= "<a href='$href&id_incident=".$incident['id_incidencia']."' class='ui-link-inherit' data-ajax='false'>";
 					//$html .= $ui->getPriorityFlagImage($incident['prioridad']);
 					$html .= print_priority_flag_image ($incident['prioridad'], true, "../", "priority-list ui-li-icon");
 					$html .= "<h3 class='ui-li-heading'>#".$incident['id_incidencia'];
@@ -171,9 +179,59 @@ class Incidents {
 			$html .= "<h3 class='error'>".__('There is no tickets')."</h3>";
 			$html .= "</li>";
 		}
-		$html .= "</ul>";
+		if (! $ajax) {
+			$html .= "</ul>";
+		} else {
+			ob_clean();
+		}
 		
 		return $html;
+	}
+	
+	public function addIncidentsLoader ($href = "") {
+		$ui = Ui::getInstance();
+		
+		$script = "<script type=\"text/javascript\">
+						var load_more_rows = 1;
+						var page = 2;
+						$(document).ready(function() {
+							$(window).bind(\"scroll\", function () {
+								
+								if (load_more_rows) {
+									if ($(this).scrollTop() + $(this).height()
+										>= ($(document).height() - 100)) {
+										
+										load_more_rows = 0;
+										
+										postvars = {};
+										postvars[\"action\"] = \"ajax\";
+										postvars[\"page\"] = \"incidents\";
+										postvars[\"method\"] = \"load_more_incidents\";
+										postvars[\"offset\"] = page;
+										postvars[\"href\"] = \"$href\";
+										postvars[\"filter_search\"] = \"".$this->filter_search."\";
+										postvars[\"filter_owner\"] = \"".$this->filter_owner."\";
+										postvars[\"filter_status\"] = ".$this->filter_status.";
+										page++;
+										
+										$.post(\"index.php\",
+											postvars,
+											function (data) {
+												if (data.length < 3) {
+													$(\"#loading_rows\").hide();
+												} else {
+													$(\"#listview\").append(data).listview('refresh');
+													load_more_rows = 1;
+												}
+											},
+											\"html\");
+									}
+								}
+							});
+						});
+					</script>";
+		
+		$ui->contentAddHtml($script);
 	}
 	
 	private function showIncidents ($message = "") {
@@ -264,23 +322,31 @@ class Incidents {
 			// Incidents listing
 			$html = $this->getIncidentsList();
 			$ui->contentAddHtml($html);
+			if ($this->getCountIncidents() > $system->getPageSize()) {
+				$ui->contentAddHtml('<div style="text-align:center;" id="loading_rows">
+										<img src="../images/spinner.gif">&nbsp;'
+											. __('Loading...') .
+										'</img>
+									</div>');
+				$this->addIncidentsLoader();
+			}
 		$ui->endContent();
 		// Foooter buttons
 		// New
 		$button_new = "<a href='index.php?page=incident' data-role='button'
 							data-ajax='false' data-icon='plus'>".__('New')."</a>\n";
 		// Pagination
-		$filter = "";
-		if ($this->filter_search != '') {
-			$filter .= "&filter_search=".$this->filter_search;
-		}
-		if ($this->filter_status) {
-			$filter .= "&filter_status=".$this->filter_status;
-		}
-		if ($this->filter_owner != '') {
-			$filter .= "&filter_owner=".$this->filter_owner;
-		}
-		$paginationCG = $ui->getPaginationControgroup("incidents$filter", $this->offset, $this->getNumPages());
+		// $filter = "";
+		// if ($this->filter_search != '') {
+		// 	$filter .= "&filter_search=".$this->filter_search;
+		// }
+		// if ($this->filter_status) {
+		// 	$filter .= "&filter_status=".$this->filter_status;
+		// }
+		// if ($this->filter_owner != '') {
+		// 	$filter .= "&filter_owner=".$this->filter_owner;
+		// }
+		// $paginationCG = $ui->getPaginationControgroup("incidents$filter", $this->offset, $this->getNumPages());
 		$ui->createFooter($button_new.$paginationCG);
 		$ui->showFooter();
 		$ui->showPage();
@@ -327,8 +393,25 @@ class Incidents {
 		$home->show($error);
 	}
 	
-	public function ajax ($parameter2 = false) {
-		// Fill me in the future
+	public function ajax ($method = false) {
+		$system = System::getInstance();
+		
+		if (!$this->permission) {
+			return;
+		}
+		else {
+			switch ($method) {
+				case 'load_more_incidents':
+					if ($this->offset == 1 || $this->offset > $this->getNumPages()) {
+						return;
+					} else {
+						$href = $system->getRequest('href', '');
+						$html = $this->getIncidentsList($href, true);
+						echo $html;
+					}
+					break;
+			}
+		}
 	}
 	
 }
