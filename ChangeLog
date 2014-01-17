@@ -1,3 +1,13 @@
+2014-01-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/help/es/help_sla.php,
+	  include/help/es/help_macros.php,
+	  include/help/es/help_autocreate_blacklist.php,
+	  include/help/es/help_choose_download.php,
+	  include/help/es/help_import_from_csv.php,
+	  include/help/es/help_auto_incident_close.php: Added new files
+	  to translate into spanish their respective english files.
+	  
 2014-01-16  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/js/integria_inventory: Fixed bug #442.
