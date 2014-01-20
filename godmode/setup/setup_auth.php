@@ -44,8 +44,8 @@ if ($update) {
 	$config['default_remote_profile'] = get_parameter ("default_remote_profile", 0);
 	$config['default_remote_group'] = get_parameter ("default_remote_group", 0);
 	$config['autocreate_blacklist'] = (string) get_parameter ("autocreate_blacklist", "");
-	$config['ldap_server'] = (string) get_parameter ("ldap_server", "localhost");
-	$config['ldap_port'] = (int) get_parameter ("ldap_port", 389);
+	$config['ldap_server'] = (string) get_parameter ("LDAP_server", "localhost");
+	$config['ldap_port'] = (int) get_parameter ("LDAP_port", 389);
 	$config['ldap_version'] = get_parameter ("ldap_version", 3); //int??
 	$config['ldap_start_tls'] = (int) get_parameter ("start_tls", 0);
 	$config['ldap_base_dn'] = get_parameter ("ldap_base_dn", "ou=People,dc=example,dc=com");

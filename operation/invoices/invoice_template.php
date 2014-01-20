@@ -14,7 +14,7 @@
 
 <?php 
 	if ($pdf_output == 1) { 
-		if ($invoice["status"] != 0){
+		if ($invoice["status"] == 'paid'){
 			echo "<div style='z-index: 100; position: absolute; padding-left: 250px; padding-top: -500px; font-size: 64px; weight: bold; color: #cc0000';>";
 			echo __("Paid");
 			echo "</div>";

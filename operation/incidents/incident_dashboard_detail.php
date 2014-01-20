@@ -60,6 +60,13 @@ if (isset($incident)) {
 	return;
 }
 
+if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] == 7) AND ($incident['score'] == 0)) {
+	if (($incident["score"] == 0)) {
+		$score_msg = incidents_get_score_table ($id_ticket);
+		echo $score_msg;
+	}
+}
+
 /* Users affected by the incident */
 $table->width = '100%';
 $table->class = "none";
@@ -330,7 +337,18 @@ if ($config['enabled_ticket_editor']) {
 		//If IW creator enabled flag is enabled, the user can change the creator
 		if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 
-			$ticket_editor .= print_input_text ('owner_editor', $owner, '', 20, 128, true, __('Owner'));
+			$src_code = print_image('images/group.png', true, false, true);
+	
+			$params_assigned['input_id'] = 'text-owner_editor';
+			$params_assigned['input_name'] = 'owner_editor';
+			$params_assigned['input_value'] = $owner;
+			$params_assigned['title'] = __('Owner');
+			$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
+			$params_assigned['return'] = true;
+			$params_assigned['return_help'] = true;
+	 
+			$ticket_editor .= user_print_autocomplete_input($params_assigned);
+		
 			$img = print_image("images/accept.png", true, array("title" => __("Update")));
 			$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setOwner($id);'>" . $img ."</a>";
 			
@@ -412,6 +430,40 @@ $incident_dates .= "</tr>";
 $incident_dates .= "</table>";
 
 $right_side .= print_container('incident_dates', __('Dates'), $incident_dates);
+
+// Review Score
+if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] == 7) AND ($incident['score'] != 0)) {
+	
+		if (give_acl($config["id_user"], 0, "IM")){
+
+			$num_stars = round(($incident['score']*5)/10);
+			$ticket_score = "<table style='width: 98%;'>";
+			$ticket_score .= "<tr>";
+			$ticket_score .= "<td>";
+			$ticket_score .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true, false) . '</div>';
+			$ticket_score .= "</td>";
+			$ticket_score .= "<td>";
+			$ticket_score .= __("Scoring").": ". $incident["score"]. "/10";
+			$ticket_score .= '<br>';
+			
+			
+			for ($stars=0;$stars<$num_stars;$stars++) {
+				$ticket_score .= print_image("images/star_naranja.png", true);
+			}
+			
+			$empty_stars=5-$num_stars;
+			for ($stars=0;$stars<$empty_stars;$stars++) {
+				$ticket_score .= print_image("images/star_dark.png", true);
+			}
+
+			$ticket_score .= "</td>";
+
+			$ticket_score .= "</tr>";
+			$ticket_score .= "</table>";
+		}
+		
+	$right_side .= print_container('ticket_score', __('Review score'), $ticket_score);
+}
 
 // SLA information
 if ($incident["sla_disabled"]) {
@@ -639,6 +691,9 @@ if ($clean_output) {
 	echo "</div>";
 }
 
+//parameter to reload page
+print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
+
 ?>
 
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
@@ -660,5 +715,15 @@ $('.incident_container h2').click(function() {
 	
 	$('#' + $(this).attr('id') + ' img').attr('src', new_arrow);
 });
+
+$("#submit-accion").click(function () {
+	var id_ticket = "<?php echo $id ?>";
+	var score = $("#score_ticket").val();
+	setTicketScore(id_ticket, score);
+});
+
+var idUser = "<?php echo $config['id_user'] ?>";
+
+bindAutocomplete("#text-owner_editor", idUser);
 
 </script>

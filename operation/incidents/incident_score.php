@@ -29,7 +29,7 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 
 // Take input parameters
 $id = (int) get_parameter ('id');
-$score = (int) get_parameter ('score', 0);
+$score = get_parameter ('score');
 
 if (is_numeric($id))
 	$incident = get_db_row("tincidencia", "id_incidencia", $id);

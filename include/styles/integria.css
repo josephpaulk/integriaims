@@ -1886,6 +1886,9 @@ h2#incidents_home {
 h2#ticket_editor {
 	background-image: url('../../images/incident_details.png');
 }
+h2#ticket_score {
+	background-image: url('../../images/statistics.png');
+}
 
 div.system_dashboard_home_container {
 	height: 100%;

@@ -285,6 +285,9 @@ function load_config() {
 	if (!isset($config["enabled_ticket_editor"])){
 		$config["enabled_ticket_editor"] = 0;
 	}
+	if (!isset($config["email_ticket_on_creation_and_closing"])){
+		$config["email_ticket_on_creation_and_closing"] = 0;
+	}
 }
 
 function config_prepare_session() {

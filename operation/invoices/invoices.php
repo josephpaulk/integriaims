@@ -79,6 +79,7 @@ if ($operation_invoices == "add_invoice"){
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
 	$create_calendar_event = get_parameter('calendar_event');
 	$language = get_parameter('id_language', $config['language_code']);
+	$internal_note = get_parameter ("internal_note", "");
 	
 	
 	if ($filename != ""){
@@ -109,11 +110,11 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
+	amount4, amount5, reference, invoice_type, id_language, internal_note) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -130,7 +131,12 @@ if ($operation_invoices == "add_invoice"){
 			$result = process_sql ($sql_event);
 
 		}
+		
+		$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice created", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
+			
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+		
 	} else {
 		echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
 	}
@@ -163,6 +169,7 @@ if ($operation_invoices == "update_invoice"){
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
 	$language = get_parameter('id_language', $config['language_code']);
+	$internal_note = get_parameter('internal_note', "");
 
 	// If no file input, the file doesnt change
 	if ($filename != ""){
@@ -222,12 +229,15 @@ if ($operation_invoices == "update_invoice"){
 	
 	$values['invoice_type'] = $invoice_type;
 	$values['id_language'] = $language;
+	$values['internal_note'] = $internal_note;
 	
 	$where = array('id' => $id_invoice);
 	
 	$ret = process_sql_update ('tinvoice', $values, $where);
 	
 	if ($ret !== false) {
+		$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice updated", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
 		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';
@@ -261,6 +271,7 @@ if ($id_invoice > 0){
 	$invoice_status = $invoice["status"];
 	$invoice_type = $invoice['invoice_type'];
 	$language = $invoice['id_language'];
+	$internal_note = $invoice['internal_note'];
 
 } else {
 	
@@ -287,6 +298,7 @@ if ($id_invoice > 0){
 	$invoice_status = "pending";
 	$invoice_type = "Submitted";
 	$language = $config['language_code'];
+	$internal_note = "";
 }
 
 echo "<h3>";
@@ -397,7 +409,10 @@ $table->colspan[13][0] = 2;
 $table->data[13][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
 
 $table->colspan[14][0] = 2;
-$table->data[14][0] = print_input_file ('upfile', 20, false, '', true, __('Attachment'));
+$table->data[14][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
+
+$table->colspan[15][0] = 2;
+$table->data[15][0] = print_input_file ('upfile', 20, false, '', true, __('Attachment'));
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail

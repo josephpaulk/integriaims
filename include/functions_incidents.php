@@ -312,7 +312,8 @@ function attach_incident_file ($id, $file_temp, $file_description, $email_notify
 		unlink ($file_temp);
 
 		// Adding a WU noticing about this
-		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". clean_input($filename);
+		$link = "<a target='_blank' href='operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."'>".$filename."</a>";
+		$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
 		$public = 1;
 		$timeused = 0;
 		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);
@@ -1281,6 +1282,12 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$company_owner = " (".reset($company_owner).")";
 	}
   
+	$ticket_score = '';
+	if  (($row["estado"] == 7) AND ($row['score'] == 0)) {
+		$ticket_score =  $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+		//$ticket_score =  '<a href="'.$config["base_url"].'"/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id="'.$id_inc.'">'."Click hear to scoring".'</a>';
+	}
+
 	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_fullname_"] = dame_nombre_real ($usuario);
 	$MACROS["_username_"] = $usuario;
@@ -1317,6 +1324,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
 		break;
 	case 0: // Incident update
+debugPrint("INCIDENT UPDATE", true);
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
 		break;
@@ -1333,6 +1341,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_delete.tpl", $MACROS);
 		break;
     case 5: // Incident closed
+		$MACROS["_ticket_score_"] = $ticket_score;
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_close.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_close.tpl", $MACROS);
         break;
@@ -1347,11 +1356,17 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
 	$msg_code .= "/" . $row["id_usuario"];;
 	
+if ((!$config['email_ticket_on_creation_and_closing']) || ($mode == 5) || ($mode == 1)) {
+debugPrint("TIENE Q MANDAR MAIL A CREADOR", true);
 	integria_sendmail ($email_owner, $subject, $text, false, $msg_code, "", 0, "", "X-Integria: no_process");
-
+}
+else {
+	debugPrint("NO TIENE Q MANDAR MAIL A CREADOR", true);
+}
     // Send a copy to each address in "email_copy"
 
-    if ($email_copy != ""){
+    //if ($email_copy != ""){
+	if (($email_copy != "") && (!$config['email_ticket_on_creation_and_closing'])){
         $emails = explode (",",$email_copy);
         foreach ($emails as $em){
         	integria_sendmail ($em, $subject, $text, false, "", "", 0, "", "X-Integria: no_process");
@@ -1359,15 +1374,18 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
     }
 
 	// Incident owner
-	if ($email_owner != $email_creator){
-
+	//if ($email_owner != $email_creator){
+if (($email_owner != $email_creator) AND (!$config['email_ticket_on_creation_and_closing'])){
+//if ((!$config['email_ticket_on_creation_and_closing']) || ($mode == 0) || ($mode == 1)) {
     	$msg_code = "TicketID#$id_inc";
-	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
+		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
     	$msg_code .= "/".$row["id_creator"];
 
-	integria_sendmail ($email_creator, $subject, $text, false, $msg_code, "", "", 0, "", "X-Integria: no_process");
+		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, "", "", 0, "", "X-Integria: no_process");
+//}
     }	
-	if ($public == 1){
+	//if ($public == 1){
+	if (($public == 1) AND (!$config['email_ticket_on_creation_and_closing'])){
 		// Send email for all users with workunits for this incident
 		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
 		if ($result=mysql_query($sql1)) {
@@ -2335,4 +2353,97 @@ function incidents_get_by_notified_email ($email) {
 	return $result;
 }
 
+function incidents_get_score_table ($id_ticket) {
+/*
+	$output = "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id_ticket>";
+	$output .= "<table width=98%><tr>";
+	$output .= "<td>";
+	$output .=  __('Please, help to improve the service and give us a score for the resolution of this ticket. People assigned to this ticket will not view directly your scoring.');
+	$output .= "</td><tr><td>";
+	$output .= "<select name=score>";
+	$output .= "<option value=10>".__("Very good, excellent !")."</option>";
+	$output .= "<option value=8>".__("Good, very satisfied.")."</option>";
+	$output .= "<option value=6>".__("It's ok, but could be better.")."</option>";
+	$output .= "<option value=5>".__("Average. Not bad, not good.")."</option>";
+	$output .= "<option value=4>".__("Bad, you must to better")."</option>";
+	$output .= "<option value=2>".__("Very bad")."</option>";
+	$output .= "<option value=1>".__("Horrible, you need to change it.")."</option>";
+	$output .= "</select>";
+	$output .= "</td><td>";
+	$output .= print_submit_button (__('Score'), 'accion', false, 'class="sub next"', true);
+	$output .= "</td></tr></table>";
+	$output .=  "</form>";
+*/
+	$output = '';
+	//$output = "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id>";
+	//$output = "<form  id=form_ticket_score ></form>";
+	$output .= "<table width=98% cellpadding=4 cellspacing=4><tr><td>";
+	$output .= "<img src='images/award_star_silver_1.png' width=32>&nbsp;";
+	$output .= "</td><td>";
+	$output .=  __('Please, help to improve the service and give us a score for the resolution of this ticket. People assigned to this ticket will not view directly your scoring.');
+	$output .= "</td><td>";
+	$output .= "<select id=score_ticket name=score>";
+	$output .= "<option value=10>".__("Very good, excellent !")."</option>";
+	$output .= "<option value=8>".__("Good, very satisfied.")."</option>";
+	$output .= "<option value=6>".__("It's ok, but could be better.")."</option>";
+	$output .= "<option value=5>".__("Average. Not bad, not good.")."</option>";
+	$output .= "<option value=4>".__("Bad, you must to better")."</option>";
+	$output .= "<option value=2>".__("Very bad")."</option>";
+	$output .= "<option value=1>".__("Horrible, you need to change it.")."</option>";
+	$output .= "</select>";
+	$output .="</td><td>";
+	$output .=print_submit_button (__('Score'), 'accion', false, 'class="sub next"', true);
+	$output .= "</td></tr></table>";
+	$output .= "</form>";
+	
+	return $output;
+}
+
+function incidents_set_tracking ($id_ticket, $action, $priority, $status, $resolution, $user, $group) {
+	
+	switch ($action) {
+		case 'update':
+			$old_incident = get_incident ($id_ticket);
+	
+			//Add traces and statistic information
+			$tracked = false;
+			if ($old_incident['prioridad'] != $priority) {
+				incident_tracking ($id_ticket, INCIDENT_PRIORITY_CHANGED, $priority);
+				$tracked = true;
+			} 
+			if ($old_incident['estado'] != $status) {
+				incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $status);
+				$tracked = true;
+			}
+			if ($old_incident['resolution'] != $resolution) {
+				incident_tracking ($id_ticket, INCIDENT_RESOLUTION_CHANGED, $resolution);
+				$tracked = true;
+			}
+			if ($old_incident['id_usuario'] != $user) {
+				incident_tracking ($id_ticket, INCIDENT_USER_CHANGED, $user);
+				$tracked = true;
+			}
+			if ($old_incident["id_grupo"] != $group) {
+				incident_tracking ($id_ticket, INCIDENT_GROUP_CHANGED, $group);
+				$tracked = true;
+			}
+				
+			if($tracked == false) {
+				incident_tracking ($id_ticket, INCIDENT_UPDATED);
+			}
+		break;
+		case 'create':
+			incident_tracking ($id_ticket, INCIDENT_CREATED);
+		break;
+	}
+	
+
+	$metric_values = array(INCIDENT_METRIC_STATUS => $status,
+							INCIDENT_METRIC_USER => $user,
+							INCIDENT_METRIC_GROUP => $group);
+	
+	incidents_add_incident_stat ($id_ticket, $metric_values);
+	
+	return;
+}
 ?>

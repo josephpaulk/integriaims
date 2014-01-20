@@ -86,8 +86,10 @@ if ((give_acl ($config['id_user'], $id_grupo, "IR") ||
 			// Delete temporal file
 			unlink ($file_temp);
 
+			$link = "<a target='_blank' href='operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."'>".$filename."</a>";
+
 			// Adding a WU noticing about this
-			$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
+			$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
 			$public = 1;
 			$timestamp = print_mysql_timestamp();
 			$timeused = "0";

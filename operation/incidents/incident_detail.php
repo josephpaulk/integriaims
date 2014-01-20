@@ -185,38 +185,7 @@ if ($action == 'update') {
 	}
 	
 	//Add traces and statistic information
-	$tracked = false;
-	if ($old_incident['prioridad'] != $priority) {
-		incident_tracking ($id, INCIDENT_PRIORITY_CHANGED, $priority);
-		$tracked = true;
-	} 
-	if ($old_incident['estado'] != $estado) {
-		incident_tracking ($id, INCIDENT_STATUS_CHANGED, $estado);
-		$tracked = true;
-	}
-	if ($old_incident['resolution'] != $resolution) {
-		incident_tracking ($id, INCIDENT_RESOLUTION_CHANGED, $resolution);
-		$tracked = true;
-	}
-	if ($old_incident['id_usuario'] != $user) {
-		incident_tracking ($id, INCIDENT_USER_CHANGED, $user);
-		$tracked = true;
-	}
-	if ($old_incident["id_grupo"] != $grupo) {
-		incident_tracking ($id, INCIDENT_GROUP_CHANGED, $grupo);
-		$tracked = true;
-	}
-		
-	if($tracked == false) {
-		incident_tracking ($id, INCIDENT_UPDATED);
-	}
-	
-	
-	$metric_values = array(INCIDENT_METRIC_STATUS => $estado,
-							INCIDENT_METRIC_USER => $user,
-							INCIDENT_METRIC_GROUP => $grupo);
-	
-	incidents_add_incident_stat ($id, $metric_values);
+	incidents_set_tracking ($id, 'update', $priority, $estado, $resolution, $user, $grupo);
 	
 	if ($sla_disabled == 1)
 		$sla_man = ", sla_disabled = 1 ";
@@ -374,20 +343,7 @@ if ($action == "insert" && !$id) {
 				"User ".$config['id_user']." created incident #".$id);
 				
 			//Add traces and statistic information	
-			incident_tracking ($id, INCIDENT_STATUS_CHANGED, $estado);
-	
-			incident_tracking ($id, INCIDENT_USER_CHANGED, $usuario);
-			
-			incident_tracking ($id, INCIDENT_GROUP_CHANGED, $grupo);
-						
-			incident_tracking ($id, INCIDENT_CREATED);
-			
-			//Add first incident statistics
-			$metric_values = array (INCIDENT_METRIC_STATUS => $estado,
-									INCIDENT_METRIC_USER => $usuario,
-									INCIDENT_METRIC_GROUP => $grupo);
-	
-			incidents_add_incident_stat ($id, $metric_values);
+			incidents_set_tracking ($id, 'create', $priority, $estado, $resolution, $user, $grupo);
 
 			// Create automatically a WU with the editor ?
 			if ($config["incident_creation_wu"] == 1){
@@ -594,25 +550,7 @@ if ($id) {
     if ($id){
 		if (($incident["score"] == 0) AND (($incident["id_creator"] == $config["id_user"]) AND ( 
     	($incident["estado"] == 7)))) {
-            echo "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id>";
-            echo "<table width=98% cellpadding=4 cellspacing=4><tr><td>";
-            echo "<img src='images/award_star_silver_1.png' width=32>&nbsp;";
-            echo "</td><td>";
-            echo __('Please, help to improve the service and give us a score for the resolution of this ticket. People assigned to this ticket will not view directly your scoring.');
-            echo "</td><td>";
-            echo "<select name=score>";
-            echo "<option value=10>".__("Very good, excellent !")."</option>";
-            echo "<option value=8>".__("Good, very satisfied.")."</option>";
-            echo "<option value=6>".__("It's ok, but could be better.")."</option>";
-            echo "<option value=5>".__("Average. Not bad, not good.")."</option>";
-            echo "<option value=4>".__("Bad, you must to better")."</option>";
-            echo "<option value=2>".__("Very bad")."</option>";
-            echo "<option value=1>".__("Horrible, you need to change it.")."</option>";
-            echo "</select>";
-            echo "</td><td>";
-            print_submit_button (__('Score'), 'accion', false, 'class="sub next"');
-            echo "</td></tr></table>";
-            echo "</form>";
+			echo incidents_get_score_table ($id);
     	}
     }
 
@@ -903,14 +841,12 @@ if (!$create_incident){
 if ($create_incident) {
 	$button = print_input_hidden ('action', 'insert', true);
 	if (give_acl ($config["id_user"], 0, "IW")) {
-		$button .= print_submit_button (__('Create'), 'accion', false, 'class="sub create"', true);
-		//$button .= print_button (__('Create'), 'accion', false, '', 'class="sub create"', true);
+		$button .= print_submit_button (__('Create'), 'action', false, 'class="sub create"', true);
 	}
 } else {
 	$button = print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
-	if ($has_permission) {
-		$button .= print_submit_button (__('Update'), 'accion', false, 'class="sub upd"', true);
+		$button .= print_submit_button (__('Update'), 'action', false, 'class="sub upd"', true);
 	}
 }
 
@@ -1192,6 +1128,12 @@ $(document).ready (function () {
 	$("#go_search").click(function (event) {
 		event.preventDefault();
 		$("#go_search_form").submit();
+	});
+	
+	$("#submit-accion").click(function () {
+		var id_ticket = "<?php echo $id ?>";
+		var score = $("#score_ticket").val();
+		setTicketScore(id_ticket, score);
 	});
 });
 

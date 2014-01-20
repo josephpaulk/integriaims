@@ -93,7 +93,8 @@ if ($delete_invoice == 1 && $id_invoice){
 		}
 		$res = process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
 		if ($res > 0) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice deleted", "Invoice ID: $id_invoice");
+			$company_name = get_db_value('name', 'tcompany', 'id', $invoice['id_company']);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice deleted", "Invoice Bill ID: ".$invoice['bill_id'].", Company: $company_name");
 		}
 	}
 }
@@ -110,10 +111,13 @@ if ($lock_invoice == 1 && $id_invoice) {
 		include ("general/noaccess.php");
 		exit;
 	} else {
+		$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
+		$company_name = get_db_value('name', 'tcompany', 'id', $invoice['id_company']);
+		
 		if ($locked && $res === 0) { // The invoice was locked and now is unlocked
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice unlocked", "Invoice ID: $id_invoice");
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice unlocked", "Invoice Bill ID: ".$invoice['bill_id'].", Company: $company_name");
 		} elseif (!$locked && $res === 1) { // The invoice was unlocked and now is locked
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice locked", "Invoice ID: $id_invoice");
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice locked", "Invoice Bill ID: ".$invoice['bill_id'].", Company: $company_name");
 		}
 		clean_cache_db();
 	}
@@ -276,9 +280,13 @@ if ($invoices != false) {
 
 		if ($clean_output == 0){
 
-			$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
-			&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
-			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
+			$data[7] = '';
+			if ($invoice['invoice_type'] == 'Submitted') {
+				$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+				&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
+				<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
+			}
+		
 			if ($lock_permission) {
 			
 				if ($is_locked) {

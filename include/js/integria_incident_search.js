@@ -856,7 +856,9 @@ function setPriority(id_ticket) {
 		data: "page=include/ajax/incidents&set_priority=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority,
 		dataType: "text",
 		success: function (data) {
-			location.reload();
+			//location.reload();
+			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
+			window.location = url;
 		}
 	});	
 }
@@ -871,7 +873,9 @@ function setResolution(id_ticket) {
 		data: "page=include/ajax/incidents&set_resolution=1&id_ticket="+ id_ticket +"&id_resolution=" + id_resolution,
 		dataType: "text",
 		success: function (data) {
-			location.reload();
+			//location.reload();
+			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
+			window.location = url;
 		}
 	});	
 }
@@ -886,7 +890,9 @@ function setStatus(id_ticket) {
 		data: "page=include/ajax/incidents&set_status=1&id_ticket="+ id_ticket +"&id_status=" + id_status,
 		dataType: "text",
 		success: function (data) {
-			location.reload();
+			//location.reload();
+			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
+			window.location = url;
 		}
 	});	
 }
@@ -898,6 +904,22 @@ function setOwner(id_ticket) {
 		type: "POST",
 		url: "ajax.php",
 		data: "page=include/ajax/incidents&set_owner=1&id_ticket="+ id_ticket +"&id_user=" + id_user,
+		dataType: "text",
+		success: function (data) {
+			//location.reload();
+			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
+			window.location = url;
+		}
+	});	
+}
+
+function setTicketScore(id_ticket, score) {
+	var id_user = $('#text-owner_editor').val();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&set_ticket_score=1&id_ticket="+ id_ticket +"&score=" + score,
 		dataType: "text",
 		success: function (data) {
 			location.reload();

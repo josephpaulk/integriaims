@@ -509,3 +509,13 @@ INSERT INTO `tlanguage` (`id_language`, `name`) VALUES ('pl','Polski');
 -- ---------------------------------------------------------------------
 ALTER TABLE tinvoice ADD invoice_type enum ('Submitted', 'Received') default 'Submitted';
 ALTER TABLE tinvoice ADD `id_language` varchar(6) NOT NULL default '';
+
+-- ---------------------------------------------------------------------
+-- Table tinvoice (20/01/2014)
+-- ---------------------------------------------------------------------
+ALTER TABLE tinvoice ADD `internal_note` mediumtext NOT NULL;
+
+-- ---------------------------------------------------------------------
+-- Table tattachment (20/01/2014)
+-- ---------------------------------------------------------------------
+ALTER TABLE tattachment ADD `id_invoice` bigint(20) NOT NULL default '0';

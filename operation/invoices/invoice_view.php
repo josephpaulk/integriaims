@@ -38,7 +38,7 @@ $tax_amount = round($tax_amount, 2);
 
 $custom_pdf = true;
 $pdf_filename = "invoice_".$invoice["bill_id"].".pdf";
-$header_logo = $config["invoice_logo"];
+$header_logo = "images/".$config["invoice_logo"];
 $header_text = $config["invoice_header"];
 $footer_text= $config["invoice_footer"];
 

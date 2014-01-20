@@ -660,7 +660,8 @@ function api_attach_file ($return_type, $user, $params){
 		process_sql ($sql);
 	} else {
 		// Adding a WU noticing about this
-		$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $short_filename;
+		$link = "<a target='_blank' href='operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."'>".$short_filename."</a>";
+		$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
 		$public = 1;
 		$timestamp = print_mysql_timestamp();
 		$timeused = "0.05";
