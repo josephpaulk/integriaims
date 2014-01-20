@@ -82,6 +82,7 @@ function filter_incidents ($filters, $count=false) {
 	$resolutions = get_incident_resolutions ();
 	
 	$sql_clause = '';
+	
 	if ($filters['priority'] != -1)
 		$sql_clause .= sprintf (' AND prioridad = %d', $filters['priority']);
 	if ($filters['id_group'] != 1)
@@ -91,29 +92,29 @@ function filter_incidents ($filters, $count=false) {
 	if (! empty ($filters['id_user_or_creator']))
 		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
 
-	if ($filters['id_incident_type']) {
-		//Incident type 0 means all and incident type -1 means without type
-		if ($filters["id_incident_type"] != -1) {
+	//Incident type 0 means all and incident type -1 means without type
+	if ($filters["id_incident_type"] != -1) {
+
+		if ($filters["id_incident_type"]) {
 			$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
+		}
 
-			$incident_fields = array();
-			foreach ($filters as $key => $value) {
-				// If matchs an incident field, ad an element to the array with their real id and its data
-				if (preg_match("/^type_field_/", $key)) {
-					$incident_fields[preg_replace("/^type_field_/", "", $key)] = $value;
-				}
+		$incident_fields = array();
+		
+		foreach ($filters as $key => $value) {
+			// If matchs an incident field, ad an element to the array with their real id and its data
+			if (preg_match("/^type_field_/", $key)) {
+				$incident_fields[preg_replace("/^type_field_/", "", $key)] = $value;
 			}
-			foreach ($incident_fields as $id => $data) {
-				if ($data !== "") {
-					$sql_clause .= sprintf (' AND id_incidencia = ANY (SELECT id_incident
-																		FROM tincident_field_data
-																		WHERE id_incident_field = "%s"
-																			AND data LIKE "%%%s%%")', $id, $data);
-				}
+		}
+		
+		foreach ($incident_fields as $id => $data) {
+			if ($data !== "") {
+				$sql_clause .= sprintf (' AND id_incidencia = ANY (SELECT id_incident
+																	FROM tincident_field_data
+																	WHERE id_incident_field = "%s"
+																		AND data LIKE "%%%s%%")', $id, $data);
 			}
-
-		} else {
-			$sql_clause .=  ' AND (id_incident_type = 0 OR id_incident_type IS NULL)';
 		}
 	}
 

@@ -1,3 +1,25 @@
+2014-01-20  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_form.php
+	include/functions_incidents.php
+	operation/incidents/incident_search_logic.php
+	operation/incidents/incident_type_field.php
+	operation/incidents/type_detail.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_search.php: New feature to
+	create global fields for incident types.
+	* integria_demo.sql
+	integria_db.sql
+	extras/mr/2.sql
+	integria_dbdata.sql: Several changes in database, MR 2 
+	was created.
+	* operation/side_menu.php
+	include/functions_user.php
+	godmode/usuarios/configurar_usuarios.php
+	godmode/usuarios/user_field_list.php
+	godmode/usuarios/user_field_editor.php: New feature to support
+	custom fields for user account.
+
 2014-01-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/operation/incidents.php: Now the incidents pages

@@ -36,6 +36,9 @@ $delete_field = (int) get_parameter ('delete_field', 0);
 $update_field = (int) get_parameter ('update_field', 0);
 
 if ($add_field) { //add field to incident type
+	
+	$global = get_parameter("global");
+
 	$value['id_incident_type'] = (int) get_parameter ('id', 0);
 	$value['label'] = get_parameter('label', '');
 	$value['type'] = get_parameter ('type');
@@ -52,6 +55,8 @@ if ($add_field) { //add field to incident type
 		echo '<h3 class="error">'.__('Empty field name').'</h3>';
 	} else if ($error_combo) {
 		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
+	} else if (!$value["type"])  {
+		echo '<h3 class="error">'.__('No type selected').'</h3>';
 	} else {
 
 		$result_field = process_sql_insert('tincident_type_field', $value);
@@ -59,6 +64,40 @@ if ($add_field) { //add field to incident type
 		if ($result_field === false) {
 			echo '<h3 class="error">'.__('Field could not be created').'</h3>';
 		} else {
+
+			//Global fields are inserted in all types
+			if ($global) {
+			
+				//Update field $result_field to get global_id = $result_field
+				$sql = sprintf("UPDATE tincident_type_field SET global_id = %d WHERE id = %d", 
+							$result_field, $result_field);
+
+				$res = process_sql($sql);
+
+				//Insert global field in the rest of types
+				$sql_types = sprintf("SELECT id, name FROM tincident_type WHERE id != %d", $id);
+
+				$types = get_db_all_rows_sql($sql_types);
+
+				if (!$types) {
+					$types = array();
+				}
+
+				//Add global field id
+				$value['global_id'] = $result_field;
+
+				foreach ($types as $t) {
+
+					$value['id_incident_type'] = $t["id"];
+				
+					$res = process_sql_insert('tincident_type_field', $value);
+
+					if (!$res) {
+						echo '<h3 class="error">'.__('There was a problem creating global field for type could not be created for type: ')." ".$t["name"].'</h3>';
+					}
+				}
+			}
+
 			echo '<h3 class="suc">'.__('Field created successfully').'</h3>';
 		}
 	}
@@ -66,8 +105,29 @@ if ($add_field) { //add field to incident type
 
 if ($delete_field) {
 	$id_field = get_parameter ('id_field');
+
+	$global_id = get_db_value("global_id", "tincident_type_field", "id", $id_field);
+
+	if ($global_id) {
+		//Delete all fields related to global field
+		$fields_sql = sprintf("SELECT id FROM tincident_type_field WHERE global_id = %d", $global_id);
+		$fields = get_db_all_rows_sql($fields_sql);
+
+		$aux = array();
+		foreach($fields as $f) {
+			$aux[] = $f["id"];
+		}
+
+		$clause = "(".implode(",", $aux).")";
+
+		$sql = sprintf("DELETE FROM tincident_type_field WHERE id IN %s", $clause);
+		$result_delete = process_sql($sql);
+	} else {
+		//Delete only this field
+		$result_delete = process_sql_delete('tincident_type_field', array('id' => $id_field));
+	}
 	
-	$result_delete = process_sql_delete('tincident_type_field', array('id' => $id_field));
+	
 	
 	if ($result_delete === false) {
 		echo '<h3 class="error">'.__('Field could not be deleted').'</h3>';
@@ -278,13 +338,17 @@ if ($id || $new_type) {
 					$data[3] = __('No');
 				}
 				
+				$data[4] = "";
 				
-				$data[4] = "<a
-				href='" . $url_update . "'>
-				<img src='images/wrench.png' border=0 /></a>";
+				if (!$field["global_id"]) {
+					$data[4] = "<a
+					href='" . $url_update . "'>
+					<img src='images/wrench.png' border=0 /></a>";
+				} 
+					
 				$data[4] .= "<a
 				onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
-				<img src='images/cross.png' border=0 /></a>";
+				<img src='images/cross.png' border=0 /></a>";	
 				
 				array_push ($table->data, $data);
 			}

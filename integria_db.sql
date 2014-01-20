@@ -130,6 +130,7 @@ CREATE TABLE `tattachment` (
   `description` text default '',
   `size` bigint(20) NOT NULL default '0',
   `timestamp` date NOT NULL default '0000-00-00',
+  `id_invoice` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id_attachment`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -482,6 +483,7 @@ CREATE TABLE `tinvoice` (
   `invoice_type` enum ('Submitted', 'Received') default 'Submitted',
   `reference` text NOT NULL default '',
   `id_language` varchar(6) NOT NULL default '',
+  `internal_note` mediumtext NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)

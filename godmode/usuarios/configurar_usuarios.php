@@ -46,6 +46,8 @@ $modo = "creacion";
 $num_employee = "";
 $enable_login = 1;
 
+$user_fields = get_db_all_rows_sql ("SELECT * FROM tuser_field");
+
 if (isset($_GET["borrar_grupo"])) {
 	$grupo = get_parameter ('borrar_grupo');
 	enterprise_hook ('delete_group');
@@ -165,6 +167,32 @@ if ($action == 'update')  {
 					}
 				}
 			}
+
+			//Add custom fields
+			foreach ($user_fields as $u) {
+
+				$custom_value = get_parameter("custom_".$u["id"]);
+				
+				$sql = sprintf('SELECT data FROM tuser_field_data WHERE id_user = "%s" AND id_user_field = %d',
+								$update_user, $u["id"]);
+				
+				$current_data = process_sql($sql);
+				
+				if ($current_data) {
+					$sql = sprintf('UPDATE tuser_field_data SET data = "%s" WHERE id_user = "%s" AND id_user_field = %d',
+							$custom_value, $update_user, $u["id"]);
+				} else {
+					$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
+							$custom_value, $update_user, $u["id"]);
+				}
+
+				$res = process_sql($sql);
+
+				if ($res === false) {
+					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+				}
+			}
+
 			$modo = "edicion";
 			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		}
@@ -207,11 +235,30 @@ if ($action == 'create'){
 	$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login, '$location')";
 
 	$resq1 = process_sql($sql_insert);
-		if (! $resq1)
-			echo "<h3 class='error'>".__('Could not be created')."</h3>";
-		else {
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		}
+	
+	if (! $resq1)
+		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+	else {
+
+		//Insert custom fields
+		foreach ($user_fields as $u) {
+
+			$custom_value = get_parameter("custom_".$u["id"]);
+			
+			$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
+						$custom_value, $nombre, $u["id"]);
+
+			$res = process_sql($sql);
+
+			if ($res === false) {
+				echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+			}
+		}	
+
+
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+	}
+
 	$update_user = $nombre;
 	$modo ="edicion";
 }
@@ -355,6 +402,63 @@ echo "<td>";
 echo __('Language');
 echo "<td>";
 print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', __('Default'), '', false, false, true, false);
+
+//Print user custom fields
+
+//Clean cache to avoid strange behaviour
+clean_cache_db();
+
+foreach ($user_fields as $u) {
+
+	echo "<tr>";
+	echo "<td>";
+	echo $u["label"];
+	echo "</td>";
+
+	$sql_data = sprintf('SELECT data FROM tuser_field_data WHERE id_user = "%s" AND id_user_field = %d',
+								$update_user, $u["id"]);
+
+	$result = process_sql($sql_data);
+
+	$data = "";
+
+	if($result) {
+		$data = safe_output($result[0]["data"]);
+	}
+	
+	switch ($u["type"]) {
+		case "text":
+			echo "<td>";
+			echo "<input type='text' name='custom_".$u["id"]."' value='".$data."'>";
+			echo "</td>";
+			echo "</tr>";
+			break;
+		case "combo":
+			$aux = split(",", $u["combo_value"]);
+			
+			$options = array();
+
+			foreach ($aux as $a) {
+				$options[$a] = $a;
+			}
+
+			echo "<td>";
+			echo print_select ($options, 'custom_'.$u["id"], $data, '', '', '0', true);
+			echo "</td>";
+			echo "</tr>";
+			break;
+		case "textarea":
+			echo "</tr>";
+			echo "<tr>";
+			echo "<td colspan=2>";
+			echo "<textarea cols=75 rows=3 name='custom_".$u["id"]."'>";
+			echo $data;
+			echo "</textarea>";
+			echo "</td>";
+			echo "</tr>";
+			break;	
+	}
+}
 
 ?>
 

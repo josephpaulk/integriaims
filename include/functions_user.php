@@ -189,6 +189,11 @@ function user_delete_user($id_user) {
 	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$id_user."'";
 	$resq2 = mysql_query($query_del2);
 
+	//Delet custom fields
+
+	$query_del3 = "DELETE FROM tuser_field_data WHERE id_user = '".$id_user."'";
+	$resq3 = mysql_query($query_del3);
+
 	if (! $resq2) 
 		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
 	else

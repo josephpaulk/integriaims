@@ -39,7 +39,7 @@ if (defined ('AJAX')) {
 
 			array_push($fields_final, $f);
 		}
-
+		
 		echo json_encode($fields_final);
 		return;
 	}

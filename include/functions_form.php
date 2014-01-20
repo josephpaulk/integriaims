@@ -918,13 +918,37 @@ function form_search_incident ($return = false, $filter=false) {
 			$sql = sprintf("SELECT *
 							FROM tincident_type_field
 							WHERE id_incident_type = %d", $search_id_incident_type);
-			$config['mysql_result_type'] = MYSQL_ASSOC;
-			$type_fields = get_db_all_rows_sql($sql);
+			
 
-			$search_type_field = array();
-			foreach ($type_fields as $key => $type_field) {
-				$search_type_field[$type_field['id']] = (string) get_parameter ('search_type_field_'.$type_field['id']);
+		} else {
+			$sql = sprintf("SELECT DISTINCT (global_id)
+							FROM tincident_type_field
+							WHERE global_id != 0");
+
+			$global_fields = get_db_all_rows_sql($sql);
+
+			if (!$global_fields) {
+				$global_fields = array();
 			}
+
+			$aux = array();
+			foreach ($global_fields as $g) {
+				$aux[] = $g["global_id"];
+			}
+
+			$clause = "(".implode(",",$aux).")";
+
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field 
+							WHERE id IN %s", $clause);
+		}
+
+		$config['mysql_result_type'] = MYSQL_ASSOC;
+		$type_fields = get_db_all_rows_sql($sql);		
+
+		$search_type_field = array();
+		foreach ($type_fields as $key => $type_field) {
+			$search_type_field[$type_field['id']] = (string) get_parameter ('search_type_field_'.$type_field['id']);
 		}
 	}
 	else {
@@ -947,14 +971,38 @@ function form_search_incident ($return = false, $filter=false) {
 			$sql = sprintf("SELECT *
 							FROM tincident_type_field
 							WHERE id_incident_type = %d", $search_id_incident_type);
-			$config['mysql_result_type'] = MYSQL_ASSOC;
-			$type_fields = get_db_all_rows_sql($sql);
+			
 
-			$search_type_field = array();
-			if ($type_fields) {
-				foreach ($type_fields as $key => $type_field) {
-					$search_type_field[$type_field['id']] = (string) $filter['type_field_'.$type_field['id']];
-				}
+		} else {
+			$sql = sprintf("SELECT DISTINCT (global_id)
+							FROM tincident_type_field
+							WHERE global_id != 0");
+
+			$global_fields = get_db_all_rows_sql($sql);
+
+			if (!$global_fields) {
+				$global_fields = array();
+			}
+
+			$aux = array();
+			foreach ($global_fields as $g) {
+				$aux[] = $g["global_id"];
+			}
+
+			$clause = "(".implode(",",$aux).")";
+
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field 
+							WHERE id IN %s", $clause);
+		}
+		
+		$config['mysql_result_type'] = MYSQL_ASSOC;
+		$type_fields = get_db_all_rows_sql($sql);
+
+		$search_type_field = array();
+		if ($type_fields) {
+			foreach ($type_fields as $key => $type_field) {
+				$search_type_field[$type_field['id']] = (string) $filter['type_field_'.$type_field['id']];
 			}
 		}
 	}
@@ -1068,41 +1116,35 @@ function form_search_incident ($return = false, $filter=false) {
 	$table_type_fields->class = "search-table";
 	$table_type_fields->data = array();
 
-	if ($search_id_incident_type) {
+	//Print custom field data
 
-		$sql = sprintf("SELECT *
-						FROM tincident_type_field
-						WHERE id_incident_type = %d", $search_id_incident_type);
-		$config['mysql_result_type'] = MYSQL_ASSOC;
-		$type_fields = process_sql($sql);
+	$column = 0;
+	$row = 0;
+	if ($type_fields) {
+		foreach ($type_fields as $key => $type_field) {
+			$data = $search_type_field[$type_field['id']];
 
-		$column = 0;
-		$row = 0;
-		if ($type_fields) {
-			foreach ($type_fields as $key => $type_field) {
-				$data = $search_type_field[$type_field['id']];
-
-				if ($type_field['type'] == "text" || $type_field['type'] == "textarea") {
-					$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
-				} else if ($type_field['type'] == "combo") {
-					$combo_values = explode(",", $type_field['combo_value']);
-					$values = array();
-					foreach ($combo_values as $value) {
-						$values[$value] = $value;
-					}
-					$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, '', __('Any'), '', true, false, false, $type_field['label']);
+			if ($type_field['type'] == "text" || $type_field['type'] == "textarea") {
+				$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+			} else if ($type_field['type'] == "combo") {
+				$combo_values = explode(",", $type_field['combo_value']);
+				$values = array();
+				foreach ($combo_values as $value) {
+					$values[$value] = $value;
 				}
+				$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, '', __('Any'), '', true, false, false, $type_field['label']);
+			}
 
-				$table_type_fields->data[$row][$column] = $input;
-				if ($column >= 3) {
-					$column = 0;
-					$row++;
-				} else {
-					$column++;
-				}
+			$table_type_fields->data[$row][$column] = $input;
+			if ($column >= 3) {
+				$column = 0;
+				$row++;
+			} else {
+				$column++;
 			}
 		}
 	}
+	
 	if ($table_type_fields->data) {
 		$table_type_fields_html = print_table($table_type_fields, true);
 	}

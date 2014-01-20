@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -14,39 +14,94 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+// Load global vars
+
 global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "IM")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
+enterprise_include ('godmode/usuarios/configurar_usuarios.php');
+
+if (! give_acl ($config["id_user"], 0, "UM")) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access user field edition");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_incident_type = (int) get_parameter ('id');
+
+$id_field = get_parameter ('id_field');
 $add_field = (int) get_parameter('add_field', 0);
 $update_field = (int) get_parameter('update_field', 0);
 
 $label = '';
 $type = '';
 $combo_value = '';
-$show_in_list = false;
 
-$id_field = get_parameter ('id_field');
+if ($add_field) {
+	$value = array();
+	$value["label"] = get_parameter("label");
+	$value["type"] = get_parameter("type");
+	$value["combo_value"] = get_parameter("combo_value");
+
+	if ($value['type'] == 'combo') {
+		if ($value['combo_value'] == '')
+			$error_combo = true;
+	}
+	
+	if ($value['label'] == '') {
+		echo '<h3 class="error">'.__('Empty field name').'</h3>';
+	} else if ($error_combo) {
+		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
+	} else {
+
+		$result_field = process_sql_insert('tuser_field', $value);
+		
+		if ($result_field === false) {
+			echo '<h3 class="error">'.__('Field could not be created').'</h3>';
+		} else {
+			echo '<h3 class="suc">'.__('Field created successfully').'</h3>';
+
+			$id_field = $result_field;
+		}
+	}
+
+}
+
+if ($update_field) { //update field to incident type
+	$id_field = get_parameter ('id_field');
+	
+	$value_update['label'] = get_parameter('label');
+	$value_update['type'] = get_parameter ('type');
+	$value_update['combo_value'] = get_parameter ('combo_value', '');
+	$error_update = false;
+
+	if ($value_update['type'] == "combo") {
+		if ($value_update['combo_value'] == '') 
+			$error_update = true;
+	} 
+	if ($error_update) {
+		echo '<h3 class="error">'.__('Field could not be updated. Empty combo value').'</h3>';
+	} else {
+		$result_update = process_sql_update('tuser_field', $value_update, array('id' => $id_field));
+		
+		if ($result_update === false) {
+			echo '<h3 class="error">'.__('Field could not be updated').'</h3>';
+		} else {
+			echo '<h3 class="suc">'.__('Field updated successfully').'</h3>';
+		}
+	}
+}
 
 if ($id_field) {
-	$id_field = get_parameter ('id_field');	
-	$field_data = get_db_row_filter('tincident_type_field', array('id' => $id_field));
+	$field_data = get_db_row_filter('tuser_field', array('id' => $id_field));
 
 	$label = $field_data['label'];
 	$type = $field_data['type'];
 	$combo_value = $field_data['combo_value'];
-	$show_in_list = (boolean) $field_data['show_in_list'];
 
 }
 
-echo '<h1>'.__('Ticket fields management').'</h1>';
+echo '<h1>'.__('User fields editor').'</h1>';
 
 $table->width = "99%";
 $table->class = "search-table-button";
@@ -57,15 +112,13 @@ $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('F
 $types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'));
 $table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
 $table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
-$table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'));
-$table->data[0][3] = print_checkbox ('global', 1, '', true, __('Global field'));
 
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
 
-if ($add_field) {
+if (!$id_field) {
 	$button = print_input_hidden('add_field', 1, true);
 	$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
-} else if ($update_field) {
+} else {
 	$button = print_input_hidden('update_field', 1, true);
 	$button .= print_input_hidden('add_field', 0, true);
 	$button .= print_input_hidden('id_field', $id_field, true);
@@ -75,7 +128,7 @@ if ($add_field) {
 $table->data['button'][0] = $button;
 $table->colspan['button'][0] = 3;
 
-echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&add_field=1">';
+echo '<form method="post" action="index.php?sec=users&sec2=godmode/usuarios/user_field_editor">';
 print_table ($table);
 echo '</form>';
 

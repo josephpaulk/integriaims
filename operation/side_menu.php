@@ -1115,7 +1115,18 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
 				echo "</li>";
 			}
-			echo "<li>";       
+
+			if ($sec2 == "godmode/usuarios/user_field_list")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";   
+			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/user_field_list'>".__('Manage user fields')."</a></li>";
+			echo "</li>";
+
+			if ($sec2 == "godmode/usuarios/import_from_csv")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
 			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a></li>";
 			echo "</li>";
 			
