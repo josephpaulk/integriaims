@@ -2446,4 +2446,37 @@ function incidents_set_tracking ($id_ticket, $action, $priority, $status, $resol
 	
 	return;
 }
+
+function incidents_get_type_fields ($search_id_incident_type) {		
+	global $config;
+	
+	if ($search_id_incident_type) {
+
+		$sql = sprintf("SELECT *
+				FROM tincident_type_field
+				WHERE id_incident_type = %d", $search_id_incident_type);
+	
+		$config['mysql_result_type'] = MYSQL_ASSOC;
+		$type_fields = get_db_all_rows_sql($sql);
+		
+	} else {
+			
+		$sql = sprintf("SELECT DISTINCT (global_id)
+						FROM tincident_type_field
+						WHERE global_id != 0");
+						
+		$sql = sprintf("SELECT * FROM tincident_type_field
+						WHERE global_id = id");
+						
+		$config['mysql_result_type'] = MYSQL_ASSOC;				
+		$type_fields = get_db_all_rows_sql($sql);
+
+	}
+	
+	if (!$type_fields) {
+		$type_fields = array();
+	}
+		
+	return $type_fields;
+}
 ?>

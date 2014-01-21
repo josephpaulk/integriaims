@@ -847,7 +847,6 @@ if ($create_incident) {
 	$button = print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
 		$button .= print_submit_button (__('Update'), 'action', false, 'class="sub upd"', true);
-	}
 }
 
 $table->colspan['button'][0] = 4;

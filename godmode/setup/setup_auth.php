@@ -91,8 +91,8 @@ $table->data[0][1] .= print_help_tip (__("This is defined in seconds. "), true);
 
 
 $table->data[1][0] = __('Autocreate remote users');
-$table->data[2][0] =  __('Yes').'&nbsp;'.print_radio_button ('autocreate_remote_users', 1, '', $config['autocreate_remote_users'], true, '', '', '').'&nbsp;&nbsp;';
-$table->data[2][0] .= __('No').'&nbsp;'.print_radio_button ('autocreate_remote_users', 0, '', $config['autocreate_remote_users'], true, '', '', '');
+$table->data[2][0] =  __('Yes').'&nbsp;'.print_radio_button_extended ('autocreate_remote_users', 1, '', $config['autocreate_remote_users'], false, 'enable_autocreate_profile();', '', true).'&nbsp;&nbsp;';
+$table->data[2][0] .= __('No').'&nbsp;'.print_radio_button_extended ('autocreate_remote_users', 0, '', $config['autocreate_remote_users'], false, 'enable_autocreate_profile();', '', true);
 
 if ($config['autocreate_remote_users'] == 0){
 	$disabled = true;
@@ -232,4 +232,18 @@ function config_form(auth_method) {
 	}
 }
 
+function enable_autocreate_profile () {
+	var remote_auto = $("input:radio[name=autocreate_remote_users]:checked").val();
+	
+	if (remote_auto == 0) {
+		$("#default_remote_profile").attr("disabled", true);
+		$("#default_remote_group").attr("disabled", true);
+		$("#text-autocreate_blacklist").attr("disabled", true);
+	}
+	else {
+		$("#default_remote_profile").removeAttr('disabled');
+		$("#default_remote_group").removeAttr('disabled');
+		$("#text-autocreate_blacklist").removeAttr('disabled');
+	}
+}
 </script>

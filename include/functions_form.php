@@ -913,39 +913,8 @@ function form_search_incident ($return = false, $filter=false) {
 		
 		$date_ini = get_parameter("search_first_date", $month_ago);
 
-		if ($search_id_incident_type) {
-
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field
-							WHERE id_incident_type = %d", $search_id_incident_type);
-			
-
-		} else {
-			$sql = sprintf("SELECT DISTINCT (global_id)
-							FROM tincident_type_field
-							WHERE global_id != 0");
-
-			$global_fields = get_db_all_rows_sql($sql);
-
-			if (!$global_fields) {
-				$global_fields = array();
-			}
-
-			$aux = array();
-			foreach ($global_fields as $g) {
-				$aux[] = $g["global_id"];
-			}
-
-			$clause = "(".implode(",",$aux).")";
-
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field 
-							WHERE id IN %s", $clause);
-		}
-
-		$config['mysql_result_type'] = MYSQL_ASSOC;
-		$type_fields = get_db_all_rows_sql($sql);		
-
+		$type_fields = incidents_get_type_fields ($search_id_incident_type);
+		
 		$search_type_field = array();
 		foreach ($type_fields as $key => $type_field) {
 			$search_type_field[$type_field['id']] = (string) get_parameter ('search_type_field_'.$type_field['id']);
@@ -966,38 +935,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
 
-		if ($search_id_incident_type) {
-
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field
-							WHERE id_incident_type = %d", $search_id_incident_type);
-			
-
-		} else {
-			$sql = sprintf("SELECT DISTINCT (global_id)
-							FROM tincident_type_field
-							WHERE global_id != 0");
-
-			$global_fields = get_db_all_rows_sql($sql);
-
-			if (!$global_fields) {
-				$global_fields = array();
-			}
-
-			$aux = array();
-			foreach ($global_fields as $g) {
-				$aux[] = $g["global_id"];
-			}
-
-			$clause = "(".implode(",",$aux).")";
-
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field 
-							WHERE id IN %s", $clause);
-		}
-		
-		$config['mysql_result_type'] = MYSQL_ASSOC;
-		$type_fields = get_db_all_rows_sql($sql);
+		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 
 		$search_type_field = array();
 		if ($type_fields) {

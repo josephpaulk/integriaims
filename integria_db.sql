@@ -924,6 +924,7 @@ CREATE TABLE `tincident_type_field` (
   `type` enum ('textarea', 'text', 'combo') default 'text',
   `combo_value` text default NULL,
   `show_in_list` tinyint(1) unsigned NOT NULL default 0,
+  `global_id` mediumint(8) unsigned,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1134,4 +1135,19 @@ CREATE TABLE `ttask_link` (
   `target` int(10) NOT NULL default 0,
   `type` int(1) NOT NULL default 0,
   PRIMARY KEY  (`id`, `source`, `target`, `type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tuser_field` ( 
+	`id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
+	`label` varchar(100) NOT NULL DEFAULT '', 
+	`type` enum('textarea','text','combo') DEFAULT 'text', 
+	`combo_value` text, 
+	PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tuser_field_data` ( 
+	`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, 
+	`id_user` varchar(60) NOT NULL DEFAULT '',
+	`id_user_field` mediumint(8) unsigned NOT NULL, 
+	`data` text, PRIMARY KEY (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

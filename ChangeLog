@@ -1,3 +1,16 @@
+2014-01-21  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  godmode/setup/setup_auth.php
+	  godmode/usuarios/import_from_csv.php
+	  include/functions_forms.php
+	  include/functions_user.php
+	  include/functions_workunits.php
+	  operation/incidents/incident_detail.php
+	  operation/incidents/incident_search.php
+	  operation/incidents/incident_search_login.php
+	  operation/incidents/type_detail.php: Fixed several bugs.
+
 2014-01-20  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_form.php

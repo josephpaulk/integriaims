@@ -42,38 +42,7 @@ $filter['order_by'] = get_parameter ('search_order_by', '');
 $filter['first_date'] = get_parameter('search_first_date', '');
 $filter['last_date'] = get_parameter('search_last_date', '');
 
-$type_fields = array();
-
-if ($filter['id_incident_type']) {
-	$sql = sprintf("SELECT *
-					FROM tincident_type_field
-					WHERE id_incident_type = %d", $filter["id_incident_type"]);
-	
-} else {
-	$sql = sprintf("SELECT DISTINCT (global_id)
-				FROM tincident_type_field
-				WHERE global_id != 0");
-
-	$global_fields = get_db_all_rows_sql($sql);
-
-	if (!$global_fields) {
-		$global_fields = array();
-	}
-
-	$aux = array();
-	foreach ($global_fields as $g) {
-		$aux[] = $g["global_id"];
-	}
-
-	$clause = "(".implode(",",$aux).")";
-
-	$sql = sprintf("SELECT *
-				FROM tincident_type_field 
-				WHERE id IN %s", $clause);
-}
-
-$config['mysql_result_type'] = MYSQL_ASSOC;
-$type_fields = process_sql($sql);
+$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 
 if ($type_fields) {
 	foreach ($type_fields as $type_field) {

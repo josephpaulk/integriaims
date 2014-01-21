@@ -24,13 +24,18 @@ $group = (int)get_parameter('group');
 $profile = (int)get_parameter('perfil', 1);
 $nivel = (int)get_parameter('nivel');
 $pass_policy = (int)get_parameter('pass_policy');
+$avatar_param = get_parameter('avatar');
+//only avatar name (without extension)
+$avatar_param = explode('.', $avatar_param);
+$avatar = $avatar_param[0];
+
 if ($upload_file) {
 	if ($_FILES["file"]["error"] == 0) {
 		if ($_FILES["file"]["type"] != 'text/csv') {
 			echo "<h3 class='error'>" . __ ('Unsupported file type') . "</h3>";
 		}
 		else {
-			load_file ($_FILES["file"]["tmp_name"], $group, $profile, $nivel, $pass_policy);
+			load_file ($_FILES["file"]["tmp_name"], $group, $profile, $nivel, $pass_policy, $avatar);
 		}
 	}
 }
@@ -63,6 +68,10 @@ $table->data[1][1] = "<label>".__('Enable policy password')."</label>";
 $table->data[1][1] .= __('Yes').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="1">';
 $table->data[1][1] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 $table->data[1][1] .= __('No').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="0" checked>';
+
+$ficheros = list_files('images/avatars/', "png", 1, 0, "small");
+$avatar_forlist = $avatar . ".png";
+$table->data[2][0] = print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, __('Avatar'));
 
 $table->data[7][0] = "<label>".__('Load file')."</label>";
 $table->data[8][0] = '<input class="sub" name="file" type="file" /><br />';

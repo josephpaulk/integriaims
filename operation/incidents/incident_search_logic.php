@@ -31,39 +31,9 @@ if (defined ('AJAX')) {
 		$table_type_fields->width = "100%";
 		$table_type_fields->class = "search-table";
 		$table_type_fields->data = array();
-
-		if ($id_incident_type) {
-
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field
-							WHERE id_incident_type = %d", $id_incident_type);
-			
-		} else {
-			$sql = sprintf("SELECT DISTINCT (global_id)
-							FROM tincident_type_field
-							WHERE global_id != 0");
-
-			$global_fields = get_db_all_rows_sql($sql);
-
-			if (!$global_fields) {
-				$global_fields = array();
-			}
-
-			$aux = array();
-			foreach ($global_fields as $g) {
-				$aux[] = $g["global_id"];
-			}
-
-			$clause = "(".implode(",",$aux).")";
-
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field 
-							WHERE id IN %s", $clause);
-		}
-
-		$config['mysql_result_type'] = MYSQL_ASSOC;
-		$type_fields = process_sql($sql);
-
+		
+		$type_fields = incidents_get_type_fields ($id_incident_type);
+		
 		$column = 0;
 		$row = 0;
 		if ($type_fields) {

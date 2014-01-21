@@ -100,7 +100,7 @@ function create_new_table_multiworkunit ($number=false) {
 	}
 	
 	//Set several global variables
-	$now = date ("Y-m-d H:i:s");
+	$now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
 	$start_date = substr ($now, 0, 10);
 	$wu_user = $config["id_user"];	
 	

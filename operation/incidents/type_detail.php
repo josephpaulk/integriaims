@@ -188,6 +188,32 @@ if ($create_type) {
 		echo '<h3 class="error">'.__('Type name empty').'</h3>';
 	}
 	//$id = 0;
+	
+	$sql_global_ids = "SELECT DISTINCT (global_id)
+				FROM tincident_type_field
+				WHERE global_id != 0";
+				
+	$global_ids = get_db_all_rows_sql($sql_global_ids);
+	
+	if ($global_ids) {
+		foreach ($global_ids as $global_id) {
+			$sql = "SELECT * FROM tincident_type_field WHERE id=".$global_id['global_id'];
+			$type_field = get_db_row_sql($sql);
+			
+			$value['id_incident_type'] = $id;
+			$value['label'] = $type_field["label"];
+			$value['type'] = $type_field["type"];
+			$value['combo_value'] = $type_field["combo_value"];
+			$value['show_in_list'] = $type_field["show_in_list"];
+			$value['global_id'] = $type_field["global_id"];
+			
+			$result = process_sql_insert('tincident_type_field', $value);
+
+			if (!$result) {
+				echo '<h3 class="error">'.__('There was a problem creating global field for type could not be created for type: ')." ".$global_id["global_id"].'</h3>';
+			}
+		}
+	}
 }
 
 // UPDATE
