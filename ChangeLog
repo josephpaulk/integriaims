@@ -1,5 +1,10 @@
 2014-01-22  Dario Rodriguez <dario@artica.es>
 
+	* extras/inventory_installer: Fixed permissions on inventory server
+	installation.
+
+2014-01-22  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_projects.php: recovered some missing functions
 	related to product costs and labour.
 
