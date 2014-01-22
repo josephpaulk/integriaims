@@ -33,6 +33,7 @@ body {
 
 .ui-header-fixed, .ui-footer-fixed {
 	min-height: 38px !important;
+	width: auto !important;
 }
 
 label, input, .ui-btn-inner {

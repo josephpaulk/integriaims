@@ -35,6 +35,7 @@ require_once('operation/workorders.php');
 require_once('operation/workorder.php');
 require_once('operation/incidents.php');
 require_once('operation/incident.php');
+require_once('operation/calendars.php');
 
 
 $system = System::getInstance();
@@ -90,6 +91,10 @@ switch ($action) {
 			case 'incident':
 				$incident = new Incident();
 				$incident->ajax($method);
+				break;
+			case 'calendars':
+				$calendars = new Calendars();
+				$calendars->ajax($method);
 				break;
 		}
 		return;
@@ -147,6 +152,10 @@ switch ($action) {
 			case 'incident':
 				$incident = new Incident();
 				$incident->show();
+				break;
+			case 'calendars':
+				$calendars = new Calendars();
+				$calendars->show();
 				break;
 			default:
 				$home = new Home();

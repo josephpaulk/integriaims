@@ -65,6 +65,12 @@ class Home {
 					'text' => __('Incidents'),
 					'href' => 'index.php?page=incidents');
 			$ui->contentAddHtml($ui->createButton($options));
+			// Calendars
+			$options = array('icon' => 'grid',
+					'pos' => 'right',
+					'text' => __('Calendars'),
+					'href' => 'index.php?page=calendars');
+			$ui->contentAddHtml($ui->createButton($options));
 			
 			if (! empty($error)) {
 				$options = array(

@@ -849,7 +849,7 @@ class Ui {
 		return $output;
 	}
 	
-	public function bindMobileAutocomplete ($idInput, $idListview, $idProject = false) {
+	public function bindMobileAutocomplete ($idInput, $idListview, $idProject = false, $callbackF = "") {
 		
 		if ($idProject) {
 			$ajaxUrl = "index.php?action=ajax&page=user&method=search_users_role&id_project=$idProject";
@@ -869,6 +869,8 @@ class Ui {
 								var a = $(e.currentTarget);
 								$(\"$idInput\").val(a.data(\"autocomplete\").value);
 								$(\"$idListview\").html(\"\");
+
+								$callbackF
 							}
 						});
 						$(\"$idInput\").bind(\"targetUpdated.autocomplete\", function(e) {
@@ -978,6 +980,7 @@ class Ui {
 		echo "		<meta name='viewport' content='width=device-width, initial-scale=1'>\n";
 		echo "		<link rel='icon' href='../images/integria_mini_logo.png' type='image/png' />\n";
 		echo "		<link rel='stylesheet' href='include/style/main.css' />\n";
+		echo "		<link rel='stylesheet' href='include/style/calendar.css' />\n";
 		echo "		<link rel='stylesheet' href='include/style/jquery.mobile-1.3.2.css' />\n";
 		echo "		<script src='include/javascript/jquery.js'></script>\n";
 		echo "		<script src='include/javascript/jquery.mobile-1.3.2.js'></script>\n";

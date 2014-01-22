@@ -21,6 +21,7 @@ class Incident {
 	private $group_id;
 	
 	private $id_creator;
+	private $id_owner;
 	private $status;
 	private $priority;
 	private $resolution;
@@ -54,6 +55,7 @@ class Incident {
 		}
 		
 		$this->id_creator = (string) $system->getRequest('id_creator', $system->getConfig('id_user'));
+		$this->id_owner = (string) $system->getRequest('id_owner', "");
 		$this->status = (int) $system->getRequest('status', 1);
 		$this->priority = (int) $system->getRequest('priority', 2);
 		$this->resolution = (int) $system->getRequest('resolution', 0);
@@ -229,6 +231,55 @@ class Incident {
 			
 			return $id_incident;
 		}
+	}
+
+	public function quickIncidentUpdate ($id_incident, $type, $value) {
+		$system = System::getInstance();
+
+		$column = "";
+
+		switch ($type) {
+			case 'priority':
+				$column = "prioridad";
+				break;
+			case 'owner':
+				$column = "id_usuario";
+				$value = "'$value'";
+				break;
+			case 'resolution':
+				$column = "resolution";
+				break;
+			case 'status':
+				$column = "estado";
+				break;
+		}
+
+		if ($column) {
+			// tincident_field_data
+			$res = $sql_delete = "UPDATE tincidencia
+								SET $column = $value
+						   		WHERE id_incidencia = $id_incident";
+			$res = process_sql ($sql_delete);
+		}
+		
+		return $res;
+
+	}
+
+	public function quickPriorityUpdate ($id_incident, $priority) {
+		return $this->quickIncidentUpdate ($id_incident, "priority", $priority);
+	}
+
+	public function quickOwnerUpdate ($id_incident, $id_owner) {
+		return $this->quickIncidentUpdate ($id_incident, "owner", $id_owner);
+	}
+
+	public function quickResolutionUpdate ($id_incident, $resolution) {
+		return $this->quickIncidentUpdate ($id_incident, "resolution", $resolution);
+	}
+
+	public function quickStatusUpdate ($id_incident, $status) {
+		return $this->quickIncidentUpdate ($id_incident, "status", $status);
 	}
 	
 	public function deleteIncident ($id_incident) {
@@ -483,6 +534,160 @@ class Incident {
 		$ui->showFooter();
 		$ui->showPage();
 	}
+
+
+	public function getIncidentQuickForm ($incident = false, $action = "index.php?page=incident", $method = "POST") {
+		$system = System::getInstance();
+		$ui = Ui::getInstance();
+
+		if (!$incident) {
+			$incident = get_db_row ("tincidencia", "id_incidencia", $this->id_incident);
+		}
+		$resolution_text = incidents_get_incident_resolution_text($incident['id_incidencia']);
+		
+
+		$has_im = $system->checkACL("IM");
+		$has_iw = $system->checkACL("IW");
+		
+		if ($has_iw || $has_im) {
+			$options = array (
+				'id' => 'form-quick_update_incident',
+				'action' => $action,
+				'method' => $method,
+				'data-ajax' => 'false'
+				);
+			$ui->beginForm($options);
+
+			// Priority
+			$options = array(
+				'name' => 'quick_priority',
+				'id' => 'select-priority',
+				'title' => __('Priority'),
+				'label' => __('Priority'),
+				'items' => get_priorities(),
+				'selected' => $incident["prioridad"]
+				);
+			$ui->formAddSelectBox($options);
+			$ui->formAddHtml("<script type=\"text/javascript\">
+								$(document).ready(function() {
+									$('#select-priority').change( function() {
+										$('#quick_update_type').val('priority');
+										$('#quick_update_value').val($(this).val());
+										$('#form-quick_update_incident').submit();
+									});
+								});
+							</script>");
+
+			//If IW creator enabled flag is enabled, the user can change the creator
+			if ($has_im || ($has_iw && $system->getConfig('iw_creator_enabled'))) {
+				// Filter owner
+				$options = array(
+					'name' => 'quick_id_owner',
+					'id' => 'text-id_owner',
+					'label' => __('Owner'),
+					'value' => $incident["id_usuario"],
+					'placeholder' => __('Owner'),
+					'autocomplete' => 'off'
+					);
+				$ui->formAddInputText($options);
+				// Owner autocompletion
+				// List
+				$ui->formAddHtml("<ul id=\"ul-autocomplete_owner\" data-role=\"listview\" data-inset=\"true\"></ul>");
+				// Autocomplete binding
+				$owner_callback = "$('#quick_update_type').val('owner');
+									$('#quick_update_value').val($('#text-id_owner').val());
+									$('#form-quick_update_incident').submit();";
+				$ui->bindMobileAutocomplete("#text-id_owner", "#ul-autocomplete_owner", false, $owner_callback);
+			}
+
+			if ($has_im) {
+				// Resolution
+				$values = array();
+				$values[0] = __('None');
+				$resolutions = get_incident_resolutions();
+				foreach ($resolutions as $key => $value) {
+					$values[$key] = $value;
+				} 
+				$options = array(
+					'name' => 'quick_resolution',
+					'id' => 'select-quick_resolution',
+					'title' => __('Resolution'),
+					'label' => __('Resolution'),
+					'items' => $values,
+					'selected' => $incident["resolution"]
+					);
+				$ui->formAddSelectBox($options);
+				$ui->formAddHtml("<script type=\"text/javascript\">
+									$(document).ready(function() {
+										$('#select-quick_resolution').change( function() {
+											$('#quick_update_type').val('resolution');
+											$('#quick_update_value').val($(this).val());
+											$('#form-quick_update_incident').submit();
+										});
+									});
+								</script>");
+			}
+
+			// Filter status
+			$values = array();
+			$status_table = process_sql ("select * from tincident_status");
+			foreach ($status_table as $status) {
+				$values[$status['id']] = __($status['name']);
+			}
+			$options = array(
+				'name' => 'quick_status',
+				'id' => 'select-quick_status',
+				'title' => __('Status'),
+				'label' => __('Status'),
+				'items' => $values,
+				'selected' => $incident["estado"]
+				);
+			$ui->formAddSelectBox($options);
+			$ui->formAddHtml("<script type=\"text/javascript\">
+								$(document).ready(function() {
+									$('#select-quick_status').change( function() {
+										$('#quick_update_type').val('status');
+										$('#quick_update_value').val($(this).val());
+										$('#form-quick_update_incident').submit();
+									});
+								});
+							</script>");
+
+			// Hidden operation (update+id)
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'operation',
+				'value' => 'quick_update_incident'
+				);
+			$ui->formAddInput($options);
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'quick_update_type',
+				'id' => 'quick_update_type',
+				'value' => ''
+				);
+			$ui->formAddInput($options);
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'quick_update_value',
+				'id' => 'quick_update_value',
+				'value' => ''
+				);
+			$ui->formAddInput($options);
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'id_incident',
+				'value' => $this->id_incident
+				);
+			$ui->formAddInput($options);
+			
+			return $ui->getEndForm();
+
+		} else {
+
+			return "";
+		}
+	}
 	
 	private function getIncidentDetail () {
 		$system = System::getInstance();
@@ -512,6 +717,33 @@ class Incident {
 			}
 			
 			$ui->contentBeginGrid();
+
+
+				// $options = array(
+				// 	'action' => "index.php?page=incidents",
+				// 	'method' => 'POST',
+				// 	'data-ajax' => 'false'
+				// 	);
+				// $ui->beginForm($options);
+				// 	// Filter status
+				// 	$values = array();
+				// 	$values[0] = __('Any');
+				// 	$values[-10] = __('Not closed');
+				// 	$status_table = process_sql ("select * from tincident_status");
+				// 	foreach ($status_table as $status) {
+				// 		$values[$status['id']] = __($status['name']);
+				// 	} 
+					
+				// 	$options = array(
+				// 		'name' => 'filter_status',
+				// 		'title' => __('Status'),
+				// 		'items' => $values,
+				// 		'selected' => $this->filter_status
+				// 		);
+				// 	$ui->formAddSelectBox($options);
+				// $form_html = $ui->getEndForm();
+
+
 				$status_cell = "<div class='detail-element'>
 								".__('Status')."<br>
 								<img src='../images/$status_icon.png'><br>
@@ -689,17 +921,35 @@ class Incident {
 			$ui->contentBeginCollapsible(__('Dates'));
 				$ui->contentCollapsibleAddItem($dates_grid);
 			$dates = $ui->getEndCollapsible("", "b", "c");
+
+			if ($system->getConfig('enabled_ticket_editor')) {
+				$ui->contentBeginCollapsible(__('Quick edit'));
+					$ui->contentCollapsibleAddItem($this->getIncidentQuickForm($incident));
+				$quick_edit = $ui->getEndCollapsible("", "b", "c");
+			} else {
+				$quick_edit = "";
+			}
 			
 			$html = "<h1 class='title'>".$incident['titulo']."</h1>";
 			$html .= $detail;
-			$ui->contentBeginGrid();
+			if (!$description || !$custom_fields) {
+				if ($description) {
+					$html .= $description;
+				}
+				if ($custom_fields) {
+					$html .= $custom_fields;
+				}
+			} else {
+				$ui->contentBeginGrid();
 				$ui->contentGridAddCell($description);
 				$ui->contentGridAddCell($custom_fields);
-			$html .= $ui->getContentEndGrid();
+				$html .= $ui->getContentEndGrid();
+			}
 			$ui->contentBeginGrid();
 				$ui->contentGridAddCell($people);
 				$ui->contentGridAddCell($dates);
 			$html .= $ui->getContentEndGrid();
+			$html .= $quick_edit;
 		}
 		
 		return $html;
@@ -1145,6 +1395,39 @@ class Incident {
 					break;
 				case 'update_incident':
 					$this->showIncidentSimpleForm();
+					break;
+				case 'quick_update_incident':
+					if ($this->id_incident > 0) {
+
+						$quick_update_type = $system->getRequest('quick_update_type', "");
+						$quick_update_value = $system->getRequest('quick_update_value', "");
+
+						if ($quick_update_type && $quick_update_value) {
+
+							$result = $this->quickIncidentUpdate($this->id_incident, $quick_update_type, $quick_update_value);
+							
+							if ($result) {
+								switch ($quick_update_type) {
+									case 'priority':
+										$this->priority = $quick_update_value;
+										break;
+									case 'owner':
+										$this->id_owner = $quick_update_value;
+										break;
+									case 'resolution':
+										$this->priority = $quick_update_value;
+										break;
+									case 'status':
+										$this->status = $quick_update_value;
+										break;
+								}
+								$message = "<h2 class='suc'>".__('Successfully updated')."</h2>";
+							} else {
+								$message = "<h2 class='error'>".__('An error ocurred while updating the incident')."</h2>";
+							}
+						}
+						$this->showIncident($this->tab, $message);
+					}
 					break;
 				case 'update_workunit':
 					if ($this->id_incident > 0) {
