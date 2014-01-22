@@ -1,3 +1,8 @@
+2014-01-22  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_projects.php: recovered some missing functions
+	related to product costs and labour.
+
 2014-01-21  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

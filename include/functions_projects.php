@@ -239,4 +239,101 @@ function projects_update_task_links ($id_task, $links, $type, $delete_previous=t
 	
 	return $ret;
 }
+
+function projects_get_cost_task_by_profile ($id_task, $id_profile=false, $have_cost=false) {
+	if ($id_profile) {
+		if ($have_cost) {
+			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
+					WHERE tworkunit_task.id_task = $id_task 
+					AND id_profile= $id_profile
+					AND have_cost = 1
+					AND tworkunit_task.id_workunit = tworkunit.id 
+					GROUP BY id_profile";
+		} else {
+			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
+					WHERE tworkunit_task.id_task = $id_task 
+					AND id_profile= $id_profile
+					AND tworkunit_task.id_workunit = tworkunit.id 
+					GROUP BY id_profile";
+		}
+	} else { //all profiles
+		if ($have_cost) {
+			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
+					WHERE tworkunit_task.id_task = $id_task 
+					AND have_cost = 1
+					AND tworkunit_task.id_workunit = tworkunit.id 
+					GROUP BY id_profile";
+		} else {
+			$sql = "SELECT id_profile, SUM(duration) as total_duration FROM tworkunit, tworkunit_task
+					WHERE tworkunit_task.id_task = $id_task 
+					AND tworkunit_task.id_workunit = tworkunit.id 
+					GROUP BY id_profile";
+		}
+	}
+
+	$duration = get_db_row_sql ($sql);
+
+	$total = 0;
+	
+	if ($duration != false) {
+			$role_info = get_db_row_sql ("SELECT name, cost FROM trole WHERE id = ".$duration['id_profile']);
+
+			if ($role_info != false) {
+				$cost_per_hour = $role_info['cost'];
+				$profile_name = $role_info['name'];
+				$total = $cost_per_hour * $duration['total_duration'];
+			}
+	}
+	return $total;
+}
+
+function projects_get_project_profiles ($id_project) {
+	
+	$project_profiles = get_db_all_rows_sql ("SELECT distinct(id_role), trole.name 
+			FROM trole_people_project, trole
+			WHERE id_project=$id_project
+			AND trole.id=trole_people_project.id_role");
+			
+	$task_profiles = get_db_all_rows_sql ("SELECT distinct(id_role), trole.name 
+			FROM trole_people_task, trole
+			WHERE trole_people_task.id_task IN (SELECT id FROM ttask WHERE id_project=$id_project)
+			AND trole.id=trole_people_task.id_role");
+	
+	if ($project_profiles == false) {
+		$project_profiles = array();
+	}
+	if ($task_profiles == false) {
+		$task_profiles = array();
+	}
+	
+	$results = array_merge($project_profiles, $task_profiles);
+	
+	if (!empty($results)) {
+		foreach ($results as $result) {
+			$all_profiles[$result['id_role']]['id_role'] = $result['id_role'];
+			$all_profiles[$result['id_role']]['name'] = $result['name'];
+		}
+	}
+	
+	return $all_profiles;
+	
+}
+
+function projects_get_cost_by_profile ($id_project, $have_cost=false) {
+	
+	$total_per_profile = array();
+	
+	$project_profiles = projects_get_project_profiles ($id_project);		
+	$project_tasks = get_db_all_rows_sql("SELECT * FROM ttask WHERE id_project = $id_project");
+	
+	if ($project_profiles) {
+		foreach ($project_profiles as $profile) {
+			foreach ($project_tasks as $task) {
+				$total_per_profile[$profile['name']] += projects_get_cost_task_by_profile ($task['id'], $profile['id_role'], $have_cost);
+			}
+		}
+	}
+	return $total_per_profile;
+}
+
 ?>
