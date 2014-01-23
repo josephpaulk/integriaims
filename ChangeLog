@@ -1,5 +1,16 @@
 2014-01-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/companies/company_detail.php: Now the companies
+	list shows the billings column, than can be ordered, and is
+	possible to filter the results by a min. billing.
+	
+	* include/functions_crm.php: Improved the function
+	"crm_get_companies_list" adding support to having clauses
+	and returning an alias column named "billings" with the
+	summatory of the amount of the infoices of every company.
+
+2014-01-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* mobile/operation/incident.php: Now the incidents quick edit
 	works correctly.
 

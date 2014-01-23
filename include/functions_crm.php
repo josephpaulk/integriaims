@@ -18,19 +18,27 @@ global $config;
 
 enterprise_include('include/functions_crm.php', true);
 
-function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "", $only_name = false) {
+function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "", $only_name = false, $sql_having = "") {
 	global $config;
 	
 	if ($date) {
-		$sql = "SELECT tcompany.* FROM tcompany, tcompany_activity
+		$sql = "SELECT tcompany.*, (SELECT SUM(tinvoice.amount1 + tinvoice.amount2 + tinvoice.amount3 + tinvoice.amount4 + tinvoice.amount5)
+									FROM tinvoice
+									WHERE tcompany.id = tinvoice.id_company) AS billing
+				FROM tcompany, tcompany_activity
 				WHERE tcompany.id = tcompany_activity.id_company $sql_search
 				GROUP BY tcompany.id
+				$sql_having
 				$sql_order_by
 				";
 	} else {
-		$sql = "SELECT tcompany.* FROM tcompany
+		$sql = "SELECT tcompany.*, (SELECT SUM(tinvoice.amount1 + tinvoice.amount2 + tinvoice.amount3 + tinvoice.amount4 + tinvoice.amount5)
+									FROM tinvoice
+									WHERE tcompany.id = tinvoice.id_company) AS billing
+				FROM tcompany
 				WHERE 1=1 $sql_search
 				GROUP BY tcompany.id
+				$sql_having
 				$sql_order_by
 				";
 	}

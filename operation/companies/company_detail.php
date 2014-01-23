@@ -877,8 +877,10 @@ if ((!$id) AND ($new_company == 0)){
 	$search_parent = (int) get_parameter ("search_parent");
 	$search_date_begin = (string) get_parameter("search_date_begin");
 	$search_date_end = (string) get_parameter("search_date_end");
+	$search_min_billing = (float) get_parameter("search_min_billing");
 	$order_by_activity = (string) get_parameter ("order_by_activity");
 	$order_by_company = (string) get_parameter ("order_by_company");
+	$order_by_billing = (string) get_parameter ("order_by_billing");
 	
 	$where_clause = "";
 	$date = false;
@@ -908,9 +910,13 @@ if ((!$id) AND ($new_company == 0)){
 		$date = true;
 	}
 
-	if ($search_date_end != ""){ 
+	if ($search_date_end != "") { 
 		$where_clause .= " AND `date` <= $search_date_end";
 		$date = true;
+	}
+
+	if ($search_min_billing != "") { 
+		$having .= "HAVING `billing` >= $search_min_billing";
 	}
 	
 	// ORDER
@@ -919,29 +925,40 @@ if ((!$id) AND ($new_company == 0)){
 		if ($order_by_activity == "ASC") {
 			$order_by .= "tcompany.last_update ASC";
 			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/arrow_down_orange.png'></a>";
-			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 		} else {
 			$order_by .= "tcompany.last_update DESC";
 			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"ASC\")'><img src='images/arrow_up_orange.png'></a>";
-			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 		}
+		$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+		$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 	} elseif ($order_by_company != "") {
 		if ($order_by_company == "DESC") {
 			$order_by .= "tcompany.name DESC";
 			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/arrow_down_orange.png'></a>";
-			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
 		} else {
 			$order_by .= "tcompany.name ASC";
 			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"DESC\")'><img src='images/arrow_up_orange.png'></a>";
-			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
 		}
+		$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
+		$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+	} elseif ($order_by_billing != "") {
+		if ($order_by_billing == "DESC") {
+			$order_by .= "billing DESC";
+			$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/arrow_down_orange.png'></a>";
+		} else {
+			$order_by .= "billing ASC";
+			$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"DESC\")'><img src='images/arrow_up_orange.png'></a>";
+		}
+		$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
+		$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 	} else {
 		$order_by .= "tcompany.last_update DESC";
 		$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"ASC\")'><img src='images/arrow_up_orange.png'></a>";
 		$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+		$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 	}
 
-	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company";
+	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
 	
 	$table->width = '99%';
 	$table->class = 'search-table-button';
@@ -957,6 +974,7 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][0] = print_select ($companies_name, 'search_parent', $search_parent, '', __('Any'), 0, true, false, false, __('Parent'));
 	$table->data[1][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
+	$table->data[1][3] = print_input_text ('search_min_billing', $search_min_billing, '', 15, 20, true, __('Min. billing'));
 		
 	$buttons = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	// Delete new lines from the string
@@ -971,9 +989,10 @@ if ((!$id) AND ($new_company == 0)){
 	// Input hidden for ORDER
 	print_input_hidden ('order_by_activity', $order_by_activity);
 	print_input_hidden ('order_by_company', $order_by_company);
+	print_input_hidden ('order_by_billing', $order_by_billing);
 	echo '</form>';
 	
-	$companies = crm_get_companies_list($where_clause, $date, $order_by);
+	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
 
 	if ($companies !== false) {
@@ -990,7 +1009,8 @@ if ((!$id) AND ($new_company == 0)){
 		$table->head[4] = __('Manager');
 		$table->head[5] = __('Country');
 		$table->head[6] = __('Last activity') . $activity_order_image;
-		$table->head[7] = __('Delete');
+		$table->head[7] = __('Billing') . $billing_order_image;
+		$table->head[8] = __('Delete');
 		
 		foreach ($companies as $company) {		
 
@@ -1031,15 +1051,20 @@ if ((!$id) AND ($new_company == 0)){
 
 			$data[6] = human_time_comparation ($last_activity);
 
+			if (!$company["billing"]) {
+				$company["billing"] = '0.00';
+			}
+			$data[7] = $company["billing"];// . " " . $config["currency"];
+
 			if ($manage_permission) {
-				$data[7] ='<a href="index.php?sec=customers&
+				$data[8] ='<a href="index.php?sec=customers&
 								sec2=operation/companies/company_detail'.$params.'&
 								delete_company=1&id='.$company['id'].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
 								<img src="images/cross.png"></a>';
 			} else {
-				$data[7] = '';
+				$data[8] = '';
 			}
 			
 			array_push ($table->data, $data);
@@ -1137,12 +1162,21 @@ function changeAction () {
 function changeActivityOrder (order) {
 	$("#hidden-order_by_activity").val(order);
 	$("#hidden-order_by_company").val('');
+	$("#hidden-order_by_billing").val('');
 	$("#company_stats_form").submit();
 }
 
 function changeCompanyOrder (order) {
 	$("#hidden-order_by_company").val(order);
 	$("#hidden-order_by_activity").val('');
+	$("#hidden-order_by_billing").val('');
+	$("#company_stats_form").submit();
+}
+
+function changeBillingOrder (order) {
+	$("#hidden-order_by_billing").val(order);
+	$("#hidden-order_by_activity").val('');
+	$("#hidden-order_by_company").val('');
 	$("#company_stats_form").submit();
 }
 
