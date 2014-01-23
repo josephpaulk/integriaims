@@ -111,6 +111,31 @@ class Incident {
 									$permission = true;
 								}
 								break;
+							case 'quick_update_incident':
+								$quick_update_type = $system->getRequest('quick_update_type', "");
+								switch ($quick_update_type) {
+									case 'priority':
+										if ($system->checkACL('IM') || $system->checkACL('IW')) {
+											$permission = true;
+										}
+										break;
+									case 'owner':
+										if ($system->checkACL('IM') || ($system->checkACL('IW') && $system->getConfig('iw_creator_enabled'))) {
+											$permission = true;
+										}
+										break;
+									case 'resolution':
+										if ($system->checkACL('IM')) {
+											$permission = true;
+										}
+										break;
+									case 'status':
+										if ($system->checkACL('IM') || $system->checkACL('IW')) {
+											$permission = true;
+										}
+										break;
+								}
+								break;
 							case 'insert_workunit':
 								if ($system->checkACL('IW') || $system->checkACL('IM')) {
 									$permission = true;
@@ -550,6 +575,8 @@ class Incident {
 		$has_iw = $system->checkACL("IW");
 		
 		if ($has_iw || $has_im) {
+			include_once ($system->getConfig('homedir')."/include/functions_incidents.php");
+
 			$options = array (
 				'id' => 'form-quick_update_incident',
 				'action' => $action,
@@ -557,26 +584,6 @@ class Incident {
 				'data-ajax' => 'false'
 				);
 			$ui->beginForm($options);
-
-			// Priority
-			$options = array(
-				'name' => 'quick_priority',
-				'id' => 'select-priority',
-				'title' => __('Priority'),
-				'label' => __('Priority'),
-				'items' => get_priorities(),
-				'selected' => $incident["prioridad"]
-				);
-			$ui->formAddSelectBox($options);
-			$ui->formAddHtml("<script type=\"text/javascript\">
-								$(document).ready(function() {
-									$('#select-priority').change( function() {
-										$('#quick_update_type').val('priority');
-										$('#quick_update_value').val($(this).val());
-										$('#form-quick_update_incident').submit();
-									});
-								});
-							</script>");
 
 			//If IW creator enabled flag is enabled, the user can change the creator
 			if ($has_im || ($has_iw && $system->getConfig('iw_creator_enabled'))) {
@@ -594,11 +601,43 @@ class Incident {
 				// List
 				$ui->formAddHtml("<ul id=\"ul-autocomplete_owner\" data-role=\"listview\" data-inset=\"true\"></ul>");
 				// Autocomplete binding
-				$owner_callback = "$('#quick_update_type').val('owner');
-									$('#quick_update_value').val($('#text-id_owner').val());
-									$('#form-quick_update_incident').submit();";
+				$owner_callback = "$.ajax({
+										type: \"POST\",
+										url: \"../ajax.php\",
+										data: \"page=include/ajax/incidents&set_owner=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_user=\" + $('#text-id_owner').val(),
+										dataType: \"text\",
+										success: function (data) {
+											location.reload();
+										}
+									});";
 				$ui->bindMobileAutocomplete("#text-id_owner", "#ul-autocomplete_owner", false, $owner_callback);
 			}
+
+			// Priority
+			$options = array(
+				'name' => 'quick_priority',
+				'id' => 'select-priority',
+				'title' => __('Priority'),
+				'label' => __('Priority'),
+				'items' => get_priorities(),
+				'selected' => $incident["prioridad"]
+				);
+			$ui->formAddSelectBox($options);
+			$ui->formAddHtml("<script type=\"text/javascript\">
+								$(document).ready(function() {
+									$('#select-priority').change( function() {
+										$.ajax({
+											type: \"POST\",
+											url: \"../ajax.php\",
+											data: \"page=include/ajax/incidents&set_priority=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_priority=\" + $(this).val(),
+											dataType: \"text\",
+											success: function (data) {
+												location.reload();
+											}
+										});
+									});
+								});
+							</script>");
 
 			if ($has_im) {
 				// Resolution
@@ -620,9 +659,15 @@ class Incident {
 				$ui->formAddHtml("<script type=\"text/javascript\">
 									$(document).ready(function() {
 										$('#select-quick_resolution').change( function() {
-											$('#quick_update_type').val('resolution');
-											$('#quick_update_value').val($(this).val());
-											$('#form-quick_update_incident').submit();
+											$.ajax({
+												type: \"POST\",
+												url: \"../ajax.php\",
+												data: \"page=include/ajax/incidents&set_resolution=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_resolution=\" + $(this).val(),
+												dataType: \"text\",
+												success: function (data) {
+													location.reload();
+												}
+											});
 										});
 									});
 								</script>");
@@ -646,9 +691,15 @@ class Incident {
 			$ui->formAddHtml("<script type=\"text/javascript\">
 								$(document).ready(function() {
 									$('#select-quick_status').change( function() {
-										$('#quick_update_type').val('status');
-										$('#quick_update_value').val($(this).val());
-										$('#form-quick_update_incident').submit();
+										$.ajax({
+											type: \"POST\",
+											url: \"../ajax.php\",
+											data: \"page=include/ajax/incidents&set_status=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_status=\" + $(this).val(),
+											dataType: \"text\",
+											success: function (data) {
+												location.reload();
+											}
+										});
 									});
 								});
 							</script>");
