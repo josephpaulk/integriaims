@@ -1,3 +1,8 @@
+2014-01-23  Sancho Lerena <slerena@artica.es>
+
+	* functions_api.php: fixed the API call to validate user, was
+	ignoring the disabled status.
+
 2014-01-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/companies/company_detail.php: Now the companies
