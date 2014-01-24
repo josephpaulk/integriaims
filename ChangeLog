@@ -1,3 +1,9 @@
+2014-01-24  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_api.php,
+	include/api.php: Added new api functions to manage some
+	aspect about invoices.
+
 2014-01-23  Sancho Lerena <slerena@artica.es>
 
 	* functions_api.php: fixed the API call to validate user, was

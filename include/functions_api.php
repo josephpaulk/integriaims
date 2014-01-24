@@ -1107,4 +1107,191 @@ function get_num_queued_emails ($return_type, $user, $params) {
 	return $return;
 }
 
+function api_get_last_invoice_id ($return_type) {
+
+	$sql = sprintf("SELECT bill_id FROM tinvoice WHERE invoice_type = 'Submitted' ORDER BY bill_id DESC LIMIT 1");
+
+	$res = process_sql($sql);
+	
+	if ($res) {
+		$res = $res[0]["bill_id"];
+	} else {
+		$res = "";
+	}
+
+	if($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<last_invoice_id>\n";
+		$return .= "<id><![CDATA[".$res."]]></id>\n";
+		$return .= "</last_invoice_id>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $res;
+	}
+	
+	return $return;
+
+}
+
+function api_get_invoice ($return_type, $params) {
+	global $config;
+
+	$bill_id = trim($params);
+
+	$sql = sprintf('SELECT * FROM tinvoice WHERE bill_id = "%s"', $bill_id);
+
+	$res = get_db_row_sql($sql);
+
+	$data = array();
+
+	if ($res) {
+		
+		//Create and CSV array
+		$data = array(
+				"id" => $res["id"],
+				"id_user" => $res["id_user"],
+				"id_task" => $res["id_task"],
+				"id_company" => $res["id_company"],
+				"bill_id" => $res["bill_id"],
+				"concept1" => $res["concept1"],
+				"concept2" => $res["concept2"],
+				"concept3" => $res["concept3"],
+				"concept4" => $res["concept4"],
+				"concept5" => $res["concept5"],
+				"amount1" => $res["amount1"],
+				"amount2" => $res["amount2"],
+				"amount3" => $res["amount3"],
+				"amount4" => $res["amount4"],
+				"amount5" => $res["amount5"],
+				"tax" => $res["tax"],
+				"currency" => $res["currency"],
+				"description" => $res["description"],
+				"id_attachment" => $res["id_attachment"],
+				"locked" => $res["locked"],
+				"locked_id_user" => $res["locked_id_user"],
+				"invoice_create_date" => $res["invoice_create_date"],
+				"invoice_payment_date" => $res["invoice_payment_date"],
+				"status" => $res["status"],
+				"reference" => $res["reference"],
+				"internal_note" => $res["internal_note"],
+				"invoice_type" => $res["invoice_type"],
+				"id_language" => $res["id_language"],
+			);
+	}
+
+	if($return_type == 'xml') {
+
+		$return = "<xml>\n";
+		$return .= "<invoice>\n";
+		
+		foreach ($data as $key => $value) {
+			$return .="<".$key.">";
+			$return .="<![CDATA[".$value."]]>";
+			$return .="</".$key.">\n";
+		}
+
+		$return .= "</invoice>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = array_to_csv($data);
+	}
+
+	return $return;
+}
+
+function api_create_invoice ($return_type, $params) {
+
+	$data = array(
+		"id_user" => trim($params[0]),
+		"id_task" => trim($params[1]),
+		"id_company" => trim($params[2]),
+		"bill_id" => trim($params[3]),
+		"concept1" => trim($params[4]),
+		"amount1" => trim($params[5]),
+		"tax" => trim($params[6]),
+		"currency" => trim($params[7]),
+		"description" => trim($params[8]),
+		"locked" => trim($params[9]),
+		"locked_id_user" => trim($params[10]),
+		"invoice_create_date" => trim($params[11]),
+		"invoice_payment_date" => trim($params[12]),
+		"status" => trim($params[13]),
+		"reference" => trim($params[14]),
+		"internal_note" => trim($params[15]),
+		"invoice_type" => trim($params[16]),
+		"id_language" => trim($params[17])
+	);
+	
+	$res_data = array("status" => 1, "error" => "invoice created");
+
+	#Set some default values
+	if (!$data["status"]) {
+		$data["status"] = "pending";
+	}
+
+	if ($data["invoice_create_date"] == "") {
+		$data["invoice_create_date"] = date('Y-m-d H:i:s', time());
+	}
+
+	if ($data["status"] && !$data["invoice_payment_date"]) {
+		$data["invoice_payment_date"] = date('Y-m-d H:i:s', time());	
+	}
+
+	#Check for empty billing id
+	if (!$data["bill_id"]) {
+		$res_data["status"] = 0;
+		$res_data["error"] = "empty billing id";
+	} else if (!$data["id_company"]) {
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "empty invoice company";
+	} else if (!$data["concept1"]) {
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "empty invoice concept";
+	} else if (!$data["amount1"]) {
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "empty invoice amount";
+	} else if (!$data["currency"]) {
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "empty invoice currency";	
+ 	} else if (!$data["invoice_type"]) {
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "empty invoice type (Submitted or Received)";
+ 	} else {
+
+ 		#Check if billing id exists
+		$invoice_id = get_db_value("id", "tinvoice", "bill_id", $data["bill_id"]);
+
+		if (!$invoice_id) {
+			$res = process_sql_insert("tinvoice", $data);
+			
+			if (!$res) {
+				$res_data["status"] = 0;
+				$res_data["error"] = "error creating invoice";
+			}
+		} else {
+			$res_data["status"] = 0;
+			$res_data["error"] = "invalid billing id";
+		}
+	}
+
+	if($return_type == 'xml') {
+
+		$return = "<xml>\n";
+		$return .= "<invoice>\n";
+		
+		foreach ($res_data as $key => $value) {
+			$return .="<".$key.">";
+			$return .="<![CDATA[".$value."]]>";
+			$return .="</".$key.">\n";
+		}
+
+		$return .= "</invoice>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = array_to_csv($res_data);
+	}
+
+	return $return;	
+}
+
 ?>

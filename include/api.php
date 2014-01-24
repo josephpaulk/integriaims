@@ -190,6 +190,22 @@ switch ($op){
 		echo get_num_queued_emails ($return_type, $user, $params);
 		break;
 	}
+	case "get_last_invoice_id":
+	{
+		echo api_get_last_invoice_id($return_type);
+		break;
+	}
+	case "get_invoice":
+	{
+		echo api_get_invoice($return_type, $params);
+		break;
+	}
+	case "create_invoice":
+	{
+		$params = explode($token, $params);
+		echo api_create_invoice($return_type, $params);
+		break;
+	}	
 	default: 
 	{
 	}
