@@ -906,12 +906,12 @@ if ((!$id) AND ($new_company == 0)){
 	}
 	
 	if ($search_date_begin != "") { 
-		$where_clause .= " AND `date` >= $search_date_begin";
+		$where_clause .= " AND `last_update` >= '$search_date_begin 00:00:00'";
 		$date = true;
 	}
 
 	if ($search_date_end != "") { 
-		$where_clause .= " AND `date` <= $search_date_end";
+		$where_clause .= " AND `last_update` <= '$search_date_end 23:59:59'";
 		$date = true;
 	}
 

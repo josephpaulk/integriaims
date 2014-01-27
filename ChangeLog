@@ -1,5 +1,10 @@
 2014-01-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* oparation/companies/company_detail.php: Fixed the last
+	activity filter of the companies list.
+
+2014-01-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_crm.php: Little change on a function call.
 	
 2014-01-24  Dario Rodriguez <dario@artica.es>
