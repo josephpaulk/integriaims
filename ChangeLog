@@ -1,6 +1,18 @@
 2014-01-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
-	* oparation/companies/company_detail.php: Fixed the last
+	* include/functions_crm.php: Added the functions
+	"crm_get_total_invoiced_graph", "crm_get_managers_invoicing",
+	"crm_get_managers_invoicing_graph" and
+	"crm_print_most_invoicing_managers".
+
+	* operation/companies/company_detail.php: Minor fixes.
+
+	* operation/companies/company_statistics.php: Fixed some errors
+	and added new graphs.
+	
+2014-01-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/companies/company_detail.php: Fixed the last
 	activity filter of the companies list.
 
 2014-01-27  Alejandro Gallardo <alejandro.gallardo@artica.es>

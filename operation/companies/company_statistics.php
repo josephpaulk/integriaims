@@ -45,15 +45,17 @@ $search_manager = (string) get_parameter ("search_manager");
 $search_parent = get_parameter ("search_parent");
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
+$search_min_billing = (float) get_parameter("search_min_billing");
 $order_by_activity = (string) get_parameter ("order_by_activity");
 $order_by_company = (string) get_parameter ("order_by_company");
+$order_by_billing = (string) get_parameter ("order_by_billing");
 
 echo "<div id='incident-search-content'>";
 echo "<h1>".__('Search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/companies/company_detail&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_manager=$search_manager&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
+echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/companies/company_detail&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_manager=$search_manager&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";
@@ -82,15 +84,18 @@ if ($search_parent != 0) {
 }
 
 if ($search_date_begin != "") {
-	$where_clause .= " AND `date` >= $search_date_begin";
+	$where_clause .= " AND `last_update` >= $search_date_begin";
 	$date = true;
 }
 
 if ($search_date_end != "") {
-	$where_clause .= " AND `date` <= $search_date_end";
+	$where_clause .= " AND `last_update` <= $search_date_end";
 	$date = true;
 }
 
+if ($search_min_billing != "") { 
+	$having .= "HAVING `billing` >= $search_min_billing";
+}
 
 $table->class = 'blank';
 $table->width = '99%';
@@ -103,6 +108,9 @@ $table->colspan[0][1] = 2;
 $table->colspan[0][2] = 2;
 $table->colspan[1][0] = 3;
 $table->colspan[1][1] = 3;
+$table->colspan[2][0] = 2;
+$table->colspan[2][1] = 2;
+$table->colspan[2][2] = 2;
 $table->valign[0] = "top";
 $table->valign[1] = "top";
 
@@ -115,7 +123,7 @@ if ($read && $enterprise) {
 
 $companies_country = crm_get_data_country_graph($companies_country);
 
-if ($companies_country !== false) {
+if ($companies_country != false) {
 	$companies_country_content = pie3d_graph ($config['flash_charts'], $companies_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
 	$companies_country_content = __('No data to show');
@@ -129,12 +137,24 @@ $table->data[0][0] = print_container('companies_per_county', __('Companies per c
 $companies_user = crm_get_total_user($where_clause);
 
 if ($read && $enterprise) {
-	$companies_user = crm_get_user_companies($config['id_user'], $companies_user);
+	$companies = array();
+	foreach ($companies_user as $company) {
+		$companies[$company["id_company"]]["id"] = $company["id_company"];
+		$companies[$company["id_company"]]["total_users"] = $company["total_users"];
+	}
+	$companies_user = crm_get_user_companies($config['id_user'], $companies);
+
+	$companies = array();
+	foreach ($companies_user as $company) {
+		$companies[$company["id_company"]] = $company["total_users"];
+	}
+	$companies_user = $company;
+	$company = null;
 }
 
 $companies_user = crm_get_data_user_graph($companies_user);
 
-if ($companies_user !== false) {
+if ($companies_user != false) {
 	$companies_user_content = pie3d_graph ($config['flash_charts'], $companies_user, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
 	$companies_user_content = __('No data to show');
@@ -153,7 +173,7 @@ if ($read && $enterprise) {
 
 $manager_companies = crm_get_data_managers_graph($manager_companies);
 
-if ($owner_companies !== false) {
+if ($manager_companies != false) {
 	$companies_per_manager = pie3d_graph ($config['flash_charts'], $manager_companies, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
 	$companies_per_manager = __('No data to show');
@@ -170,13 +190,67 @@ if ($read && $enterprise) {
 	$companies_invoincing = crm_get_user_companies($config['id_user'], $companies_invoincing);
 }
 
-if ($companies_invoincing !== false) {
-	$companies_invoincing_content = print_table(crm_print_most_invoicing_companies($companies_invoincing), true);
+if ($companies_invoincing != false) {
+	$companies_invoincing_content = '<br>' . print_table(crm_print_most_invoicing_companies($companies_invoincing), true);
 } else {
 	$companies_invoincing_content = '<br><div>' . __('No data to show') . '</div>';
 }
 
 $table->data[1][0] = print_container('top_10_invoicing', __('Top 10 invoicing'), $companies_invoincing_content, 'no', true, '10px');
+
+//INVOICING VOLUME
+// The code below isn't needed meanwhile the $companies_invoices array are filled on the TOP 10 INVOICING 
+// $companies_invoincing = crm_get_total_invoiced($where_clause);
+
+// if ($read && $enterprise) {
+// 	$companies_invoincing = crm_get_user_companies($config['id_user'], $companies_invoincing);
+// }
+
+$companies_invoincing = crm_get_total_invoiced_graph($companies_invoincing);
+
+if ($companies_invoincing != false) {
+	$companies_invoincing_volume = pie3d_graph ($config['flash_charts'], $companies_invoincing, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+} else {
+	$companies_invoincing_volume = __('No data to show');
+}
+
+$companies_invoincing_volume = '<br><div class="pie_frame">' . $companies_invoincing_volume . '</div>';
+
+$table->data[2][0] = print_container('invoicing_volume', __('Invoicing volume'), $companies_invoincing_volume, 'no', true, '10px');
+
+//MANAGERS INVOICING VOLUME
+if ($read && $enterprise) {
+	$managers_invoicing = crm_get_invoicing_managers_acl($config['id_user'], $where_clause);
+} else {
+	$managers_invoicing = crm_get_managers_invoicing($where_clause);
+}
+
+$managers_invoicing = crm_get_managers_invoicing_graph($managers_invoicing);
+
+if ($managers_invoicing != false) {
+	$managers_invoicing_volume = pie3d_graph ($config['flash_charts'], $managers_invoicing, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+} else {
+	$managers_invoicing_volume = __('No data to show');
+}
+
+$managers_invoicing_volume = '<br><div class="pie_frame">' . $managers_invoicing_volume . '</div>';
+
+$table->data[2][1] = print_container('managers_invoicing_volume', __('Managers invoicing volume'), $managers_invoicing_volume, 'no', true, '10px');
+
+//TOP 10 MANAGERS INVOICING
+if ($read && $enterprise) {
+	$managers_invoicing = crm_get_invoicing_managers_acl($config['id_user'], $where_clause);
+} else {
+	$managers_invoicing = crm_get_managers_invoicing($where_clause);
+}
+
+if ($managers_invoicing != false) {
+	$managers_invoicing_content = '<br>' . print_table(crm_print_most_invoicing_managers($managers_invoicing), true);
+} else {
+	$managers_invoicing_content = '<br><div>' . __('No data to show') . '</div>';
+}
+
+$table->data[2][2] = print_container('top_10_managers_invoicing', __('Top 10 managers invoicing'), $managers_invoicing_content, 'no', true, '10px');
 
 //TOP 10 ACTIVITY
 $companies_activity = crm_get_total_activity($where_clause);
@@ -185,8 +259,8 @@ if ($read && $enterprise) {
 	$companies_activity = crm_get_user_companies($config['id_user'], $companies_activity);
 }
 
-if ($companies_activity !== false) {
-	$companies_activity_content = print_table(crm_print_most_activity_companies($companies_activity), true);
+if ($companies_activity != false) {
+	$companies_activity_content = '<br>' . print_table(crm_print_most_activity_companies($companies_activity), true);
 } else {
 	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
 }

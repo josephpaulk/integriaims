@@ -248,16 +248,16 @@ function crm_get_all_invoices ($where_clause, $order_by='') {
 function crm_get_total_invoiced($where_clause = false) {
 	
 	if ($where_clause) {
-		$sql = "SELECT id_company as id, SUM(amount1+amount2+amount3+amount4+amount5) as total_ammount FROM tinvoice
+		$sql = "SELECT id_company as id, SUM(amount1+amount2+amount3+amount4+amount5) as total_amount FROM tinvoice
 			WHERE id_company IN (SELECT id FROM tcompany
 					WHERE 1=1 $where_clause)
 			GROUP BY id_company
-			ORDER BY total_ammount DESC
+			ORDER BY total_amount DESC
 			";
 	} else {
-		$sql = "SELECT id_company as id, SUM(amount1+amount2+amount3+amount4+amount5) as total_ammount FROM tinvoice
+		$sql = "SELECT id_company as id, SUM(amount1+amount2+amount3+amount4+amount5) as total_amount FROM tinvoice
 			GROUP BY id_company
-			ORDER BY total_ammount DESC
+			ORDER BY total_amount DESC
 			";
 	}
 	
@@ -265,6 +265,23 @@ function crm_get_total_invoiced($where_clause = false) {
 	$total = process_sql ($sql);
 
 	return $total;
+}
+
+function crm_get_total_invoiced_graph($companies) {
+
+	if (!$companies) {
+		return false;
+	}
+
+	$companies_invoincing = array();
+	foreach ($companies as $company) {
+		if ($company["total_amount"] > 0) {
+
+			$companies_invoincing[crm_get_company_name ($company['id'])] = $company["total_amount"];
+		}
+	}
+	
+	return $companies_invoincing;
 }
 
 //print top 10 invoices
@@ -288,7 +305,76 @@ function crm_print_most_invoicing_companies($companies) {
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company['id']."'>"
 				. crm_get_company_name ($company['id']) . "</a>";
 
-			$data[1] = $company['total_ammount'];
+			$data[1] = $company['total_amount'];
+
+			array_push ($table->data, $data);
+		}
+		$i++;
+	}
+	
+	return $table;
+}
+
+function crm_get_managers_invoicing ($where_clause = false) {
+
+	if ($where_clause) {
+		$sql = "SELECT id_user AS manager, SUM(amount1+amount2+amount3+amount4+amount5) AS total_amount
+				FROM tinvoice
+				WHERE id_user IN (SELECT tcompany.manager
+								  FROM tcompany
+								  WHERE 1=1 $where_clause)
+				GROUP BY manager
+				ORDER BY total_amount DESC";
+	} else {
+		$sql = "SELECT id_user AS manager, SUM(amount1+amount2+amount3+amount4+amount5) AS total_amount
+				FROM tinvoice
+				GROUP BY manager
+				ORDER BY total_amount DESC";
+	}
+	
+	$total = process_sql ($sql);
+
+	return $total;
+
+}
+
+function crm_get_managers_invoicing_graph($managers) {
+
+	if (!$managers) {
+		return false;
+	}
+
+	$managers_invoincing = array();
+	foreach ($managers as $manager) {
+		if ($manager["total_amount"] > 0) {
+
+			$managers_invoincing[$manager['manager']] = $manager["total_amount"];
+		}
+	}
+	
+	return $managers_invoincing;
+}
+
+//print top 10 manager invoices
+function crm_print_most_invoicing_managers($managers) {
+	
+	$table->id = 'manager_list';
+	$table->class = 'listing';
+	$table->width = '90%';
+	$table->data = array ();
+	$table->head = array ();
+	$table->style = array ();
+	
+	$table->head[0] = __('Manager');
+	$table->head[1] = __('Invoiced');
+	
+	$i = 0;
+	foreach ($managers as $key=>$manager) {
+	
+		if ($i < 10 && $manager['total_amount'] > 0) {
+			$data = array();
+			$data[0] = $manager['manager'];
+			$data[1] = $manager['total_amount'];
 
 			array_push ($table->data, $data);
 		}

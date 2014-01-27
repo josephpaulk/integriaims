@@ -958,7 +958,7 @@ if ((!$id) AND ($new_company == 0)){
 		$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 	}
 
-	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
+	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
 	
 	$table->width = '99%';
 	$table->class = 'search-table-button';
