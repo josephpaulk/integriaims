@@ -48,7 +48,7 @@ function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "",
 		$companies = array();
 	}
 
-	$user_companies = enterprise_hook('crm_get_user_companies', array($config['id_user'], $companies, $only_name, $sql_search, $sql_order_by, $date));
+	$user_companies = enterprise_hook('crm_get_user_companies', array($config['id_user'], $companies, $only_name, $sql_search, $sql_order_by, $date, $sql_having));
 	if ($user_companies !== ENTERPRISE_NOT_HOOK) {
 		$companies = $user_companies;
 	} else {
