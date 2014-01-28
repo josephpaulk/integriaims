@@ -23,8 +23,9 @@ include_once('include/functions_crm.php');
 
 $operation = get_parameter ("operation");
 $id = (int) get_parameter ("id");
+$id_company = get_db_sql ("SELECT id_company FROM tcrm_template WHERE id = $id");
 
-$manage_permission = check_crm_acl ('company', 'cm', false, $id);
+$manage_permission = check_crm_acl ('company', 'cm', false, $id_company);
 
 if (!$manage_permission) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to template manager");

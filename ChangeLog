@@ -1,3 +1,8 @@
+2014-01-28  Sancho Lerena <slerena@artica.es>
+
+	* operation/leads/template_manager.php: Fixed ACL problem due 
+	a bad ID passed to ACL function.
+
 2014-01-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_crm.php: Added the functions
