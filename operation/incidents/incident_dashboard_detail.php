@@ -273,16 +273,21 @@ $incident_users .= "<tr>";
 
 $long_name_creator = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_creator"]));
 $avatar_creator = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident["id_creator"]));
+
 $incident_users .= "<td>";
-$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true) . '</div>';
+$creator = $incident['id_creator'];
+$options["onclick"]="openUserInfo(\"$creator\")";
+$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true, $options) . '</div>';
 $incident_users .= '<span>' . __('Created by') . ':</span><br>' . $long_name_creator;
 $incident_users .= "</td>";
 
 $long_name_asigned = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_usuario"]));
 $avatar_asigned = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident["id_usuario"]));
+$owner = $incident['id_usuario'];
+$options["onclick"]="openUserInfo(\"$owner\")";
 
 $incident_users .= "<td>";
-$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true) . '</div>';
+$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true, $options) . '</div>';
 $incident_users .= '<span>' . __('Owned by') . ':</span><br>' . $long_name_asigned;
 $incident_users .= "</td>";
 
@@ -300,7 +305,9 @@ else if (empty($incident["closed_by"])) {
 }
 else {
 	$long_name_closer = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["closed_by"]));
-	$incident_users .= print_image('images/avatars/' . $avatar_closer  . '.png', true);
+	$closer = $incident['closed_by'];
+	$options["onclick"]="openUserInfo(\"$closer\")";
+	$incident_users .= print_image('images/avatars/' . $avatar_closer  . '.png', true, $options);
 }
 $incident_users .= '</div>';
 $incident_users .= '<span>' . __('Closed by') . ':</span><br>' . $long_name_closer;
@@ -311,7 +318,7 @@ $incident_users .= "</tr>";
 
 $incident_users .= "</table>";
 
-$right_side = print_container('incident_users', __('People'), $incident_users);
+$right_side = print_container('incident_users', __('People').print_help_tip (_('Click on icons for more details'), true), $incident_users);
 
 // Quick editor
 if ($config['enabled_ticket_editor']) {
@@ -694,6 +701,8 @@ if ($clean_output) {
 //parameter to reload page
 print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
 
+//div to show user info
+echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>

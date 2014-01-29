@@ -1,3 +1,29 @@
+2014-01-29  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  integria_dbdata.sql
+	  godmode/setup/incidents_setup.php
+	  include/functions_calendar.php
+	  include/functions_db.php
+	  include/functions_forms.php
+	  include/functions_incidents.php
+	  include/functions_user.php
+	  include/functions_workunits.php
+	  include/ajax/incidents.php
+	  include/js/integria_incidents_search.js
+	  include/styles/calendar.css
+	  operation/incidents/incident_dashboard_detail.php
+	  operation/incidents/incident_search_login.php
+	  operation/incidents/incident_type_field.php
+	  operation/leads/lead_detail.php
+	  operation/projects/project_detail.php
+	  operation/slas/sla_detail.php
+	  operation/user_report/report_annual.php
+	  operation/users/user_spare_workunit.php: Fixed several bugs.
+
+	* operation/user_report/annual_workunits.php
+	  extras/mr/3.sql: Added files.
+
 2014-01-28  Sancho Lerena <slerena@artica.es>
 
 	* operation/leads/template_manager.php: Fixed ACL problem due 

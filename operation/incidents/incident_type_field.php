@@ -60,7 +60,7 @@ $table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type')
 $table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'));
 $table->data[0][3] = print_checkbox ('global', 1, '', true, __('Global field'));
 
-$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
+$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
 
 if ($add_field) {
 	$button = print_input_hidden('add_field', 1, true);

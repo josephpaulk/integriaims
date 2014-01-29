@@ -26,6 +26,8 @@ $set_resolution = get_parameter('set_resolution', 0);
 $set_status = get_parameter('set_status', 0);
 $set_owner = get_parameter('set_owner', 0);
 $set_ticket_score = get_parameter('set_ticket_score', 0);
+$get_user_info = get_parameter('get_user_info', 0);
+$hours_to_dms = get_parameter('hours_to_dms', 0);
 
 if ($get_incidents_search) {
 	
@@ -255,4 +257,90 @@ if ($set_ticket_score) {
 	$sql = "UPDATE tincidencia SET score = $score WHERE id_incidencia = $id_ticket";
 	process_sql ($sql);
 }
+
+if ($get_user_info) {
+
+	$id_user = get_parameter('id_user');
+	
+	$info_user = get_db_row('tusuario', 'id_usuario', $id_user);
+	
+	$total_tickets_opened = get_db_value_sql("SELECT count(id_incidencia) 
+									FROM tincidencia 
+									WHERE estado<>7
+									AND id_creator='$id_user'");
+
+	echo "<table>";
+	echo "<tr>";
+	echo "<td>";
+		print_image('images/avatars/' . $info_user['avatar'] . '.png', false, false);
+	echo "</td>";
+	echo "<td vertical-align='middle'>";
+			echo $info_user['nombre_real'];
+			echo '<br>'.'('.$id_user.')';
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr>";
+	echo "<td align='left'>";
+		echo '<b>'.__('Telephone: ').'</b>'.$info_user['telefono'];
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr align='left'>";
+	echo "<td>";
+		echo '<b>'.__('Email: ').'</b>'.$info_user['direccion'];
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr align='left'>";
+	echo "<td>";
+		echo '<b>'.__('Company: ').'</b>'.get_db_value('name', 'tcompany', 'id', $info_user['id_company']);
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr align='left'>";
+	echo "<td>";
+		echo '<b>'.__('Total tickets opened: ').'</b>'.$total_tickets_opened;
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr align='left'>";
+	echo "<td>";
+		echo '<b>'.__('Comments ').'</b>';
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr align='left'>";
+	echo "<td colspan=2>";
+			echo $info_user['comentarios'];
+	echo "</td>";
+	echo "</tr>";
+
+$user_fields = get_db_all_rows_sql ("SELECT t.label, t2.data 
+							FROM tuser_field t, tuser_field_data t2
+							WHERE t2.id_user='$id_user'
+							AND t.id=t2.id_user_field");
+if ($user_fields) {
+	foreach ($user_fields as $field) {
+		echo "<tr align='left'>";
+		echo "<td>";
+			echo '<b>'.$field["label"].': '.'</b>'.$field['data'];
+		echo "</td>";
+	}
+}
+
+	echo "</table>";
+	return;
+}
+
+if ($hours_to_dms) {
+	
+	$hours = get_parameter('hours');
+
+	$result = incidents_hours_to_dayminseg ($hours);	
+	
+	echo json_encode($result);
+	return;
+}
+
 ?>

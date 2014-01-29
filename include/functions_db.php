@@ -18,6 +18,7 @@ require_once ('functions_ui.php');
 require_once ("functions_inventories.php");
 require_once ("functions_incidents.php");
 require_once ("functions_db.mysql.php");
+require_once ("functions_user.php");
 
 // Load enterprise version functions
 
@@ -1057,8 +1058,10 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 		break;
 	}
 	
-	// Send an email to project manager
-	integria_sendmail (get_user_email($id_manager), $subject, $text);
+	if (!user_is_disabled ($id_manager)) {
+		// Send an email to project manager
+		integria_sendmail (get_user_email($id_manager), $subject, $text);
+	}
 }
 
 // TODO: Make todo mail using a template, like the other mails !
@@ -2673,4 +2676,9 @@ function get_invoice_amount ($id_invoice, $with_taxes = false) {
 	return $sum;
 }
 
+function get_user_work_home ($id_user, $year){
+	global $config;
+	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59' AND tworkunit.work_home=1");
+	return format_numeric ($hours/$config["hours_perday"]);
+}
 ?>

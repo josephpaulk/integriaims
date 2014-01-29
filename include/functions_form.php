@@ -718,7 +718,7 @@ function show_workunit_data ($workunit, $title) {
 	echo "</div>";
 }
 
-function show_workunit_user ($id_workunit, $full = 0) {
+function show_workunit_user ($id_workunit, $full = 0, $show_multiple=true) {
 	global $config;
 	
 	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
@@ -736,6 +736,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	$profile = $row["id_profile"];
 	$public = $row["public"];
 	$locked = $row["locked"];
+	$work_home = $row["work_home"];
 	$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
 	if (! $id_task) {
 		$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
@@ -764,7 +765,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
 	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
-	echo "<tr><td rowspan=3 width='7%'>";
+	echo "<tr><td rowspan=4 width='7%'>";
 	print_user_avatar ($id_user, true);
 
 	echo "<td width='60%'><b>";
@@ -775,11 +776,13 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		echo __('Ticket')." </b> : ";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>$incident_title</A>";
 	}
+	echo "</td>";
 	echo "<td width='13%'>";
 	echo "<b>".__('Duration')."</b>";
-
+	echo "</td>";
 	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
+	echo "</td>";
 	echo "<td>";
 	// Public WU ?
 	echo "<span style='margin-bottom:0px; padding-right:10px;'>";
@@ -788,7 +791,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 	else
 		echo "<img src='images/delete.png' title='".__('Non public Workunit')."' />";
 	echo "</span>";
-	
+	echo "</td></tr>";	
 	echo "<tr>";
 	echo "<td><b>";
 	if ($id_task) {
@@ -798,7 +801,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		echo __('Group')."</b> : ";
 		echo dame_nombre_grupo (get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
 	}
-
+	echo "</td>";
 	echo "<td><b>";
 
 	if ($have_cost != 0){
@@ -809,24 +812,40 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		$cost = __('N/A');
 	echo __('Cost');
 	echo "</b>";
+	echo "</td>";
 	echo "<td>";
 	echo " : ".$cost;
 	echo "</td>";
-	echo "<td>";
-	echo print_checkbox_extended ('op_multiple[]', $id_workunit, false, false, '', '', true);
+	if ($show_multiple) {
+		echo "<td>";
+		echo print_checkbox_extended ('op_multiple[]', $id_workunit, false, false, '', '', true);
+		echo "</td>";
+	}
+	echo "</tr>";
+
+	echo "<tr>";
+	echo "<td><b>";
+	echo __('Work from home');
+	echo "</b>";
+	if ($work_home == 0)
+		$wfh = __('No');
+	else 
+		$wfh = __('Yes');
+	echo " : ".$wfh;
 	echo "</td>";
-
-
+	echo "<td><b>";
+	echo __('Profile');
+	echo "</b></td><td>";
+	echo " : ".get_db_value ("name", "trole", "id", $profile);
+	
 	echo "<tr>";
 	echo "<td>";
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
 	echo " ".__('said on').' '.$timestamp;
-	echo "<td><b>";
-	echo __('Profile');
-	echo "</b></td><td>";
-	echo " : ".get_db_value ("name", "trole", "id", $profile);
+	echo "</td></tr>";
+	
 	echo "</table>";
 	echo "</div>";
 echo "</form>";

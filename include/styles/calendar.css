@@ -197,3 +197,7 @@ table.month_calendar td {
 	padding-left: 8px;
 	padding-right: 8px;
 }
+
+.day_work_home, .day_work_home * {
+	background: #79d8ed !important;
+}

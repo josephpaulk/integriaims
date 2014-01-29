@@ -164,10 +164,10 @@ CREATE TABLE `tsla` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
-  `min_response` int(11) NULL default NULL,
-  `max_response` int(11) NULL default NULL,
+  `min_response` float(11,2) NOT NULL DEFAULT 0.0,
+  `max_response` float(11,2) NOT NULL DEFAULT 0.0,
   `max_incidents` int(11) NULL default NULL,
-  `max_inactivity` int(11) unsigned NULL default 96,
+  `max_inactivity` float(11,2) unsigned NULL default 96.0,
   `enforced` tinyint NULL default 0,
   `five_daysonly` tinyint NULL default 0,
   `time_from` tinyint NULL default 0,
@@ -308,6 +308,7 @@ CREATE TABLE `tworkunit` (
   `id_profile` int(10) unsigned NOT NULL default '0',
   `locked` varchar(125) DEFAULT '',
   `public` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `work_home` tinyint(1) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`),
   KEY `tw_idx_1` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

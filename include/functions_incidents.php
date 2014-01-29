@@ -1245,6 +1245,7 @@ function get_incident_lastworkunit ($id_incident) {
 
 function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
 	global $config;
+	include_once('include/functions_user.php');
 
 	clean_cache_db();
 	
@@ -1281,7 +1282,11 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	else {
 		$company_owner = " (".reset($company_owner).")";
 	}
-  
+
+	//check if user is disabled
+	$owner_disabled = user_is_disabled ($usuario);
+	$creator_disabled = user_is_disabled ($creator);
+	
 	$ticket_score = '';
 	if  (($row["estado"] == 7) AND ($row['score'] == 0)) {
 		$ticket_score =  $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
@@ -1324,7 +1329,6 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
 		break;
 	case 0: // Incident update
-debugPrint("INCIDENT UPDATE", true);
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
 		break;
@@ -1354,15 +1358,12 @@ debugPrint("INCIDENT UPDATE", true);
 
 	$msg_code = "TicketID#$id_inc";
 	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
-	$msg_code .= "/" . $row["id_usuario"];;
-	
-if ((!$config['email_ticket_on_creation_and_closing']) || ($mode == 5) || ($mode == 1)) {
-debugPrint("TIENE Q MANDAR MAIL A CREADOR", true);
-	integria_sendmail ($email_owner, $subject, $text, false, $msg_code, "", 0, "", "X-Integria: no_process");
-}
-else {
-	debugPrint("NO TIENE Q MANDAR MAIL A CREADOR", true);
-}
+	$msg_code .= "/" . $row["id_usuario"];
+		
+	if (((!$config['email_ticket_on_creation_and_closing']) || ($mode == 5) || ($mode == 1)) && (!$owner_disabled)) {
+		integria_sendmail ($email_owner, $subject, $text, false, $msg_code, "", 0, "", "X-Integria: no_process");
+	}
+
     // Send a copy to each address in "email_copy"
 
     //if ($email_copy != ""){
@@ -1374,20 +1375,17 @@ else {
     }
 
 	// Incident owner
-	//if ($email_owner != $email_creator){
-if (($email_owner != $email_creator) AND (!$config['email_ticket_on_creation_and_closing'])){
-//if ((!$config['email_ticket_on_creation_and_closing']) || ($mode == 0) || ($mode == 1)) {
+	if (($email_owner != $email_creator) AND (!$config['email_ticket_on_creation_and_closing']) AND (!$creator_disabled)){
     	$msg_code = "TicketID#$id_inc";
 		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
     	$msg_code .= "/".$row["id_creator"];
 
 		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, "", "", 0, "", "X-Integria: no_process");
-//}
     }	
 	//if ($public == 1){
 	if (($public == 1) AND (!$config['email_ticket_on_creation_and_closing'])){
 		// Send email for all users with workunits for this incident
-		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario AND tusuario.disabled=0";
 		if ($result=mysql_query($sql1)) {
 			while ($row=mysql_fetch_array($result)){
 				if (($row[0] != $email_owner) AND ($row[0] != $email_creator)){
@@ -2073,7 +2071,7 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 }
 
 /*Filters or display result for incident search*/
-function incidents_search_result ($filter, $ajax=false, $return_incidents = false) {
+function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false) {
 	global $config;
 	
 	$params = "";
@@ -2313,8 +2311,11 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	echo "</tbody>";
 	echo "</table>";
 
-	pagination ($count, $url, $offset, true, $aux_text);
+	pagination ($count, $url, $offset, false, $aux_text);
 
+	if ($print_result_count) {
+		echo "<h5>".$count.__(" ticket(s) found")."</h5>";
+	}
 	echo "<br>";	
 }
 
@@ -2354,29 +2355,9 @@ function incidents_get_by_notified_email ($email) {
 }
 
 function incidents_get_score_table ($id_ticket) {
-/*
-	$output = "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id_ticket>";
-	$output .= "<table width=98%><tr>";
-	$output .= "<td>";
-	$output .=  __('Please, help to improve the service and give us a score for the resolution of this ticket. People assigned to this ticket will not view directly your scoring.');
-	$output .= "</td><tr><td>";
-	$output .= "<select name=score>";
-	$output .= "<option value=10>".__("Very good, excellent !")."</option>";
-	$output .= "<option value=8>".__("Good, very satisfied.")."</option>";
-	$output .= "<option value=6>".__("It's ok, but could be better.")."</option>";
-	$output .= "<option value=5>".__("Average. Not bad, not good.")."</option>";
-	$output .= "<option value=4>".__("Bad, you must to better")."</option>";
-	$output .= "<option value=2>".__("Very bad")."</option>";
-	$output .= "<option value=1>".__("Horrible, you need to change it.")."</option>";
-	$output .= "</select>";
-	$output .= "</td><td>";
-	$output .= print_submit_button (__('Score'), 'accion', false, 'class="sub next"', true);
-	$output .= "</td></tr></table>";
-	$output .=  "</form>";
-*/
+
 	$output = '';
-	//$output = "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id>";
-	//$output = "<form  id=form_ticket_score ></form>";
+
 	$output .= "<table width=98% cellpadding=4 cellspacing=4><tr><td>";
 	$output .= "<img src='images/award_star_silver_1.png' width=32>&nbsp;";
 	$output .= "</td><td>";
@@ -2478,5 +2459,26 @@ function incidents_get_type_fields ($search_id_incident_type) {
 	}
 		
 	return $type_fields;
+}
+
+function incidents_hours_to_dayminseg ($hours) {
+	
+	$seconds = $hours * 3600;
+	$days = floor($seconds/86400);
+	$hours = floor(($seconds - ($days * 86400)) / 3600);
+	$minutes = floor(($seconds - ($days * 86400) - ($hours * 3600)) / 60);
+	 
+	$result = "";
+	if ($days > 0) {
+		$result .=$days."d";
+	}
+	if ($hours > 0) {
+		$result .=$hours."h";
+	}
+	if ($minutes > 0) {
+		$result .=$minutes."m";
+	}
+	
+	return $result;
 }
 ?>

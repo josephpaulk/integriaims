@@ -322,9 +322,7 @@ if ($id_project) {
 	foreach ($users_involved as $u) {
 		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
 		if ($avatar != "") {
-			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
-			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 title='".$u."'/>";
-			$people_involved .= "</a>";
+			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 		}
 	}
 	$people_involved .= "</div>";
@@ -423,11 +421,15 @@ if ($id_project) {
 
 echo "</form>";
 
+//div to show user info
+echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";
+
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 
 <script type="text/javascript">
 

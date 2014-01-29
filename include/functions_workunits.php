@@ -58,7 +58,7 @@ function lock_task_workunit ($id_workunit) {
 	return (bool) process_sql ($sql);
 }
 
-function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1) {
+function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1, $work_home = 0) {
 	$fecha = print_mysql_timestamp();
 	$sql = sprintf ('UPDATE tincidencia
 		SET affected_sla_id = 0, actualizacion = "%s"  
@@ -68,8 +68,8 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 	incident_tracking ($incident_id, INCIDENT_WORKUNIT_ADDED);
 	
 	// Add work unit if enabled
-	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public)
-			VALUES ("%s", %.2f, "%s", "%s", %d)', $fecha, $timeused, $user, $wu_text, $public);
+	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public, work_home)
+			VALUES ("%s", %.2f, "%s", "%s", %d, %d)', $fecha, $timeused, $user, $wu_text, $public, $work_home);
 	$id_workunit = process_sql ($sql, "insert_id");
 	$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
 			VALUES (%d, %d)',
@@ -186,6 +186,12 @@ function create_new_table_multiworkunit ($number=false) {
 	echo "</tr>";
 	
 	echo "<tr>";
+	echo "<td>";
+	echo print_checkbox ('work_home_'.$number, 1, false, true, __('Work from home'));
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "<tr>";
 	echo "<td colspan=5>";
 	echo print_textarea ('description_'.$number, 4, 30, false, '', true, __('Description'));
 	echo "</td>";
@@ -208,6 +214,8 @@ function create_single_workunit ($number) {
 	$id_user = (string) get_parameter ("id_username_".$number, $config['id_user']);
 	$wu_user = $id_user;
 	$forward = (bool) get_parameter ("forward_".$number);	
+	$work_home = (bool) get_parameter ("work_home_".$number);
+	
 	// Multi-day assigment
 	if ($split && $duration > $config["hours_perday"]) {
 
@@ -227,10 +235,11 @@ function create_single_workunit ($number) {
 			$total_days_sum += $hours_day;
 			
 			$sql = sprintf ('INSERT INTO tworkunit 
-				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
-				VALUES ("%s", %f, "%s", "%s", %d, %d, %d)',
+				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
+				VALUES ("%s", %f, "%s", "%s", %d, %d, %d, %d)',
 				$current_timestamp, $hours_day, $id_user, $description,
-				$have_cost, $id_profile, $public);
+				$have_cost, $id_profile, $public, $work_home);
+				
 			$id_workunit = process_sql ($sql, 'insert_id');
 			if ($id_workunit !== false) {
 				$sql = sprintf ('INSERT INTO tworkunit_task 
@@ -252,10 +261,10 @@ function create_single_workunit ($number) {
 	} else {
 		// Single day workunit
 		$sql = sprintf ('INSERT INTO tworkunit 
-				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
-				VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d)',
+				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
+				VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d, %d)',
 				$timestamp, $duration, $id_user, $description,
-				$have_cost, $id_profile, $public);
+				$have_cost, $id_profile, $public, $work_home);
 		$id_workunit = process_sql ($sql, 'insert_id');
 		if ($id_workunit !== false) {
 			$sql = sprintf ('INSERT INTO tworkunit_task 
@@ -292,7 +301,8 @@ function create_single_workunit ($number) {
 					"split" => $split,
 					"forward" => $forward,
 					"description" => $description,
-					"result_out" => $result_output);
+					"result_out" => $result_output,
+					"work_home" => $work_home);
 	
 	return $return;
 }
@@ -362,6 +372,16 @@ function print_single_workunit_report ($mwur) {
 	echo print_checkbox_extended ("id", "nothing", $mwur['split'], true, "", "" , true);
 	echo "</td>";	
 	echo "</tr>";
+	
+	echo "<tr>";
+	echo "<td>";
+	echo "<strong>".__("Work from home").": </strong>";
+	echo "</td>";
+	echo "<td>";
+	echo print_checkbox_extended ("id", "nothing", $mwur['work_home'], true, "", "" , true);
+	echo "</td>";	
+	echo "</tr>";
+	
 	echo "<tr>";
 	echo "<td colspan='5'>";
 	echo "<strong>".__("Description")."</strong>";
@@ -389,4 +409,93 @@ function workunits_get_user_role ($id_user, $id_wo) {
 	}
 	
 	return $roles;
+}
+
+function workunits_get_vacation_wu ($id_user, $year) {
+	
+	$holidays_wu = get_db_all_rows_sql ("SELECT tworkunit.* FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
+
+	if ($holidays_wu) {
+		return $holidays_wu;
+	}
+	
+	return array();
+}
+
+function workunits_get_work_home_wu ($id_user, $year) {
+	
+	$work_home_wus = get_db_all_rows_sql ("SELECT tworkunit.* FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59' AND tworkunit.work_home=1");
+
+	if ($work_home_wus) {
+		return $work_home_wus;
+	}
+	
+	return array();
+}
+
+function  workunits_get_worked_project_wu ($id_user, $year) {
+	
+	$work_project_wus = get_db_all_rows_sql ("SELECT tworkunit.* FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
+
+	if ($work_project_wus) {
+		return $work_project_wus;
+	}
+	
+	return array();
+}
+
+function  workunits_get_worked_ticket_wu ($id_user, $year) {
+	
+	$work_ticket_wus = get_db_all_rows_sql ("SELECT tworkunit.* FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
+
+	if ($work_ticket_wus) {
+		return $work_ticket_wus;
+	}
+	
+	return array();
+}
+
+function workunits_print_table_massive_edition($id_task=0, $id_profile=0) {
+	
+	global $config;
+	
+	echo '<br><h2>'.__('Massive operations over selected items').'</h2>';
+	$table = new StdClass;
+	$table->class = 'search-table-button';
+	$table->width = '99%';
+	$table->data = array ();
+	$table->colspan = array ();
+
+	// Profile or role
+	if (dame_admin ($config['id_user'])) {
+		$table->data[0][0] = combo_roles (false, 'id_profile', __('Role'), true, true, '', true);
+	}
+	else {
+		$table->data[0][0] = combo_user_task_profile ($id_task, 'id_profile', $id_profile, false, true, true);
+	}
+
+	// Show task combo if none was given.
+	if (! $id_task) {
+		$table->data[0][1] = combo_task_user_participant ($config['id_user'], true, 0, true, __('Task'), false, false, false, '', true);
+	}
+	else {
+		$table->data[0][1] = combo_task_user_participant ($config['id_user'], true, $id_task, true, __('Task'), false, false, false, true);
+	}
+
+	// Various checkboxes
+
+	$table->data[2][0] = print_checkbox ('have_cost', 1, '', true, __('Have cost'));
+
+	$table->data[2][1] = print_checkbox ('keep_cost', 1, '', true, __('Keep cost'));
+
+	$table->data[3][0] = print_checkbox ('public', 1, '', true, __('Public'));
+
+	$table->data[3][1] = print_checkbox ('keep_public', 1, '', true, __('Keep public'));
+
+	$table->colspan[5][0] = 2;
+	$table->data[5][0] = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+	$table->data[5][0] .= print_submit_button(__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
+
+	print_table ($table);	
+
 }

@@ -238,7 +238,7 @@ echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "inc
 echo "<td style='vertical-align: top;'>".print_select ($ticket_options, "enabled_ticket_editor", $config["enabled_ticket_editor"], '','','',true, 0, true, __('Enable quick edit mode'))."</td>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticketticket type'))."</td>";
+echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticket type'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
 

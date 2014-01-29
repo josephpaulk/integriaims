@@ -76,21 +76,27 @@
 
     echo "<table class='search-table' width=99% style='text-align:right;'><tr><td>";
     echo "<table style='margin: 0px auto; '><tr>";
-    echo "<td style='text-align:right;'>".__('Vacations days');
+    echo "<td style='text-align:right;'>";
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/annual_workunits&operation=show_vacations&year=$year&id_user=$id_user_show'>".__('Vacations days').'</a>';
     echo "<td class='day_vacation day_legend'>";
     echo get_user_vacations ($id_user_show, $year). "</td>";
     
     echo "<td style='text-align:right; padding-left: 35px;'>";
-    echo __('Days worked (projects)');
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/annual_workunits&operation=show_worked_projects&year=$year&id_user=$id_user_show'>".__('Days worked (projects)').'</a>';
     echo "<td class='day_worked_projects day_legend'>";
     echo get_user_worked_days ($id_user_show, $year). "</td>";
 
     echo "<td style='text-align:right; padding-left: 35px;'>";
-    echo __('Days worked (ticket)');
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/annual_workunits&operation=show_worked_tickets&year=$year&id_user=$id_user_show'>".__('Days worked (tickets)').'</a>';
     echo "<td class='day_worked_incidents day_legend' day_legend'>";
     echo get_user_incident_worked_days ($id_user_show, $year). "</td>";
 
-
+	echo "<td style='text-align:right; padding-left: 35px;'>";
+    //echo __('Work from home');
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/annual_workunits&operation=show_work_home&year=$year&id_user=$id_user_show'>".__('Work from home').'</a>';
+    echo "<td class='day_work_home day_legend'>";
+    echo get_user_work_home ($id_user_show, $year). "</td>";
+    
     echo "<td style='text-align:right; padding-left: 35px;'>";
     echo __('Other');
 	echo "<td class='day_other day_legend'>";

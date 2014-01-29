@@ -880,6 +880,8 @@ if ($id || $new) {
 
 	$leads = crm_get_all_leads ($where_clause);
 
+	$count_total_leads = count($leads);
+	
 	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$params", $offset);
 
 	if ($leads !== false) {
@@ -990,6 +992,8 @@ if ($id || $new) {
 
 		}
 		print_table ($table);
+		
+		echo "<h5>".$count_total_leads.__(" lead(s) found")."</h5>";
 	}
 	
 	if ($section_write_permission || $section_manage_permission) {

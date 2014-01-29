@@ -653,6 +653,17 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 				$normal = 4;
             }
 		}
+		
+		// Show SUM workunits for that day (BLUE) - work from home
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' AND tworkunit.work_home=1";
+
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_e = $row[0];
+			if ($workhours_e > 0){
+				$normal = 5;
+            }
+		}
 
 		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";
 
@@ -673,6 +684,10 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
         elseif ($normal == 3) {
             $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
             $calendar .= "<td class='calendar day_worked_incidents'><a href='$mylink' title='$total_wu'>$day</a></td>";
+		}
+		elseif ($normal == 5) {
+			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+			$calendar .= "<td class='calendar day_work_home'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
 		elseif ($normal == 4) {
             $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
@@ -769,6 +784,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
         $workhours_c = 0; 
         $workhours_b = 0;
         $workhours_a = 0;
+		$workhours_e = 0;
 
         // Show SUM workunits for that day (GREEN) - standard wu
         $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
@@ -813,6 +829,17 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
                 $normal = 4;
             }
         }
+        
+        // Show SUM workunits for that day (BLUE) - work from home
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' AND tworkunit.work_home=1";
+
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_e = $row[0];
+			if ($workhours_e > 0){
+				$normal = 5;
+            }
+		}
 
 		if (($day == $today) && ($today_m == $month))
             $border = "border: 2px dotted #707070";
@@ -857,6 +884,10 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
             $class = 'day_other';
             $mydiff++;
 		} 
+		if ($workhours_e > 0){
+            $class = 'day_work_home';
+            $mydiff++;
+		} 
 		
         $calendar .= "<td valign='top' class='$class' style='$border; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
 
@@ -866,6 +897,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
             $calendar .= __("Vacations"). " : ". $workhours_b . "<br>";
             $calendar .= __("Incidents"). " : ". $workhours_c . "<br>";
             $calendar .= __("Non-Justified"). " : ". $workhours_d . "<br>";
+            $calendar .= __("Work from home"). " : ". $workhours_e . "<br>";
             $calendar .= "</a>";
         }
         $calendar .= "<br><br>";

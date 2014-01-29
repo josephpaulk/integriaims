@@ -41,10 +41,10 @@ $delete_sla = (bool) get_parameter ('delete_sla');
 if ($create_sla) {
 	$name = (string) get_parameter ('name');
 	$description = (string) get_parameter ('description');
-	$min_response = (int) get_parameter ('min_response');
-	$max_response = (int) get_parameter ('max_response');
+	$min_response = (float) get_parameter ('min_response');
+	$max_response = (float) get_parameter ('max_response');
 	$max_incidents = (int) get_parameter ('max_incidents');
-	$max_inactivity = (int) get_parameter ('max_inactivity');
+	$max_inactivity = (float) get_parameter ('max_inactivity');
 	$id_sla_base = (int) get_parameter ('id_sla_base');
 	$enforced = (int) get_parameter ('enforced');
 
@@ -52,10 +52,10 @@ if ($create_sla) {
     $time_from = (int) get_parameter ("time_from", 0);
     $time_to = (int) get_parameter ("time_to", 0);
     $no_holidays = (int) get_parameter ('no_holidays', 0);
-   
+
 	$sql = sprintf ('INSERT INTO tsla (`name`, `description`, id_sla_base,
 		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity, no_holidays)
-		VALUE ("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)',
+		VALUE ("%s", "%s", %d, %.2f, %.2f, %d, %d, %d, %d, %d, %.2f, %d)',
 		$name, $description, $id_sla_base, $min_response,
 		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to, $max_inactivity, $no_holidays);
 
@@ -76,23 +76,24 @@ if ($create_sla) {
 if ($update_sla) {
 	$name = (string) get_parameter ('name');
 	$description = (string) get_parameter ('description');
-	$min_response = (int) get_parameter ('min_response');
-	$max_response = (int) get_parameter ('max_response');
+	$min_response = (float) get_parameter ('min_response');
+	$max_response = (float) get_parameter ('max_response');
+
 	$max_incidents = (int) get_parameter ('max_incidents');
 	$id_sla_base = (int) get_parameter ('id_sla_base');
 	$enforced = (int) get_parameter ('enforced');
     $five_daysonly = (int) get_parameter ("five_daysonly", 0);
     $time_from = (int) get_parameter ("time_from", 0);
     $time_to = (int) get_parameter ("time_to", 0);
-    $max_inactivity = (int) get_parameter ('max_inactivity');
+    $max_inactivity = (float) get_parameter ('max_inactivity');
     $no_holidays = (int) get_parameter ('no_holidays', 0);
-	
-	$sql = sprintf ('UPDATE tsla SET max_inactivity = %d, enforced = %d, description = "%s",
-		name = "%s", max_incidents = %d, min_response = %d, max_response = %d,
+
+	$sql = sprintf ('UPDATE tsla SET max_inactivity = %.2f, enforced = %d, description = "%s",
+		name = "%s", max_incidents = %d, min_response = %.2f, max_response = %.2f,
 		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d, no_holidays = %d WHERE id = %d', $max_inactivity, 
 		$enforced, $description, $name, $max_incidents, $min_response,
 		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $no_holidays, $id);
-	
+
 	$result = process_sql ($sql);
 	if (! $result)
 		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
@@ -121,10 +122,10 @@ if ($id || $new_sla) {
 	if ($new_sla) {
 		$name = "";
 		$description = "";
-		$min_response = 48;
-		$max_response = 480;
+		$min_response = 48.0;
+		$max_response = 480.0;
 		$max_incidents = 10;
-		$max_inactivity = 96;
+		$max_inactivity = 96.0;
 		$id_sla_base = 0;
 		$enforced = 1;
         $five_daysonly = 1;
@@ -160,18 +161,28 @@ if ($id || $new_sla) {
 	
 	$table->data[0][2] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
 		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
-	
-	$table->data[1][0] = print_input_text ('min_response', $min_response, '',
-		5, 100, true, __('Max. response time (in hours)'));
 
-	$table->data[1][1] = print_input_text ('max_response', $max_response, '',
-		5, 100, true, __('Max. resolution time (in hours)'));
+	$table->data[1][0] = print_label(__('Max. response time (in hours)'), '', 'text', true);
+	$table->data[1][0] .= '&nbsp;'."<input type='text' name='min_response' id='text-min_response' value='$min_response' size='5' maxlenght='100' onChange='hours_to_dms(\"min\")'>";
+		
+	$min_response_time = incidents_hours_to_dayminseg ($min_response);
+	$table->data[1][0] .= '&nbsp;'.print_input_text ('min_response_time', $min_response_time, '',
+		7, 100, true, '', true);
+
+	$table->data[1][1] = print_label(__('Max. resolution time (in hours)'), '', 'text', true);
+	$table->data[1][1] .= '&nbsp;'."<input type='text' name='max_response' id='text-max_response' value='$max_response' size='5' maxlenght='100' onChange='hours_to_dms(\"max\")'>";
+	$max_response_time = incidents_hours_to_dayminseg ($max_response);
+	$table->data[1][1] .= '&nbsp;'.print_input_text ('max_response_time', $max_response_time, '',
+		7, 100, true, '', true);
 
 	$table->data[1][2] = print_input_text ("max_incidents", $max_incidents, '',
 		5, 100, true, __('Max. tickets at the same time'));
-	
-	$table->data[1][3] = print_input_text ("max_inactivity", $max_inactivity, '',
-		5, 100, true, __('Max. ticket inactivity'));
+
+	$table->data[1][3] = print_label(__('Max. ticket inactivity (in hours)'), '', 'text', true);
+	$table->data[1][3] .= '&nbsp;'."<input type='text' name='max_inactivity' id='text-max_inactivity' value='$max_inactivity' size='5' maxlenght='100' onChange='hours_to_dms(\"inactivity\")'>";
+	$max_inactivity_time = incidents_hours_to_dayminseg ($max_inactivity);
+	$table->data[1][3] .= '&nbsp;'.print_input_text ('max_inactivity_time', $max_inactivity_time, '',
+		7, 100, true, '', true);
 		
 
 	$table->data[2][0] = print_input_text ('time_from', $time_from, '',
@@ -250,10 +261,10 @@ if ($id || $new_sla) {
 			$data = array ();
 			
 			$data[0] = "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail&id=".$sla['id']."'>".$sla['name']."</a>";
-			$data[1] = $sla['min_response'].' '.__('Hours');
-			$data[2] = $sla['max_response'].' '.__('Hours');
+			$data[1] = incidents_hours_to_dayminseg($sla['min_response']);
+			$data[2] = incidents_hours_to_dayminseg($sla['max_response']);
 			$data[3] = $sla['max_incidents'];
-			$data[4] = $sla['max_inactivity'];
+			$data[4] = incidents_hours_to_dayminseg($sla['max_inactivity']);
 			
 			if ($sla['enforced'] == 1)
 				$data[5] = __("Yes");
@@ -283,6 +294,7 @@ if ($id || $new_sla) {
 
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 
 <script  type="text/javascript">
 	

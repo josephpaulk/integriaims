@@ -81,6 +81,7 @@ $id_project = (int) get_parameter ("id_project");
 $id_workunit = (int) get_parameter ('id_workunit');
 $id_task = (int) get_parameter ("id_task",0);
 $id_incident = (int) get_parameter ("id_incident", 0);
+$work_home = get_parameter ("work_home", 0);
 
 if ($id_task == 0){
     // Try to get id_task from tworkunit_task
@@ -151,6 +152,7 @@ if ($id_workunit) {
 	$public = (bool) $workunit['public'];
 	$now_date = substr ($now, 0, 10);
 	$now_time = substr ($now, 10, 8);
+	$work_home = $workunit['work_home'];
 	
 	if ($id_user != $config["id_user"] && ! project_manager_check ($id_project) ) {
 		if (!give_acl($config["id_user"], 0, "UM")){
@@ -169,6 +171,7 @@ if ($id_workunit) {
 	$have_cost = false;
 	$public = true;
 	$id_profile = "";
+	$work_home = false;
 	// $now is passed as parameter or get current time by default
 }
 
@@ -184,6 +187,7 @@ if ($operation == 'insert') {
 	$split = (bool) get_parameter ("split");
 	$id_user = (string) get_parameter ("id_username", $config['id_user']);
 	$wu_user = $id_user;
+	$work_home = get_parameter ("work_home");
 	
 	// Multi-day assigment
 	if ($split && $duration > $config["hours_perday"]) {
@@ -205,9 +209,10 @@ if ($operation == 'insert') {
 			
 			$sql = sprintf ('INSERT INTO tworkunit 
 				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
-				VALUES ("%s", %f, "%s", "%s", %d, %d, %d)',
+				VALUES ("%s", %f, "%s", "%s", %d, %d, %d, %d)',
 				$current_timestamp, $hours_day, $id_user, $description,
-				$have_cost, $id_profile, $public);
+				$have_cost, $id_profile, $public, $work_home);
+				
 			$id_workunit = process_sql ($sql, 'insert_id');
 			if ($id_workunit !== false) {
 				$sql = sprintf ('INSERT INTO tworkunit_task 
@@ -229,10 +234,10 @@ if ($operation == 'insert') {
 	} else {
 		// Single day workunit
 		$sql = sprintf ('INSERT INTO tworkunit 
-				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
-				VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d)',
+				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
+				VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d, %d)',
 				$timestamp, $duration, $id_user, $description,
-				$have_cost, $id_profile, $public);
+				$have_cost, $id_profile, $public, $work_home);
 		$id_workunit = process_sql ($sql, 'insert_id');
 		if ($id_workunit !== false) {
 			$sql = sprintf ('INSERT INTO tworkunit_task 
@@ -289,14 +294,16 @@ if ($operation == 'update') {
 	$public = (bool) get_parameter ("public");
 	$wu_user = (string) get_parameter ("id_username", $config['id_user']);
 	$id_task = (int) get_parameter ("id_task",0);
+	$work_home = get_parameter ("work_home");
 	
 	// UPDATE WORKUNIT
 	$sql = sprintf ('UPDATE tworkunit
 		SET timestamp = "%s", duration = %.2f, description = "%s",
-		have_cost = %d, id_profile = %d, public = %d, id_user = "%s" 
+		have_cost = %d, id_profile = %d, public = %d, id_user = "%s",
+		work_home = %d 
 		WHERE id = %d',
 		$timestamp, $duration, $description, $have_cost,
-		$id_profile, $public, $wu_user, $id_workunit);
+		$id_profile, $public, $wu_user, $work_home, $id_workunit);
 	$result = process_sql ($sql);
 
 	if ($id_task !=0) {
@@ -414,7 +421,7 @@ $table->class = 'search-table-button';
 $table->width = '99%';
 $table->data = array ();
 $table->colspan = array ();
-$table->colspan[5][0] = 3;
+$table->colspan[6][0] = 3;
 
 if (!isset($start_date))
 	$start_date = substr ($now, 0, 10);
@@ -478,7 +485,10 @@ if (! $id_workunit) {
 	$table->data[4][1] .= print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'),
 		true);
 }
-$table->data[5][0] = print_textarea ('description', 10, 30, $description,
+
+$table->data[5][0] = print_checkbox ('work_home', 1, $work_home, true, __('Work from home'));
+
+$table->data[6][0] = print_textarea ('description', 10, 30, $description,
 	'', true, __('Description'));
 	
 if ($id_workunit) {
@@ -493,8 +503,8 @@ else {
 }
 $button .= print_input_hidden ('timestamp', $now, true);
 
-$table->data[6][0] = $button;
-$table->colspan[6][0] = 2;
+$table->data[7][0] = $button;
+$table->colspan[7][0] = 2;
 
 echo '<form id="single_task_form" method="post" onsubmit="return validate_single_form()">';
 print_table ($table);

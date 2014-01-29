@@ -200,4 +200,15 @@ function user_delete_user($id_user) {
 	
 	return;
 }
+
+function user_is_disabled ($id_user) {
+	
+	$disabled = get_db_value('disabled', 'tusuario', 'id_usuario', $id_user);
+	
+	if ($disabled == 1) {
+		return true;
+	}
+	
+	return false;
+}
 ?>

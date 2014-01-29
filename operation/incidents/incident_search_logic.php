@@ -223,7 +223,7 @@ echo '</select>';
 echo '</form>';
 echo '</div>';
 
-incidents_search_result($filter);
+incidents_search_result($filter, false, false, true);
 
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="stats_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=stats" style="clear: both">';

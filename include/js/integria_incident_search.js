@@ -926,3 +926,62 @@ function setTicketScore(id_ticket, score) {
 		}
 	});	
 }
+
+function openUserInfo(id_user) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&get_user_info=1&id_user="+id_user,
+		dataType: "html",
+		success: function(data){
+			
+			$("#user_info_window").html (data);
+			$("#user_info_window").show ();
+			
+			$("#user_info_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 420,
+					height: 400
+				});
+			$("#user_info_window").dialog('open');
+
+		}
+	});
+}
+
+function hours_to_dms(type) {
+	
+	if (type == 'min') {
+		var hours = $("#text-min_response").val();
+	}
+	if (type == 'max') {
+		var hours = $("#text-max_response").val();
+	}
+	if (type == 'inactivity') {
+		var hours = $("#text-max_inactivity").val();
+	}
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&hours_to_dms=1&hours="+ hours,
+		dataType: "json",
+		success: function (data) {
+			if (type == 'min') {
+				$('#text-min_response_time').val(data);
+			}
+			if (type == 'max') {
+				$('#text-max_response_time').val(data);
+			}
+			if (type == 'inactivity') {
+				$('#text-max_inactivity_time').val(data);
+			}
+		}
+	});	
+}
