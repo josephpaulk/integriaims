@@ -841,12 +841,12 @@ if (!$create_incident){
 if ($create_incident) {
 	$button = print_input_hidden ('action', 'insert', true);
 	if (give_acl ($config["id_user"], 0, "IW")) {
-		$button .= print_submit_button (__('Create'), 'action', false, 'class="sub create"', true);
+		$button .= print_submit_button (__('Create'), 'action2', false, 'class="sub create"', true);
 	}
 } else {
 	$button = print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
-		$button .= print_submit_button (__('Update'), 'action', false, 'class="sub upd"', true);
+		$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);
 }
 
 $table->colspan['button'][0] = 4;

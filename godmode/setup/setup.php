@@ -137,8 +137,10 @@ $table->data = array ();
 $incident_reporter_options[0] = __('Disabled');
 $incident_reporter_options[1] = __('Enabled');
 
+$language_config = get_db_value('value', 'tconfig', 'token', 'language_code');
+
 $table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'language_code', $config['language_code'], '', '', '', true, false, false,
+	'language_code', $language_config, '', '', '', true, false, false,
 	__('Language'));
 
 $table->data[0][1] = print_input_text ("sitename", $config["sitename"], '',

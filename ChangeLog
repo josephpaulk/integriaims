@@ -1,3 +1,8 @@
+2014-01-30  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/setup/setup.php
+	  operation/incidents/incident_detail.php: Fixed bugs.
+
 2014-01-29  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
