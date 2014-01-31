@@ -1,5 +1,10 @@
 2014-01-31  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/styles/integria.css
+	  operation/main_menu.php: Fixed bugs.
+
+2014-01-31  Vanessa Gil <vanessa.gil@artica.es>
+
 	* index.php
 	  general/header.php
 	  include/functions.php

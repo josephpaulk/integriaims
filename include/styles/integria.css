@@ -510,6 +510,7 @@ div.submenu li {
 div.submenu li a:hover {
 	background: none;
 	font-weight: bold;
+	font-size: 12px;
 }
 
 

@@ -35,7 +35,7 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 // Support submenus ACLs
 $incidents_acl = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
 $kb_acl = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
-$download_acl = give_acl($config["id_user"], 0, "KR");
+$download_acl = give_acl($config["id_user"], 0, "FRR");
 
 // Support submenus links
 if($simple_mode) {
