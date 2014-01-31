@@ -1,3 +1,15 @@
+2014-01-31  Vanessa Gil <vanessa.gil@artica.es>
+
+	* index.php
+	  general/header.php
+	  include/functions.php
+	  include/functions_crm.php
+	  include/ajax/header.php
+	  include/js/integria_header.js
+	  operation/side_menu.php: Fixed bugs.
+
+	* operation/newsletter/manage_address.php: Added file.
+
 2014-01-30  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/setup.php

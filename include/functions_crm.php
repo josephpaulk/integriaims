@@ -1028,4 +1028,39 @@ function crm_get_amount_total_invoice($field_invoice) {
 	return $total;
 }
 
+function crm_merge_newsletter_address ($id_newsletter_source, $id_newsletter_destination) {
+	
+	$sql = "SELECT * FROM tnewsletter_address
+		WHERE email NOT IN (
+			SELECT email FROM tnewsletter_address
+			WHERE id_newsletter=$id_newsletter_destination
+			)
+		AND status=0 AND id_newsletter=$id_newsletter_source";
+	
+	$address_source = get_db_all_rows_sql($sql);
+	$now = date ("Y-m-d H:i:s");
+	$success = 0;
+
+	if ($address_source) {
+		$total_address = count($address_source);
+		foreach ($address_source as $address) {
+			
+			$values['id_newsletter'] = $id_newsletter_destination;
+			$values['name'] = $address['name'];
+			$values['email'] = $address['email'];
+			$values['status'] = $address['status'];
+			$values['datetime'] = $now;
+			
+			$result = process_sql_insert('tnewsletter_address', $values);
+			
+			if ($result) {
+				$success = $success+1;
+			}
+		}
+	} else {
+		return '<h3 class="error">'.__('No address to import').'</h3>';
+	}
+	
+	return '<h3 class="suc">'.$success.' of '.$total_address.'&nbsp;'.__('addresses have been imported').'</h3>';
+}
 ?>

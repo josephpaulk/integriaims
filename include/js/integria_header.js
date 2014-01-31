@@ -2,6 +2,9 @@
 // Show the modal window of alerts
 function openAlerts() {
 	update_manager_msg = $("#hidden-result_check_update_manager").val();
+	if (update_manager_msg == undefined) {
+		update_manager_msg = '';
+	}
 
 	$.ajax({
 		type: "POST",

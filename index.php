@@ -447,30 +447,7 @@ if ($clean_output == 0) {
 	
         <td valign=top>
 			<div id="main">
-			<?php
-				
-				// Check for problems
-				if (!is_writable("attachment")){
-					echo "<h3 class='error'>".__('Attachment directory is not writtable by HTTP Server')."</h3>";
-					echo '<p>';
-					echo __('Please check that {HOMEDIR}/attachment directory has write rights for HTTP server');
-					echo "</p>";
-				}
-				
-				if (!is_writable("attachment/tmp")){
-					echo "<h3 class='error'>".__('Temporal directory is not writtable by HTTP Server')."</h3>";
-					echo '<p>';
-					echo __('Please check that {HOMEDIR}/attachment/tmp directory has write rights for HTTP server');
-					echo "</p>";
-				}
-				
-				if (file_exists("extras/mr") && !is_writable("extras/mr")){
-					echo "<h3 class='error'>".__('Minor releases directory is not writtable by HTTP Server')."</h3>";
-					echo '<p>';
-					echo __('Please check that {HOMEDIR}/extras/mr directory has write rights for HTTP server');
-					echo "</p>";
-				}
-				
+			<?php			
 				// Open a dialog if the database schema update has returned messages
 				if ($minor_release_message) {
 					echo "<div class= 'dialog ui-dialog-content' title='".__("Minor release update")."' id='mr_dialog'>$minor_release_message</div>";

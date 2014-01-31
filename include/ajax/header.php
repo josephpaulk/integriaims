@@ -33,6 +33,7 @@ if ($get_alerts) {
 	$queued_emails = check_email_queue (true);
 	$update_manager_msg = get_parameter ('update_manager_msg', '');
 	$check_alarm_calendar = check_alarm_calendar();
+	$check_directory_permissions = check_directory_permissions();
 	
 	$alerts = '';
 	
@@ -67,6 +68,22 @@ if ($get_alerts) {
 				$alarm_calendar_msg .= $msg;
 			}
 			$alerts .= $alarm_calendar_msg;
+		}
+	}
+	if ($check_directory_permissions) {
+		$attachment = check_writable_attachment();
+		if ($attachment != '') {
+			$alerts .= ui_print_message($attachment);
+		}
+		
+		$tmp = check_writable_tmp();
+		if ($attachment != '') {
+			$alerts .= ui_print_message($tmp);
+		}
+		
+		$mr = check_writable_mr();
+		if ($mr != '') {
+			$alerts .= ui_print_message($mr);
 		}
 	}
 	

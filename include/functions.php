@@ -1311,4 +1311,53 @@ function check_alarm_calendar ($count=true, $id=false) {
 
 	return $alarms;
 }
+
+function check_directory_permissions() {	
+	if (!is_writable("attachment")){
+		return true;
+	}
+	if (!is_writable("attachment/tmp")){	
+		return true;
+	}	
+	if (file_exists("extras/mr") && !is_writable("extras/mr")){
+		return true;
+	}	
+	return false;
+}
+
+function check_writable_attachment() {
+	$output = '';
+	
+	if (!is_writable("attachment")) {
+		$output .= __('Attachment directory is not writtable by HTTP Server');
+		$output .= '<p>';
+		$output .= __('Please check that {HOMEDIR}/attachment directory has write rights for HTTP server');
+		$output .= '</p>';
+	}
+	return $output;
+}
+
+function check_writable_tmp() {
+	$output = '';
+	
+	if (!is_writable("attachment/tmp")){
+		$output .= __('Temporal directory is not writtable by HTTP Server');
+		$output .= '<p>';
+		$output .= __('Please check that {HOMEDIR}/attachment/tmp directory has write rights for HTTP server');
+		$output .= '</p>';
+
+	}
+	return $output;
+}
+
+function check_writable_mr() {
+	$output = '';
+	if (file_exists("extras/mr") && !is_writable("extras/mr")){
+		$output .= __('Minor releases directory is not writtable by HTTP Server');
+		$output .= '<p>';
+		$output .= __('Please check that {HOMEDIR}/extras/mr directory has write rights for HTTP server');
+		$output .= '</p>';
+	}
+	return $output;
+}
 ?>

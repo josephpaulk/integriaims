@@ -736,6 +736,10 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/address_creation&create=1'>".__('New address')."</a>";
 	echo "</li>";
 	
+	echo "<li style='margin-left: 15px; font-size: 10px;'>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/manage_address&create=1'>".__('Manage address')."</a>";
+	echo "</li>";
+	
 	if (($sec2=="operation/newsletter/queue_manager") AND (!isset($_GET["create"])))
 		echo "<li id='sidesel'>";
 	else
