@@ -294,7 +294,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_type_field` WRITE;
 /*!40000 ALTER TABLE `tincident_type_field` DISABLE KEYS */;
-INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0),(2,1,'Base&#x20;OS','text','',0),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0),(4,1,'Expected&#x20;behaviour','textarea','',0);
+INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0, NULL),(2,1,'Base&#x20;OS','text','',0, NULL),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0, NULL),(4,1,'Expected&#x20;behaviour','textarea','',0, NULL);
 /*!40000 ALTER TABLE `tincident_type_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -766,7 +766,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tworkunit` WRITE;
 /*!40000 ALTER TABLE `tworkunit` DISABLE KEYS */;
-INSERT INTO `tworkunit` VALUES (1,'2013-02-12 09:53:45',0.25,'demo','I&#039;ve&#x20;not&#x20;entered&#x20;yet&#x20;in&#x20;this,&#x20;please,&#x20;give&#x20;me&#x20;a&#x20;few&#x20;days&#x20;to&#x20;do&#x20;more&#x20;tests.',0,0,'',1),(2,'2013-02-12 00:00:00',4.00,'admin','lot&#039;s&#x20;of&#x20;work&#x20;done&#x20;today&#x20;:&#41;',0,0,'',1),(3,'2013-04-01 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(4,'2013-04-02 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(5,'2013-04-03 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(6,'2013-04-04 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(7,'2013-04-05 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(8,'2013-02-20 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(9,'2013-02-21 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(10,'2013-02-22 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(11,'2013-02-25 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(12,'2013-02-26 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1);
+INSERT INTO `tworkunit` VALUES (1,'2013-02-12 09:53:45',0.25,'demo','I&#039;ve&#x20;not&#x20;entered&#x20;yet&#x20;in&#x20;this,&#x20;please,&#x20;give&#x20;me&#x20;a&#x20;few&#x20;days&#x20;to&#x20;do&#x20;more&#x20;tests.',0,0,'',1,0),(2,'2013-02-12 00:00:00',4.00,'admin','lot&#039;s&#x20;of&#x20;work&#x20;done&#x20;today&#x20;:&#41;',0,0,'',1,0),(3,'2013-04-01 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1,0),(4,'2013-04-02 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1,0),(5,'2013-04-03 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1,0),(6,'2013-04-04 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1,0),(7,'2013-04-05 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1,0),(8,'2013-02-20 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1,0),(9,'2013-02-21 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1,0),(10,'2013-02-22 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1,0),(11,'2013-02-25 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1,0),(12,'2013-02-26 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1,0);
 /*!40000 ALTER TABLE `tworkunit` ENABLE KEYS */;
 UNLOCK TABLES;
 
