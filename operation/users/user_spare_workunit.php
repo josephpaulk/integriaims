@@ -68,7 +68,8 @@ if (defined ('AJAX')) {
 	
 	if (get_parameter("get_new_mult_wu")) {
 		$number = get_parameter ("next");
-		create_new_table_multiworkunit($number);	
+		$date = get_parameter("given_date");
+		create_new_table_multiworkunit($number, $date);	
 		
 		return;
 	}
@@ -767,9 +768,10 @@ $(document).ready (function () {
 		var valid_form = validate_multiple_form();
 		
 		if (valid_form) {
-			
+		
 			var number_wu = $('#wu_1').siblings().length;
-			
+			var givendate = $("#text-start_date_1").val();
+
 			values = Array ();
 			values.push ({name: "page",
 						value: "operation/users/user_spare_workunit"});
@@ -777,6 +779,8 @@ $(document).ready (function () {
 				value: 1});
 			values.push ({name: "next",
 				value: number_wu});
+			values.push ({name: "given_date",
+				value: givendate});
 			jQuery.get ("ajax.php",
 				values,
 				function (data, status) {

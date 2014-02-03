@@ -91,7 +91,7 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 	return true;
 }
 
-function create_new_table_multiworkunit ($number=false) {
+function create_new_table_multiworkunit ($number=false, $date=false) {
 	global $config;
 	
 	//If not number return empty
@@ -100,7 +100,11 @@ function create_new_table_multiworkunit ($number=false) {
 	}
 	
 	//Set several global variables
-	$now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
+	if ($date) {
+		$now = $date;
+	} else {
+		$now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
+	}
 	$start_date = substr ($now, 0, 10);
 	$wu_user = $config["id_user"];	
 	

@@ -33,6 +33,10 @@ function openAlerts() {
 	});
 }
 
+function closeAlertDialog() {
+	$("#alert_window").dialog('close');
+}
+
 
 
 

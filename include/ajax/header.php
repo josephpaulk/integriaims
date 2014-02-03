@@ -38,23 +38,19 @@ if ($get_alerts) {
 	$alerts = '';
 	
 	if ($minutes_last_exec == '') {
-		$alerts .= ui_print_error_message(__('Crontask not installed. Please check documentation!'), '', '', 'h4', false);
+		$alerts .= '<h4>'.__('Crontask not installed. Please check documentation!').'</h4>';
 	}
 	if (!$check_cron) {
-		$alerts .= ui_print_error_message (__('Last time Crontask was executed was ').calendar_seconds_to_humand($seconds_last_exec).__(' ago'), '', '', 'h4', false); 
+		$alerts .= '<h4>'.__('Last time Crontask was executed was ').calendar_seconds_to_humand($seconds_last_exec).__(' ago').'</h4>';
 	}
 	if (!$check_emails) {
-		$alerts .= ui_print_error_message(__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration'), '', '', 'h4', false); 
+		$alerts .= '<h4>'.__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration').'</h4>';
 	}
 	if ($update_manager_msg != '') {
-/*
-		$update_manager_msg .= "<br><a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".
-							__("Go to Update Manager")."</a>";
-*/
 		$update_manager_msg .= "<br><a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".
 							__("Go to Update Manager")."</a>";
 							
-		$alerts .= ui_print_message($update_manager_msg);
+		$alerts .= '<h4>'.$update_manager_msg.'</h4>';
 
 	}
 	if ($check_alarm_calendar) {
@@ -73,21 +69,23 @@ if ($get_alerts) {
 	if ($check_directory_permissions) {
 		$attachment = check_writable_attachment();
 		if ($attachment != '') {
-			$alerts .= ui_print_message($attachment);
+			$alerts .= '<h4>'.$attachment.'</h4>';
 		}
 		
 		$tmp = check_writable_tmp();
-		if ($attachment != '') {
-			$alerts .= ui_print_message($tmp);
+		if ($tmp != '') {
+			$alerts .= '<h4>'.$tmp.'</h4>';
 		}
 		
 		$mr = check_writable_mr();
 		if ($mr != '') {
-			$alerts .= ui_print_message($mr);
+			$alerts .= '<h4>'.$mr.'</h4>';
 		}
 	}
 	
 	echo $alerts;
+	echo '<br>';
+	echo "<input type='button' class='sub close' onClick='javascript: closeAlertDialog();' value='".__("Close")."''>";
 	return;	
 }
 
