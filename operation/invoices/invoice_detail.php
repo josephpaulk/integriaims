@@ -27,13 +27,14 @@ $offset = get_parameter ('offset', 0);
 // Invoice listing
 $search_text = (string) get_parameter ('search_text');
 $search_invoice_status = (string) get_parameter ('search_invoice_status');
+$search_last_date = (int) get_parameter ('search_last_date');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 $search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
 
 $order_by = get_parameter ('order_by', '');
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type";
 
 include_once('include/functions_crm.php');
 
@@ -133,6 +134,15 @@ if ($search_text != "") {
 if ($search_invoice_status != "") {
 	$where_clause .= sprintf (' AND status = "%s"', $search_invoice_status);
 }
+
+// last_date is in days
+if ($search_last_date) {
+	$last_date_seconds = $search_last_date * 24 * 60 * 60;
+	$search_date_begin = date('Y-m-d H:i:s', time() - $last_date_seconds);
+	//$search_date_end = date('Y-m-d H:i:s');
+	$search_date_end = "";
+}
+
 if ($search_date_begin != "") {
 	$where_clause .= sprintf (' AND invoice_create_date >= "%s"', $search_date_begin);
 }
@@ -146,49 +156,37 @@ if ($search_invoice_type != "") {
 if ($clean_output == 0){
 
 	echo '<form method="post">';
-	echo "<table width=99% class='search-table'>";
-	echo "<tr>";
 
-	echo "<td colspan=2>";
-	echo print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
-	echo "</td>";
+	$table = new stdClass;
+	$table->id = 'invoices_table';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
+	$table->size = array ();
+	$table->style = array ();
+	$table->colspan[2][0] = 4;
+	$table->data = array ();
 
-	echo "<td>";
-	$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
-	echo print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, false, 0, false, __('Invoice type'), false, 'width:150px;');
-	echo "</td>";
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
 	
-	echo "<td>";
+	$table->data[0][1] = get_last_date_control ($search_last_date, 'search_last_date', __('Date'), $search_date_begin, 'search_date_begin', __('From'), $search_date_end, 'search_date_end', __('To'));
+	
+	$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
+	$table->data[0][2] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
+	
 	$invoice_status_ar = array();
 	$invoice_status_ar['']= __("Any");
 	$invoice_status_ar['pending']= __("Pending");
 	$invoice_status_ar['paid']= __("Paid");
 	$invoice_status_ar['cancel']= __("Cancelled");
-	echo print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, false, 0, false, __('Invoice status'), false, 'width:150px;');
-	echo "</td>";
+	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, true, 0, false, __('Invoice status'), false, 'width:150px;');
 	
-	echo "<td>";
-	echo print_input_text ('search_date_begin', $search_date_begin, '', 12, 20, true, __('From'));
-	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-	echo "</td>";
-
-	echo "<td>";
-	echo print_input_text ('search_date_end', $search_date_end, '', 12, 20, true, __('To'));
-	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
-	echo "</td>";
-
-	echo "<td valign=bottom align='right'>";
-	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	// Delete new lines from the string
+	$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-
-	echo print_report_image ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __("PDF report"));
+	$table->data[2][0] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+	$table->data[2][0] .= print_report_image ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __("PDF report"));
 	
-	echo "</td>";
-	echo "</tr>";
-
-	echo "</table>";
+	print_table($table);
+	
 	echo '</form>';
 }
 

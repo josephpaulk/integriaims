@@ -923,14 +923,12 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_company = (int) get_parameter ('search_id_company');
 		$search_id_user = (string) get_parameter ('search_id_user');
 		$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
-		$date_end = get_parameter("search_last_date", date ('Y-m-d'));
+		$date_from = (int) get_parameter("search_from_date");
+		$date_start = (string) get_parameter("search_first_date");
+		$date_end = (string) get_parameter("search_last_date");
 		$search_creator = (string) get_parameter ('search_creator');
-		$search_editor = (string) get_parameter ('search_creator');
+		$search_editor = (string) get_parameter ('search_editor');
 		$search_closed_by = (string) get_parameter ('search_creator');
-		
-		$month_ago = date('Y-m-d',strtotime($date_end) - 2592000);
-		
-		$date_ini = get_parameter("search_first_date", $month_ago);
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -948,8 +946,9 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_inventory = (int) $filter['id_inventory'];
 		$search_id_incident_type = (int) $filter['id_incident_type'];
 		$search_id_user = (string) $filter['id_user'];
-		$date_end = $filter['last_date'];
-		$date_ini = $filter['first_date'];
+		$date_from = (int) $filter['from_date'];
+		$date_start = (string) $filter['first_date'];
+		$date_end = (string) $filter['last_date'];
 		$search_creator = (string) $filter['id_creator'];
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
@@ -975,7 +974,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->style = array ();
 	$table->style[0] = 'width: 25%';
 	$table->style[1] = 'width: 25%';
-	$table->style[2] = 'width: 25%';
+	$table->style[2] = 'width: 25%; vertical-align:text-top;';
 	$table->style[3] = 'width: 25%';
 	$table->rowstyle = array ();
 	$table->rowstyle[1] = 'display: none';
@@ -986,8 +985,11 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
+	$table->colspan[2][2] = 2;
 	$table->colspan[5][0] = 4;
 	$table->colspan[6][1] = 3;
+	$table->rowspan = array ();
+	$table->rowspan[2][2] = 2;
 	
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
 		'', 50, 100, true, __('Search string'));
@@ -1000,30 +1002,9 @@ function form_search_incident ($return = false, $filter=false) {
 			'', __('Any'), 0, true, false, true,
 			__('Status'));
 	
-	$table->data[1][0] = print_select (get_priorities (),
-			'search_priority', $priority,
-			'', __('Any'), -1, true, false, false,
-			__('Priority'), false, 'width: 70px;');
-
 	$table->data[0][2] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
 			'', __('All'), 1, true, false, false, __('Group'));
-		
-	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	
-	$table->data[1][1] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
-	
-	$table->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
-	
-	$table->data[1][1] .= print_input_hidden ('id_inventory', $id_inventory, true);
-	
-			
-	$table->data[1][2] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Created from'));
-	$table->data[1][3] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('Created to'));
-	
-	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
-		'search_id_user', $search_id_user,
-		'', __('Any'), 0, true, false, false, __('Owner'));
 	
 	$params_owner = array();
 	$params_owner['input_id'] = 'text-search_id_user';
@@ -1032,7 +1013,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_owner['title'] = __('Owner');
 	$params_owner['return'] = true;
 
-	$table->data[3][0] = user_print_autocomplete_input($params_owner);
+	$table->data[1][0] = user_print_autocomplete_input($params_owner);
 	
 	$params_editor = array();
 	$params_editor['input_id'] = 'text-search_editor';
@@ -1041,7 +1022,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_editor['title'] = __('Editor');
 	$params_editor['return'] = true;
 
-	$table->data[3][1] = user_print_autocomplete_input($params_editor);
+	$table->data[1][1] = user_print_autocomplete_input($params_editor);
 	
 	$params_closed_by = array();
 	$params_closed_by['input_id'] = 'text-search_closed_by';
@@ -1050,7 +1031,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_closed_by['title'] = __('Closed by');
 	$params_closed_by['return'] = true;
 
-	$table->data[3][2] = user_print_autocomplete_input($params_closed_by);
+	$table->data[1][2] = user_print_autocomplete_input($params_closed_by);
 	
 	$params_creator = array();
 	$params_creator['input_id'] = 'text-search_creator';
@@ -1059,7 +1040,22 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_creator['title'] = __('Creator');
 	$params_creator['return'] = true;
 
-	$table->data[3][3] = user_print_autocomplete_input($params_creator);
+	$table->data[1][3] = user_print_autocomplete_input($params_creator);
+	
+	$table->data[2][0] = print_select (get_priorities (),
+			'search_priority', $priority,
+			'', __('Any'), -1, true, false, false,
+			__('Priority'), false);
+
+	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
+	$table->data[2][1] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
+	
+	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	
+	$table->data[2][1] .= print_input_hidden ('id_inventory', $id_inventory, true);
+	
+	
+	$table->data[2][2] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
 	
 	if (!get_external_user ($config["id_user"]))
 		$table->data[4][0] = print_select (get_companies (), 'search_id_company',

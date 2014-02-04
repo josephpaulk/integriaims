@@ -21,6 +21,7 @@ include_once('include/functions_crm.php');
 // Invoice listing
 $search_text = (string) get_parameter ('search_text');
 $search_invoice_status = (string) get_parameter ('search_invoice_status');
+$search_last_date = (int) get_parameter ('search_last_date');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 $search_invoice_type = (string) get_parameter ('search_invoice_type');
@@ -32,7 +33,7 @@ if ($pdf_report) {
 	$graph_ttl = 2;
 }
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_invoice_type=$search_invoice_type";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_invoice_type=$search_invoice_type";
 
 $read = check_crm_acl ('company', 'cr');
 
@@ -74,6 +75,13 @@ if ($search_text != "") {
 }
 if ($search_invoice_status != "") {
 	$where_clause .= sprintf (' AND status = "%s"', $search_invoice_status);
+}
+// last_date is in days
+if ($search_last_date) {
+	$last_date_seconds = $search_last_date * 24 * 60 * 60;
+	$search_date_begin = date('Y-m-d H:i:s', time() - $last_date_seconds);
+	//$search_date_end = date('Y-m-d H:i:s');
+	$search_date_end = "";
 }
 if ($search_date_begin != "") {
 	$where_clause .= sprintf (' AND invoice_create_date >= "%s"', $search_date_begin);

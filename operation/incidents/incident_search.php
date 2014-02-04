@@ -36,11 +36,10 @@ $filter['id_user'] = (string) get_parameter ('search_id_user', '');
 $filter['id_creator'] = (string) get_parameter ('search_creator', '');
 $filter['editor'] = (string) get_parameter ('search_editor', '');
 $filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
-$filters['first_date'] = (string) get_parameter ('first_date', '');
-$filters['last_date'] = (string) get_parameter ('last_date', '');
-$filter['order_by'] = get_parameter ('search_order_by', '');
-$filter['first_date'] = get_parameter('search_first_date', '');
-$filter['last_date'] = get_parameter('search_last_date', '');
+$filter['order_by'] = (string) get_parameter ('search_order_by', '');
+$filter['from_date'] = (string) get_parameter('search_from_date', '');
+$filter['first_date'] = (string) get_parameter('search_first_date', '');
+$filter['last_date'] = (string) get_parameter('search_last_date', '');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 

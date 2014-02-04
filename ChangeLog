@@ -1,3 +1,27 @@
+2014-02-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_html.php: Added the function
+	"get_last_date_control".
+
+	* include/functions_form.php: Added the new date contol to
+	the incident search form in the function
+	"form_search_incident".
+
+	* include/functions_incidents.php: Modified the function
+	"filter_incidents" to add the new date filter.
+
+	* include/functions_db.php: Added the function
+	"get_last_dates".
+
+	* operation/invoices/invoice_stats.php,
+	  operation/invoices/invoice_detail.php,
+	  operation/incidents/incident_search.php,
+	  operation/leads/lead_pipeline.php,
+	  operation/leads/lead_statistics.php,
+	  operation/leads/lead_export.php,
+	  operation/leads/lead_detail.php: Added the new date
+	  control and filters and fixed some errors.
+
 2014-02-04  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_api.php: Improved invoice id 

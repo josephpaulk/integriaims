@@ -2681,4 +2681,18 @@ function get_user_work_home ($id_user, $year){
 	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59' AND tworkunit.work_home=1");
 	return format_numeric ($hours/$config["hours_perday"]);
 }
+
+function get_last_dates () {
+	$last_dates = array();
+	$last_dates[0] = __("Custom");
+	$last_dates[1] = __("Last 24 hours");
+	$last_dates[2] = __("Last 2 days");
+	$last_dates[7] = __("Last week");
+	$last_dates[15] = __("Last 15 days");
+	$last_dates[30] = __("Last month");
+	$last_dates[90] = __("Last trimester");
+
+	return $last_dates;
+}
+
 ?>

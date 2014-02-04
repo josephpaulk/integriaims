@@ -63,14 +63,13 @@ function filter_incidents ($filters, $count=false) {
 	$filters['id_incident_type'] = isset ($filters['id_incident_type']) ? $filters['id_incident_type'] : 0;
 	$filters['id_user'] = isset ($filters['id_user']) ? $filters['id_user'] : '';
 	$filters['id_user_or_creator'] = isset ($filters['id_user_or_creator']) ? $filters['id_user_or_creator'] : '';
+	$filters['from_date'] = isset ($filters['from_date']) ? $filters['from_date'] : 0;
 	$filters['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
 	$filters['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';	
 	$filters['id_creator'] = isset ($filters['id_creator']) ? $filters['id_creator'] : '';
 	$filters['editor'] = isset ($filters['editor']) ? $filters['editor'] : '';
 	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
-	$filter['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
-	$filter['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -118,22 +117,34 @@ function filter_incidents ($filters, $count=false) {
 		}
 	}
 
-	if (! empty ($filters['first_date'])) {
-		$time = strtotime ($filters['first_date']);
-		//00:00:00 to set date at the beginig of the day
-		$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d 00:00:00", $time));
-	}
-	if (! empty ($filters['last_date'])) {
-		$time = strtotime ($filters['last_date']);
+
+	if (! empty ($filters['from_date']) && $filters['from_date'] > 0) {
+
+		$last_date_seconds = $filters['from_date'] * 24 * 60 * 60;
+		$filters['first_date'] = date('Y-m-d H:i:s', time() - $last_date_seconds);
+		$sql_clause .= sprintf (' AND inicio >= "%s"', $filters['first_date']);
+		$filters['last_date'] = "";
+
+	} else {
+
 		if (! empty ($filters['first_date'])) {
-			//23:59:59 to set date at the end of day
-			$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d 23:59:59", $time));
-		} else {
-			$time_from = strtotime ($filters['first_date']);
-			if ($time_from < $time)
-				$sql_clause .= sprintf (' AND inicio <= "%s"',
-					date ("Y-m-d", $time));
+			$time = strtotime ($filters['first_date']);
+			//00:00:00 to set date at the beginig of the day
+			$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d 00:00:00", $time));
 		}
+		if (! empty ($filters['last_date'])) {
+			$time = strtotime ($filters['last_date']);
+			if (! empty ($filters['first_date'])) {
+				//23:59:59 to set date at the end of day
+				$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d 23:59:59", $time));
+			} else {
+				$time_from = strtotime ($filters['first_date']);
+				if ($time_from < $time)
+					$sql_clause .= sprintf (' AND inicio <= "%s"',
+						date ("Y-m-d", $time));
+			}
+		}
+
 	}
 	
 	if (! empty ($filters['id_creator']))

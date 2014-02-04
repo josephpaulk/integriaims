@@ -305,6 +305,7 @@ if (defined ('AJAX') && $massive_leads_update) {
 $filter = array ();
 $filter['search_text'] = (string) get_parameter ('search_text');
 $filter['id_company'] = (int) get_parameter ('id_company_search');
+$filter['last_date'] = (int) get_parameter ('last_date_search');
 $filter['start_date'] = (string) get_parameter ('start_date_search');
 $filter['end_date'] = (string) get_parameter ('end_date_search');
 $filter['country'] = (string) get_parameter ('country_search', "");
@@ -733,6 +734,7 @@ if ($id || $new) {
 	if ($id_search) {
 		$search_text = $filter['search_text'];
 		$id_company = $filter['id_company'];
+		$last_date = $filter['last_date'];
 		$start_date = $filter['start_date'];
 		$end_date = $filter['end_date'];
 		$country = $filter['country'];
@@ -746,6 +748,7 @@ if ($id || $new) {
 	} else {
 		$search_text = (string) get_parameter ('search_text');
 		$id_company = (int) get_parameter ('id_company_search');
+		$last_date = (int) get_parameter ('last_date_search');
 		$start_date = (string) get_parameter ('start_date_search');
 		$end_date = (string) get_parameter ('end_date_search');
 		$country = (string) get_parameter ('country_search');
@@ -758,7 +761,7 @@ if ($id || $new) {
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
 	}
 
-	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 	$where_group = "";
 
@@ -791,6 +794,14 @@ if ($id || $new) {
 
 	if ($id_company) {
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
+	}
+
+	// last_date is in days
+	if ($last_date) {
+		$last_date_seconds = $last_date * 24 * 60 * 60;
+		$start_date = date('Y-m-d H:i:s', time() - $last_date_seconds);
+		//$end_date = date('Y-m-d H:i:s');
+		$end_date = "";
 	}
 
 	if ($start_date) {
@@ -858,11 +869,9 @@ if ($id || $new) {
 	$table_advanced->data = array ();
 	$table_advanced->width = "99%";
 	
-	$progress_values = lead_progress_array ();
-	$table_advanced->data[0][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
-	$table_advanced->data[0][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
+	$table_advanced->data[0][0] = get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
 
-	$table_advanced->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
+	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);
 	
 	$table_advanced->data[1][0] = print_select ($companies, 'id_company_search', $id_company, '', __("Any"), 0, true, 0, false,  __('Managed by'));
 
