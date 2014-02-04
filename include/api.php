@@ -205,7 +205,13 @@ switch ($op){
 		$params = explode($token, $params);
 		echo api_create_invoice($return_type, $params);
 		break;
-	}	
+	}
+	case "create_company":
+	{
+		$params = explode($token, $params);
+		echo api_create_company($return_type, $params);
+		break;
+	}
 	default: 
 	{
 	}

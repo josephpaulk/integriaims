@@ -1294,4 +1294,42 @@ function api_create_invoice ($return_type, $params) {
 	return $return;	
 }
 
+function api_create_company ($return_type, $params) {
+
+	$name = $params[0];
+	$address = $params[1];
+	$fiscal_id = $params[2];
+	$id_company_role = $params[3];
+	$country = $params[4];
+	$manager = $params[5];
+	$id_parent = $params[6];
+
+	$comments = "Created from SaaS portal";
+	$website = "";
+
+	$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
+				 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent)";
+	
+	$id = process_sql ($sql, 'insert_id');	
+
+	$res = $id;
+	if (!$id) {
+		$res = 0;
+	}
+
+	if ($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<company>\n";
+		$return .="<id>";
+		$return .="<![CDATA[".$res."]]>";
+		$return .="</id>\n";
+		$return .= "</company>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $res;
+	}
+
+	return $return;
+}
+
 ?>

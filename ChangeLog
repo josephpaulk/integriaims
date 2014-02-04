@@ -1,3 +1,9 @@
+2014-02-04  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_api.php,
+	include/api.php: Created a new function to create
+	companies using the API.
+
 2014-02-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_html.php: Added the function
