@@ -212,6 +212,16 @@ switch ($op){
 		echo api_create_company($return_type, $params);
 		break;
 	}
+	case "user_exists":
+	{
+		echo api_get_user_exists($return_type, $params);
+		break;
+	}
+	case "delete_user":
+	{
+		echo api_delete_user($return_type, $params);
+		break;
+	}
 	default: 
 	{
 	}

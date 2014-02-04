@@ -1332,4 +1332,57 @@ function api_create_company ($return_type, $params) {
 	return $return;
 }
 
+function api_get_user_exists ($return_type, $params) {
+
+	$user = get_db_value("id_usuario", "tusuario", "id_usuario", $params);
+
+	$res = 0;
+
+	if ($user) {
+		$res = 1;
+	}
+
+	if ($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<user>\n";
+		$return .="<exists>";
+		$return .="<![CDATA[".$res."]]>";
+		$return .="</exists>\n";
+		$return .= "</user>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $res;
+	}
+
+	return $return;
+
+}
+
+function api_delete_user($return_type, $params) {
+
+	$sql = sprintf('DELETE FROM tusuario WHERE id_usuario = "%s"', $params);
+
+	$ret = process_sql($sql);
+
+	$res = 0;
+
+	if ($ret) {
+		$res = 1;
+	}
+
+	if ($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<user>\n";
+		$return .="<exists>";
+		$return .="<![CDATA[".$res."]]>";
+		$return .="</exists>\n";
+		$return .= "</user>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $res;
+	}
+
+	return $return;	
+}
+
 ?>

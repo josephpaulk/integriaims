@@ -1,3 +1,9 @@
+2014-02-04  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_api.php
+	include/api.php: Created new functions to 
+	delete and verify an user.
+
 2014-02-04  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/grupos/configurar_grupo.php: Fixed bug.
