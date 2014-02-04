@@ -1,3 +1,8 @@
+2014-02-04  Mario Pulido <mario.pulido@artica.es>
+
+	* integria.centos.spec,
+        integria.spec: Fixed bug. Updates by rpm
+
 2014-02-04  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_api.php

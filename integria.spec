@@ -57,17 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %preun
 
-if [ -f %{prefix}/integria/include/config.php ]
-then
-	export DBPASS=`cat %{prefix}/integria/include/config.php | grep "dbpass" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-        export DBUSER=`cat %{prefix}/integria/include/config.php | grep "dbuser" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-        export DBHOST=`cat %{prefix}/integria/include/config.php | grep "dbhost" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-        export DBNAME=`cat %{prefix}/integria/include/config.php | grep "dbname" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
+# Upgrading
 
-	echo "drop database $DBNAME" | mysql -u $DBUSER -h $DBHOST -p$DBPASS 
+if [ "$1" = "1" ]; then
+        exit 0
 fi
-
-rm -Rf %{prefix}/integria/ 
+ 
 
 %post
 
