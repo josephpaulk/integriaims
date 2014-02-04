@@ -17,7 +17,7 @@
 global $config;
 check_login();
 
-include("include/functions_user.php");
+//include("include/functions_user.php");
 enterprise_include("include/functions_groups.php");
 
 if (! give_acl ($config["id_user"], 0, "UM")) {

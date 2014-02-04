@@ -1,3 +1,10 @@
+2014-02-04  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/grupos/configurar_grupo.php: Fixed bug.
+
+	* operation/invoices/invoices.php: Added file
+	attachment to invoices.
+
 2014-02-04  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_api.php,

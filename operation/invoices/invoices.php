@@ -52,6 +52,48 @@ if ($id_invoice > 0 || $id_company > 0) {
 	}
 }
 
+$upload_file = get_parameter('upload_file', 0);
+
+if ($upload_file) {
+	if (isset($_POST['upfile']) && ( $_POST['upfile'] != "" )){ //if file
+		$filename= $_POST['upfile'];
+		$file_tmp = sys_get_temp_dir().'/'.$filename;
+		$size = filesize ($file_tmp);
+		$description = get_parameter ("description", "");
+
+		$sql = sprintf("INSERT INTO tattachment (id_invoice, id_usuario, filename, description, timestamp, size) VALUES (%d, '%s', '%s', '%s', '%s', %d)", $id_invoice, $config["id_user"], $filename, $description, date('Y-m-d H:i:s'), $size);
+		$id_attach = process_sql ($sql, 'insert_id');
+
+		$filename_encoded = $id_attach . "_" . $filename;
+		
+		// Copy file to directory and change name
+		$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+
+		if (!(copy($file_tmp, $file_target))){
+			echo "<h3 class=error>".__("Could not be attached")."</h3>";
+		} else {
+			// Delete temporal file
+			echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+			$location = $file_target;
+			unlink ($file_tmp);
+		}
+	}
+}
+
+// Delete file
+$deletef = get_parameter ("deletef", "");
+if ($deletef != ""){
+	$file = get_db_row ("tattachment", "id_attachment", $deletef);
+	if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
+		$sql = "DELETE FROM tattachment WHERE id_attachment = $deletef";
+		process_sql ($sql);	
+		$filename = $config["homedir"]."/attachment/". $file["id_attachment"]. "_" . $file["filename"];
+		unlink ($filename);
+		echo "<h3 class=suc>".__("Successfully deleted")."</h3>";
+	}
+}
+
+
 if ($operation_invoices == "add_invoice"){
 	
 	$filename = get_parameter ('upfile', false);
@@ -170,38 +212,6 @@ if ($operation_invoices == "update_invoice"){
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter('internal_note', "");
-
-	// If no file input, the file doesnt change
-	if ($filename != ""){
-		$old_id_attachment = $id_attachment;
-		
-		$file_temp = sys_get_temp_dir()."/$filename";
-		$filesize = filesize($file_temp);
-		
-		// Creating the attach
-		$sql = sprintf ('INSERT INTO tattachment (id_usuario, filename, description, size) VALUES ("%s", "%s", "%s", "%s")',
-				$user_id, $filename, $description, $filesize);
-		$id_attachment = process_sql ($sql, 'insert_id');
-		
-		// Copy file to directory and change name
-		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
-			
-		if (! copy($file_temp, $file_target)) {
-			$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
-			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
-			process_sql ($sql);
-		} else {
-			// Delete temporal file
-			unlink ($file_temp);
-			$values['id_attachment'] = $id_attachment;
-			
-			// POSSIBLE FEATURE, DELETE OLD ATTACHMENT IF IS SETTED IN A CHECKBOX OR SOMETHING
-			//~ if($old_id_attachment != 0) {
-				//~ $old_filename = get_db_value('filename', 'tattachment', 'id_attachment', $old_id_attachment);
-				//~ unlink($config["homedir"]."/attachment/".$old_id_attachment."_".$old_filename);
-			//~ }
-		}
-	}
 	
 	// Updating the invoice
 	$values = array();
@@ -411,9 +421,6 @@ $table->data[13][0] = print_textarea ('description', 5, 40, $description, '', tr
 $table->colspan[14][0] = 2;
 $table->data[14][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
 
-$table->colspan[15][0] = 2;
-$table->data[15][0] = print_input_file ('upfile', 20, false, '', true, __('Attachment'));
-
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail
 &view_invoice=1&op=invoices&id_invoice='.$id_invoice.'">';
@@ -431,6 +438,61 @@ if ($id_invoice != -1) {
 echo '</div>';
 echo '</form>';
 
+echo '<br>';
+echo '<ul class="ui-tabs-nav">';
+echo '<li class="ui-tabs-selected"><span>'.__('Files').'</span></li>';
+echo '<li class="ui-tabs-title">' . __('Files') . '</h1></li>';
+echo '</ul>';
+echo '<br>';
+
+$target_directory = 'attachment';
+$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&upload_file=1";				
+$into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
+print_input_file_progress($action,$into_form,'','sub upload');	
+
+
+// List of invoice attachments
+$sql = "SELECT * FROM tattachment WHERE id_invoice = $id_invoice ORDER BY timestamp DESC";
+$files = get_db_all_rows_sql ($sql);
+$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1");
+
+if ($files !== false) {
+	unset ($table);
+	$table->width = "99%";
+	$table->class = "listing";
+	$table->data = array ();
+	$table->size = array ();
+	$table->style = array ();
+	$table->rowstyle = array ();
+
+	$table->head = array ();
+	$table->head[0] = __('Filename');
+	$table->head[1] = __('Description');
+	$table->head[2] = __('Size');
+	$table->head[3] = __('Date');
+	$table->head[4] = __('Ops.');
+
+	foreach ($files as $file) {
+		$data = array ();
+		
+		$data[0] = "<a href='operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=company'>".$file["filename"] . "</a>";
+		$data[1] = $file["description"];
+		$data[2] = format_numeric($file["size"]);
+		$data[3] = $file["timestamp"];
+
+		// Todo. Delete files owner and admins only
+		if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
+			$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
+		}
+
+		array_push ($table->data, $data);
+		array_push ($table->rowstyle, $style);
+	}
+	print_table ($table);
+
+} else {
+	echo "<h3>". __('There is no files attached for this invoice')."</h3>";
+}
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
