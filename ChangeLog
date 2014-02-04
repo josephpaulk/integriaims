@@ -1,3 +1,8 @@
+2014-02-04  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_api.php: Improved invoice id 
+	api function to get last id by date and by bill id.
+
 2014-02-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* integria_demo.sql: Updated some insertions to adapt it

@@ -1109,7 +1109,7 @@ function get_num_queued_emails ($return_type, $user, $params) {
 
 function api_get_last_invoice_id ($return_type) {
 
-	$sql = sprintf("SELECT bill_id FROM tinvoice WHERE invoice_type = 'Submitted' ORDER BY bill_id DESC LIMIT 1");
+	$sql = sprintf("SELECT bill_id FROM tinvoice WHERE invoice_type = 'Submitted' ORDER BY invoice_create_date DESC, bill_id DESC LIMIT 1");
 
 	$res = process_sql($sql);
 	
