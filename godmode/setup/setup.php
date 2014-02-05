@@ -56,6 +56,7 @@ if ($update) {
 	$config["access_protocol"] = get_parameter("access_protocol");
 	$config["access_port"] = get_parameter("access_port", "");
 	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_NAME"]);
+	$config["loginhash_pwd"] = get_parameter("loginhash_pwd", "");
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -87,6 +88,8 @@ if ($update) {
 	update_config_token ("access_protocol", $config["access_protocol"]);
 	update_config_token ("access_port", $config["access_port"]);	
 	update_config_token ("access_public", $config["access_public"]);
+
+	update_config_token ("loginhash_pwd", $config["loginhash_pwd"]);
 	
 	if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
@@ -187,6 +190,9 @@ $table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["fir
 
 $table->data[5][0] = print_input_text ("url_updatemanager", $config["url_updatemanager"], '',
 	60, 255, true, __('URL update manager'));
+
+$table->data[5][1] = print_input_text ("loginhash_pwd", $config["loginhash_pwd"], '',
+	30, 255, true, __('Loginhash password'));
 
 $table->data[6][0] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
 

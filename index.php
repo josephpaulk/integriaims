@@ -256,7 +256,22 @@ if (ip_acl_check ($ip_origin)) {
 }
 
 // Login process
-if (! isset ($_SESSION['id_usuario']) && $login) {
+if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
+
+	$loginhash_data = get_parameter("loginhash_data", "");
+	$loginhash_user = get_parameter("loginhash_user", "");
+	
+	if ($config["loginhash_pwd"] != "" && $loginhash_data == md5($loginhash_user.$config["loginhash_pwd"])) {
+		logon_db ($loginhash_user, $_SERVER['REMOTE_ADDR']);
+		$_SESSION['id_usuario'] = $loginhash_user;
+		$config["id_user"] = $loginhash_user;
+	}
+	else {
+			echo '<body class="login">';
+			require ('general/login_page.php');
+			exit;
+	}
+} elseif (! isset ($_SESSION['id_usuario']) && $login) {
 
 	$nick = get_parameter ("nick");
 	$pass = get_parameter ("pass");
