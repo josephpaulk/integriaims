@@ -176,7 +176,7 @@ if ($newsletters !== false) {
 	$table->head[6] = __('Unsubscribe Link');
 	$table->head[7] = __('Last edition');
 	$table->style[5] = "text-aling: center; vertical-align: middle";
-	if(give_acl ($config["id_user"], $id_group, "VM")) {
+	if(give_acl ($config["id_user"], $id_group, "CN")) {
 		$table->head[8] = __('Delete');
 	}
 	foreach ($newsletters as $newsletter) {
@@ -203,7 +203,7 @@ if ($newsletters !== false) {
 		$data[7] = get_db_sql ("SELECT MAX(datetime) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);
 		
 		$data[7] .= "</a>";
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
+		if(give_acl ($config["id_user"], $id_group, "CN")) {
 			$data[8] ='<a href="index.php?sec=customers&sec2=operation/newsletter/newsletter_definition&
 						delete=1&id='.$newsletter['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

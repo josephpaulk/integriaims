@@ -18,13 +18,13 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
+if (! give_acl ($config["id_user"], 0, "CN")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$manager = give_acl ($config["id_user"], 0, "VM");
+$manager = give_acl ($config["id_user"], 0, "CN");
 
 $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
@@ -49,7 +49,7 @@ if ($create) {
 	$issue = get_db_row ("tnewsletter_content", "id", $id_newsletter_content);
 	$newsletter = get_db_row ("tnewsletter", "id", $issue["id_newsletter"]);
 
-	if (! give_acl ($config["id_user"], $newsletter["id_group"], "VM")) {
+	if (! give_acl ($config["id_user"], $newsletter["id_group"], "CN")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
 		require ("general/noaccess.php");
 		exit;
@@ -172,7 +172,7 @@ if ($queue !== false) {
 	
 	$table->head[4] .= print_help_tip (__("Total / Ready / Sent / Error"), true);		
 
-	if(give_acl ($config["id_user"], $id_group, "VM")) {
+	if(give_acl ($config["id_user"], $id_group, "CN")) {
 		$table->head[5] = __('Delete');
 		$table->head[5] .= print_help_tip (__("Similar to the stop operation, but will delete the queue contents. If crontask is being processed, addresses in memory will be processed"), true);			
 		
@@ -223,7 +223,7 @@ if ($queue !== false) {
 		$data[4] = "$total / $ready / $done / $error";
 
 	
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
+		if(give_acl ($config["id_user"], $id_group, "CN")) {
 			$data[5] ='<a href="index.php?sec=customers&sec2=operation/newsletter/queue_manager&
 						delete=1&id='.$items['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

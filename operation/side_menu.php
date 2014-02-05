@@ -697,7 +697,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CM") && $show_custo
 // Newsletter
 
 
-if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($config["id_user"], 0, "VM")) && ($show_customers != MENU_HIDDEN)) {
+if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($config["id_user"], 0, "CN")) && ($show_customers != MENU_HIDDEN)) {
 
 	echo "<div class='portlet'>";
 

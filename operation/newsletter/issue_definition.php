@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VM")) {
+if (! give_acl ($config["id_user"], 0, "CN")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
@@ -26,7 +26,7 @@ if (! give_acl ($config["id_user"], 0, "VM")) {
 
 include("include/functions_crm.php");
 
-$manager = give_acl ($config["id_user"], 0, "VM");
+$manager = give_acl ($config["id_user"], 0, "CN");
 
 $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
@@ -50,7 +50,7 @@ if ($create) {
 	$id_newsletter = get_parameter ("id_newsletter"); 
 	$campaign = get_parameter("campaign");
 		
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! give_acl ($config["id_user"], $id_group, "CN")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
 		require ("general/noaccess.php");
 		exit;
@@ -163,7 +163,7 @@ if ($issues !== false) {
 	$table->head[3] = __('Date');
 	$table->head[4] = __('Status');
 	$table->head[5] = __('Reads');
-	if(give_acl ($config["id_user"], $id_group, "VM")) {
+	if(give_acl ($config["id_user"], $id_group, "CN")) {
 		$table->head[6] = __('Delete');
 	}
 
@@ -193,7 +193,7 @@ if ($issues !== false) {
 
 		$data[6] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
 	
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
+		if(give_acl ($config["id_user"], $id_group, "CN")) {
 			$data[6] .='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
 						delete=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

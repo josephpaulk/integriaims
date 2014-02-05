@@ -19,13 +19,13 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VM")) {
+if (! give_acl ($config["id_user"], 0, "CN")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$manager = give_acl ($config["id_user"], 0, "VM");
+$manager = give_acl ($config["id_user"], 0, "CN");
 
 $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
@@ -47,7 +47,7 @@ if ($create) {
     $datetime = date ("Y-m-d H:i:s"); 		
     $id_group = get_db_sql ("SELECT id_group FROM tnewsletter WHERE id = $id_newsletter");
     
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! give_acl ($config["id_user"], $id_group, "CN")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
 		require ("general/noaccess.php");
 		exit;
@@ -183,7 +183,7 @@ if ($issues !== false) {
 	$table->head[2] = __('Name');
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Date');
-	if(give_acl ($config["id_user"], $id_group, "VM")) {
+	if(give_acl ($config["id_user"], $id_group, "CN")) {
 		$table->head[5] = __('Disable/Delete');
 	}
 
@@ -207,7 +207,7 @@ if ($issues !== false) {
 
 		$data[4] = $issue["datetime"];
 	
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
+		if(give_acl ($config["id_user"], $id_group, "CN")) {
 			$data[5] ='<a href="index.php?sec=customers&sec2=operation/newsletter/address_definition&
 						disable=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

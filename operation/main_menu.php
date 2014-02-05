@@ -81,13 +81,17 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
 }
 
 // Customers
-if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {
+
+if ((give_acl($config["id_user"], 0, "CR") || (give_acl($config["id_user"], 0, "CN"))) && (get_external_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {
     if ($sec == "customers" )
 	    echo "<li id='current' class='customer'>";
     else
 	    echo "<li class='customer'>";
     echo "<div>|</div>";
-    echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Customers')."</a></li>";
+    if (give_acl($config["id_user"], 0, "CR"))
+    	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Customers')."</a></li>";
+    else 
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>".__("Newsletters")."</a></lI>";
 }
 
 if ($show_people != MENU_HIDDEN) {

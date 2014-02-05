@@ -46,7 +46,7 @@ echo '
 </script>
 <!-- /TinyMCE -->';
 
-if (! give_acl ($config["id_user"], 0, "VM")) {
+if (! give_acl ($config["id_user"], 0, "CN")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access newsletter management");
 	require ("general/noaccess.php");
 	exit;
