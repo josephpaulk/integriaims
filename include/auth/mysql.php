@@ -62,7 +62,7 @@ if (!isset ($config)) {
 }
 
 //include_once($config['homedir'] . "/include/functions_profile.php");
-//enterprise_include ('include/auth/mysql.php');
+enterprise_include ('include/auth/mysql.php');
 
 $config["user_can_update_info"] = true;
 $config["user_can_update_password"] = true;
@@ -279,12 +279,14 @@ function process_user_login ($login, $pass) {
 				break;
 				
 			// Active Directory
-		/*	case 'ad':
-				
+			case 'ad':
+				if (enterprise_hook ('ad_process_user_login', array ($login, $pass)) === false) {
+					return false;
+				}
 				break;
 
 			// Remote Pandora FMS
-			case 'pandora':
+			/* case 'pandora':
 				
 				break;
 

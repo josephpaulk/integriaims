@@ -30,6 +30,7 @@ if (! dame_admin ($config["id_user"])) {
 $is_enterprise = false;
 if (file_exists ("enterprise/load_enterprise.php")) {
 	$is_enterprise = true;
+	enterprise_include('godmode/setup/setup_auth.php');
 }
 	
 /* Tabs list */
@@ -51,6 +52,12 @@ if ($update) {
 	$config['ldap_base_dn'] = get_parameter ("ldap_base_dn", "ou=People,dc=example,dc=com");
 	$config['ldap_login_attr'] = (string) get_parameter ("ldap_login_attr", "uid");
 	$config["session_timeout"] = get_parameter ("session_timeout", 90);
+	
+	//Active directory
+	$config['ad_server'] = (string) get_parameter('ad_server', 'localhost');
+	$config['ad_port'] = (int) get_parameter ("ad_port", 389);
+	$config['ad_start_tls'] = (int) get_parameter ("ad_start_tls", 0);
+	$config['ad_domain'] = (string) get_parameter('ad_domain', '');
 
 	update_config_token ("auth_methods", $config["auth_methods"]);
 	update_config_token ("autocreate_remote_users", $config["autocreate_remote_users"]);
@@ -63,6 +70,12 @@ if ($update) {
 	update_config_token ("ldap_start_tls", $config["ldap_start_tls"]);
 	update_config_token ("ldap_base_dn", $config["ldap_base_dn"]);
 	update_config_token ("ldap_login_attr", $config["ldap_login_attr"]);
+	
+	//Active Directory
+	update_config_token ('ad_server', $config['ad_server']);
+	update_config_token ('ad_port', $config['ad_port']);
+	update_config_token ('ad_start_tls', $config['ad_start_tls']);
+	update_config_token ('ad_domain', $config['ad_domain']);
 
     update_config_token ("session_timeout", $config["session_timeout"]);
 }
@@ -82,6 +95,9 @@ $table->colspan = array ();
 $table->data = array ();
 
 $auth_methods = array ('mysql' => __('Local Integria'), 'ldap' => __('LDAP'));
+if ($is_enterprise) {
+	add_enterprise_auth_methods($auth_methods);
+}
 $table->data[0][0] = print_select ($auth_methods, "auth_methods", $auth_method, '','','',true, 0, true, __('Authentication method'));
 
 $table->data[0][1] = print_input_text ("session_timeout", $config['session_timeout'], '',
@@ -90,7 +106,7 @@ $table->data[0][1] = print_input_text ("session_timeout", $config['session_timeo
 $table->data[0][1] .= print_help_tip (__("This is defined in seconds. "), true);
 
 
-$table->data[1][0] = __('Autocreate remote users');
+$table->data[1][0] = '<b>'.__('Autocreate remote users').'</b>';
 $table->data[2][0] =  __('Yes').'&nbsp;'.print_radio_button_extended ('autocreate_remote_users', 1, '', $config['autocreate_remote_users'], false, 'enable_autocreate_profile();', '', true).'&nbsp;&nbsp;';
 $table->data[2][0] .= __('No').'&nbsp;'.print_radio_button_extended ('autocreate_remote_users', 0, '', $config['autocreate_remote_users'], false, 'enable_autocreate_profile();', '', true);
 
@@ -122,7 +138,7 @@ $table->data[7][0] = print_input_text ("LDAP_port", $config['ldap_port'], '',
 $ldap_version = array (1 => 'LDAPv1', 2 => 'LDAPv2', 3 => 'LDAPv3');
 $table->data[8][0] = print_select ($ldap_version, "ldap_version", $config['ldap_version'], '','','',true, 0, true, __('LDAP version'));
 
-$table->data[9][0] = __('Start TLS');
+$table->data[9][0] = '<b>'.__('Start TLS').'</b>';
 $table->data[10][0] =  __('Yes').'&nbsp;'.print_radio_button ('ldap_start_tls', 1, '', $config['ldap_start_tls'], true, '', '', '').'&nbsp;&nbsp;';
 $table->data[10][0] .= __('No').'&nbsp;'.print_radio_button ('ldap_start_tls', 0, '', $config['ldap_start_tls'], true, '', '', '');
 
@@ -138,6 +154,11 @@ $table->data[12][0] = print_input_text ("ldap_login_attr", $config['ldap_login_a
 	$table->rowstyle[$i] = $config['auth_methods'] == 'ldap' ? '' : 'display: none;';
 	$table->rowclass[$i] = 'ldap';
 }*/
+
+// Add enterprise authentication options
+if ($is_enterprise) {
+	add_enterprise_auth_options($table, 13);
+}
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
@@ -202,8 +223,11 @@ function config_form(auth_method) {
 		$('#radiobtn0003').parent().css('display', 'none');
 		$('#radiobtn0003').css('display', 'none');
 		$('#radiobtn0004').css('display', 'none');
-	} else {
-		$('#table1-9-0').css('display', '');
+		$(".ad").css("display", "none");
+		
+	} else if (auth_method == 'ldap') {
+
+ 		$('#table1-9-0').css('display', '');
 		$('#radiobtn0001').parent().css('display', '');
 		$('#radiobtn0001').css('display', '');
 		$('#radiobtn0002').css('display', '');
@@ -229,6 +253,39 @@ function config_form(auth_method) {
 		$('#radiobtn0003').parent().css('display', '');
 		$('#radiobtn0003').css('display', '');
 		$('#radiobtn0004').css('display', '');
+		$(".ad").css("display", "none");
+		
+	} else {
+
+		$('#table1-9-0').css('display', 'none');
+		$('#radiobtn0001').parent().css('display', '');
+		$('#radiobtn0001').parent().css('display', '');
+		$('#radiobtn0001').css('display', '');
+		$('#radiobtn0002').css('display', '');
+		$('#default_remote_profile').parent().css('display', '');
+		$('#default_remote_profile').css('display', '');
+		$('#default_remote_group').parent().css('display', '');
+		$('#default_remote_group').css('display', '');
+		$('#text-autocreate_blacklist').parent().css('display', '');
+		$('#text-autocreate_blacklist').css('display', '');
+		$('#text-LDAP_server').parent().css('display', 'none');
+		$('#text-LDAP_server').css('display', 'none');
+		$('#text-LDAP_port').parent().css('display', 'none');
+		$('#text-LDAP_port').css('display', 'none');
+		$('#ldap_version').parent().css('display', 'none');
+		$('#ldap_version').css('display', 'none');
+		$('#ldap_start_tls').parent().css('display', 'none');
+		$('#ldap_start_tls').css('display', 'none');
+		$('#text-ldap_base_dn').parent().css('display', 'none');
+		$('#text-ldap_base_dn').css('display', 'none');
+		$('#text-ldap_login_attr').parent().css('display', 'none');
+		$('#text-ldap_login_attr').css('display', 'none');
+		$('#table1-1-0').css('display', '');
+		$('#radiobtn0003').parent().css('display', 'none');
+		$('#radiobtn0003').css('display', 'none');
+		$('#radiobtn0004').css('display', 'none');
+		
+		$(".ad").css("display", "");
 	}
 }
 

@@ -1,3 +1,9 @@
+2014-02-06  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/setup/setup_auth.php
+	  include/auth/mysql.php: Added active directory configuration.
+
+
 2014-02-05  Dario Rodriguez <dario@artica.es>
 	
 	* index.php,
