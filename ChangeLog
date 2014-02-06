@@ -1,3 +1,13 @@
+2014-02-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/companies/company_statistics.php: Improved the
+	statistics layout.
+
+	* include/functions_crm.php: Added numeric format to the
+	values of the function "crm_print_most_invoicing_companies"
+	and "crm_print_most_invoicing_managers".
+
+
 2014-02-06  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/setup_auth.php

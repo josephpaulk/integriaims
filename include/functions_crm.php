@@ -300,12 +300,12 @@ function crm_print_most_invoicing_companies($companies) {
 	$i = 0;
 	foreach ($companies as $key=>$company) {
 	
-		if ($i < 10) {
+		if ($i < 10 && $company['total_amount'] > 0) {
 			$data = array();
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company['id']."'>"
 				. crm_get_company_name ($company['id']) . "</a>";
 
-			$data[1] = $company['total_amount'];
+			$data[1] = format_numeric($company['total_amount']);
 
 			array_push ($table->data, $data);
 		}
@@ -374,7 +374,7 @@ function crm_print_most_invoicing_managers($managers) {
 		if ($i < 10 && $manager['total_amount'] > 0) {
 			$data = array();
 			$data[0] = $manager['manager'];
-			$data[1] = $manager['total_amount'];
+			$data[1] = format_numeric($manager['total_amount']);
 
 			array_push ($table->data, $data);
 		}

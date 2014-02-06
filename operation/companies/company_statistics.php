@@ -99,18 +99,10 @@ if ($search_min_billing != "") {
 
 $table->class = 'blank';
 $table->width = '99%';
-$table->data = array ();
-$table->style = array ();
-$table->colspan = array ();
-$table->valign = array ();
-$table->colspan[0][0] = 2;
-$table->colspan[0][1] = 2;
-$table->colspan[0][2] = 2;
-$table->colspan[1][0] = 3;
-$table->colspan[1][1] = 3;
-$table->colspan[2][0] = 2;
-$table->colspan[2][1] = 2;
-$table->colspan[2][2] = 2;
+$table->data = array();
+$table->style = array();
+$table->colspan = array();
+$table->valign = array();
 $table->valign[0] = "top";
 $table->valign[1] = "top";
 
@@ -132,6 +124,40 @@ if ($companies_country != false) {
 $companies_country_content = '<br><div class="pie_frame">' . $companies_country_content . '</div>';
 
 $table->data[0][0] = print_container('companies_per_county', __('Companies per country'), $companies_country_content, 'no', true, '10px');
+
+// MANAGERS
+if ($read && $enterprise) {
+	$manager_companies = crm_get_total_managers_acl($where_clause);
+} else {
+	$manager_companies = crm_get_total_managers($where_clause);
+}
+
+$manager_companies = crm_get_data_managers_graph($manager_companies);
+
+if ($manager_companies != false) {
+	$companies_per_manager = pie3d_graph ($config['flash_charts'], $manager_companies, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+} else {
+	$companies_per_manager = __('No data to show');
+}
+
+$companies_per_manager = '<br><div class="pie_frame">' . $companies_per_manager . '</div>';
+
+$table->data[0][1] = print_container('companies_per_manager', __('Companies per manager'), $companies_per_manager, 'no', true, '10px');
+
+//TOP 10 ACTIVITY
+$companies_activity = crm_get_total_activity($where_clause);
+
+if ($read && $enterprise) {
+	$companies_activity = crm_get_user_companies($config['id_user'], $companies_activity);
+}
+
+if ($companies_activity != false) {
+	$companies_activity_content = '<br>' . print_table(crm_print_most_activity_companies($companies_activity), true);
+} else {
+	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
+}
+
+$table->data[1][0] = print_container('top_10_activity', __('Top 10 activity'), $companies_activity_content, 'no', true, '10px');
 
 //USERS
 $companies_user = crm_get_total_user($where_clause);
@@ -162,26 +188,7 @@ if ($companies_user != false) {
 
 $companies_user_content = '<br><div class="pie_frame">' . $companies_user_content . '</div>';
 
-$table->data[0][1] = print_container('companies_per_user', __('Users per company'), $companies_user_content, 'no', true, '10px');
-
-// MANAGERS
-if ($read && $enterprise) {
-	$manager_companies = crm_get_total_managers_acl($where_clause);
-} else {
-	$manager_companies = crm_get_total_managers($where_clause);
-}
-
-$manager_companies = crm_get_data_managers_graph($manager_companies);
-
-if ($manager_companies != false) {
-	$companies_per_manager = pie3d_graph ($config['flash_charts'], $manager_companies, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-} else {
-	$companies_per_manager = __('No data to show');
-}
-
-$companies_per_manager = '<br><div class="pie_frame">' . $companies_per_manager . '</div>';
-
-$table->data[0][2] = print_container('companies_per_manager', __('Companies per manager'), $companies_per_manager, 'no', true, '10px');
+$table->data[1][1] = print_container('companies_per_user', __('Users per company'), $companies_user_content, 'no', true, '10px');
 
 //TOP 10 INVOICING
 $companies_invoincing = crm_get_total_invoiced($where_clause);
@@ -196,7 +203,7 @@ if ($companies_invoincing != false) {
 	$companies_invoincing_content = '<br><div>' . __('No data to show') . '</div>';
 }
 
-$table->data[1][0] = print_container('top_10_invoicing', __('Top 10 invoicing'), $companies_invoincing_content, 'no', true, '10px');
+$table->data[2][0] = print_container('top_10_invoicing', __('Top 10 invoicing'), $companies_invoincing_content, 'no', true, '10px');
 
 //INVOICING VOLUME
 // The code below isn't needed meanwhile the $companies_invoices array are filled on the TOP 10 INVOICING 
@@ -216,7 +223,22 @@ if ($companies_invoincing != false) {
 
 $companies_invoincing_volume = '<br><div class="pie_frame">' . $companies_invoincing_volume . '</div>';
 
-$table->data[2][0] = print_container('invoicing_volume', __('Invoicing volume'), $companies_invoincing_volume, 'no', true, '10px');
+$table->data[2][1] = print_container('invoicing_volume', __('Invoicing volume'), $companies_invoincing_volume, 'no', true, '10px');
+
+//TOP 10 MANAGERS INVOICING
+if ($read && $enterprise) {
+	$managers_invoicing = crm_get_invoicing_managers_acl($config['id_user'], $where_clause);
+} else {
+	$managers_invoicing = crm_get_managers_invoicing($where_clause);
+}
+
+if ($managers_invoicing != false) {
+	$managers_invoicing_content = '<br>' . print_table(crm_print_most_invoicing_managers($managers_invoicing), true);
+} else {
+	$managers_invoicing_content = '<br><div>' . __('No data to show') . '</div>';
+}
+
+$table->data[3][0] = print_container('top_10_managers_invoicing', __('Top 10 managers invoicing'), $managers_invoicing_content, 'no', true, '10px');
 
 //MANAGERS INVOICING VOLUME
 if ($read && $enterprise) {
@@ -235,37 +257,7 @@ if ($managers_invoicing != false) {
 
 $managers_invoicing_volume = '<br><div class="pie_frame">' . $managers_invoicing_volume . '</div>';
 
-$table->data[2][1] = print_container('managers_invoicing_volume', __('Managers invoicing volume'), $managers_invoicing_volume, 'no', true, '10px');
-
-//TOP 10 MANAGERS INVOICING
-if ($read && $enterprise) {
-	$managers_invoicing = crm_get_invoicing_managers_acl($config['id_user'], $where_clause);
-} else {
-	$managers_invoicing = crm_get_managers_invoicing($where_clause);
-}
-
-if ($managers_invoicing != false) {
-	$managers_invoicing_content = '<br>' . print_table(crm_print_most_invoicing_managers($managers_invoicing), true);
-} else {
-	$managers_invoicing_content = '<br><div>' . __('No data to show') . '</div>';
-}
-
-$table->data[2][2] = print_container('top_10_managers_invoicing', __('Top 10 managers invoicing'), $managers_invoicing_content, 'no', true, '10px');
-
-//TOP 10 ACTIVITY
-$companies_activity = crm_get_total_activity($where_clause);
-
-if ($read && $enterprise) {
-	$companies_activity = crm_get_user_companies($config['id_user'], $companies_activity);
-}
-
-if ($companies_activity != false) {
-	$companies_activity_content = '<br>' . print_table(crm_print_most_activity_companies($companies_activity), true);
-} else {
-	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
-}
-
-$table->data[1][1] = print_container('top_10_activity', __('Top 10 activity'), $companies_activity_content, 'no', true, '10px');
+$table->data[3][1] = print_container('managers_invoicing_volume', __('Managers invoicing volume'), $managers_invoicing_volume, 'no', true, '10px');
 
 echo '<br>';
 print_table($table);
