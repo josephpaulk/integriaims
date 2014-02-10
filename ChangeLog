@@ -1,3 +1,7 @@
+2014-02-10  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/auth/mysql.php: Fixed bug creating user profile.
+
 2014-02-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/companies/company_statistics.php: Improved the

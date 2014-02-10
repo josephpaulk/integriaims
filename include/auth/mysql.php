@@ -232,6 +232,7 @@ function create_user ($id_user, $password, $user_info) {
  */
 function process_user_login ($login, $pass) {
 	global $config, $mysql_cache;
+	include_once($config['homedir'] . "/include/functions_profile.php");
 
 	// Always authenticate admins against the local database
 	if (strtolower ($config["auth_methods"]) == 'mysql'|| dame_admin ($login)) {	
