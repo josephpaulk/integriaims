@@ -324,7 +324,7 @@ function attach_incident_file ($id, $file_temp, $file_description, $email_notify
 
 		// Adding a WU noticing about this
 		$link = "<a target='_blank' href='operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."'>".$filename."</a>";
-		$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
+		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
 		$public = 1;
 		$timeused = 0;
 		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);
@@ -2491,5 +2491,11 @@ function incidents_hours_to_dayminseg ($hours) {
 	}
 	
 	return $result;
+}
+
+function incidents_get_status_name($id_status) {
+	
+	$name = get_db_value ('name', 'tincident_status', 'id', $id_status);
+	return $name;
 }
 ?>

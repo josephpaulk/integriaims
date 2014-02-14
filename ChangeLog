@@ -1,3 +1,15 @@
+2014-02-14  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  integria_dbdata.sql
+	  integria_demo.sql
+	  include/functions_form.php
+	  include/functions_groups.php
+	  include/functions_incidents.php
+	  operation/side_menu.php: Added workflow rules.
+
+	* extras/mr/4.sql: Added file.
+
 2014-02-10  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/auth/mysql.php: Fixed bug creating user profile.

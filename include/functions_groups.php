@@ -183,4 +183,9 @@ function print_groups_table ($groups) {
 	}
 }
 
+function groups_get_group_name($id_group) {
+	$name = get_db_value('nombre', 'tgrupo', 'id_grupo', $id_group);
+	
+	return $name;
+}
 ?>

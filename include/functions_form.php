@@ -259,7 +259,7 @@ function combo_groups ($actual = -1, $mode = "IR") {
 
 // Returns a combo with the incident status available
 // ----------------------------------------------------------------------
-function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false, $for_massives = false, $script='') {
+function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false, $for_massives = false, $script='', $nothing = 'select', $nothing_value = '0') {
 	$output = '';
 
 	if ($disabled) {
@@ -285,7 +285,7 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 		true, false, false, __('Status'));
 	}
 	else {
-	$output .= print_select ($values, 'incident_status', $actual, $script, '', 0,
+	$output .= print_select ($values, 'incident_status', $actual, $script, $nothing, $nothing_value,
 		true, false, false, __('Status'));
 	}
 

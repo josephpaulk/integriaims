@@ -502,8 +502,13 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "</div>";
 		}
 	}
-	echo "</div></div>";
-}
+	
+	//Workflow rules
+	if (get_admin_user($config['id_user'])) {
+		enterprise_include ("operation/sidemenu_workflow_rules.php");
+	}
+		echo "</div></div>";
+	}
 
 // INVENTORY
 if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inventory != MENU_HIDDEN) {
