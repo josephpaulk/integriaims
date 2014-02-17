@@ -930,8 +930,8 @@ function round_number ($number, $rounder = 5) {
 	return (int) ($number / $rounder + 0.5) * $rounder;
 }
 
-function template_process ($filename, $macroarray) {
-	
+function template_process ($filename, $macroarray, $contents = false) {
+
 	/* USAGE:
 	
 	$MACROS["_fullname_"] = "My taylor is rich";
@@ -941,19 +941,21 @@ function template_process ($filename, $macroarray) {
 	contents altered on function return
 	
 	*/
-	$fh = fopen ($filename, "r");
-	
-	// Empty string
-	if (! $fh) {
-		return "";
-	}
+	if (!$contents) { //file
+		$fh = fopen ($filename, "r");
+		
+		// Empty string
+		if (! $fh) {
+			return "";
+		}
 
-	$contents = fread($fh, filesize($filename));
-	fclose ($fh);
-	
+		$contents = fread($fh, filesize($filename));
+		fclose ($fh);
+	}	
 	foreach ($macroarray as $key => $value) {
 		$contents = str_replace($key, $value, $contents);
 	}
+
 	return $contents;
 }
 

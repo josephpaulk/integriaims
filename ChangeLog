@@ -1,3 +1,12 @@
+2014-02-17  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions.php: Changed templates
+	for macros in workflow rules.
+
+	* include/help/en/help_macros_workflow.php
+	  include/help/es/help_macros_workflow.php: Added
+	files.
+
 2014-02-14  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
