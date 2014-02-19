@@ -221,7 +221,7 @@ ALTER TABLE tcompany ADD `website` tinytext NULL default NULL;
 ALTER TABLE tcompany ADD `id_parent` mediumint(8) unsigned default NULL;
 ALTER TABLE tcompany ADD `manager` varchar(150) NOT NULL default '';
 
-CREATE TABLE `ttranslate_string` (
+CREATE TABLE IF NOT EXISTS`ttranslate_string` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `lang` tinytext NOT NULL,
   `string` text NOT NULL,
@@ -242,8 +242,8 @@ ALTER TABLE tdownload ADD `external_id` text NOT NULL default '';
 
 
 ALTER TABLE tattachment MODIFY `description` text default '';
-ALTER TABLE tdownload_category ADD   `icon` varchar(100) NOT NULL default '';
-ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
+-- ALTER TABLE tdownload_category ADD   `icon` varchar(100) NOT NULL default '';
+-- ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
  
 ALTER TABLE tinvoice ADD status enum ('pending', 'paid', 'canceled') default 'pending';
 ALTER TABLE tinvoice ADD `tax` float(11,2) NOT NULL DEFAULT '0.0';
@@ -302,8 +302,11 @@ CREATE TABLE `tkb_product_group` (
 UPDATE tprofile SET `cr` = 1;
 UPDATE tprofile SET `cw` = 1 WHERE `id` IN (1, 3);
 UPDATE tprofile SET `cm` = 1 WHERE `id` IN (1, 3);
+ALTER TABLE tprofile ADD `frr` tinyint(1) NOT NULL default '0';
 UPDATE tprofile SET `frr` = 1;
+ALTER TABLE tprofile ADD `frw` tinyint(1) NOT NULL default '0';
 UPDATE tprofile SET `frw` = 1 WHERE `id` IN (1, 3);
+ALTER TABLE tprofile ADD `frm` tinyint(1) NOT NULL default '0';
 UPDATE tprofile SET `frm` = 1 WHERE `id` IN (1, 3);
 
 /* 25/06/2013 */
@@ -385,7 +388,7 @@ CREATE TABLE `tinventory_acl` (
 
 ALTER TABLE `ttask` DROP `id_group`;
 
-ALTER TABLE `tgrupo` ADD `id_inventory_default` bigint(20) unsigned NOT NULL;
+-- ALTER TABLE `tgrupo` ADD `id_inventory_default` bigint(20) unsigned NOT NULL;
 
 /*31/07/2013 */
 CREATE TABLE IF NOT EXISTS `tupdate_settings` ( 
