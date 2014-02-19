@@ -1,3 +1,10 @@
+2014-02-19  Vanessa Gil <vanessa.gil@artica.es>
+
+	* general/header.php: Fixed bug in
+	update manager message.
+	
+	* operation/manufacturers.php: Fixed bug.
+
 2014-02-19  Mario Pulido <mario.pulido@artica.es>
 
 	* extras/migrate.sql: Fixed queries in migrate 3.X to 4.X 

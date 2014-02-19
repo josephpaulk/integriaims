@@ -75,7 +75,7 @@ if ($update_manufacturer) {
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Updated manufacturer $name");
 	}
-}
+
 	$id = 0;
 }
 
@@ -86,7 +86,7 @@ if ($delete_manufacturer) {
 	$sql = sprintf ('DELETE FROM tmanufacturer WHERE id = %d', $id);
 	process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Deleted manufacturer $name");
-	}
+
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
