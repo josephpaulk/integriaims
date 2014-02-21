@@ -221,8 +221,13 @@ if ($id || $new_contact) {
 		$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 		
-		$companies = crm_get_companies_list ("", false, "", true);
-		$table->data[3][1] = print_select ($companies, 'id_company', $id_company, '', '', 0, true, 0, true, __('Company'));
+		$params = array();
+		$params['input_id'] = 'id_company';
+		$params['input_name'] = 'id_company';
+		$params['input_value'] = $id_company;
+		$params['title'] = __('Company');
+		$params['return'] = true;
+		$table->data[3][1] = print_company_autocomplete_input($params);
 		
 		if ($id) {
 			$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
@@ -291,6 +296,13 @@ if ($id || $new_contact) {
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
+
+$(document).ready (function () {
+
+	var idUser = "<?php echo $config['id_user'] ?>";
+	bindCompanyAutocomplete ('id_company', idUser);
+
+});
 
 // Form validation
 trim_element_on_submit('#text-search_text');

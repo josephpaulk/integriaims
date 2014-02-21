@@ -203,10 +203,14 @@ function filter_incidents ($filters, $count=false) {
 			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
 			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-			ORDER BY %s actualizacion DESC
-			LIMIT %d OFFSET %d',
+			ORDER BY %s actualizacion DESC',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $order_by, $filters["limit"], $filters["offset"]);
+			$filters['string'],$filters['string'], $filters['string'], $order_by);
+
+		if ($filters["limit"] > 0) {
+			$sql_limit = sprintf (' LIMIT %d OFFSET %d', $filters["limit"], $filters["offset"]);
+			$sql .= $sql_limit;
+		}
 		
 		$incidents = get_db_all_rows_sql ($sql);
 

@@ -82,8 +82,12 @@ if ($get_group_info) {
 if ($get_user_company) {
 	$id_user = get_parameter("id_user");
 	$company = get_user_company ($id_user, false);
+	if ($company != false) {
+		$company['name'] = safe_output($company['name']);
+	}
 	
-	echo json_encode($company['id']);
+	echo json_encode($company);
+	return;
 }
 
 if ($delete_users) {

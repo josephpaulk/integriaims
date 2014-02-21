@@ -1,3 +1,68 @@
+2014-02-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* extras/mr/5.sql: Added file. New MR5.
+
+	* operation/download/manage_types.php: Added file
+	to manage the file releases types.
+
+	* images/download_type/default.png: Added a default
+	icon for the file releases types.
+
+	* include/functions_file_releases.php: Added file to
+	hold the file releases related functions.
+
+	* include/ajax/companies.php: Added file to make
+	companies related ajax calls.
+
+	* operation/download/browse.php: Now is possible to
+	upload multiple files and set its information without
+	reloading the page. Added a new view based in a grid
+	of file releases types. Many improvements.
+
+	* godmode/setup/offline_update.php,
+	  mobile/operation/incident.php,
+	  include/ajax/users.php,
+	  operation/incidents/incident_statistics.php,
+	  operation/users/user_spare_workunit.php: Minor fixes.
+
+	* include/functions.php: Added the functions
+	"getFileUploadStatus" and "translateFileUploadStatus".	
+
+	* include/functions_form.php: Improvements on the
+	function "combo_download_categories".
+
+	* include/functions_html.php: Improvements on the
+	functions "print_input_hidden". Added the function
+	"print_company_autocomplete_input".
+
+	* include/functions_incidents.php: Now the function
+	"filter_incidents" does not limit the results if the
+	limit filter is set to 0.
+
+	* include/ajax/remote_validations.php: Added a new
+	remote validation for the file releases types.
+
+	* include/js/integria.js: Added the function
+	"bindCompanyAutocomplete" to give autocompletion to
+	the input created with the function
+	"print_company_autocomplete_input".
+
+	* include/styles/integria.css: Added new style rules,
+	expecially for the fileupload forms.
+
+	* operation/main_menu.php,
+	  operation/side_menu.php: Now the links to the file
+	releases section point to the file releases type grid
+	selection.
+
+	* operation/companies/company_detail.php,
+	  operation/contacts/contact_detail.php,
+	  operation/contacts/contact_manage.php,
+	  operation/contracts/contract_detail.php,
+	  operation/invoices/invoices.php,
+	  operation/leads/lead_detail.php: Added the new
+	company autocomplete input and fixed some errors.
+
 2014-02-19  Vanessa Gil <vanessa.gil@artica.es>
 
 	* general/header.php: Fixed bug in

@@ -504,12 +504,16 @@ function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0,
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  * @param string HTML class to be added. Useful in javascript code.
  */
-function print_input_hidden ($name, $value, $return = false, $class = '', $label = false) {
+function print_input_hidden ($name, $value, $return = false, $class = '', $label = false, $id = '') {
 	if ($label) {
 		$output .= print_label ($label, $name, 'hidden', true);
 	}
+
+	if (!$id) {
+		$id = "hidden-".$name;
+	}
 	
-	$output = '<input id="hidden-'.$name.'" name="'.$name.'" type="hidden"';
+	$output = '<input id="'.$id.'" name="'.$name.'" type="hidden"';
 	if ($class != '')
 		$output .= ' class="'.$class.'"';
 	$output .=' value="'.$value.'" />';
@@ -818,7 +822,7 @@ function print_table (&$table, $return = false) {
  * @param bool Disable the button (optional, button enabled by default).
  * @param string Script to execute when onClick event is triggered (optional).
  * @param string Optional HTML attributes. It's a free string which will be
-	inserted into the HTML tag, use it carefully (optional).
+ *	inserted into the HTML tag, use it carefully (optional).
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_radio_button_extended ($name, $value, $label, $checkedvalue, $disabled, $script, $attributes, $return = false) {
@@ -938,7 +942,7 @@ function print_label ($label, $id, $input_type = 'text', $return = false, $html 
  * @param bool Disable the button  (optional, button enabled by default).
  * @param string Script to execute when onClick event is triggered (optional).
  * @param string Optional HTML attributes. It's a free string which will be
-	inserted into the HTML tag, use it carefully (optional).
+ * inserted into the HTML tag, use it carefully (optional).
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $attributes, $return = false, $label = false) {
@@ -1200,6 +1204,76 @@ function get_last_date_control ($last_date = 0, $id = 'last_date_search', $label
 
 	return $html;
 
+}
+
+
+function print_company_autocomplete_input ($parameters) {
+	
+	if (isset($parameters['input_name'])) {
+		$input_name = $parameters['input_name'];
+	}
+	
+	$input_value = '';
+	$company_name = '';
+	if (isset($parameters['input_value'])) {
+		$input_value = $parameters['input_value'];
+		$company_name = get_db_value("name", "tcompany", "id", $input_value);
+		if (!$company_name) {
+			$company_name = "";
+		}
+	}
+	
+	if (isset($parameters['input_id'])) {
+		$input_id = $parameters['input_id'];
+	}
+	
+	$return = false;
+	if (isset($parameters['return'])) {
+		$return = $parameters['return'];
+	}
+	//$input_size = 15;
+	if (isset($parameters['size'])) {
+		$input_size = $parameters['size'];
+	}
+	
+	//$input_maxlength = 50;
+	if (isset($parameters['maxlength'])) {
+		$input_maxlength = $parameters['maxlength'];
+	}
+	
+	$title = '';
+	if (isset($parameters['title'])) {
+		$title = $parameters['title'];
+	}
+	
+	$help_message = "Type at least two characters to search";
+	if (isset($parameters['help_message'])) {
+		$help_message = $parameters['help_message'];
+	}
+	$return_help = true;
+	if (isset($parameters['return_help'])) {
+		$return_help = $parameters['return_help'];
+	}
+
+	$filter = "";
+	if (isset($parameters['filter'])) {
+		$filter = $parameters['filter'];
+	}
+	
+	$attributes = 'class="company_autocomplete"';
+	
+	$html = "";
+	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title)). print_help_tip (__($help_message), $return_help);
+	$html .= print_input_hidden ($input_name, $input_value, true);
+	if ($filter) {
+		$html .= print_input_hidden ("autocomplete_".$input_name."_filter", $filter, true);
+	}
+
+	if ($return) {
+		return $html;
+	} else {
+		echo $html;
+	}
 }
 
 ?>

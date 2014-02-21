@@ -45,7 +45,7 @@ else {
 	$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
 }
 $kb_link = 'index.php?sec=kb&sec2=operation/kb/browse';
-$download_link = 'index.php?sec=download&sec2=operation/download/browse';
+$download_link = 'index.php?sec=download&sec2=operation/download/browse&show_types=1';
 
 $support_link = 'javascript:';
 if ($incidents_acl) {

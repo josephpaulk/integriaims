@@ -958,7 +958,7 @@ if ((!$id) AND ($new_company == 0)){
 		$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 	}
 
-	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
+	$search_params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
 	
 	$table->width = '99%';
 	$table->class = 'search-table-button';
@@ -970,8 +970,16 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 10, 100, true, __('Country'));
 	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
 	
-	$companies_name = crm_get_companies_list("", false, "ORDER BY name", true);
-	$table->data[1][0] = print_select ($companies_name, 'search_parent', $search_parent, '', __('Any'), 0, true, false, false, __('Parent'));
+	// $companies_name = crm_get_companies_list("", false, "ORDER BY name", true);
+	// $table->data[1][0] = print_select ($companies_name, 'search_parent', $search_parent, '', __('Any'), 0, true, false, false, __('Parent'));
+	$params = array();
+	$params['input_id'] = 'search_parent';
+	$params['input_name'] = 'search_parent';
+	$params['input_value'] = $search_parent;
+	$params['title'] = __('Parent');
+	$params['return'] = true;
+	$table->data[1][0] = print_company_autocomplete_input($params);
+
 	$table->data[1][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 	$table->data[1][3] = print_input_text ('search_min_billing', $search_min_billing, '', 15, 20, true, __('Min. billing'));
@@ -993,7 +1001,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo '</form>';
 	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
-	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
+	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$search_params", $offset);
 
 	if ($companies !== false) {
 
@@ -1056,9 +1064,10 @@ if ((!$id) AND ($new_company == 0)){
 			}
 			$data[7] = $company["billing"];// . " " . $config["currency"];
 
+			$manage_permission = check_crm_acl ('company', 'cm', $config['id_user'], $company['id']);
 			if ($manage_permission) {
 				$data[8] ='<a href="index.php?sec=customers&
-								sec2=operation/companies/company_detail'.$params.'&
+								sec2=operation/companies/company_detail'.$search_params.'&
 								delete_company=1&id='.$company['id'].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
@@ -1095,6 +1104,7 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	if (<?php echo json_encode($id) ?> <= 0 || <?php echo json_encode($disabled_write) ?> == false) {
 		bindAutocomplete ('#text-user', idUser);
+		bindCompanyAutocomplete ('search_parent', idUser);
 	}
 	
 	// Form validation
@@ -1103,8 +1113,8 @@ $(document).ready (function () {
 	trim_element_on_submit('#text-fiscal_id');
 	validate_form("#form-company_detail");
 	// id_user
-	if ($("#company_stats_form").length > 0){
-	  validate_user ("#company_stats_form", "#text-user", "<?php echo __('Invalid user')?>");
+	if ($("#company_stats_form").length > 0) {
+		validate_user ("#company_stats_form", "#text-user", "<?php echo __('Invalid user')?>");
 	} else if ("#form-company_detail") {
 		validate_user ("#form-company_detail", "#text-user", "<?php echo __('Invalid user')?>");
 	}

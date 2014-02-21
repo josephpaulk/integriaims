@@ -561,13 +561,6 @@ if ($id || $new) {
 		$table->data[4][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		$table->data[5][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 		
-		if ($config["lead_company_filter"] != ""){
-			$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."')";
-		} else {
-			$where_filter = "AND 1=1";
-		}
-		$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
-		
 		$languages = crm_get_all_languages();
 		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, true,  __('Language'));
 		
@@ -600,7 +593,21 @@ if ($id || $new) {
 				<img src='images/award_star_silver_1.png'></a>";
 		}
 		
-		$table->data[6][1] = print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
+
+		if ($config["lead_company_filter"] != ""){
+			$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."')";
+		} else {
+			$where_filter = "AND 1=1";
+		}
+		$params = array();
+		$params['input_id'] = 'id_company';
+		$params['input_name'] = 'id_company';
+		$params['input_value'] = $id_company;
+		$params['title'] = __('Managed by');
+		$params['return'] = true;
+		$params['filter'] = $where_filter;
+		$table->data[6][1] = print_company_autocomplete_input($params);
+
 		if ($id_company) {
 			$table->data[6][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 			$table->data[6][1] .= "<img src='images/company.png'></a>";
@@ -718,13 +725,13 @@ if ($id || $new) {
 	echo '<form id="form-saved_searches" method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search">';
 	foreach ($filter as $key => $value) {
 		if ($key == "search_text") {
-			print_input_hidden ("search_text", $value);
+			print_input_hidden ("search_text", $value, false, '', false, "filter-search_text");
 		} elseif ($key == "id_language") {
-			print_input_hidden ("id_language", $value);
+			print_input_hidden ("id_language", $value, false, '', false, "filter-id_language");
 		} elseif ($key == "id_category") {
-			print_input_hidden ("product", $value);
+			print_input_hidden ("product", $value, false, '', false, "filter-product");
 		} else {
-			print_input_hidden ($key."_search", $value);
+			print_input_hidden ($key."_search", $value, false, '', false, "filter-".$key."_search");
 		}
 	}
 	print_table ($table);
@@ -761,7 +768,7 @@ if ($id || $new) {
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
 	}
 
-	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+	$search_params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 	$where_group = "";
 
@@ -838,14 +845,6 @@ if ($id || $new) {
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
-	if ($config["lead_company_filter"] != ""){
-		$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."')";
-	} else {
-		$where_filter = "AND 1=1";
-	}
-	
-	$companies = crm_get_companies_list ($where_filter, false, "ORDER BY name", true);
-	
 	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __('Owner'))
 
@@ -873,7 +872,19 @@ if ($id || $new) {
 
 	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);
 	
-	$table_advanced->data[1][0] = print_select ($companies, 'id_company_search', $id_company, '', __("Any"), 0, true, 0, false,  __('Managed by'));
+	if ($config["lead_company_filter"] != ""){
+		$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."') ";
+	} else {
+		$where_filter = "";
+	}
+	$params = array();
+	$params['input_id'] = 'id_company_search';
+	$params['input_name'] = 'id_company_search';
+	$params['input_value'] = $id_company;
+	$params['title'] = __('Managed by');
+	$params['return'] = true;
+	$params['filter'] = $where_filter;
+	$table_advanced->data[1][0] = print_company_autocomplete_input($params);
 
 	$table_advanced->data[1][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', __('Any'), '', true, false, false,
@@ -891,7 +902,7 @@ if ($id || $new) {
 
 	$count_total_leads = count($leads);
 	
-	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$params", $offset);
+	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$search_params", $offset);
 
 	if ($leads !== false) {
 		unset ($table);
@@ -1149,13 +1160,17 @@ $(document).ready (function () {
 				get_user_company: 1,
 				id_user: $('#text-user').val()
 			},
+			dataType: "json",
 			success: function(data) {
-				$('#id_company').find('option[value='+data+']').attr("selected",true);
+				$('#id_company').val(data.name);
+				$('#hidden-id_company').val(data.id);
 			}
 		});
 	};
-	bindAutocomplete ("#text-user", idUser);
-	$("#text-user").blur(onAutocompleteChange);
+	bindAutocomplete("#text-user", idUser);
+	$("#text-user").change(onAutocompleteChange);
+	bindCompanyAutocomplete("id_company", idUser);
+	bindCompanyAutocomplete("id_company_search", idUser);
 	
 	if ($("#lead_stats_form").length > 0) {
 		validate_user ("#lead_stats_form", "#text-user", "<?php echo __('Invalid user')?>");
@@ -1172,7 +1187,7 @@ function changeAction(tab) {
 	
 	var f = document.forms.lead_stats_form;
 	
-	f.action = "index.php?sec=customers&sec2=operation/leads/lead&tab="+tab+"<?php echo $params ?>";
+	f.action = "index.php?sec=customers&sec2=operation/leads/lead&tab="+tab+"<?php echo $search_params ?>";
 	$("#lead_stats_form").submit();
 }
 

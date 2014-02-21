@@ -43,6 +43,7 @@ $search_existing_kb_category = (bool) get_parameter ('search_existing_kb_categor
 $search_existing_product_type = (bool) get_parameter ('search_existing_product_type');
 $search_existing_download = (bool) get_parameter ('search_existing_download');
 $search_existing_file_category = (bool) get_parameter ('search_existing_file_category');
+$search_existing_file_type = (bool) get_parameter ('search_existing_file_type');
 $search_existing_user_id = (bool) get_parameter ('search_existing_user_id');
 $search_non_existing_user_id = (bool) get_parameter ('search_non_existing_user_id');
 $search_existing_user_name = (bool) get_parameter ('search_existing_user_name');
@@ -728,6 +729,29 @@ if ($search_existing_project) {
 	$query_result = get_db_value("name", "tdownload_category", "name", $file_category_name);
 	if ($query_result) {
 		if ($file_category_name != $old_file_category_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_file_type) {
+	require_once ('include/functions_db.php');
+	$file_type_name = get_parameter ('file_type_name');
+	$file_type_id = get_parameter ('file_type_id', 0);
+	$old_file_type_name = "";
+	
+	if ($file_type_id) {
+		$old_file_type_name = get_db_value("name", "tdownload_type", "id", $file_type_id);
+	}
+	
+	// Checks if the category is in the db
+	$query_result = get_db_value("name", "tdownload_type", "name", $file_type_name);
+	if ($query_result) {
+		if ($file_type_name != $old_file_type_name) {
 			// Exists. Validation error
 			echo json_encode(false);
 			return;

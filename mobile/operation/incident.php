@@ -1014,6 +1014,7 @@ class Incident {
 			
 			$filename = $_FILES[$file]['name'];
 			$filename = str_replace (" ", "_", $filename);
+			$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 			$correct_file_path = sys_get_temp_dir()."/$filename";
 			$file_tmp = $_FILES[$file]['tmp_name'];
 			if (rename($file_tmp, $correct_file_path)) {

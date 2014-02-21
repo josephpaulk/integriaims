@@ -335,7 +335,7 @@ echo "</h3>";
 
 $table->id = 'cost_form';
 $table->width = '98%';
-$table->class = 'databox';
+$table->class = 'search-table';
 $table->colspan = array ();
 $table->size = array ();
 $table->data = array ();
@@ -345,13 +345,13 @@ if ($id_company > 0) {
 	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 50, 100, true, __('Company'), true);
 	$table->data[0][0] .= "<input type=hidden name='id' value='$id_company'>";
 } else {
-	if (dame_admin($config['id_user'])) {
-		$where_clause = "";
-	} else {
-		$where_clause = "AND manager = '".$config['id_user']."'";
-	}
-	$companies = crm_get_companies_list ($where_clause, false, "ORDER BY name", true);
-	$table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
+	// $table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
+	$params = array();
+	$params['input_id'] = 'id';
+	$params['input_name'] = 'id';
+	$params['title'] = __('Company');
+	$params['return'] = true;
+	$table->data[0][0] = print_company_autocomplete_input($params);
 }
 
 $invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
@@ -514,26 +514,32 @@ trim_element_on_submit('#text-bill_id');
 validate_form("#form-invoice");
 var rules, messages;
 
+if (<?php echo json_encode((int)$id_company) ?> <= 0) {
+	// Rules: #id
+	rules = { required: true };
+	messages = { required: "<?php echo __('Company required'); ?>" };
+	add_validate_form_element_rules('#id', rules, messages);
+}
+
 // Rules: #text-bill_id
 rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
-        type: "POST",
-        data: {
-          page: "include/ajax/remote_validations",
-          search_existing_invoice: 1,
-		  invoice_type: function() { return $('#invoice_type').val() },
-          bill_id: function() { return $('#text-bill_id').val() },
-          invoice_id: <?php echo $id_invoice ?>
-        }
+		type: "POST",
+		data: {
+			page: "include/ajax/remote_validations",
+			search_existing_invoice: 1,
+			invoice_type: function() { return $('#invoice_type').val() },
+			bill_id: function() { return $('#text-bill_id').val() },
+			invoice_id: <?php echo $id_invoice ?>
+		}
 	}
 };
 messages = {
 	required: "<?php echo __('Bill ID required'); ?>",
 	remote: "<?php echo __('This bill ID already exists'); ?>"
 };
-
 add_validate_form_element_rules('#text-bill_id', rules, messages);
 
 // Rules: #text-tax
@@ -563,6 +569,12 @@ add_validate_form_element_rules('input[name="amount5"]', rules, messages);
 
 
 $(document).ready (function () {
+
+	var idUser = "<?php echo $config['id_user'] ?>";
+	if (<?php echo json_encode((int)$id_company) ?> <= 0) {
+		bindCompanyAutocomplete ('id', idUser, 'invoice');
+	}
+
 	$("#invoice_type").click (function () {
 		if ($("#invoice_type").val() == 'Received') {
 			$("#last_id").css('display', 'none');

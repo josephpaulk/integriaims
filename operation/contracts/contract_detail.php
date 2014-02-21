@@ -220,8 +220,14 @@ if ($id || $new_contract) {
 		
 		$table->class = 'search-table-button';
 		
-		$companies = crm_get_companies_list ("", false, "ORDER BY name", true);		
-		$table->data[0][0] =  print_select ($companies, 'id_company', $id_company, '', '', '', true, 0, false,  __('Company'));
+		$params = array();
+		$params['input_id'] = 'id_company';
+		$params['input_name'] = 'id_company';
+		$params['input_value'] = $id_company;
+		$params['title'] = __('Company');
+		$params['return'] = true;
+		$table->data[0][0] = print_company_autocomplete_input($params);
+
 		$table->data[0][1] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
 		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
 		$table->data[1][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);		
@@ -482,6 +488,9 @@ add_ranged_datepicker ("#text-search_date_begin_beginning", "#text-search_date_e
 add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
 
 $(document).ready (function () {
+
+	var idUser = "<?php echo $config['id_user'] ?>";
+	bindCompanyAutocomplete ('id_company', idUser);
 	
 	$("#id_group").change (function() {
 		refresh_company_combo();

@@ -1920,7 +1920,7 @@ table.search_by_priority td {
 	width: 15%;
 }
 
-div.incident_container, .integria_form, .container, table.search-table, table.search-table-button  {
+div.incident_container, .integria_form, .container, table.search-table, table.search-table-button, table.search-table-white {
 	background: #e6e6e6;
 	padding: 2px 0px 1px 12px;
 	margin-bottom: 9px;
@@ -1933,11 +1933,15 @@ div.incident_container, .integria_form, .container, table.search-table, table.se
 	border-radius:4px;
 }
 
-table.search-table, table.search-table-button, table.pipeline-table {
+table.search-table, table.search-table-button, table.search-table-white, table.pipeline-table {
 	padding: 12px 10px 16px 12px;
 	margin-left: 5px;
 	text-align: left;
 	width: 99%;
+}
+
+table.search-table-white {
+	background: none;
 }
 
 table.search-table-button tr:last-child td {
@@ -2074,6 +2078,13 @@ input.inventory_obj_search {
 
 input.ui-autocomplete-input {
 	background-image: url("../../images/group.png");
+	background-repeat: no-repeat;
+	background-position: 97% 50%;
+	background-color: #FFFFFF !important;
+}
+
+input.company_autocomplete {
+	background-image: url("../../images/company.png");
 	background-repeat: no-repeat;
 	background-position: 97% 50%;
 	background-color: #FFFFFF !important;
@@ -2500,7 +2511,7 @@ p.pagination {
     Thanks to: http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
 -----------------------------*/
 
-#form-offline_update {
+.fileupload_form {
     font-family:'PT Sans Narrow', sans-serif;
     background-color:#373a3d;
 	
@@ -2529,6 +2540,23 @@ p.pagination {
     color:#707070;
 }
 
+#drop_file table {
+	vertical-align: middle;
+}
+
+#drop_file table td, #drop_file table label {
+    font-family:'PT Sans Narrow', sans-serif;
+    font-size:16px;
+    font-weight:bold;
+    color:#707070;
+	vertical-align: middle;
+	margin-top: 0px;
+}
+
+#drop_file table select {
+	float: none;
+}
+
 #drop_file a {
     background-color:#FF9933;
     padding:12px 26px;
@@ -2537,7 +2565,6 @@ p.pagination {
     border-radius:2px;
     cursor:pointer;
     display:inline-block;
-    margin-top:12px;
     line-height:1;
 }
 
@@ -2550,14 +2577,15 @@ p.pagination {
     display:none;
 }
 
-#form-offline_update ul {
+.fileupload_form ul {
     list-style:none;
     margin:0 -30px;
     border-top:1px solid #2b2e31;
     border-bottom:1px solid #3d4043;
+    padding:0px;
 }
 
-#form-offline_update ul li {
+.fileupload_form ul li {
 
     background-color:#333639;
 
@@ -2568,17 +2596,16 @@ p.pagination {
     border-top:1px solid #3d4043;
     border-bottom:1px solid #2b2e31;
     padding:15px;
-    height: 52px;
 
     position: relative;
 }
 
-#form-offline_update ul li input {
+.fileupload_form ul li #input-progress {
 	left: 68px;
     position: absolute;
 }
 
-#form-offline_update ul li p {
+.fileupload_form ul li p {
     overflow: hidden;
     white-space: nowrap;
     color: #EEE;
@@ -2589,20 +2616,20 @@ p.pagination {
     left: 95px;
 }
 
-#form-offline_update ul li i {
+.fileupload_form ul li i {
     font-weight: normal;
     font-style:normal;
     color:#7f7f7f;
     display:block;
 }
 
-#form-offline_update ul li canvas {
+.fileupload_form ul li canvas {
     top: 15px;
     left: 13px;
     position: absolute;
 }
 
-#form-offline_update ul li span {
+.fileupload_form ul li span {
     width: 15px;
     height: 12px;
     background: url('../../images/check-cross.png') no-repeat;
@@ -2612,34 +2639,38 @@ p.pagination {
     cursor:pointer;
 }
 
-#form-offline_update ul li.working span {
+.fileupload_form ul li div {
+    display: block !important;
+}
+
+.fileupload_form ul li.working span {
     height: 16px;
     background-position: 0 -12px;
 }
 
-#form-offline_update ul li.loading span {
+.fileupload_form ul li.loading span {
     height: 16px;
     background: url('../../images/spinner.gif') no-repeat;
     background-position: 0 0px;
 }
 
-#form-offline_update ul li.suc span {
+.fileupload_form ul li.suc span {
     height: 12px;
     background: url('../../images/check-cross.png') no-repeat;
     background-position: 0 0px;
 }
 
-#form-offline_update ul li.suc p {
+.fileupload_form ul li.suc p {
     color: #5a8629;
 }
 
-#form-offline_update ul li.error span {
+.fileupload_form ul li.error span {
     height: 16px;
     background: url('../../images/check-cross.png') no-repeat;
     background-position: 0 -12px;
 }
 
-#form-offline_update ul li.error p {
+.fileupload_form ul li.error p {
     color: #FF3333;
 }
 

@@ -22,16 +22,110 @@ if (give_acl($config["id_user"], 0, "FRR")==0) {
     exit;
 }
 
-function get_download_files () {
-	$base_dir = 'attachment/downloads';
-	$files = list_files ($base_dir, "", 0, false);
-	
-	$retval = array ();
-	foreach ($files as $file) {
-		$retval[$file] = $file;
+require_once ('include/functions_file_releases.php');
+
+if (defined ('AJAX')) {
+
+	$get_external_id = get_parameter ("get_external_id", 0);
+	if ($get_external_id) {
+		echo sha1(random_string(12).date());
+		return;
 	}
-	
-	return $retval;
+
+	$upload_file = get_parameter ("upload_file", 0);
+	if ($upload_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+
+		if (give_acl($config["id_user"], 0, "FRW") != 1){
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create a new Download file without privileges");
+			$result["message"] = __('Error');
+			echo json_encode($result);
+			return;
+		}
+
+		$upload_status = getFileUploadStatus("upfile");
+		$upload_result = translateFileUploadStatus($upload_status);
+
+		if ($upload_result === true) {
+			$filename = $_FILES["upfile"]['name'];
+			$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
+			$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
+			$location = "attachment/downloads/$filename";
+			
+			$file_path = $config["homedir"]."/".$location;
+			$file_tmp = $_FILES["upfile"]['tmp_name'];
+			
+			if (copy($file_tmp, $file_path)) {
+				unlink ($file_tmp);
+				$result["status"] = true;
+				$result["filename"] = $filename;
+			} else {
+				unlink ($file_tmp);
+				$result["message"] = __('The file could not be copied');
+			}
+
+		} else {
+			$result["message"] = $upload_result;
+		}
+
+		echo json_encode($result);
+		return;
+	}
+
+	$insert_fr = get_parameter ("insert_fr", 0);
+	if ($insert_fr) {
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+
+		if (give_acl($config["id_user"], 0, "FRW") != 1){
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create a new Download file without privileges");
+			$result["message"] = __('Error');
+			echo json_encode($result);
+			return;
+		}
+
+		// Database Creation
+		// ==================
+		$timestamp = date('Y-m-d H:i:s');
+		$name = get_parameter ("name","");
+
+		if ($name != "") {
+
+			$filename = get_parameter ("filename","");
+			$description = get_parameter ("description", "");
+			$id_category = get_parameter ("id_category", "");
+			$id_type = get_parameter ("id_type", -1);
+			$public = (int) get_parameter ("public", 0);
+			$external_id = (string) get_parameter ("external_id");
+
+			$sql_insert = "INSERT INTO tdownload (name, location, description, id_category, id_user, date, public, external_id) 
+			  		 VALUE ('$name','attachment/downloads/$filename', '$description', '$id_category', '".$config["id_user"]."', '$timestamp', $public, '$external_id') ";
+			
+			$id = process_sql($sql_insert, "insert_id");	
+			if ($id) {
+
+				$result["status"] = true;
+				$result["message"] = __('Successfully created');
+				if ($id_type > 0) {
+					insert_type_file($id, $id_type);
+				}
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Created download item $id_data - $name");
+
+			} else {
+				$result["message"] = __('Could not be created'); 
+			}
+		} else {
+			$result["message"] = __('Name required');
+			$result["repeat"] = true;
+		}
+		// ==================
+
+		echo json_encode($result);
+		return;
+	}
 }
 
 $delete_btn = get_parameter ("delete_btn", 0);
@@ -47,42 +141,6 @@ if ($delete_btn){
 	unlink ($file_path);
 	$_GET["create"]=1;
 
-}
-
-
-// Database Creation
-// ==================
-if (isset($_GET["create2"])){ // Create group
-
-	if (give_acl($config["id_user"], 0, "FRW") != 1){
-		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create a new Download file without privileges");
-		require ("general/noaccess.php");
-		exit;
-	}
-	
-	$timestamp = date('Y-m-d H:i:s');
-	$name = get_parameter ("name","");
-
-	if ($name != "") {
-
-		$location = clean_output (get_parameter ("location",""));
-		$description = get_parameter ("description","");
-		$id_category = get_parameter ("id_category","");
-		$public = (int) get_parameter ("public",0);
-		$external_id = (string) get_parameter ("external_id");
-
-		$sql_insert = "INSERT INTO tdownload (name, location, description, id_category, id_user, date, public, external_id) 
-		  		 VALUE ('$name','attachment/downloads/$location', '$description', '$id_category', '".$config["id_user"]."', '$timestamp', $public, '$external_id') ";
-		$result=mysql_query($sql_insert);	
-		if (! $result)
-			echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
-		else {
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-			$id_data = mysql_insert_id();
-			//insert_event ("DOWNLOAD ITEM CREATED", $id_data, 0, $name);
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Created download item $id_data - $name");
-		}
-	}
 }
 
 // Database UPDATE
@@ -111,6 +169,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	// Location should not be changed never.
 	$description = get_parameter ("description","");
 	$id_category = get_parameter ("id_category","");
+	$id_type = get_parameter ("id_type", 0);
 	$public = (int) get_parameter ("public",0);
 	$external_id = (string) get_parameter ("external_id");
 
@@ -121,6 +180,12 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	else {
+		if ($id_type > 0) {
+			insert_type_file($id, $id_type);
+		} else {
+			delete_type_file($id);
+		}
+
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		//insert_event ("DOWNLOAD ITEM UPDATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Updated download item $id - $name");
@@ -157,6 +222,8 @@ if (isset($_GET["delete_data"])){ // if delete
 	$sql_delete= "DELETE FROM tdownload WHERE id = $id";		
 	$result=mysql_query($sql_delete);
 
+	delete_type_file($id);
+
 	$sql_delete= "DELETE FROM tdownload_tracking WHERE id_download = $id";		
 	$result=mysql_query($sql_delete);
 
@@ -178,6 +245,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$name = "";
 		$location = "";
 		$id_category = 1;
+		$id_type = 0;
 		$id = -1;
 		$description = "";	
 		$external_id = sha1(random_string(12).date());
@@ -197,291 +265,515 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$description =$row["description"];
 		$location = $row["location"];
 		$id_category = $row["id_category"];
+		$id_type = get_db_value("id_type", "tdownload_type_file", "id_download", $row["id"]);
 		$timestamp = $row["date"];
 		$down_id_user = $row["id_user"];
 		$public = $row["public"];
 		$external_id = $row["external_id"];
 	}
-	
-	echo "<h1>".__('File releases management')."</h1>";	
-	
-	$current_directory = $config["homedir"]. "/attachment/downloads";
 
-	// Upload file
-	if (isset($_GET["upload_file"])) {
-		
-		if (isset($_POST['upfile']) && ( $_POST['upfile'] != "" )){ //if file
-			$filename= $_POST['upfile'];
-			$file_tmp = sys_get_temp_dir().'/'.$filename;
-			$directory = get_parameter ("directory","");
+	if ($id == -1) {
 
-			// Copy file to directory and change name
-			$file_target = $config["homedir"]."/".$directory."/".$filename;
-			if (!(copy($file_tmp, $file_target))){
-				echo "<h3 class=error>".__("Could not be attached")."</h3>";
-			} else {
-				// Delete temporal file
-				echo "<h3 class=suc>".__("Successfully attached")."</h3>";
-				$location = $file_target;
-				unlink ($file_tmp);
-			}
-			
-		}
-	}
-
-	echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
-	echo '<h3>'.__('Upload a new file').'</h3>';
-	echo '</a>';
-	echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
-
-	if (is_writable($current_directory)) {
-		$target_directory = 'attachment/downloads';
-		$action = 'index.php?sec=download&sec2=operation/download/browse&create=1&upload_file';
-				
-		$into_form = "<input type='hidden' name='directory' value='$target_directory'>";
-
-		print_input_file_progress($action,$into_form,'','sub next');	
-	} else {
-		echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
-		echo "<p>";
-		echo __('Please check that current directory has write rights for HTTP server');
-		echo "</p>";
-	}
-	
-	echo "</div>";
-
-	// echo "<form method='post' action='index.php?sec=download&sec2=operation/download/browse&create=1&upload_file' enctype='multipart/form-data'>";
-	//echo "<table>";
-	
-	if ($id == -1){
 		echo "<h1>".__('Create a new file release')."</h1>";
-		echo "<form id='form-file_release' name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2=1'>";
-	}
-	else {
-		echo "<h1>".__('Update existing file release')."</h1>";
-		echo "<form id='form-file_release' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
-		echo "<input id='id_download' type=hidden name=id value='$id'>";
-	}
-	
-	echo '<table width="99%" class="search-table-button">';
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Name');
-	echo "<td class=datos>";
-	echo "<input id='text-name' type=text size=40 name='name' value='$name'>";
 
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('External ID');
-	echo "<td class=datos>";
-	echo "<input type=text size=60 name='external_id' value='$external_id'>";
+		$current_directory = $config["homedir"]. "/attachment/downloads";
 
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Public');
-	echo "<td class=datos>";
-	echo print_checkbox ("public", 1, $public, true, '');
+		if (!is_writable($current_directory)) {
 
-	if ($id == -1){
+			echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
+			echo "<p>";
+			echo __('Please check that current directory has write rights for HTTP server');
+			echo "</p>";
 
-		echo "<tr>";
-		echo "<td>";
-		echo __('Choose file from repository');
-		echo integria_help ("choose_download", true);
+		} else {
+			
+			// This chunk of code is to do not show in the combo with files, files already as file downloads
+			// (slerena, Sep2011)
 
-		echo "<td valign=top>";
+		    $location = basename ($location);
+		    $files = get_download_files();
+		    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload WHERE location LIKE 'attachment/downloads/%'");
+			if($files_db == false) {
+				$files_db = array();
+			}
 
-		// This chunk of code is to do not show in the combo with files, files already as file downloads
-		// (slerena, Sep2011)
+			$files_in = array();
+		    foreach ($files_db as $file_db){
+		        $files_in[basename($file_db['location'])] = 1;
+		    }
 
-	    $location = basename ($location);
-	    $files = get_download_files();
-	    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload WHERE location LIKE 'attachment/downloads/%'");
-		if($files_db == false) {
-			$files_db = array();
+		    $files_not_in = array();
+		    foreach ($files as $file) {
+		        if(!isset($files_in[$file])) {
+		            $files_not_in[$file] = $file;
+		        }
+		    }
+
+			echo "<form id=\"form-file_releases\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+			echo 	"<div id=\"drop_file\">";
+			echo 		"<table width=\"99%\">";
+			echo 			"<td width=\"30%\">";
+			echo 				__('Drop the file here');
+			echo 			"<td>";
+			echo 				__('or');
+			echo 			"<td width=\"30%\">";
+			echo 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
+			echo 			"<td>";
+			echo 				__('or');
+			echo 			"<td width=\"30%\">";
+			echo 				print_select ($files_not_in, 'location', $location, '', __('Select'), 0, true, 0, false, __('Choose file from repository'));
+			echo 				"&nbsp;" . integria_help ("choose_download", true);
+			echo 		"</table>";
+			echo 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
+			echo 	"</div>";
+			echo 	"<ul></ul>";
+			echo "</form>";
 		}
 
-		$files_in = array();
-	    foreach ($files_db as $file_db){
-	        $files_in[basename($file_db['location'])] = 1;
-	    }
+	} else {
+		echo "<h1>".__('Update existing file release')."</h1>";
+	}
+	
+	$table = new stdClass;
+	$table->width = '99%';
+	$table->id = 'download_data';
+	$table->class = 'search-table-button';
+	$table->data = array();
+	$table->colspan = array();
+	$table->colspan[0][1] = 2;
+	$table->colspan[2][0] = 3;
+	$table->colspan[3][0] = 3;
 
-	    $files_not_in = array();
-	    $match = 0;
-	    foreach ($files as $file) {
-	        if(!isset($files_in[$file])) {
-	                $files_not_in[$file] = $file;
-	        }
-	    }
+	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Name'));
+	$table->data[0][1] = print_input_text ('external_id', $external_id, '', 60, 100, true, __('External ID'));
+	$table->data[1][0] = print_checkbox ("public", 1, $public, true, __('Public'));
+	$table->data[1][1] = combo_download_categories ($id_category, 0, __('Main category'), true);
+	$table->data[1][2] = print_select (get_file_types(true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
+	$table->data[2][0] = print_textarea ("description", 5, 40, $description, '', true, __('Description'));
+	
+	if ($id == -1) {
 
-		print_select ($files_not_in, 'location', $location, '', '', '', false);
+		$table->data[3][0] = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
+		$form_file_release = '<form style="display:none;" id="form-file_release" enctype="multipart/form-data" name=prodman2 method="post" action="index.php?sec=download&sec2=operation/download/browse&create2=1">';
+	
+	} else {
 
-		echo "&nbsp;&nbsp;"; 
-
-		print_submit_button (__('Delete file'), 'delete_btn', false, 'class="sub upd"');
-
+		$table->data[3][0] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+		$form_file_release = "<form id='form-file_release' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
+		$form_file_release .= "<input id='id_download' type=hidden name=id value='$id'>";
 	}
 
-	
-	echo "<tr>";
-	echo "<td class=datos2 valign=top>";
-	echo __('Description');
-	echo "<td class=datos2>";
-	print_textarea ("description", 5, 40, $description, '', false,false);
+	$form_file_release .= print_table($table, true);
+	$form_file_release .= "</form>";
 
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Main category');
-	echo "<td class=datos>";
-	combo_download_categories ($id_category, 0);
-	if ($id == -1)
-		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
-	else
-		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
-	echo "</table>";
-	echo "</form>";
+	echo $form_file_release;
+
 }
 
 
-if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
+if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 	
-	// ==================================================================
-	// Show search controls
-	// ==================================================================
+	$show_types = (bool) get_parameter ("show_types", 0);
 	
-	echo "<h1>".__('Downloads')." &raquo; ".__('Defined data')."</h1>";
-	
-	// Search parameter 
-	$free_text = get_parameter ("free_text", "");
-	$category = get_parameter ("id_category", 0);
-	
-	// Search filters
-	echo '<form method="post">';
-	echo '<table width="99%" class="search-table">';
-	echo "<tr>";
-	echo "<td>";
-	echo __('Categories');
-	echo "<td>";
-	
-	combo_download_categories ($category, 1);
-	
-	echo "<tr>";
-	echo "<td>";
-	echo __('Search');
-	echo "<td>";
-	echo "<input type=text name='free_text' size=25 value='$free_text'>";
-	
-	echo "<td >";
-	echo "<input type=submit class='sub search' value='".__('Search')."'>";
-	
-	
-	echo "</td></tr></table></form>";
-	
-	// ==================================================================
-	// Download listings
-	// ==================================================================
-	
-	$sql_filter = "";
-	
-	if ($free_text != "")
-		$sql_filter .= " AND name LIKE '%$free_text%' OR description LIKE 
-	'%$free_text%'";
-	
-	if ($category > 0)
-		$sql_filter .= " AND id_category = $category ";
-	
-	$offset = get_parameter ("offset", 0);
-	$condition = get_filter_by_fr_category_accessibility();
-	$count = get_db_sql("SELECT COUNT(id) FROM tdownload $condition $sql_filter");
-	pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$category&free_text=$free_text", $offset);
-	
-	$sql = "SELECT * FROM tdownload $condition $sql_filter ORDER BY date DESC, name LIMIT $offset, ". $config["block_size"];
-	
-	$color =0;
-	
-	$downloads = process_sql($sql);
+	if ($show_types) {
 
-	if($downloads == false) {
-		$downloads = array();
-		echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
-	}
-	else {
-		echo '<table width="99%" class="listing" cellspacing=4 cellpading=4>';
+		echo "<h1>".__('Download')." &raquo; ".__('Types')."</h1>";
+		print_file_types_table();
 
-		echo "<th>".__('Name')."</th>";
-		echo "<th>".__('Size')."</th>";
-		echo "<th>".__('Category')."</th>";
-		if (give_acl($config["id_user"], 0, "FRW")){
-			echo "<th>".__('Downloads')."</th>";
-			echo "<th>".__('Public link')."</th>";
-		}
-		echo "<th>".__('Date')."</th>";
-		if (give_acl($config["id_user"], 0, "FRW")){
-			echo "<th>".__('Admin')."</th>";
-		}
-	}
+	} else {
 
-	foreach($downloads as $row){
-		echo "<tr>";
-
-		// Name
-		echo "<td><a title='".$row["description"]."' href='operation/common/download_file.php?type=release&id_attachment=".$row["id"]."'>";
-		echo $row["name"]."</a>";
-		if ($row["description"] != ""){
-			echo "<img src='images/zoom.png'>";
-		}
-		echo "</td>";
-
-		// Size
-		echo "<td>";
-		echo format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
+		// ==================================================================
+		// Show search controls
+		// ==================================================================
 		
-		// Category
-		echo "<td>";
-				echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
+		echo "<h1>".__('Downloads')." &raquo; ".__('Defined data')."</h1>";
+		
+		// Search parameter 
+		$free_text = get_parameter ("free_text", "");
+		$category = get_parameter ("id_category", 0);
+		$id_type = get_parameter ("id_type", 0);
+		
+		// Search filters
+		$table = new stdClass;
+		$table->width = '99%';
+		$table->class = 'search-table-button';
+		$table->data = array();
+		$table->colspan = array();
+		$table->colspan[1][0] = 3;
 
-		// Description
-		//	echo "<td class=f9>";
-		//	echo $row["description"];
+		$table->data[0][0] = print_input_text ('free_text', $free_text, '', 40, 100, true, __('Search'));
+		$table->data[0][1] = combo_download_categories ($id_category, true, true, true);
+		$table->data[0][2] = print_select (get_file_types(true), 'id_type', $id_type, '', __('Any'), 0, true, 0, false, __('Type'));
+		$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
-		if (give_acl($config["id_user"], 0, "FRW")){
-			// Downloads
-			echo "<td>";
-			echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
+		echo '<form method="post" action="index.php?sec=download&sec2=operation/download/browse">';
+		echo print_table($table, true);
+		echo "</form>";
+		
+		// ==================================================================
+		// Download listings
+		// ==================================================================
+		
+		$sql_filter = "";
+		
+		if ($free_text != "")
+			$sql_filter .= " AND name LIKE '%$free_text%' OR description LIKE '%$free_text%'";
+		
+		if ($id_category > 0)
+			$sql_filter .= " AND id_category = $id_category ";
 
-			// Public URL
-			echo "<td>";
-			if ($row["public"]){
-				$url = $config["base_url"] . "/operation/common/download_file.php?type=external_release&id_attachment=".$row["external_id"];
-				echo "<a href='$url'><img src='images/world.png'></a>";
+		if ($id_type > 0)
+			$sql_filter .= " AND id IN (SELECT id_download FROM tdownload_type_file WHERE id_type = $id_type) ";
+		if ($id_type == -1)
+			$sql_filter .= " AND id NOT IN (SELECT id_download FROM tdownload_type_file) ";
+		
+		$offset = get_parameter ("offset", 0);
+		$condition = get_filter_by_fr_category_accessibility();
+		$count = get_db_sql("SELECT COUNT(id) FROM tdownload $condition $sql_filter");
+		pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$id_category&id_type=$id_type&free_text=$free_text", $offset);
+		
+		$sql = "SELECT * FROM tdownload $condition $sql_filter ORDER BY date DESC, name LIMIT $offset, ". $config["block_size"];
+		
+		$color = 0;
+		
+		$downloads = process_sql($sql);
+
+		if($downloads == false) {
+			$downloads = array();
+			echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
+		}
+		else {
+
+			$table = new stdClass;
+			$table->width = '99%';
+			$table->class = 'listing';
+			$table->head = array();
+			$table->data = array();
+			$table->colspan = array();
+
+			$table->head[0] = __('Name');
+			$table->head[1] = __('Size');
+			$table->head[2] = __('Category');
+			$table->head[3] = __('Type');
+			if (give_acl($config["id_user"], 0, "FRW")) {
+				$table->head[4] = __('Downloads');
+				$table->head[5] = __('Public link');
 			}
+			$table->head[6] = __('Date');
+			if (give_acl($config["id_user"], 0, "FRW")){
+				$table->head[7] = __('Admin');
+			}
+
+			foreach($downloads as $row) {
+
+				$data = array();
+
+				// Name
+				$data[0] = "<a title='".$row["description"]."' href='operation/common/download_file.php?type=release&id_attachment=".$row["id"]."'>";
+				$data[0] .= $row["name"]."</a>";
+				if ($row["description"] != ""){
+					$data[0] .=  " <img src='images/zoom.png'>";
+				}
+
+				// Size
+				$data[1] = format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
+
+				// Category
+				$data[2] = "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
+				
+				// Type
+				$row["id_type"] = get_db_value("id_type", "tdownload_type_file", "id_download", $row["id"]);
+				if (!$row["id_type"]) {
+					$row["id_type"] = -1;
+				}
+				$data[3] = get_download_type_icon($row["id_type"]);
+
+				if (give_acl($config["id_user"], 0, "FRW")){
+					// Downloads
+					$data[4] = get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
+
+					// Public URL
+					if ($row["public"]){
+						$url = $config["base_url"] . "/operation/common/download_file.php?type=external_release&id_attachment=".$row["external_id"];
+						$data[5] = "<a href='$url'><img src='images/world.png'></a>";
+					} else {
+						$data[5] = "";
+					}
+				}
+
+				// Timestamp
+				$data[6] = human_time_comparation($row["date"]);
+
+				if (give_acl($config["id_user"], 0, "FRW")){
+
+					// Edit
+					$data[7] = "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
+					$data[7] .= "&nbsp;&nbsp;";
+					// Delete
+					$data[7] .= "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+				}
+
+				array_push ($table->data, $data);
+
+			}
+			
+			print_table($table);
 		}
-		// Timestamp
-		echo "<td class='f9'>";
-		echo human_time_comparation($row["date"]);
-
-		if (give_acl($config["id_user"], 0, "FRW")){
-
-			// Edit
-			echo "<td class='f9' align='center' >";
-			echo "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
-			echo "&nbsp;&nbsp;";
-
-			// Delete
-			echo "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
-		}
-
 	}
-	echo "</table>";	
 
 }
 
 ?>
 
+<script src="include/js/jquery.fileupload.js"></script>
+<script src="include/js/jquery.iframe-transport.js"></script>
+<script src="include/js/jquery.knob.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
+
+$(document).ready (function () {
+	form_upload();
+});
+
+function form_upload () {
+	var file_list = $('#form-file_releases ul');
+	var selectedRF = new Array();
+
+	$('#drop_file #browse_button').click(function() {
+		// Simulate a click on the file input button to show the file browser dialog
+		$("#file-upfile").click();
+	});
+
+	$('#drop_file select').change(function() {
+		var value = $('#drop_file select').val();
+		
+		if ( value != 0 && selectedRF.indexOf(value) == -1 ) {
+			selectedRF.push(value);
+
+			var item = addListItem (100, value, 0);
+			item.addClass('working');
+			
+			var form_div = addForm (item, value);
+			
+		}
+	});
+
+	// Initialize the jQuery File Upload plugin
+	$('#form-file_releases').fileupload({
+		
+		url: 'ajax.php?page=operation/download/browse&upload_file=true',
+		
+		// This element will accept file drag/drop uploading
+		dropZone: $('#drop_file'),
+
+		// This function is called when a file is added to the queue;
+		// either via the browse button, or via drag/drop:
+		add: function (e, data) {
+			data.context = addListItem(0, data.files[0].name, data.files[0].size);
+
+			// Automatically upload the file once it is added to the queue
+			data.context.addClass('working');
+			var jqXHR = data.submit();
+		},
+
+		progress: function(e, data) {
+
+			// Calculate the completion percentage of the upload
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+
+			// Update the hidden input field and trigger a change
+			// so that the jQuery knob plugin knows to update the dial
+			data.context.find('input').val(progress).change();
+
+			if (progress >= 100) {
+				data.context.removeClass('working');
+				data.context.removeClass('error');
+				data.context.addClass('loading');
+			}
+		},
+
+		fail: function(e, data) {
+			// Something has gone wrong!
+			data.context.removeClass('working');
+			data.context.removeClass('loading');
+			data.context.addClass('error');
+		},
+		
+		done: function (e, data) {
+			
+			var result = JSON.parse(data.result);
+			
+			if (result.status) {
+				data.context.removeClass('error');
+				data.context.removeClass('loading');
+				data.context.addClass('working');
+			
+				// FORM
+				var form_div = addForm (data.context, result.filename);
+				
+			} else {
+				// Something has gone wrong!
+				data.context.removeClass('working');
+				data.context.removeClass('loading');
+				data.context.addClass('error');
+			}
+		}
+
+	});
+
+	// Prevent the default action when a file is dropped on the window
+	$(document).on('drop_file dragover', function (e) {
+		e.preventDefault();
+	});
+
+	function addListItem (progress, filename, filesize) {
+		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
+			'<div class="download_form"></div></li>');
+		
+		// Append the file name and file size
+		tpl.find('p').text(filename);
+		if (filesize > 0) {
+			tpl.find('p').append('<i>' + formatFileSize(filesize) + '</i>');
+		}
+
+		// Initialize the knob plugin
+		tpl.find('input').val(0);
+		tpl.find('input').knob({
+			'draw' : function () {
+				$(this.i).val(this.cv + '%')
+			}
+		});
+
+		// Listen for clicks on the cancel icon
+		tpl.find('span').click(function() {
+
+			if (tpl.hasClass('working') || tpl.hasClass('error') || tpl.hasClass('suc')) {
+
+				if (tpl.hasClass('working') && typeof jqXHR != 'undefined') {
+					jqXHR.abort();
+				}
+
+				var i = selectedRF.indexOf(filename);
+				if (i != -1) {
+					selectedRF.splice(i, 1);
+				}
+
+				tpl.fadeOut();
+				tpl.slideUp(500, "swing", function() {
+					tpl.remove();
+				});
+			}
+
+		});
+		
+		// Add the HTML to the UL element
+		var item = tpl.appendTo(file_list);
+		item.find('input').val(progress).change();
+
+		return item;
+	}
+
+	function addForm (item, filename) {
+		var form_div = item.find(".download_form");
+		form_div.html($("#form-file_release").html());
+
+		$.ajax({
+			type: 'POST',
+			url: 'ajax.php',
+			data: {
+				page : "operation/download/browse",
+				get_external_id : 1
+			},
+			dataType: "text",
+			success: function (data) {
+				item.find("#text-external_id").val(data);
+			}
+		});
+
+		item.find("#submit-crt_btn").click(function(e) {
+			e.preventDefault();
+			
+			$(this).hide();
+			item.find("#text-name").prop("disabled", true);
+			item.find("#text-external_id").prop("disabled", true);
+			item.find("#checkbox-public").prop("disabled", true);
+			item.find("#id_category").prop("disabled", true);
+			item.find("#id_type").prop("disabled", true);
+			item.find("#textarea-description").prop("disabled", true);
+			item.removeClass('working');
+			item.removeClass('error');
+			item.addClass('loading');
+
+			$.ajax({
+				type: 'POST',
+				url: 'ajax.php',
+				data: {
+					page: "operation/download/browse",
+					insert_fr: true,
+					filename: filename,
+					name: function() { return item.find("#text-name").val() },
+					external_id: function() { return item.find("#text-external_id").val() },
+					public: function() { return item.find("#checkbox-public").prop("checked") },
+					id_category: function() { return item.find("#id_category").val() },
+					id_type: function() { return item.find("#id_type").val() },
+					description: function() { return item.find("#textarea-description").val() },
+				},
+				dataType: "json",
+				success: function (data) {
+					
+					if (data.status) {
+
+						item.removeClass('loading');
+						item.removeClass('working');
+						item.removeClass('error');
+						item.addClass('suc');
+						item.find('span').click();
+
+					} else {
+
+						item.find("#text-name").prop("disabled", false);
+						item.find("#text-external_id").prop("disabled", false);
+						item.find("#checkbox-public").prop("disabled", false);
+						item.find("#id_category").prop("disabled", false);
+						item.find("#id_type").prop("disabled", false);
+						item.find("#textarea-description").prop("disabled", false);
+						item.find("#submit-crt_btn").show();
+
+						item.removeClass('loading');
+						item.removeClass('working');
+						item.removeClass('suc');
+						item.addClass('error');
+						item.find("p").text(data.message);
+
+					}
+				}
+			});
+		});
+
+		return form_div;
+	}
+
+}
+
+// Helper function that formats the file sizes
+function formatFileSize(bytes) {
+    if (typeof bytes !== 'number') {
+        return '';
+    }
+
+    if (bytes >= 1000000000) {
+        return (bytes / 1000000000).toFixed(2) + ' GB';
+    }
+
+    if (bytes >= 1000000) {
+        return (bytes / 1000000).toFixed(2) + ' MB';
+    }
+
+    return (bytes / 1000).toFixed(2) + ' KB';
+}
 
 // Form validation
 trim_element_on_submit('input[name="free_text"]');

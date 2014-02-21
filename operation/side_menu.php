@@ -871,11 +871,11 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "FRR") && $show_file_
 	echo "<ul class='sidemenu'>";
 
 	// Browser
-	if ($sec2 == "operation/download/browse")
+	if ($sec2 == "operation/download/browse" AND !isset($_GET["create"]))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Browse')."</a></li>";
+	echo "<a href='index.php?sec=download&sec2=operation/download/browse&show_types=1'>".__('Browse')."</a></li>";
 
 	if  (give_acl($config["id_user"], 0, "FRW")) {
 		// Create / Manage downloads
@@ -886,6 +886,13 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "FRR") && $show_file_
 		echo "<a href='index.php?sec=download&sec2=operation/download/browse&create=1'>".__('Create file release')."</a></li>";
 	}
 	if  (give_acl($config["id_user"], 0, "FRM")) {
+		// FR Manage Types
+		if ($sec2 == "operation/download/manage_types")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=download&sec2=operation/download/manage_types'>".__('Manage types')."</a></li>";
+
 		// FR Manage Cat.
 		if ($sec2 == "operation/download/manage_cat")
 			echo "<li id='sidesel'>";

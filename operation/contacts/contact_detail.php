@@ -151,7 +151,7 @@ if ($id == 0 && !$new_contact) {
 	if ($id_company) {
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
 	}
-	$params = "&search_text=$search_text&id_company=$id_company";
+	$search_params = "&search_text=$search_text&id_company=$id_company";
 
 	$table->width = '99%';
 	$table->class = 'search-table';
@@ -160,9 +160,14 @@ if ($id == 0 && !$new_contact) {
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
-	$companies = crm_get_companies_list("", false, "", true);
-	
-	$table->data[0][1] = print_select ($companies, 'id_company', $id_company, '', 'All', 0, true, false, true, __('Company'));
+	$params = array();
+	$params['input_id'] = 'id_company';
+	$params['input_name'] = 'id_company';
+	$params['input_value'] = $id_company;
+	$params['title'] = __('Company');
+	$params['return'] = true;
+	$table->data[0][1] = print_company_autocomplete_input($params);
+
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
@@ -173,7 +178,7 @@ if ($id == 0 && !$new_contact) {
 
 	$contacts = crm_get_all_contacts ($where_clause);
 
-	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$params", $offset);
+	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$search_params", $offset);
 
 	if ($contacts !== false) {
 		unset ($table);

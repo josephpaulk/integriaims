@@ -209,7 +209,7 @@ if ($operation == 'insert') {
 			$total_days_sum += $hours_day;
 			
 			$sql = sprintf ('INSERT INTO tworkunit 
-				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
+				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
 				VALUES ("%s", %f, "%s", "%s", %d, %d, %d, %d)',
 				$current_timestamp, $hours_day, $id_user, $description,
 				$have_cost, $id_profile, $public, $work_home);

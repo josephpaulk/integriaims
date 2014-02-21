@@ -1300,45 +1300,44 @@ function combo_product_types ($id_product, $show_any = 0) {
 
 // Returns a combo with download categories
 // ----------------------------------------------------------------------
-function combo_download_categories ($id_category, $show_any = 0){
+function combo_download_categories ($id_category, $show_any = false, $label = false, $return = false) {
 	global $config;
 
 	enterprise_include('include/functions_form.php');
-	$return = enterprise_hook ('combo_download_categories_extra', array ($id_category, $show_any));
-	if ($return !== ENTERPRISE_NOT_HOOK) {
-		echo $return;
-	} else {
-		echo "<select name='id_category' style='width: 180px;'>";
-		if ($show_any == 1){
-			if($id_category == 0) {
-				$selected = "selected='selected'";
-			}
-			else {
-				$selected = "";
-			}
-			echo "<option value='0' $selected>".__("Any")."</option>";
-		}	
+	$result = enterprise_hook ('combo_download_categories_extra', array ($id_category, $show_any, $label, true));
+	if ($result === ENTERPRISE_NOT_HOOK) {
 		
 		$sql = "SELECT * FROM tdownload_category ORDER BY 2";
-		
 		$result = process_sql($sql);
 		if($result == false) {
 			$result = array();
 		}
 
-		$debug = "";
+		$categories = array();
 		foreach ($result as $row){
 			if (give_acl($config["id_user"], $row["id_group"], "KR")){
-				if($row["id"] == $id_category) {
-					$selected = "selected='selected'";
-				}
-				else {
-					$selected = "";
-				}
-				echo "<option value='".$row["id"]."' $selected>".$row["name"]."</option>";
+				$categories[$row["id"]] = $row["name"];
 			}
 		}
-		echo "</select>";
+
+		if ($show_any) {
+			$nothing = __('Any');
+		} else {
+			$nothing = '';
+		}
+		if ($label) {
+			$label = __('Category');
+		} else {
+			$label = false;
+		}
+		$result = print_select ($categories, 'id_category', $id_category, '', $nothing, 0, $return, 0, false, $label);
+
+	}
+	
+	if ($return) {
+		return $result;
+	} else {
+		echo $result;
 	}
 }
 

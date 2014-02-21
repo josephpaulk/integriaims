@@ -1362,4 +1362,44 @@ function check_writable_mr() {
 	}
 	return $output;
 }
+
+function getFileUploadStatus ($file_input_name) {
+	return $_FILES[$file_input_name]['error'];
+}
+
+function translateFileUploadStatus ($status) {
+	switch ($status) {
+		case UPLOAD_ERR_OK:
+			$message = true;
+			break;
+		case UPLOAD_ERR_INI_SIZE:
+			$message = __('The file exceeds the maximum size');
+			break;
+		case UPLOAD_ERR_FORM_SIZE:
+			$message = __('The file exceeds the maximum size');
+			break;
+		case UPLOAD_ERR_PARTIAL:
+			$message = __('The uploaded file was only partially uploaded');
+			break;
+		case UPLOAD_ERR_NO_FILE:
+			$message = __('No file was uploaded');
+			break;
+		case UPLOAD_ERR_NO_TMP_DIR:
+			$message = __('Missing a temporary folder');
+			break;
+		case UPLOAD_ERR_CANT_WRITE:
+			$message = __('Failed to write file to disk');
+			break;
+		case UPLOAD_ERR_EXTENSION:
+			$message = __('File upload stopped by extension');
+			break;
+		
+		default:
+			$message = __('Unknown upload error');
+			break;
+	}
+	
+	return $message;
+}
+
 ?>

@@ -258,7 +258,7 @@ echo "<h1>".__("Offline update")."</h1>";
 
 ?>
 
-<form id="form-offline_update" method="post" enctype="multipart/form-data">
+<form id="form-offline_update" class="fileupload_form" method="post" enctype="multipart/form-data">
 	<div></div>
 	<ul></ul>
 </form>
@@ -296,7 +296,7 @@ echo "<h1>".__("Offline update")."</h1>";
 			// either via the browse button, or via drag/drop:
 			add: function (e, data) {
 				$('#drop_file').slideUp();
-				var tpl = $('<li><input type="text" value="0" data-width="55" data-height="55"'+
+				var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
 					' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
 				
 				// Append the file name and file size

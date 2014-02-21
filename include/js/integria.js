@@ -225,6 +225,65 @@ function bindAutocomplete (idTag, idUser, idProject, onChange) {
 	});
 }
 
+/**
+ * Binds autocomplete behaviour to an input tag 
+ * 
+ * !!!jquery.ui.autocomplete.js must be loaded in the page before use this function!!!
+ *
+ */
+function bindCompanyAutocomplete (idTag, idUser, filterType) {
+	console.log(filterType);
+
+	var filter = $('#hidden-autocomplete_'+idTag+'_filter').val();
+	if (filter) {
+		filter = "&filter="+filter;
+	} else {
+		filter = "";
+	}
+	filter = filter+"&type="+filterType;
+	var ajaxUrl = "ajax.php?page=include/ajax/companies&search_companies=1&id_user="+idUser;
+
+	$('#'+idTag).autocomplete ({
+		source: ajaxUrl + filter,
+		minLength: 2,
+		delay: 200,
+		select: function(event, ui) {
+			event.preventDefault();
+
+			$('#hidden-'+idTag).val(ui.item.value);
+			$('#'+idTag).val(ui.item.label);
+		},
+		change: function(event, ui) {
+			$.ajax({
+				type: "POST",
+				url: "ajax.php",
+				data: {
+					page: "include/ajax/companies",
+					get_company_id: 1,
+					company_name: function() { return $('#'+idTag).val() },
+					id_user: idUser,
+					filter: function() { return $('#hidden-autocomplete_'+idTag+'_filter').val() }
+				},
+				dataType: "json",
+				success: function(data) {
+					if (data) {
+						$('#hidden-'+idTag).val(data);
+					} else {
+						$('#'+idTag).val("");
+						$('#hidden-'+idTag).val(0);
+					}
+				}
+			});
+		}
+	});
+
+	$('#'+idTag).keypress(function(e) {
+		if ( e.which == 13 ) {
+			e.preventDefault();
+		}
+	});
+}
+
 function beginReloadTimeout(seconds, form_id) {
 	var reload;
 	if (form_id) {
