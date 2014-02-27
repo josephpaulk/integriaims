@@ -677,6 +677,40 @@ function run_mail_queue () {
 	}
 }
 
+function cron_validate_newsletter_address() {
+	
+	global $config;
+	require_once($config["homedir"] . "/include/smtp_validate_email.php");
+	
+	$smtp_validate = new SMTP_validateEmail;
+	
+	$sql = "SELECT email FROM tnewsletter_address WHERE status = 0 and validated = 0 LIMIT 10";
+	$newsletter_emails = get_db_all_rows_sql($sql);
+	
+	if ($newsletter_emails === false) {
+		$newsletter_emails = array();
+	}
+	
+	$i = 0;
+	foreach ($newsletter_emails as $email) {
+		$news_emails[$i] = $email['email']; 
+		$i++;
+	}
+
+	$checked_emails = $smtp_validate->validate($news_emails);
+	
+	foreach ($checked_emails as $email=>$validated) {
+		if ($validated) { //validated
+			$values['validated'] = 1;
+		} else { //disabled/removed
+			$values['status'] = 1;
+		}
+		process_sql_update('tnewsletter_address', $values, array('email'=>$email));
+	}
+	
+	return;
+}
+
 function run_newsletter_queue () {
 
 	global $config;
@@ -1006,8 +1040,10 @@ run_mail_queue();
 
 // if enabled, run newsletter queue
 
-if ($config["enable_newsletter"] == 1)
+if ($config["enable_newsletter"] == 1) {
+	cron_validate_newsletter_address();
 	run_newsletter_queue();
+}
 
 // Check SLA on active incidents (max. opened time without fixing and min. response)
 

@@ -1,3 +1,19 @@
+2014-02-27  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  include/integria_cron.php: Added email validator.
+
+	* extras/mr/6.sql
+	  include/smtp_validate_email.php: Added files
+
+	* operation/leads/lead_detail.php: Fixed bug counting
+	leads.
+
+	* index.php: Fixed language bug.
+
+	* operation/invoices/invoices.php: Fixed bug uploading
+	files to invoice.
+
 2014-02-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* extras/mr/5.sql: Added file. New MR5.

@@ -864,7 +864,8 @@ CREATE TABLE `tnewsletter_address` (
   `name` tinytext default NULL,
   `email` tinytext default NULL,
   `status` int unsigned NOT NULL default '0',
-  `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `datetime` datetime NOT NULL default '0000-00-00 00:00:00', 
+  `validated` int unsigned NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

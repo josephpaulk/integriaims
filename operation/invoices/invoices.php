@@ -435,63 +435,66 @@ if ($id_invoice != -1) {
 	print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
 	print_input_hidden ('operation_invoices', "add_invoice");
 }
-echo '</div>';
-echo '</form>';
 
-echo '<br>';
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><span>'.__('Files').'</span></li>';
-echo '<li class="ui-tabs-title">' . __('Files') . '</h1></li>';
-echo '</ul>';
-echo '<br>';
+if ($id_invoice != -1) { 
+	echo '</div>';
+	echo '</form>';
 
-$target_directory = 'attachment';
-$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&upload_file=1";				
-$into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
-print_input_file_progress($action,$into_form,'','sub upload');	
+	echo '<br>';
+	echo '<ul class="ui-tabs-nav">';
+	echo '<li class="ui-tabs-selected"><span>'.__('Files').'</span></li>';
+	echo '<li class="ui-tabs-title">' . __('Files') . '</h1></li>';
+	echo '</ul>';
+	echo '<br>';
+
+	$target_directory = 'attachment';
+	$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&upload_file=1";				
+	$into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
+	print_input_file_progress($action,$into_form,'','sub upload');	
 
 
-// List of invoice attachments
-$sql = "SELECT * FROM tattachment WHERE id_invoice = $id_invoice ORDER BY timestamp DESC";
-$files = get_db_all_rows_sql ($sql);
-$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1");
+	// List of invoice attachments
+	$sql = "SELECT * FROM tattachment WHERE id_invoice = $id_invoice ORDER BY timestamp DESC";
+	$files = get_db_all_rows_sql ($sql);
+	$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1");
 
-if ($files !== false) {
-	unset ($table);
-	$table->width = "99%";
-	$table->class = "listing";
-	$table->data = array ();
-	$table->size = array ();
-	$table->style = array ();
-	$table->rowstyle = array ();
+	if ($files !== false) {
+		unset ($table);
+		$table->width = "99%";
+		$table->class = "listing";
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->rowstyle = array ();
 
-	$table->head = array ();
-	$table->head[0] = __('Filename');
-	$table->head[1] = __('Description');
-	$table->head[2] = __('Size');
-	$table->head[3] = __('Date');
-	$table->head[4] = __('Ops.');
+		$table->head = array ();
+		$table->head[0] = __('Filename');
+		$table->head[1] = __('Description');
+		$table->head[2] = __('Size');
+		$table->head[3] = __('Date');
+		$table->head[4] = __('Ops.');
 
-	foreach ($files as $file) {
-		$data = array ();
-		
-		$data[0] = "<a href='operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=company'>".$file["filename"] . "</a>";
-		$data[1] = $file["description"];
-		$data[2] = format_numeric($file["size"]);
-		$data[3] = $file["timestamp"];
+		foreach ($files as $file) {
+			$data = array ();
+			
+			$data[0] = "<a href='operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=company'>".$file["filename"] . "</a>";
+			$data[1] = $file["description"];
+			$data[2] = format_numeric($file["size"]);
+			$data[3] = $file["timestamp"];
 
-		// Todo. Delete files owner and admins only
-		if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
-			$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
+			// Todo. Delete files owner and admins only
+			if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
+				$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
+			}
+
+			array_push ($table->data, $data);
+			array_push ($table->rowstyle, $style);
 		}
+		print_table ($table);
 
-		array_push ($table->data, $data);
-		array_push ($table->rowstyle, $style);
+	} else {
+		echo "<h3>". __('There is no files attached for this invoice')."</h3>";
 	}
-	print_table ($table);
-
-} else {
-	echo "<h3>". __('There is no files attached for this invoice')."</h3>";
 }
 ?>
 

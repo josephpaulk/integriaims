@@ -374,6 +374,8 @@ else {
 	$config["id_user"] = $_SESSION['id_usuario'];
 }
 
+include ("include/config_process.php");
+
 load_menu_visibility();
 ?><script>var lang = {
 	"Are you sure?" : "<?php echo __('Are you sure?')?>",
@@ -532,8 +534,9 @@ if ($clean_output == 0) {
 		} else {
 			echo "<br><b class='error'>".__('Page not found')."</b>";
 		}
-	} else
+	} else {
 		require ("general/home.php");  //default
+	}
 }
 
 if ($pdf_output == 1){
