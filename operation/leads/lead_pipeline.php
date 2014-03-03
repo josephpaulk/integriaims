@@ -37,6 +37,7 @@ $start_date = (string) get_parameter ('start_date_search');
 $end_date = (string) get_parameter ('end_date_search');
 $country = (string) get_parameter ('country_search');
 $id_category = (int) get_parameter ('product');
+$progress = (int) get_parameter ('progress_search');
 $progress_major_than = (int) get_parameter ('progress_major_than_search');
 $progress_minor_than = (int) get_parameter ('progress_minor_than_search');
 $owner = (string) get_parameter ("owner_search");
@@ -44,7 +45,7 @@ $show_100 = (int) get_parameter ("show_100_search");
 $id_language = (string) get_parameter ("id_language", "");
 $est_sale = (int) get_parameter ("est_sale_search", 0);
 
-$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 echo "<div id='incident-search-content'>";
 echo "<h1>". __('Lead pipeline');
@@ -99,11 +100,15 @@ if ($country) {
 	$where_clause .= sprintf (' AND country LIKE "%%%s%%"', $country);
 }
 
-if ($progress_minor_than >= 0) {
+if ($progress > 0) {
+	$where_clause .= sprintf (' AND progress = %d ', $progress);
+}
+
+if ($progress_minor_than > 0) {
 	$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 }
 
-if ($progress_major_than >= 0) {
+if ($progress_major_than > 0) {
 	$where_clause .= sprintf (' AND progress >= %d ', $progress_major_than);
 }
 

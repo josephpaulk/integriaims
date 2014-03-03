@@ -148,6 +148,7 @@ function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_i
 	$chart_id = 'chart_' . $random_number;
 		
 	$output = '<div id="' . $div_id. '" style="z-index:1;"></div>';
+	$output .= include_flash_chart_script($config['homeurl']);
 	//$output .= '<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>';
 	$output .= '<script type="text/javascript">
 			<!--

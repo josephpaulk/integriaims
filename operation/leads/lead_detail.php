@@ -310,6 +310,7 @@ $filter['start_date'] = (string) get_parameter ('start_date_search');
 $filter['end_date'] = (string) get_parameter ('end_date_search');
 $filter['country'] = (string) get_parameter ('country_search', "");
 $filter['id_category'] = (int) get_parameter ('product');
+$filter['progress'] = (int) get_parameter ('progress_search');
 $filter['progress_major_than'] = (int) get_parameter ('progress_major_than_search');
 $filter['progress_minor_than'] = (int) get_parameter ('progress_minor_than_search');
 $filter['owner'] = (string) get_parameter ("owner_search");
@@ -746,6 +747,7 @@ if ($id || $new) {
 		$end_date = $filter['end_date'];
 		$country = $filter['country'];
 		$id_category = $filter['id_category'];
+		$progress = $filter['progress'];
 		$progress_major_than = $filter['progress_major_than'];
 		$progress_minor_than = $filter['progress_minor_than'];
 		$owner = $filter['owner'];
@@ -760,6 +762,7 @@ if ($id || $new) {
 		$end_date = (string) get_parameter ('end_date_search');
 		$country = (string) get_parameter ('country_search');
 		$id_category = (int) get_parameter ('product');
+		$progress = (int) get_parameter ('progress_search');
 		$progress_major_than = (int) get_parameter ('progress_major_than_search', -1);
 		$progress_minor_than = (int) get_parameter ('progress_minor_than_search', -1);
 		$owner = (string) get_parameter ("owner_search");
@@ -768,7 +771,7 @@ if ($id || $new) {
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
 	}
 
-	$search_params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+	$search_params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 	$where_group = "";
 
@@ -823,6 +826,10 @@ if ($id || $new) {
 		$where_clause .= sprintf (' AND country LIKE "%%%s%%"', $country);
 	}
 
+	if ($progress > 0) {
+		$where_clause .= sprintf (' AND progress = %d ', $progress);
+	}
+
 	if ($progress_minor_than > 0) {
 		$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 	}
@@ -867,10 +874,8 @@ if ($id || $new) {
 	$table_advanced->style[0] = 'font-weight: bold;';
 	$table_advanced->data = array ();
 	$table_advanced->width = "99%";
-	
-	$table_advanced->data[0][0] = get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
-
-	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);
+	$table_advanced->colspan = array();
+	$table_advanced->colspan[1][1] = 2;
 	
 	if ($config["lead_company_filter"] != ""){
 		$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."') ";
@@ -884,12 +889,18 @@ if ($id || $new) {
 	$params['title'] = __('Managed by');
 	$params['return'] = true;
 	$params['filter'] = $where_filter;
-	$table_advanced->data[1][0] = print_company_autocomplete_input($params);
+	$table_advanced->data[0][0] = print_company_autocomplete_input($params);
 
-	$table_advanced->data[1][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'id_language', $id_language, '', __('Any'), '', true, false, false,
-	__('Language'));
+	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);
 	
+	$table_advanced->data[0][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+	'id_language', $id_language, '', __('Any'), '', true, false, false, __('Language'));
+	
+	$progress_values = lead_progress_array ();
+	$table_advanced->data[1][0] = print_select ($progress_values, 'progress_search', $progress, '', __('Any'), 0, true, 0, false, __('Lead progress') );
+
+	$table_advanced->data[1][1] = get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
+
 	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), print_table($table_advanced, true), 'closed', true, false);
 	$table->colspan['advanced'][2] = 3;
 	
@@ -1137,6 +1148,16 @@ $(document).ready (function () {
 	
 	$("#saved_searches").change(function() {
 		$("#form-saved_searches").submit();
+	});
+
+	$("#progress_search").change(function() {
+		var checkbox = $("#checkbox-show_100_search");
+		
+		if ($(this).val() >= 100) {
+			checkbox.prop("checked", true);
+		} else {
+			checkbox.prop("checked", false);
+		}
 	});
 
 	//JS for massive operations

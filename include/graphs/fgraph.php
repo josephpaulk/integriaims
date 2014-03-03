@@ -92,8 +92,8 @@ function funnel($data, $font, $ttl = 1, $homedir="") {
 	$graph["data"] = $data;
 
 	$id_graph = serialize_in_temp($graph, null, $ttl);
-		
-	return "<img src='".$homedir."include/graphs/functions_gd.php?graph_type=funnel&ttl=".$ttl."&id_graph=".$id_graph."'>";
+	
+	return "<img src='include/graphs/functions_gd.php?graph_type=funnel&ttl=".$ttl."&id_graph=".$id_graph."'>";
 }
 
 function progressbar($progress, $width, $height, $title, $font, $mode = 1, 
@@ -127,7 +127,7 @@ function slicesbar_graph($chart_data, $period, $width, $height, $colors, $font,
 	$graph['color'] = $colors;
 
 	$id_graph = serialize_in_temp($graph, null, $ttl);
-		
+	
 	return "<img src='".$home_url."include/graphs/functions_pchart.php?graph_type=slicebar&ttl=".$ttl."&id_graph=".$id_graph."'>";
 }
 

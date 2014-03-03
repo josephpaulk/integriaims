@@ -524,7 +524,7 @@ if ($incident["sla_disabled"]) {
 	$incident_sla .= "<div class='pie_frame'>";
 	$incident_sla .= graph_incident_sla_compliance ($id, 155, 80, $ttl);
 	$incident_sla .= "</div>";	
-	$incident_sla .= "</td>";	
+	$incident_sla .= "</td>";
 	$incident_sla .= "<tr>";
 	$incident_sla .= "</table>";
 }

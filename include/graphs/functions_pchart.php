@@ -108,20 +108,12 @@ if (!$force_height) {
 
 $water_mark = '';
 if(isset($graph['water_mark'])) { 
-	$water_mark = $graph['water_mark']; //"/var/www/pandora_console/images/logo_vertical_water.png";
+	$water_mark = $graph['water_mark'];
 }
 
 if (isset($graph['force_steps'])) {
 	$force_steps = $graph['force_steps'];
 }
-
-/*
-$colors = array();
-$colors['pep1'] = array('border' => '#000000', 'color' => '#000000', 'alpha' => 50);
-$colors['pep2'] = array('border' => '#ff7f00', 'color' => '#ff0000', 'alpha' => 50);
-$colors['pep3'] = array('border' => '#ff0000', 'color' => '#00ff00', 'alpha' => 50);
-$colors['pep4'] = array('border' => '#000000', 'color' => '#0000ff', 'alpha' => 50);
-*/
 
 $step = 1;
 if ($force_steps) {

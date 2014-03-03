@@ -229,12 +229,11 @@ $managers_invoicing_volume = '<br><div class="pie_frame">' . $managers_invoicing
 $table->data[2][1] = print_container('managers_invoicing_volume', __('Managers invoicing volume'), $managers_invoicing_volume, 'no', true, '10px');
 
 //TOP 10 INVOICING
-// The code below isn't needed meanwhile the $companies_invoices array are filled on the INVOICING VOLUME 
-// $companies_invoincing = crm_get_total_invoiced($where_clause);
+$companies_invoincing = crm_get_total_invoiced($where_clause);
 
-// if ($read && $enterprise) {
-// 	$companies_invoincing = crm_get_user_companies($config['id_user'], $companies_invoincing);
-// }
+if ($read && $enterprise) {
+	$companies_invoincing = crm_get_user_companies($config['id_user'], $companies_invoincing);
+}
 
 if ($companies_invoincing != false) {
 	$companies_invoincing_content = '<br>' . print_table(crm_print_most_invoicing_companies($companies_invoincing), true);

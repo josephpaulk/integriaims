@@ -163,7 +163,7 @@ function filter_incidents ($filters, $count=false) {
 	}
 
 	//Use config block size if no other was given
-	if (empty ($filters["limit"])) {
+	if (!isset($filters["limit"])) {
 		$filters["limit"] = $config["block_size"];
 	}
 
@@ -722,11 +722,19 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 
 	$users_label = '';
+	$users_data = array();
 	foreach ($most_active_users as $user) {
 		$users_data[$user['id_user']] = $user['worked_hours'];
 	}
 	
-	if(empty($most_active_users)) {
+	// Remove the items with no value
+	foreach ($users_data as $key => $value) {
+		if (!$value || $value <= 0) {
+			unset($users_data[$key]);
+		}
+	}
+
+	if(empty($most_active_users) || empty($users_data)) {
 		$users_label = "<div class='container_adaptor_na_graphic2'>";
 		$users_label .= graphic_error(false);
 		$users_label .= __("N/A");
@@ -745,8 +753,15 @@ function print_incidents_stats ($incidents, $return = false) {
 		$inc_title = substr(safe_output($incident['titulo']), 0, 20);
 		$incidents_data[$inc_title] = $incident['worked_hours'];
 	}
+
+	// Remove the items with no value
+	foreach ($incidents_data as $key => $value) {
+		if (!$value || $value <= 0) {
+			unset($incidents_data[$key]);
+		}
+	}
 	
-	if(empty($most_active_incidents)) {
+	if(empty($most_active_incidents) || empty($incidents_data)) {
 		$incidents_label .= graphic_error(false);
 		$incidents_label .= __("N/A");
 		$incidents_label = "<div class='container_adaptor_na_graphic'>".$incidents_label."</div>";
@@ -775,13 +790,14 @@ function print_incidents_stats ($incidents, $return = false) {
 		arsort($creator_assigned_data);
 		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
+
+	// TOP X scoring users
 	
 	$scoring_label ="";
 	$top5_scoring = get_best_incident_scoring (5, $incident_id_array);
 	
 	foreach ($top5_scoring as $submitter){
 		$scoring_data[$submitter["id_usuario"]] = $submitter["total"];
-//		$scoring_label .= $submitter["id_usuario"]." ( ".$submitter["total"]. " )<br>";
 	}
 	
 	if(empty($top5_scoring)) {
@@ -947,7 +963,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	if ($oldest_incident) {
 		
         $oldest_incident_time = get_incident_workunit_hours  ($oldest_incident["id_incidencia"]);
-		$output = "<table class='listing' style='width: 80%; margin: 10px auto;'>";
+		$output = "<table class='listing'>";
 		$output .= "<th>";
 		$output .= __("Metric");
 		$output .= "</th>";
@@ -1045,7 +1061,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output .= "<th style='text-align:center;'><strong>".__("Group")."</strong></th>";
 	$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
 	$output .= "</tr>";
-	
+
 	$count = 1;
 	arsort($groups_time);
 	foreach ($groups_time as $key => $value) {
@@ -1054,7 +1070,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		if ($count == 5) {
 			break;
 		}
-		
+
 		$output .= "<tr>";
 		$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
 		$output .= "<td>".$group_name."</td>";

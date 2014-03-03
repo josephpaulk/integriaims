@@ -179,7 +179,7 @@ switch ($search_invoice_type) {
 		break;
 }
 
-$invoicing_graph = stacked_area_graph($config["flash_chart"], $inv_data_currency, 650, 250, null, $legend, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl, $config["base_url"]);
+$invoicing_graph = stacked_area_graph($config["flash_charts"], $inv_data_currency, 650, 250, null, $legend, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl, $config["base_url"]);
 $container_invoicing_graph = '<div class="pie_frame">' .$invoicing_graph."</div>";
 echo print_container('history_invoiced', $container_title, $container_invoicing_graph, 'no', true, true, "container_simple_title", "container_simple_div");
 
@@ -208,7 +208,7 @@ switch ($search_invoice_type) {
 		break;
 }
 
-$companies_invoiced_graph = pie3d_graph ($config["flash_chart"], $comp_invoiced_data, 400, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $graph_ttl);
+$companies_invoiced_graph = pie3d_graph ($config["flash_charts"], $comp_invoiced_data, 400, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $graph_ttl);
 $companies_invoiced_graph = '<div class="pie_frame">' .$companies_invoiced_graph."</div>";
 echo print_container('companies_invoiced', $container_title, $companies_invoiced_graph, 'no', true, true, "container_simple_title", "container_simple_div");
 

@@ -40,6 +40,7 @@ $start_date = (string) get_parameter ('start_date_search');
 $end_date = (string) get_parameter ('end_date_search');
 $country = (string) get_parameter ('country_search');
 $id_category = (int) get_parameter ('product');
+$progress = (int) get_parameter ('progress_search');
 $progress_major_than = (int) get_parameter ('progress_major_than_search');
 $progress_minor_than = (int) get_parameter ('progress_minor_than_search');
 $owner = (string) get_parameter ("owner_search");
@@ -58,7 +59,7 @@ if ($pdf_output) {
 	$ttl = 2;
 }
 
-$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 echo "<h1>".__('Lead search statistics');
 
@@ -123,11 +124,15 @@ if ($country) {
 	$where_clause .= sprintf (' AND country LIKE "%%%s%%"', $country);
 }
 
+if ($progress > 0) {
+	$where_clause .= sprintf (' AND progress = %d ', $progress);
+}
+
 if ($progress_minor_than > 0) {
 	$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 }
 
-if ($progress_major_than >= 0) {
+if ($progress_major_than > 0) {
 	$where_clause .= sprintf (' AND progress >= %d ', $progress_major_than);
 }
 
@@ -187,7 +192,7 @@ if ($leads_funnel != false) {
 		$data[$lf["progress"]]["amount"] = $lf["amount"];
 	}
 	
-	$leads_funnel_content = funnel($data, $config["font"], $ttl, $config["base_url"]);
+	$leads_funnel_content = funnel($data, $config["font"], $ttl, $config["homedir"]);
 } else {
 	$leads_funnel_content = __('No data to show');
 }
@@ -335,7 +340,7 @@ if ($leads_creation !== false) {
 		$area_height = 155;		
 	}
 
-	$leads_creation_content = area_graph(false, $leads_creation, $area_width, $area_height, "#2179B1", '', '', '', "", "", $config["base_url"], "", '', '', '', $ttl);
+	$leads_creation_content = area_graph($config['flash_charts'], $leads_creation, $area_width, $area_height, "#2179B1", '', '', '', "", "", $config["base_url"], "", '', '', '', $ttl);
 } else {
 	$leads_creation_content = __('No data to show');
 }

@@ -1,3 +1,31 @@
+2014-03-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_graph.php: Fixed the function
+	"graph_incident_statistics_sla_compliance".
+
+	* include/functions_incidents.php: Fixed an error on
+	the function "filter_incidents".
+
+	* include/graphs/fgraph.php: Fixed an error on the
+	function "funnel".
+
+	* include/graphs/functions_fsgraph.php: Fixed an error
+	on the function "fs_stacked_graph".
+
+	* include/graphs/functions_pchart.php: Deleted some
+	unused code.
+
+	* operation/companies/company_statistics.php:
+	Fixed the top 10 invoicing graph.
+
+	* operation/invoices/invoice_stats.php: Fixes on
+	function calls.
+
+	* operation/leads/lead_detail.php,
+	  operation/leads/lead_pipeline.php,
+	  operation/leads/lead_statistics.php: Added a new
+	progress filter for the lead list. Graph fixes.
+
 2014-02-27  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
