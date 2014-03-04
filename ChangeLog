@@ -1,3 +1,22 @@
+2014-03-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_incidents.php: Added the functions
+	"incidents_update_stats_item", "incidents_update_stats_data"
+	and "incidents_update_incident_stats_data" to collect the
+	tickets statistics.
+	Removed the function "incidents_add_incident_stat".
+	Fixes on the function "incidents_get_incident_stats".
+	Deleted unused code from the function "incidents_set_tracking".
+
+	* include/integria_cron.php: Added the function
+	"incidents_update_stats_data" to the cron checks.
+
+	* include/smtp_validate_email.php: Fixed an error on the
+	function "validate".
+
+	* operation/incidents/incident_workunits.php: Deleted
+	some unused code.
+
 2014-03-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_graph.php: Fixed the function

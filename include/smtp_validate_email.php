@@ -123,6 +123,10 @@ class SMTP_validateEmail {
    $this->setSenderEmail($sender);
   }
 
+  if (gettype($this->domains) != "array") {
+    $this->domains = array();
+  }
+
   // query the MTAs on each Domain
   foreach($this->domains as $domain=>$users) {
         

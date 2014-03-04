@@ -72,10 +72,6 @@ if ($insert_workunit) {
 	
 		incident_tracking ($id, INCIDENT_USER_CHANGED, $config["id_user"]);
 
-		$metric_values = array(INCIDENT_METRIC_STATUS => 3,
-						INCIDENT_METRIC_USER => $config["id_user"]);
-
-		incidents_add_incident_stat ($id, $metric_values);
 	} else {
 		$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
 	}

@@ -1119,5 +1119,9 @@ foreach ($slas as $sla) {
 $temp_dir = $config["homedir"]."/attachment/tmp";
 delete_all_files_in_dir ($temp_dir);
 
+// Update the incident statistics
+
+incidents_update_stats_data();
+
 ?>
 
