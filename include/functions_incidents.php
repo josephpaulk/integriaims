@@ -207,7 +207,7 @@ function filter_incidents ($filters, $count=false) {
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
 			$filters['string'],$filters['string'], $filters['string'], $order_by);
 
-		if ($filters["limit"] > 0) {
+		if (isset($filters["limit"]) && $filters["limit"] > 0) {
 			$sql_limit = sprintf (' LIMIT %d OFFSET %d', $filters["limit"], $filters["offset"]);
 			$sql .= $sql_limit;
 		}
@@ -2192,7 +2192,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	$incidents = filter_incidents($filter);
 	
 	if ($return_incidents) {
-			return $incidents;
+		return $incidents;
 	}
 	
 	$statuses = get_indicent_status ();
@@ -2493,10 +2493,10 @@ function incidents_set_tracking ($id_ticket, $action, $priority, $status, $resol
 			if($tracked == false) {
 				incident_tracking ($id_ticket, INCIDENT_UPDATED);
 			}
-		break;
+			break;
 		case 'create':
 			incident_tracking ($id_ticket, INCIDENT_CREATED);
-		break;
+			break;
 	}
 	
 	return;
@@ -2560,5 +2560,72 @@ function incidents_get_status_name($id_status) {
 	
 	$name = get_db_value ('name', 'tincident_status', 'id', $id_status);
 	return $name;
+}
+
+function incidents_get_incident_sla_graph_seconds ($id_incident) {
+
+	$seconds = array();
+	$seconds["OK"] = 0;
+	$seconds["FAIL"] = 0;
+
+	$last_value = -1;
+	$last_timestamp = array();
+	$last_timestamp["OK"] = 0;
+	$last_timestamp["FAIL"] = 0;
+
+	$sql = sprintf("SELECT utimestamp, value
+					FROM tincident_sla_graph_data
+					WHERE id_incident = %s
+					ORDER BY utimestamp ASC",
+					$id_incident);
+
+	$data = get_db_all_row_by_steps_sql(true, $result_sla, $sql);
+
+	if ($data) {
+		if ($data["value"] == 1) {
+			$last_timestamp["OK"] = $data["utimestamp"];
+		} else {
+			$last_timestamp["FAIL"] = $data["utimestamp"];
+		}
+		$last_value = $data["value"];
+	}
+
+	while ($data = get_db_all_row_by_steps_sql(false, $result_sla, $sql)) {
+
+		if ($data["value"] != $last_value) {
+			if ($data["value"] == 1) {
+				$seconds["FAIL"] += $data["utimestamp"] - $last_timestamp["FAIL"];
+				$last_timestamp["OK"] = $data["utimestamp"];
+			} else {
+				$seconds["OK"] += $data["utimestamp"] - $last_timestamp["OK"];
+				$last_timestamp["FAIL"] = $data["utimestamp"];
+			}
+			$last_value = $data["value"];
+		}
+	}
+
+	if ($last_value == 1) {
+		$seconds["OK"] += time() - $last_timestamp["OK"];
+	} elseif ($last_value == 0) {
+		$seconds["FAIL"] += time() - $last_timestamp["FAIL"];
+	}
+
+	return $seconds;
+}
+
+function incidents_get_sla_graph_seconds ($incidents) {
+
+	$total_seconds = array();
+	$total_seconds["OK"] = 0;
+	$total_seconds["FAIL"] = 0;
+	
+	foreach ($incidents as $incident) {
+
+		$seconds = incidents_get_incident_sla_graph_seconds($incident["id_incidencia"]);
+		$total_seconds["OK"] += $seconds["OK"];
+		$total_seconds["FAIL"] += $seconds["FAIL"];
+	}
+
+	return $total_seconds;
 }
 ?>

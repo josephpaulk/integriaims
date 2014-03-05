@@ -838,39 +838,26 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 
 function graph_incident_statistics_sla_compliance($incidents, $width=200, $height=200, $ttl=1) {
 	global $config;
+
+	if (! require_once ("include/functions_incidents.php")) {
+		require_once ("functions_incidents.php");
+	}
 	
 	if ($incidents == false) {
 		$incidents = array();
 	}
-	
-	$incident_array = array();
-	
-	foreach ($incidents as $incident) {
-		array_push($incident_array, $incident['id_incidencia']);
-	}
-		
-	$incident_clause = implode(",", $incident_array);
-	
-	$incident_clause = "(".$incident_clause.")";
-			
-	$sql_ok = sprintf("SELECT COUNT(id_incident) AS num FROM tincident_sla_graph WHERE value = 1 AND id_incident IN %s", $incident_clause);
-	$sql_fail = sprintf("SELECT COUNT(id_incident) AS num FROM tincident_sla_graph WHERE value = 0 AND id_incident IN %s", $incident_clause);
 
-	$num_ok = process_sql($sql_ok);
-	$num_fail = process_sql($sql_fail);
-	
-	$num_ok = $num_ok[0]["num"];
-	$num_fail = $num_fail[0]["num"];
-	$total = $num_ok + $num_fail;
-	
+	$seconds = incidents_get_sla_graph_seconds($incidents);
+
 	$data = array();
+	$total = $seconds["OK"] + $seconds["FAIL"];
 	
 	if ($total == 0) {
 		$data["FAIL"] = 0;
 		$data["OK"] = 100;
 	} else {
-		$percent_fail = ($num_fail/$total)*100;
-		$percent_ok = ($num_ok/$total)*100;
+		$percent_fail = ($seconds["FAIL"] / $total) * 100;
+		$percent_ok = ($seconds["OK"] / $total) * 100;
 		
 		$data["FAIL"] = $percent_fail;
 		$data["OK"] = $percent_ok;
@@ -913,31 +900,26 @@ function graph_incident_priority($incidents, $width=300, $height=150, $ttl=1) {
 // Draw a simple pie graph with SLA fulfillment of the incident
 // ===============================================================================
 
-function graph_incident_sla_compliance($incident, $width=200, $height=200, $ttl=1) {
+function graph_incident_sla_compliance($id_incident, $width=200, $height=200, $ttl=1) {
 	global $config;
-		
-	$sql_ok = sprintf("SELECT COUNT(id_incident) AS num FROM tincident_sla_graph WHERE value = 1 AND id_incident = %d", $incident);
-	$sql_fail = sprintf("SELECT COUNT(id_incident) AS num FROM tincident_sla_graph WHERE value = 0 AND id_incident = %d", $incident);
+
+	if (! require_once ("include/functions_incidents.php")) {
+		require_once ("functions_incidents.php");
+	}
+
+	$seconds = incidents_get_incident_sla_graph_seconds($id_incident);
 	
-	$num_ok = process_sql($sql_ok);
-	$num_fail = process_sql($sql_fail);
-	
-	$num_ok = $num_ok[0]["num"];
-	$num_fail = $num_fail[0]["num"];
-	$total = $num_ok + $num_fail;
+	$total = $seconds["OK"] + $seconds["FAIL"];
 	
 	if ($total == 0) {
 		$percent_fail = 0;
 		$percent_ok = 100;
-	
 	} else {
-	
-		$percent_fail = ($num_fail/$total)*100;
-		$percent_ok = ($num_ok/$total)*100;
+		$percent_fail = ($seconds["FAIL"] / $total) * 100;
+		$percent_ok = ($seconds["OK"] / $total) * 100;
 	}
 	
 	$data = array();
-	
 	$data["FAIL"] = $percent_fail;
 	$data["OK"] = $percent_ok;
 	
@@ -957,13 +939,16 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	//Get time and calculate start date based on period
 	$now = time();
 	//This array sets the color of sla graph
-	$colors = 	array(0 => '#FF0000', 1 => '#38B800');
+	$colors = array(0 => '#FF0000', 1 => '#38B800');
 	$start_period = $now - $period;
 	
 	//Get all sla graph data
-	$sql = sprintf ("SELECT value as data, utimestamp FROM tincident_sla_graph 
-				WHERE id_incident = %d AND utimestamp > %d ORDER BY utimestamp ASC", 
-				$incident, $start_period);
+	$sql = sprintf ("SELECT value as data, utimestamp
+					FROM tincident_sla_graph_data
+					WHERE id_incident = %d
+						AND utimestamp > %d
+					ORDER BY utimestamp ASC",
+					$incident, $start_period);
 
 	$aux_data = get_db_all_rows_sql($sql);
 	
@@ -975,22 +960,14 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 		$data [0]= array("data" => 1, "utimestamp" => $now);
 		$data [1]= array("data" => 1, "utimestamp" => $now-$period);
 		
-		return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'],
-			false,'',$ttl);
+		return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'], false,'',$ttl);
 	}
 	
-	//Get max timestamp from sla graph
-	$sql2 = sprintf("SELECT MAX(utimestamp) FROM tincident_sla_graph 
-					WHERE id_incident = %d", $incident);
-		
-	$max_utimestamp = get_db_sql($sql2);
-	
 	//Set previous value and time to create sla data array ranges
-	$previous_value = $aux_data[0]["data"];
-	$previous_time = $aux_data[0]["utimestamp"];	
+	$previous_time = $aux_data[0]["utimestamp"];
 	
 	//Compare period set by user with max period of data stored
-	$time_diff = ($max_utimestamp - $previous_time);
+	$time_diff = ($now - $previous_time);
 
 	//If period of data stored is lower than the period set by user
 	//the period is stablished by the maximun period of data stored
@@ -1000,31 +977,22 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	
 	$data = array();
 	
-	foreach ($aux_data as $aux) {
-	
-		//If sla value changes we must calculate a range
-		if ($previous_value != $aux["data"]) {
+	for ($i = 0; $i < count($aux_data); $i++) {
 
-			$range = $aux["utimestamp"] - $previous_time;
-			
-			array_push($data, array("data" => $previous_value, "utimestamp" => $range));
-			
-			$previous_value = $aux["data"];
-			$previous_time = $aux["utimestamp"];
+		$value = $aux_data[$i]["data"];
+		$timestamp = $aux_data[$i]["utimestamp"];
+		
+		if (isset($aux_data[$i+1])) {
+			$range = $aux_data[$i+1]["utimestamp"] - $timestamp;
+		} else {
+			$range = $now - $timestamp;
 		}
+		
+		array_push($data, array("data" => $value, "utimestamp" => $range));
 	}
-
-	//We must add the last range for sla
-	$last_value = $aux["data"];
-	$last_time = $aux["utimestamp"];
 	
-	$range = $last_time - $previous_time;
-	
-	array_push($data, array("data" => $previous_value, "utimestamp" => $range));
-			
 	//Draw the graph
-	return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'],
-		false,'',$ttl);
+	return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'], false,'',$ttl);
 }
 
 function graph_incident_user_activity ($incident, $width=200, $height=200, $ttl=1) {

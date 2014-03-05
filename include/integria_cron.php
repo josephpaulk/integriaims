@@ -404,8 +404,20 @@ function graph_sla($incident) {
 		$values['value'] = 1;
 	}
 	
-	//Insert SLA value in table
-	process_sql_insert('tincident_sla_graph', $values);
+	$sql = sprintf("SELECT value
+					FROM tincident_sla_graph_data
+					WHERE id_incident = %d
+					ORDER BY utimestamp DESC",
+					$id_incident);
+	$result = get_db_row_sql($sql);
+	if ($result) {
+		$last_value = $result['value'];
+
+		if ($values['value'] != $last_value) {
+			//Insert SLA value in table
+			process_sql_insert('tincident_sla_graph', $values);
+		}
+	}
 }
 
 /**
@@ -440,7 +452,7 @@ function check_sla_min ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    	$MACROS["_sitename_"] = $config["sitename"];
+    $MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -489,7 +501,7 @@ function check_sla_max ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    	$MACROS["_sitename_"] = $config["sitename"];
+    $MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -517,7 +529,7 @@ function check_sla_inactivity ($incident) {
 	if (! $id_sla)
 		return false;
 	
-        $sla = get_db_row("tsla", "id", $id_sla);
+	$sla = get_db_row("tsla", "id", $id_sla);
 
 	/* Check if it was already notified in a specified time interval */
 	$sql = sprintf ('SELECT COUNT(id) FROM tevent
@@ -892,8 +904,8 @@ function delete_old_incidents () {
 				$error = true;
 			}
 			
-			// tincident_sla_graph
-			$sql_delete = "DELETE FROM tincident_sla_graph
+			// tincident_sla_graph_data
+			$sql_delete = "DELETE FROM tincident_sla_graph_data
 						   WHERE id_incident = ".$incident["id_incidencia"];
 			$res = process_sql ($sql_delete);
 			

@@ -240,15 +240,6 @@ INSERT INTO `tincident_resolution` VALUES (1,'Fixed'),(2,'Invalid'),(3,'Wont fix
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tincident_sla_graph`
---
-
-LOCK TABLES `tincident_sla_graph` WRITE;
-/*!40000 ALTER TABLE `tincident_sla_graph` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tincident_sla_graph` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tincident_stats`
 --
 

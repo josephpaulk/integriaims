@@ -1,3 +1,41 @@
+2014-03-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* extras/mr/7.sql: Added file. New MR5.
+
+	* extras/incidents_old_sla_table_importer.php: Script
+	to fill the new table "tincident_sla_graph_data" with
+	the data of the deprecated table "tincident_sla_graph".
+
+	* integria_db.sql: Replaced the "tincident_sla_graph"
+	for the table "tincident_sla_graph_data".
+
+	* integria_demo.sql: Deleted a reference to the table
+	"tincident_sla_graph".
+
+	* include/functions_graph.php,
+	  include/functions_db.php: Modified the functions
+	"graph_incident_statistics_sla_compliance",
+	"graph_incident_sla_compliance", "get_sla_compliance"
+	and "graph_sla_slicebar" to use the new ways to get
+	the incidents sla data.
+
+	* include/functions_incidents.php: Added the functions
+	"incidents_get_incident_sla_graph_seconds" and
+	"incidents_get_sla_graph_seconds". Minor fixes.
+
+	* include/integria_cron.php: Now the function "graph_sla"
+	only inserts new data if the sla value is different than
+	the last inserted value.
+	Modified the function "delete_old_incidents" to delete
+	the old data from the table "tincident_sla_graph_data".
+
+	* mobile/operation/incident.php: Improved the functions
+	"quickIncidentUpdate" and "deleteIncident".
+
+	* operation/incidents/incident_dashboard.php: Fixed an
+	error that caused the pagination controls were showed
+	in the incidents dashboard.
+	
 2014-03-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_incidents.php: Added the functions

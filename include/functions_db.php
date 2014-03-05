@@ -2062,32 +2062,18 @@ function get_sla_compliance_single_id ($id_incident) {
  */
 function get_sla_compliance ($incidents) {
 
+	require_once ("include/functions_incidents.php");
+
 	if (($incidents == false) OR ($incidents == "")) {
 		return 100;
 	}
-	
-	$incident_array = array();
-	
-	foreach ($incidents as $incident) {
-		array_push($incident_array, $incident['id_incidencia']);
-	}
-		
-	$incident_clause = implode(",", $incident_array);
-	
-	$incident_clause = "(".$incident_clause.")";
-			
-	$sql_ok = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 1 AND id_incident IN %s", $incident_clause);
-	$sql_fail = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 0 AND id_incident IN %s", $incident_clause);
-		
-	$num_ok = process_sql($sql_ok);
-	$num_fail = process_sql($sql_fail);
 
-	$num_ok = $num_ok[0][0];
-	$num_fail = $num_fail[0][0];
-	$total = $num_ok + $num_fail;
+	$seconds = incidents_get_sla_graph_seconds($incidents);
 	
+	$total = $seconds["OK"] + $seconds["FAIL"];
+
 	if ($total > 0)
-		$percent_ok = ($num_ok/$total)*100;
+		$percent_ok = ($seconds["OK"] / $total) * 100;
 	else
 		$percent_ok = 100;
 	

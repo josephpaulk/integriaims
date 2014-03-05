@@ -824,7 +824,7 @@ CREATE TABLE `tuser_report` (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `tincident_sla_graph` (
+CREATE TABLE `tincident_sla_graph_data` (
   `id_incident` int(10) NOT NULL default '0',
   `utimestamp` int(20) unsigned NOT NULL default 0,
   `value` int(1) unsigned NOT NULL default '0',

@@ -65,13 +65,7 @@ if ($custom_searches === false) {
 			}
 		}
 		
-		$result_search = incidents_search_result ($filter_search, false, true);
-		
-		if ($result_search) {
-			$count_cs = count($result_search);
-		} else {
-			$count_cs = 0;
-		}
+		$count_cs = filter_incidents ($filter_search, true);
 		
 		$custom .="<div class='custom_search'>";
 		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]." ". "(". $count_cs.")" . "</a><br>";

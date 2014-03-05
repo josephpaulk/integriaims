@@ -223,8 +223,7 @@ class Incident {
 				update_incident_inventories ($id_incident, array($id_inventory));
 			}
 			
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
-				"Ticket created",
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket created",
 				"User ".$config['id_user']." created ticket #".$id_incident);
 			
 			incident_tracking ($id_incident, INCIDENT_CREATED);
@@ -269,7 +268,6 @@ class Incident {
 				break;
 			case 'owner':
 				$column = "id_usuario";
-				$value = "'$value'";
 				break;
 			case 'resolution':
 				$column = "resolution";
@@ -280,11 +278,24 @@ class Incident {
 		}
 
 		if ($column) {
-			// tincident_field_data
-			$res = $sql_delete = "UPDATE tincidencia
-								SET $column = $value
-						   		WHERE id_incidencia = $id_incident";
-			$res = process_sql ($sql_delete);
+			$res = process_sql_update ('tincidencia', array($column => $value), array("id_incidencia" => $id_incident));
+
+			if ($res && include_once ($system->getConfig('homedir')."/include/functions_incidents.php")) {
+				switch ($type) {
+					case 'priority':
+						incident_tracking ($id_incident, INCIDENT_PRIORITY_CHANGED, $value);
+						break;
+					case 'owner':
+						incident_tracking ($id_incident, INCIDENT_USER_CHANGED, $value);
+						break;
+					case 'resolution':
+						incident_tracking ($id_incident, INCIDENT_RESOLUTION_CHANGED, $value);
+						break;
+					case 'status':
+						incident_tracking ($id_incident, INCIDENT_STATUS_CHANGED, $value);
+						break;
+				}
+			}
 		}
 		
 		return $res;
@@ -340,7 +351,7 @@ class Incident {
 		}
 		
 		// tincident_sla_graph
-		$sql_delete = "DELETE FROM tincident_sla_graph
+		$sql_delete = "DELETE FROM tincident_sla_graph_data
 					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
