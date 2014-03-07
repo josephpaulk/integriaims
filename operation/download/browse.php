@@ -348,7 +348,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	$table->data[0][1] = print_input_text ('external_id', $external_id, '', 60, 100, true, __('External ID'));
 	$table->data[1][0] = print_checkbox ("public", 1, $public, true, __('Public'));
 	$table->data[1][1] = combo_download_categories ($id_category, 0, __('Main category'), true);
-	$table->data[1][2] = print_select (get_file_types(true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
+	$table->data[1][2] = print_select (get_file_types(true, true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
 	$table->data[2][0] = print_textarea ("description", 5, 40, $description, '', true, __('Description'));
 	
 	if ($id == -1) {
@@ -429,10 +429,10 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		
 		$offset = get_parameter ("offset", 0);
 		$condition = get_filter_by_fr_category_accessibility();
-		$count = get_db_sql("SELECT COUNT(id) FROM tdownload $condition $sql_filter");
+		$count = get_db_sql("SELECT COUNT(id) FROM tdownload WHERE 1=1 $condition $sql_filter");
 		pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$id_category&id_type=$id_type&free_text=$free_text", $offset);
 		
-		$sql = "SELECT * FROM tdownload $condition $sql_filter ORDER BY date DESC, name LIMIT $offset, ". $config["block_size"];
+		$sql = "SELECT * FROM tdownload WHERE 1=1 $condition $sql_filter ORDER BY date DESC, name LIMIT $offset, ". $config["block_size"];
 		
 		$color = 0;
 		

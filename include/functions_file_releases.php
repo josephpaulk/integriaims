@@ -51,9 +51,35 @@ function insert_type_file ($id_download, $id_type) {
 	return $result;
 }
 
-function get_file_types ($only_name = false) {
+function get_file_types ($only_name = false, $all = false) {
 
 	$types = process_sql("SELECT * FROM tdownload_type ORDER BY name DESC");
+
+	if (!$all) {
+		$condition = get_filter_by_fr_category_accessibility();
+
+		$types_aux = array();
+
+		foreach ($types as $type) {
+			$result = process_sql("SELECT COUNT(tdownload.id) AS num_files
+									FROM tdownload, tdownload_type_file
+									WHERE tdownload.id = tdownload_type_file.id_download
+										AND tdownload_type_file.id_type = ".$type['id']."
+										$condition");
+			
+			if ($result) {
+				$num_files = $result[0]['num_files'];
+			} else {
+				$num_files = 0;
+			}
+
+			if ($num_files > 0) {
+				$types_aux[] = $type;
+			}
+		}
+		$types = $types_aux;
+		$types_aux = null;
+	}
 
 	if ($only_name) {
 		$types_name = array();
@@ -118,6 +144,8 @@ function get_file_releases ($id_category = 0, $id_type = 0, $limit = 0, $only_na
 
 function print_file_types_table ($return = false) {
 
+	$condition = get_filter_by_fr_category_accessibility();
+
 	$types = process_sql("SELECT tdownload_type.id AS id,
 								tdownload_type.name AS name,
 								tdownload_type.description AS description,
@@ -127,6 +155,7 @@ function print_file_types_table ($return = false) {
 						FROM tdownload, tdownload_type, tdownload_type_file
 						WHERE tdownload.id = tdownload_type_file.id_download
 							AND tdownload_type.id = tdownload_type_file.id_type
+							$condition
 						GROUP BY name
 						ORDER BY last_update DESC");
 
@@ -142,6 +171,7 @@ function print_file_types_table ($return = false) {
 										MAX(date) AS last_update
 								FROM tdownload
 								WHERE id NOT IN (SELECT id_download FROM tdownload_type_file)
+									$condition
 								ORDER BY last_update DESC");
 	if ($without_type) {
 		$without_type = $without_type[0];

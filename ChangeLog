@@ -1,3 +1,13 @@
+2014-03-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/download/browse.php,
+	  operation/download/manage_types.php: Error fixes.
+
+	* include/functions_file_releases.php,
+	  include/functions_db.php: Changes on the functions
+	"get_file_types", "print_file_types_table" and
+	"get_filter_by_fr_category_accessibility".
+	
 2014-03-07  Sancho Lerena <slerena@artica.es>
 
 	* operation/download/manage_types.php: Fixed creation

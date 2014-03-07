@@ -2554,7 +2554,7 @@ function get_filter_by_fr_category_accessibility () {
 	$return = enterprise_hook ('get_filter_by_fr_category_accessibility_extra');
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
-	return "WHERE 1=1";
+	return "";
 }
 
 /**
