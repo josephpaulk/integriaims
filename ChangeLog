@@ -1,3 +1,9 @@
+2014-03-07  Sancho Lerena <slerena@artica.es>
+
+	* operation/download/manage_types.php: Fixed creation
+	of FileRelease types, if list is empty, button for
+	creation is not shown.
+
 2014-03-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* extras/mr/7.sql: Added file. New MR5.

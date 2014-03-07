@@ -165,12 +165,13 @@ else {
 		}
 		
 		print_table($table);		
-		echo '<div style="width:99%; text-align: right;">';
-		echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_types'>";
-		print_input_hidden ('op', 'new');
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
-		echo "</form></div>";
 	}
+	echo '<div style="width:99%; text-align: right;">';
+	echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_types'>";
+	print_input_hidden ('op', 'new');
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
+	echo "</form></div>";
+	
 } // end of list
 
 ?>
