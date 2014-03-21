@@ -1,3 +1,12 @@
+2014-03-21  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_files.php: Added field 'user' to 
+	upload files.
+	  
+	* operation/projects/task_workunit.php: Fixed massive edition.
+
+	* operation/users/user_workunit_report.php: Added massive edition.
+
 2014-03-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/download/browse.php,

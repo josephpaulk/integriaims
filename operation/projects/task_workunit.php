@@ -55,16 +55,16 @@ if (defined ('AJAX')) {
 			$wu_data = get_db_row_filter('tworkunit', array('id'=>$id));
 			
 			$values['id_profile'] = $id_profile;
-			$values['have_cost'] = $have_cost;
-			$values['public'] = $public;
+			$values['have_cost'] = ($have_cost == "true") ? 1: 0;
+			$values['public'] = ($public == "true") ? 1: 0;
 			
 			if ($id_profile == -1) { //No change option
 				$values['id_profile'] = $wu_data['id_profile'];
 			}
-			if ($keep_cost) {
+			if ($keep_cost == "true") {
 				$values['have_cost'] = $wu_data['have_cost'];
 			}
-			if ($keep_public) {
+			if ($keep_public == "true") {
 				$values['public'] = $wu_data['public'];
 			}
 			
@@ -439,10 +439,10 @@ $(document).ready (function () {
 
 		var id_profile = $("#id_profile").val();
 		var id_task = $("#id_task").val();
-		var have_cost = $("#checkbox-have_cost").val();
-		var is_public = $("#checkbox-public").val();
-		var keep_cost = $("#checkbox-keep_cost").val();
-		var keep_public = $("#checkbox-keep_public").val();
+		var have_cost = document.getElementById('checkbox-have_cost').checked;
+		var is_public = document.getElementById('checkbox-public').checked;
+		var keep_cost = document.getElementById('checkbox-keep_cost').checked;
+		var keep_public = document.getElementById('checkbox-keep_public').checked;
 		
 		$.ajax({
 		type: "POST",

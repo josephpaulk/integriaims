@@ -196,6 +196,7 @@ echo "<tr>";
 echo "<th>".__('Filename');
 echo "<th>".__('Timestamp');
 echo "<th>".__('Description');
+echo "<th>".__('ID user');
 echo "<th>".__('Size');
 
 if (give_acl ($config['id_user'], $incident['id_grupo'], "IM") && !$clean_output) {
@@ -216,6 +217,7 @@ foreach ($files as $file) {
     echo "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
 
     echo "<td valign=top class=f9>". $file["description"];
+    echo "<td valign=top>". $file["id_usuario"];
     echo "<td valign=top>". byte_convert ($file['size']);
 
 	// Delete attachment
