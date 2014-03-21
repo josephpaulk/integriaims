@@ -714,7 +714,9 @@ function cron_validate_newsletter_address() {
 	foreach ($checked_emails as $email=>$validated) {
 		if ($validated) { //validated
 			$values['validated'] = 1;
+			$values['status'] = 0;
 		} else { //disabled/removed
+			$values['validated'] = 1;
 			$values['status'] = 1;
 		}
 		process_sql_update('tnewsletter_address', $values, array('email'=>$email));

@@ -1,5 +1,10 @@
 2014-03-21  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/integria_cron.php: Fixed bug validating
+	emails.
+
+2014-03-21  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/incidents/incident_files.php: Added field 'user' to 
 	upload files.
 	  
