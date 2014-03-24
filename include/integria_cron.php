@@ -415,7 +415,7 @@ function graph_sla($incident) {
 
 		if ($values['value'] != $last_value) {
 			//Insert SLA value in table
-			process_sql_insert('tincident_sla_graph', $values);
+			process_sql_insert('tincident_sla_graph_data', $values);
 		}
 	}
 }

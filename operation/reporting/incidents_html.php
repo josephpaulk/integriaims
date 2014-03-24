@@ -68,13 +68,13 @@ $output .= "<td>";
 $output .= "<strong>".__('Containing').': </strong>'.$filter['string'];
 $output .= "</td>";
 $output .= "<td>";
-	if ($filter['status'] == -10) {
-		$status_text = __("Not closed");
-	} else {
-		$status_text = $statuses[$filter['status']];
-	}
-	
-	$output .= "<strong>".__('Status').': </strong>'.$status_text;	
+if ($filter['status'] == -10) {
+	$status_text = __("Not closed");
+} else {
+	$status_text = $statuses[$filter['status']];
+}
+
+$output .= "<strong>".__('Status').': </strong>'.$status_text;
 $output .= "</td>";	
 $output .= "<td>";
 $output .= "<strong>".__('Priority').': </strong>'.print_priority_flag_image ($filter['priority'], true);
@@ -86,7 +86,7 @@ $output .= "<td>";
 $output .= "<strong>".__('Product').': </strong>'.get_db_value ('name', 'tkb_product', 'id', $filter['id_product']);
 $output .= "</td>";
 $output .= "<td>";
-$output .= "<strong>".__('Company').': </strong>'.		get_db_value ('name', 'tinventory', 'id', $filter['id_company']);
+$output .= "<strong>".__('Company').': </strong>'.get_db_value ('name', 'tinventory', 'id', $filter['id_company']);
 $output .= "</td>";
 $output .= "</tr>";
 $output .= "<tr>";

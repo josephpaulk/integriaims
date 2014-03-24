@@ -350,12 +350,18 @@ function update_manager_check_online_free_packages ($is_ajax=true) {
 	$http_status = curl_getinfo($curlObj, CURLINFO_HTTP_CODE);
 	curl_close($curlObj);
 	
-		
-	if ($http_status == 500) {
+	if ($http_status >= 400 && $http_status < 500) {
 		if ($is_ajax) {
-			echo __("There is a error with the update server.");
+			echo __("Server not found.");
 		} else {
-			$update_message = __("There is a error with the update server.");
+			$update_message = __("Server not found.");
+		}
+	}
+	elseif ($http_status >= 500) {
+		if ($is_ajax) {
+			echo $result;
+		} else {
+			$update_message = $result;
 		}
 	}
 	else {

@@ -1,3 +1,13 @@
+2014-03-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_update_manager.php: Improved the
+	error messages.
+
+	* include/integria_cron.php: Fixed an error.
+
+	* operation/reporting/incidents_html.php: Little
+	identation change.
+	
 2014-03-21  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/integria_cron.php: Fixed bug validating
