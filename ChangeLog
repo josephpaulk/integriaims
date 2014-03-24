@@ -1,5 +1,17 @@
 2014-03-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/incident_files.php: Now is possible
+	to upload multiple files via ajax.	
+
+	* godmode/setup/offline_update.php,
+	  operation/download/browse.php: Function removed.
+
+	* include/functions_db.php: Added the function "get_incident_file".
+
+	* include/js/integria.js: Added the function "formatFileSize".
+
+2014-03-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_update_manager.php: Improved the
 	error messages.
 

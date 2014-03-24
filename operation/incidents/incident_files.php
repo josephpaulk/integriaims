@@ -30,96 +30,156 @@ if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== 
  	// Doesn't have access to this page
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
 		'Trying to access files of ticket #'.$id." '".$titulo."'");
-	include ("general/noaccess.php");
-	exit;
+	if (!defined ('AJAX')) {
+		include ("general/noaccess.php");
+		exit;
+	} else {
+		return;
+	}
 }
 
 if (!$id) {
 	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation",
 		"Trying to access files of ticket #".$id);
-	include ("general/noaccess.php");
-	exit;
+	if (!defined ('AJAX')) {
+		include ("general/noaccess.php");
+		exit;
+	} else {
+		return;
+	}
 }
 
-//Upload new file
-$filename = get_parameter ('upfile', false);
-if ((give_acl ($config['id_user'], $id_grupo, "IR") || 
-	$config['id_user'] == $incident_creator) 
-	&& (bool)$filename) {
-	$result_msg = '<h3 class="error">'.__('No file was attached').'</h3>';
-	/* if file */
-	if ($filename != "") {
-		$file_description = get_parameter ("file_description",
-				__('No description available'));
-		
-		// Insert into database
-		$filename_real = safe_output ( $filename ); // Avoid problems with blank spaces
-		$file_temp = sys_get_temp_dir()."/$filename_real";
-		$file_new = str_replace (" ", "_", $filename_real); // Replace blank spaces
-		$file_new = filter_var($file_new, FILTER_SANITIZE_URL); // Replace conflictive characters
-		$filesize = filesize($file_temp); // In bytes
+if (defined ('AJAX')) {
+	$upload_file = (bool) get_parameter("upload_file");
+	if ($upload_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+		$result["id_attachment"] = 0;
 
-		$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
-				filename, description, size)
-				VALUES (%d, "%s", "%s", "%s", %d)',
-				$id, $config['id_user'], $file_new, $file_description, $filesize);
+		$upload_status = getFileUploadStatus("upfile");
+		$upload_result = translateFileUploadStatus($upload_status);
 
-		$id_attachment = process_sql ($sql, 'insert_id');
-		incident_tracking ($id, INCIDENT_FILE_ADDED);
-		echo '<h3 class="suc">'.__('File added').'</h3>';
-		// Email notify to all people involved in this incident
-		if ($email_notify == 1) {
-			if ($config["email_on_incident_update"] == 1){
-				mail_incident ($id, $config['id_user'], 0, 0, 2);
+		if ($upload_result === true) {
+			$file_tmp = $_FILES["upfile"]['tmp_name'];
+			$filename = $_FILES["upfile"]['name'];
+			$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
+			$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
+			$filesize = filesize($file_tmp); // In bytes
+
+			$values = array(
+					"id_incidencia" => $id,
+					"id_usuario" => $config['id_user'],
+					"filename" => $filename,
+					"description" => __('No description available'),
+					"size" => $filesize,
+					"timestamp" => date("Y-m-d")
+				);
+			$id_attachment = process_sql_insert("tattachment", $values);
+
+			if ($id_attachment) {
+				incident_tracking ($id, INCIDENT_FILE_ADDED);
+				// Email notify to all people involved in this incident
+				if ($config["email_on_incident_update"]) {
+					mail_incident ($id, $config['id_user'], 0, 0, 2);
+				}
+
+				$location = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+
+				if (copy($file_tmp, $location)) {
+					// Delete temporal file
+					unlink ($file_tmp);
+					$result["status"] = true;
+					$result["id_attachment"] = $id_attachment;
+
+					// Adding a WU noticing about this
+					$link = "<a target=\"_blank\" href=\"operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."\">".$filename."</a>";
+					$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
+					$timestamp = print_mysql_timestamp();
+
+					$values = array(
+							"timestamp" => $timestamp,
+							"duration" => 0,
+							"id_user" => $config['id_user'],
+							"description" => $nota,
+							"public" => 1
+						);
+					$id_workunit = process_sql_insert("tworkunit", $values);
+					
+					$values = array(
+							"id_incident" => $id,
+							"id_workunit" => $id_workunit
+						);
+					process_sql_insert("tworkunit_incident", $values);
+
+					// Updating the ticket
+					process_sql_update("tincidencia", array("actualizacion" => $timestamp), array("id_incidencia" => $id));
+					
+				} else {
+					unlink ($file_tmp);
+					process_sql_delete ('tattachment', array('id_attachment' => $id_attachment));
+					$result["message"] = __('The file could not be copied');
+				}
+			}
+
+		} else {
+			$result["message"] = $upload_result;
+		}
+
+		echo json_encode($result);
+		return;
+	}
+
+	$update_file_description = (bool) get_parameter("update_file_description");
+	if ($update_file_description) {
+		$id_file = (int) get_parameter("id_attachment");
+		$file_description = get_parameter("file_description");
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+
+		$result['status'] = (bool) process_sql_update('tattachment',
+			array('description' => $file_description), array('id_attachment' => $id_file));
+
+		if (!$result['status'])
+			$result['message'] = __('Description not updated');
+
+		echo json_encode($result);
+		return;
+	}
+
+	$get_file_row = (bool) get_parameter("get_file_row");
+	if ($get_file_row) {
+		$id_file = (int) get_parameter("id_attachment");
+		$file = get_incident_file($id, $id_file);
+
+		$html = "";
+		if ($file) {
+			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
+			$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
+
+			$html .= "<tr>";
+			$html .= "<td valign=top>";
+			$html .= '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
+
+			$stat = stat ($real_filename);
+			$html .= "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
+
+			$html .= "<td valign=top class=f9>". $file["description"];
+			$html .= "<td valign=top>". $file["id_usuario"];
+			$html .= "<td valign=top>". byte_convert ($file['size']);
+
+			// Delete attachment
+			if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM')) {
+				$html .= "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"]
+				.'" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='
+				.$id.'&tab=files&id_attachment='.$file["id_attachment"].'&delete_file=1#incident-operations">
+				<img src="images/cross.png"></a>';
 			}
 		}
-		
-		// Copy file to directory and change name
-		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$file_new;
-		
-		if (! copy ($file_temp, $file_target)) {
-			echo '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
-			$sql = sprintf ('DELETE FROM tattachment
-					WHERE id_attachment = %d', $id_attachment);
-			process_sql ($sql);
-		} else {
-			// Delete temporal file
-			unlink ($file_temp);
 
-			$link = "<a target='_blank' href='operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."'>".$filename."</a>";
-
-			// Adding a WU noticing about this
-			$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
-			$public = 1;
-			$timestamp = print_mysql_timestamp();
-			$timeused = "0";
-			$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $nota, $public);
-
-			$id_workunit = process_sql ($sql, "insert_id");
-			$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $id, $id_workunit);
-			process_sql ($sql);
-
-			$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
-			process_sql ($sql);
-		}
-	}  else {
-		//~ $error = $_FILES['userfile']['error'];
-		$error = 4;
-		switch ($error) {
-		case 1:
-			$result_msg = '<h3 class="error">'.__('File is too big').'</h3>';
-			break;
-		case 3:
-			$result_msg = '<h3 class="error">'.__('File was partially uploaded. Please try again').'</h3>';
-			break;
-		case 4:
-			$result_msg = '<h3 class="error">'.__('No file was uploaded').'</h3>';
-			break;
-		default:
-			$result_msg = '<h3 class="error">'.__('Generic upload error').'(Code: '.$_FILES['userfile']['error'].')</h3>';
-		}
-		
-		echo $result_msg;
+		echo $html;
+		return;
 	}
 }
 
@@ -146,34 +206,36 @@ if ($delete_file) {
 }
 
 if (!$clean_output) {
-	echo '<div id="upload_result"></div>';
+	echo "<br>";
+	echo "<strong>".__("File formats supported")."</strong>";
+	echo print_help_tip (__("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"), true);
+	
+	echo "<form id=\"form-incident_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+	echo 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
+	echo 		"<table width=\"99%\">";
+	echo 			"<td width=\"45%\">";
+	echo 				__('Drop the file here');
+	echo 			"<td>";
+	echo 				__('or');
+	echo 			"<td width=\"45%\">";
+	echo 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
+	echo 		"</table>";
+	echo 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
+	echo 	"</div>";
+	echo 	"<ul></ul>";
+	echo "</form>";
 
-	//echo "<h3>".__('Add file')."</h3>";
+	echo "<div id='file_description_table_hook' style='display:none;'>";
+	$table = new stdClass;
+	$table->width = '99%';
+	$table->id = 'incident_file_description';
+	$table->class = 'search-table-button';
+	$table->data = array();
+	$table->data[0][0] = print_textarea ("file_description", 5, 40, '', '', true, __('Description'));
+	$table->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+	print_table($table);
+	echo "</div>";
 
-	echo "<div id='upload_control' style='width: 80%;margin: 0 auto;'>";
-
-	$table->width = '100%';
-	$table->data = array ();
-
-
-	$table->data[0][0] = "<strong>".__("File formats supported")."</strong>";
-	$table->data[0][0] .= print_help_tip (__("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"), true);
-	$table->data[1][0] = print_textarea ('file_description', 8, 1, '', "style='resize:none'", true, __('Description'));
-
-
-	$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations';
-
-	$into_form = print_table ($table, true);
-	$into_form .= '<div class="button" style="width: '.$table->width.'">';
-	$into_form .= print_button (__('Upload'), 'upload', false, '', 'class="sub next"', true);
-	$into_form .= '</div>';
-	$into_form .= print_input_hidden ('id', $id, true);
-	$into_form .= print_input_hidden ('upload_file', 1, true);
-
-	// Important: Set id 'form-add-file' to form. It's used from ajax control
-	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub', 'button-upload');
-
-	echo '</div>';
 }
 
 
@@ -186,12 +248,13 @@ if ($clean_output) {
 // Files attached to this incident
 $files = get_incident_files ($id);
 if ($files === false) {
-	echo '<h4>'.__('No files were added to the incidence').'</h4>';
-	return;
+	$files = array();
+	echo '<h4 id="no_files_message">'.__('No files were added to the ticket').'</h4>';
+	$hidden = "style=\"display:none;\"";
 }
 
 echo "<div style='width: 90%; margin: 0 auto;'>";
-echo "<table class=listing cellpadding=0 cellspacing=0 width='100%'>";
+echo "<table id='table-incident_files' $hidden class=listing cellpadding=0 cellspacing=0 width='100%'>";
 echo "<tr>";
 echo "<th>".__('Filename');
 echo "<th>".__('Timestamp');
@@ -205,56 +268,240 @@ if (give_acl ($config['id_user'], $incident['id_grupo'], "IM") && !$clean_output
 
 foreach ($files as $file) {
 
-     $link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
+	$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
 
-     $real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
+	$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
 
-    echo "<tr>";
-    echo "<td valign=top>";
+	echo "<tr>";
+	echo "<td valign=top>";
 	echo '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
 
-    $stat = stat ($real_filename);
-    echo "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
+	$stat = stat ($real_filename);
+	echo "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
 
-    echo "<td valign=top class=f9>". $file["description"];
-    echo "<td valign=top>". $file["id_usuario"];
-    echo "<td valign=top>". byte_convert ($file['size']);
+	echo "<td valign=top class=f9>". $file["description"];
+	echo "<td valign=top>". $file["id_usuario"];
+	echo "<td valign=top>". byte_convert ($file['size']);
 
 	// Delete attachment
 	if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM') && !$clean_output) {
-		    echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files&id_attachment='.$file["id_attachment"].'&delete_file=1#incident-operations">
-			<img src="images/cross.png"></a>';
+		echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files&id_attachment='.$file["id_attachment"].'&delete_file=1#incident-operations">
+		<img src="images/cross.png"></a>';
 	}
 
 }
 
 echo "</table>";
 echo "</div>";
+
 ?>
 
+<script src="include/js/jquery.fileupload.js"></script>
+<script src="include/js/jquery.iframe-transport.js"></script>
+<script src="include/js/jquery.knob.js"></script>
+
 <script type="text/javascript">
-//~ $('a[name^="delete_file_"]').click(function() {
-	//~ id_attachment = $(this).attr('name').split('_')[2];
-	//~ row = $(this).parent().parent();
-	//~ 
-	//~ values = Array ();
-	//~ values.push ({name: "page", value: "operation/incidents/incident_detail"});
-	//~ values.push ({name: "delete_file", value: 1});
-	//~ values.push ({name: "id_attachment", value: id_attachment});
-	//~ values.push ({name: "id", value: <?php echo $id_incident; ?>});
-	//~ 
-	//~ jQuery.get ("ajax.php",
-		//~ values,
-		//~ function (data, status) {
-			//~ // If the return is succesfull we hide the deleted file row
-			//~ if(data.search('class="error"') == -1) {
-				//~ row.hide();
-			//~ }
-			//~ $(".result").html(data);
-		//~ },
-		//~ "html"
-	//~ );
-	//~ return false;
-//~ 
-//~ });
+
+$(document).ready (function () {
+	form_upload();
+});
+
+function form_upload () {
+	var file_list = $('#form-incident_files ul');
+
+	$('#drop_file #browse_button').click(function() {
+		// Simulate a click on the file input button to show the file browser dialog
+		$("#file-upfile").click();
+	});
+
+	// Initialize the jQuery File Upload plugin
+	$('#form-incident_files').fileupload({
+		
+		url: 'ajax.php?page=operation/incidents/incident_files&upload_file=true&id=<?php echo $id; ?>',
+		
+		// This element will accept file drag/drop uploading
+		dropZone: $('#drop_file'),
+
+		// This function is called when a file is added to the queue;
+		// either via the browse button, or via drag/drop:
+		add: function (e, data) {
+			data.context = addListItem(0, data.files[0].name, data.files[0].size);
+
+			// Automatically upload the file once it is added to the queue
+			data.context.addClass('working');
+			var jqXHR = data.submit();
+		},
+
+		progress: function(e, data) {
+
+			// Calculate the completion percentage of the upload
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+
+			// Update the hidden input field and trigger a change
+			// so that the jQuery knob plugin knows to update the dial
+			data.context.find('input').val(progress).change();
+
+			if (progress >= 100) {
+				data.context.removeClass('working');
+				data.context.removeClass('error');
+				data.context.addClass('loading');
+			}
+		},
+
+		fail: function(e, data) {
+			// Something has gone wrong!
+			data.context.removeClass('working');
+			data.context.removeClass('loading');
+			data.context.addClass('error');
+		},
+		
+		done: function (e, data) {
+			
+			var result = JSON.parse(data.result);
+
+			if (result.status) {
+				data.context.removeClass('error');
+				data.context.removeClass('loading');
+				data.context.addClass('working');
+			
+				// FORM
+				addForm (data.context, result.id_attachment);
+				
+			} else {
+				// Something has gone wrong!
+				data.context.removeClass('working');
+				data.context.removeClass('loading');
+				data.context.addClass('error');
+			}
+		}
+
+	});
+
+	// Prevent the default action when a file is dropped on the window
+	$(document).on('drop_file dragover', function (e) {
+		e.preventDefault();
+	});
+
+	function addListItem (progress, filename, filesize) {
+		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
+			'<div class="incident_file_form"></div></li>');
+		
+		// Append the file name and file size
+		tpl.find('p').text(filename);
+		if (filesize > 0) {
+			tpl.find('p').append('<i>' + formatFileSize(filesize) + '</i>');
+		}
+
+		// Initialize the knob plugin
+		tpl.find('input').val(0);
+		tpl.find('input').knob({
+			'draw' : function () {
+				$(this.i).val(this.cv + '%')
+			}
+		});
+
+		// Listen for clicks on the cancel icon
+		tpl.find('span').click(function() {
+
+			if (tpl.hasClass('working') || tpl.hasClass('error') || tpl.hasClass('suc')) {
+
+				if (tpl.hasClass('working') && typeof jqXHR != 'undefined') {
+					jqXHR.abort();
+				}
+
+				tpl.fadeOut();
+				tpl.slideUp(500, "swing", function() {
+					tpl.remove();
+				});
+			}
+
+		});
+		
+		// Add the HTML to the UL element
+		var item = tpl.appendTo(file_list);
+		item.find('input').val(progress).change();
+
+		return item;
+	}
+
+	function addForm (item, file_id) {
+		
+		item.find(".incident_file_form").html($("#file_description_table_hook").html());
+
+		item.find("span").click(function(e) {
+			addFileRow(file_id);
+		});
+
+		item.find("#submit-crt_btn").click(function(e) {
+			e.preventDefault();
+			
+			$(this).hide();
+			item.find("#textarea-file_description").prop("disabled", true);
+			item.removeClass('working');
+			item.removeClass('error');
+			item.addClass('loading');
+
+			$.ajax({
+				type: 'POST',
+				url: 'ajax.php',
+				data: {
+					page: "operation/incidents/incident_files",
+					update_file_description: true,
+					id: <?php echo $id; ?>,
+					id_attachment: file_id,
+					file_description: function() { return item.find("#textarea-file_description").val() }
+				},
+				dataType: "json",
+				success: function (data) {
+					
+					if (data.status) {
+
+						item.removeClass('loading');
+						item.addClass('suc');
+						item.find('span').click();
+
+					} else {
+
+						item.find("#textarea-file_description").prop("disabled", false);
+						item.find("#submit-crt_btn").show();
+
+						item.removeClass('loading');
+						item.removeClass('suc');
+						item.addClass('error');
+						item.find("p").text(data.message);
+
+					}
+				}
+			});
+		});
+
+	}
+
+	function addFileRow (file_id) {
+		var no_files_message = $("#no_files_message");
+		var table_files = $("#table-incident_files");
+
+		$.ajax({
+			type: 'POST',
+			url: 'ajax.php',
+			data: {
+				page: "operation/incidents/incident_files",
+				get_file_row: true,
+				id: <?php echo $id; ?>,
+				id_attachment: file_id
+			},
+			dataType: "html",
+			success: function (data) {
+				if (no_files_message.length > 0) {
+					no_files_message.remove();
+					table_files.show();
+				}
+				table_files.find("tbody").append(data);
+			}
+		});
+	}
+
+}
+
 </script>

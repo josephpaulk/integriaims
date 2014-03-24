@@ -1692,6 +1692,10 @@ function get_incident_files ($id_incident, $order_desc = false) {
 	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident, $order);
 }
 
+function get_incident_file ($id_incident, $id_file) {
+	return get_db_row_filter ('tattachment', array('id_incidencia' => $id_incident, 'id_attachment' => $id_file));
+}
+
 function get_incident_tracking ($id_incident) {
 	return get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id_incident);
 }
