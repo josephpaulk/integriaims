@@ -1,3 +1,12 @@
+2014-03-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_detail.php: Improved the
+	ticket insert and update. Now is possible to upload
+	multiple files on the ticket creation.
+	
+	* include/styles/integria.css: Deleted the shadow of the
+	multiupload control.
+
 2014-03-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_files.php: Now is possible

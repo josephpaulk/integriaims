@@ -43,6 +43,47 @@ if (defined ('AJAX')) {
 		echo json_encode($fields_final);
 		return;
 	}
+
+	$upload_file = (bool) get_parameter('upload_file');
+	if ($upload_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["filename"] = "";
+		$result["location"] = "";
+		$result["message"] = "";
+
+		$upload_status = getFileUploadStatus("upfile");
+		$upload_result = translateFileUploadStatus($upload_status);
+
+		if ($upload_result === true) {
+			$result["status"] = true;
+			$result["location"] = $_FILES["upfile"]['tmp_name'];
+			$result["name"] = $_FILES["upfile"]['name'];
+			// Replace conflictive characters
+			$result["name"] = str_replace (" ", "_", $result["name"]);
+			$result["name"] = filter_var($result["name"], FILTER_SANITIZE_URL);
+
+			$destination = sys_get_temp_dir().DIRECTORY_SEPARATOR.$result["name"];
+
+			if (copy($result["location"], $destination))
+				$result["location"] = $destination;
+		} else {
+			$result["message"] = $upload_result;
+		}
+		echo json_encode($result);
+		return;
+	}
+
+	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
+	if ($remove_tmp_file) {
+		$result = false;
+		$tmp_file_location = (string) get_parameter('location');
+		if ($tmp_file_location) {
+			$result = unlink($tmp_file_location);
+		}
+		echo json_encode($result);
+		return;
+	}
 }
 
 $id_grupo = (int) get_parameter ('id_grupo');
@@ -147,7 +188,7 @@ if ($action == 'update') {
 	
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
-	$sla_disabled = (bool) get_parameter ('sla_disabled', $old_incident['sla_disabled']); //Get SLA given on submit
+	$sla_disabled = (int) get_parameter ('sla_disabled', $old_incident['sla_disabled']); //Get SLA given on submit
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
@@ -187,11 +228,6 @@ if ($action == 'update') {
 	//Add traces and statistic information
 	incidents_set_tracking ($id, 'update', $priority, $estado, $resolution, $user, $grupo);
 	
-	if ($sla_disabled == 1)
-		$sla_man = ", sla_disabled = 1 ";
-	else
-		$sla_man = ", sla_disabled = 0";
-	
 	if ($id_parent == 0) {
 		$idParentValue = 'NULL';
 	}
@@ -200,27 +236,31 @@ if ($action == 'update') {
 	}
 	$timestamp = print_mysql_timestamp();
 	
-	$sql = sprintf ('UPDATE tincidencia SET email_copy = "%s", actualizacion = "%s",
-			  id_creator = "%s",
-			titulo = "%s", estado = %d,
-			id_grupo = %d, id_usuario = "%s", closed_by = "%s",
-			notify_email = %d, prioridad = %d, descripcion = "%s",
-			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %s, affected_sla_id = 0 %s 
-			WHERE id_incidencia = %d', $email_copy, $timestamp, $id_creator, 
-			$titulo, $estado, $grupo, $user, $closed_by,
-			$email_notify, $priority, $description,
-			$epilog, $id_task, $resolution, $id_incident_type,
-			$idParentValue, $sla_man, $id);
-	$result = process_sql ($sql);
-	
+	$values = array(
+			'email_copy' => $email_copy,
+			'actualizacion' => $timestamp,
+			'id_creator' => $id_creator,
+			'titulo' => $titulo,
+			'estado' => $estado,
+			'id_grupo' => $grupo,
+			'id_usuario' => $user,
+			'closed_by' => $closed_by,
+			'notify_email' => $email_notify,
+			'prioridad' => $priority,
+			'descripcion' => $description,
+			'epilog' => $epilog,
+			'id_task' => $id_task,
+			'resolution' => $resolution,
+			'id_incident_type' => $id_incident_type,
+			'id_parent' => $idParentValue,
+			'affected_sla_id' => 0,
+			'sla_disabled' => $sla_disabled
+		);
 	// When close incident set close date to current date
-	if (($estado == 7)){
-		$sql = sprintf ('UPDATE tincidencia SET cierre = "%s" 
-			WHERE id_incidencia = %d',$timestamp, $id);
-		$result = process_sql ($sql);
+	if ($estado == 7) {
+		$values['cierre'] = $timestamp;
 	}
-
+	$result = process_sql_update('tincidencia', $values, array('id_incidencia' => $id));
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id);
 
@@ -238,7 +278,7 @@ if ($action == 'update') {
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
-		if (($estado == 7) OR ($config["email_on_incident_update"] == 1)){
+		if (($estado == 7) || ($config["email_on_incident_update"] == 1)) {
             if (($estado == 7))
     			mail_incident ($id, $user, "", 0, 5);
             else
@@ -273,6 +313,7 @@ if ($action == "insert" && !$id) {
 	$email_copy = get_parameter ("email_copy", "");
 	$creation_date = get_parameter ("creation_date", "");
 	$creation_time = get_parameter ("creation_time", "");
+	$upfiles = (string) get_parameter('upfiles');
 	
 	//Get notify flag from group if the user doesn't has IM flag
 	if (! give_acl ($config['id_user'], $id_grupo, "IW")) {
@@ -317,19 +358,28 @@ if ($action == "insert" && !$id) {
 			$timestamp = print_mysql_timestamp();
 		}
 		
-		$sql = sprintf ('INSERT INTO tincidencia
-				(inicio, actualizacion, titulo, descripcion,
-				id_usuario, closed_by, estado, prioridad,
-				id_grupo, id_creator, notify_email, id_task,
-				resolution, id_incident_type, id_parent, sla_disabled, email_copy, editor, id_group_creator)
-				VALUES ("%s", "%s", "%s", "%s", "%s", "%s", %d, %d, %d,
-				"%s", %d, %d, %d, %d, %s, %d, "%s", "%s", "%s")', $timestamp, $timestamp,
-				$titulo, $description, $usuario, $closed_by,
-				$estado, $priority, $grupo, $id_creator,
-				$email_notify, $id_task, $resolution, $id_incident_type,
-				$idParentValue, $sla_disabled, $email_copy, $editor, $id_group_creator);	
-
-		$id = process_sql ($sql, 'insert_id');
+		$values = array(
+				'inicio' => $timestamp,
+				'actualizacion' => $timestamp,
+				'titulo' => $titulo,
+				'descripcion' => $description,
+				'id_usuario' => $usuario,
+				'closed_by' => $closed_by,
+				'estado' => $estado,
+				'prioridad' => $priority,
+				'id_grupo' => $grupo,
+				'id_creator' => $id_creator,
+				'notify_email' => $email_notify,
+				'id_task' => $id_task,
+				'resolution' => $resolution,
+				'id_incident_type' => $id_incident_type,
+				'id_parent' => $idParentValue,
+				'sla_disabled' => $sla_disabled,
+				'email_copy' => $email_copy,
+				'editor' => $editor,
+				'id_group_creator' => $id_group_creator
+			);
+		$id = process_sql_insert ('tincidencia', $values);
 
 		if ($id !== false) {
 			/* Update inventory objects in incident */
@@ -379,15 +429,23 @@ if ($action == "insert" && !$id) {
 			}
 			
 			// ATTACH A FILE IF IS PROVIDED
-			if ($_FILES["upfile"]["error"] == UPLOAD_ERR_OK) {
-				$file_description = get_parameter('file_description',__('No description available'));
-				$file_temp = $_FILES["upfile"]["tmp_name"];
+			$upfiles = json_decode(safe_output($upfiles), true);
+			if (!empty($upfiles)) {
 				include_once('include/functions_workunits.php');
-				$file_result = attach_incident_file ($id, $file_temp, $file_description, false, $_FILES["upfile"]["name"]);
+				foreach ($upfiles as $file) {
+					if (is_array($file)) {
+						if ($file['description']) {
+							$file_description = $file['description'];
+						} else {
+							$file_description = __('No description available');
+						}
+						$file_result = attach_incident_file ($id, $file["location"], $file_description, false, $file["name"]);
+					}
+				}
 			}
 			
 		} else {
-			$result_msg  = '<h3 class="error">'.__('Could not be created').'</h3>';
+			$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
 		}
 	}
 	
@@ -828,14 +886,37 @@ if (!$create_incident){
 	$table->data[10][0] .= "</div>";
 } else {
 	// Optional file update
-	$table_file->width = '98%';
-	$table_file->class = 'search-table';
-	$table_file->data = array ();
-	//$table_file->data[0][0] = '___FILE___';
-	$table_file->data[0][0] = print_input_file ('upfile', 200, false, 'class="sub"', true);
-	$table_file->data[1][0] = print_textarea ('file_description', 2, 10, '', '', true, __('File description'));
+	$html = "";
+	$html .= "<div id=\"incident_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+	$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
+	$html .= 		"<table width=\"99%\">";
+	$html .= 			"<td width=\"45%\">";
+	$html .= 				__('Drop the file here');
+	$html .= 			"<td>";
+	$html .= 				__('or');
+	$html .= 			"<td width=\"45%\">";
+	$html .= 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
+	$html .= 			"<tr>";
+	$html .= 		"</table>";
+	$html .= 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
+	$html .= 		"<input type=\"hidden\" name=\"upfiles\" id=\"upfiles\" />"; // JSON STRING
+	$html .= 	"</div>";
+	$html .= 	"<ul></ul>";
+	$html .= "</div>";
+
+	$table_description = new stdClass;
+	$table_description->width = '99%';
+	$table_description->id = 'incident_file_description';
+	$table_description->class = 'search-table-button';
+	$table_description->data = array();
+	$table_description->data[0][0] = print_textarea ("file_description", 3, 40, '', '', true, __('Description'));
+	$table_description->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+	$html .= "<div id='file_description_table_hook' style='display:none;'>";
+	$html .= print_table($table_description, true);
+	$html .= "</div>";
+
 	$table->colspan[10][0] = 4;
-	$table->data[10][0] = print_container('file_upload_container', __('File upload'), print_table($table_file, true), 'closed', true, false);
+	$table->data[10][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
 }
 
 if ($create_incident) {
@@ -855,7 +936,6 @@ $table->data['button'][0] = $button;
 if ($has_permission){
 	if ($create_incident) {
 		$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
-		//echo print_input_file_progress($action, print_table ($table, true), 'id="incident_status_form"', 'sub create', 'button-accion', true, '___FILE___');
 		echo '<form id="incident_status_form" method="post" enctype="multipart/form-data">';
 		print_table ($table);
 		echo '</form>';
@@ -888,6 +968,9 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 <script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="include/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="include/js/jquery.knob.js"></script>
 
 <script  type="text/javascript">
 
@@ -1134,6 +1217,10 @@ $(document).ready (function () {
 		var score = $("#score_ticket").val();
 		setTicketScore(id_ticket, score);
 	});
+
+	// Init the file upload
+	form_upload();
+
 });
 
 
@@ -1171,6 +1258,185 @@ function removeInventory() {
 	
 }
 
+function form_upload () {
+	// Input will hold the JSON String with the files data
+	var input_upfiles = $('input#upfiles');
+	// JSON Object will hold the files data
+	var upfiles = {};
+
+	$('#drop_file #browse_button').click(function() {
+		// Simulate a click on the file input button to show the file browser dialog
+		$("#file-upfile").click();
+	});
+
+	// Initialize the jQuery File Upload plugin
+	$('#incident_files').fileupload({
+		
+		url: 'ajax.php?page=operation/incidents/incident_detail&upload_file=true',
+		
+		// This element will accept file drag/drop uploading
+		dropZone: $('#drop_file'),
+
+		// This function is called when a file is added to the queue;
+		// either via the browse button, or via drag/drop:
+		add: function (e, data) {
+			data.context = addListItem(0, data.files[0].name, data.files[0].size);
+
+			// Automatically upload the file once it is added to the queue
+			data.context.addClass('working');
+			var jqXHR = data.submit();
+		},
+
+		progress: function(e, data) {
+
+			// Calculate the completion percentage of the upload
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+
+			// Update the hidden input field and trigger a change
+			// so that the jQuery knob plugin knows to update the dial
+			data.context.find('input').val(progress).change();
+
+			if (progress >= 100) {
+				data.context.removeClass('working');
+				data.context.removeClass('error');
+				data.context.addClass('loading');
+			}
+		},
+
+		fail: function(e, data) {
+			// Something has gone wrong!
+			data.context.removeClass('working');
+			data.context.removeClass('loading');
+			data.context.addClass('error');
+		},
+		
+		done: function (e, data) {
+			
+			var result = JSON.parse(data.result);
+			
+			if (result.status) {
+				data.context.removeClass('error');
+				data.context.removeClass('loading');
+				data.context.addClass('working');
+
+				// Increase the counter
+				if (upfiles.length == undefined) {
+					upfiles.length = 0;
+				} else {
+					upfiles.length += 1;
+				}
+				var index = upfiles.length;
+				// Create the new element
+				upfiles[index] = {};
+				upfiles[index].name = result.name;
+				upfiles[index].location = result.location;
+				// Save the JSON String into the input
+				input_upfiles.val(JSON.stringify(upfiles));
+
+				// FORM
+				addForm (data.context, index);
+				
+			} else {
+				// Something has gone wrong!
+				data.context.removeClass('working');
+				data.context.removeClass('loading');
+				data.context.addClass('error');
+			}
+		}
+
+	});
+
+	// Prevent the default action when a file is dropped on the window
+	$(document).on('drop_file dragover', function (e) {
+		e.preventDefault();
+	});
+
+	function addListItem (progress, filename, filesize) {
+		var tpl = $('<li>'+
+						'<input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+						' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" />'+
+						'<p></p>'+
+						'<span></span>'+
+						'<div class="incident_file_form"></div>'+
+					'</li>');
+		
+		// Append the file name and file size
+		tpl.find('p').text(filename);
+		if (filesize > 0) {
+			tpl.find('p').append('<i>' + formatFileSize(filesize) + '</i>');
+		}
+
+		// Initialize the knob plugin
+		tpl.find('input').val(0);
+		tpl.find('input').knob({
+			'draw' : function () {
+				$(this.i).val(this.cv + '%')
+			}
+		});
+
+		// Listen for clicks on the cancel icon
+		tpl.find('span').click(function() {
+
+			if (tpl.hasClass('working') || tpl.hasClass('error') || tpl.hasClass('suc')) {
+
+				if (tpl.hasClass('working') && typeof jqXHR != 'undefined') {
+					jqXHR.abort();
+				}
+
+				tpl.fadeOut();
+				tpl.slideUp(500, "swing", function() {
+					tpl.remove();
+				});
+
+			}
+
+		});
+		
+		// Add the HTML to the UL element
+		var item = tpl.appendTo($('#incident_files ul'));
+		item.find('input').val(progress).change();
+
+		return item;
+	}
+
+	function addForm (item, array_index) {
+		
+		item.find(".incident_file_form").html($("#file_description_table_hook").html());
+
+		item.find("#submit-crt_btn").click(function(e) {
+			e.preventDefault();
+			
+			$(this).prop('value', "<?php echo __('Update'); ?>");
+			$(this).removeClass('create');
+			$(this).addClass('upd');
+
+			// Add the description to the array
+			upfiles[array_index].description = item.find("#textarea-file_description").val();	
+			// Save the JSON String into the input
+			input_upfiles.val(JSON.stringify(upfiles));
+		});
+
+		// Listen for clicks on the cancel icon
+		item.find('span').click(function() {
+			// Remove the element from the array
+			upfiles[array_index] = {};
+			// Save the JSON String into the input
+			input_upfiles.val(JSON.stringify(upfiles));
+			// Remove the tmp file
+			$.ajax({
+				type: 'POST',
+				url: 'ajax.php',
+				data: {
+					page: "operation/incidents/incident_detail",
+					remove_tmp_file: true,
+					location: upfiles[array_index].location
+				}
+			});
+		});
+
+	}
+
+}
 
 // Form validation
 trim_element_on_submit('#text-titulo');
