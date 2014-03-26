@@ -100,7 +100,7 @@ require_once ('include/functions_api.php');
 
 include_once("include/functions_update_manager.php");
 
-if($buffer_html) {
+if ($buffer_html) {
 	$config["flash_charts"] = 0;
 }
 
@@ -375,6 +375,10 @@ else {
 }
 
 include ("include/config_process.php");
+
+if ($buffer_html) {
+	$config["flash_charts"] = 0;
+}
 
 load_menu_visibility();
 ?><script>var lang = {

@@ -15,7 +15,7 @@
 
 global $config;
 check_login ();
-
+debugPrint($config["flash_charts"], true);
 include_once('include/functions_crm.php');
 
 // Invoice listing
@@ -25,6 +25,7 @@ $search_last_date = (int) get_parameter ('search_last_date');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 $search_invoice_type = (string) get_parameter ('search_invoice_type');
+$search_company_role = (int) get_parameter ('search_company_role');
 
 $pdf_report = get_parameter("pdf_output");
 
@@ -33,7 +34,7 @@ if ($pdf_report) {
 	$graph_ttl = 2;
 }
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_invoice_type=$search_invoice_type";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role";
 
 $read = check_crm_acl ('company', 'cr');
 
@@ -91,6 +92,9 @@ if ($search_date_end != "") {
 }
 if ($search_invoice_type != "") {
 	$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
+}
+if ($search_company_role > 0) {
+	$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
 }
 
 $invoices = crm_get_all_invoices($where_clause);

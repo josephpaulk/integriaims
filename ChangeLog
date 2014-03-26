@@ -1,3 +1,14 @@
+2014-03-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* index.php: Now the flash charts are disabled correctly
+	when the html is buffered to make a report or something.
+
+	* operation/invoices/invoice_detail.php,
+	  operation/invoices/invoice_stats.php: Now the invoices
+	can be filtered by company role.
+
+	* include/integria_cron_enterprise.php: Minor fix.
+
 2014-03-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_detail.php: Improved the

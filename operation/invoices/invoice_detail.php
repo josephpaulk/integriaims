@@ -31,10 +31,11 @@ $search_last_date = (int) get_parameter ('search_last_date');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 $search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
+$search_company_role = (int) get_parameter ('search_company_role');
 
 $order_by = get_parameter ('order_by', '');
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role";
 
 include_once('include/functions_crm.php');
 
@@ -152,21 +153,29 @@ if ($search_date_end != "") {
 if ($search_invoice_type != "") {
 	$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
 }
+if ($search_company_role > 0) {
+	$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
+}
 
 if ($clean_output == 0){
 
 	echo '<form method="post">';
 
-	$table = new stdClass;
+	$table = new stdClass();
 	$table->id = 'invoices_table';
 	$table->width = '99%';
 	$table->class = 'search-table-button';
-	$table->size = array ();
-	$table->style = array ();
+	$table->size = array();
+	$table->style = array();
+	$table->style[1] = 'vertical-align:top;';
 	$table->colspan[2][0] = 4;
-	$table->data = array ();
+	$table->rowspan[0][1] = 2;
+	$table->data = array();
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
+
+	$sql = 'SELECT id, name FROM tcompany_role ORDER BY name';
+	$table->data[1][0] = print_select_from_sql ($sql, 'search_company_role', $search_company_role, '', __('Any'), 0, true, false, false, __('Company Role'));
 	
 	$table->data[0][1] = get_last_date_control ($search_last_date, 'search_last_date', __('Date'), $search_date_begin, 'search_date_begin', __('From'), $search_date_end, 'search_date_end', __('To'));
 	
@@ -183,8 +192,8 @@ if ($clean_output == 0){
 	$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
 	$table->data[2][0] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-	$table->data[2][0] .= print_report_image ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __("PDF report"));
-	
+	$table->data[2][0] .= print_report_button ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __('Export to PDF')."&nbsp;");
+
 	print_table($table);
 	
 	echo '</form>';
@@ -216,6 +225,7 @@ if ($invoices != false) {
 				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
 		}
 	
+	$table = new stdClass();
 	$table->width = "99%";
 	$table->class = "listing";
 	$table->cellspacing = 0;
