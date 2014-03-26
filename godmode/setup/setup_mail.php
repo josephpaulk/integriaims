@@ -141,24 +141,24 @@ $table->data[7][0] .= print_help_tip (__("This means, in each execution of the b
 
 
 $table->colspan[8][0] = 3;
-$table->data[8][1] = "<h4>".__("IMAP Parameters")."</h4>";
+$table->data[8][1] = "<h4>".__("POP/IMAP Parameters")."</h4>";
 
 $table->data[9][0] = print_input_text ("pop_host", $config["pop_host"],
-	'', 25, 30, true, __('IMAP Host'));
+	'', 25, 30, true, __('POP/IMAP Host'));
 
 $table->data[9][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use IMAP with SSL"), true);
 
 
 $table->data[9][1] = print_input_text ("pop_port", $config["pop_port"],
-	'', 15, 30, true, __('IMAP Port'));	
+	'', 15, 30, true, __('POP/IMAP Port'));	
 
-$table->data[9][1] .= print_help_tip (__("993 for SSL, 110 for unencrypted standard port"), true);
+$table->data[9][1] .= print_help_tip (__("POP3: Port 110, IMAP: Port 143, IMAPS: Port 993, SSL-POP: Port 995"), true);
 
 $table->data[10][0] = print_input_text ("pop_user", $config["pop_user"],
-	'', 15, 30, true, __('IMAP User'));
+	'', 15, 30, true, __('POP/IMAP User'));
 
 $table->data[10][1] = print_input_text ("pop_pass", $config["pop_pass"], 
-	'', 15, 30, true, __('IMAP Password'));
+	'', 15, 30, true, __('POP/IMAP Password'));
 				
 $table->data[11][1] = "<h4>".__("Newsletter SMTP Parameters")."</h4>";
 

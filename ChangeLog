@@ -1,3 +1,10 @@
+2014-03-26  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/setup/setup_mail.php: Changed labels.
+
+	* operation/user_report/report_full.php: Fixed bug
+	in data filter.
+
 2014-03-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* index.php: Now the flash charts are disabled correctly

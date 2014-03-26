@@ -58,18 +58,19 @@ $editor = get_parameter ("editor", "");
 $status = get_parameter ("search_status", 0);
 
 $show_btn = get_parameter ("show_btn", "new");
-// First time you enter in the form. Need to set some checkbox values to 1
-if ($show_btn == "new"){
-	$only_projects = 1;
-	$only_incidents = 1;
-} else {
+
+$show_result_filter = get_parameter('show_filter', 0);
+
+if ($show_result_filter){
 	$only_projects = get_parameter ("only_projects", 0);
 	$only_incidents = get_parameter ("only_incidents", 0);
+} else {
+	$only_projects = 1;
+	$only_incidents = 1;
 }
 
 $only_summary = get_parameter ("only_summary", 0);
 $id_group_creator = get_parameter ("id_group_creator", 0);
-
 
 $total_time = 0;
 $total_global = 0;
@@ -223,6 +224,7 @@ if ($clean_output == 0){
     // TODO: Meter aqui inventario, con un control nuevo, tipo AJAX similar al de los usuarios.
 
     echo "<tr><td colspan=3 align=right>";
+    print_input_hidden('show_filter', 1);
     print_submit_button (__('Show'), 'show_btn', false, 'class="sub zoom"');
     echo "</form>";
     echo "</table>";
@@ -286,7 +288,9 @@ if ($do_search == 0){
 			// Get the lists separated
 			foreach ($search_incidents as $i){
 				$lista_incidencias .= ", ". $i[0];
-				$lista_tareas .= ", ".$i[1];
+				if ($i['id_task']) {
+					$lista_tareas .= ", ".$i[1];
+				}
 			}
 		} else {
 			// There is no match.
@@ -312,6 +316,7 @@ if ($do_search == 0){
 				FROM tproject, ttask, tworkunit_task, tworkunit
 			WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . ' 
 				AND tworkunit_task.id_task = ttask.id
+				AND tproject.id = '. $id_project . '
 				AND ttask.id_project = tproject.id
 			AND tworkunit.timestamp >= "%s"
 			AND tworkunit.timestamp <= "%s" ' . $task_selector . '
@@ -359,8 +364,6 @@ if ($do_search == 0){
 
 		}		
 	}
-
-
 
 	$projects = get_db_all_rows_sql ($sql);
 
@@ -508,10 +511,10 @@ if ($do_search == 0){
 
 		$incidencias = get_db_all_rows_sql ($sql);
 
-		if (sizeof($incidencias) == 0){
-			echo "<h3>";
+		if (!$incidencias){
+			echo "<h4>";
 			echo __("There is no data to show");
-			echo "</h3>";
+			echo "</h4>";
 		} else {
 				
 			echo '<table width="99%" class="listing"><tr>';
@@ -607,7 +610,7 @@ if ($do_search == 0){
 					
 					// SLA Compliance    
 					echo "<td>";
-					echo format_numeric (get_sla_compliance_single_id ($incident["iid"]));
+					echo format_numeric (get_sla_compliance_single_id ($incident["id"]));
 					echo " %";
 					echo "</td></tr>";
 				}
