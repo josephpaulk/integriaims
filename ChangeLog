@@ -1,5 +1,11 @@
 2014-03-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/invoices/invoice_detail.php
+	  operation/invoices/invoice_stats.php: Added a new filter
+	by manager on the invoice search.
+
+2014-03-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/incidents/incident_detail.php
 	  operation/incidents/incident_files.php: Added extension
 	validation to the files uploaded.

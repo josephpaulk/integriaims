@@ -32,10 +32,11 @@ $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 $search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
 $search_company_role = (int) get_parameter ('search_company_role');
+$search_company_manager = (string) get_parameter ('search_company_manager');
 
 $order_by = get_parameter ('order_by', '');
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role&search_company_manager=$search_company_manager";
 
 include_once('include/functions_crm.php');
 
@@ -156,6 +157,9 @@ if ($search_invoice_type != "") {
 if ($search_company_role > 0) {
 	$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
 }
+if ($search_company_manager != "") {
+	$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE manager = "%s")', $search_company_manager);
+}
 
 if ($clean_output == 0){
 
@@ -181,13 +185,14 @@ if ($clean_output == 0){
 	
 	$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
 	$table->data[0][2] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
-	
+	$table->data[1][2] = print_input_text_extended ('search_company_manager', $search_company_manager, 'text-search_company_manager', '', 20, 50, false, '', array(), true, '', __("Manager") )
+		. print_help_tip (__("Type at least two characters to search"), true);
+
 	$invoice_status_ar = array();
-	$invoice_status_ar['']= __("Any");
-	$invoice_status_ar['pending']= __("Pending");
-	$invoice_status_ar['paid']= __("Paid");
-	$invoice_status_ar['cancel']= __("Cancelled");
-	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '','', 0, true, 0, false, __('Invoice status'), false, 'width:150px;');
+	$invoice_status_ar['pending'] = __("Pending");
+	$invoice_status_ar['paid'] = __("Paid");
+	$invoice_status_ar['cancel'] = __("Cancelled");
+	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
 	
 	$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
@@ -361,6 +366,9 @@ $(document).ready (function () {
 	
 		refresh_company_combo();
 	});
+
+	var idUser = "<?php echo $config['id_user'] ?>";
+	bindAutocomplete("#text-search_company_manager", idUser);
 });
 
 function toggle_advanced_fields () {
