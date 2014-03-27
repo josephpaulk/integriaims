@@ -853,6 +853,7 @@ CREATE TABLE `tnewsletter_content` (
   `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
   `status` int unsigned NOT NULL default '0',
   `id_campaign` int(10) unsigned NOT NULL default 0,
+  `from_address` varchar(120) default NULL,
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

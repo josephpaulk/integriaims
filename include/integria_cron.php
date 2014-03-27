@@ -788,7 +788,11 @@ function run_newsletter_queue () {
 
 			$mailer = Swift_Mailer::newInstance($transport);
 			$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
-			$message->setFrom($newsletter["from_address"]);
+			if (!empty($issue["from_address"])) {
+				$message->setFrom($issue["from_address"]);
+			} else {
+				$message->setFrom($newsletter["from_address"]);
+			}
 			$dest_email = trim(safe_output($address['email']));
 		
 			$message->setTo($dest_email);

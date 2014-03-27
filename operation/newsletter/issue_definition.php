@@ -49,6 +49,7 @@ if ($create) {
 	$time = get_parameter("issue_time");
 	$id_newsletter = get_parameter ("id_newsletter"); 
 	$campaign = get_parameter("campaign");
+	$from_address = get_parameter ("from_address");
 		
 	if (! give_acl ($config["id_user"], $id_group, "CN")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
@@ -56,11 +57,17 @@ if ($create) {
 		exit;
 	}
 
-	$sql = sprintf ('INSERT INTO tnewsletter_content (id_newsletter, email_subject, status, datetime, html, plain, id_campaign) 
-					VALUES (%d, "%s", "%s", "%s %s", "%s", "%s", %d)', $id_newsletter, $email_subject, $status, $date, $time, 
-					$html, $plain, $campaign);
-
-	$id = process_sql ($sql, 'insert_id');
+	$values = array(
+			'id_newsletter' => $id_newsletter,
+			'email_subject' => $email_subject,
+			'status' => $status,
+			'datetime' => $date . " " . $time,
+			'html' => $html,
+			'plain' => $plain,
+			'id_campaign' => $campaign,
+			'from_address' => $from_address
+		);
+	$id = process_sql_insert('tnewsletter_content', $values);
 	if ($id === false)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	else {
@@ -82,12 +89,19 @@ if ($update) {
 	$time = get_parameter("issue_time");
 	$id_newsletter = get_parameter ("id_newsletter"); 
 	$campaign = get_parameter("campaign");
+	$from_address = get_parameter ("from_address");
 
-	$sql = sprintf ('UPDATE tnewsletter_content SET id_newsletter = %d, email_subject = "%s", html = "%s",
-		plain = "%s", status = "%s",datetime = "%s %s", id_campaign = %d WHERE id = %d',
-		$id_newsletter, $email_subject, $html, $plain, $status, $date, $time, $campaign, $id);
-	
-	$result = mysql_query ($sql);
+	$values = array(
+			'id_newsletter' => $id_newsletter,
+			'email_subject' => $email_subject,
+			'html' => $html,
+			'plain' => $plain,
+			'status' => $status,
+			'datetime' => $date . " " . $time,
+			'id_campaign' => $campaign,
+			'from_address' => $from_address
+		);
+	$result = process_sql_update('tnewsletter_content', $values, array('id' => $id));
 	if ($result === false)
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	else {
@@ -183,11 +197,11 @@ if ($issues !== false) {
 		$data[3] = $issue["datetime"];
 		 
 		if ($issue["status"] == 1)
-			$data[4] = __("Ready");
-		elseif ($issue["status"] == 0)
 			$data[4] = __("Pending");	
+		elseif ($issue["status"] == 2)
+			$data[4] = __("Sent");
 		else
-			$data[4] = __("Sent");	
+			$data[4] = __("Ready");
 
 		$data[5] = crm_get_issue_reads($issue["id"]);
 

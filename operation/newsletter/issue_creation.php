@@ -66,6 +66,7 @@ if ($create == 1) {
 	$date = date("Y-m-d");
 	$time = date("H:i:s");
 	$campaign = 0;
+	$from_address = "";
 	
 	echo "<h2>".__("Issue creation")."</h2>";
 } else {
@@ -79,8 +80,9 @@ if ($create == 1) {
 	$status = $issue["status"];
 	$email_subject = $issue["email_subject"];
 	$campaign = $issue["id_campaign"];
+	$from_address = $issue["from_address"];
 }
-	
+
 $table->width = '90%';
 $table->class = 'databox';
 $table->colspan = array ();
@@ -88,12 +90,14 @@ $table->colspan[3][0] = 3;
 $table->colspan[4][0] = 3;
 $table->data = array ();
 
-
 $table->data[0][0] = print_input_text ('email_subject', $email_subject, '', 40, 100, true, __('Email subject'));
 
-	
-$table->data[0][1] = print_input_text ('issue_date', $date, '', 10, 20, true, __('Date'));
-$table->data[0][2] = print_input_text ('issue_time', $time, '', 10, 20, true, __('Time'));
+$table->data[0][1] = print_input_text ('from_address', $from_address, '', 35, 120, true, __('From address'))
+	. print_help_tip (__('Leave this field empty to use the newsletter from address'), true);
+
+$table->data[0][2] = "<div style='display:inline-block;'>" . print_input_text ('issue_date', $date, '', 11, 2, true, __('Date')) . "</div>";
+$table->data[0][2] .= "&nbsp;";
+$table->data[0][2] .= "<div style='display:inline-block;'>" . print_input_text ('issue_time', $time, '', 7, 20, true, __('Time')) . "</div>";
 
 $table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
 	'id_newsletter', $id_newsletter, '', '', '', true, false, false,__('Newsletter'));

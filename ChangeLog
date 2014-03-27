@@ -1,5 +1,21 @@
 2014-03-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/newsletter/issue_creation.php,
+	  operation/newsletter/issue_definition.php: Now is
+	possible to set a from address for every newsletter
+	issue.
+
+	* include/integria_cron.php: Now the newsletter issue
+	from address are used instead the newsletter from
+	address if it exists in the function "run_newsletter_queue".
+
+	* integria_db.sql: Added the column "from_address" to the
+	table "tnewsletter_content".
+
+	* extras/mr/8.sql: Added file. New MR8.
+
+2014-03-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/invoices/invoice_detail.php
 	  operation/invoices/invoice_stats.php: Added a new filter
 	by manager on the invoice search.
