@@ -1,3 +1,9 @@
+2014-03-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_detail.php
+	  operation/incidents/incident_files.php: Added extension
+	validation to the files uploaded.
+
 2014-03-27  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/languages/cs.mo

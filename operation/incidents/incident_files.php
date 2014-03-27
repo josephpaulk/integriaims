@@ -61,65 +61,74 @@ if (defined ('AJAX')) {
 		$upload_result = translateFileUploadStatus($upload_status);
 
 		if ($upload_result === true) {
-			$file_tmp = $_FILES["upfile"]['tmp_name'];
 			$filename = $_FILES["upfile"]['name'];
-			$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
-			$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
-			$filesize = filesize($file_tmp); // In bytes
+			$extension = pathinfo($filename, PATHINFO_EXTENSION);
+			$invalid_extensions = "/^(bat|exe|cmd|sh|php|php1|php2|php3|php4|php5|pl|cgi|386|dll|com|torrent|js|app|jar|
+				pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|
+				htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh)$/i";
+			
+			if (!preg_match($invalid_extensions, $extension)) {
+				$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
+				$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
+				$file_tmp = $_FILES["upfile"]['tmp_name'];
+				$filesize = filesize($file_tmp); // In bytes
 
-			$values = array(
-					"id_incidencia" => $id,
-					"id_usuario" => $config['id_user'],
-					"filename" => $filename,
-					"description" => __('No description available'),
-					"size" => $filesize,
-					"timestamp" => date("Y-m-d")
-				);
-			$id_attachment = process_sql_insert("tattachment", $values);
+				$values = array(
+						"id_incidencia" => $id,
+						"id_usuario" => $config['id_user'],
+						"filename" => $filename,
+						"description" => __('No description available'),
+						"size" => $filesize,
+						"timestamp" => date("Y-m-d")
+					);
+				$id_attachment = process_sql_insert("tattachment", $values);
 
-			if ($id_attachment) {
-				incident_tracking ($id, INCIDENT_FILE_ADDED);
-				// Email notify to all people involved in this incident
-				if ($config["email_on_incident_update"]) {
-					mail_incident ($id, $config['id_user'], 0, 0, 2);
+				if ($id_attachment) {
+					incident_tracking ($id, INCIDENT_FILE_ADDED);
+					// Email notify to all people involved in this incident
+					if ($config["email_on_incident_update"]) {
+						mail_incident ($id, $config['id_user'], 0, 0, 2);
+					}
+
+					$location = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+
+					if (copy($file_tmp, $location)) {
+						// Delete temporal file
+						unlink ($file_tmp);
+						$result["status"] = true;
+						$result["id_attachment"] = $id_attachment;
+
+						// Adding a WU noticing about this
+						$link = "<a target=\"_blank\" href=\"operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."\">".$filename."</a>";
+						$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
+						$timestamp = print_mysql_timestamp();
+
+						$values = array(
+								"timestamp" => $timestamp,
+								"duration" => 0,
+								"id_user" => $config['id_user'],
+								"description" => $nota,
+								"public" => 1
+							);
+						$id_workunit = process_sql_insert("tworkunit", $values);
+						
+						$values = array(
+								"id_incident" => $id,
+								"id_workunit" => $id_workunit
+							);
+						process_sql_insert("tworkunit_incident", $values);
+
+						// Updating the ticket
+						process_sql_update("tincidencia", array("actualizacion" => $timestamp), array("id_incidencia" => $id));
+						
+					} else {
+						unlink ($file_tmp);
+						process_sql_delete ('tattachment', array('id_attachment' => $id_attachment));
+						$result["message"] = __('The file could not be copied');
+					}
 				}
-
-				$location = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
-
-				if (copy($file_tmp, $location)) {
-					// Delete temporal file
-					unlink ($file_tmp);
-					$result["status"] = true;
-					$result["id_attachment"] = $id_attachment;
-
-					// Adding a WU noticing about this
-					$link = "<a target=\"_blank\" href=\"operation/common/download_file.php?type=incident&id_attachment=".$id_attachment."\">".$filename."</a>";
-					$nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
-					$timestamp = print_mysql_timestamp();
-
-					$values = array(
-							"timestamp" => $timestamp,
-							"duration" => 0,
-							"id_user" => $config['id_user'],
-							"description" => $nota,
-							"public" => 1
-						);
-					$id_workunit = process_sql_insert("tworkunit", $values);
-					
-					$values = array(
-							"id_incident" => $id,
-							"id_workunit" => $id_workunit
-						);
-					process_sql_insert("tworkunit_incident", $values);
-
-					// Updating the ticket
-					process_sql_update("tincidencia", array("actualizacion" => $timestamp), array("id_incidencia" => $id));
-					
-				} else {
-					unlink ($file_tmp);
-					process_sql_delete ('tattachment', array('id_attachment' => $id_attachment));
-					$result["message"] = __('The file could not be copied');
-				}
+			} else {
+				$result["message"] = __('Invalid extension');
 			}
 
 		} else {
@@ -372,6 +381,11 @@ function form_upload () {
 				data.context.removeClass('working');
 				data.context.removeClass('loading');
 				data.context.addClass('error');
+				if (result.message) {
+					var info = data.context.find('i');
+					info.css('color', 'red');
+					info.html(result.message);
+				}
 			}
 		}
 

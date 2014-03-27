@@ -56,17 +56,27 @@ if (defined ('AJAX')) {
 		$upload_result = translateFileUploadStatus($upload_status);
 
 		if ($upload_result === true) {
-			$result["status"] = true;
-			$result["location"] = $_FILES["upfile"]['tmp_name'];
-			$result["name"] = $_FILES["upfile"]['name'];
-			// Replace conflictive characters
-			$result["name"] = str_replace (" ", "_", $result["name"]);
-			$result["name"] = filter_var($result["name"], FILTER_SANITIZE_URL);
+			$filename = $_FILES["upfile"]['name'];
+			$extension = pathinfo($filename, PATHINFO_EXTENSION);
+			$invalid_extensions = "/^(bat|exe|cmd|sh|php|php1|php2|php3|php4|php5|pl|cgi|386|dll|com|torrent|js|app|jar|
+				pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|
+				htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh)$/i";
+			
+			if (!preg_match($invalid_extensions, $extension)) {
+				$result["status"] = true;
+				$result["location"] = $_FILES["upfile"]['tmp_name'];
+				// Replace conflictive characters
+				$filename = str_replace (" ", "_", $filename);
+				$filename = filter_var($filename, FILTER_SANITIZE_URL);
+				$result["name"] = $filename;
 
-			$destination = sys_get_temp_dir().DIRECTORY_SEPARATOR.$result["name"];
+				$destination = sys_get_temp_dir().DIRECTORY_SEPARATOR.$result["name"];
 
-			if (copy($result["location"], $destination))
-				$result["location"] = $destination;
+				if (copy($result["location"], $destination))
+					$result["location"] = $destination;
+			} else {
+				$result["message"] = __('Invalid extension');
+			}
 		} else {
 			$result["message"] = $upload_result;
 		}
@@ -1341,6 +1351,11 @@ function form_upload () {
 				data.context.removeClass('working');
 				data.context.removeClass('loading');
 				data.context.addClass('error');
+				if (result.message) {
+					var info = data.context.find('i');
+					info.css('color', 'red');
+					info.html(result.message);
+				}
 			}
 		}
 
