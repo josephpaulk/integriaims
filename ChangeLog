@@ -1,3 +1,15 @@
+2014-03-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions.php: The insertion in the database
+	in the function "integria_sendmail" is now cleaner.
+
+	* operation/leads/lead_forward.php: Now is possible to
+	attach files to a lead forward mail. The files attached
+	to that mail will also appear on the lead files section.
+	ACL improvements.
+
+	* operation/leads/lead_mail.php: ACL improvements.
+
 2014-03-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/newsletter/issue_creation.php,

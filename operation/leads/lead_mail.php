@@ -19,8 +19,19 @@ global $config;
 check_login ();
 
 
-if (($id == "") OR ($id == 0))
-	return;
+if (! $id) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a lead forward");
+	include ("general/noaccess.php");
+	exit;
+}
+
+$write_permission = check_crm_acl ('lead', 'cw', $config['id_user'], $id);
+$manage_permission = check_crm_acl ('lead', 'cm', $config['id_user'], $id);
+if (!$write_permission && !$manage_permission) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a lead forward");
+	include ("general/noaccess.php");
+	exit;
+}
 
 $id_template = get_parameter ("id_template");
 

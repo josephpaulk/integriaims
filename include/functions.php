@@ -681,7 +681,19 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	// without HTML encoding. THis is because it is not to be rendered on a browser, 
 	// it will be directly to a SMTP connection.
 	
-	process_sql ("INSERT INTO tpending_mail (date, attempts, status, recipient, subject, body, attachment_list, `from`, cc, extra_headers) VALUES ('".$current_date."', 0, 0, '".$to."', '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($body)."', '".$attachments."', '".$from."', '".$cc."', '".$extra_headers."')");
+	$values = array(
+			'date' => $current_date,
+			'attempts' => 0,
+			'status' => 0,
+			'recipient' => $to,
+			'subject' => mysql_real_escape_string($subject),
+			'body' => mysql_real_escape_string($body),
+			'attachment_list' => $attachments,
+			'from' => $from,
+			'cc' => $cc,
+			'extra_headers' => $extra_headers
+		);
+	process_sql_insert('tpending_mail', $values);
 }
 
 function topi_rndcode ($length = 6) {
