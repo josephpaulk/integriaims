@@ -85,7 +85,7 @@ function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_i
 		
 		$alpha = '';
 		$areaBorderColor = '';
-		$color = '';
+		$colour = '';
 		$showAreaBorder = 1; //0 old default
 		if (isset($color[$i])) {
 			if (!isset($color[$i]['border'])) {
@@ -97,18 +97,16 @@ function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_i
 			}
 			
 			if (isset($color[$i]['border'])) {
-				$areaBorderColor = 'areaBorderColor=' . $color[$i]['border'] . ';';
+				$areaBorderColor = 'areaBorderColor=#' . $color[$i]['border'] . ';';
 			}
 			
 			if (isset($color[$i]['color'])) {
-				$color = 'color=#' . $color[$i]['color'];
+				$colour = 'color=#' . $color[$i]['color'];
 			}
 		}
-		
 		$chart->addDataSet($legend_text, $alpha . 
 			'showAreaBorder=' . $showAreaBorder . ';' .
-			$areaBorderColor .
-			$color);
+			$areaBorderColor . $colour);
 			
 		$count = 0;
 		$step = 10;

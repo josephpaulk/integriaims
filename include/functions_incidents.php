@@ -851,7 +851,12 @@ function print_incidents_stats ($incidents, $return = false) {
 		
 	}
 	arsort($incident_group_data2);
-	
+
+	// Show graph with tickets open/close histogram
+	$ticket_oc_graph = '<div class="pie_frame">' . graph_ticket_oc_histogram($incidents, 650, 250, $ttl) . "</div>";
+	$container_title = __("Ticket Open/Close histogram");
+	$container_ticket_oc = print_container('container_ticket_oc', $container_title, $ticket_oc_graph, 'open', true, true, "container_simple_title", "container_simple_div");
+
 	//Print first table
 	$output .= "<table class='listing' width=190px border=0 cellspacing=0 cellpadding=0 border=0 >";
 	$output .= "<tr>";
@@ -1113,31 +1118,35 @@ function print_incidents_stats ($incidents, $return = false) {
 		
 	$container_title = __("Top 5 users by time");
     $container_top5_user_time = print_container('container_top5_user_time', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div"); 
-
-    //First row
+	
+	//First row
+    echo $container_ticket_oc;
+    
+	//Second row
 	echo $container_incident_statistics;
 	echo $container_top5_incidents;
 	echo $container_sla_compliance;
 
-	//Second row
+	//Third row
 	echo $container_status_incidents;
 	echo $container_priority_incidents;
 
-	//Third row
+	//Fourth row
 	echo $container_longest_closed;
 	echo $container_openclose_incidents;
 	echo "<br><br>";
-	//Fourth row
+
+	//Fifth row
 	echo $container_topactive_users;
 	echo $container_topincident_submitter;
 	echo $container_user_assigned;
 
-	//Fifth row
+	//Sixth row
 	echo $container_incidents_group;
 	echo $container_incident_creator_group;
 	echo $container_top5_scoring;
 
-	//Sixth row
+	// Seventh row
 	echo $container_top5_group_time;
 	echo $container_top5_user_time;
 }

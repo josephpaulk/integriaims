@@ -1019,6 +1019,71 @@ function graph_incident_user_activity ($incident, $width=200, $height=200, $ttl=
 }
 
 // ===============================================================================
+// Draws a stacked area graph for the tickets opened/resolved
+// ===============================================================================
+
+function graph_ticket_oc_histogram ($incidents, $width = 650, $height = 250, $ttl = 1) {
+	global $config;
+
+	$dates = array();
+	$dates['start'] = array();
+	$dates['end'] = array();
+	// Iterates through the incidents array and fill the dates array passed by reference
+	array_walk($incidents, function ($value, $key, $dates_array) {
+
+		$start = "0000-00-00";
+		if (isset($value['inicio'])) {
+			$udate = strtotime($value['inicio']);
+			$start = date("Y-m-d", $udate);
+		}
+		$dates_array['start'][] = $start;
+
+		$end = "";
+		if ($value['estado'] == 7) { // Closed
+			if (!isset($value['cierre']) || $value['cierre'] == "0000-00-00 00:00:00") {
+				$end = date("Y-m-d");
+			} else {
+				$udate = strtotime($value['cierre']);
+				$end = date("Y-m-d", $udate);
+			}
+		}
+		$dates_array['end'][] = $end;
+
+	}, &$dates);
+
+	$dates_keys = $dates['start'] + $dates['end'];
+	$dates_keys[] = date("Y-m-d");
+	sort($dates_keys);
+	$data_oc = array_fill_keys ($dates_keys, array(0 => 0, 1 => 0));
+
+	// $dates['start'] and $dates['end'] has the same number of elements and
+	// are correlative since they are two columns extracted from the same array
+	for ($i = 0; $i < count($dates['start']); $i++) {
+		foreach (array_keys($data_oc) as $date) {
+			if ($date >= $dates['start'][$i] && (empty($dates['end'][$i]) || $date < $dates['end'][$i])) {
+				$data_oc[$date][1] += 1;
+			} elseif (!empty($dates['end'][$i]) && $date >= $dates['end'][$i]) {
+				$data_oc[$date][0] += 1;
+			}
+		}
+	}
+	if ($config["flash_charts"]) {
+		$color = array();
+		$color[0]['color'] = "088A08";
+		$color[0]['alpha'] = "0";
+		$color[0]['border'] = "088A08";
+		$color[1]['color'] = "B40404";
+		$color[1]['alpha'] = "70";
+		$color[1]['border'] = "B40404";
+	}
+	$legend = array();
+	$legend[0] = __('Resolved');
+	$legend[1] = __('Created');
+	
+	return stacked_area_graph($config["flash_charts"], $data_oc, $width, $height, $color, $legend, '', '', '', '', '' ,'' ,'' ,'', $ttl, $config["base_url"]);
+}
+
+// ===============================================================================
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 

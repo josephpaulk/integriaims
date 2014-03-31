@@ -31,6 +31,7 @@ if ($report_image) {
 echo "</ul>";
 echo "</div>";
 echo "</h1>";
+echo "<br>";
 
 $filter['limit'] = 0;
 $incidents = filter_incidents ($filter);

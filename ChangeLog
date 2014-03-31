@@ -1,3 +1,17 @@
+2014-03-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_graph.php: Added the function
+	"graph_ticket_oc_histogram" to get a stacked area graph
+	with open/closed tickets data.
+
+	* include/functions_incidents.php: Added an area graph
+	with open/closed tickets data.
+
+	* include/graphs/functions_fsgraph.php: Now the function
+	"fs_stacked_graph" shows the custom colours correcly.
+
+	* operation/incidents/incident_statistics.php: Minor fix.
+
 2014-03-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions.php: The insertion in the database
