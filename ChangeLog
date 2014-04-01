@@ -1,5 +1,10 @@
 2014-04-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/invoices/invoice_detail.php: Now the invoice
+	PDF is displayed correctly in the language defined in it.
+
+2014-04-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* godmode/setup/setup_visual.php: Added an option to
 	select a custom image for the login background.
 	

@@ -214,21 +214,21 @@ $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=ope
 
 if ($invoices != false) {
 	
-		$url_id_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=bill_id';
-		$url_create_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=invoice_create_date';
-		switch ($order_by) {
-			case "bill_id":
-				$id_img = "&nbsp;<a href='$url_id_order'><img src='images/arrow_down_orange.png'></a>";
-				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/block_orange.png'></a>";
-				break;
-			case "invoice_create_date":
-				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
-				$id_img = "&nbsp;<a href='$url_id_order'><img src='images/block_orange.png'></a>";
-				break;
-			case '':
-				$id_img = "&nbsp;<a href='$url_id_order'><img src='images/block_orange.png'></a>";
-				$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
-		}
+	$url_id_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=bill_id';
+	$url_create_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=invoice_create_date';
+	switch ($order_by) {
+		case "bill_id":
+			$id_img = "&nbsp;<a href='$url_id_order'><img src='images/arrow_down_orange.png'></a>";
+			$date_img = "&nbsp;<a href='$url_create_order'><img src='images/block_orange.png'></a>";
+			break;
+		case "invoice_create_date":
+			$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
+			$id_img = "&nbsp;<a href='$url_id_order'><img src='images/block_orange.png'></a>";
+			break;
+		case '':
+			$id_img = "&nbsp;<a href='$url_id_order'><img src='images/block_orange.png'></a>";
+			$date_img = "&nbsp;<a href='$url_create_order'><img src='images/arrow_down_orange.png'></a>";
+	}
 	
 	$table = new stdClass();
 	$table->width = "99%";
@@ -296,7 +296,7 @@ if ($invoices != false) {
 			$data[7] = '';
 			if ($invoice['invoice_type'] == 'Submitted') {
 				$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
-				&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
+				&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1&amp;language='.$invoice['id_language'].'">
 				<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 			}
 		
