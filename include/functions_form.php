@@ -918,6 +918,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_string = (string) get_parameter ('search_string');
 		$status = (int) get_parameter ('search_status', -10);
 		$priority = (int) get_parameter ('search_priority', -1);
+		$resolution = (int) get_parameter ('search_resolution', -1);
 		$id_group = (int) get_parameter ('search_id_group');
 		$id_inventory = (int) get_parameter ('search_id_inventory');
 		$id_company = (int) get_parameter ('search_id_company');
@@ -942,6 +943,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$priority = (int) $filter['priority'];
 		$id_group = (int) $filter['id_group'];
 		$status = (int) $filter['status'];
+		$resolution = (int) $filter['resolution'];
 		$id_company = (int) $filter['id_company'];
 		$id_inventory = (int) $filter['id_inventory'];
 		$search_id_incident_type = (int) $filter['id_incident_type'];
@@ -985,7 +987,6 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
-	$table->colspan[2][2] = 2;
 	$table->colspan[5][0] = 4;
 	$table->colspan[6][1] = 3;
 	$table->rowspan = array ();
@@ -1042,20 +1043,18 @@ function form_search_incident ($return = false, $filter=false) {
 
 	$table->data[1][3] = user_print_autocomplete_input($params_creator);
 	
-	$table->data[2][0] = print_select (get_priorities (),
-			'search_priority', $priority,
-			'', __('Any'), -1, true, false, false,
-			__('Priority'), false);
+	$table->data[2][0] = print_select (get_priorities(), 'search_priority', $priority,
+			'', __('Any'), -1, true, false, false, __('Priority'), false);
 
-	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	$table->data[2][1] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
-	
-	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
-	
-	$table->data[2][1] .= print_input_hidden ('id_inventory', $id_inventory, true);
-	
+	$table->data[2][1] = print_select (get_incident_resolutions(), 'search_resolution', $resolution,
+			'', __('Any'), -1, true, false, false, __('Resolution'), false);
 	
 	$table->data[2][2] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
+	
+	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
+	$table->data[2][3] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
+	$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	$table->data[2][3] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
 	if (!get_external_user ($config["id_user"]))
 		$table->data[4][0] = print_select (get_companies (), 'search_id_company',

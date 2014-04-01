@@ -1,3 +1,12 @@
+2014-04-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_form.php,
+	  include/functions_incidents.php: Added the resolution
+	filter to the tickets.
+
+	* operation/incidents/incident_statistics.php,
+	  operation/reporting/incidents_html.php: Error fixes.
+
 2014-03-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_graph.php: Added the function

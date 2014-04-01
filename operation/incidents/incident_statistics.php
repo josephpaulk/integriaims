@@ -22,7 +22,7 @@ echo "<ul>";
 echo "<li>";
 echo "<a id='search_form_submit' href='#'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
-$report_image = print_report_image ("javascript:submit_form()", __("PDF report"), "pdf_report_submit");
+$report_image = print_report_image ("javascript:function() { $(\"#pdf_report_form\").submit(); };", __("PDF report"), "pdf_report_submit");
 if ($report_image) {
 	echo "<li>";
 	echo $report_image;
@@ -48,7 +48,7 @@ echo "</form>";
 /* Add a form to generate HTML reports */
 echo '<form id="html_report_form" method="post" target="_blank" action="index.php" style="clear: both">';
 foreach ($filter as $key => $value) {
-	print_input_hidden ($key, $value);
+	print_input_hidden ("search_".$key, $value);
 }
 
 print_input_hidden ('sec2', 'operation/reporting/incidents_html');
@@ -58,7 +58,7 @@ echo "</form>";
 /* Add a form to generate HTML reports */
 echo '<form id="pdf_report_form" method="post" target="_blank" action="index.php" style="clear: both">';
 foreach ($filter as $key => $value) {
-	print_input_hidden ($key, $value);
+	print_input_hidden ("search_".$key, $value);
 }
 
 print_input_hidden ('sec2', 'operation/reporting/incidents_html');

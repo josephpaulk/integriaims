@@ -26,6 +26,7 @@ $filter['string'] = (string) get_parameter ('search_string');
 $filter['priority'] = (int) get_parameter ('search_priority', -1);
 $filter['id_group'] = (int) get_parameter ('search_id_group', 1);
 $filter['status'] = (int) get_parameter ('search_status', -10);
+$filter['resolution'] = (int) get_parameter ('search_resolution', -1);
 $filter['id_product'] = (int) get_parameter ('search_id_product');
 $filter['id_company'] = (int) get_parameter ('search_id_company');
 $filter['id_inventory'] = (int) get_parameter ('id_inventory');

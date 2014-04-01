@@ -69,6 +69,7 @@ function filter_incidents ($filters, $count=false) {
 	$filters['id_creator'] = isset ($filters['id_creator']) ? $filters['id_creator'] : '';
 	$filters['editor'] = isset ($filters['editor']) ? $filters['editor'] : '';
 	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
+	$filters['resolution'] = isset ($filters['resolution']) ? $filters['resolution'] : '';
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
 	
 	if (empty ($filters['status']))
@@ -90,6 +91,8 @@ function filter_incidents ($filters, $count=false) {
 		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
 	if (! empty ($filters['id_user_or_creator']))
 		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
+	if (! empty ($filters['resolution']) && $filters['resolution'] > -1)
+		$sql_clause .= sprintf (' AND resolution = %d', $filters['resolution']);
 
 	//Incident type 0 means all and incident type -1 means without type
 	if ($filters["id_incident_type"] != -1) {

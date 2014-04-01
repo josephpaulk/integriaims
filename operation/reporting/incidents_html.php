@@ -137,7 +137,9 @@ $table->head[6] = __('Updated')."<br /><em>".__('Started')."</em>";
 $table->head[7] = __('Responsible');
 $table->data = array ();
 
+$filter['limit'] = 0;
 $incidents = filter_incidents ($filter);
+unset($filter['limit']);
 
 if ($incidents) {
 	print_incidents_stats ($incidents);
