@@ -1,4 +1,12 @@
 2014-04-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* godmode/setup/setup_visual.php: Added an option to
+	select a custom image for the login background.
+	
+	* general/login_page.php: Now a custom image is loaded
+	as a login page background if the user has defined it.
+
+2014-04-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_form.php,
 	  include/functions_incidents.php: Added the resolution

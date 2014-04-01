@@ -43,16 +43,16 @@ if ($update) {
 	$config["pdffont"] = get_parameter ("pdffont", "code.ttf");
 	$config["site_logo"] = get_parameter ("site_logo", "custom_logos/integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "custom_logos/integria_logo_header.png");
+    $config["login_background"] = (string) get_parameter ("login_background");
 	$config["flash_charts"] = get_parameter ("flash_charts");
-	$config["graphviz_win"] = get_parameter ("graphviz_win");
 	
-	update_config_token ("graphviz_win", $config["graphviz_win"]);
     update_config_token ("block_size", $config["block_size"]);
     update_config_token ("fontsize", $config["fontsize"]);
     update_config_token ("font", $config["font"]);
     update_config_token ("pdffont", $config["pdffont"]);
     update_config_token ("site_logo", $config["site_logo"]);
     update_config_token ("header_logo", $config["header_logo"]);
+    update_config_token ("login_background", $config["login_background"]);
     update_config_token ("flash_charts", $config["flash_charts"]);
 }
 
@@ -60,32 +60,6 @@ $table->width = '99%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
-
-$table->data[0][0] = print_input_text ("block_size", $config["block_size"], '',
-	5, 5, true, __('Block size for pagination'));
-
-
-function get_font_files () {
-	global $config;
-	$base_dir = $config['homedir'].'/include/fonts';
-	$files = list_files ($base_dir, ".ttf", 1, 0);
-	
-	$retval = array ();
-	foreach ($files as $file) {
-		$retval[$config['homedir'].'/include/fonts/'.$file] = $file;
-	}
-	
-	return $retval;
-}
-
-$fontlist = get_font_files ();
-
-$table->data[0][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, __('Font for graphs')) ;
-
-$table->data[1][0] = print_select ($fontlist, 'pdffont', $config["pdffont"], '', '', '',  true, 0, true, __('Font for PDF')) ;
-
-$table->data[1][1] = print_input_text ("fontsize", $config["fontsize"], '',
-	3, 5, true, __('Graphics font size'));
 
 function get_logo_files () {
 	$base_dir = 'images/custom_logos';
@@ -103,17 +77,49 @@ function get_logo_files () {
 
 $imagelist = get_logo_files ();
 
-$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', __('Default'), '',  true, 0, true, __('Site logo')) ;
+$table->data[0][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', __('Default'), '',  true, 0, true, __('Site logo')) ;
+$table->data[0][0] .= print_help_tip(__('You can place your custom images into the folder') . ": images/custom_logos", true);
 
-$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', __('Default'), '',  true, 0, true,  __('Header logo')) ;
+$table->data[1][0] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', __('Default'), '',  true, 0, true,  __('Header logo')) ;
+$table->data[1][0] .= print_help_tip(__('You can place your custom images into the folder') . ": images/custom_logos", true);
+
+$backgrounds_list_jpg = list_files("images/backgrounds", "jpg", 1, 0);
+$backgrounds_list_gif = list_files("images/backgrounds", "gif", 1, 0);
+$backgrounds_list_png = list_files("images/backgrounds", "png", 1, 0);
+$backgrounds_list = array_merge($backgrounds_list_jpg, $backgrounds_list_png);
+$backgrounds_list = array_merge($backgrounds_list, $backgrounds_list_gif);
+asort($backgrounds_list);
+$table->data[2][0] = print_select ($backgrounds_list, 'login_background', $config["login_background"], '', __('Default'), '',  true, 0, true,  __('Login background'));
+$table->data[2][0] .= print_help_tip(__('You can place your custom images into the folder') . ": images/backgrounds", true);
+
+$table->data[3][0] = print_input_text ("block_size", $config["block_size"], '',
+	5, 5, true, __('Block size for pagination'));
+
+function get_font_files () {
+	global $config;
+	$base_dir = $config['homedir'].'/include/fonts';
+	$files = list_files ($base_dir, ".ttf", 1, 0);
+	
+	$retval = array ();
+	foreach ($files as $file) {
+		$retval[$config['homedir'].'/include/fonts/'.$file] = $file;
+	}
+	
+	return $retval;
+}
+
+$fontlist = get_font_files ();
 
 $flash_options = array();
 $flash_options[0]="Disabled";
 $flash_options[1]="Enabled";
+$table->data[0][1] = print_select ($flash_options, 'flash_charts', $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
 
-$table->data[3][0] = print_select ($flash_options, 'flash_charts', $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
+$table->data[1][1] = print_select ($fontlist, 'pdffont', $config["pdffont"], '', '', '',  true, 0, true, __('Font for PDF')) ;
 
-// $table->data[3][1] = print_input_text ("graphviz_win", $config["graphviz_win"], '', 45, 225, true, __('Graphviz Path (only for Windows)'));
+$table->data[2][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, __('Font for graphs')) ;
+
+$table->data[3][1] = print_input_text ("fontsize", $config["fontsize"], '', 3, 5, true, __('Graphics font size'));
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
