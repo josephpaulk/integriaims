@@ -1,5 +1,17 @@
 2014-04-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* images/backgrounds,
+	  images/backgrounds/tiles.jpg,
+	  images/backgrounds/flowers.jpg,
+	  images/backgrounds/pandora_4.0.jpg,
+	  images/backgrounds/wood.jpg,
+	  images/backgrounds/pandora_5.0.png,
+	  images/backgrounds/default_4.0.gif,
+	  images/backgrounds/grass.jpg,
+	  images/backgrounds/wall.jpg: Added files.
+
+2014-04-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/functions_graph.php: Added the functions
 	"print_activity_calendar" and "graph_ticket_activity_calendar".
 
