@@ -45,7 +45,7 @@ function print_bubble_incidents_per_user_graph($incidents_by_user) {
 	$incident_radius = array();
 	foreach ($incidents_by_user as $incident) {
 
-		$radius = $incident['hours'] + (0.1 * $incident['files']);
+		$radius = $incident['workunits'] + $incident['hours'] + (0.1 * $incident['files']);
                 
 		if ($radius > $max_radius) {
                         $max_radius = $radius;
@@ -65,17 +65,18 @@ function print_bubble_incidents_per_user_graph($incidents_by_user) {
 
 	foreach ($incidents_by_user as $incident) {
 		
-		$content = '<b>' . __('Creator') . ':</b> ' . $incident['user_name'] . '<br>' .
-			'<b>' . __('Ticket') . ':</b> ' . $incident['incident_name'] . '<br>' .
-			'<b>' . __('Hours') . ':</b> ' . $incident['hours'] . '<br>' .
-			'<b>' . __('Files') . ':</b> ' . $incident['files'];
+		$content = '<b>' . __('Creator') . ':</b> ' . safe_input($incident['user_name']) . '<br>' .
+			'<b>' . __('Ticket') . ':</b> ' . safe_input($incident['incident_name']) . '<br>' .
+			'<b>' . __('Workunits') . ':</b> ' . safe_input($incident['workunits']) . '<br>' .
+			'<b>' . __('Hours') . ':</b> ' . safe_input($incident['hours']) . '<br>' .
+			'<b>' . __('Files') . ':</b> ' . safe_input($incident['files']);
 		
 		if ($adjust_visual) {
 			$radius = 3;	
 		} else {
 			$radius = $incident_radius[$id];
 		}
-	
+		
 		$row = array();
 		$row['radius'] = $radius;
 		$row['id_creator'] = $incident['id_creator'];

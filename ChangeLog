@@ -1,5 +1,10 @@
 2014-04-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* incidents/incident_graph.php,
+	  include/functions_graph.php: Bugfixes on the D3 graph.
+
+2014-04-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* images/backgrounds,
 	  images/backgrounds/tiles.jpg,
 	  images/backgrounds/flowers.jpg,

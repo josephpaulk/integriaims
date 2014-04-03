@@ -46,6 +46,7 @@ foreach ($incidents as $incident) {
 	$row['id_incident'] = $incident['id_incidencia'];
 	$row['incident_name'] = safe_output($incident['titulo']);
 	$row['user_name'] = safe_output($user_name);
+	$row['workunits'] = get_incident_count_workunits($incident['id_incidencia']);
 	$row['hours'] = get_incident_workunit_hours($incident['id_incidencia']);
 	$row['files'] = get_number_files_incident($incident['id_incidencia']);
 	
@@ -63,7 +64,6 @@ echo "</form>";
 
 if (empty($incidents_by_user)) {
 	ui_print_error_message(__('There are not tickets with this filter.'));
-	//return;
 } else {
 	print_bubble_incidents_per_user_graph($incidents_by_user);
 }
