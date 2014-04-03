@@ -38,7 +38,7 @@ function print_bubble_incidents_per_user_graph($incidents_by_user) {
 	$adjust_visual = false;
 	
 	$data = array();
-	//debugPrint($incidents_by_user);
+	
 	$id = 0;
 
 	//First we calculate max_radius to ensure a correct visualization
@@ -1081,6 +1081,219 @@ function graph_ticket_oc_histogram ($incidents, $width = 650, $height = 250, $tt
 	$legend[1] = __('Created');
 	
 	return stacked_area_graph($config["flash_charts"], $data_oc, $width, $height, $color, $legend, '', '', '', '', '' ,'' ,'' ,'', $ttl, $config["base_url"]);
+}
+
+function print_activity_calendar($values, $date_start, $date_end, $return = false) {
+	$week_days = array(
+			0 => substr(__('Sunday'), 0, 1),
+			1 => substr(__('Monday'), 0, 1),
+			2 => substr(__('Tuesday'), 0, 1),
+			3 => substr(__('Wednesday'), 0, 1),
+			4 => substr(__('Thursday'), 0, 1),
+			5 => substr(__('Friday'), 0, 1),
+			6 => substr(__('Saturday'), 0, 1)
+		);
+	$months_names = array(
+			1 => substr(__('January'), 0, 3),
+			2 => substr(__('February'), 0, 3),
+			3 => substr(__('March'), 0, 3),
+			4 => substr(__('April'), 0, 3),
+			5 => substr(__('May'), 0, 3),
+			6 => substr(__('June'), 0, 3),
+			7 => substr(__('July'), 0, 3),
+			8 => substr(__('August'), 0, 3),
+			9 => substr(__('September'), 0, 3),
+			10 => substr(__('October'), 0, 3),
+			11 => substr(__('November'), 0, 3),
+			12 => substr(__('December'), 0, 3)
+		);
+
+	// Remove the possible time, only the date is needed
+	$date_start = date('Y-m-d', strtotime($date_start));
+	$date_end = date('Y-m-d', strtotime($date_end));
+	// Convert the dates to unix timestamp
+	$udate_start = strtotime($date_start);
+	$udate_end = strtotime($date_end);
+
+	$week_day_start = date('w', $udate_start);
+	$year_start = date('Y', $udate_start);
+
+	$week_count = 0;
+	$months = array();
+	$days = array();
+
+	$first_week = true;
+	while (!$end) {
+		$week_count++;
+		foreach ($week_days as $i => $day) {
+			$data = array();
+			$data['type'] = "";
+			$data['date'] = "";
+			$data['val'] = 0;
+			// The days until the start should be invisible
+			if ($first_week && $i != $week_day_start) {
+				$data['type'] = "none";
+				$data['date'] = date("Y-m-d", $udate);
+				$days[$i][$week_count] = $data;
+				continue;
+			} elseif ($first_week && $i == $week_day_start) {
+				$first_week = false;
+			}
+
+			if (!isset($udate)) {
+				$udate = $udate_start;
+			} else {
+				$udate = strtotime('+1 day', $udate);
+			}
+			$month = date('n', $udate);
+
+			$data['type'] = "day";
+			$data['date'] = date("Y-m-d", $udate);
+			$data['val'] = $values[$data['date']];
+			$days[$i][$week_count] = $data;
+
+			if ($udate >= $udate_end) {
+				$end = true;
+				break;
+			}
+		}
+		$months[$week_count] = $month;
+	}
+
+	$width = "12px";
+	$height = "12px";
+
+	$output = "";
+
+	$output .= "<table width=\"auto\" style=\"width:auto;\">";
+	// Print the year
+	$output .= "<tr>";
+	$output .= "<td width=\"50px\" align=\"center\" valign=\"middle\" rowspan=\"10\" style=\"line-height:12px;\">";
+		for ($i = 0; $i < strlen($year_start); $i++) {
+			$output .= "<div>".$year_start[$i]."</div>";
+		}
+	$output .= "</td>";
+	$output .= "</tr>";
+	// Print the months names row
+	$output .= "<tr>";
+	$output .= "<td width=$width height=$height style=\"line-height:0px;\"></td>";
+	for ($i = 1; $i <= count($months); $i++) {
+		if ($months[$i] != $months[$i-1] && $months[$i] == $months[$i+1]) {
+			$output .= "<td width=$width height=$height colspan=\"2\" style=\"line-height:0px;\">" . $months_names[$months[$i]] . "</td>";
+			$colspan = true;
+		} elseif (!$colspan) {
+			$output .= "<td width=$width height=$height style=\"line-height:0px;\"></td>";
+		} else {
+			$colspan = false;
+		}
+	}
+	$output .= "</tr>";
+	// Print the days
+	// Each row is a week day
+	foreach ($days as $week_day => $row) {
+		$output .= "<tr>";
+		// Print the week day name
+		$output .= "<td align=\"center\" width=$width height=$height style=\"line-height:0px;\">" . $week_days[$week_day] . "</td>";
+		// Print the days squares
+		foreach ($row as $day) {
+			if ($day['type'] == "day") {
+				$val = $day['val'];
+				if ($val >= 80) {
+					$bgcolor = "#21610B";
+				} elseif ($val >= 60) {
+					$bgcolor = "#31B404";
+				} elseif ($val >= 40) {
+					$bgcolor = "#40FF00";
+				} elseif ($val >= 20) {
+					$bgcolor = "#82FA58";
+				} elseif ($val > 0) {
+					$bgcolor = "#D0F5A9";
+				} else {
+					$bgcolor = "#D8D8D8";
+				}
+				$bgcolor = "bgcolor=\"$bgcolor\"";
+			} elseif ($day['type'] == "none") {
+				$bgcolor = "";
+			}
+			$output .= "<td width=$width height=$height $bgcolor></td>";
+		}
+		$output .= "</tr>";
+	}
+	$output .= "</table>";
+
+	if ($return) {
+		return $output;
+	} else {
+		echo $output;
+	}
+}
+
+function graph_ticket_activity_calendar ($incidents) {
+	global $config;
+
+	// Iterates through the incidents array and fill the incidents ids array passed by reference
+	$incidents_ids = array();
+	array_walk($incidents, function ($value, $key, $incidents_ids) {
+		$incidents_ids[] = $value['id_incidencia'];
+	}, &$incidents_ids);
+
+	if (empty($incidents_ids)) {
+		$ids = 0;
+	} else {
+		$ids = implode(",", $incidents_ids);
+	}
+	$sql = "SELECT COUNT(id_it) AS num, DATE(timestamp) AS date
+			FROM tincident_track
+			WHERE id_incident IN ($ids)
+			GROUP BY date
+			ORDER BY date ASC";
+	$track_data = process_sql($sql);
+
+	// Iterates through the track data array and get the max value passed by reference
+	$max_value = 0;
+	array_walk($track_data, function ($value, $key, $max_value) {
+		if ($value['num'] > $max_value)
+			$max_value = $value['num'];
+	}, &$max_value);
+
+	// Iterates through the incidents array and fill the incidents ids array passed by reference
+	$data = array();
+	foreach ($track_data as $key => $value) {
+		$data[$value['date']] = ($value['num'] * 100) / $max_value;
+	}
+	
+	$output = "";
+	
+	$date_start = $track_data[0]['date'];
+	end($track_data);
+	$last_key = key($track_data);
+	$date_end = $track_data[$last_key]['date'];
+
+	$datetime1 = date_create($date_start);
+	$datetime2 = date_create($date_end);
+	$interval = date_diff($datetime1, $datetime2);
+	
+	if ($interval->y > 0 && ($interval->m > 0 || $interval->d > 0)) {
+		$udate_start = strtotime($date_start);
+		$udate_end = strtotime($date_end);
+
+		$year_start = date('Y', $udate_start);
+		$year_end = date('Y', $udate_end);
+
+		for ($i = $year_start; $i <= $year_end; $i++) {
+			if ($i == $year_start) {
+				$output .= print_activity_calendar($data, $date_start, $year_start."-12-31", true);
+			} elseif ($i == $year_end) {
+				$output .= print_activity_calendar($data, $year_end."-01-01", $date_end, true);
+			} else {
+				$output .= print_activity_calendar($data, $i."-01-01", $i."-12-31", true);
+			}
+		}
+	} else {
+		$output .= print_activity_calendar($data, $date_start, $date_end, true);
+	}
+
+	return $output;
 }
 
 // ===============================================================================

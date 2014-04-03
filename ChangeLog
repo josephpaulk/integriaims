@@ -1,3 +1,11 @@
+2014-04-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_graph.php: Added the functions
+	"print_activity_calendar" and "graph_ticket_activity_calendar".
+
+	* include/functions_incidents.php: Added a ticket activity
+	graph.
+
 2014-04-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/invoices/invoice_detail.php: Now the invoice
