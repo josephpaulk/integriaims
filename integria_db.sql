@@ -1190,3 +1190,18 @@ CREATE TABLE `tworkflow_action` (
   FOREIGN KEY (`id_rule`) REFERENCES tworkflow_rule(`id`)
        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tdownload_type` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(250) NOT NULL,
+  `description` text,
+  `icon` varchar(100),
+  PRIMARY KEY (`id`)
+); ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tdownload_type_file` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_type` mediumint(8) unsigned NOT NULL,
+  `id_download` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+); ENGINE=InnoDB DEFAULT CHARSET=utf8;
