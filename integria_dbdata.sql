@@ -14,8 +14,8 @@
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
 ('language_code','en_GB'),
 ('block_size','25'),
-('db_scheme_version','4.0'),
-('db_scheme_build','131119'),
+('db_scheme_version','4.1MR8'),
+('db_scheme_build','140405'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management System'),
@@ -45,7 +45,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_audit', 15),
 ('max_days_session', 7),
 ('update_manager_installed', 1),
-('current_package', 0),
+('current_package', 9),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('minor_release', 8);

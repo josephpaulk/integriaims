@@ -1,3 +1,9 @@
+2014-04-04  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql,
+	integria_dbdata.sql: Fixed broken SQL. Updated some 
+	version in SQL.
+
 2014-04-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_db.sql: Added the tables `tdownload_type`

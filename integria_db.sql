@@ -1197,11 +1197,11 @@ CREATE TABLE `tdownload_type` (
   `description` text,
   `icon` varchar(100),
   PRIMARY KEY (`id`)
-); ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tdownload_type_file` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `id_type` mediumint(8) unsigned NOT NULL,
   `id_download` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-); ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
