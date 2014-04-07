@@ -90,7 +90,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tconfig` WRITE;
 /*!40000 ALTER TABLE `tconfig` DISABLE KEYS */;
-INSERT INTO `tconfig` VALUES (1,'language_code','en_GB'),(2,'block_size','25'),(3,'db_scheme_version','4.0'),(4,'db_scheme_build','130330'),(5,'date_format','F j, Y, g:i a'),(6,'currency','eu'),(8,'hours_perday','8'),(9,'FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n'),(10,'HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),(11,'notification_period','24'),(14,'flash_charts','1'),(15,'fontsize','6'),(16,'auth_methods','mysql'),(17,'wiki_plugin_dir','include/wiki/plugins/'),(18,'conf_var_dir','wiki_data/'),(27,'enterprise_installed','0'),(28,'timezone','Europe/Madrid'),(29,'want_chat','0'),(30,'incident_creation_wu','0'),(31,'lead_company_filter',''),(32,'lead_warning_time','7'),(33,'months_to_delete_incidents','12'),(34,'sitename','Integria&#x20;IMS&#x20;-&#x20;the&#x20;ITIL&#x20;Management&#x20;System'),(35,'limit_size','250'),(36,'max_file_size','50M'),(37,'autowu_completion','0'),(38,'no_wu_completion',''),(39,'incident_reporter','0'),(40,'show_creator_incident','1'),(41,'show_owner_incident','1'),(42,'pwu_defaultime','4'),(43,'iwu_defaultime','0.25'),(44,'api_acl','127.0.0.1'),(45,'api_password',''),(46,'auto_incident_close','72'),(47,'email_on_incident_update','0'),(48,'error_log','1'),(49,'iw_creator_enabled','0'),(50,'enable_newsletter','0'),(51,'batch_newsletter','15'),(52,'enable_pass_policy','0'),(53,'pass_size','4'),(54,'pass_needs_numbers','0'),(55,'pass_needs_symbols','0'),(56,'pass_expire','0'),(57,'first_login','1'),(58,'mins_fail_pass','5'),(59,'number_attempts','5'),(60,'max_days_events','30'),(61,'max_days_incidents','15'),(62,'max_days_wu','365'),(63,'max_days_wo','365'),(64,'max_days_audit','15'),(65,'max_days_session','7'),(66, 'update_manager_installed', 1), (67, 'current_package', 0), (68, 'url_updatemanager', 'https://artica.es/integriaupdate4/server.php'), (69, 'license', 'INTEGRIA-FREE'), (70, 'minor_release', 4);
+INSERT INTO `tconfig` (`token`, `value`) VALUES ('enterprise_installed','0'),('timezone','Europe/Madrid'),('want_chat','0'),('incident_creation_wu','0'),('lead_company_filter',''),('lead_warning_time','7'),('months_to_delete_incidents','12'),('max_file_size','50M'),('autowu_completion','0'),('no_wu_completion',''),('incident_reporter','0'),('show_creator_incident','1'),('show_owner_incident','1'),('pwu_defaultime','4'),('iwu_defaultime','0.25'),('api_acl','127.0.0.1'),('auto_incident_close','72'),('email_on_incident_update','0'),('error_log','1'),('iw_creator_enabled','0'),('enable_newsletter','0'),('batch_newsletter','15'),('update_manager_installed', 1),('license', 'INTEGRIA-FREE');
 /*!40000 ALTER TABLE `tconfig` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,16 +172,6 @@ INSERT INTO `tevent` VALUES (1,'OBJECT TYPE CREATED','2013-02-12 09:24:28','admi
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tgrupo`
---
-
-LOCK TABLES `tgrupo` WRITE;
-/*!40000 ALTER TABLE `tgrupo` DISABLE KEYS */;
-INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL,0,0,0,0,"","",0,0,0,NULL),(2,'Customer&#x20;#A','eye.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0,0,0,0,0,"","",0,0,0,NULL),(3,'Customer #B','eye.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL,0,0,0,0,"","",0,0,0,NULL),(4,'Engineering','computer.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0,0,0,0,0,"","",0,0,0,NULL);
-/*!40000 ALTER TABLE `tgrupo` ENABLE KEYS */;  
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tholidays`
 --
 
@@ -230,16 +220,6 @@ INSERT INTO `tincident_inventory` VALUES (1,2);
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tincident_resolution`
---
-
-LOCK TABLES `tincident_resolution` WRITE;
-/*!40000 ALTER TABLE `tincident_resolution` DISABLE KEYS */;
-INSERT INTO `tincident_resolution` VALUES (1,'Fixed'),(2,'Invalid'),(3,'Wont fix'),(4,'Duplicate'),(5,'Works for me'),(6,'Incomplete'),(7,'Expired'),(8,'Moved'),(9,'In process');
-/*!40000 ALTER TABLE `tincident_resolution` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tincident_stats`
 --
 
@@ -247,16 +227,6 @@ LOCK TABLES `tincident_stats` WRITE;
 /*!40000 ALTER TABLE `tincident_stats` DISABLE KEYS */;
 INSERT INTO `tincident_stats` VALUES (1,1,0,'status_time','',1,0),(2,1,0,'user_time','admin',0,0),(3,1,0,'group_time','',0,3),(4,1,0,'total_time','',0,0),(5,1,0,'total_w_third','',0,0);
 /*!40000 ALTER TABLE `tincident_stats` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tincident_status`
---
-
-LOCK TABLES `tincident_status` WRITE;
-/*!40000 ALTER TABLE `tincident_status` DISABLE KEYS */;
-INSERT INTO `tincident_status` VALUES (1,'New'),(2,'Unconfirmed'),(3,'Assigned'),(4,'Re-opened'),(5,'Pending to be closed'),(6,'Pending on a third person'),(7,'Closed');
-/*!40000 ALTER TABLE `tincident_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -367,16 +337,6 @@ INSERT INTO `tkb_product` VALUES (1,'Packages','','box.png',0);
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tlanguage`
---
-
-LOCK TABLES `tlanguage` WRITE;
-/*!40000 ALTER TABLE `tlanguage` DISABLE KEYS */;
-INSERT INTO `tlanguage` VALUES ('bn','à¦¬à¦¾à¦‚à¦²à¦¾'),('da','Dansk'),('el','Î•Î»Î»Î·Î½Î¹ÎºÎ¬'),('en_GB','English'),('es','EspaÃ±ol'),('fr','FranÃ§ais'),('ko','í•œêµ­ì–´'),('nl','Nederlands'),('ru','Ð ÑƒÑÑÐºÐ¸Ð¹'),('tr','TÃ¼rkÃ§e');
-/*!40000 ALTER TABLE `tlanguage` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tlead`
 --
 
@@ -404,16 +364,6 @@ LOCK TABLES `tlead_history` WRITE;
 /*!40000 ALTER TABLE `tlead_history` DISABLE KEYS */;
 INSERT INTO `tlead_history` VALUES (1,1,'admin','Created lead','2013-02-12 09:28:27'),(2,1,'admin','Added comments','2013-02-12 09:30:17');
 /*!40000 ALTER TABLE `tlead_history` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tlink`
---
-
-LOCK TABLES `tlink` WRITE;
-/*!40000 ALTER TABLE `tlink` DISABLE KEYS */;
-INSERT INTO `tlink` VALUES (0000000001,'Integria Project','http://integria.sourceforge.net'),(0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Report a bug','https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
-/*!40000 ALTER TABLE `tlink` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -520,26 +470,6 @@ INSERT INTO `tobject_field_data` VALUES (1,2,1,'2347234873'),(2,2,2,'Xeon&#x20;3
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tobject_type`
---
-
-LOCK TABLES `tobject_type` WRITE;
-/*!40000 ALTER TABLE `tobject_type` DISABLE KEYS */;
-INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,0),(2,'Pandora&#x20;agents','Imported&#x20;agents&#x20;from&#x20;Pandora&#x20;FMS','pandora.png',0,1),(3,'CDROM','','cd-dvd.png',0,0),(4,'NIC','','network.png',0,0),(5,'Software','','box.png',0,0),(6,'RAM','','memory-card.png',0,0),(7,'Service','','engine.png',0,0),(8,'CPU','','server.png',0,0),(9,'HD','','harddisk.png',0,0),(10,'Video','','system-monitor.png',0,0),(11,'Patches','','attachment.png',0,0);
-/*!40000 ALTER TABLE `tobject_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tobject_type_field`
---
-
-LOCK TABLES `tobject_type_field` WRITE;
-/*!40000 ALTER TABLE `tobject_type_field` DISABLE KEYS */;
-INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0,1),(2,1,'CPU','text','','','',0,0,1),(3,1,'Memory','text','','','',0,0,1),(4,1,'IP&#x20;Address','text','','','',1,0,1),(5,1,'MAC&#x20;Address','text','','','',1,0,1),(6,1,'Users','text','','','',0,0,0),(7,1,'File&#x20;system','text','','','',0,0,0),(8,NULL,'OS','text',NULL,NULL,NULL,0,0,1),(9,NULL,'IP Address','text',NULL,NULL,NULL,0,0,1),(10,NULL,'URL Address','text',NULL,NULL,NULL,0,0,1),(11,NULL,'ID Agent','text',NULL,NULL,NULL,0,0,1),(12,2,'OS','text',NULL,NULL,NULL,0,0,1),(13,2,'IP Address','text',NULL,NULL,NULL,0,0,1),(14,2,'URL Address','text',NULL,NULL,NULL,0,0,1),(15,2,'ID Agent','text',NULL,NULL,NULL,0,0,1),(16,2,'Users','text',NULL,NULL,NULL,0,0,1),(17,2,'File system','text',NULL,NULL,NULL,0,0,1),(19,3,'Description','text','','','',0,0,0),(20,3,'Mount&#x20;point','text','','','',0,0,0),(22,4,'MAC','text','','','',1,0,0),(23,4,'IP&#x20;Address','text','','','',0,0,0),(26,5,'Version','text','','','',0,0,0),(27,6,'Size','text','','','',0,0,0),(28,6,'Type','text','','','',0,0,0),(29,7,'Path','text','','','',0,0,0),(30,7,'Status','text','','','',0,0,0),(31,8,'Speed','text','','','',0,0,0),(32,8,'Model','text','','','',0,0,0),(33,9,'Capacity','text','','','',0,0,0),(34,9,'Name','text','','','',0,0,0),(35,10,'Memory','text','','','',0,0,0),(36,10,'Type','text','','','',0,0,0),(37,11,'Description','text','','','',0,0,0),(38,11,'Extra','text','','','',0,0,0),(39,11,'Internal&#x20;Code','text','','','',0,0,0);
-/*!40000 ALTER TABLE `tobject_type_field` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tpending_mail`
 --
 
@@ -550,22 +480,12 @@ INSERT INTO `tpending_mail` VALUES (1,'2013-02-12 09:50:29',0,0,'admin@integria.
 UNLOCK TABLES;
 
 --
--- Dumping data for table `tprofile`
---
-
-LOCK TABLES `tprofile` WRITE;
-/*!40000 ALTER TABLE `tprofile` DISABLE KEYS */;
-INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-/*!40000 ALTER TABLE `tprofile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `tproject`
 --
 
 LOCK TABLES `tproject` WRITE;
 /*!40000 ALTER TABLE `tproject` DISABLE KEYS */;
-INSERT INTO `tproject` VALUES (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0),(1,'Super&#x20;Vaporware&#x20;v1.0','','2013-05-01','2013-05-01','admin',0,0);
+INSERT INTO `tproject` VALUES (1,'Super&#x20;Vaporware&#x20;v1.0','','2013-05-01','2013-05-01','admin',0,0);
 /*!40000 ALTER TABLE `tproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -586,16 +506,6 @@ LOCK TABLES `tproject_track` WRITE;
 /*!40000 ALTER TABLE `tproject_track` DISABLE KEYS */;
 INSERT INTO `tproject_track` VALUES (1,1,'admin',21,'2013-02-12 09:54:53',0),(2,1,'admin',22,'2013-02-12 09:56:55',0);
 /*!40000 ALTER TABLE `tproject_track` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `trole`
---
-
-LOCK TABLES `trole` WRITE;
-/*!40000 ALTER TABLE `trole` DISABLE KEYS */;
-INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
-/*!40000 ALTER TABLE `trole` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -644,10 +554,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `ttask` WRITE;
 /*!40000 ALTER TABLE `ttask` DISABLE KEYS */;
-INSERT INTO `ttask` VALUES (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00','0000-00-00',0,0.00,'none',1),
-(-3,-1,0,'Not justified','',0,0,0,'0000-00-00','0000-00-00',0,0.00,'none',1),
-(-2,-1,0,'Health issues','',0,0,0,'0000-00-00','0000-00-00',0,0.00,'none',1),(-1,-1,0,'Vacations','',0,0,0,'0000-00-00','0000-00-00',0,0.00,'none',1),
-(1,1,0,'Planning','',0,0,0,'2013-01-02','2013-01-17',128,0.00,'none',1),
+INSERT INTO `ttask` VALUES (1,1,0,'Planning','',0,0,0,'2013-01-02','2013-01-17',128,0.00,'none',1),
 (2,1,0,'Analysis','',0,0,0,'2013-02-04','2013-02-12',72,0.00,'none',1),
 (3,1,0,'Development','',6,0,0,'2013-02-20','2013-02-28',72,0.00,'none',1),
 (4,1,0,'Tests','',0,0,0,'2013-03-01','2013-03-30',240,0.00,'none',1),
@@ -709,7 +616,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tusuario` WRITE;
 /*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
-INSERT INTO `tusuario` VALUES ('admin','Default&#x20;Admin','2f62afb6e17e46f0717225bcca6225b7','Default&#x20;Integria&#x20;Admin&#x20;superuser.&#x20;Please&#x20;change&#x20;password&#x20;ASAP','2013-02-12 10:24:47','admin@integria.sf.net','555-555-555',1,'moustache3','en_GB','',0,1,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'',1,"Madrid"),('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'moustache4','en_GB','',0,1,0,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1,"Paris");
+INSERT INTO `tusuario` VALUES ('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'moustache4','en_GB','',0,1,0,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1,"Paris");
 /*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -780,18 +687,3 @@ LOCK TABLES `tworkunit_task` WRITE;
 INSERT INTO `tworkunit_task` VALUES (1,3,2),(2,-1,3),(3,-1,4),(4,-1,5),(5,-1,6),(6,-1,7),(7,3,8),(8,3,9),(9,3,10),(10,3,11),(11,3,12);
 /*!40000 ALTER TABLE `tworkunit_task` ENABLE KEYS */;
 UNLOCK TABLES;
-
-INSERT INTO `tupdate_settings` VALUES ('customer_key', 'INTEGRIA-FREE'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('dbport', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
-
-INSERT INTO tlead_progress (id,name) VALUES
-(0,'New'),
-(20,'Meeting arranged'),
-(40,'Needs discovered'),
-(60,'Proposal delivered'),
-(80,'Offer accepted'),
-(100,'Closed, not response or dead'),
-(101,'Closed, lost'),
-(102,'Closed, invalid or N/A'),
-(200,'Closed successfully');
-
-UPDATE tlead_progress SET `id`=0 WHERE `id`=1;

@@ -422,11 +422,10 @@ function install_step4() {
 			$step3 = parse_mysql_dump("integria_db.sql");
 			check_generic ($step3, "Creating schema");
 			
-			// populate database with a blank DB or DEMO database ?
-			if ($demodb == 1)
+			// Populate the database with basic and optional demo data
+			$step4 = parse_mysql_dump("integria_dbdata.sql");
+			if ($step4 == 1 && $demodb == 1)
 				$step4 = parse_mysql_dump("integria_demo.sql");
-			else
-				$step4 = parse_mysql_dump("integria_dbdata.sql");
 			
 			check_generic ($step4, "Populating database");
 			

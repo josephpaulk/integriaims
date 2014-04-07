@@ -1,3 +1,14 @@
+2014-04-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* install.php: Now the data of "integria_dbdata.sql" is
+	is used always.
+
+	* integria_demo.sql: Deleted some insertions to adapt the
+	file to the new reality.
+
+	* operation/incidents/incident_detail.php,
+	  integria_dbdata.php: Minor fixes.
+
 2014-04-04  Sancho Lerena <slerena@artica.es>
 
 	* integria_db.sql,

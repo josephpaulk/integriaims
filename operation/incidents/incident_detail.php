@@ -239,7 +239,7 @@ if ($action == 'update') {
 	incidents_set_tracking ($id, 'update', $priority, $estado, $resolution, $user, $grupo);
 	
 	if ($id_parent == 0) {
-		$idParentValue = 'NULL';
+		$idParentValue = null;
 	}
 	else {
 		$idParentValue = sprintf ('%d', $id_parent);
@@ -353,7 +353,7 @@ if ($action == "insert" && !$id) {
 	else {
 	
 		if ($id_parent == 0) {
-			$idParentValue = 'NULL';
+			$idParentValue = null;
 		}
 		else {
 			$idParentValue = sprintf ('%d', $id_parent);
