@@ -1,5 +1,17 @@
 2014-04-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/leads/lead_detail.php: Added code to process
+	or delete an uploaded file via ajax. Now an admin user can
+	see the mail tab in a lead.
+
+	* operation/leads/lead_forward.php: Removed the atachment
+	files of the forward lead mails.
+
+	* operation/leads/lead_mail.php: Now is possible to send
+	files as attachment of the lead mails.
+
+2014-04-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* install.php: Now the data of "integria_dbdata.sql" is
 	is used always.
 

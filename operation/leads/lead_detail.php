@@ -56,6 +56,64 @@ if ($id || $id_company) {
 	}
 }
 
+// AJAX - START
+if (defined ('AJAX')) {
+	ob_clean();
+
+	$upload_file = (bool) get_parameter('upload_file');
+	if ($upload_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["filename"] = "";
+		$result["location"] = "";
+		$result["message"] = "";
+
+		$upload_status = getFileUploadStatus("upfile");
+		$upload_result = translateFileUploadStatus($upload_status);
+
+		if ($upload_result === true) {
+			$filename = $_FILES["upfile"]['name'];
+			$extension = pathinfo($filename, PATHINFO_EXTENSION);
+			$invalid_extensions = "/^(bat|exe|cmd|sh|php|php1|php2|php3|php4|php5|pl|cgi|386|dll|com|torrent|js|app|jar|
+				pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|
+				htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh)$/i";
+			
+			if (!preg_match($invalid_extensions, $extension)) {
+				$result["status"] = true;
+				$result["location"] = $_FILES["upfile"]['tmp_name'];
+				// Replace conflictive characters
+				$filename = str_replace (" ", "_", $filename);
+				$filename = filter_var($filename, FILTER_SANITIZE_URL);
+				$result["name"] = $filename;
+
+				$ds = DIRECTORY_SEPARATOR;
+				$destination = $config["homedir"].$ds."attachment".$ds."tmp".$ds.$result["name"];
+
+				if (move_uploaded_file($result["location"], $destination))
+					$result["location"] = $destination;
+			} else {
+				$result["message"] = __('Invalid extension');
+			}
+		} else {
+			$result["message"] = $upload_result;
+		}
+		echo json_encode($result);
+		return;
+	}
+
+	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
+	if ($remove_tmp_file) {
+		$result = false;
+		$tmp_file_location = (string) get_parameter('location');
+		if ($tmp_file_location) {
+			$result = unlink($tmp_file_location);
+		}
+		echo json_encode($result);
+		return;
+	}
+}
+// AJAX - END
+
 $new = (bool) get_parameter ('new');
 $create = (bool) get_parameter ('create');
 $update = (bool) get_parameter ('update');
@@ -447,7 +505,7 @@ if ($id || $new) {
 		// Show mail tab only on owned leads
 		$lead_owner = get_db_value ("owner", "tlead", "id", $id);
 
-		if ($lead_owner == $config["id_user"]){
+		if ($lead_owner == $config["id_user"] || dame_admin($config["id_user"])){
 			if ($op == "mail")
 				echo '<li class="ui-tabs-selected">';
 			else
