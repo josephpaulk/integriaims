@@ -1097,6 +1097,7 @@ echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";
 <script type="text/javascript" >
 	
 add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
+add_datepicker ("#text-last_update");
 
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();

@@ -232,7 +232,6 @@ function bindAutocomplete (idTag, idUser, idProject, onChange) {
  *
  */
 function bindCompanyAutocomplete (idTag, idUser, filterType) {
-	console.log(filterType);
 
 	var filter = $('#hidden-autocomplete_'+idTag+'_filter').val();
 	if (filter) {
