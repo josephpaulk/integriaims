@@ -34,25 +34,14 @@ $delete = (bool) get_parameter ('delete');
 
 // CREATE
 if ($create) {
-	if (!$manager) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a new newsletter");
-		require ("general/noaccess.php");
-		exit;
-	}
 	
 	$data = get_parameter ("data");
 	$id_newsletter = get_parameter ("id_newsletter"); 
 	
 	
-    $datetime = date ("Y-m-d H:i:s"); 		
-    $id_group = get_db_sql ("SELECT id_group FROM tnewsletter WHERE id = $id_newsletter");
+    	$datetime = date ("Y-m-d H:i:s"); 		
+    	$id_group = get_db_sql ("SELECT id_group FROM tnewsletter WHERE id = $id_newsletter");
     
-	if (! give_acl ($config["id_user"], $id_group, "CN")) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
-		require ("general/noaccess.php");
-		exit;
-	}
-
 	// Parse chunk data from the textarea
 	
 	$data = safe_output($data);
