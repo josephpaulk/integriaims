@@ -1,3 +1,8 @@
+2014-04-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/incidents/incident_detail.php: Now the new
+	resolution epilog text is saved as a ticket workunit.
+
 2014-04-28 Sancho Lerena <slerena@artica.es>
 
 	* operation/newsletter/address_definition.php: Fixed an ACL

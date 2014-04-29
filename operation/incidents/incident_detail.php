@@ -295,6 +295,13 @@ if ($action == 'update') {
     			mail_incident ($id, $user, "", 0, 0);
 		}
 	}
+
+	if ( $epilog && ($epilog != $old_incident['epilog']) ) {
+		if (include_once('include/functions_workunits.php')) {
+			$wu_text = __("Resolution epilog") . ": " . $epilog;
+			create_workunit ($id, $wu_text, $config['id_user'], 0, 0, "", 1, 0);
+		}
+	}
 	
 	// AJAX (Massive operations)
 	if ($massive_number_loop > -1) {
