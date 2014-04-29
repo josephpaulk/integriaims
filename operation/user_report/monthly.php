@@ -38,7 +38,9 @@ if ((give_acl($real_user_id, $id_grupo, "PR") != 1) AND (give_acl($$real_user_id
 }
 
 
-$users = get_user_visible_users();
+
+//$users = get_user_visible_users();
+$users = get_user_visible_users(0,'IR',true,true,false,'',false);
 
 if (($id == "") || (($id != $real_user_id) && !in_array($id, array_keys($users)))) {
 		audit_db("Noauth", $config["REMOTE_ADDR"], "No permission access", "Trying to access user workunit report");

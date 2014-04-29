@@ -1359,7 +1359,7 @@ function get_project_manager_users($id_user = "") {
  * 
  * @return A list of users visible by the id_user sended.
  */
-function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true, $both = true, $anygroup = false, $search = '') {
+function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true, $both = true, $anygroup = false, $search = '', $check_acl=true) {
 	global $config;
 	
 	$values = array ();
@@ -1421,10 +1421,24 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 			if ($users === false)
 				continue;
 			foreach ($users as $user) {
+/*
 				if (! give_acl ($user["id_usuario"], $group['id_grupo'], $access) && 
 					!in_array($user['id_usuario'], $project_users) && 
 					$id_user != $user['id_usuario']) {
 					continue;
+				}
+*/
+				if ($check_acl) {
+					if (! give_acl ($user["id_usuario"], $group['id_grupo'], $access) && 
+						!in_array($user['id_usuario'], $project_users) && 
+						$id_user != $user['id_usuario']) {
+							continue;
+					}
+				} else {
+					if (!in_array($user['id_usuario'], $project_users) && 
+						$id_user != $user['id_usuario']) {
+						continue;
+					}
 				}
 				if ($only_name)
 					$values[$user['id_usuario']] = $user['nombre_real'];

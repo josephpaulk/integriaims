@@ -1,3 +1,15 @@
+2014-04-29  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* general/home.php
+	  godmode/setup/newsboard.php
+	  include/functions_db.php
+	  operation/invoices/invoice_detail.php
+	  operation/invoices/invoice_template.php
+	  operation/invoices/invoices.php
+	  operation/user_report/monthly.php
+	  operation/user_report/report_monthly.php: Fixed several
+	bugs (#725, #728, #742, #744).
+
 2014-04-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/incidents/incident_detail.php: Now the new

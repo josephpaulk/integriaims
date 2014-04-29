@@ -411,8 +411,8 @@ if ($id_invoice != -1) {
 	$tax_amount = $amount * ($tax/100);
 	$total = round($amount + $tax_amount, 2);
 	
-	$table->data[11][0] = print_label(__('Total amount: ').format_numeric($total).' '.$invoice['currency'], 'total_amount', 'text', true);
-	$table->data[11][1] = print_label(__('Total amount without taxes: ').format_numeric($amount).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	$table->data[11][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	$table->data[11][1] = print_label(__('Total amount without taxes: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
 }
 
 $table->colspan[13][0] = 2;

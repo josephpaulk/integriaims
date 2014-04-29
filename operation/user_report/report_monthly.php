@@ -95,7 +95,8 @@
 	echo "</td></tr></table>";
 	echo "</form>";
 
-   	$values = get_user_visible_users ($config['id_user'], "UM", true, true, false, $search);
+   	//$values = get_user_visible_users ($config['id_user'], "UM", true, true, false, $search);
+   	$values = get_user_visible_users($config['id_user'],'UM',true,true,false,$search,false);
 
 	if(empty($values) && $search == '') {
 		$values[$config['id_user']] = $config['id_user'];

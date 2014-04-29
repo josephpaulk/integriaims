@@ -94,35 +94,35 @@
 					echo '<tr>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:left;">'.$invoice['concept1'].'</td>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:right;">'
-							.format_numeric($invoice['amount1']).' '.$invoice['currency'].'</td>';
+							.format_numeric($invoice['amount1'],2).' '.$invoice['currency'].'</td>';
 					echo '</tr>';
 				}
 				if ($invoice['concept2'] != "") {
 					echo '<tr>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:left;">'.$invoice['concept2'].'</td>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:right;">'
-							.format_numeric($invoice['amount2']).' '.$invoice['currency'].'</td>';
+							.format_numeric($invoice['amount2'],2).' '.$invoice['currency'].'</td>';
 					echo '</tr>';
 				}
 				if ($invoice['concept3'] != "") {
 					echo '<tr>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:left;">'.$invoice['concept3'].'</td>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:right;">'
-							.format_numeric($invoice['amount3']).' '.$invoice['currency'].'</td>';
+							.format_numeric($invoice['amount3'],2).' '.$invoice['currency'].'</td>';
 					echo '</tr>';
 				}
 				if ($invoice['concept4'] != "") {
 					echo '<tr>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:left;">'.$invoice['concept4'].'</td>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:right;">'
-							.format_numeric($invoice['amount4']).' '.$invoice['currency'].'</td>';
+							.format_numeric($invoice['amount4'],2).' '.$invoice['currency'].'</td>';
 					echo '</tr>';
 				}
 				if ($invoice['concept5'] != "") {
 					echo '<tr>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:left;">'.$invoice['concept5'].'</td>';
 						echo '<td style="padding-top:5px; font-size:13px; text-align:right;">'
-							.format_numeric($invoice['amount5']).' '.$invoice['currency'].'</td>';
+							.format_numeric($invoice['amount5'],2).' '.$invoice['currency'].'</td>';
 					echo '</tr>';
 				}
 				?>
@@ -141,13 +141,13 @@
 				</tr>
 				<tr>
 					<td style="padding-bottom:15px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($amount).' '.$invoice['currency'].'</b>' ?>
+						<?php echo '<b>'.format_numeric($amount,2).' '.$invoice['currency'].'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($tax_amount).' '.$invoice['currency'].'</b>' ?>
+						<?php echo '<b>'.format_numeric($tax_amount,2).' '.$invoice['currency'].'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($total).' '.$invoice['currency'].'</b>' ?>
+						<?php echo '<b>'.format_numeric($total,2).' '.$invoice['currency'].'</b>' ?>
 					</td>
 				</tr>
 			</table>

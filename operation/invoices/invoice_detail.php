@@ -191,7 +191,7 @@ if ($clean_output == 0){
 	$invoice_status_ar = array();
 	$invoice_status_ar['pending'] = __("Pending");
 	$invoice_status_ar['paid'] = __("Paid");
-	$invoice_status_ar['cancel'] = __("Cancelled");
+	$invoice_status_ar['canceled'] = __("Canceled");
 	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
 	
 	$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
@@ -279,12 +279,12 @@ if ($invoices != false) {
 		else
 			$total[$invoice["currency"]] = $partial;
 
-		$data[2] = format_numeric($partial);
+		$data[2] = format_numeric($partial,2);
 
 		$tax = get_invoice_tax ($invoice["id"]);
 		$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
 		if (($tax != 0) && ($clean_output == 0))
-			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount), true);
+			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount,2), true);
 
 		$data[3] = strtoupper ($invoice["currency"]);
 		$data[4] = __($invoice["status"]);
@@ -334,7 +334,7 @@ if ($invoices != false) {
 	if ($total)
 	echo __("Subtotals for each currency: ");
 	foreach ($total as $key => $value) {
-		echo "- $key : ". format_numeric ($value);
+		echo "- $key : ". format_numeric ($value,2);
 	}
 
 } else {

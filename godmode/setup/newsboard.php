@@ -136,10 +136,9 @@ if ($operation == "") {
 	echo "</table>";
 
 
-    echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
+    echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=create">';
 	echo '<div style="width: 99%; text-align: right;">';
 	print_submit_button (__('Create'), 'crt', false, 'class="sub create');
-	print_input_hidden ('operation', 'create');
 	echo '</form></div>';
 
 } // Fin bloque else

@@ -88,7 +88,11 @@ if ($info) {
 		$system_dashboard_home .= "</div>";
 	}
 	
-	echo print_container('system_dashboard_home', __('System newsboard') . "<span class='landing_subtitle'>" . __('News of last 30 days') . "</span>", $system_dashboard_home, 'no');
+	$add_more = "<a href='index.php?sec=godmode&sec2=godmode/setup/newsboard'>";
+	$add_more .= "<img class='much_more' src='images/add.png' title='" . __('Newsboard management') . "'>";
+	$add_more .= "</a>";
+	
+	echo print_container('system_dashboard_home', __('System newsboard') . "<span class='landing_subtitle'>" . __('News of last 30 days') . "</span>".$add_more, $system_dashboard_home, 'no');
 	
 	// ==============================================================
 	// Show Projects items
