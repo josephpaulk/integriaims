@@ -653,18 +653,12 @@ if ($id || $new) {
 		}
 		
 
-		if ($config["lead_company_filter"] != ""){
-			$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."')";
-		} else {
-			$where_filter = "AND 1=1";
-		}
 		$params = array();
 		$params['input_id'] = 'id_company';
 		$params['input_name'] = 'id_company';
 		$params['input_value'] = $id_company;
 		$params['title'] = __('Managed by');
 		$params['return'] = true;
-		$params['filter'] = $where_filter;
 		$table->data[6][1] = print_company_autocomplete_input($params);
 
 		if ($id_company) {
@@ -935,18 +929,12 @@ if ($id || $new) {
 	$table_advanced->colspan = array();
 	$table_advanced->colspan[1][1] = 2;
 	
-	if ($config["lead_company_filter"] != ""){
-		$where_filter = " AND id_company_role IN ('".$config["lead_company_filter"]."') ";
-	} else {
-		$where_filter = "";
-	}
 	$params = array();
 	$params['input_id'] = 'id_company_search';
 	$params['input_name'] = 'id_company_search';
 	$params['input_value'] = $id_company;
 	$params['title'] = __('Managed by');
 	$params['return'] = true;
-	$params['filter'] = $where_filter;
 	$table_advanced->data[0][0] = print_company_autocomplete_input($params);
 
 	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);

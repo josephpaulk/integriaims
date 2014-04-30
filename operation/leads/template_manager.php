@@ -125,16 +125,7 @@ if (($operation == "create") || ($operation == "edit")){
 	'id_language', $id_language, '', '', '', true, false, false,
 	__('Language'));
 
-
-	// TODO: Show only companies with access to them
-
-	if ($config["lead_company_filter"] != ""){
-		$sql2 = "SELECT id, name FROM tcompany WHERE id_company_role IN ('".$config["lead_company_filter"]."')";
-	} else {
-		$sql2 = "SELECT id, name FROM tcompany ";
-	}
-	$sql2 .=  " ORDER by name";
-
+	$sql2 = "SELECT id, name FROM tcompany ORDER by name";
 
 	$table->data[2][0] = print_input_text ('subject', $subject, '', 70, 200, true,
 		__('Subject'));

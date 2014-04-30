@@ -41,14 +41,12 @@ if ($update) {
 	$config["invoice_header"] = (string) get_parameter ("invoice_header");
 	$config["invoice_footer"] = (string) get_parameter ("invoice_footer");
 	$config["invoice_tax_name"] = (string) get_parameter ("invoice_tax_name");
-	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");
 	
 	update_config_token ("invoice_logo", $config["invoice_logo"]);
 	update_config_token ("invoice_header", $config["invoice_header"]);
 	update_config_token ("invoice_footer", $config["invoice_footer"]);
 	update_config_token ("invoice_tax_name", $config["invoice_tax_name"]);
-	update_config_token ("lead_company_filter", $config["lead_company_filter"]);
 	update_config_token ("lead_warning_time", $config["lead_warning_time"]);
 
 
@@ -109,26 +107,12 @@ $table->data[4][0] = print_textarea ('invoice_footer', 5, 40, $config["invoice_f
 $table->colspan[5][0] = 2;
 $table->data[5][0] = "<h3>".__('Lead parameters')."</h3><br>";
 
-$table->data[6][0] = print_input_text ("lead_company_filter", $config["lead_company_filter"], '',
-	20, 255, true, __('Lead company filter IDs'));
+$table->data[6][0] = "<h3>".__('Lead progress defintion')."</h3><br>";
 
 $table->data[6][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
-	
-$table->colspan[7][0] = 2;
-$table->data[7][0] = "<h3>".__('Lead progress defintion')."</h3><br>";
 
 $progress_values = lead_progress_array ();
-
-$table->colspan[8][0] = 2;
-$table->colspan[9][0] = 2;
-$table->colspan[10][0] = 2;
-$table->colspan[11][0] = 2;
-$table->colspan[12][0] = 2;
-$table->colspan[13][0] = 2;
-$table->colspan[14][0] = 2;
-$table->colspan[15][0] = 2;
-$table->colspan[16][0] = 2;
 
 $closed_lead_tip = print_help_tip (__('This status means that lead is closed'), true);
 
