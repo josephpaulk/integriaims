@@ -133,21 +133,27 @@ if ($delete_company) { // if delete
 		exit;
 	}
 
-	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
+	$sql_invoices = "SELECT COUNT(id) as total FROM tinvoice WHERE id_company = $id";
+	$check_invoices = process_sql($sql_invoices);
 
-	process_sql ($sql);
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company $name");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	if ($check_invoices['total'] != 0) {
+		echo "<h3 class='error'>".__('Error deleting. Company has invoices.')."</h3>";
+	} else {
+		// Delete contacts for that company
+		$sql= sprintf ('DELETE FROM tcompany_contact WHERE id_company = %d', $id);
+		process_sql ($sql);
+		
+		$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
+
+		$result = process_sql ($sql);
+		
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company $name");
+		
+		if ($result) {
+			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		}
+	}
 	$id = 0;
-
-	// Delete contacts for that company
-	$sql= sprintf ('DELETE FROM tcompany_contact WHERE id_company = %d', $id);
-	process_sql ($sql);
-
-	// Delete invoices for that company
-	$sql= sprintf ('DELETE FROM tinvoice WHERE id_company = %d', $id);
-	process_sql ($sql);	
-
 }
 
 // Delete INVOICE
