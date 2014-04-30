@@ -460,6 +460,12 @@ if ($action == "insert" && !$id) {
 					}
 				}
 			}
+
+			// If the ticket creation is successful, redirect the page to the ticket dashboard detail of the new ticket
+			echo "<script type=\"text/javascript\">";
+			echo	"document.location.search= \"?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id\"";
+			echo "</script>";
+			exit;
 			
 		} else {
 			$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
@@ -471,9 +477,6 @@ if ($action == "insert" && !$id) {
 		return;
 	}
 	
-	include("incident_dashboard_detail.php");
-	return;
-
 }
 
 // Edit / Visualization MODE - Get data from database

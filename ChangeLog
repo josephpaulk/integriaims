@@ -1,5 +1,12 @@
 2014-04-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/incidents/incident_detail.php: Now the page
+	makes a redirect to the incident dashboard detail when
+	a ticket is created, instead of loading the incident
+	dashboard detail script.
+
+2014-04-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* integria_demo.sql,
 	  godmode/setup/setup_crm.php,
 	  include/functions_config.php,
