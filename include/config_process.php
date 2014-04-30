@@ -46,6 +46,9 @@ $config["homedir"] = join("/", $array_path);
 
 $config["homedir"] .= $config["base_url_dir"];
 
+if (!isset($config['baseurl']))
+	$config["baseurl"] = $config["base_url_dir"];
+
 // Detect enterprise version
 // NOTE: If you override this value without enterprise code, you will break 
 // the code and get several problems!
@@ -167,10 +170,10 @@ if (isset($_SERVER["SERVER_NAME"])) {
 	$server_addr = $_SERVER["SERVER_NAME"];
 }
 
-$config["base_url"] = $protocol."://".$server_addr.$port.$config["base_url_dir"];
+$config["base_url"] = $protocol."://".$server_addr.$port.$config["baseurl"];
 
 //Compound public url
-$config["public_url"] = $protocol."://".$config["access_public"].$port.$config["base_url_dir"];
+$config["public_url"] = $protocol."://".$config["access_public"].$port.$config["baseurl"];
 
 // Beware: DONT LET BLANK LINES AFTER PHP END CODE MARK BELOW !!
 ?>

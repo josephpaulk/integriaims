@@ -304,7 +304,7 @@ function install_step3() {
 	<div align='center'>
 	<div id='wizard'>
 		<div id='install_box'>
-			<h1>Database setup</h1>
+			<h1>Database and enviroment setup</h1>
 			<p>
 				This wizard will (optionally) create your Integria IMS database, and populate it with data needed to run for first time.
 				You need a privileged user to create database schema, this is usually root user. 
@@ -337,7 +337,13 @@ function install_step3() {
 				</div>
 				
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
-				</div>";
+				</div>
+
+				<br>
+				<div style='padding:0; margin: 0px;'>URL path to Integria IMS</div>
+				<span style='padding:0; font-size: 9px'>For example '/integria'</span>
+				<br>
+				<input class='login' type='text' name='url' style='width: 250px;' value='".dirname ($_SERVER["SCRIPT_NAME"])."'>";
 				
 				echo "
 				
@@ -389,6 +395,11 @@ function install_step4() {
 			$createuser = 0;
 		
 		$dbname = $_POST["dbname"];
+
+		if (isset($_POST["url"]))
+			$url = $_POST["url"];
+		else
+			$url = '/integria';
 	}
 	$everything_ok = 0;
 	$step1=0;
@@ -462,6 +473,9 @@ function install_step4() {
 				$config_new = $config_new . "\n" . 
 				'$config["dbname"]="'.$dbname.'";    // MySQL DataBase name' . "\n". 
 				'$config["dbhost"]="'.$dbhost.'";    // DB Host' . "\n".
+				"\n" .
+				'$config["baseurl"]="'.$url.'";	// Base URL' . "\n".
+				'$config["baseurl_static"]="'.$url.'";	// Don\'t  delete' . "\n".
 				'// End of automatic config file' . "\n".
 				'?>';
 			//---END--- CONFIG FILE

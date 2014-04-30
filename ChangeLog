@@ -1,3 +1,11 @@
+2014-04-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/config_process.php: Now the url use the 'baseurl'
+	config token to build the complete 'base_url'.
+
+	* install.php: Now is possible to save a relative url path
+	from the server to integria. This should fix the images error.
+
 2014-04-30  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/companies/company_detail.php: Verify
