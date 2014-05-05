@@ -2,6 +2,13 @@
 
 	* operation/leads/lead_detail.php,
 	  operation/leads/lead_pipeline.php,
+	  operation/leads/lead_statistics.php: Improved the
+	not owned leads filter.
+
+2014-05-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/leads/lead_detail.php,
+	  operation/leads/lead_pipeline.php,
 	  operation/leads/lead_statistics.php: Now is possible
 	to search the not owned leads only.
 

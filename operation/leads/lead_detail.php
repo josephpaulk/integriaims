@@ -847,7 +847,8 @@ if ($id || $new) {
 	if ($show_not_owned) {
 		$where_clause .= " AND owner = '' ";
 	}
-	else if ($owner != ""){
+	
+	if ($owner != ""){
 		$where_clause .= sprintf (' AND owner =  "%s"', $owner);
 	}
 	
