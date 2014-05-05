@@ -1,3 +1,14 @@
+2014-05-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/integria_cron.php: Modified the function
+	"run_auto_incident_close" to disable the tickets close
+	if the value is empty or negative.
+
+	* include/help/en/help_auto_incident_close.php,
+	  include/help/es/help_auto_incident_close.php: Updated
+	the help to explain how to disable the auto incident
+	close functionality.
+
 2014-04-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/incidents/incident_detail.php: Now the page

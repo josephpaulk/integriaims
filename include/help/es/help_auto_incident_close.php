@@ -7,4 +7,5 @@ configurado en la opci&oacute;n de la configuraci&oacute;n "Auto cerrado de inci
 
 El propietario del incidente recibe un aviso mediante mail.
 
+<br><br><small>El valor 0 deshabilita esta funcionalidad.</small>
 </p>

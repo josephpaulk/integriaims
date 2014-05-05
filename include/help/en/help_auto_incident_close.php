@@ -5,4 +5,5 @@ Defines a limit (in DAYS), where Integria IMS automatically will close the ticke
 
 Ticket owner is warn about this by mail.
 
+<br><br><small>Set to 0 to disable this functionality.</small>
 </p>

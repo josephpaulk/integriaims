@@ -214,18 +214,22 @@ function run_daily_check () {
 
 function run_auto_incident_close () {
 	global $config;
-    	require_once ($config["homedir"]."/include/functions_incidents.php");
 
-    	$utimestamp = date("U");
+	if (empty($config["auto_incident_close"]) || $config["auto_incident_close"] <= 0)
+		return;
+
+    require_once ($config["homedir"]."/include/functions_incidents.php");
+
+    $utimestamp = date("U");
 	$limit = date ("Y-m-d H:i:s", $utimestamp - $config["auto_incident_close"] * 86400);
 
     	// For each incident
 	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4,5) AND actualizacion < '$limit'");
-    	$mailtext = __("This ticket has been closed automatically by Integria after waiting confirmation to close this ticket for 
+    $mailtext = __("This ticket has been closed automatically by Integria after waiting confirmation to close this ticket for 
 ").$config["auto_incident_close"]."  ".__("days");
 
-    	if ($incidents)
-	    foreach ($incidents as $incident){
+    if ($incidents) {
+	    foreach ($incidents as $incident) {
 			
             // Set status to "Closed" (# 7) and solution to 7 (Expired)
             process_sql ("UPDATE tincidencia SET resolution = 7, estado = 7 WHERE id_incidencia = ".$incident["id_incidencia"]);
@@ -236,6 +240,7 @@ function run_auto_incident_close () {
             // Send mail warning about this autoclose
             mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
         }
+    }
 
 }
 
