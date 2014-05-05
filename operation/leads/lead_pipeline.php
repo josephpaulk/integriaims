@@ -44,8 +44,9 @@ $owner = (string) get_parameter ("owner_search");
 $show_100 = (int) get_parameter ("show_100_search");
 $id_language = (string) get_parameter ("id_language", "");
 $est_sale = (int) get_parameter ("est_sale_search", 0);
+$show_not_owned = (int) get_parameter ("show_not_owned_search");
 
-$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner&show_not_owned_search=$show_not_owned";
 
 echo "<div id='incident-search-content'>";
 echo "<h1>". __('Lead pipeline');
@@ -68,7 +69,10 @@ if ($id_language != ""){
 	$where_clause .= " AND id_language = '$id_language' ";
 }
 
-if ($owner != ""){
+if ($show_not_owned) {
+	$where_clause .= " AND owner = '' ";
+}
+else if ($owner != ""){
 	$where_clause .= sprintf (' AND owner =  "%s"', $owner);
 }
 

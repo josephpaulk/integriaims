@@ -375,6 +375,7 @@ $filter['owner'] = (string) get_parameter ("owner_search");
 $filter['show_100'] = (int) get_parameter ("show_100_search");
 $filter['id_language'] = (string) get_parameter ("id_language", "");
 $filter['est_sale'] = (int) get_parameter ("est_sale_search", 0);
+$filter['show_not_owned'] = (int) get_parameter ("show_not_owned_search");
 
 /* Create a custom saved search*/
 if ($create_custom_search && !$id_search) {
@@ -806,6 +807,7 @@ if ($id || $new) {
 		$show_100 = $filter['show_100'];
 		$id_language = $filter['id_language'];
 		$est_sale = $filter['est_sale'];
+		$show_not_owned = $filter['show_not_owned'];
 	} else {
 		$search_text = (string) get_parameter ('search_text');
 		$id_company = (int) get_parameter ('id_company_search');
@@ -821,9 +823,10 @@ if ($id || $new) {
 		$show_100 = (int) get_parameter ("show_100_search");
 		$id_language = (string) get_parameter ("id_language", "");
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
+		$show_not_owned = (int) get_parameter ("show_not_owned_search");
 	}
 
-	$search_params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+	$search_params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner&show_not_owned_search=$show_not_owned";
 
 	$where_group = "";
 
@@ -841,7 +844,10 @@ if ($id || $new) {
 		$where_clause .= " AND id_language = '$id_language' ";
 	}
 
-	if ($owner != ""){
+	if ($show_not_owned) {
+		$where_clause .= " AND owner = '' ";
+	}
+	else if ($owner != ""){
 		$where_clause .= sprintf (' AND owner =  "%s"', $owner);
 	}
 	
@@ -916,11 +922,13 @@ if ($id || $new) {
 
 	$table->data[1][1] = print_input_text ("est_sale_search", $est_sale, "", 21, 100, true, __('Estimated Sale'));
 	
-	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	$table->data[1][2] =  print_checkbox ("show_not_owned_search", 1, $show_not_owned, true, __("Show not owned leads"));
+
+	$table->data[1][3] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$table->data[1][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-	
+	$table->data[1][3] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+
 	$table_advanced->class = 'search-table';
 	$table_advanced->style = array ();
 	$table_advanced->style[0] = 'font-weight: bold;';
@@ -948,7 +956,7 @@ if ($id || $new) {
 	$table_advanced->data[1][1] = get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
 
 	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), print_table($table_advanced, true), 'closed', true, false);
-	$table->colspan['advanced'][2] = 3;
+	$table->colspan['advanced'][2] = 4;
 	
 	print_table ($table);
 	$table->data = array ();
