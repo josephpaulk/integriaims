@@ -26,22 +26,26 @@ echo '
 <script type="text/javascript">
 	tinyMCE.init({
 		extended_valid_elements : "iframe[src|style|width|height|scrolling|marginwidth|marginheight|frameborder]",
-	invalid_elements : "",
-        mode : "textareas",
-        theme : "advanced",
-	height: "500",
-        plugins : "preview, print, table, searchreplace, nonbreaking,xhtmlxtras,noneditable",
-        // Theme options
-        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsize, select,|,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr", theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-        theme_advanced_buttons3 : "",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_resizing : true,
-	force_p_newlines : false,
-	relative_urls : false,
-	convert_urls : false,
-	forced_root_block : "",
-        theme_advanced_statusbar_location : "bottom"
+		invalid_elements : "",
+		mode : "textareas",
+		theme : "advanced",
+		height: "500",
+		plugins : "preview, print, table, searchreplace, nonbreaking, xhtmlxtras, noneditable",
+		// Theme options
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsize, select,|,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr",
+		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+		theme_advanced_buttons3 : "",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_toolbar_align : "left",
+		theme_advanced_resizing : true,
+		force_p_newlines : false,
+		relative_urls : false,
+		convert_urls : false,
+		forced_root_block : "",
+		theme_advanced_statusbar_location : "bottom",
+		inline_styles : true,
+		valid_children : "+body[style]",
+		element_format : "html"
 	});
 </script>
 <!-- /TinyMCE -->';
@@ -83,8 +87,8 @@ if ($create == 1) {
 	$from_address = $issue["from_address"];
 }
 
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->colspan[3][0] = 3;
 $table->colspan[4][0] = 3;
@@ -112,23 +116,28 @@ $campaigns = crm_get_campaigns_combo_list();
 
 $table->data[1][2] = print_select ($campaigns, "campaign", $campaign, '', __("None"), 0,true,0,true, __('Campaign'));
 
-$table->data[4][0] = print_textarea ("html", 10, 1, $html, '', true, "<br>".__('HTML'));
+$editor_type_chkbx = "<div style=\"padding: 4px 0px;\"><b><small>";
+$editor_type_chkbx .= __('Basic') . "&nbsp;&nbsp;";
+$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', true, false, "removeTinyMCE('textarea-html')", '', true);
+$editor_type_chkbx .= "&nbsp;&nbsp;&nbsp;&nbsp;";
+$editor_type_chkbx .= __('Advanced') . "&nbsp;&nbsp;";
+$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', false, false, "addTinyMCE('textarea-html')", '', true);
+$editor_type_chkbx .= "</small></b></div>";
+
+$table->data[3][0] = print_textarea ("html", 10, 1, $html, '', true, "<br>" . __('HTML') . $editor_type_chkbx);
+
+$table->data[4][0] = "";
+if ($id) {
+	$table->data[4][0] .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+	$table->data[4][0] .= print_input_hidden ('id', $id, true);
+	$table->data[4][0] .= print_input_hidden ('update', 1, true);
+} else {
+	$table->data[4][0] .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+	$table->data[4][0] .= print_input_hidden ('create', 1, true);
+}
 
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/issue_definition">';
 print_table ($table);
-
-
-echo '<div class="button" style="width: '.$table->width.'">';
-if ($id) {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-		print_input_hidden ('id', $id);
-		print_input_hidden ('update', 1);
-} else {
-	print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
-	print_input_hidden ('create', 1);
-}
-echo "</div>";
-
 echo "</form>";
 
 ?>
@@ -138,6 +147,13 @@ echo "</form>";
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script>
+
+function removeTinyMCE(element_id) {
+	tinyMCE.EditorManager.execCommand('mceRemoveControl', true, element_id);
+}
+function addTinyMCE(element_id) {
+	tinyMCE.EditorManager.execCommand('mceAddControl', true, element_id);
+}
 
 add_datepicker ("#text-issue_date");
 

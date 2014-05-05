@@ -1,5 +1,11 @@
 2014-05-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/newsletter/issue_creation.php: Fixes and
+	improvements on the TinyMCE editor. Added an option
+	to enable or disable the TinyMCE editor.
+
+2014-05-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* operation/leads/lead_detail.php,
 	  operation/leads/lead_pipeline.php,
 	  operation/leads/lead_statistics.php: Improved the
