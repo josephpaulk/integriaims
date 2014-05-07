@@ -1029,31 +1029,31 @@ function graph_ticket_oc_histogram ($incidents, $width = 650, $height = 250, $tt
 	$dates = array();
 	$dates['start'] = array();
 	$dates['end'] = array();
-	// Iterates through the incidents array and fill the dates array passed by reference
-	array_walk($incidents, function ($value, $key, $dates_array) {
-
+	// Iterates through the incidents array to fill the dates array
+	foreach ($incidents as $key => $incident) {
+		
 		$start = "0000-00-00";
-		if (isset($value['inicio'])) {
-			$udate = strtotime($value['inicio']);
+		if (isset($incident['inicio'])) {
+			$udate = strtotime($incident['inicio']);
 			$start = date("Y-m-d", $udate);
 		}
-		$dates_array['start'][] = $start;
+		$dates['start'][] = $start;
 
 		$end = "";
-		if ($value['estado'] == 7) { // Closed
-			if (!isset($value['cierre']) || $value['cierre'] == "0000-00-00 00:00:00") {
+		if ($incident['estado'] == 7) { // Closed
+			if (!isset($incident['cierre']) || $incident['cierre'] == "0000-00-00 00:00:00") {
 				$end = date("Y-m-d");
 			} else {
-				$udate = strtotime($value['cierre']);
+				$udate = strtotime($incident['cierre']);
 				$end = date("Y-m-d", $udate);
 			}
 		}
-		$dates_array['end'][] = $end;
-
-	}, &$dates);
+		$dates['end'][] = $end;
+	}
 
 	$dates_keys = $dates['start'] + $dates['end'];
 	$dates_keys[] = date("Y-m-d");
+	$dates_keys = array_unique($dates_keys);
 	sort($dates_keys);
 
 	$first_date = $dates_keys[0];
@@ -1240,11 +1240,11 @@ function print_activity_calendar($values, $date_start, $date_end, $return = fals
 function graph_ticket_activity_calendar ($incidents) {
 	global $config;
 
-	// Iterates through the incidents array and fill the incidents ids array passed by reference
+	// Iterates through the incidents array to fill the incidents ids array
 	$incidents_ids = array();
-	array_walk($incidents, function ($value, $key, $incidents_ids) {
-		$incidents_ids[] = $value['id_incidencia'];
-	}, &$incidents_ids);
+	foreach ($incidents as $incident) {
+		$incidents_ids[] = $incident['id_incidencia'];
+	}
 
 	if (empty($incidents_ids)) {
 		$ids = 0;
@@ -1258,12 +1258,12 @@ function graph_ticket_activity_calendar ($incidents) {
 			ORDER BY date ASC";
 	$track_data = process_sql($sql);
 
-	// Iterates through the track data array and get the max value passed by reference
+	// Iterates through the track data array to get their max value
 	$max_value = 0;
-	array_walk($track_data, function ($value, $key, $max_value) {
+	foreach ($track_data as $key => $value) {
 		if ($value['num'] > $max_value)
 			$max_value = $value['num'];
-	}, &$max_value);
+	}
 
 	// Iterates through the incidents array and fill the incidents ids array passed by reference
 	$data = array();
