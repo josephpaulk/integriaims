@@ -1,3 +1,9 @@
+2014-05-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_graph.php,
+	  include/graphs/functions_fsgraph.php: Fixed the periods
+	between the dates of the open/closed tickets graph.
+
 2014-05-07  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* godmode/setup/setup_mail.php
@@ -7,7 +13,6 @@
 	  operation/newsletter/issue_definition.php
 	  operation/newsletter/newsletter_definition.php: Improvements
 	in newsletters.
-	
 
 2014-05-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 

@@ -43,8 +43,8 @@ function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_i
 	
 	
 	if(is_array(reset($chart_data))) {
-	 	$data2 = array();
-	 	$count = 0;
+		$data2 = array();
+		$count = 0;
 		foreach($chart_data as $i =>$values) {
 			$count++;
 			$show_name = '0';
@@ -54,7 +54,7 @@ function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_i
 			
 			if (isset($long_index[$i])) {
 				$chart->addCategory($i, //'');
-						'hoverText=' . $long_index[$i] .  
+						'hoverText=' . $long_index[$i] .
 						';showName=' . $show_name);
 			}
 			else {
@@ -68,15 +68,15 @@ function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_i
 			}
 		}
 		$data = $data2;
-	 }
-	 else {
+	}
+	else {
 		$data = array($chart_data);
-	 }
+	}
 	
-	 $a = 0;
-	 
+	$a = 0;
+	
 	$empty = 1;
-	foreach ($data as $i => $value) {	
+	foreach ($data as $i => $value) {
 		
 		$legend_text = '';
 		if (isset($legend[$i])) {

@@ -1055,12 +1055,20 @@ function graph_ticket_oc_histogram ($incidents, $width = 650, $height = 250, $tt
 	$dates_keys = $dates['start'] + $dates['end'];
 	$dates_keys[] = date("Y-m-d");
 	sort($dates_keys);
+
+	$first_date = $dates_keys[0];
+	$today_time = strtotime(date("Y-m-d"));
+	$dates_keys = array();
+	for ($i = strtotime($first_date); $i <= $today_time; $i = strtotime('+1 day', $i)) { 
+		$dates_keys[] = date("Y-m-d", $i);;
+	}
+
 	$data_oc = array_fill_keys ($dates_keys, array(0 => 0, 1 => 0));
 
 	// $dates['start'] and $dates['end'] has the same number of elements and
 	// are correlative since they are two columns extracted from the same array
 	for ($i = 0; $i < count($dates['start']); $i++) {
-		foreach (array_keys($data_oc) as $date) {
+		foreach ($dates_keys as $date) {
 			if ($date >= $dates['start'][$i] && (empty($dates['end'][$i]) || $date < $dates['end'][$i])) {
 				$data_oc[$date][1] += 1;
 			} elseif (!empty($dates['end'][$i]) && $date >= $dates['end'][$i]) {
