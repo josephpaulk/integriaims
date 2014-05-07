@@ -701,7 +701,7 @@ function cron_validate_newsletter_address() {
 	
 	$smtp_validate = new SMTP_validateEmail;
 	
-	$sql = "SELECT email FROM tnewsletter_address WHERE status = 0 and validated = 0 LIMIT 10";
+	$sql = "SELECT email FROM tnewsletter_address WHERE status = 0 AND validated = 0 LIMIT ". $config["batch_email_validation"];
 	$newsletter_emails = get_db_all_rows_sql($sql);
 	
 	if ($newsletter_emails === false) {

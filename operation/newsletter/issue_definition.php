@@ -171,14 +171,15 @@ if ($issues !== false) {
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold';
 	$table->colspan = array ();
-	$table->head[0] = __('Newsletter');
-	$table->head[1] = __('Issue #');
-	$table->head[2] = __('Subject');
+	$table->head[0] = __('Issue #');
+	$table->head[1] = __('Subject');
+	$table->head[2] = __('Newsletter');
 	$table->head[3] = __('Date');
 	$table->head[4] = __('Status');
 	$table->head[5] = __('Reads');
+	$table->head[6] = __('Valid addresses');
 	if(give_acl ($config["id_user"], $id_group, "CN")) {
-		$table->head[6] = __('Delete');
+		$table->head[7] = __('Delete');
 	}
 
 	
@@ -187,12 +188,12 @@ if ($issues !== false) {
 		
 		$newsletter_name = get_db_value ('name', 'tnewsletter', 'id', $issue["id_newsletter"]);
 		
-		$data[0] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".$issue["id_newsletter"]."'>$newsletter_name</a>";
+		$data[0] = "<b>".$issue["id"]."</b>";
 		
-		$data[1] = "<b>".$issue["id"]."</b>";
-		
-		$data[2] = "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&id=".
+		$data[1] = "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&id=".
 			$issue["id"]."'>".$issue["email_subject"]."</a>";
+			
+		$data[2] = $newsletter_name;
 
 		$data[3] = $issue["datetime"];
 		 
@@ -204,11 +205,13 @@ if ($issues !== false) {
 			$data[4] = __("Ready");
 
 		$data[5] = crm_get_issue_reads($issue["id"]);
+		
+		$data[6] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$issue["id_newsletter"] . " AND validated = 1 AND status = 0");
 
-		$data[6] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
+		$data[7] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
 	
 		if(give_acl ($config["id_user"], $id_group, "CN")) {
-			$data[6] .='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
+			$data[7] .='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
 						delete=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">

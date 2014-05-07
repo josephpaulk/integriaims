@@ -284,6 +284,9 @@ function load_config() {
 	if (!isset($config["email_ticket_on_creation_and_closing"])){
 		$config["email_ticket_on_creation_and_closing"] = 0;
 	}
+	if (!isset($config["batch_email_validation"])) {
+		$config["batch_email_validation"] = 10;
+	}
 }
 
 function config_prepare_session() {

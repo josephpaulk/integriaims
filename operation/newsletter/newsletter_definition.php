@@ -36,6 +36,31 @@ $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
 $update = (bool) get_parameter ('update');
 $delete = (bool) get_parameter ('delete');
+$validate_newsletter = (bool) get_parameter('validate_newsletter', 0);
+
+if ($validate_newsletter) {
+
+	$sql = "SELECT * FROM tnewsletter_address WHERE id_newsletter = $id AND validated = 0";
+
+	$newsletter_emails = get_db_all_rows_sql($sql);
+
+	if ($newsletter_emails === false) {
+		$newsletter_emails = array();
+	}
+	
+	$i = 0;
+	foreach ($newsletter_emails as $email) {
+
+		$values['validated'] = 1;
+		$values['status'] = 0;
+		
+		process_sql_update('tnewsletter_address', $values, array('id'=>$email['id']));
+		$i++;
+	}
+	
+	echo "<h3 class='suc'>".__('Emails validated: ').$i."</h3>";
+	$id = 0;
+}
 
 // CREATE
 if ($create) {
@@ -169,15 +194,15 @@ if ($newsletters !== false) {
 	$table->colspan = array ();
 	$table->head[0] = __('ID');
 	$table->head[1] = __('Name');
-	$table->head[2] = __('# of editions');
-	$table->head[3] = __('Group');
-	$table->head[4] = __('Addresses');
-	$table->head[5] = __('Subscribe Link');
-	$table->head[6] = __('Unsubscribe Link');
-	$table->head[7] = __('Last edition');
+	$table->head[2] = __('Total addresses');
+	$table->head[3] = __('Subscribe Link');
+	$table->head[4] = __('Unsubscribe Link');
+	$table->head[5] = __('Validated addr.');
+	$table->head[6] = __('Invalid addr.');
 	$table->style[5] = "text-aling: center; vertical-align: middle";
+	$table->head[7] = __('Pending validation');
 	if(give_acl ($config["id_user"], $id_group, "CN")) {
-		$table->head[8] = __('Delete');
+		$table->head[8] = __('Action');
 	}
 	foreach ($newsletters as $newsletter) {
 		$data = array ();
@@ -186,25 +211,31 @@ if ($newsletters !== false) {
 		
 		$data[1] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".
 			$newsletter["id"]."'>".$newsletter["name"]."</a>";
-
-		$data[2] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);	
-		$data[3] = dame_nombre_grupo($newsletter["id_group"]);
 		
-		$data[4] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"]);
+		$data[2] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"]);
 		
-		$data[5] = "<a href='".$config["base_url"]."/include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
+		$data[3] = "<a href='".$config["base_url"]."/include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
 
-		$data[5] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
+		$data[3] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
 
-		$data[6] = "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
+		$data[4] = "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
 
-		$data[6] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
-	
-		$data[7] = get_db_sql ("SELECT MAX(datetime) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);
+		$data[4] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
 		
-		$data[7] .= "</a>";
+		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 0");
+		
+		$data[6] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 1");
+		
+		$data[7] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 0");
+		
+		$data[8] ='<a href="index.php?sec=customers&sec2=operation/newsletter/newsletter_definition&
+						validate_newsletter=1&id='.$newsletter['id'].'" 
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;">
+						<img src="images/accept.png" title="Forced email validation of pending addresses" ></a>';
+		
 		if(give_acl ($config["id_user"], $id_group, "CN")) {
-			$data[8] ='<a href="index.php?sec=customers&sec2=operation/newsletter/newsletter_definition&
+			$data[8] .='<a href="index.php?sec=customers&sec2=operation/newsletter/newsletter_definition&
 						delete=1&id='.$newsletter['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
@@ -222,6 +253,5 @@ if($manager) {
 	echo '</div>';
 	echo '</form>';
 }
-
 
 ?>

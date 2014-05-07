@@ -122,6 +122,7 @@ echo "<br>";
 $search_text = (string) get_parameter ('search_text');	
 $search_newsletter = (int) get_parameter ("search_newsletter");
 $search_status = (int) get_parameter ('search_status',0);
+$search_validate = get_parameter('search_validate','');
 
 $where_clause = "WHERE status = $search_status ";
 
@@ -131,6 +132,14 @@ if ($search_text != "") {
 
 if ($search_newsletter > 0 ){
 	$where_clause .= " AND id_newsletter = $search_newsletter ";
+}
+
+if ($search_validate != ''){
+	if ($search_validate == 0) {
+		$where_clause .= " AND validated = 1 ";
+	} else {
+		$where_clause .= " AND validated = 0 ";
+	}
 }
 
 $table->width = '90%';
@@ -143,20 +152,27 @@ $table->data[0][0] = __('Search');
 $table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
 $table->data[0][2] = print_select_from_sql ('SELECT id, name FROM tnewsletter', 'search_newsletter', $search_newsletter, '', '', '', true, false, false,"");
 
-$status_values[0] = __('Enabled');
-$status_values[1] = __('Disabled');
+$status_values[0] = __('Show enabled addresses');
+$status_values[1] = __('Show disabled addresses');
 
 $table->data[0][3] = print_select ($status_values, "search_status", $search_status, '','','',true,0,true );
 
-$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+$validated_values[0] = __('Validated');
+$validated_values[1] = __('Pending');
+
+$table->data[0][4] = print_select ($validated_values, "search_validate", $search_validate, '','','',true,0,true );
+
+$table->data[0][5] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
 echo '<form method="post" action="">';
 print_table ($table);
 echo '</form>';
 
 $sql = "SELECT * FROM tnewsletter_address $where_clause ORDER BY datetime DESC";
-
 $issues = get_db_all_rows_sql ($sql);
+
+$count_addresses = count($issues);
+echo '<h5>'.__('Total addresses: ').$count_addresses.'</h5>';
 
 $issues = print_array_pagination ($issues, "index.php?sec=customers&sec2=operation/newsletter/address_definition&search_text=$search_text&search_status=$search_status&search_newsletter=$search_newsletter");
 
@@ -172,8 +188,9 @@ if ($issues !== false) {
 	$table->head[2] = __('Name');
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Date');
+	$table->head[5] = __('Validated');
 	if(give_acl ($config["id_user"], $id_group, "CN")) {
-		$table->head[5] = __('Disable/Delete');
+		$table->head[6] = __('Disable/Delete');
 	}
 
 	
@@ -188,22 +205,28 @@ if ($issues !== false) {
 		$data[2] = $issue["name"];
 		
 		if ($issue["status"] == 0)
-			$data[3] = __("Valid");
+			$data[3] = __("Enabled");
 		elseif ($issue["status"] == 1)
 			$data[3] = __("Disabled");	
 		else
 			$data[3] = __("Other");	
 
 		$data[4] = $issue["datetime"];
+		
+		if ($issue["validated"]) {
+			$data[5] = __("Validated");
+		} else {
+			$data[5] = __("Pending");
+		}
 	
 		if(give_acl ($config["id_user"], $id_group, "CN")) {
-			$data[5] ='<a href="index.php?sec=customers&sec2=operation/newsletter/address_definition&
+			$data[6] ='<a href="index.php?sec=customers&sec2=operation/newsletter/address_definition&
 						disable=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/info.png" title="Disable"></a>';
 						
-			$data[5] .='&nbsp;<a href="index.php?sec=customers&sec2=operation/newsletter/address_definition&
+			$data[6] .='&nbsp;<a href="index.php?sec=customers&sec2=operation/newsletter/address_definition&
 						delete=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">

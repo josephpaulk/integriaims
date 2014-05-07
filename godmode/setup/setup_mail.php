@@ -70,6 +70,7 @@ if ($update) {
 	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
 	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
 	$config["news_batch_newsletter"] = get_parameter ("news_batch_newsletter", 0);
+	$config["batch_email_validation"] = get_parameter ("batch_email_validation", 0);
 	
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
 	update_config_token ("FOOTER_EMAIL", $config["FOOTER_EMAIL"]);
@@ -91,6 +92,7 @@ if ($update) {
 	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
 	update_config_token ("news_batch_newsletter", $config["news_batch_newsletter"]);
+	update_config_token ("batch_email_validation", $config["batch_email_validation"]);
 }
 
 $table->width = '99%';
@@ -138,8 +140,7 @@ $table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsle
 
 
 $table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
-
-
+        
 $table->colspan[8][0] = 3;
 $table->data[8][1] = "<h4>".__("POP/IMAP Parameters")."</h4>";
 
@@ -181,6 +182,10 @@ $table->data[14][0] = print_input_text ("news_batch_newsletter", $config["news_b
 
 $table->data[14][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
 
+$table->data[14][1] = print_input_text ("batch_email_validation", $config["batch_email_validation"], '',
+        4, 255, true, __('Newsletter email validation batch'));
+$table->data[14][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron) will try to validate this ammount of emails."), true);
+        
 $table->data[15][1] = "<h4>".__("Mail general texts")."</h4>";
 
 $table->colspan[16][0] = 3;
