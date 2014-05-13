@@ -1,3 +1,13 @@
+2014-05-13  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/setup_mail.php
+	  include/functions_config.php
+	  include/integria_cron.php
+	  include/smtp_validate_email.php
+	  operation/newsletter/address_definition.php
+	  operation/newsletter/newsletter_definition.php: Improvements
+	in newsletters. Changed email address validation.
+
 2014-05-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_graph.php: Fixed a php warning caused

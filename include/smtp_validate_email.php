@@ -122,11 +122,7 @@ class SMTP_validateEmail {
   if ($sender) {
    $this->setSenderEmail($sender);
   }
-
-  if (gettype($this->domains) != "array") {
-    $this->domains = array();
-  }
-
+ 
   // query the MTAs on each Domain
   foreach($this->domains as $domain=>$users) {
         
@@ -173,15 +169,20 @@ class SMTP_validateEmail {
             // MTA gave an error...
             foreach($users as $user) {
                 $results[$user.'@'.$domain] = false;
-                }
+            }
                 continue;
-           }
+           } else {
+			   foreach($users as $user) {
+					$results[$user.'@'.$domain] = true;
+				}
+                continue;
+		   }
 
            // say helo
            $this->send("HELO ".$this->from_domain);
            // tell of sender
-           $this->send("MAIL FROM: <".$this->from_user.'@'.$this->from_domain.">");
-           
+           $this->send("MAIL FROM: <".$this->from_user.'@'.$this->from_domain.">");        
+/*
            // ask for each recepient on this domain
            foreach($users as $user) {
            
@@ -191,11 +192,12 @@ class SMTP_validateEmail {
                     // get code and msg from response
                    preg_match('/^([0-9]{3}) /ims', $reply, $matches);
                    $code = isset($matches[1]) ? $matches[1] : '';
-                
+               
                    if ($code == '250') {
                     // you received 250 so the email address was accepted
                     $results[$user.'@'.$domain] = true;
-                   } elseif ($code == '451' || $code == '452') {
+                   //} elseif ($code == '451' || $code == '452') {
+					 } elseif ($code == '451' || $code == '452' || $code == '') {
                         // you received 451 so the email address was greylisted (or some temporary error occured on the MTA) - so assume is ok
                         $results[$user.'@'.$domain] = true;
                    } else {
@@ -203,7 +205,7 @@ class SMTP_validateEmail {
                    }
            
            }
-           
+*/      
            // reset before quit
            $this->send("RSET");
            
@@ -218,7 +220,7 @@ class SMTP_validateEmail {
         }
         return $results;
  }
-
+ 
 
  function send($msg) {
   fwrite($this->sock, $msg."\r\n");

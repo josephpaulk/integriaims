@@ -287,6 +287,9 @@ function load_config() {
 	if (!isset($config["batch_email_validation"])) {
 		$config["batch_email_validation"] = 10;
 	}
+	if (!isset ($config["active_validate"])) {
+		$config["active_validate"] = 1;
+	}
 }
 
 function config_prepare_session() {

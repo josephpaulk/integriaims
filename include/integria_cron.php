@@ -1031,6 +1031,26 @@ function delete_old_sessions_data () {
 	}
 }
 
+function cron_validate_all_newsletter_address() {
+	global $config;
+	
+	$sql = "SELECT id,email FROM tnewsletter_address WHERE status = 0 AND validated = 0 LIMIT ". $config["batch_email_validation"];
+	$newsletter_emails = get_db_all_rows_sql($sql);
+	
+	if ($newsletter_emails === false) {
+		$newsletter_emails = array();
+	}
+	
+	foreach ($newsletter_emails as $email) {
+		$values['validated'] = 1;
+		$values['status'] = 0;
+		
+		process_sql_update('tnewsletter_address', $values, array('id'=>$email['id']));
+	}
+	
+	return;
+}
+
 // ---------------------------------------------------------------------------
 /* Main code goes here */
 // ---------------------------------------------------------------------------
@@ -1064,7 +1084,11 @@ run_mail_queue();
 // if enabled, run newsletter queue
 
 if ($config["enable_newsletter"] == 1) {
-	cron_validate_newsletter_address();
+	if ($config["active_validate"]) {
+		cron_validate_newsletter_address();
+	} else {
+		cron_validate_all_newsletter_address();
+	}
 	run_newsletter_queue();
 }
 

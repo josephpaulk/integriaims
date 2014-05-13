@@ -222,11 +222,17 @@ if ($newsletters !== false) {
 
 		$data[4] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
 		
-		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 0");
+		$validated_addr = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 0");
+		$data[5] = "<a href='index.php?sec=customers&sec2=operation/newsletter/address_definition&search_status=0&search_validate=0&search_newsletter=".
+			$newsletter["id"]."'>".$validated_addr."</a>";
 		
-		$data[6] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 1");
+		$invalid_addr = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 1");
+		$data[6] = "<a href='index.php?sec=customers&sec2=operation/newsletter/address_definition&search_status=1&search_validate=0&search_newsletter=".
+			$newsletter["id"]."'>".$invalid_addr."</a>";
 		
-		$data[7] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 0");
+		$pending_validation = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 0");
+		$data[7] = "<a href='index.php?sec=customers&sec2=operation/newsletter/address_definition&search_validate=1&search_newsletter=".
+			$newsletter["id"]."'>".$pending_validation."</a>";
 		
 		$data[8] ='<a href="index.php?sec=customers&sec2=operation/newsletter/newsletter_definition&
 						validate_newsletter=1&id='.$newsletter['id'].'" 

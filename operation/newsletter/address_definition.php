@@ -122,9 +122,13 @@ echo "<br>";
 $search_text = (string) get_parameter ('search_text');	
 $search_newsletter = (int) get_parameter ("search_newsletter");
 $search_status = (int) get_parameter ('search_status',0);
-$search_validate = get_parameter('search_validate','');
+$search_validate = get_parameter('search_validate',2);
 
-$where_clause = "WHERE status = $search_status ";
+if ($search_status != 2) {
+	$where_clause = "WHERE status = $search_status ";
+} else {
+	$where_clause = "WHERE 1=1";
+}
 
 if ($search_text != "") {
 	$where_clause .= sprintf ('AND email LIKE "%%%s%%" OR name LIKE "%%%s%%"', $search_text, $search_text);
@@ -134,10 +138,10 @@ if ($search_newsletter > 0 ){
 	$where_clause .= " AND id_newsletter = $search_newsletter ";
 }
 
-if ($search_validate != ''){
+if ($search_validate != 2){
 	if ($search_validate == 0) {
 		$where_clause .= " AND validated = 1 ";
-	} else {
+	} else if ($search_validate == 1){
 		$where_clause .= " AND validated = 0 ";
 	}
 }
@@ -149,16 +153,31 @@ $table->style[0] = 'font-weight: bold;';
 $table->style[2] = 'font-weight: bold;';
 $table->data = array ();
 $table->data[0][0] = __('Search');
+
 $table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[0][2] = print_select_from_sql ('SELECT id, name FROM tnewsletter', 'search_newsletter', $search_newsletter, '', '', '', true, false, false,"");
+$newsletters = get_db_all_rows_sql("SELECT id, name FROM tnewsletter");
+if ($newsletters == false) {
+	$newsletters = array();
+}
+
+$newsletter_values = array();
+foreach ($newsletters as $news) {
+	$newsletter_values[$news['id']] = $news['name'];
+}
+
+$newsletter_values[0] = __('Any');
+
+$table->data[0][2] = print_select ($newsletter_values, "search_newsletter", $search_newsletter, '','','',true,0,true );
 
 $status_values[0] = __('Show enabled addresses');
 $status_values[1] = __('Show disabled addresses');
+$status_values[2] = __('Any');
 
 $table->data[0][3] = print_select ($status_values, "search_status", $search_status, '','','',true,0,true );
 
 $validated_values[0] = __('Validated');
 $validated_values[1] = __('Pending');
+$validated_values[2] = __('Any');
 
 $table->data[0][4] = print_select ($validated_values, "search_validate", $search_validate, '','','',true,0,true );
 
@@ -169,6 +188,7 @@ print_table ($table);
 echo '</form>';
 
 $sql = "SELECT * FROM tnewsletter_address $where_clause ORDER BY datetime DESC";
+
 $issues = get_db_all_rows_sql ($sql);
 
 $count_addresses = count($issues);
