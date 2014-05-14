@@ -281,6 +281,7 @@ if ($update) { // if modified any parameter
 	$date_alarm = get_parameter('alarm_date', '');
 	$time_alarm = get_parameter('alarm_time', '');
 	$datetime_alarm = $date_alarm.' '.$time_alarm;
+	$executive_overview = (string) get_parameter ('executive_overview');
 
 	// Detect if it's a progress change
 
@@ -293,10 +294,10 @@ if ($update) { // if modified any parameter
 		SET modification = "%s", description = "%s", fullname = "%s", phone = "%s",
 		mobile = "%s", email = "%s", position = "%s",
 		id_company = %d, country = "%s", owner = "%s", progress = %d , id_language = "%s", estimated_sale = "%s" , 
-		company = "%s", id_category = %d , id_campaign = %d, alarm = "%s" WHERE id = %d',
+		company = "%s", id_category = %d , id_campaign = %d, alarm = "%s", executive_overview="%s" WHERE id = %d',
 		date('Y-m-d H:i:s'), $description, $fullname, $phone, $mobile, $email, $position,
 		$id_company, $country, $owner, $progress, $id_language, $estimated_sale, $company, $id_category, 
-		$id_campaign, $datetime_alarm, $id);
+		$id_campaign, $datetime_alarm, $executive_overview, $id);
 
 	$result = process_sql ($sql);
 	if ($result === false) {
@@ -670,7 +671,7 @@ if ($id || $new) {
 	$table->width = "99%";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[9][0] = 4;
+	$table->colspan[10][0] = 4;
 	
 	if ($section_write_permission || $section_manage_permission) {
 		
@@ -753,11 +754,13 @@ if ($id || $new) {
 		$table->data[7][1] = combo_kb_products ($id_category, true, 'Product type', true);
 
 		$table->data[8][0] = print_input_text ("executive_overview", $executive_overview, "", 60, 100, true, __('Executive overview'));
-		$table->data[8][1] = print_input_text ("alarm_date", $alarm_date, "", 10, 20, true, __('Alarm - date'));
-		$table->data[8][1] .= print_input_text ("alarm_time", $alarm_time, "", 10, 20, true, __('Alarm - time'));
+		
+		$table->data[8][1] = print_input_text ("alarm_date", $alarm_date, "", 15, 20, true, __('Alarm - date'));
+		$table->data[8][1] .= print_input_text ("alarm_time", $alarm_time, "", 15, 20, true, __('Alarm - time'));
 		$table->data[8][1] .= '&nbsp;'.print_image("images/cross.png", true, array("onclick" => "cleanAlarm()"));
 		
-		$table->data[9][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
+		
+		$table->data[10][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 		
 		if ($id) {
 			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);

@@ -1,4 +1,4 @@
-- INTEGRIA - the ITIL Management System
+-- INTEGRIA - the ITIL Management System
 -- http://integria.sourceforge.net
 -- ==================================================
 -- Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
