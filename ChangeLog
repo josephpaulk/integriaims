@@ -1,3 +1,15 @@
+2014-05-14  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  integria_dbdata.sql
+	  operation/leads/lead_detail.php
+	  operation/leads/lead_pipeline.php
+	  operation/newsletter/address_definition.php
+	  operation/newsletter/newsletter_definition.php: Improvements
+	in leads. Added 'executive overview' and 'alarm'.
+
+	* extras/mr/9.sql: Added file.
+
 2014-05-13  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* godmode/setup/setup_mail.php

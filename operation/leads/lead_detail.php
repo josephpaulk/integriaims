@@ -164,19 +164,47 @@ if ($create) {
 	$id_category = (int) get_parameter ('product');
 	$progress = (string) get_parameter ('progress');
 	$campaign = (int) get_parameter("campaign");
-		
+	$executive_overview = (string) get_parameter ('executive_overview');
+	$date_alarm = get_parameter('alarm_date', '');
+	$time_alarm = get_parameter('alarm_time', '');
+	
+	$datetime_alarm = $date_alarm.' '.$time_alarm;
+
 	$sql = sprintf ('INSERT INTO tlead (modification, creation, fullname, phone, mobile,
-			email, position, id_company, description, company, country, id_language, owner, estimated_sale, id_category, progress, id_campaign)
-			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
+			email, position, id_company, description, company, country, id_language, owner, estimated_sale, id_category, progress, id_campaign, executive_overview, alarm)
+			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s","%s")',
 			date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), $fullname, $phone, $mobile, $email, $position,
-			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale, $id_category, $progress, $campaign);
+			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale, $id_category, $progress, $campaign, $executive_overview, $datetime_alarm);
 
 	$id = process_sql ($sql, 'insert_id');
 
 	$datetime =  date ("Y-m-d H:i:s");
 	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Created lead");
 	process_sql ($sql);
+	
+	//create agenda entry
+	if ($date_alarm != '') {
+		$public = 0;
+		$alarm = 60;
+		$date = $date_alarm;
+		if ($time != '') {
+			$time = $time_alarm;
+		} else {
+			$time = date ('H:i');
+		}
+		$datetime = $date.' '.$time;
+		$title = '';
+		$duration = 0;
+		$description = "ALARM: LEAD ".$fullname;
+		$sql = sprintf ('INSERT INTO tagenda (public, alarm, timestamp, id_user,
+				title, duration, description)
+				VALUES (%d, "%s", "%s %s", "%s", "%s", %d, "%s")',
+				$public, $alarm, $date, $time, $config['id_user'], $title,
+				$duration, $description);
 
+		$result = process_sql ($sql);
+	}
+	
 	if ($id === false) {
 		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	} else {
@@ -250,19 +278,25 @@ if ($update) { // if modified any parameter
 	$estimated_sale = (string) get_parameter ('estimated_sale');
 	$id_category = (int) get_parameter ('product');
 	$id_campaign = (int) get_parameter ('campaign');
+	$date_alarm = get_parameter('alarm_date', '');
+	$time_alarm = get_parameter('alarm_time', '');
+	$datetime_alarm = $date_alarm.' '.$time_alarm;
 
 	// Detect if it's a progress change
 
 	$old_progress = get_db_value  ('progress', 'tlead', 'id', $id);
+	
+	$old_alarm = get_db_value  ('alarm', 'tlead', 'id', $id);
+	$old_name = get_db_value  ('fullname', 'tlead', 'id', $id);
 
 	$sql = sprintf ('UPDATE tlead
 		SET modification = "%s", description = "%s", fullname = "%s", phone = "%s",
 		mobile = "%s", email = "%s", position = "%s",
 		id_company = %d, country = "%s", owner = "%s", progress = %d , id_language = "%s", estimated_sale = "%s" , 
-		company = "%s", id_category = %d , id_campaign = %d WHERE id = %d',
+		company = "%s", id_category = %d , id_campaign = %d, alarm = "%s" WHERE id = %d',
 		date('Y-m-d H:i:s'), $description, $fullname, $phone, $mobile, $email, $position,
 		$id_company, $country, $owner, $progress, $id_language, $estimated_sale, $company, $id_category, 
-		$id_campaign, $id);
+		$id_campaign, $datetime_alarm, $id);
 
 	$result = process_sql ($sql);
 	if ($result === false) {
@@ -284,6 +318,44 @@ if ($update) { // if modified any parameter
 		}
 
 		$result = process_sql ($sql);
+		
+		if ($datetime_alarm != $old_alarm) {
+			if ($date_alarm == '') {
+				$old_description = "ALARM: LEAD ".$old_name;
+				$sql = "DELETE FROM tagenda WHERE timestamp='$old_alarm' AND description='$old_description'";
+
+				$res = process_sql ($sql);
+			} else {
+				if ($time_alarm == '') {
+					$time_alarm = date ('H:i');
+				}
+				$values['timestamp'] = $datetime_alarm;
+				$id_agenda = get_db_value_sql("SELECT id FROM tagenda WHERE timestamp='$old_alarm' AND description='$old_alarm'");
+				process_sql_update('tagenda', $values, array('id'=>$id_agenda));
+			}
+			
+			if ($old_alarm == '0000-00-00 00:00:00') {
+				$public = 0;
+				$alarm = 60;
+				$date = $date_alarm;
+				if ($time_alarm != '') {
+					$time = $time_alarm;
+				} else {
+					$time = date ('H:i');
+				}
+				$datetime = $date.' '.$time;
+				$title = '';
+				$duration = 0;
+				$description = "ALARM: LEAD ".$fullname;
+				$sql = sprintf ('INSERT INTO tagenda (public, alarm, timestamp, id_user,
+						title, duration, description)
+						VALUES (%d, "%s", "%s %s", "%s", "%s", %d, "%s")',
+						$public, $alarm, $date, $time, $config['id_user'], $title,
+						$duration, $description);
+
+				$result = process_sql ($sql);
+			}
+		}
 
 	}
 }
@@ -458,6 +530,9 @@ if ($id || $new) {
 		$estimated_sale = (string) get_parameter ('estimated_sale');
 		$id_category = (int) get_parameter ('product');
 		$campaign = (int) get_parameter ("campaign");
+		$executive_overview = (string)get_parameter('executive_overview');
+		$alarm_date = get_parameter('alarm_date');
+		$alarm_time = get_parameter('alarm_time');
 
 	} else {
 		
@@ -480,6 +555,11 @@ if ($id || $new) {
 		$modification = $lead["modification"];
 		$id_category = $lead["id_category"];
 		$campaign = $lead["id_campaign"];
+		$executive_overview = $lead['executive_overview'];
+		$alarm = $lead['alarm'];
+		$alarm = explode(' ', $alarm);
+		$alarm_date = $alarm[0];
+		$alarm_time = $alarm[1];
 	}
 	
 	// Show tabs
@@ -590,7 +670,7 @@ if ($id || $new) {
 	$table->width = "99%";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[8][0] = 4;
+	$table->colspan[9][0] = 4;
 	
 	if ($section_write_permission || $section_manage_permission) {
 		
@@ -672,7 +752,12 @@ if ($id || $new) {
 
 		$table->data[7][1] = combo_kb_products ($id_category, true, 'Product type', true);
 
-		$table->data[8][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
+		$table->data[8][0] = print_input_text ("executive_overview", $executive_overview, "", 60, 100, true, __('Executive overview'));
+		$table->data[8][1] = print_input_text ("alarm_date", $alarm_date, "", 10, 20, true, __('Alarm - date'));
+		$table->data[8][1] .= print_input_text ("alarm_time", $alarm_time, "", 10, 20, true, __('Alarm - time'));
+		$table->data[8][1] .= '&nbsp;'.print_image("images/cross.png", true, array("onclick" => "cleanAlarm()"));
+		
+		$table->data[9][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 		
 		if ($id) {
 			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
@@ -1021,9 +1106,13 @@ if ($id || $new) {
 
 			$data[2] = print_product_icon ($lead['id_category'], true);
 
-
+			if ($lead['executive_overview'] != '') {
+				$overview = print_help_tip ($lead['executive_overview'], true);
+			} else {
+				$overview = '';
+			}
  			$data[3] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
-				$lead['id']."'>".$lead['fullname']."</a><br>";
+				$lead['id']."'>".$lead['fullname'].$overview."</a><br>";
 				$data[3] .= "<span style='font-size: 9px'><i>".$lead["company"]."</i></span>";
 
 
@@ -1124,6 +1213,10 @@ if ($id || $new) {
 
 <script type="text/javascript" >
 
+function datepicker_hook () {
+	add_datepicker ('input[name*="alarm_date"]', null);
+}
+
 add_ranged_datepicker ("#text-start_date_search", "#text-end_date_search", null);
 
 // Form validation
@@ -1200,6 +1293,8 @@ if (<?php echo $id ?> > 0 || <?php echo json_encode($new) ?> == true) {
 }
 
 $(document).ready (function () {
+	
+	datepicker_hook();
 	
 	$("#saved_searches").change(function() {
 		$("#form-saved_searches").submit();
@@ -1410,6 +1505,11 @@ function process_massive_leads_update () {
 			}
 		}
 	}	
+}
+
+function cleanAlarm() {
+	$('#text-alarm_date').val('');
+	$('#text-alarm_time').val('');
 }
 
 </script>

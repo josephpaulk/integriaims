@@ -991,6 +991,8 @@ CREATE TABLE `tlead` (
   `progress` mediumint(5) NULL default 0,
   `estimated_sale` mediumint NULL default 0,
   `id_campaign` int(10) unsigned NOT NULL default 0,
+  `executive_overview` tinytext  default NULL,
+  `alarm` datetime NOT NULL default '0000-00-00 00:00:00',  
   PRIMARY KEY  (`id`),
   KEY `id_company_idx` (`id_company`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

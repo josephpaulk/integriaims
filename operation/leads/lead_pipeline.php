@@ -201,6 +201,9 @@ foreach ($progress as $k => $v) {
 		$char_truncate = 18;
 		
 		$name = ui_print_truncate_text($name, $char_truncate, false, true);
+		if ($l['executive_overview'] != '') {
+			$name .= print_help_tip ($l['executive_overview'], true);
+		}
 	
 		$lead_list .= "<div class='pipeline-list-title'>";
 		$lead_list .= $name;
