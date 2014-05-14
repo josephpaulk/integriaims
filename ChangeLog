@@ -1,5 +1,10 @@
 2014-05-14  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* godmode/grupos/configurar_grupo.php: Show
+	inventory name.
+
+2014-05-14  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_db.sql
 	  integria_dbdata.sql
 	  operation/leads/lead_detail.php

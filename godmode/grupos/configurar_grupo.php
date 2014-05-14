@@ -58,6 +58,7 @@ if ($id) {
 		$id_sla = $group["id_sla"];
 		$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id);
 		$id_inventory = $group["id_inventory_default"];
+		$inventory_name = get_inventory_name ($group["id_inventory_default"]);
 		$autocreate_user = $group["autocreate_user"];
 		$grant_access = $group["grant_access"];
 		$send_welcome = $group["send_welcome"];
@@ -152,8 +153,9 @@ foreach ($slas_aux as $s) {
 $table->data[5][1] = print_select ($slas,
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Ticket SLA'));
 	
-$table->data[6][0] = print_input_text ('id_inventory', $id_inventory,'', 7, 0, true, __('Default Inventory object'), false);	
+$table->data[6][0] = print_input_text ('inventory_name', $inventory_name,'', 25, 0, true, __('Default Inventory object'), false);	
 $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
+$table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
@@ -244,7 +246,16 @@ function loadParams() {
 
 function loadInventory(id_inventory) {
 	
-	$('#text-id_inventory').val(id_inventory);
+	$('#hidden-id_inventory').val(id_inventory);
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_name=1&id_inventory="+ id_inventory,
+		dataType: "text",
+		success: function (name) {
+			$('#text-inventory_name').val(name);
+		}
+	});	
 	$("#inventory_search_window").dialog('close');
 }
 
