@@ -1,5 +1,27 @@
 2014-05-15  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/languages/cs.mo
+	  include/languages/cs.po
+	  include/languages/de.mo
+	  include/languages/de.po
+	  include/languages/en_GB.mo
+	  include/languages/en_GB.po
+	  include/languages/es.mo
+	  include/languages/es.po
+	  include/languages/fr.po
+	  include/languages/fr.mo
+	  include/languages/pl.po
+	  include/languages/pl.mo
+	  include/languages/ru.po
+	  include/languages/ru.mo
+	  include/languages/zh_CN.mo
+	  include/languages/zh_CN.po
+	  include/languages/zh_TN.mo
+	  include/languages/zh_TN.po
+	  include/languages/index.pot: Updated translations.
+
+2014-05-15  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/integria_cron.php: Fixed address
 	validation.
 
