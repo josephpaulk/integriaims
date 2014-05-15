@@ -705,7 +705,7 @@ function cron_validate_newsletter_address() {
 	$newsletter_emails = get_db_all_rows_sql($sql);
 	
 	if ($newsletter_emails === false) {
-		$newsletter_emails = array();
+		return;
 	}
 	
 	$i = 0;
@@ -716,6 +716,13 @@ function cron_validate_newsletter_address() {
 
 	$checked_emails = $smtp_validate->validate($news_emails);
 	
+	foreach ($news_emails as $mail) {
+		$exists = array_key_exists($mail, $checked_emails);
+		if (!$exists) {
+			$checked_emails[$mail] = false;
+		}
+	}
+
 	foreach ($checked_emails as $email=>$validated) {
 		if ($validated) { //validated
 			$values['validated'] = 1;

@@ -1,3 +1,8 @@
+2014-05-15  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/integria_cron.php: Fixed address
+	validation.
+
 2014-05-14  Sancho Lerena <slerena@artica.es>
 
 	* operation/newsletter/address_definition.php: fixed typo for
