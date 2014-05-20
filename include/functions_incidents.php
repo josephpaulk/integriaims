@@ -50,7 +50,7 @@ include_once ($config["homedir"]."/include/graphs/fgraph.php");
 enterprise_include("include/functions_users.php");
 enterprise_include("include/functions_incidents.php");
 
-function filter_incidents ($filters, $count=false) {
+function filter_incidents ($filters, $count=false, $limit=true) {
 	global $config;
 	
 	/* Set default values if none is set */
@@ -166,8 +166,10 @@ function filter_incidents ($filters, $count=false) {
 	}
 
 	//Use config block size if no other was given
-	if (!isset($filters["limit"])) {
-		$filters["limit"] = $config["block_size"];
+	if ($limit) {
+		if (!isset($filters["limit"])) {
+			$filters["limit"] = $config["block_size"];
+		}
 	}
 
 	$order_by = "";
@@ -489,7 +491,13 @@ function get_incidents_stats ($incidents) {
         }          
 		$hours = get_incident_workunit_hours($incident['id_incidencia']);
 		$total_hours += $hours;
+		
+		if ($incident['estado'] != 7) {
+			$opened++;
+		}
+
 	}
+
 	$closed = $total - $opened;
 	$opened_pct = 0;
 	$mean_work = 0;

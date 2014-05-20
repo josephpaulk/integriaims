@@ -2080,7 +2080,7 @@ function get_sla_compliance_single_id ($id_incident) {
  */
 function get_sla_compliance ($incidents) {
 
-	require_once ("include/functions_incidents.php");
+	//require_once ("include/functions_incidents.php");
 
 	if (($incidents == false) OR ($incidents == "")) {
 		return 100;

@@ -892,8 +892,10 @@ function api_get_stats ($return_type, $param, $token, $user){
     $filter['first_date'] = (string) get_parameter ('search_first_date');
     $filter['last_date'] = (string) get_parameter ('search_last_date');
 
-    $incidents = filter_incidents ($filter);
+    //$incidents = filter_incidents ($filter);
+    $incidents = filter_incidents ($filter, false, false);
     $stats = get_incidents_stats ($incidents);
+
 
 /*
     $data ["total_incidents"] = $total;
