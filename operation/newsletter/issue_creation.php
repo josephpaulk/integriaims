@@ -20,6 +20,14 @@ $tinymce_path = $config["base_url"] ."/include/js/tiny_mce/tiny_mce.js";
 
 check_login ();
 
+if (defined ('AJAX')) {	
+	$id_issue = get_parameter('id');
+	$issue = get_db_row ("tnewsletter_content", "id", $id_issue);
+	$html = $issue["html"];
+	echo safe_output($html);
+	return;
+}
+	
 echo '
 <!-- TinyMCE -->
 <script type="text/javascript" src="'.$tinymce_path.'"></script>
@@ -45,7 +53,8 @@ echo '
 		theme_advanced_statusbar_location : "bottom",
 		inline_styles : true,
 		valid_children : "+body[style]",
-		element_format : "html"
+		element_format : "html",
+		editor_deselector : "noselected"
 	});
 </script>
 <!-- /TinyMCE -->';
@@ -118,13 +127,15 @@ $table->data[1][2] = print_select ($campaigns, "campaign", $campaign, '', __("No
 
 $editor_type_chkbx = "<div style=\"padding: 4px 0px;\"><b><small>";
 $editor_type_chkbx .= __('Basic') . "&nbsp;&nbsp;";
-$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', true, false, "removeTinyMCE('textarea-html')", '', true);
+//$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', true, false, "removeTinyMCE('textarea-html')", '', true);
+$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', false, false, "removeTinyMCE('textarea-html')", '', true);
 $editor_type_chkbx .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 $editor_type_chkbx .= __('Advanced') . "&nbsp;&nbsp;";
-$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', false, false, "addTinyMCE('textarea-html')", '', true);
+//$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', false, false, "addTinyMCE('textarea-html')", '', true);
+$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', true, false, "addTinyMCE('textarea-html')", '', true);
 $editor_type_chkbx .= "</small></b></div>";
 
-$table->data[3][0] = print_textarea ("html", 10, 1, $html, '', true, "<br>" . __('HTML') . $editor_type_chkbx);
+$table->data[3][0] = print_textarea ("html", 10, 1, $html, 'class="noselected"', true, "<br>" . __('HTML') . $editor_type_chkbx);
 
 $table->data[4][0] = "";
 if ($id) {
@@ -140,6 +151,11 @@ echo '<form method="post" action="index.php?sec=customers&sec2=operation/newslet
 print_table ($table);
 echo "</form>";
 
+//id hidden
+echo '<div id="id_hidden" style="display:none;">';
+print_input_text('id', $id);
+echo '</div>';
+		
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
@@ -149,7 +165,23 @@ echo "</form>";
 <script>
 
 function removeTinyMCE(element_id) {
+
 	tinyMCE.EditorManager.execCommand('mceRemoveControl', true, element_id);
+	
+	id = $('#text-id').val();
+
+	values = Array ();
+	values.push ({name: "page",
+				value: "operation/newsletter/issue_creation"});
+	values.push ({name: "id",
+				value: id});
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			$('#textarea-html').val(data);
+		},
+		"html"
+	);
 }
 function addTinyMCE(element_id) {
 	tinyMCE.EditorManager.execCommand('mceAddControl', true, element_id);
