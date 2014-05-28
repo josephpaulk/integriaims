@@ -1,3 +1,9 @@
+2014-05-28  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/setup_mail.php
+	  include/integria_cron.php: Changed
+	configuration token.
+
 2014-05-27  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/newsletter/issue_creation.php:

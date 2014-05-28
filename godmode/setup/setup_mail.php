@@ -142,8 +142,6 @@ $table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsle
 
 
 $table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
-
-$table->data[7][1] =  print_checkbox ("active_validate", 1, $config["active_validate"], true, __('Activate email validation'));
    
 $table->colspan[8][0] = 3;
 $table->data[8][1] = "<h4>".__("POP/IMAP Parameters")."</h4>";
@@ -189,25 +187,28 @@ $table->data[14][0] .= print_help_tip (__("This means, in each execution of the 
 $table->data[14][1] = print_input_text ("batch_email_validation", $config["batch_email_validation"], '',
         4, 255, true, __('Newsletter email validation batch'));
 $table->data[14][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron) will try to validate this ammount of emails."), true);
-        
-$table->data[15][1] = "<h4>".__("Mail general texts")."</h4>";
 
-$table->colspan[16][0] = 3;
+$table->data[15][0] =  print_checkbox ("active_validate", 1, $config["active_validate"], true, __('Activate email validation'));
+
+$table->data[16][1] = "<h4>".__("Mail general texts")."</h4>";
+
 $table->colspan[17][0] = 3;
-$table->data[16][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+$table->colspan[18][0] = 3;
+$table->colspan[19][0] = 3;
+$table->data[17][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
-$table->data[17][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+$table->data[18][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
 	'', true, __('Email footer'));
 
-$table->data[18][1] = "<h4>".__("Mail queue control");
+$table->data[19][1] = "<h4>".__("Mail queue control");
 
 $total_pending = get_db_sql ("SELECT COUNT(*) from tpending_mail");
 
-$table->data[18][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
+$table->data[19][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
 
 if ($total_pending > 0) {
 
-	$table->colspan[19][0] = 3;
+	$table->colspan[20][0] = 3;
 
 	$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
 	$mail_queue .= "<table width=100% class=listing>";
@@ -235,7 +236,7 @@ if ($total_pending > 0) {
 
 	$mail_queue .= "<tr></tr></table></div>";
 
-	$table->data[19][0] = $mail_queue;
+	$table->data[20][0] = $mail_queue;
 }
 
 $button = print_input_hidden ('update', 1, true);
@@ -244,8 +245,8 @@ $button .= print_submit_button (__("Reactivate pending mails"), 'pending_ok', fa
 $button .= print_submit_button (__("Delete pending mails"), 'pending_delete', false, 'class="sub delete"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data[20][0] = $button;
-$table->colspan[20][0] = 3;
+$table->data[21][0] = $button;
+$table->colspan[21][0] = 3;
 
 echo "<form name='setup' method='post'>";
 print_table ($table);

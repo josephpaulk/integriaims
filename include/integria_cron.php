@@ -744,7 +744,7 @@ function run_newsletter_queue () {
 	include_once ($config["homedir"] . "/include/functions.php");	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 	
-	if (isset($config['news_stmp_host'])) { //If Newsletters STMP parameters are not empty
+	if (isset($config['news_smtp_host'])) { //If Newsletters STMP parameters are not empty
 		$total = $config["news_batch_newsletter"];
 	} else {
 		$total = $config["batch_newsletter"];
