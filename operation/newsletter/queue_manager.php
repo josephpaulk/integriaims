@@ -24,6 +24,69 @@ if (! give_acl ($config["id_user"], 0, "CN")) {
 	exit;
 }
 
+if (defined ('AJAX')) {
+		
+	$calculate_total = get_parameter('calculate_total', 0);
+	$create_queue = get_parameter('create_queue', 0);
+	$add_address = get_parameter('add_address', 0);
+	
+	if ($calculate_total) {
+		$id_newsletter_content = get_parameter('id_newsletter_content');
+		$issue = get_db_row ("tnewsletter_content", "id", $id_newsletter_content);
+		$newsletter = get_db_row ("tnewsletter", "id", $issue["id_newsletter"]);
+	
+		$sql = "SELECT COUNT(id) FROM tnewsletter_address WHERE status = 0 AND id_newsletter = ". $newsletter["id"];
+		$total = get_db_value_sql($sql);
+	
+		echo json_encode($total);
+		return;
+	}
+	
+	if ($create_queue) {
+
+		$id_newsletter_content = get_parameter('id_newsletter_content');
+		
+		$datetime = date ("Y-m-d H:i:s"); 
+		$issue = get_db_row ("tnewsletter_content", "id", $id_newsletter_content);
+		$newsletter = get_db_row ("tnewsletter", "id", $issue["id_newsletter"]);
+		
+		//Create the queue
+		$sql = sprintf ('INSERT INTO tnewsletter_queue (id_newsletter_content, datetime, status) VALUES (%d, "%s", %d)', $issue["id"], $datetime, 0);
+		$id_queue = process_sql ($sql, 'insert_id');
+	
+		echo json_encode($id_queue);
+		return;
+	}
+	
+	if ($add_address) {
+		$id_queue = get_parameter('id_queue');
+		$limit = get_parameter('limit');
+		$offset = get_parameter('offset');
+		$id_newsletter_content = get_parameter('id_newsletter_content');
+		$datetime = date ("Y-m-d H:i:s"); 
+		
+		$issue = get_db_row ("tnewsletter_content", "id", $id_newsletter_content);
+		$newsletter = get_db_row ("tnewsletter", "id", $issue["id_newsletter"]);
+	
+		$sql = "SELECT * FROM tnewsletter_address WHERE status = 0 AND id_newsletter = ". $newsletter["id"]." LIMIT $limit OFFSET $offset";
+
+		$queue = get_db_all_rows_sql ($sql);
+
+		if ($queue !== false) {
+			foreach ($queue as $item) {
+				$sql = sprintf ('INSERT INTO tnewsletter_queue_data (id_queue, id_newsletter, id_newsletter_content, email, name, datetime, status) VALUES (%d, %d, %d, "%s", "%s", "%s", %d)', $id_queue, $newsletter["id"], $issue["id"], $item["email"], $item["name"], $datetime, 0);
+				process_sql ($sql);
+			}
+				
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER QUEUE CREATED", "Created newsletter queue for issue ".$issue["email_subject"]);
+		}
+	}
+	
+	$return = 1;
+	echo json_encode($return);
+	return;
+}
+
 $manager = give_acl ($config["id_user"], 0, "CN");
 
 $id = (int) get_parameter ('id');
@@ -58,7 +121,7 @@ if ($create) {
 
 	// First create the queue
 	
-	$sql = sprintf ('INSERT INTO tnewsletter_queue (id_newsletter_content, datetime, status) VALUES (%d, "%s", %d)', $issue["id"], $datetime, 0);	
+	$sql = sprintf ('INSERT INTO tnewsletter_queue (id_newsletter_content, datetime, status) VALUES (%d, "%s", %d)', $issue["id"], $datetime, 0);
 	$id_queue = process_sql ($sql, 'insert_id');
 
 	// Add addresses to this queue I've created !
@@ -133,13 +196,19 @@ if ($disable_bad) { // if delete
 	$id = 0;
 }
 
+echo '<br>';
+echo '<div id="loading" style="display:none; width: 90%; margin-left: 0;">';
+echo print_image("images/wait.gif", true, array("border" => '0')) . '<br />';
+echo '<strong>' . __('Please wait...') . '</strong>';
+echo '</div>';
+
 // General issue listing
 
 echo "<h2>".__('Newsletter queue management')."</h2>";
 
 if($manager) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/queue_manager&create=1">';
-	echo "<table width=600 class=databox>";
+	echo "<table width=90% class=databox>";
 	echo "<tr><td>";
 
 	echo print_select_from_sql ('SELECT id, email_subject FROM tnewsletter_content ORDER BY email_subject', 'id_newsletter_content', 0, '', '', '', true, false, false,"");
@@ -194,11 +263,14 @@ if ($queue !== false) {
 		$data = array ();
 		
 		$id_issue = $items["id_newsletter_content"];
-		$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = $id_issue");
+		//$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = $id_issue");
+		$id_newsletter = get_db_value('id_newsletter', 'tnewsletter_queue_data', 'id_queue', $items['id']);
+
 		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
+
 		$issue_name = get_db_sql ("SELECT email_subject FROM tnewsletter_content WHERE id = $id_issue");
 		
-		$data[0] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".$items["id_newsletter"]."'>".$newsletter["name"]."</a>";
+		$data[0] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".$id_newsletter."'>".$newsletter["name"]."</a>";
 		
 		$data[1] = "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&id=".
 			$id_issue."'>".$issue_name."</a>";
@@ -236,7 +308,6 @@ if ($queue !== false) {
 						return false;">
 						<img src="images/go-next.png" title="start"></a>';
 
-
 			$data[7] ='<a href="index.php?sec=customers&sec2=operation/newsletter/queue_manager&
 						stop=1&id='.$items['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -264,3 +335,67 @@ if ($queue !== false) {
 }
 
 ?>
+
+<script language="javascript" type="text/javascript">
+
+$(document).ready (function () {
+	$("#loading").css("display", "none");	
+});
+	
+$('#submit-new_btn').click(function (event) {
+		
+	event.preventDefault();
+	$("#loading").css("display", "");
+	var id_newsletter_content = $('#id_newsletter_content').val();
+	var limit = 200;
+	var offset = 0;
+	var offset_final = 0;
+	
+	$.ajax ({
+		type: "POST",
+		data: "page=<?php echo $_GET['sec2']; ?>&calculate_total=1&id_newsletter_content="+id_newsletter_content,
+		url: "ajax.php",
+		async: false,
+		timeout: 10000,
+		dataType: 'json',
+		success: function (data_total, status) {
+			var total = data_total;
+			var i_max = Math.ceil((total/limit));
+	
+			$.ajax ({
+				type: "POST",
+				data: "page=<?php echo $_GET['sec2']; ?>&create_queue=1&id_newsletter_content="+id_newsletter_content,
+				url: "ajax.php",
+				async: false,
+				timeout: 10000,
+				dataType: 'json',
+				success: function (data_queue, status) {
+
+					var id_queue = data_queue;
+					
+					for(i=1;i<=i_max;i++) {
+						if (i != 1) {
+							offset_final += limit; 
+						}
+						
+						$.ajax ({
+							type: "POST",
+							data: "page=<?php echo $_GET['sec2']; ?>&add_address=1&id_newsletter_content="+id_newsletter_content+"&id_queue="+id_queue+"&limit="+limit+"&offset="+offset_final,
+							url: "ajax.php",
+							async: false,
+							timeout: 10000,
+							dataType: 'json',
+							success: function (data_result, status) {
+		
+							}
+						}); //end add
+					}
+				}
+			}); //end create queue
+		}
+	});
+	
+	location.reload();
+
+});
+</script>
