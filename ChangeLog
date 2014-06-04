@@ -1,3 +1,8 @@
+2014-06-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* godmode/usuarios/configurar_usuarios.php: Changed the
+	old company select input for an autocomplete input.
+
 2014-05-30  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/newsletter/queue_manager.php:

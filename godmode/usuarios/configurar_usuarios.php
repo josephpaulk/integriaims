@@ -366,7 +366,17 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 <td class="datos" colspan=2><input type="text" name="telefono" value="<?php echo $telefono ?>">
 
 <tr><td class="datos"><?php echo __('Company') ?>
-<td class="datos" colspan=2><?php print_select (get_companies (), 'id_company', $id_company, '', __('None'), 0, false); ?>
+<td class="datos" colspan=2>
+<?php
+
+$params = array();
+$params['input_id'] = 'id_company';
+$params['input_name'] = 'id_company';
+$params['input_value'] = $id_company;
+print_company_autocomplete_input($params);
+//print_select (get_companies (), 'id_company', $id_company, '', __('None'), 0, false);
+
+?>
 
 <tr><td class="datos"><?php echo __('Location') ?>
 <td class="datos" colspan=2><input type="text" name="location" value="<?php echo $location ?>">
@@ -560,6 +570,9 @@ $(document).ready (function () {
 			$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
 		});
 	});
+
+	var idUser = "<?php echo $config['id_user'] ?>";
+	bindCompanyAutocomplete("id_company", idUser);
 });
 
 // Form validation
