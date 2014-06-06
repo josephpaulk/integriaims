@@ -1,3 +1,14 @@
+2014-06-06  Sancho Lerena <slerena@artica.es>
+
+	* images/backgrounds/back_metal_floor.jpg,
+	images/backgrounds/dark_spot.jpg: New background images.
+
+	* images/backgrounds/flowers.jpg,
+	images/backgrounds/grass.jpg,
+	images/backgrounds/tiles.jpg,
+	images/backgrounds/wood.jpg: Same files, but compressed
+	for smaller size.
+
 2014-06-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* godmode/usuarios/configurar_usuarios.php: Changed the
