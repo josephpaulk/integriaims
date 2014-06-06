@@ -132,6 +132,8 @@ function api_create_incident ($return_type, $user, $params){
 	$status = 1; // new
 	$resolution = 9; // In process / Pending
 	$id_inventory = $params[4];
+	$id_incident_type = (int) $params[5];
+	$email_copy = $params[6];
 
 	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $group");
 	$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $group");
@@ -144,11 +146,11 @@ function api_create_incident ($return_type, $user, $params){
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
-			resolution)
+			resolution, email_copy, id_incident_type)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d)', $timestamp, $timestamp, $title, $description, $owner,
+			"%s", %d, "%s", %d)', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution);
+			$email_notify, $resolution, $email_copy, $id_incident_type);
 	
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
