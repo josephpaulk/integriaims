@@ -1,3 +1,13 @@
+2014-06-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/common/download_file.php: Removed the html
+	entities of the filenames.
+
+	* operation/download/browse.php: Removed the html entities
+	of the filenames. Now the filenames are not modified. Now
+	the name of the file upload form is the filename for default.
+	Improved the error management.
+
 2014-06-06  Sancho Lerena <slerena@artica.es>
 
 	* images/backgrounds/back_metal_floor.jpg,

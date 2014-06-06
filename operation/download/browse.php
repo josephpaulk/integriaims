@@ -50,8 +50,8 @@ if (defined ('AJAX')) {
 
 		if ($upload_result === true) {
 			$filename = $_FILES["upfile"]['name'];
-			$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
-			$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
+			//$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
+			//$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 			$location = "attachment/downloads/$filename";
 			
 			$file_path = $config["homedir"]."/".$location;
@@ -217,7 +217,8 @@ if (isset($_GET["delete_data"])){ // if delete
 
 	$file_path = $config["homedir"]."/".$file_path;
 
-	unlink ($file_path);
+	if ($file_path)
+		unlink (safe_output($file_path));
 	
 	$sql_delete= "DELETE FROM tdownload WHERE id = $id";		
 	$result=mysql_query($sql_delete);
@@ -466,6 +467,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 
 			foreach($downloads as $row) {
 
+				$row["location"] = safe_output($row["location"]);
+
 				$data = array();
 
 				// Name
@@ -618,6 +621,7 @@ function form_upload () {
 				data.context.removeClass('working');
 				data.context.removeClass('loading');
 				data.context.addClass('error');
+				data.context.find('i').text(result.message);
 			}
 		}
 
@@ -679,6 +683,8 @@ function form_upload () {
 	function addForm (item, filename) {
 		var form_div = item.find(".download_form");
 		form_div.html($("#form-file_release").html());
+
+		item.find("#text-name").val(filename);
 
 		$.ajax({
 			type: 'POST',

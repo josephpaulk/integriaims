@@ -56,16 +56,18 @@ switch ($type) {
 
 
 	case "contact":
-		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
-		
+
 		$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $data["id_contact"]);
 		
 		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
 		if (!$read_permission) {
 			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
-    		require ($general_error);
-    		exit;
+			require ($general_error);
+			exit;
 		}
+		
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+		$data["filename"] = safe_output($data["filename"]);
 		
 		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 		$last_name = $data["filename"];
@@ -84,6 +86,7 @@ switch ($type) {
     			exit;
 			}
 		}
+		$data["filename"] = safe_output($data["filename"]);
 		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 		$last_name = $data["filename"];
 		break;
@@ -98,6 +101,7 @@ switch ($type) {
 		mysql_query ("INSERT INTO tdownload_tracking (id_download, id_user, date) VALUES ($id_attachment, '".$config['id_user']."','$timestamp')");
 
 		$data = get_db_row ("tdownload", "id", $id_attachment );
+		$data["location"] = safe_output($data["location"]);
 
 		$fileLocation = $config["homedir"]."/".$data["location"];
 		$short_name = preg_split ("/\//", $data["location"]);
@@ -109,6 +113,7 @@ switch ($type) {
 		mysql_query ("INSERT INTO tdownload_tracking (id_download, id_user, date) VALUES ($id_attachment, 'anonymous','$timestamp')");
 		
 		$data = get_db_row ("tdownload", "external_id", $id_attachment );
+		$data["location"] = safe_output($data["location"]);
 		
 		$fileLocation = $config["homedir"]."/".$data["location"];
 		$short_name = preg_split ("/\//", $data["location"]);
@@ -125,6 +130,7 @@ switch ($type) {
     		exit;
 		}
 
+		$data["filename"] = safe_output($data["filename"]);
 		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 		$last_name = $data["filename"];		
 
@@ -138,6 +144,7 @@ switch ($type) {
 			exit;
 		}
 
+		$data["filename"] = safe_output($data["filename"]);
 		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 		$last_name = $data["filename"];		
 
@@ -185,7 +192,7 @@ switch ($type) {
 }
 
 //Compound file path
-if ($type == "release" ||$type == "external_release") {
+if ($type == "release" || $type == "external_release") {
 	$fileLocation = $config["homedir"]."/".$data["location"];
 	$short_name = preg_split ("/\//", $data["location"]);
 	$last_name = $short_name[sizeof($short_name)-1];	
