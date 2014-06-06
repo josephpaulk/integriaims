@@ -143,10 +143,10 @@ function crm_change_invoice_lock ($id_user, $id_invoice) {
 	return -1;
 }
 
-function crm_get_all_leads ($where_clause) {
+function crm_get_all_leads ($where_clause, $order_by_clause = "ORDER BY creation DESC") {
 	global $config;
 	
-	$sql = "SELECT * FROM tlead $where_clause ORDER BY creation DESC";
+	$sql = "SELECT * FROM tlead $where_clause $order_by_clause";
 	$leads = get_db_all_rows_sql ($sql);
 	
 	$user_leads = enterprise_hook('crm_get_user_leads', array($config['id_user'], $leads));

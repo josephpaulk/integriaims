@@ -2470,6 +2470,14 @@ img.pipeline-product-icon {
 div.pipeline-list-details {
 	font-style: italic;
 	font-size: 7pt;
+	line-height: 17px;
+}
+
+div.pipeline-list-owner {
+	font-style: italic;
+	font-size: 6pt;
+	line-height: 17px;
+	padding-bottom: 3px;
 }
 
 img.pipeline-warning-icon {

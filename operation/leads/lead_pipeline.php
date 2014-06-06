@@ -143,7 +143,7 @@ foreach ($progress as $k => $v) {
 	}
 	
 	//Get statistics for $k status
-	$leads = crm_get_all_leads ("WHERE 1=1 $where_clause AND progress = $k");
+	$leads = crm_get_all_leads ("WHERE 1=1 $where_clause AND progress = $k", "ORDER BY estimated_sale DESC");
 	
 	if(!$leads) {
 		$leads = array();
@@ -191,34 +191,28 @@ foreach ($progress as $k => $v) {
 		$lead_list .= "<li class='pipeline-list'>";
 		$lead_list .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".$l["id"]."'>";
 
-		$name = strtolower($l["fullname"]);	
-
-		$name = ucwords($name);
-
-		//Adjust text truncate for very long names
-		$name_size = strlen(safe_output($l["fullname"]));
-
 		$char_truncate = 18;
 		
-		$name = ui_print_truncate_text($name, $char_truncate, false, true);
-		if ($l['executive_overview'] != '') {
-			$name .= print_help_tip ($l['executive_overview'], true);
-		}
-	
-		$lead_list .= "<div class='pipeline-list-title'>";
-		$lead_list .= $name;
-
-		$lead_list .= "</div>";
-
-
-		$lead_list .= "<div class='pipeline-list-subtitle'>";
-
-
 		$company = $l["company"];
 
 		if (!$company) {
 			$company = __("N/A");
 		}
+
+		$company = ui_print_truncate_text($company, $char_truncate, false, true);
+		if ($l['executive_overview'] != '') {
+			$company .= print_help_tip ($l['executive_overview'], true);
+		}
+	
+		$lead_list .= "<div class='pipeline-list-title'>";
+		$lead_list .= $company;
+
+		$lead_list .= "</div>";
+
+		$lead_list .= "<div class='pipeline-list-subtitle'>";
+
+		$name = strtolower($l["fullname"]);
+		$name = ucwords($name);
 
 		$country = $l["country"];
 
@@ -226,7 +220,7 @@ foreach ($progress as $k => $v) {
 			$country = __("N/A");
 		}
 
-		$details = $company."  (".$country.")";
+		$details = $name."&nbsp;&nbsp;(".$country.")";
 
 		$details_size = strlen(safe_output($details));
 
@@ -235,6 +229,16 @@ foreach ($progress as $k => $v) {
 		$details = ui_print_truncate_text($details, $char_truncate, false, true);
 
 		$lead_list .= "<div class='pipeline-list-details'>".$details."</div>";
+
+		if (!empty($l['owner'])) {
+
+			$char_truncate = 35;
+
+			$owner = $l['owner'];
+			$details = ui_print_truncate_text($owner, $char_truncate, false, true);
+
+			$lead_list .= "<div class='pipeline-list-owner'>".$owner."</div>";
+		}
 
 		// Detect is the lead is pretty old 
 		if (calendar_time_diff ($l["modification"]) > $lead_warning_time ){

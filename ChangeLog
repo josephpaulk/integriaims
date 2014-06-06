@@ -1,3 +1,18 @@
+2014-06-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* godmode/setup/update_manager.php,
+	  include/functions_update_manager.php: Now the update
+	manager only sends the number of users with the login
+	enabled.
+
+	* include/functions_crm.php: Now is possible to set a
+	custom 'ORDER BY' in the function "crm_get_all_leads".
+	
+	* include/styles/integria.css: Added styles for
+	"div.pipeline-list-owner".
+
+	* operation/leads/lead_pipeline.php: Visual changes.
+
 2014-06-06  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_api.php: Added email_copy and type

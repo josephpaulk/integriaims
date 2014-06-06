@@ -31,7 +31,7 @@ if (defined ('AJAX')) {
 	$count = get_db_all_rows_sql(
 		'SELECT COUNT(*)
 		FROM tusuario
-		WHERE disabled = 0 AND login_blocked = 0;');
+		WHERE enable_login = 1 AND disabled = 0 AND login_blocked = 0;');
 	$users = $count[0][0];
 	$license = $config['license'];
 	$current_package = $config['current_package'];
