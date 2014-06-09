@@ -39,8 +39,7 @@ if ($get_license_info) {
 		$table->data[1][0] = '<strong>'.__('Platform Limit').'</strong>';
 		$table->data[1][1] = __('Unlimited');
 		$table->data[2][0] = '<strong>'.__('Current Platform Count').'</strong>';
-		$count_users = get_db_value_sql ('SELECT count(*) FROM tusuario WHERE enable_login=1');
-		$table->data[2][1] = $count_users;
+		$table->data[2][1] = get_valid_users_num();
 		$table->data[3][0] = '<strong>'.__('License Mode').'</strong>';
 		$table->data[3][1] = __('Open Source Version');
 		

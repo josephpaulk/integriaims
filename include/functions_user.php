@@ -64,8 +64,10 @@ function user_print_autocomplete_input($parameters) {
 function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar) {
 	$file_handle = fopen($users_file, "r");
 	global $config;
-	
-	while (!feof($file_handle)) {
+
+	enterprise_include ('include/functions_license.php', true);
+
+	while (!feof($file_handle) && (($users_check = enterprise_hook('license_check_users_num')) === true || $users_check === ENTERPRISE_NOT_HOOK)) {
 		$line = fgets($file_handle);
 		
 		preg_match_all('/(.*),/',$line,$matches);
@@ -105,27 +107,31 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 			'enable_login' => $enable_login,
 			'force_change_pass' => $force_change_pass);
 			
-			if (($id_usuario!='')&&($nombre_real!='')) {
-				if ($id_usuario == get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id_usuario)){
-					echo "<h3 class='error'>" . __ ('User '). $id_usuario . __(' already exists') . "</h3>";
-				}
-				else {
-					$resul = process_sql_insert('tusuario', $value);
+		if (($id_usuario!='')&&($nombre_real!='')) {
+			if ($id_usuario == get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id_usuario)){
+				echo "<h3 class='error'>" . __ ('User '). $id_usuario . __(' already exists') . "</h3>";
+			}
+			else {
+				$resul = process_sql_insert('tusuario', $value);
+				
+				if ($resul==false){
+					$value2 = array(
+						'id_usuario' => $id_usuario,
+						'id_perfil' => $profile,
+						'id_grupo' => $group,
+						'assigned_by' => $config["id_user"]
+					);
 					
-					if ($resul==false){
-						$value2 = array(
-							'id_usuario' => $id_usuario,
-							'id_perfil' => $profile,
-							'id_grupo' => $group,
-							'assigned_by' => $config["id_user"]
-						);
-						
-						if ($id_usuario!='') {
-							process_sql_insert('tusuario_perfil', $value2);
-						}
+					if ($id_usuario!='') {
+						process_sql_insert('tusuario_perfil', $value2);
 					}
 				}
 			}
+		}
+	}
+
+	if ($users_check === false) {
+		echo "<h3 class='error'>".__('The number of users has reached the license limit')."</h3>";
 	}
 	
 	fclose($file_handle);

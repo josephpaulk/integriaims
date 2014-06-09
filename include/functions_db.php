@@ -2699,4 +2699,14 @@ function get_last_dates () {
 	return $last_dates;
 }
 
+function get_valid_users_num () {
+	clean_cache_db();
+	$filter = array(
+			'enable_login' => 1,
+			'disabled' => 0,
+			'login_blocked' => 0
+		);
+	return get_db_value_filter("COUNT(id_usuario)", "tusuario", $filter);
+}
+
 ?>

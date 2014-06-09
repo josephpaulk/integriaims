@@ -28,11 +28,7 @@ include_once("include/functions_update_manager.php");
 enterprise_include("include/functions_update_manager.php");
 
 if (defined ('AJAX')) {
-	$count = get_db_all_rows_sql(
-		'SELECT COUNT(*)
-		FROM tusuario
-		WHERE enable_login = 1 AND disabled = 0 AND login_blocked = 0;');
-	$users = $count[0][0];
+	$users = get_valid_users_num();
 	$license = $config['license'];
 	$current_package = $config['current_package'];
 	
@@ -47,7 +43,6 @@ if (defined ('AJAX')) {
 		update_manager_check_online_free_packages ();
 		
 		return;
-		
 	}
 	
 	if ($update_last_free_package) {
@@ -55,8 +50,6 @@ if (defined ('AJAX')) {
 		$package = get_parameter('package', '');
 		$version = get_parameter('version', '');
 		$package_url = base64_decode($package);
-		//debugPrint($package_url, true);
-		//debugPrint($version, true);
 		
 		$params = array('action' => 'get_package',
 			'license' => $license,
@@ -67,27 +60,14 @@ if (defined ('AJAX')) {
 			'build' => $config['build']);
 		
 		$curlObj = curl_init();
-		//curl_setopt($curlObj, CURLOPT_URL, $config['url_updatemanager']);
 		curl_setopt($curlObj, CURLOPT_URL, $package_url);
 		curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curlObj, CURLOPT_FOLLOWLOCATION, true);
-		//curl_setopt($curlObj, CURLOPT_POST, true);
-		//curl_setopt($curlObj, CURLOPT_POSTFIELDS, $params);
 		curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, false);
 		$result = curl_exec($curlObj);
 		$http_status = curl_getinfo($curlObj, CURLINFO_HTTP_CODE);
 		
 		curl_close($curlObj);
-		
-		//debugPrint("end", true);
-		
-		
-		//~ debugPrint($params, true);
-		//~ debugPrint($result, true);
-		//~ debugPrint($http_status, true);
-		
-		
-		
 		
 		if (empty($result)) {
 			echo json_encode(array(
@@ -105,7 +85,6 @@ if (defined ('AJAX')) {
 			$progress_update_status = get_db_value(
 				'value', 'tconfig', 'token', 'progress_update_status');
 			
-			//debugPrint($progress_update_status, true);
 			if (empty($progress_update_status)) {
 				process_sql_insert('tconfig',
 					array(

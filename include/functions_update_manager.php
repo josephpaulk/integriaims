@@ -273,7 +273,6 @@ function update_manager_recurse_copy($src, $dst, $black_list) {
 	@mkdir($dst);
 	@trigger_error("NONE");
 	
-	//debugPrint("mkdir(" . $dst . ")", true);
 	while (false !== ( $file = readdir($dir)) ) { 
 		if (( $file != '.' ) && ( $file != '..' ) && (!in_array($file, $black_list))) { 
 			if ( is_dir($src . '/' . $file) ) { 
@@ -282,11 +281,8 @@ function update_manager_recurse_copy($src, $dst, $black_list) {
 				}
 			}
 			else { 
-				//debugPrint($src . '/' . $file.",".$dst . '/' . $file, true);
 				$result = copy($src . '/' . $file,$dst . '/' . $file);
-				//debugPrint($result, true);
 				$error = error_get_last();
-				//debugPrint($error, true);
 				
 				if (strstr($error['message'], "copy(") ) {
 					return false;
@@ -319,16 +315,12 @@ function update_manager_count_files($path) {
 	return $count;
 }
 
-function update_manager_check_online_free_packages ($is_ajax=true) {
+function update_manager_check_online_free_packages ($is_ajax = true) {
 	global $config;
 	
 	$update_message = '';
 	
-	$count = get_db_all_rows_sql(
-		'SELECT COUNT(*)
-		FROM tusuario
-		WHERE enable_login = 1 AND disabled = 0 AND login_blocked = 0;');
-	$users = $count[0][0];
+	$users = get_valid_users_num();
 	$license = $config['license'];
 	$current_package = $config['current_package'];
 	

@@ -1,3 +1,15 @@
+2014-06-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_db.php: Added the function "get_valid_users_num".
+	
+	* include/functions_update_manager.php,
+	  include/ajax/license.php: Removed some unused code and replaced
+	some blocks with functions.
+
+	* godmode/usuarios/configurar_usuarios.php,
+	  include/functions_user.php: Added a limit on the user creation
+	to the enterprise users.
+
 2014-06-09 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* integria_demo.sql: fixed the installation of default data.

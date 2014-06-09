@@ -206,61 +206,75 @@ if ($action == 'update')  {
 // CREATE USER
 ///////////////////////////////
 if ($action == 'create'){
-	// Get data from POST
-	$nombre = strtolower(get_parameter ("nombre"));
-	$password = get_parameter ("pass1");
-	$password2 = get_parameter ("pass2");
-	$nombre_real = get_parameter ("nombre_real");
-	$lang = get_parameter ("lang");
-	if ($password <> $password2){
-		echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
-	}
-	$direccion = rtrim(get_parameter ("direccion"));
-	$telefono = get_parameter ("telefono");
-	$id_company = get_parameter ("id_company");
-	$simple_mode = get_parameter ("simple_mode");
-	$comentarios = get_parameter ("comentarios");
-	if (isset($_POST["nivel"])) {
-		$nivel = get_parameter ("nivel",0);
-	}
-	$password = md5($password);
-	$avatar = get_parameter ("avatar");
-	$avatar = substr($avatar, 0, strlen($avatar)-4);
-	$disabled = get_parameter ("disabled");
-		
-	$ahora = date("Y-m-d H:i:s");
-	$num_employee = get_parameter("num_employee");
-	$enable_login = get_parameter("enable_login");
-	$location = get_parameter ("location", "");
-	$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login, '$location')";
+	enterprise_include ('include/functions_license.php', true);
 
-	$resq1 = process_sql($sql_insert);
-	
-	if (! $resq1)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
-	else {
+	$users_check = enterprise_hook('license_check_users_num');
 
-		//Insert custom fields
-		foreach ($user_fields as $u) {
+	if ($users_check === true || $users_check === ENTERPRISE_NOT_HOOK) {
 
-			$custom_value = get_parameter("custom_".$u["id"]);
+		// Get data from POST
+		$nombre = strtolower(get_parameter ("nombre"));
+		$password = get_parameter ("pass1");
+		$password2 = get_parameter ("pass2");
+		$nombre_real = get_parameter ("nombre_real");
+		$lang = get_parameter ("lang");
+		if ($password <> $password2){
+			echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
+		}
+		$direccion = rtrim(get_parameter ("direccion"));
+		$telefono = get_parameter ("telefono");
+		$id_company = get_parameter ("id_company");
+		$simple_mode = get_parameter ("simple_mode");
+		$comentarios = get_parameter ("comentarios");
+		if (isset($_POST["nivel"])) {
+			$nivel = get_parameter ("nivel",0);
+		}
+		$password = md5($password);
+		$avatar = get_parameter ("avatar");
+		$avatar = substr($avatar, 0, strlen($avatar)-4);
+		$disabled = get_parameter ("disabled");
 			
-			$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
-						$custom_value, $nombre, $u["id"]);
+		$ahora = date("Y-m-d H:i:s");
+		$num_employee = get_parameter("num_employee");
+		$enable_login = get_parameter("enable_login");
+		$location = get_parameter ("location", "");
+		$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login, '$location')";
 
-			$res = process_sql($sql);
+		$resq1 = process_sql($sql_insert);
+		
+		if (! $resq1)
+			echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		else {
 
-			if ($res === false) {
-				echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
-			}
-		}	
+			//Insert custom fields
+			foreach ($user_fields as $u) {
+
+				$custom_value = get_parameter("custom_".$u["id"]);
+				
+				$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
+							$custom_value, $nombre, $u["id"]);
+
+				$res = process_sql($sql);
+
+				if ($res === false) {
+					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+				}
+			}	
 
 
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		}
+
+		$update_user = $nombre;
+		$modo ="edicion";
+
+	} else {
+		$_GET["alta"] = 1;
+		unset($_GET["nuevo_usuario"]);
+		unset($_GET["update_user"]);
+		echo "<h3 class='error'>".__('The number of users has reached the license limit')."</h3>";
 	}
 
-	$update_user = $nombre;
-	$modo ="edicion";
 }
 
 if (isset($_GET["alta"])){
