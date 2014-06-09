@@ -1,3 +1,9 @@
+2014-06-09 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* integria_demo.sql: fixed the installation of default data.
+	
+	* godmode/setup/offline_update.php: cleaned source code style.
+
 2014-06-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* godmode/setup/update_manager.php,

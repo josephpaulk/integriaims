@@ -52,7 +52,7 @@ if (defined ('AJAX')) {
 					// The files will be extracted one by one
 					for($i = 0; $i < $zip->numFiles; $i++) {
 						$filename = $zip->getNameIndex($i);
-
+						
 						if ($zip->extractTo($destination, array($filename))) {
 							// Creates a file with the name of the files extracted
 							file_put_contents ($destination."/files.txt", $filename."\n", FILE_APPEND | LOCK_EX);
@@ -254,7 +254,7 @@ if (defined ('AJAX')) {
 }
 
 
-echo "<h1>".__("Offline update")."</h1>";
+echo "<h1>" . __("Offline update") . "</h1>";
 
 ?>
 

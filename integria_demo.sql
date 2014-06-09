@@ -342,7 +342,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tlead` WRITE;
 /*!40000 ALTER TABLE `tlead` DISABLE KEYS */;
-INSERT INTO `tlead` VALUES (1,0,'en_GB',0,'admin','Peter&#x20;McNee','peter@nothere.net','3434324233','3247473863','CTO','Not&#x20;There&#x20;Computer&#x20;Ltd','USA','Hi&#x20;there,&#x20;&#x0d;&#x0a;&#x0d;&#x0a;Im&#x20;interested&#x20;in&#x20;XXXXX.&#x20;Please,&#x20;give&#x20;me&#x20;more&#x20;information.&#x0d;&#x0a;','2013-02-12 09:28:27','2013-02-12 09:28:27',0,2300,0);
+INSERT INTO `tlead` (`id`, `id_company`, `id_language`, `id_category`, `owner`, `fullname`, `email`, `phone`, `mobile`, `position`, `company`, `country`, `description`, `creation`, `modification`, `progress`, `estimated_sale`, `id_campaign`) VALUES (1, 0, 'en_GB', 0, 'admin', 'Peter&#x20;McNee', 'peter@nothere.net', '3434324233', '3247473863', 'CTO', 'Not&#x20;There&#x20;Computer&#x20;Ltd', 'USA', 'Hi&#x20;there,&#x20;&#x0d;&#x0a;&#x0d;&#x0a;Im&#x20;interested&#x20;in&#x20;XXXXX.&#x20;Please,&#x20;give&#x20;me&#x20;more&#x20;information.&#x0d;&#x0a;', '2013-02-12 09:28:27', '2013-02-12 09:28:27', 0, 2300, 0);
 /*!40000 ALTER TABLE `tlead` ENABLE KEYS */;
 UNLOCK TABLES;
 
