@@ -1,3 +1,8 @@
+2014-06-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/integria_cron.php: Fixed the function "graph_sla".
+	Now updates the values correctly.
+
 2014-06-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_db.php: Added the function "get_valid_users_num".

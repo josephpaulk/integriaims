@@ -415,13 +415,11 @@ function graph_sla($incident) {
 					ORDER BY utimestamp DESC",
 					$id_incident);
 	$result = get_db_row_sql($sql);
-	if ($result) {
-		$last_value = $result['value'];
-
-		if ($values['value'] != $last_value) {
-			//Insert SLA value in table
-			process_sql_insert('tincident_sla_graph_data', $values);
-		}
+	$last_value = !empty($result) ? $result['value'] : -1;
+	
+	if ($values['value'] != $last_value) {
+		//Insert SLA value in table
+		process_sql_insert('tincident_sla_graph_data', $values);
 	}
 }
 
