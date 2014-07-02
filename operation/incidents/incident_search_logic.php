@@ -113,6 +113,8 @@ if ($serialized_filter) {
 //Filter auxiliar array 
 $filter_form = $filter;
 
+$has_im  = give_acl ($config['id_user'], $filter_form['id_group'], "IM");
+
 /* Create a custom saved search*/
 if ($create_custom_search && !$id_search) {
 	$form_values = get_parameter ('form_values');
@@ -255,13 +257,28 @@ $table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __
 $table->data[0][2] = combo_incident_resolution ($resolution, false, true, true);
 $table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true, false, true, __('Assigned user'));
 
-$table->data[1][0] = print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true);
-$table->colspan[1][0] = 4;
+//Task
+$table->data[1][0] = combo_task_user (0, $config["id_user"], 0, 0, true);
+
+if ($has_im) {
+	//Parent ticket
+	$table->data[1][1] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'));
+	$table->data[1][1] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table->data[1][1] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
+	//Email notify
+	$table->data[1][2] = print_checkbox_extended ('mass_email_notify', 1, 1, false, '', '', true, __('Notify changes by email'));
+	//Delete tickets
+	$table->data[1][3] = print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
+}
+
+$table->data[2][0] = print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true);
+$table->colspan[2][0] = 4;
 
 $massive_oper_incidents = print_table ($table, true);
 
 echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
 
+echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -330,6 +347,11 @@ $(document).ready(function () {
 		validate_user ("#search_incident_form", "#text-search_editor", "<?php echo __('Invalid user')?>");
 		validate_user ("#search_incident_form", "#text-search_closed_by", "<?php echo __('Invalid user')?>");
 	}
+	
+	/*Open parent search popup*/
+	$("#text-search_parent").focus(function () {
+		parent_search_form('');
+	});
 	
 });
 

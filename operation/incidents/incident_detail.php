@@ -183,6 +183,14 @@ if ($quick_delete) {
 			no_permission();
 		}
 	}
+	
+	$massive_number_loop = get_parameter ('massive_number_loop', -1);	
+	// AJAX (Massive operations)
+	if ($massive_number_loop > -1) {
+		ob_clean();
+		echo json_encode($massive_number_loop);
+		return;
+	}
 }
 
 
@@ -202,7 +210,19 @@ if ($action == 'update') {
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
-	$email_notify = (bool) get_parameter ('email_notify', $old_incident['notify_email']);
+	$email_notify = (int)get_parameter ('email_notify_form', 0);
+
+	//For massive operations
+	$mass_email_notify = get_parameter ('mass_email_notify', -1);
+	if ($mass_email_notify != -1) {
+		if (!$mass_email_notify) {
+			$email_notify = 0;
+		}
+		if ($mass_email_notify) {
+			$email_notify = 1;
+		}
+	}
+
 	$epilog = get_parameter ('epilog', $old_incident['epilog']);
 	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
 	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
@@ -323,7 +343,7 @@ if ($action == "insert" && !$id) {
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
 	$id_task = (int) get_parameter ("id_task");
-	$email_notify = (bool) get_parameter ('email_notify');
+	$email_notify = (bool) get_parameter ('email_notify_form');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
@@ -806,8 +826,7 @@ if ($has_im){
 	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
 	        false, '', '', true, __('SLA disabled'));
 
-	$table_advanced->data[1][0] = print_checkbox_extended ('email_notify', 1, $email_notify,
-                false, '', '', true, __('Notify changes by email'));
+    $table_advanced->data[1][0] = print_checkbox ("email_notify_form", 1, $email_notify, true, __('Notify changes by email '));
 
 } else {
 	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);

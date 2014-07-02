@@ -433,6 +433,9 @@ function process_massive_updates () {
 	var priority;
 	var resolution;
 	var assigned_user;
+	var task;
+	var parent_ticket;
+	var notify_changes;
 
 	$(".cb_incident").each(function() {
 		id = this.id.split ("-").pop ();
@@ -451,52 +454,68 @@ function process_massive_updates () {
 		priority = $("#mass_priority").attr("value");
 		resolution = $("#mass_resolution").attr("value");
 		assigned_user = $("#mass_assigned_user").attr("value");
-		if(status == -1 && priority == -1 && resolution == -1 && assigned_user == -1) {
-			alert(__("Nothing to update"));
-		}
-		else {		
-			for(var i=0;i<checked_ids.length;i++){
-				values = Array ();
-				values.push ({name: "page",
-							value: "operation/incidents/incident_detail"});
-				values.push ({name: "id",
-							value: checked_ids[i]});
-				if(status != -1) {
-					values.push ({name: "incident_status",
-							value: status});
-				}
-				if(priority != -1) {
-					values.push ({name: "priority_form",
-							value: priority});
-				}
-				if(resolution != -1) {
-					values.push ({name: "incident_resolution",
-							value: resolution});
-				}
-				if(assigned_user != -1) {
-					values.push ({name: "id_user",
-							value: assigned_user});
-				}
-				values.push ({name: "massive_number_loop",
-						value: i});
-				values.push ({name: "action",
-							value: 'update'});
-				
-				jQuery.get ("ajax.php",
-					values,
-					function (data, status) {
-						
-						// We refresh the interface in the last loop
-						if(data >= (checked_ids.length - 1)) {
-							// This takes the user to the top of the page
-							//window.location.href="index.php?sec=incidents&sec2=operation/incidents/incident_search";
-							// This takes the user to the same place before reload
-							location.reload();
-						}
-					},
-					"json"
-				);
+		task = $("#task_user").attr("value");
+		parent_ticket_name = $("#text-search_parent").attr("value");
+		parent_ticket_split = parent_ticket_name.split('#');
+		parent_ticket_id = parent_ticket_split[1];	
+		notify_changes = $("#checkbox-mass_email_notify:checked").val();
+		
+		for(var i=0;i<checked_ids.length;i++){
+			values = Array ();
+			values.push ({name: "page",
+						value: "operation/incidents/incident_detail"});
+			values.push ({name: "id",
+						value: checked_ids[i]});
+			if(status != -1) {
+				values.push ({name: "incident_status",
+						value: status});
 			}
+			if(priority != -1) {
+				values.push ({name: "priority_form",
+						value: priority});
+			}
+			if(resolution != -1) {
+				values.push ({name: "incident_resolution",
+						value: resolution});
+			}
+			if(assigned_user != -1) {
+				values.push ({name: "id_user",
+						value: assigned_user});
+			}
+			if(task != 0) {
+				values.push ({name: "id_task",
+						value: task});
+			}
+			if(parent_ticket != 0) {
+				values.push ({name: "id_parent",
+						value: parent_ticket_id});
+			}
+			if(notify_changes == 1) {
+				values.push ({name: "mass_email_notify",
+						value: 1});
+			} else {
+				values.push ({name: "mass_email_notify",
+						value: 0});
+			}
+			values.push ({name: "massive_number_loop",
+					value: i});
+			values.push ({name: "action",
+						value: 'update'});
+			
+			jQuery.get ("ajax.php",
+				values,
+				function (data, status) {
+					
+					// We refresh the interface in the last loop
+					if(data >= (checked_ids.length - 1)) {
+						// This takes the user to the top of the page
+						//window.location.href="index.php?sec=incidents&sec2=operation/incidents/incident_search";
+						// This takes the user to the same place before reload
+						location.reload();
+					}
+				},
+				"json"
+			);
 		}
 	}	
 	
@@ -984,4 +1003,45 @@ function hours_to_dms(type) {
 			}
 		}
 	});	
+}
+
+function delete_massive_tickets () {
+	var checked_ids = new Array();
+	$(".cb_incident").each(function() {
+		id = this.id.split ("-").pop ();
+		checked = $(this).attr('checked');
+		if(checked) {
+			$(this).attr('checked', false);
+			checked_ids.push(id);
+		}
+	});
+
+	if(checked_ids.length == 0) {
+		alert(__("No items selected"));
+	}
+	else {
+		for(var i=0;i<checked_ids.length;i++){
+				values = Array ();
+				values.push ({name: "page",
+							value: "operation/incidents/incident_detail"});
+				values.push ({name: "quick_delete",
+							value: checked_ids[i]});
+				values.push ({name: "massive_number_loop",
+						value: i});
+				jQuery.get ("ajax.php",
+					values,
+					function (data, status) {
+						
+						// We refresh the interface in the last loop
+						if(data >= (checked_ids.length - 1)) {
+							// This takes the user to the top of the page
+							//window.location.href="index.php?sec=incidents&sec2=operation/incidents/incident_search";
+							// This takes the user to the same place before reload
+							location.reload();
+						}
+					},
+					"json"
+				);
+			}
+	}
 }
