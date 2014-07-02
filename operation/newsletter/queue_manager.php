@@ -261,11 +261,11 @@ if ($queue !== false) {
 	
 	foreach ($queue as $items) {
 		$data = array ();
-		
+
 		$id_issue = $items["id_newsletter_content"];
+
 		//$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = $id_issue");
 		$id_newsletter = get_db_value('id_newsletter', 'tnewsletter_queue_data', 'id_queue', $items['id']);
-
 		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
 
 		$issue_name = get_db_sql ("SELECT email_subject FROM tnewsletter_content WHERE id = $id_issue");
@@ -287,10 +287,10 @@ if ($queue !== false) {
 			$data[3] = __("Done");	
 
 
-		$total = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE id_newsletter_content = $id_issue");
-		$ready = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 0 AND id_newsletter_content = $id_issue");
-		$done = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = $id_issue");
-		$error = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter_content = $id_issue");
+		$total = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
+		$ready = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 0 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
+		$done = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter ");
+		$error = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
 		
 		$data[4] = "$total / $ready / $done / $error";
 

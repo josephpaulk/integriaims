@@ -1,3 +1,8 @@
+2014-07-02  Sancho Lerena <slerena@artica.es>
+
+	* operation/newsletter/queue_manager.php: Fixed a stupid bug
+	which shows duplied count for same issues from different newsletters.
+
 2014-06-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/integria_cron.php: Fixed the function "graph_sla".
