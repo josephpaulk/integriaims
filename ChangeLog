@@ -1,3 +1,8 @@
+2014-07-04  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/newsletter/address_definition.php: Added
+	multiple delete.
+
 2014-07-02  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/js/integria_incident_search.js

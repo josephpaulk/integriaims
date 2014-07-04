@@ -31,6 +31,7 @@ $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
 $disable = (bool) get_parameter ('disable');
 $delete = (bool) get_parameter ('delete');
+$multiple_delete = (bool) get_parameter ('multiple_delete');
 
 // CREATE
 if ($create) {
@@ -112,6 +113,25 @@ if ($delete) {
 		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER ADDRESESS DELETED", "Deleted $email");
 	}
+	$id = 0;
+}
+
+if ($multiple_delete) {
+	$ids = (array)get_parameter('delete_multiple', array());
+	
+	foreach ($ids as $id) {	
+		$email = get_db_sql ("SELECT email FROM tnewsletter_address WHERE id = $id");
+	
+		$sql = "DELETE FROM tnewsletter_address WHERE id = $id";
+		$result = mysql_query ($sql);
+		if ($result === false)
+			break;
+		else {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER ADDRESESS DELETED", "Deleted $email");
+		}
+	}
+
+	echo "<h3 class='suc'>".__('Successfully multiple deleted')."</h3>";
 	$id = 0;
 }
 
@@ -211,6 +231,7 @@ if ($issues !== false) {
 	$table->head[5] = __('Validated');
 	if(give_acl ($config["id_user"], $id_group, "CN")) {
 		$table->head[6] = __('Disable/Delete');
+		$table->head[7] = print_checkbox_extended('all_delete', 0, false, false,'check_all_checkboxes();', '', true, false);
 	}
 
 	
@@ -251,19 +272,41 @@ if ($issues !== false) {
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png" title="Delete"></a>';
+						
+			$data[7] = print_checkbox_extended ('delete_multiple[]', $issue['id'], false, false, '', 'class="check_delete"', true);
 		}
 		array_push ($table->data, $data);
 	}
-	print_table ($table);
 }
 
 if($manager) {
+	echo "<form method='post' action='index.php?sec=customers&sec2=operation/newsletter/address_definition&multiple_delete=1&search_text=$search_text&search_newsletter=$search_newsletter&search_status=$search_status&search_validate=$search_validate'>";
+	print_table ($table);
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Delete selected items'), 'new_btn', false, 'class="sub delete"');
+	echo '</div>';
+	echo '</form>';
+	
+	echo '<br>';
+	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/issue_creation&create=1">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	echo '</div>';
 	echo '</form>';
+} else {
+	print_table ($table);
 }
 
-
 ?>
+
+<script type="text/javascript">
+function check_all_checkboxes() {
+	if ($("input[name=all_delete]").attr('checked')) {
+		$(".check_delete").attr('checked', true);
+	}
+	else {
+		$(".check_delete").attr('checked', false);
+	}
+}
+</script>
