@@ -1,3 +1,8 @@
+2014-07-07  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_graph.php: Fixed bug
+	with the color of legend in graphs.
+
 2014-07-04  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/newsletter/address_definition.php: Added
