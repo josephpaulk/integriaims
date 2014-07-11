@@ -26,11 +26,6 @@ if (!isset($config["id_user"]))
 //Get queries to know if there is info or not
 //////////////
 
-// NEWS
-$sql = "SELECT * FROM tnewsboard  WHERE (`date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY) OR `date` = '0000-00-00 00:00:00') ORDER BY date ASC";
-
-$news = get_db_all_rows_sql ($sql);	
-
 //AGENDA
 $now = date('Y-m-d', strtotime("now"));
 $now3 = date('Y-m-d', strtotime("now + 10 days"));
@@ -63,74 +58,6 @@ if ($info) {
 	// LEFT SIDE
 	echo "<td>";
 
-	// ==============================================================
-	// Show Newsboard
-	// ==============================================================
-	$system_dashboard = '';
-	if ($news) {
-		$system_dashboard_home .= "<div class='landing_news landing_content'>";
-		foreach ($news as $news_item) {
-			$system_dashboard_home .= "<span class='landing_news_title'>".$news_item["title"]."</span>";
-			
-			if ($news_item["date"] === "0000-00-00 00:00:00") {
-				$system_dashboard_home .= "<img class='landing_news_note' src='images/nota.gif'>";
-			} else {
-				$system_dashboard_home .= ", <i>".substr($news_item["date"],0,10)."</i>";
-			}
-			$system_dashboard_home .= "<hr><div style='margin-right: 20px; margin-left: 10px; margin-top: 10px; text-align: justify;'>";
-			$system_dashboard_home .= clean_output_breaks ($news_item["content"]);
-			$system_dashboard_home .= "<br><br></div>";
-		}
-		$system_dashboard_home .= "</div>";
-	} else {
-		$system_dashboard_home .= "<div class='landing_empty'>";
-		$system_dashboard_home .= __("There aren't news in the system");
-		$system_dashboard_home .= "</div>";
-	}
-	
-	$add_more = "<a href='index.php?sec=godmode&sec2=godmode/setup/newsboard'>";
-	$add_more .= "<img class='much_more' src='images/add.png' title='" . __('Newsboard management') . "'>";
-	$add_more .= "</a>";
-	
-	echo print_container('system_dashboard_home', __('System newsboard') . "<span class='landing_subtitle'>" . __('News of last 30 days') . "</span>".$add_more, $system_dashboard_home, 'no');
-	
-	// ==============================================================
-	// Show Projects items
-	// ==============================================================
-	
-	$projects_home = '';
-	
-	if ($projects > 0){
-		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
-
-		$graph_result = graph_workunit_project_user (500, 200, $config["id_user"], $from_one_month, 0, true);
-
-		//If there is an error in graph the graph functions returns a string
-		$projects_home .= "<div class='landing_empty'>";
-		$projects_home .= "<div class='graph_frame'>" . $graph_result . "</div>";
-		$projects_home .= "</div>";		
-	} else {
-		$projects_home .= "<div class='landing_empty'>";
-		$projects_home .= __("There aren't active projects");
-		$projects_home .= "</div>";	
-	}
-	
-	$much_more = "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
-	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
-	$much_more .= "</a>";
-	
-	$subtitle = "<span class='landing_subtitle'>";
-	$subtitle .= __("Total active projects") . ": ";
-	$subtitle .= projects_active_user ($config["id_user"]);
-	$subtitle .= "</span>";
-	
-	echo print_container('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no');
-	
-	echo "</td>";
-
-	// RIGHT SIDE
-	echo "<td>";
-	echo "<div class='landing_content'>";
 	// ==============================================================
 	// Show Agenda items
 	// ==============================================================
@@ -235,6 +162,45 @@ if ($info) {
 	$subtitle .= "</span>";
 	
 	echo print_container('agenda_home', __('Agenda') . $subtitle . $much_more, $agenda_home, 'no');
+	
+	
+	// ==============================================================
+	// Show Projects items
+	// ==============================================================
+	
+	$projects_home = '';
+	
+	if ($projects > 0){
+		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
+
+		$graph_result = graph_workunit_project_user (500, 200, $config["id_user"], $from_one_month, 0, true);
+
+		//If there is an error in graph the graph functions returns a string
+		$projects_home .= "<div class='landing_empty'>";
+		$projects_home .= "<div class='graph_frame'>" . $graph_result . "</div>";
+		$projects_home .= "</div>";		
+	} else {
+		$projects_home .= "<div class='landing_empty'>";
+		$projects_home .= __("There aren't active projects");
+		$projects_home .= "</div>";	
+	}
+	
+	$much_more = "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
+	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "</a>";
+	
+	$subtitle = "<span class='landing_subtitle'>";
+	$subtitle .= __("Total active projects") . ": ";
+	$subtitle .= projects_active_user ($config["id_user"]);
+	$subtitle .= "</span>";
+	
+	echo print_container('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no');
+	
+	echo "</td>";
+
+	// RIGHT SIDE
+	echo "<td>";
+	echo "<div class='landing_content'>";
 	
 	// ==============================================================
 	// Show WorkOrder items

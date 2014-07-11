@@ -1276,4 +1276,52 @@ function print_company_autocomplete_input ($parameters) {
 	}
 }
 
+/**
+ * Render an input password element.
+ *
+ * The element will have an id like: "password-$name"
+ * 
+ * @param mixed parameters:
+ * 			- id: string
+ * 			- style: string
+ * 			- hidden: boolean
+ * 			- content: string
+ * @param bool return or echo flag
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function print_div ($options, $return = false) {
+	$output = '<div';
+	
+	//Valid attributes (invalid attributes get skipped)
+	$attrs = array ("id", "style", "class");
+	
+	if (isset ($options['hidden'])) {
+		if (isset($options['style'])) {
+			$options['style'] .= 'display:none;';
+		}
+		else {
+			$options['style'] = 'display:none;';
+		}
+	}
+	
+	foreach ($attrs as $attribute) {
+		if (isset ($options[$attribute])) {
+			$output .= ' '.$attribute.'="'.safe_input_html ($options[$attribute]).'"';
+		}
+	}
+	
+	$output .= '>';
+	
+	$output .= isset ($options['content']) ? $options['content'] : '';
+	
+	$output .= '</div>';
+	
+	if ($return) {
+		return $output;
+	}
+	else {
+		echo $output;
+	}
+}
 ?>

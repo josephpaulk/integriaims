@@ -1,3 +1,16 @@
+2014-07-11  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* index.php
+	  integria_dbdata.sql
+	  general/home.php
+	  godmode/setup/newsboard.php
+	  include/functions.php
+	  include/functions_html.php: Changed news board.
+
+	* extras/mr/10.sql
+	  general/news_dialog.php
+	  include/js/encode_decode_base64.js: Added files.
+
 2014-07-07  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_graph.php: Fixed bug

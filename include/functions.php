@@ -1414,4 +1414,39 @@ function translateFileUploadStatus ($status) {
 	return $message;
 }
 
+function get_news($arguments) {
+	global $config;
+	
+	if (isset($arguments['id_user'])) {
+		$id_user = $arguments['id_user'];
+	} else {
+		$id_user = $config['id_user'];
+	}
+	
+	if (isset($arguments['limit'])) {
+		$limit = $arguments['limit'];
+	} else {
+		$limit = 99999999;
+	}
+
+	$groups = get_user_groups ($id_user);
+	$groups = array_keys($groups);
+	$id_group = implode(',',$groups);
+	
+	$current_datetime = date('Y-m-d H:i:s', time());
+
+	$sql = sprintf("SELECT title,content,`date`,creator
+				FROM tnewsboard WHERE id_group IN (%s) AND 
+								(expire = 0 OR (expire = 1 AND expire_timestamp > '%s'))
+				ORDER BY `date` DESC
+				LIMIT %s", $id_group, $current_datetime, $limit);
+
+	$news = get_db_all_rows_sql ($sql);
+	
+	if (empty($news)) {
+		$news = array();
+	}
+	
+	return $news;
+}
 ?>

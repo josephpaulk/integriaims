@@ -490,6 +490,11 @@ if ($clean_output == 0) {
 					echo "</script>";
 				}
 				
+				if (get_parameter ('login', 0) !== 0) {
+					// Display news dialog
+					include_once("general/news_dialog.php");
+				}
+				
 				// Page loader / selector
 				if ($sec2 != "") {
 					if (file_exists ($sec2.".php")) {
