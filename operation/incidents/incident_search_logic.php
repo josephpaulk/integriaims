@@ -225,7 +225,11 @@ echo '</select>';
 echo '</form>';
 echo '</div>';
 
-incidents_search_result($filter, false, false, true);
+if ($filter_form['group_by_project']) {
+	incidents_search_result_group_by_project ($filter);
+} else {
+	incidents_search_result($filter, false, false, true);
+}
 
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="stats_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=stats" style="clear: both">';

@@ -41,6 +41,7 @@ $filter['order_by'] = (string) get_parameter ('search_order_by', '');
 $filter['from_date'] = (string) get_parameter('search_from_date', '');
 $filter['first_date'] = (string) get_parameter('search_first_date', '');
 $filter['last_date'] = (string) get_parameter('search_last_date', '');
+$filter['group_by_project'] = (bool) get_parameter('group_by_project');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 
@@ -71,6 +72,9 @@ echo "</div>";
 
 //Configure some actions to send forms stats
 $(document).ready(function () {
+
+	hide_all_rows();
+	
 	$("#search_form_submit").click(function (event) {
 		event.preventDefault();
 		$("#search_form").submit();
@@ -84,9 +88,19 @@ $(document).ready(function () {
 	$("#pdf_report_submit").click(function (event) {
 		event.preventDefault();
 		$("#pdf_report_form").submit();
-	});
-	
+	});	
 });
 
+function hide_all_rows() {
+	$("tr[class$='-task']").hide();
+}
+
+function check_rows(id_task) {
+	if ($("tr[class$='"+id_task+"-task']").css('display') != "none") {
+		$("tr[class$='"+id_task+"-task']").hide();
+	} else {
+		$("tr[class$='"+id_task+"-task']").show();
+	}
+} 
 
 </script>

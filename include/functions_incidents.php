@@ -71,6 +71,7 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
 	$filters['resolution'] = isset ($filters['resolution']) ? $filters['resolution'] : '';
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
+	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -2655,5 +2656,475 @@ function incidents_get_sla_graph_seconds ($incidents) {
 	}
 
 	return $total_seconds;
+}
+
+function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false) {
+	global $config;
+	
+	/* Set default values if none is set */
+	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
+	$filters['status'] = isset ($filters['status']) ? $filters['status'] : -10;
+	$filters['priority'] = isset ($filters['priority']) ? $filters['priority'] : -1;
+	$filters['id_group'] = isset ($filters['id_group']) ? $filters['id_group'] : -1;
+	$filters['id_company'] = isset ($filters['id_company']) ? $filters['id_company'] : 0;
+	$filters['id_inventory'] = isset ($filters['id_inventory']) ? $filters['id_inventory'] : 0;
+	$filters['id_incident_type'] = isset ($filters['id_incident_type']) ? $filters['id_incident_type'] : 0;
+	$filters['id_user'] = isset ($filters['id_user']) ? $filters['id_user'] : '';
+	$filters['id_user_or_creator'] = isset ($filters['id_user_or_creator']) ? $filters['id_user_or_creator'] : '';
+	$filters['from_date'] = isset ($filters['from_date']) ? $filters['from_date'] : 0;
+	$filters['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
+	$filters['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';	
+	$filters['id_creator'] = isset ($filters['id_creator']) ? $filters['id_creator'] : '';
+	$filters['editor'] = isset ($filters['editor']) ? $filters['editor'] : '';
+	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
+	$filters['resolution'] = isset ($filters['resolution']) ? $filters['resolution'] : '';
+	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
+	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
+	$filters["id_task"] = isset ($filters['id_task']) ? $filters['id_task'] : -1;
+	
+	if (empty ($filters['status']))
+		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
+	
+	// Not closed
+	if ($filters["status"] == -10)
+		$filters['status'] = "1,2,3,4,5,6";
+
+	$resolutions = get_incident_resolutions ();
+	
+	$sql_clause = '';
+	if ($filters['priority'] != -1)
+		$sql_clause .= sprintf (' AND prioridad = %d', $filters['priority']);
+	if ($filters['id_group'] != 1)
+		$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
+	if (! empty ($filters['id_user']))
+		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
+	if (! empty ($filters['id_user_or_creator']))
+		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
+	if (! empty ($filters['resolution']) && $filters['resolution'] > -1)
+		$sql_clause .= sprintf (' AND resolution = %d', $filters['resolution']);
+	if ($filters['id_task'] == 0) {
+		$sql_clause .= sprintf (' AND id_task = 0');
+	} else if ($filters['id_task'] != -1) {
+		$sql_clause .= sprintf (' AND id_task = %d', $filters['id_task']);
+	}
+	
+	//Incident type 0 means all and incident type -1 means without type
+	if ($filters["id_incident_type"] != -1) {
+
+		if ($filters["id_incident_type"]) {
+			$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
+		}
+
+		$incident_fields = array();
+		
+		foreach ($filters as $key => $value) {
+			// If matchs an incident field, ad an element to the array with their real id and its data
+			if (preg_match("/^type_field_/", $key)) {
+				$incident_fields[preg_replace("/^type_field_/", "", $key)] = $value;
+			}
+		}
+		
+		foreach ($incident_fields as $id => $data) {
+			if ($data !== "") {
+				$sql_clause .= sprintf (' AND id_incidencia = ANY (SELECT id_incident
+																	FROM tincident_field_data
+																	WHERE id_incident_field = "%s"
+																		AND data LIKE "%%%s%%")', $id, $data);
+			}
+		}
+	}
+
+	if (! empty ($filters['from_date']) && $filters['from_date'] > 0) {
+
+		$last_date_seconds = $filters['from_date'] * 24 * 60 * 60;
+		$filters['first_date'] = date('Y-m-d H:i:s', time() - $last_date_seconds);
+		$sql_clause .= sprintf (' AND inicio >= "%s"', $filters['first_date']);
+		$filters['last_date'] = "";
+
+	} else {
+
+		if (! empty ($filters['first_date'])) {
+			$time = strtotime ($filters['first_date']);
+			//00:00:00 to set date at the beginig of the day
+			$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d 00:00:00", $time));
+		}
+		if (! empty ($filters['last_date'])) {
+			$time = strtotime ($filters['last_date']);
+			if (! empty ($filters['first_date'])) {
+				//23:59:59 to set date at the end of day
+				$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d 23:59:59", $time));
+			} else {
+				$time_from = strtotime ($filters['first_date']);
+				if ($time_from < $time)
+					$sql_clause .= sprintf (' AND inicio <= "%s"',
+						date ("Y-m-d", $time));
+			}
+		}
+	}
+	
+	if (! empty ($filters['id_creator']))
+		$sql_clause .= sprintf (' AND id_creator = "%s"', $filters['id_creator']);
+		
+	if (! empty ($filters['editor']))
+		$sql_clause .= sprintf (' AND editor = "%s"', $filters['editor']);
+		
+	if (! empty ($filters['closed_by']))
+		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
+	
+	if ($filters['order_by'] && !is_array($filters['order_by'])) {
+		$order_by_array = json_decode(clean_output($filters["order_by"]), true);
+	} else {
+		$order_by_array = $filters['order_by'];
+	}
+
+	//Use config block size if no other was given
+	if ($limit) {
+		if (!isset($filters["limit"])) {
+			$filters["limit"] = $config["block_size"];
+		}
+	}
+
+	$order_by = "";
+
+	if ($order_by_array) {
+		foreach ($order_by_array as $key => $value) {
+			if ($value) {
+				$order_by .= " $key $value, ";
+			}
+		}
+	}
+	
+	switch ($mode) {
+		case 'count':
+			//Just count items
+			$sql = sprintf ('SELECT COUNT(id_incidencia) FROM tincidencia FD
+				WHERE estado IN (%s)
+				%s
+				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
+				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
+				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))',
+				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
+				$filters['string'],$filters['string'], $filters['string']);
+		
+			$count = get_db_value_sql($sql);
+			
+			if ($count === false) {
+				return 0;
+			}
+			return $count;
+		break;
+		case 'tasks':
+			$sql = sprintf ('SELECT id_task FROM tincidencia FD
+				WHERE estado IN (%s)
+				%s
+				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
+				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
+				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+				GROUP BY id_task',
+				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
+				$filters['string'],$filters['string'], $filters['string']);
+		
+			$tasks = get_db_all_rows_sql ($sql);
+			
+			if ($tasks === false) {
+				return false;
+			}
+			return $tasks;
+		break;
+		case 'tickets':
+		default:
+			//Select all items and return all information
+			$sql = sprintf ('SELECT * FROM tincidencia FD
+				WHERE estado IN (%s)
+				%s
+				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
+				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
+				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+				ORDER BY %s actualizacion DESC',
+				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
+				$filters['string'],$filters['string'], $filters['string'], $order_by);
+
+			$incidents = get_db_all_rows_sql ($sql);
+
+			if ($incidents === false)
+				return false;
+		
+			$result = array ();
+			foreach ($incidents as $incident) {
+				
+				//Check external users ACLs
+				$external_check = enterprise_hook("manage_external", array($incident));
+
+				if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+					continue;
+				} else {
+				
+					//Normal ACL pass if IR for this group or if the user is the incident creator
+					//or if the user is the owner or if the user has workunits
+					
+					$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
+					
+					if (!$check_acl)
+						continue;		
+						
+				}
+				
+				$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+				
+				if ($filters['id_inventory']) {
+					$found = false;
+					foreach ($inventories as $inventory) {
+						if ($inventory['id'] == $filters['id_inventory']) {
+							$found = true;
+							break;
+						}
+					}
+				
+					if (! $found)
+						continue;
+				}
+			
+				if ($filters['id_company']) {
+					$found = false;
+					$user_creator = $incident['id_creator'];
+					$user_company = get_db_value('id_company', 'tusuario', 'id_usuario', $user_creator);
+
+					//If company do no match, dismiss incident
+					if ($filters['id_company'] != $user_company) {
+						continue;
+					}
+				}
+				
+				array_push ($result, $incident);
+			}	
+			return $result;
+		break;
+	}
+}
+
+/*Filters or display result for incident search*/
+function incidents_search_result_group_by_project ($filter, $ajax=false, $return_incidents = false, $print_result_count = false) {
+	global $config;
+
+	// ----------------------------------------
+	// Here we print the result of the search
+	// ----------------------------------------
+	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+
+	echo '<thead>';
+	echo "<tr>";
+	echo "<th>";
+	echo print_checkbox ('incidentcb-all', "", false, true);
+	echo "</th>";
+	echo "<th>";
+	echo __('ID');
+	echo "</th>";
+	echo "<th>";
+	echo __('SLA');
+	echo "</th>";
+	echo "<th>";
+	echo __('Ticket');
+	echo "</th>";
+	echo "<th>";
+	echo __('Group')."<br><i>".__('Company')."</i>";
+	echo "</th>";
+	echo "<th>";
+	echo __('Status')."<br><i>".__('Resolution')."</i>";
+	echo "</th>";
+	echo "<th>";
+	echo __('Priority');
+	echo "</th>";
+	echo "<th style='width: 70px;'>";
+	echo __('Updated')."<br><i>".__('Started')."</i>";
+	echo "</th>";
+
+	if ($config["show_creator_incident"] == 1)
+		echo "<th>";
+		echo __('Creator');	
+		echo "</th>";
+	if ($config["show_owner_incident"] == 1)
+		echo "<th>";
+		echo __('Owner');	
+		echo "</th>";
+
+	echo "</tr>";
+	echo '</thead>';
+	echo "<tbody>";
+
+	$tasks_in_tickets = incidents_get_filter_tickets_tree ($filter, 'tasks');
+	if ($tasks_in_tickets === false) {
+		$tasks_in_tickets = array();
+	}
+
+	$i = 0;
+	$tickets_str = '';
+	$add_no_project = false;
+	foreach ($tasks_in_tickets as $task_ticket) {
+		if ($i == 0) {
+			$tickets_str = $task_ticket['id_task'];
+		} else {
+			$tickets_str .= ','.$task_ticket['id_task'];
+		}
+		if ($task_ticket['id_task'] == 0) {
+			$add_no_project = true;
+		}
+		$i++;
+	}
+	$sql = "SELECT t1.name as n_task, t2.name as n_project, t1.id as id_task FROM ttask t1, tproject t2
+		WHERE t1.id_project=t2.id AND t1.id IN ($tickets_str)
+		ORDER BY t2.name";
+		
+	$tickets = get_db_all_rows_sql($sql);
+	if ($tickets === false) {
+		$tickets = array();
+	}
+	if ($add_no_project) {
+		$tickets[$i]['id_task'] = 0;
+		$tickets[$i]['n_project'] = __('No associated project');
+	}
+
+	foreach ($tickets as $task_ticket) {
+		$task = get_db_row('ttask', 'id', $task_ticket['id_task']);
+		
+		$img = print_image ("images/input_create.png", true, array ("style" => 'vertical-align: middle;', "id" => $img_id));
+		$img_task = print_image ("images/project_information.png", true, array ("style" => 'vertical-align: middle;'));
+		
+		//tickets in task
+		$filter['id_task'] = $task_ticket['id_task'];
+		$tickets_in_task = incidents_get_filter_tickets_tree ($filter, 'tickets');
+		$count_tickets = count($tickets_in_task);
+			
+		//print ticket with task
+		if ($task_ticket['id_task'] != 0) {
+			$project_name = $task_ticket['n_project'].' - '. $task_ticket['n_task'];
+			
+		} else {
+			$project_name = $task_ticket['n_project'];
+		}
+		
+		//print project-task
+		echo '<tr><td colspan="10" valign="top">';
+		echo "
+		<a onfocus='JavaScript: this.blur()' href='javascript: check_rows(\"" . $task_ticket['id_task']. "\")'>" .
+		$img . "&nbsp;" . $img_task ."&nbsp;" .  safe_output($project_name)."&nbsp;" ."($count_tickets)"."</a>"."&nbsp;&nbsp;";
+		echo '</td></tr>';
+
+		foreach ($tickets_in_task as $incident) {
+
+			$class = $task_ticket['id_task']."-task";
+			if ($incident["estado"] < 3 )
+				$tr_status = 'class="red_row '.$class.'"';
+			elseif ($incident["estado"] < 6 )
+				$tr_status = 'class="yellow_row"';
+			else
+				$tr_status = 'class="green_row"';
+
+			echo '<tr '.$tr_status.' id="incident-'.$incident['id_incidencia'].'"';
+
+			echo " style='border-bottom: 1px solid #ccc;' >";
+			echo '<td>';
+			print_checkbox_extended ('incidentcb-'.$incident['id_incidencia'], $incident['id_incidencia'], false, '', '', 'class="cb_incident"');
+			echo '</td>';
+			
+			//Print incident link if not ajax, if ajax link to js funtion to replace parent
+			$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
+			
+			if ($ajax) {
+				$link = "javascript:update_parent('".$incident["id_incidencia"]."')";
+			}
+			
+			echo '<td>';
+			echo '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
+			
+			// SLA Fired ?? 
+			if ($incident["affected_sla_id"] != 0)
+				echo '<td width="25"><img src="images/exclamation.png" /></td>';
+			else
+				echo '<td></td>';
+			
+			echo '<td>';
+							
+			echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
+			echo "<span style='font-size:11px;font-style:italic'>";
+			echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
+			
+			$sql = sprintf("SELECT *
+							FROM tincident_type_field
+							WHERE id_incident_type = %d", $incident["id_incident_type"]);
+			$config['mysql_result_type'] = MYSQL_ASSOC;
+			$type_fields = get_db_all_rows_sql($sql);
+			
+			$type_fields_values_text = "";
+			if ($type_fields) {
+				foreach ($type_fields as $type_field) {
+					if ($type_field["show_in_list"]) {
+						$field_data = get_db_value_filter("data", "tincident_field_data", array ("id_incident" => $incident["id_incidencia"], "id_incident_field" => $type_field["id"]));
+						if ($field_data) {
+							if ($type_field["type"] == "textarea") {
+								$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
+							}
+							$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[$field_data]</div>";
+						}
+					}
+				}
+			}
+			echo "&nbsp;$type_fields_values_text";
+			
+			echo '</span></td>';
+			echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
+			if ($config["show_creator_incident"] == 1){	
+				$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
+				if($id_creator_company != 0) {
+					$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
+					echo "<br><span style='font-size:11px;font-style:italic'>$company_name</span>";
+				}
+			}
+			echo '</td>';
+			$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
+
+			echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';
+
+			// priority
+			echo '<td>';
+			print_priority_flag_image ($incident['prioridad']);
+			$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
+			if ($last_wu["id_user"] == $incident["id_creator"]){
+				echo "<br><img src='images/comment.gif' title='".$last_wu["id_user"]."'>";
+			}
+
+			echo '</td>';
+			
+			echo '<td style="font-size:11px;">'.human_time_comparation ($incident["actualizacion"]);
+		
+			// Show only if it's different
+			if ($incident["inicio"] != $incident["actualizacion"]){
+				echo "<br><em>[". human_time_comparation ($incident["inicio"]);
+				echo "]</em>";
+			}
+			echo "<br>";
+			echo '<span style="font-size:9px;">';
+			echo $last_wu["id_user"];
+			echo "</span>";
+			echo '</td>';
+			
+			if ($config["show_creator_incident"] == 1){	
+				echo "<td class='f9'>";
+				$incident_creator = $incident["id_creator"];
+				echo substr($incident_creator,0,12);
+				echo "</td>";
+			}
+			
+			if ($config["show_owner_incident"] == 1){	
+				echo "<td class='f9'>";
+				$incident_owner = $incident["id_usuario"];
+				echo substr($incident_owner,0,12);
+				echo "</td>";
+			}
+			
+			echo '</tr>';
+		}
+	}
+	echo '</tbody>';
+	echo '</table>';
 }
 ?>

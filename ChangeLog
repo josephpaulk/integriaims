@@ -1,3 +1,11 @@
+2014-07-17  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_form.php
+	  include/functions_incidents.php
+	  operation/incidents/incident_search.php
+	  operation/incidents/incident_search_logic.php: Added
+	view tickets grouped by project/task.
+
 2014-07-11  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* index.php

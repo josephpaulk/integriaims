@@ -930,6 +930,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_creator = (string) get_parameter ('search_creator');
 		$search_editor = (string) get_parameter ('search_editor');
 		$search_closed_by = (string) get_parameter ('search_creator');
+		$group_by_project = (bool) get_parameter('group_by_project');
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -954,6 +955,8 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_creator = (string) $filter['id_creator'];
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
+		$group_by_project = (bool) $filter['group_by_project'];
+
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 
@@ -1062,6 +1065,8 @@ function form_search_incident ($return = false, $filter=false) {
 			
 	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
 		$search_id_incident_type, 'javascript:change_type_fields_table();', __('All'), 0, true, false, false, __('Ticket type'));
+		
+	$table->data[4][3] = print_checkbox_extended ('group_by_project', 1, $group_by_project, false, '', '', true, __('Group by project/task'));
 
 	$table_type_fields = new stdclass;
 	$table_type_fields->width = "100%";
