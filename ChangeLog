@@ -1,5 +1,11 @@
 2014-07-23  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/help/en/help_workflow_conditions.php
+	  include/help/es/help_workflow_conditions.php: Added
+	files.
+
+2014-07-23  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_dbdata.sql
 	  godmode/setup/setup_maintenance.php
 	  include/integria_cron.php: Changed maintenance of
