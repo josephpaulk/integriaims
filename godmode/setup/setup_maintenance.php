@@ -43,6 +43,7 @@ if ($update) {
 	$config["max_days_wo"] = (int) get_parameter ("max_days_wo", 365);
 	$config["max_days_audit"] = (int) get_parameter ("max_days_audit", 15);
 	$config["max_days_session"] = (int) get_parameter ("max_days_session", 7);
+	$config["max_days_workflow_events"] = (int) get_parameter ("max_days_workflow_events", 900);
 	
 	update_config_token ("max_days_events", $config["max_days_events"]);
 	update_config_token ("max_days_incidents", $config["max_days_incidents"]);
@@ -50,6 +51,7 @@ if ($update) {
 	update_config_token ("max_days_wo", $config["max_days_wo"]);
 	update_config_token ("max_days_audit", $config["max_days_audit"]);
 	update_config_token ("max_days_session", $config["max_days_session"]);
+	update_config_token ("max_days_workflow_events", $config["max_days_workflow_events"]);
 }
 
 $table->width = '99%';
@@ -71,6 +73,9 @@ $table->data[2][0] = print_input_text ("max_days_audit", $config["max_days_audit
 $table->data[2][0] .= integria_help ("old_audit", true);
 $table->data[2][1] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions'));
 $table->data[2][1] .= integria_help ("old_sessions", true);
+
+$table->data[3][0] = print_input_text ("max_days_workflow_events", $config["max_days_workflow_events"], '', 4, 4, true, __('Days to delete workflow events'));
+$table->data[3][0] .= integria_help ("old_workflow_events", true);
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Reset to default'), 'reset_button', false, 'class="sub upd"', true);
@@ -94,6 +99,7 @@ $(document).ready (function () {
 		$("#text-max_days_wo").val("");
 		$("#text-max_days_audit").val("");
 		$("#text-max_days_session").val("");
+		$("#text-max_days_workflow_events").val("");
 	});
 });
 </script>

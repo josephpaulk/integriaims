@@ -115,24 +115,12 @@ $filter_form = $filter;
 
 $has_im  = give_acl ($config['id_user'], $filter_form['id_group'], "IM");
 
-/* Create a custom saved search*/
-if ($create_custom_search && !$id_search) {
-	$form_values = get_parameter ('form_values');
-	$search_name = (string) get_parameter ('search_name');
-	
-	if ($filter['order_by'] && !is_array($filter['order_by'])) {
-		$filter['order_by'] = json_decode(clean_output($filter['order_by']), true);
-	}
-	
-	$result = create_custom_search ($search_name, 'incidents', $filter);
-	
-	if ($result === false) {
-		echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
-	}
-	else {
-		echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
-	}
-}
+echo '<div id="msg_ok_hidden" style="display:none;">';
+	echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+echo '</div>';
+echo '<div id="msg_error_hidden" style="display:none;">';
+	echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+echo '</div>';
 
 /* Get a custom search*/
 if ($id_search && !$delete_custom_search) {
@@ -357,6 +345,34 @@ $(document).ready(function () {
 		parent_search_form('');
 	});
 	
+	$("#submit-save-search").click (function () {
+		search_name = $('#text-search_name').val();
+
+		search_values = get_form_input_values ('search_incident_form');
+		
+		values = get_form_input_values (this);
+		values.push ({name: "page", value: "operation/incidents/incident_search"});
+		$(search_values).each (function () {
+			values.push ({name: "form_values["+this.name+"]", value: this.value});
+		});
+		values.push ({name: "create_custom_search", value: 1});
+		values.push ({name: "search_name", value: search_name});
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				if (status == 'success') {
+					$("#msg_ok_hidden").show ();
+					msg = "Custom search saved";
+				} else {
+					$("#msg_error_hidden").show ();
+					msg = "Could not create custom search";
+				}
+				location.reload();
+			},
+			"html"
+		);
+		return false;
+	});
 });
 
 function changeIncidentOrder(element, order) {

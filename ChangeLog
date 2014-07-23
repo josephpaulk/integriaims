@@ -1,3 +1,20 @@
+2014-07-23  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_dbdata.sql
+	  godmode/setup/setup_maintenance.php
+	  include/integria_cron.php: Changed maintenance of
+	'tevent'.
+
+	* include/help/en/help_old_workflow_events.php
+	  include/help/es/help_old_workflow_events.php: Added
+	files.
+
+	* include/functions_form.php
+	  include/functions_incidents.php
+	  operation/incidents/incident_search.php
+	  operation/incidents/incident_search_logic.php: Fixed
+	custom search.
+
 2014-07-17  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_form.php

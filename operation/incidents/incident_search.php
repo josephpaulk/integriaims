@@ -17,6 +17,33 @@
 
 check_login ();
 
+if (defined ('AJAX')) {
+	$create_custom_search = get_parameter('create_custom_search');
+	$search_name = get_parameter('search_name');
+	$form_values = get_parameter('form_values');
+
+	$filter['string'] = $form_values['search_string'];
+	$filter['status'] = $form_values['search_status'];
+	$filter['priority'] = $form_values['search_priority'];
+	$filter['id_group'] = $form_values['search_id_group'];
+	$filter['resolution'] = $form_values['search_resolution'];
+	$filter['id_product'] = $form_values['search_id_product'];
+	$filter['id_company'] = $form_values['search_id_company'];
+	$filter['id_inventory'] = $form_values['id_inventory'];
+	$filter['id_incident_type'] = $form_values['search_id_incident_type'];
+	$filter['id_user'] = $form_values['search_id_user'];
+	$filter['id_creator'] = $form_values['search_id_creator'];
+	$filter['editor'] = $form_values['search_editor'];
+	$filter['closed_by'] = $form_values['search_closed_by'];
+	$filter['order_by'] = $form_values['search_order_by'];
+	$filter['from_date'] = $form_values['search_from_date'];
+	$filter['first_date'] = $form_values['search_first_date'];
+	$filter['last_date'] = $form_values['search_last_date'];
+	$filter['group_by_project'] = $form_values['search_group_by_project'];
+	
+	$result = create_custom_search ($search_name, 'incidents', $filter);
+}
+
 global $config;
 
 $option = get_parameter("option", "search");
@@ -41,7 +68,7 @@ $filter['order_by'] = (string) get_parameter ('search_order_by', '');
 $filter['from_date'] = (string) get_parameter('search_from_date', '');
 $filter['first_date'] = (string) get_parameter('search_first_date', '');
 $filter['last_date'] = (string) get_parameter('search_last_date', '');
-$filter['group_by_project'] = (bool) get_parameter('group_by_project');
+$filter['group_by_project'] = (bool) get_parameter('search_group_by_project');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 

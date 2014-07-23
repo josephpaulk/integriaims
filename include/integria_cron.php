@@ -204,6 +204,7 @@ function run_daily_check () {
 	delete_old_wu_data();
 	delete_old_wo_data();
 	delete_old_sessions_data();
+	delete_old_workflow_event_data();
 }
 
 
@@ -854,7 +855,7 @@ function delete_old_audit_data () {
 }
 
 /**
- * This function deletes tevent data with more than X days
+ * This function deletes tevent data with more than X days. This function doesn't delete workflow events.
  */
 function delete_old_event_data () {
     global $config;
@@ -863,7 +864,8 @@ function delete_old_event_data () {
     
     if ($DELETE_DAYS > 0) {
 		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
-		$sql = "DELETE FROM tevent WHERE timestamp < '$limit'";
+		$sql = "DELETE FROM tevent WHERE timestamp < '$limit'
+			AND `type` NOT LIKE '%WORKFLOW%'";
 		process_sql ($sql);
 	}
 }
@@ -1054,6 +1056,22 @@ function cron_validate_all_newsletter_address() {
 	}
 	
 	return;
+}
+
+/**
+ * This function deletes tevent workflow data with more than X days.
+ */
+function delete_old_workflow_event_data () {
+    global $config;
+   
+    $DELETE_DAYS = (int) $config["max_days_workflow_events"];
+    
+    if ($DELETE_DAYS > 0) {
+		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
+		$sql = "DELETE FROM tevent WHERE timestamp < '$limit'
+			AND `type` LIKE '%WORKFLOW%'";
+		process_sql ($sql);
+	}
 }
 
 // ---------------------------------------------------------------------------

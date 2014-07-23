@@ -2987,7 +2987,7 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 		$task = get_db_row('ttask', 'id', $task_ticket['id_task']);
 		
 		$img = print_image ("images/input_create.png", true, array ("style" => 'vertical-align: middle;', "id" => $img_id));
-		$img_task = print_image ("images/project_information.png", true, array ("style" => 'vertical-align: middle;'));
+		$img_task = print_image ("images/task.png", true, array ("style" => 'vertical-align: middle;'));
 		
 		//tickets in task
 		$filter['id_task'] = $task_ticket['id_task'];
@@ -3012,12 +3012,13 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 		foreach ($tickets_in_task as $incident) {
 
 			$class = $task_ticket['id_task']."-task";
+			$tr_status = 'class="'.$class.'"';
 			if ($incident["estado"] < 3 )
 				$tr_status = 'class="red_row '.$class.'"';
 			elseif ($incident["estado"] < 6 )
-				$tr_status = 'class="yellow_row"';
+				$tr_status = 'class="yellow_row '.$class.'"';
 			else
-				$tr_status = 'class="green_row"';
+				$tr_status = 'class="green_row '.$class.'"';
 
 			echo '<tr '.$tr_status.' id="incident-'.$incident['id_incidencia'].'"';
 
