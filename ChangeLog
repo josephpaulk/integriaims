@@ -1,6 +1,16 @@
 2014-07-23  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/help/en/help_workflow_conditions.php
+	  include/help/es/help_workflow_conditions.php: Modified
+	help.
+
+	* images/help/workflow_actions.png
+	  images/help/workflow_actions2.png
+	  images/help/workflow_conditions.png: Added images.
+
+2014-07-23  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/help/en/help_workflow_conditions.php
 	  include/help/es/help_workflow_conditions.php: Added
 	files.
 

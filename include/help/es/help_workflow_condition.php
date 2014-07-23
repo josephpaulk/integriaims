@@ -18,3 +18,22 @@ Necesita enviar un email de aviso a un coordinador, cuando una incidencia de pri
 <br>
 Simplemente tiene que rellenar en la condición “Match all fields”, el grupo específico y la prioriad muy alta, solo para incidencias asignadas. En “Time Update” escogeremos un mes.
 </p>
+
+<p>
+<?php print_image("images/help/workflow_conditions.png", false); ?>
+</p>
+
+<p>
+Al añadir la acción de enviar un mail, se creará automáticamente la accion de actualizar el ticket, que dejaremos tal cual, para actualizar el ticket y evitar que siga saltando la regla. 
+</p>
+
+<p>
+<?php print_image("images/help/workflow_actions.png", false, false); ?>
+</p>
+<p>
+<?php print_image("images/help/workflow_actions2.png", false, false); ?>
+</p>
+<p>
+Al pasar una semana, si no se ha actualizado la incidencia, volverá a saltar la regla y asi de forma indefinida.
+</p>
+

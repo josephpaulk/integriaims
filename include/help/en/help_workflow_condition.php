@@ -1,4 +1,4 @@
-<h1>Workflow conditions</h1>
+<h1>Condiciones de reglas de flujo de trabajo</h1>
 
 <p>
 En general las reglas de workflow se dispararán UNA SOLA vez, de forma que si establece una regla para cambiar por ejemplo, el usuario asignado a la incidencia cuando una incidencia tenga más de 30 dias de vida, y el usuario asignado es X, pero luego manualmente alguien vuelve a poner ese usuario X, la regla NO se volverá a disparar. La única excepción de este comportamiento es cuando la condición es el tiempo de actualización.
@@ -18,3 +18,22 @@ Necesita enviar un email de aviso a un coordinador, cuando una incidencia de pri
 <br>
 Simplemente tiene que rellenar en la condición “Match all fields”, el grupo específico y la prioriad muy alta, solo para incidencias asignadas. En “Time Update” escogeremos un mes.
 </p>
+
+<p>
+<?php print_image("images/help/workflow_conditions.png", false); ?>
+</p>
+
+<p>
+Al añadir la acción de enviar un mail, se creará automáticamente la accion de actualizar el ticket, que dejaremos tal cual, para actualizar el ticket y evitar que siga saltando la regla. 
+</p>
+
+<p>
+<?php print_image("images/help/workflow_actions.png", false, false); ?>
+</p>
+<p>
+<?php print_image("images/help/workflow_actions2.png", false, false); ?>
+</p>
+<p>
+Al pasar una semana, si no se ha actualizado la incidencia, volverá a saltar la regla y asi de forma indefinida.
+</p>
+
