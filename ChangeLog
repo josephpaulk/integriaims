@@ -1,5 +1,10 @@
 2014-07-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/download/browse.php: Now is possible to delete
+	repository files from the file releases creator.
+
+2014-07-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* extras/mr/11.sql: Added file. New MR11.
 
 2014-07-23  Vanessa Gil <vanessa.gil@artica.es>

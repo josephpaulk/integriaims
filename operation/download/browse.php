@@ -126,6 +126,29 @@ if (defined ('AJAX')) {
 		echo json_encode($result);
 		return;
 	}
+
+	$delete_file = (bool) get_parameter("delete_file");
+	if ($delete_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+
+		if (!give_acl($config["id_user"], 0, "FRW")) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a file without privileges");
+			$result["message"] = __('Error');
+			echo json_encode($result);
+			return;
+		}
+
+		$file = (string) clean_output(get_parameter("file"));
+		if ($file) {
+			$file_path = $config["homedir"]. "/". "attachment/downloads/" . $file;
+			$result["status"] = unlink ($file_path);
+		}
+		
+		echo json_encode($result);
+		return;
+	}
 }
 
 $delete_btn = get_parameter ("delete_btn", 0);
@@ -324,6 +347,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo 			"<td width=\"30%\">";
 			echo 				print_select ($files_not_in, 'location', $location, '', __('Select'), 0, true, 0, false, __('Choose file from repository'));
 			echo 				"&nbsp;" . integria_help ("choose_download", true);
+			echo 				print_image("images/cross.png", true, array('class' => 'delete', 'style' => 'display: none;'));
 			echo 		"</table>";
 			echo 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
 			echo 	"</div>";
@@ -551,17 +575,46 @@ function form_upload () {
 
 	$('#drop_file select').change(function() {
 		var value = $('#drop_file select').val();
-		
-		if ( value != 0 && selectedRF.indexOf(value) == -1 ) {
-			selectedRF.push(value);
 
-			var item = addListItem (100, value, 0);
-			item.addClass('working');
-			
-			var form_div = addForm (item, value);
-			
+		if (value != 0) {
+			$('#drop_file img.img_help').hide();
+			$('#drop_file img.delete').show();
+
+			if (selectedRF.indexOf(value) == -1) {
+				
+				selectedRF.push(value);
+
+				var item = addListItem (100, value, 0);
+				item.addClass('working');
+				
+				var form_div = addForm (item, value);
+			}
+
+		} else {
+			$('#drop_file img.delete').hide();
+			$('#drop_file img.img_help').show();
 		}
 	});
+
+	$('#drop_file img.delete')
+		.css('cursor', 'pointer')
+		.click(function(e) {
+			var file = $('#drop_file select').find(':selected').val();
+			$('#drop_file select').find(':selected').remove();
+			$('#drop_file select').val(0).change();
+			
+			$('form#form-file_releases ul>li[data-file="' + file + '"]>span').click();
+			jQuery.ajax({
+				url: 'ajax.php',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					page: 'operation/download/browse',
+					delete_file: 1,
+					file: file
+				}
+			});
+		});
 
 	// Initialize the jQuery File Upload plugin
 	$('#form-file_releases').fileupload({
@@ -633,10 +686,10 @@ function form_upload () {
 	});
 
 	function addListItem (progress, filename, filesize) {
-		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+		var tpl = $('<li data-file="' + filename + '"><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
 			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
 			'<div class="download_form"></div></li>');
-		
+
 		// Append the file name and file size
 		tpl.find('p').text(filename);
 		if (filesize > 0) {
