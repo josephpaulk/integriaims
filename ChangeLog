@@ -1,3 +1,7 @@
+2014-07-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* extras/mr/11.sql: Added file. New MR11.
+
 2014-07-23  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/help/en/help_workflow_conditions.php
