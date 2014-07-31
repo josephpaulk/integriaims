@@ -187,36 +187,59 @@ if ($export_csv_inventory) {
 	$rows = $aux_rows;
 }
 
-ob_end_clean();
+if (empty($rows))
+	die(__('Empty data'));
 
-// CSV Output
-header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-header ('Content-Type: text/css; charset=utf-8');	
+$csv_head = implode(';', array_keys($rows[0]));
+$csv_lines = array();
 
-// Header
-echo safe_output (implode (',', array_keys ($rows[0])))."\n";
+$search = array();
+// Delete \r !!!
+$search[] = "&#x0d;";
+$search[] = "\r";
+// Delete \n !!!
+$search[] = "&#x0a;";
+$search[] = "\n";
+// Delete " !!!
+$search[] = '"';
+// Delete ' !!!
+$search[] = "'";
 
 // Item / data
 foreach ($rows as $row) {
 
-	// Delete \r !!!
-	$row = str_replace ("&#x0d;", " ",  $row);
+	$line = array();
 
-	// Delete \n !!
-	$row = str_replace ("&#x0a;", " ",  $row);
+	foreach ($row as $value) {
+		$cell = str_replace ($search, " ", safe_output($value));
+		// Change ; !!	
+		$cell = str_replace (";", ",", $cell);
 
-	// Delete , !!	
-	$row = str_replace (",", " ",  $row);
+		$line[] = $cell;
+	}
 
-	$buffer = safe_output (implode (',', $row))."\n";
-	// Delete " !!!
-
-	$buffer = str_replace ('"', " ",  $buffer);
-
-	// Delete ' !!!
-	$buffer = str_replace ("'", " ",  $buffer);
-
-	echo $buffer;
+	$line = implode(';', $line);
+	$csv_lines[] = $line;
 }
+
+ob_end_clean();
+
+// CSV Output
+header ('Content-Type: text/csv; charset=UTF-8');
+header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
+
+// Header
+echo $csv_head . "\n";
+
+$standard_encoding = (bool) $config['csv_standard_encoding'];
+
+// Item / data
+foreach ($csv_lines as $line) {
+	if ($standard_encoding)
+		echo $line . "\n";
+	else
+		echo mb_convert_encoding($line, 'UTF-16LE', 'UTF-8') . "\n";
+}
+
 exit;	
 ?>

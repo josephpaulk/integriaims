@@ -57,6 +57,7 @@ if ($update) {
 	$config["access_port"] = get_parameter("access_port", "");
 	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_NAME"]);
 	$config["loginhash_pwd"] = get_parameter("loginhash_pwd", "");
+	$config["csv_standard_encoding"] = (int) get_parameter("csv_standard_encoding");
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -90,6 +91,8 @@ if ($update) {
 	update_config_token ("access_public", $config["access_public"]);
 
 	update_config_token ("loginhash_pwd", $config["loginhash_pwd"]);
+
+	update_config_token ("csv_standard_encoding", $config["csv_standard_encoding"]);
 	
 	if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
@@ -201,9 +204,15 @@ $table->data[6][1] = print_input_text ("access_port", $config["access_port"], ''
 $table->data[6][1] .= print_help_tip (__("Leave blank to use default port (80)"), true);
 
 $table->data[7][0] = print_input_text ("access_public", $config["access_public"],
-        '', 30, 50, true, __('Public access to server'));
+	'', 30, 50, true, __('Public access to server'));
 
 $table->data[7][0] .= print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true);
+
+$csv_standard_encoding = !isset($config['csv_standard_encoding']) ? false : (bool) $config['csv_standard_encoding'];
+$table->data[7][1] = print_label(__('CSV encoding type'), '', '', true);
+$table->data[7][1] .=  __('Excel') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 0, '', $csv_standard_encoding, true);
+$table->data[7][1] .= print_help_tip (__("The Excel type may not be compatible with other applications"), true);
+$table->data[7][1] .=  '&nbsp;&nbsp;' . __('Other') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 1, '', $csv_standard_encoding, true);
 
 $table->data[8][0] = print_input_hidden ('update', 1, true);
 $table->data[8][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
