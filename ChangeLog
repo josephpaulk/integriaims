@@ -1,3 +1,18 @@
+2014-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* images/custom_screens/widgets,
+	  images/custom_screens/widgets/custom_url.png,
+	  images/custom_screens/widgets/downloads.png,
+	  images/custom_screens/widgets/knowledgebase.png,
+	  images/custom_screens/widgets/status.png,
+	  images/custom_screens/widgets/ticket.png,
+	  images/custom_screens/widgets/ticket_simple.png,
+	  images/custom_screens/widgets/timesheet.png,
+	  images/custom_screens/widgets/view_tickets.png,
+	  images/custom_screens/widgets/view_tickets_simple.png,
+	  images/custom_screens/widgets/warning.png,
+	  images/custom_screens/widgets/wikipedia.png: Added files.
+	  
 2014-07-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* godmode/setup/setup.php: Added a new token to choose
