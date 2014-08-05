@@ -116,17 +116,23 @@ if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
 	echo "<div>|</div></li>";
 }
 
-/*
-// Setup
-if (isset($config["id_user"]) && dame_admin($config["id_user"]) && $show_setup != MENU_HIDDEN) {
-	// Setup
-	if ($sec == "godmode" )
-		echo "<li id='current' class='setup'>";
-	else
-		echo "<li class='setup'>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
+
+// Custom Screens
+if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+	if (!empty($custom_screens)) {
+		foreach ($custom_screens as $id => $custom_screen) {
+			if (isset($custom_screen['menuEnabled']) && (bool) $custom_screen['menuEnabled']) {
+				if ($sec == "custom_screen-$id")
+					echo "<li id='current' class='custom_screen'>";
+				else
+					echo "<li class='custom_screen'>";
+				echo "<a href='index.php?sec=custom_screen-$id&sec2=enterprise/operation/custom_screens/custom_screens&id=$id'>" . $custom_screen['name'] . "</a>";
+				echo "<div>|</div></li>";
+			}
+		}
+	}
 }
-* */
 
 echo "</ul>";
 

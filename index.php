@@ -511,7 +511,20 @@ if ($clean_output == 0) {
 						echo "<h3 class='error'>".__('Page not found')."</h3>";
 					}
 				} else {
-					require ("general/home.php");  //default
+					$custom_screen_loaded = false;
+					if ($is_enterprise && (int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+						$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+						if (!empty($custom_screens)) {
+							foreach ($custom_screens as $id => $custom_screen) {
+								if (isset($custom_screen['homeEnabled']) && (bool) $custom_screen['homeEnabled']) {
+									enterprise_include('operation/custom_screens/custom_screens.php');
+									$custom_screen_loaded = true;
+								}
+							}
+						}
+					}
+					if (!$custom_screen_loaded)
+						require ("general/home.php");
 				}
 			?>
 			</div>

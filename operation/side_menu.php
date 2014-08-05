@@ -1013,6 +1013,9 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	// Pandora FMS translation
 	enterprise_include("godmode/sidemenu_translate_setup.php");
 
+	// Pandora FMS Custom Screens
+	enterprise_include("godmode/sidemenu_custom_screens_editor.php");
+
 	echo "</ul>";
 	echo "</div>";
 }
