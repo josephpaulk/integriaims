@@ -1,3 +1,8 @@
+2014-08-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/styles/integria.css: Fixed the max height of
+	the header images.
+
 2014-08-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* index.php,

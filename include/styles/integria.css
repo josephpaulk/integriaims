@@ -467,6 +467,9 @@ form.searchform input.button {
 	padding-bottom: 10px;
 }
 
+#header #logo_container img {
+	max-height: 33px;
+}
 
 .header_icons {
 	width: 160px;
