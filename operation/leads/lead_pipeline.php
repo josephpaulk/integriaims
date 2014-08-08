@@ -240,6 +240,13 @@ foreach ($progress as $k => $v) {
 			$lead_list .= "<div class='pipeline-list-owner'>".$owner."</div>";
 		}
 
+		if (!empty($l['estimated_close_date']) && $l['estimated_close_date'] != '0000-00-00 00:00:00') {
+
+			$estimated_close_date = date('Y-m-d', strtotime($l['estimated_close_date']));
+
+			$lead_list .= "<div title= '".__('Estimated close date')."' class='pipeline-list-estimated_close_date'>".$estimated_close_date."</div>";
+		}
+
 		// Detect is the lead is pretty old 
 		if (calendar_time_diff ($l["modification"]) > $lead_warning_time ){
 			$human_time_lead = human_time_comparation ($l['modification']);

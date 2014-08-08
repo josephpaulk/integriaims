@@ -1382,6 +1382,16 @@ function translate_lead_progress ($progress = 0){
 		return __("Other");
 }
 
+// Returns the "legend" for a given lead estimated close date
+// ----------------------------------------------
+
+function translate_lead_estimated_close_date ($estimated_close_date = "") {
+	if (!empty($estimated_close_date) && $estimated_close_date != '0000-00-00 00:00:00')
+		return date('Y-m-d', strtotime($estimated_close_date));
+	else
+		return __("None");
+}
+
 // Return an array with current legends for lead progress
 // ------------------------------------------------------
 

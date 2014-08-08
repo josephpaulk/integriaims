@@ -167,20 +167,42 @@ if ($create) {
 	$executive_overview = (string) get_parameter ('executive_overview');
 	$date_alarm = get_parameter('alarm_date', '');
 	$time_alarm = get_parameter('alarm_time', '');
+	$estimated_close_date = (string) get_parameter ('estimated_close_date');
 	
 	$datetime_alarm = $date_alarm.' '.$time_alarm;
 
-	$sql = sprintf ('INSERT INTO tlead (modification, creation, fullname, phone, mobile,
-			email, position, id_company, description, company, country, id_language, owner, estimated_sale, id_category, progress, id_campaign, executive_overview, alarm)
-			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s","%s")',
-			date('Y-m-d H:i:s'), date('Y-m-d H:i:s'), $fullname, $phone, $mobile, $email, $position,
-			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale, $id_category, $progress, $campaign, $executive_overview, $datetime_alarm);
-
-	$id = process_sql ($sql, 'insert_id');
+	$values = array(
+			'modification' => date('Y-m-d H:i:s'),
+			'creation' => date('Y-m-d H:i:s'),
+			'fullname' => $fullname,
+			'phone' => $phone,
+			'mobile' => $mobile,
+			'email' => $email,
+			'position' => $position,
+			'id_company' => $id_company,
+			'description' => $description,
+			'company' => $company,
+			'country' => $country,
+			'id_language' => $id_language,
+			'owner' => $owner,
+			'estimated_sale' => $estimated_sale,
+			'id_category' => $id_category,
+			'progress' => $progress,
+			'id_campaign' => $campaign,
+			'executive_overview' => $executive_overview,
+			'alarm' => $datetime_alarm,
+			'estimated_close_date' => $estimated_close_date
+		);
+	$id = process_sql_insert('tlead', $values);
 
 	$datetime =  date ("Y-m-d H:i:s");
-	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Created lead");
-	process_sql ($sql);
+	$values = array(
+			'id_lead' => $id,
+			'id_user' => $config["id_user"],
+			'timestamp' => $datetime,
+			'description' => "Created lead"
+		);
+	process_sql_insert('tlead_history', $values);
 	
 	//create agenda entry
 	if ($date_alarm != '') {
@@ -196,13 +218,16 @@ if ($create) {
 		$title = '';
 		$duration = 0;
 		$description = "ALARM: LEAD ".$fullname;
-		$sql = sprintf ('INSERT INTO tagenda (public, alarm, timestamp, id_user,
-				title, duration, description)
-				VALUES (%d, "%s", "%s %s", "%s", "%s", %d, "%s")',
-				$public, $alarm, $date, $time, $config['id_user'], $title,
-				$duration, $description);
-
-		$result = process_sql ($sql);
+		$values = array(
+				'public' => $public,
+				'alarm' => $alarm,
+				'timestamp' => $date . " " . $time,
+				'id_user' => $config['id_user'],
+				'title' => $title,
+				'duration' => $duration,
+				'description' => $description
+			);
+		$result = process_sql_insert('tagenda', $values);
 	}
 	
 	if ($id === false) {
@@ -282,24 +307,40 @@ if ($update) { // if modified any parameter
 	$time_alarm = get_parameter('alarm_time', '');
 	$datetime_alarm = $date_alarm.' '.$time_alarm;
 	$executive_overview = (string) get_parameter ('executive_overview');
+	$estimated_close_date = (string) get_parameter ('estimated_close_date');
 
 	// Detect if it's a progress change
 
-	$old_progress = get_db_value  ('progress', 'tlead', 'id', $id);
+	$old_progress = get_db_value ('progress', 'tlead', 'id', $id);
+	$old_estimated_close_date = get_db_value ('estimated_close_date', 'tlead', 'id', $id);
 	
-	$old_alarm = get_db_value  ('alarm', 'tlead', 'id', $id);
-	$old_name = get_db_value  ('fullname', 'tlead', 'id', $id);
+	$old_alarm = get_db_value ('alarm', 'tlead', 'id', $id);
+	$old_name = get_db_value ('fullname', 'tlead', 'id', $id);
 
-	$sql = sprintf ('UPDATE tlead
-		SET modification = "%s", description = "%s", fullname = "%s", phone = "%s",
-		mobile = "%s", email = "%s", position = "%s",
-		id_company = %d, country = "%s", owner = "%s", progress = %d , id_language = "%s", estimated_sale = "%s" , 
-		company = "%s", id_category = %d , id_campaign = %d, alarm = "%s", executive_overview="%s" WHERE id = %d',
-		date('Y-m-d H:i:s'), $description, $fullname, $phone, $mobile, $email, $position,
-		$id_company, $country, $owner, $progress, $id_language, $estimated_sale, $company, $id_category, 
-		$id_campaign, $datetime_alarm, $executive_overview, $id);
+	$values = array(
+			'modification' => date('Y-m-d H:i:s'),
+			'description' => $description,
+			'fullname' => $fullname,
+			'phone' => $phone,
+			'mobile' => $mobile,
+			'email' => $email,
+			'position' => $position,
+			'id_company' => $id_company,
+			'country' => $country,
+			'owner' => $owner,
+			'progress' => $progress,
+			'id_language' => $id_language,
+			'estimated_sale' => $estimated_sale,
+			'company' => $company,
+			'id_category' => $id_category,
+			'id_campaign' => $id_campaign,
+			'alarm' => $datetime_alarm,
+			'executive_overview' => $executive_overview,
+			'estimated_close_date' => $estimated_close_date
+		);
+	$where = array('id' => $id);
 
-	$result = process_sql ($sql);
+	$result = process_sql_update('tlead', $values, $where);
 	if ($result === false) {
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
@@ -308,17 +349,27 @@ if ($update) { // if modified any parameter
 
 		$datetime =  date ("Y-m-d H:i:s");	
 
-		if ($old_progress != $progress){
+		$values = array(
+				'id_lead' => $id,
+				'id_user' => $config["id_user"],
+				'timestamp' => $datetime,
+				'description' => "Lead updated"
+			);
+		$result = process_sql_insert('tlead_history', $values);
 
-			$label = translate_lead_progress($old_progress) . " -> " . translate_lead_progress ($progress);
+		if ($old_progress != $progress || $old_estimated_close_date != $estimated_close_date) {
 
-			$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Lead progress updated. $label");
-		} else {
-		
-			$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Lead updated");
+			if ($old_progress != $progress) {
+				$label = translate_lead_progress($old_progress) . " -> " . translate_lead_progress ($progress);
+				$values['description'] = "Lead progress updated. $label";
+				$result = process_sql_insert('tlead_history', $values);
+			}
+			else if ($old_estimated_close_date != $estimated_close_date) {
+				$label = translate_lead_estimated_close_date($old_estimated_close_date) . " -> " . translate_lead_estimated_close_date($estimated_close_date);
+				$values['description'] = "Lead estimated close date updated. $label";
+				$result = process_sql_insert('tlead_history', $values);
+			}
 		}
-
-		$result = process_sql ($sql);
 		
 		if ($datetime_alarm != $old_alarm) {
 			if ($date_alarm == '') {
@@ -348,16 +399,19 @@ if ($update) { // if modified any parameter
 				$title = '';
 				$duration = 0;
 				$description = "ALARM: LEAD ".$fullname;
-				$sql = sprintf ('INSERT INTO tagenda (public, alarm, timestamp, id_user,
-						title, duration, description)
-						VALUES (%d, "%s", "%s %s", "%s", "%s", %d, "%s")',
-						$public, $alarm, $date, $time, $config['id_user'], $title,
-						$duration, $description);
-
-				$result = process_sql ($sql);
+				
+				$values = array(
+						'public' => $public,
+						'alarm' => $alarm,
+						'timestamp' => $date . " " . $time,
+						'id_user' => $config['id_user'],
+						'title' => $title,
+						'duration' => $duration,
+						'description' => $description
+					);
+				$result = process_sql_insert('tagenda', $values);
 			}
 		}
-
 	}
 }
 
@@ -370,12 +424,18 @@ if ($close) {
 		exit;
 	}
 
-	$sql = sprintf ('UPDATE tlead SET progress = 100 WHERE id = %d', $id);
-	$result = process_sql ($sql);
+	$values = array('progress' => 100);
+	$where = array('id' => $id);
+	$result = process_sql_update('tlead', $values, $where);
 
 	if ($result > 0) {
-		$datetime =  date ("Y-m-d H:i:s");	
-		$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Lead closed");
+		$values = array(
+				'id_lead' => $id,
+				'id_user' => $config["id_user"],
+				'timestamp' => date ("Y-m-d H:i:s"),
+				'description' => "Lead closed"
+			);
+		process_sql_insert('tlead_history', $values);
 
 		echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
 		$id = 0;
@@ -532,6 +592,7 @@ if ($id || $new) {
 		$id_category = (int) get_parameter ('product');
 		$campaign = (int) get_parameter ("campaign");
 		$executive_overview = (string)get_parameter('executive_overview');
+		$estimated_close_date = (string) get_parameter ('estimated_close_date');
 		$alarm_date = get_parameter('alarm_date');
 		$alarm_time = get_parameter('alarm_time');
 
@@ -561,6 +622,7 @@ if ($id || $new) {
 		$alarm = explode(' ', $alarm);
 		$alarm_date = $alarm[0];
 		$alarm_time = $alarm[1];
+		$estimated_close_date = $lead['estimated_close_date'];
 	}
 	
 	// Show tabs
@@ -694,21 +756,22 @@ if ($id || $new) {
 		$table->data[3][0] = print_input_text ("estimated_sale", $estimated_sale, "", 12, 100, true, __('Estimated sale'));
 		$table->data[3][0] .= print_help_tip (__("Use only integer values, p.e: 23000 instead 23,000 or 23,000.00"), true);
 
-		$progress_values = lead_progress_array ();
-
-		$table->data[3][1] = print_select ($progress_values, 'progress', $progress, '', '', 0, true, 0, false, __('Lead progress') );
+		$estimated_close_date = !empty($estimated_close_date) && $estimated_close_date != '0000-00-00 00:00:00' ? date("Y-m-d", strtotime($estimated_close_date)) : "";
+		$table->data[3][1] = print_input_text ("estimated_close_date", $estimated_close_date, "", 15, 20, true, __('Estimated close date'));
 
 		$table->data[4][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
-		$table->data[4][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
+
+		$progress_values = lead_progress_array ();
+
+		$table->data[4][1] = print_select ($progress_values, 'progress', $progress, '', '', 0, true, 0, false, __('Lead progress') );
+
 		$table->data[5][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
-		
-		$languages = crm_get_all_languages();
-		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, true,  __('Language'));
+
+		$table->data[5][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		
 		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __("Owner") )
 		. print_help_tip (__("Type at least two characters to search"), true);
-
 
 		// Show delete control if its owned by the user
 		if ($id && ( ($config["id_user"] == $owner) || dame_admin($config["id_user"]) ) ){
@@ -734,6 +797,11 @@ if ($id || $new) {
 				<img src='images/award_star_silver_1.png'></a>";
 		}
 		
+		$languages = crm_get_all_languages();
+		$table->data[6][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, true,  __('Language'));
+		
+		$table->data[7][0] = "<b>". __("Creation / Last update"). "</b><br><span style='font-size: 10px'>";
+		$table->data[7][0] .=  "$creation / $modification </span>";
 
 		$params = array();
 		$params['input_id'] = 'id_company';
@@ -741,23 +809,20 @@ if ($id || $new) {
 		$params['input_value'] = $id_company;
 		$params['title'] = __('Managed by');
 		$params['return'] = true;
-		$table->data[6][1] = print_company_autocomplete_input($params);
+		$table->data[7][1] = print_company_autocomplete_input($params);
 
 		if ($id_company) {
-			$table->data[6][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
-			$table->data[6][1] .= "<img src='images/company.png'></a>";
+			$table->data[7][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+			$table->data[7][1] .= "<img src='images/company.png'></a>";
 		}
-
-		$table->data[7][0] = "<b>". __("Creation / Last update"). "</b><br><span style='font-size: 10px'>";
-		$table->data[7][0] .=  "$creation / $modification </span>";
-
-		$table->data[7][1] = combo_kb_products ($id_category, true, 'Product type', true);
 
 		$table->data[8][0] = print_input_text ("executive_overview", $executive_overview, "", 60, 100, true, __('Executive overview'));
 		
-		$table->data[8][1] = print_input_text ("alarm_date", $alarm_date, "", 15, 20, true, __('Alarm - date'));
-		$table->data[8][1] .= print_input_text ("alarm_time", $alarm_time, "", 15, 20, true, __('Alarm - time'));
-		$table->data[8][1] .= '&nbsp;'.print_image("images/cross.png", true, array("onclick" => "cleanAlarm()"));
+		$table->data[8][1] = combo_kb_products ($id_category, true, 'Product type', true);
+
+		$table->data[9][0] = "<div style=\"display: inline-block;\">" . print_input_text ("alarm_date", $alarm_date, "", 15, 20, true, __('Alarm - date')) . "</div>&nbsp;";
+		$table->data[9][0] .= "<div style=\"display: inline-block;\">" . print_input_text ("alarm_time", $alarm_time, "", 15, 20, true, __('Alarm - time')) . "</div>";
+		$table->data[9][0] .= '&nbsp;'.print_image("images/cross.png", true, array("onclick" => "cleanAlarm()"));
 		
 		
 		$table->data[10][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
@@ -1218,6 +1283,7 @@ if ($id || $new) {
 
 function datepicker_hook () {
 	add_datepicker ('input[name*="alarm_date"]', null);
+	add_datepicker ('input#text-estimated_close_date', null);
 }
 
 add_ranged_datepicker ("#text-start_date_search", "#text-end_date_search", null);

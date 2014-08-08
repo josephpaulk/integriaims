@@ -1,3 +1,19 @@
+2014-08-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/styles/integria.css: Created a new style for
+	the estimated close date in the pipeline.
+
+	* include/functions_form.php: Added the function
+	"translate_lead_estimated_close_date".
+	
+	* operation/leads/lead_detail.php: Improved the insertions
+	and updates. Added the new item: estimated close date.
+
+	* operation/leads/lead_pipeline.php: Now the estimated
+	close date are showed below the owner if exists.
+
+	* extras/mr/12.sql: Added file. New MR12.
+
 2014-08-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/styles/integria.css: Fixed the max height of
