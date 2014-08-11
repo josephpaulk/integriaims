@@ -30,6 +30,10 @@ if (!$read) {
 
 $id = (int) get_parameter ('id');
 
+$filter = (bool) get_parameter ('filter');
+$order_item = (string) get_parameter ('order_item', 'estimated_sale');
+$show_closed = (int) get_parameter ('show_closed');
+
 $search_text = (string) get_parameter ('search_text');
 $id_company = (int) get_parameter ('id_company_search');
 $last_date = (int) get_parameter ('last_date_search');
@@ -61,11 +65,11 @@ echo "</h1>";
 
 $where_clause = '';
 
-if ($est_sale != ""){
+if ($est_sale != "") {
 	$where_clause .= " AND estimated_sale >= $est_sale ";
 }
 
-if ($id_language != ""){
+if ($id_language != "") {
 	$where_clause .= " AND id_language = '$id_language' ";
 }
 
@@ -73,7 +77,7 @@ if ($show_not_owned) {
 	$where_clause .= " AND owner = '' ";
 }
 
-if ($owner != ""){
+if ($owner != "") {
 	$where_clause .= sprintf (' AND owner =  "%s"', $owner);
 }
 
@@ -89,7 +93,6 @@ if ($id_company) {
 if ($last_date) {
 	$last_date_seconds = $last_date * 24 * 60 * 60;
 	$start_date = date('Y-m-d H:i:s', time() - $last_date_seconds);
-	//$end_date = date('Y-m-d H:i:s');
 	$end_date = "";
 }
 
@@ -137,14 +140,33 @@ $progress = lead_progress_array ();
 
 $i = 0;
 foreach ($progress as $k => $v) {
-	//Only display open leads
-	if ($k > 80) {
-		break;
+	// The leads are closed from the 100
+	if ($k >= 100) {
+		if ((bool)$show_closed && ($k == 100 || $k >= 200)) {
+			if ($k >= 200) {
+				$where = "WHERE 1=1 $where_clause AND progress = $k AND UNIX_TIMESTAMP(modification) > " . (time() - SECONDS_1YEAR);
+			}
+			else {
+				$v = __('Closed unsuccessfully');
+				$progress_closed = array();
+				foreach ($progress as $progress_value => $progress_description) {
+					if ($progress_value >= 100 && $progress_value < 200)
+						$progress_closed[] = $progress_value;
+				}
+				if (empty($progress_closed))
+					continue;
+				$where = "WHERE 1=1 $where_clause AND progress IN (".implode(",", $progress_closed).") AND UNIX_TIMESTAMP(modification) > " . (time() - SECONDS_3MONTHS);
+			}
+		}
+		else {
+			continue;
+		}
 	}
-	
-	//Get statistics for $k status
-	$leads = crm_get_all_leads ("WHERE 1=1 $where_clause AND progress = $k", "ORDER BY estimated_sale DESC");
-	
+	else {
+		$where = "WHERE 1=1 $where_clause AND progress = $k";
+	}
+	$leads = crm_get_all_leads ($where, "ORDER BY $order_item DESC");
+
 	if(!$leads) {
 		$leads = array();
 		$num_leads = 0;
@@ -247,13 +269,40 @@ foreach ($progress as $k => $v) {
 			$lead_list .= "<div title= '".__('Estimated close date')."' class='pipeline-list-estimated_close_date'>".$estimated_close_date."</div>";
 		}
 
-		// Detect is the lead is pretty old 
-		if (calendar_time_diff ($l["modification"]) > $lead_warning_time ){
+		// Detect if the lead is pretty old 
+		if (calendar_time_diff ($l["modification"]) > $lead_warning_time) {
 			$human_time_lead = human_time_comparation ($l['modification']);
 
 			$time_title = sprintf (__("Updated %s ago"), $human_time_lead);
 		
 			$lead_list .= "<img class='pipeline-warning-icon' src='images/header_warning.png' title='".$time_title."' alt='".$time_title."'>";
+		}
+
+		// Detect if the lead have specific changes in the last 7 days
+		$sql = sprintf("SELECT id_lead, id_user, description, UNIX_TIMESTAMP(timestamp) AS datetime
+						FROM tlead_history
+						WHERE id_lead = %d
+							AND UNIX_TIMESTAMP(timestamp) >= %d
+						ORDER BY datetime DESC", $l['id'], time() - SECONDS_1WEEK);
+		$lead_history = process_sql($sql);
+		
+		if ($lead_history !== false) {
+			$changes_info = array();
+			foreach ($lead_history as $id => $entry) {
+				if (preg_match("/^Lead .+ updated\. .*$/", $entry['description'])) {
+					$changes_info[] = date("Y-m-d H:i:s", $entry['datetime']) . ": " . safe_output($entry['description']);
+				}
+			}
+			if (!empty($changes_info)) {
+				$changes_info_size = count($changes_info);
+				$changes_info_title = "";
+				foreach ($changes_info as $key => $change_info) {
+					$changes_info_title .= $change_info;
+					if ($key < $changes_info_size -1)
+						$changes_info_title .=  "\n\n";
+				}
+				$lead_list .= "<img class='pipeline-changes-icon' src='images/info.png' title='".$changes_info_title."' alt='".$changes_info_title."'>";
+			}
 		}
 
 		$lead_list .= $l["estimated_sale"]." ".$config["currency"];
@@ -282,6 +331,46 @@ foreach ($progress as $k => $v) {
 	$i++;
 }
 
+// Filter button
+echo "<div id='button-bar-title' style='float:left; margin-left: 7px; padding-bottom: 3px; margin-top: 5px;'>";
+echo "<ul>";
+echo "<li style='padding: 3px;'>";
+echo "<a href='javascript:' onclick='toggleDiv (\"pipeline_filter\")'>".__('Filter form')."</a>";
+echo "</li>";
+echo "</ul>";
+echo "</div>";
+
+// Filter form
+$table_filter = new stdClass;
+$table_filter->id = 'pipeline_filter_form_table';
+$table_filter->width = '99%';
+$table_filter->class = 'search-table';
+$table_filter->data = array();
+
+$row = array();
+$sql = sprintf ('SELECT id, name FROM tcustom_search
+				 WHERE id_user = "%s"
+					 AND section = "leads"
+				 ORDER BY name',
+				 $config['id_user']);
+$order_items = array(
+		'estimated_sale' => __('Estimated sale'),
+		'modification' => __('Modification date'),
+		'estimated_close_date' => __('Estimated close date')
+	);
+$row[] = print_select($order_items, 'order_item', $order_item, '', '', 0, true, false, false, __('Order by'));
+$row[] = print_checkbox('show_closed', 1, (bool)$show_closed, true, __('Show closed leads'));
+$row[] = print_submit_button(__('Filter'), 'filter', false, 'class="sub save" style="margin-top: 13px;"', true);
+
+$table_filter->data[] = $row;
+
+echo '<div id="pipeline_filter" style="display: none;">';
+echo '<form id="form-pipeline_filter" method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=pipeline&$params">';
+print_table($table_filter);
+echo '</form>';
+echo '</div>';
+
+// Table pipeline
 print_table($table);
 
 ?>

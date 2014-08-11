@@ -1,11 +1,11 @@
 
 /* Function to hide/unhide a specific Div id */
-function toggleDiv (div) {
-	if (typeof div == "string") {
-		$("#" + div).toggle ();
-	} else {
-		$(div).toggle ();
-	}
+function toggleDiv (div, animate) {
+	var item = (typeof div == "string") ? $("#" + div) : $(div);
+	if (typeof animate !== "undefined" && animate == true)
+		item.slideToggle();
+	else
+		item.toggle();
 }
 
 function winopeng (url, wid) {

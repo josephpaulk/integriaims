@@ -215,7 +215,7 @@ if ($create) {
 			$time = date ('H:i');
 		}
 		$datetime = $date.' '.$time;
-		$title = '';
+		$title = 'LEAD #'.$id;
 		$duration = 0;
 		$description = "ALARM: LEAD ".$fullname;
 		$values = array(
@@ -264,10 +264,13 @@ if ($make_owner){
 	}
 
 	// Update lead with current user/company to take ownership of the lead.
-	$sql = sprintf ('UPDATE tlead
-		SET id_company = %d, owner = "%s" WHERE id = %d',
-		$id_company, $id_user, $id);
-	$result = process_sql ($sql);
+	$values = array(
+			'id_company' => $id_company,
+			'owner' => $id_user,
+			'modification' => date('Y-m-d H:i:s')
+		);
+	$where = array('id' => $id);
+	$result = process_sql_update('tlead', $values, $where);
 
 	// Add tracking info.
 	$datetime =  date ("Y-m-d H:i:s");
@@ -305,17 +308,29 @@ if ($update) { // if modified any parameter
 	$id_campaign = (int) get_parameter ('campaign');
 	$date_alarm = get_parameter('alarm_date', '');
 	$time_alarm = get_parameter('alarm_time', '');
-	$datetime_alarm = $date_alarm.' '.$time_alarm;
+	$datetime_alarm = !empty($time_alarm) ? $date_alarm.' '.$time_alarm : $date_alarm;
 	$executive_overview = (string) get_parameter ('executive_overview');
 	$estimated_close_date = (string) get_parameter ('estimated_close_date');
 
 	// Detect if it's a progress change
 
-	$old_progress = get_db_value ('progress', 'tlead', 'id', $id);
-	$old_estimated_close_date = get_db_value ('estimated_close_date', 'tlead', 'id', $id);
+	$old_progress = false;
+	$old_estimated_close_date = false;
+	$old_estimated_sale = false;
 	
-	$old_alarm = get_db_value ('alarm', 'tlead', 'id', $id);
-	$old_name = get_db_value ('fullname', 'tlead', 'id', $id);
+	$old_alarm = false;
+	$old_name = false;
+
+	$old_lead = process_sql("SELECT * FROM tlead WHERE id = $id");
+	if (!empty($old_lead)) {
+		$old_lead = $old_lead[0];
+		$old_progress = !empty($old_lead['progress']) ? $old_lead['progress'] : false;
+		$old_estimated_close_date = !empty($old_lead['estimated_close_date']) ? date('Y-m-d', strtotime($old_lead['estimated_close_date'])) : false;
+		$old_estimated_sale = !empty($old_lead['estimated_sale']) ? $old_lead['estimated_sale'] : false;
+		
+		$old_alarm = !empty($old_lead['alarm']) ? $old_lead['alarm'] : false;
+		$old_name = !empty($old_lead['fullname']) ? $old_lead['fullname'] : false;
+	}
 
 	$values = array(
 			'modification' => date('Y-m-d H:i:s'),
@@ -347,7 +362,7 @@ if ($update) { // if modified any parameter
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		audit_db ($config['id_user'], '', "Lead updated", "Lead named '$fullname' has been updated");
 
-		$datetime =  date ("Y-m-d H:i:s");	
+		$datetime = date ("Y-m-d H:i:s");	
 
 		$values = array(
 				'id_lead' => $id,
@@ -357,36 +372,55 @@ if ($update) { // if modified any parameter
 			);
 		$result = process_sql_insert('tlead_history', $values);
 
-		if ($old_progress != $progress || $old_estimated_close_date != $estimated_close_date) {
+		if (($old_progress !== false && $old_progress != $progress)
+				|| ($old_estimated_close_date !== false && $old_estimated_close_date != $estimated_close_date)
+				|| ($old_estimated_sale !== false && $old_estimated_sale != $estimated_sale)) {
 
 			if ($old_progress != $progress) {
-				$label = translate_lead_progress($old_progress) . " -> " . translate_lead_progress ($progress);
+				$label = translate_lead_progress($old_progress) . " -> " . translate_lead_progress($progress);
 				$values['description'] = "Lead progress updated. $label";
 				$result = process_sql_insert('tlead_history', $values);
 			}
-			else if ($old_estimated_close_date != $estimated_close_date) {
+			if ($old_estimated_close_date != $estimated_close_date) {
 				$label = translate_lead_estimated_close_date($old_estimated_close_date) . " -> " . translate_lead_estimated_close_date($estimated_close_date);
 				$values['description'] = "Lead estimated close date updated. $label";
 				$result = process_sql_insert('tlead_history', $values);
 			}
+			if ($old_estimated_sale != $estimated_sale) {
+				$label = translate_lead_estimated_sale($old_estimated_sale) . " -> " . translate_lead_estimated_sale($estimated_sale);
+				$values['description'] = "Lead estimated sale updated. $label";
+				$result = process_sql_insert('tlead_history', $values);
+			}
 		}
 		
-		if ($datetime_alarm != $old_alarm) {
-			if ($date_alarm == '') {
-				$old_description = "ALARM: LEAD ".$old_name;
-				$sql = "DELETE FROM tagenda WHERE timestamp='$old_alarm' AND description='$old_description'";
+		if (!empty($old_alarm) && $old_alarm != '0000-00-00 00:00:00' && !empty($old_name) && (empty($datetime_alarm) || $datetime_alarm == '0000-00-00 00:00:00')) {
 
-				$res = process_sql ($sql);
-			} else {
-				if ($time_alarm == '') {
-					$time_alarm = date ('H:i');
-				}
-				$values['timestamp'] = $datetime_alarm;
-				$id_agenda = get_db_value_sql("SELECT id FROM tagenda WHERE timestamp='$old_alarm' AND description='$old_alarm'");
-				process_sql_update('tagenda', $values, array('id'=>$id_agenda));
+			$old_description = "ALARM: LEAD ".$old_name;
+			$sql = "DELETE FROM tagenda WHERE timestamp = '$old_alarm' AND description = '$old_description'";
+			$res = process_sql ($sql);
+		}
+		else if (!empty($date_alarm) && $date_alarm != '0000-00-00') {
+
+			if ($time_alarm == '') {
+				$time_alarm = date ('H:i');
+				$datetime_alarm = $date_alarm ." ". $time_alarm;
 			}
-			
-			if ($old_alarm == '0000-00-00 00:00:00') {
+
+			if (!empty($old_alarm) && !empty($old_name) && $old_alarm != '0000-00-00 00:00:00') {
+
+				$old_description = "ALARM: LEAD ".$old_name;
+				$description = "ALARM: LEAD ".$fullname;
+
+				$id_agenda = get_db_value_sql("SELECT id FROM tagenda WHERE timestamp = '$old_alarm' AND description = '$old_description'");
+				$values = array(
+						'timestamp' => $datetime_alarm,
+						'id_user' => $config['id_user'],
+						'description' => $description
+					);
+				process_sql_update('tagenda', $values, array('id' => $id_agenda));
+			}
+			else if (empty($old_alarm) || $old_alarm == '0000-00-00 00:00:00') {
+
 				$public = 0;
 				$alarm = 60;
 				$date = $date_alarm;
@@ -396,7 +430,7 @@ if ($update) { // if modified any parameter
 					$time = date ('H:i');
 				}
 				$datetime = $date.' '.$time;
-				$title = '';
+				$title = 'LEAD #'.$id;
 				$duration = 0;
 				$description = "ALARM: LEAD ".$fullname;
 				
@@ -411,6 +445,7 @@ if ($update) { // if modified any parameter
 					);
 				$result = process_sql_insert('tagenda', $values);
 			}
+			
 		}
 	}
 }

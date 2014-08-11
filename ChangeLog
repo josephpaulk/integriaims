@@ -1,3 +1,24 @@
+2014-08-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/constants.php: Added new constants with the seconds
+	contained in some date ranges.
+
+	* include/constants.php: Added the function
+	"translate_lead_estimated_sale". Fixed the function
+	"translate_lead_estimated_close_date".
+
+	* include/js/integria.js: Now the function "toggleDiv"
+	can toggle the elements with a slide animation.
+
+	* operation/leads/lead_detail.php: Fixed the lead alarm
+	functionality. Added more elements to the lead tracking.
+	Minor fixes.
+
+	* operation/leads/lead_pipeline.php: Now some elements
+	show an icon with certain changes on the last 7 days.
+	Now is possible to change the order of the elements.
+	Now is possible to show the closed leads.
+
 2014-08-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/styles/integria.css: Created a new style for

@@ -2495,6 +2495,12 @@ img.pipeline-warning-icon {
 	width: 18px;
 }
 
+img.pipeline-changes-icon {
+	float: left;
+	margin-right: 10px;
+	width: 18px;
+}
+
 table.conversion_rate td{
 	padding-top: 36px;
 	padding-bottom: 37px;

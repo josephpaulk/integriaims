@@ -1372,7 +1372,7 @@ function combo_lead_progress ($actual = 0, $disabled = 0, $label = "", $return =
 // Returns the "legend" for a given lead progress
 // ----------------------------------------------
 
-function translate_lead_progress ($progress = 0){
+function translate_lead_progress ($progress = 0) {
 
 	$lead_progress = lead_progress_array();
 
@@ -1386,8 +1386,19 @@ function translate_lead_progress ($progress = 0){
 // ----------------------------------------------
 
 function translate_lead_estimated_close_date ($estimated_close_date = "") {
-	if (!empty($estimated_close_date) && $estimated_close_date != '0000-00-00 00:00:00')
-		return date('Y-m-d', strtotime($estimated_close_date));
+	if (!empty($estimated_close_date) && ($unix_timestamp = strtotime($estimated_close_date)) > 0)
+		return date('Y-m-d', $unix_timestamp);
+	else
+		return __("None");
+}
+
+// Returns the "legend" for a given lead estimated close date
+// ----------------------------------------------
+
+function translate_lead_estimated_sale ($estimated_sale = "") {
+	global $config;
+	if (!empty($estimated_sale))
+		return $estimated_sale . " " . $config["currency"];
 	else
 		return __("None");
 }
@@ -1396,7 +1407,6 @@ function translate_lead_estimated_close_date ($estimated_close_date = "") {
 // ------------------------------------------------------
 
 function lead_progress_array (){
-
 
 	$lprogress = get_db_all_rows_in_table("tlead_progress");
 
