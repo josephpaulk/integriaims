@@ -121,13 +121,13 @@ if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
 if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
 	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
 	if (!empty($custom_screens)) {
-		foreach ($custom_screens as $id => $custom_screen) {
+		foreach ($custom_screens as $custom_screen_id => $custom_screen) {
 			if (isset($custom_screen['menuEnabled']) && (bool) $custom_screen['menuEnabled']) {
-				if ($sec == "custom_screen-$id")
+				if ($sec == "custom_screen-$custom_screen_id")
 					echo "<li id='current' class='custom_screen'>";
 				else
 					echo "<li class='custom_screen'>";
-				echo "<a href='index.php?sec=custom_screen-$id&sec2=enterprise/operation/custom_screens/custom_screens&id=$id'>" . $custom_screen['name'] . "</a>";
+				echo "<a href='index.php?sec=custom_screen-$custom_screen_id&sec2=enterprise/operation/custom_screens/custom_screens&id=$custom_screen_id'>" . $custom_screen['name'] . "</a>";
 				echo "<div>|</div></li>";
 			}
 		}
