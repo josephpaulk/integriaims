@@ -1,3 +1,7 @@
+2014-08-12  Sancho lerena <slerena@artica.es>
+
+	* extras/mr/12.sql: Fixed MODIFY TABLE, is an ADD.
+
 2014-08-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_form.php: Fixed an bug in the function

@@ -16,4 +16,7 @@
 -- ---------------------------------------------------------------------
 -- Table tcustom_screen (08/08/2014)
 -- ---------------------------------------------------------------------
-ALTER TABLE `tlead` MODIFY COLUMN `estimated_close_date` datetime NOT NULL default '0000-00-00 00:00:00';
+
+ALTER TABLE `tlead` ADD `estimated_close_date` datetime NOT NULL default '0000-00-00 00:00:00';
+
+
