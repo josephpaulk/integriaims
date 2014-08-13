@@ -1,3 +1,8 @@
+2014-08-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_form.php: Fixed an bug in the function
+	"combo_task_user_participant".
+
 2014-08-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/main_menu.php: Bugfix.

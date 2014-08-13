@@ -444,35 +444,29 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 		$values[-3] = "(*) ".__('Not justified');
 	}
 	
-	$sql = sprintf ('SELECT ttask.id, tproject.name, ttask.name 
+	$sql = sprintf ('SELECT ttask.id, tproject.name AS project_name, ttask.name AS task_name
 					FROM ttask, trole_people_task, tproject
 					WHERE ttask.id_project = tproject.id
 					AND tproject.disabled = 0
 					AND ttask.id = trole_people_task.id_task
 					AND trole_people_task.id_user = "%s" 
-					ORDER BY tproject.name, ttask.name', $id_user);
+					ORDER BY project_name, task_name', $id_user);
 	
 	//if (dame_admin ($id_user) && $multiple) {
 	if (dame_admin ($id_user)) {
-/*
-		$sql = 'SELECT ttask.id, tproject.name, ttask.name 
-				FROM ttask, trole_people_task, tproject
-				WHERE ttask.id_project = tproject.id
-					AND tproject.disabled = 0
-				ORDER BY tproject.name, ttask.name';
-*/
-		$sql = 'SELECT ttask.id, tproject.name, ttask.name 
+
+		$sql = 'SELECT ttask.id, tproject.name AS project_name, ttask.name AS task_name
 				FROM ttask, tproject
 				WHERE ttask.id_project = tproject.id
 					AND tproject.disabled = 0
-				ORDER BY tproject.name, ttask.name';
+				ORDER BY project_name, task_name';
 	}
 	
 	$tasks = get_db_all_rows_sql ($sql);
 
 	if ($tasks)
 	foreach ($tasks as $task){
-		$values[$task[0]] = array('optgroup' => $task[1], 'name' => '&nbsp;'.$task[2]);
+		$values[$task['id']] = array('optgroup' => $task['project_name'], 'name' => '&nbsp;'.$task['task_name']);
 	}
 	
 	
@@ -489,7 +483,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	if ($no_change) {
 		$nothing = __('No change');
 	}
-
+	
 	$output .= print_select ($values, $name, $actual, $script, $nothing, '0', true,
 		$multiple, false, $label);
 
