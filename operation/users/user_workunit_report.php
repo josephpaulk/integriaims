@@ -229,9 +229,9 @@ $alldata = get_db_all_rows_sql ($sql);
 foreach ($alldata as $row){ 
 	
 	if ($row["id"] != -1)
-        	show_workunit_user ($row[0], 1);
+        	show_workunit_user ($row['id'], 1);
 	else 
-		show_workunit_user ($row[0]);
+		show_workunit_user ($row['id']);
 }
 
 echo '<div id="show_multiple_edit">';

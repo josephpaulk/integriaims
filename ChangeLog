@@ -1,3 +1,8 @@
+2014-08-14  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/users/user_workunit_report.php: Fixed problems
+	listing wu. Ticket #1149.
+
 2014-08-12  Sancho lerena <slerena@artica.es>
 
 	* extras/mr/12.sql: Fixed MODIFY TABLE, is an ADD.
