@@ -14,7 +14,7 @@
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
 ('language_code','en_GB'),
 ('block_size','25'),
-('db_scheme_version','4.1'),
+('db_scheme_version','4.1.15'),
 ('db_scheme_build','140814'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
@@ -49,7 +49,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('current_package', 15),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
-('minor_release', 10);
+('minor_release', 12);
 
 -- Default password is 'integria'
 
