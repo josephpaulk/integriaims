@@ -2,8 +2,8 @@
 # Integria IMS	
 #
 %define name        IntegriaIMS
-%define version     4.0
-%define release     131205
+%define version     4.1
+%define release     15
 %define httpd_name  httpd
 # User and Group under which Apache is running
 %define httpd_name  apache2

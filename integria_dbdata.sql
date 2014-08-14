@@ -14,8 +14,8 @@
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
 ('language_code','en_GB'),
 ('block_size','25'),
-('db_scheme_version','4.1MR10'),
-('db_scheme_build','140405'),
+('db_scheme_version','4.1'),
+('db_scheme_build','140814'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management System'),
