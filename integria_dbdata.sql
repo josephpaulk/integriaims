@@ -46,7 +46,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_session', 7),
 ('max_days_workflow_events', 900),
 ('update_manager_installed', 1),
-('current_package', 9),
+('current_package', 15),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('minor_release', 10);
