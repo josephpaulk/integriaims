@@ -1,3 +1,7 @@
+2014-08-14  SAncho Lerena <slerena@artica.es>
+
+	* integria_demo.sql: Fixed outdated insert (missing cols)
+
 2014-08-14  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/users/user_workunit_report.php: Fixed problems

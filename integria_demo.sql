@@ -401,7 +401,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tnewsboard` WRITE;
 /*!40000 ALTER TABLE `tnewsboard` DISABLE KEYS */;
-INSERT INTO `tnewsboard` VALUES (1,'Welcome&#x20;to&#x20;Integria&#x20;4.0','Remember,&#x20;this&#x20;is&#x20;a&#x20;development&#x20;version.&#x20;Some&#x20;screens&#x20;are&#x20;ugly&#x20;yet,&#x20;but&#x20;will&#x20;be&#x20;much&#x20;nicer!.&#x20;Most&#x20;features&#x20;need&#x20;to&#x20;be&#x20;improved,&#x20;but&#x20;the&#x20;base&#x20;of&#x20;the&#x20;system&#x20;is&#x20;already&#x20;done.&#x0d;&#x0a;','2013-02-12 00:00:00');
+INSERT INTO `tnewsboard` VALUES (1,'Welcome&#x20;to&#x20;Integria&#x20;4.0','Remember,&#x20;this&#x20;is&#x20;a&#x20;development&#x20;version.&#x20;Some&#x20;screens&#x20;are&#x20;ugly&#x20;yet,&#x20;but&#x20;will&#x20;be&#x20;much&#x20;nicer!.&#x20;Most&#x20;features&#x20;need&#x20;to&#x20;be&#x20;improved,&#x20;but&#x20;the&#x20;base&#x20;of&#x20;the&#x20;system&#x20;is&#x20;already&#x20;done.&#x0d;&#x0a;','2013-02-12 00:00:00',0,0,0,'');
 /*!40000 ALTER TABLE `tnewsboard` ENABLE KEYS */;
 UNLOCK TABLES;
 
