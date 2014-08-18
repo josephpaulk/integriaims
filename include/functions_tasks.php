@@ -138,19 +138,19 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 	
 	//$sql_search = base64_encode($sql_search);
 
-	$sql_count = "SELECT COUNT(*)
+	$sql_count = "SELECT COUNT(*) AS num
 			FROM ttask t
 			WHERE t.id_parent_task=0
 				AND t.id>0
 				AND t.id_project=$id_project
 				$sql_search";
-			
+	
 	$countRows = process_sql ($sql_count);
 	
 	if ($countRows === false)
 		$countRows = 0;
 	else
-		$countRows = (int) $countRows[0][0];
+		$countRows = (int) $countRows[0]['num'];
 	
 	if ($countRows == 0) {
 		echo '<h3 class="error">'.__('No tasks found').'</h3>';

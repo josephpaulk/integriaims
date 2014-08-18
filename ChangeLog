@@ -1,4 +1,9 @@
-2014-08-14  SAncho Lerena <slerena@artica.es>
+2014-08-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_tasks.php: Fixed the items count
+	on the function "tasks_print_tree".
+
+2014-08-14  Sancho Lerena <slerena@artica.es>
 
 	* integria_demo.sql: Fixed outdated insert (missing cols)
 

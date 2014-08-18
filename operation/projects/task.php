@@ -617,8 +617,8 @@ if ($clean_output == 1) {
 	$color = 1;
 
 	show_task_tree ($table, $id_project, 0, 0, $where_clause);
-
-	if(empty($table->data)) {
+	
+	if (empty($table->data)) {
 		echo '<h3 class="error">'.__('No tasks found').'</h3>';
 	}
 	else {
