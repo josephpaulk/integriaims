@@ -127,7 +127,7 @@ if ($update) {
 		process_sql  ($sql_insert);
 		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('license', 'INTEGRIA-FREE');";
                 process_sql  ($sql_insert);
-		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('current_package', '0');";
+		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('current_package', '16');";
                 process_sql  ($sql_insert);
 		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php');";
                 process_sql  ($sql_insert);	

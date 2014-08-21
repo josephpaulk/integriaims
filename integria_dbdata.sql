@@ -46,11 +46,12 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_session', 7),
 ('max_days_workflow_events', 900),
 ('update_manager_installed', 1),
-('current_package', 15),
+('current_package', 16),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('minor_release', 12);
 
+-- Nota: Revisar tambien el valor por defecto de current package en godmode/setup/setup.php
 -- Default password is 'integria'
 
 INSERT INTO `tusuario` (id_usuario, nombre_real, password, comentarios, fecha_registro, direccion, telefono, nivel, avatar, lang, pwdhash, disabled) VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'moustache3','en_GB','',0);
