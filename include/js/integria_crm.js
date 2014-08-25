@@ -62,7 +62,7 @@ function loadParamsCompany() {
 
 	search_text = $('#text-search_text').val();
 	search_role = $('#search_role').val();
-	search_manager = $('#text-user').val();
+	search_manager = $('#text-search_user').val();
 	search_parent = $('#search_parent').val();
 	search_date_begin = $('#text-search_date_begin').val();
 	search_date_end = $('#text-search_date_end').val();

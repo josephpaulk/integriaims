@@ -53,7 +53,7 @@ if ($get_company_search) {
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
 	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 10, 100, true, __('Country'));
-	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-search_user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
 
 	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 		'search_parent', $search_parent, '', __('Select'), 0, true, false, false, __('Parent'));

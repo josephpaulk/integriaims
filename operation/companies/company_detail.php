@@ -384,8 +384,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, $disabled_write, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
+	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, true, "", "", true, false,  __('Parent company'));
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table->data[1][0] .= "&nbsp;<a href='javascript:show_company_search(\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Add parent')."'><img src='images/zoom.png'></a>";
 	$table->data[1][0] .= "&nbsp;<a href='javascript:clearParent();' title='".__('Clear parent')."'><img src='images/cross.png'></a>";
 	
 	$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'), $disabled_write);
