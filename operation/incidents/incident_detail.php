@@ -353,7 +353,7 @@ if ($action == "insert" && !$id) {
 	$upfiles = (string) get_parameter('upfiles');
 	
 	//Get notify flag from group if the user doesn't has IM flag
-	if (! give_acl ($config['id_user'], $id_grupo, "IW")) {
+	if (give_acl ($config['id_user'], $id_grupo, "IW")) {
 		$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $grupo);
 	}
 	
