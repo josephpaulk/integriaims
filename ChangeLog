@@ -1,6 +1,12 @@
 2014-08-27  Vanessa Gil <vanessa.gil@artica.es>
 	
-	* operation/incidents/incident_detail.php
+	* index.php: Show custom screen instead of
+	home page.
+
+2014-08-27  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/incidents/incident_detail.php: Fixed bug
+	#1208.
 
 2014-08-25  Vanessa Gil <vanessa.gil@artica.es>
 	

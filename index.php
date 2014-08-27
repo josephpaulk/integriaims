@@ -255,6 +255,18 @@ if (ip_acl_check ($ip_origin)) {
 	}
 }
 
+$custom_screen_loaded = false;
+if ($is_enterprise && (int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+	if (!empty($custom_screens)) {
+		foreach ($custom_screens as $id => $custom_screen) {
+			if (isset($custom_screen['homeEnabled']) && (bool) $custom_screen['homeEnabled']) {
+				$custom_screen_loaded = true;
+			}
+		}
+	}
+}
+					
 // Login process
 if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 
@@ -312,12 +324,22 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 		exit;
 	} else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
 		unset ($_GET["sec2"]);
-		$_GET["sec"] = "general/home";
+
+		if ($custom_screen_loaded) {
+			$sec2 = 'enterprise/operation/custom_screens/custom_screens';
+		} else {
+			$_GET["sec"] = "general/home";
+		}
 		logon_db ($nick_in_db, $_SERVER['REMOTE_ADDR']);
 		$_SESSION['id_usuario'] = $nick_in_db;
 		$config['id_user'] = $nick_in_db;
 		if ($sec2 == '') {
-			$sec2 = 'general/home';
+			if ($custom_screen_loaded) {
+				$sec2 = 'enterprise/operation/custom_screens/custom_screens';
+			} else {
+				$sec2 = 'general/home';
+			}
+
 		}
 		$minor_release_message = db_update_schema(); // MINOR RELEASES
 	} else { //login wrong
@@ -510,21 +532,6 @@ if ($clean_output == 0) {
 					} else {
 						echo "<h3 class='error'>".__('Page not found')."</h3>";
 					}
-				} else {
-					$custom_screen_loaded = false;
-					if ($is_enterprise && (int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
-						$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
-						if (!empty($custom_screens)) {
-							foreach ($custom_screens as $id => $custom_screen) {
-								if (isset($custom_screen['homeEnabled']) && (bool) $custom_screen['homeEnabled']) {
-									enterprise_include('operation/custom_screens/custom_screens.php');
-									$custom_screen_loaded = true;
-								}
-							}
-						}
-					}
-					if (!$custom_screen_loaded)
-						require ("general/home.php");
 				}
 			?>
 			</div>
