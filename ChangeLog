@@ -1,3 +1,7 @@
+2014-08-28  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* index.php: Fixed several bugs. Tickets #1214, #1215.
+
 2014-08-27  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* index.php: Show custom screen instead of

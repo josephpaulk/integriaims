@@ -256,14 +256,10 @@ if (ip_acl_check ($ip_origin)) {
 }
 
 $custom_screen_loaded = false;
-if ($is_enterprise && (int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
-	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
-	if (!empty($custom_screens)) {
-		foreach ($custom_screens as $id => $custom_screen) {
-			if (isset($custom_screen['homeEnabled']) && (bool) $custom_screen['homeEnabled']) {
-				$custom_screen_loaded = true;
-			}
-		}
+if ($is_enterprise) {
+	$custom = get_db_value_sql('SELECT id FROM tcustom_screen WHERE home_enabled=1');
+	if ($custom !== false) {
+		$custom_screen_loaded = true;
 	}
 }
 					
@@ -450,7 +446,7 @@ $session_id = session_id();
 session_write_close ();
 
 // Special pages, which doesn't use sidemenu
-if (($sec2 == "") OR ($sec2 == "general/home")) {
+if (($sec2 == "") OR ($sec2 == "general/home") OR ($_POST['login'] == 1 AND $custom_screen_loaded) OR ($sec2 == 'enterprise/operation/custom_screens/custom_screens')) {
 	$not_show_menu = 1;
 }
 
@@ -531,6 +527,23 @@ if ($clean_output == 0) {
 						}
 					} else {
 						echo "<h3 class='error'>".__('Page not found')."</h3>";
+					}
+				}
+				else {
+					$custom_screen_loaded = false;
+					if ($is_enterprise && (int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+						$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+						if (!empty($custom_screens)) {
+							foreach ($custom_screens as $id => $custom_screen) {
+								if (isset($custom_screen['homeEnabled']) && (bool) $custom_screen['homeEnabled']) {
+									enterprise_include('operation/custom_screens/custom_screens.php');
+									$custom_screen_loaded = true;
+								}
+							}
+						}
+					}
+					if (!$custom_screen_loaded) {
+						require ("general/home.php");
 					}
 				}
 			?>
