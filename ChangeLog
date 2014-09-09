@@ -1,3 +1,10 @@
+2014-09-09  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/usuarios/configurar_usuarios.php
+	  include/functions_config.php
+	  include/functions_incidents.php: Removed warnings to 
+	run integria cron. Tickets #1256.
+
 2014-08-28  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* index.php: Fixed several bugs. Tickets #1214, #1215.

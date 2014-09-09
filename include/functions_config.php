@@ -251,7 +251,11 @@ function load_config() {
 	}
 
 	if (!isset ($config["access_public"])) {
-		$config["access_public"] = $_SERVER["SERVER_NAME"];
+		if (isset($_SERVER["SERVER_NAME"])) {
+			$config["access_public"] = $_SERVER["SERVER_NAME"];
+		} else {
+			$config["access_public"] = "localhost";
+		}
 		update_config_token ("access_public", $config["access_public"]);
 	}
 

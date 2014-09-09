@@ -1304,7 +1304,7 @@ function get_incident_lastworkunit ($id_incident) {
 
 function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
 	global $config;
-	include_once('include/functions_user.php');
+	include_once($config["homedir"].'/include/functions_user.php');
 
 	clean_cache_db();
 	

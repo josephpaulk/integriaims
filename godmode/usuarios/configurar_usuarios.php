@@ -48,6 +48,10 @@ $enable_login = 1;
 
 $user_fields = get_db_all_rows_sql ("SELECT * FROM tuser_field");
 
+if ($user_fields === false) {
+	$user_fields = array();
+}
+
 if (isset($_GET["borrar_grupo"])) {
 	$grupo = get_parameter ('borrar_grupo');
 	enterprise_hook ('delete_group');
