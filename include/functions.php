@@ -1430,8 +1430,13 @@ function get_news($arguments) {
 	}
 
 	$groups = get_user_groups ($id_user);
-	$groups = array_keys($groups);
-	$id_group = implode(',',$groups);
+	
+	if (empty($groups)) {
+		$id_group = 0;
+	} else {
+		$groups = array_keys($groups);
+		$id_group = implode(',',$groups);
+	}
 	
 	$current_datetime = date('Y-m-d H:i:s', time());
 
