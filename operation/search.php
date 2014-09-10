@@ -292,7 +292,7 @@ if ( check_crm_acl ('contract', 'cr') && $show_customers != MENU_HIDDEN ) {
 // Companies
 if ( check_crm_acl('company', 'cr') && $show_customers != MENU_HIDDEN ){
 
-	$where_clause = " AND (name LIKE '%".$search_string."%' OR id IN (SELECT id_company
+	$where_clause = " AND (tcompany.name LIKE '%".$search_string."%' OR tcompany.id IN (SELECT id_company
 																FROM tcompany_activity
 																WHERE description LIKE '%$search_string%'))";
 	

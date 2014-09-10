@@ -1,5 +1,10 @@
 2014-09-10  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/search.php: Fixed problem in 
+	free search. Ticket #1264.
+
+2014-09-10  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/functions.php: Fixed problem when
 	you login with a user without group assigned.
 
