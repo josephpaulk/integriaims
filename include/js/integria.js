@@ -381,12 +381,12 @@ function eraseCookie(name) {
 }
 
 // Show the modal window of license info
-function show_license_info() {
+function show_license_info(expiry_day, expiry_month, expiry_year, max_users) {
 
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/license&get_license_info=1",
+		data: "page=include/ajax/license&get_license_info=1&expiry_day="+expiry_day+"&expiry_month="+expiry_month+"&expiry_year="+expiry_year+"&max_users="+max_users,
 		dataType: "html",
 		success: function(data){	
 			$("#dialog_show_license").html (data);

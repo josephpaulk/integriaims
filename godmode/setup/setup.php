@@ -185,7 +185,7 @@ $newsletter_options[1] = __('Enabled');
 
 $table->data[4][0] = __('License information');
 $table->data[4][0] = print_input_text ('license_info_key', $config['license'], '', 40, 255, true, __('License key'));
-$table->data[4][0] .= '&nbsp;<a id="dialog_license_info" title="'.__("License Info").'" href="javascript: show_license_info()">'.print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
+$table->data[4][0] .= "&nbsp;<a id='dialog_license_info' title='".__("License Info")."' href='javascript: show_license_info(\"" . $config["expiry_day"] . "\", \"" . $config["expiry_month"] . "\",\"" . $config["expiry_year"] . "\",\"" . $config["max_users"] . "\")'>".print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
 $table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>';	
 
 $days_of_week = get_days_of_week();

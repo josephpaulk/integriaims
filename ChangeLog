@@ -1,3 +1,10 @@
+2014-09-11  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/setup.php
+	  include/ajax.php
+	  include/js/integria.js: Fixed license info in setup.
+	Ticket #1266.
+
 2014-09-10  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/search.php: Fixed problem in 
