@@ -1,3 +1,8 @@
+2014-09-22  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* extras/create_ticket_form.php: Added file.
+	Creation of tickets through a web form. Ticket #1218.
+
 2014-09-11  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* godmode/setup/setup.php
