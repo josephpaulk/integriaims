@@ -1,5 +1,13 @@
 2014-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/incidents/incident_dashboard_detail.php,
+	  operation/common/download_file.php: Now the ticket creator
+	and assigned users can download their ticket files and acccess
+	to the quick ticket update as IW although they haven't permissions
+	on that group.
+
+2014-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/ajax/incidents.php: Now the functions to do the
 	quick update of a ticket change correctly the ticket last
 	update value.

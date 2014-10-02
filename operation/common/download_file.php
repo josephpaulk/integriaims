@@ -77,13 +77,15 @@ switch ($type) {
 		
 		if ($data) {
 			$id_incident =  $data["id_incidencia"];
+			$incident = get_db_row ("tincidencia", "id_incidencia", $id_incident);
 
-			$id_group = get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident");
-
-			if (! give_acl ($config['id_user'], $id_group, "IR")){
-    			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
-    			require ($general_error);
-    			exit;
+			if (empty($incident)
+					|| (! give_acl ($config['id_user'], $incident['id_grupo'], "IR")
+						&& (empty($config['id_user']) || $config['id_user'] != $incident['id_usuario'])
+						&& (empty($config['id_user']) || $config['id_user'] != $incident['id_creator']))) {
+				audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+				require ($general_error);
+				exit;
 			}
 		}
 		$data["filename"] = safe_output($data["filename"]);

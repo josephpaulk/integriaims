@@ -323,8 +323,11 @@ $right_side = print_container('incident_users', __('People').print_help_tip (_('
 // Quick editor
 if ($config['enabled_ticket_editor']) {
 	
-	$has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
-	$has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
+	$has_im  = give_acl ($config['id_user'], $id_grupo, "IM")
+		|| $config['id_user'] == $incident['id_creator'];
+	$has_iw = give_acl ($config['id_user'], $id_grupo, "IW")
+		|| $config['id_user'] == $incident['id_usuario']
+		|| $config['id_user'] == $incident['id_creator'];
 
 	if ($has_iw) {
 		$incident_data = get_incident ($id);
