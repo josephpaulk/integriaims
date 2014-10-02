@@ -20,6 +20,62 @@ check_login();
 
 include_once('include/functions_crm.php');
 
+if (defined ('AJAX')) {
+	
+	global $config;
+	
+	$upload_file = (bool) get_parameter('upload_file');
+	if ($upload_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["filename"] = "";
+		$result["location"] = "";
+		$result["message"] = "";
+
+		$upload_status = getFileUploadStatus("upfile");
+		$upload_result = translateFileUploadStatus($upload_status);
+
+		if ($upload_result === true) {
+			$filename = $_FILES["upfile"]['name'];
+			$extension = pathinfo($filename, PATHINFO_EXTENSION);
+			$invalid_extensions = "/^(bat|exe|cmd|sh|php|php1|php2|php3|php4|php5|pl|cgi|386|dll|com|torrent|js|app|jar|
+				pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|
+				htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh)$/i";
+			
+			if (!preg_match($invalid_extensions, $extension)) {
+				$result["status"] = true;
+				$result["location"] = $_FILES["upfile"]['tmp_name'];
+				// Replace conflictive characters
+				$filename = str_replace (" ", "_", $filename);
+				$filename = filter_var($filename, FILTER_SANITIZE_URL);
+				$result["name"] = $filename;
+
+				$destination = sys_get_temp_dir().DIRECTORY_SEPARATOR.$result["name"];
+
+				if (copy($result["location"], $destination))
+					$result["location"] = $destination;
+			} else {
+				$result["message"] = __('Invalid extension');
+			}
+		} else {
+			$result["message"] = $upload_result;
+		}
+		echo json_encode($result);
+		return;
+	}
+
+	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
+	if ($remove_tmp_file) {
+		$result = false;
+		$tmp_file_location = (string) get_parameter('location');
+		if ($tmp_file_location) {
+			$result = unlink($tmp_file_location);
+		}
+		echo json_encode($result);
+		return;
+	}
+}
+
 $id = (int) get_parameter ('id');
 $id_company = (int) get_parameter ('id_company');
 
@@ -69,6 +125,27 @@ $create_contract = (bool) get_parameter ('create_contract');
 $update_contract = (bool) get_parameter ('update_contract');
 $delete_contract = (bool) get_parameter ('delete_contract');
 
+// Delete file
+$delete_file = (bool) get_parameter ('delete_file');
+if ($delete_file) {
+	if ($manage_permission) {
+		$id_attachment = get_parameter ('id_attachment');
+		$filename = get_db_value ('filename', 'tattachment',
+			'id_attachment', $id_attachment);
+		$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
+			$id_attachment);
+		process_sql ($sql);
+		$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+		if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
+			$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
+		
+	} else {
+		$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
+	}
+	
+	echo $result_msg;
+}
+
 if ($get_sla) {
 	$sla = get_contract_sla ($id, false);
 	
@@ -103,7 +180,7 @@ if ($create_contract) {
 	$date_end = (string) get_parameter ('date_end');
 	$private = (int) get_parameter ('private');
 	$status = (int) get_parameter ('status', 1);
-
+	$upfiles = (string) get_parameter('upfiles');
 	
 	$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
 		date_end, id_company, private, status)
@@ -115,6 +192,38 @@ if ($create_contract) {
 	if ($id === false)
 		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	else {
+		// ATTACH A FILE IF IS PROVIDED
+		$upfiles = json_decode(safe_output($upfiles), true);
+
+		if (!empty($upfiles)) {
+			foreach ($upfiles as $file) {
+				if (is_array($file)) {
+					if ($file['description']) {
+						$file_description = $file['description'];
+					} else {
+						$file_description = __('No description available');
+					}
+					$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
+					
+					$file_tmp = sys_get_temp_dir().'/'.$file["name"];
+					$size = filesize ($file_tmp);
+					$filename_encoded = $file_result . "_" . $file["name"];
+				
+					// Copy file to directory and change name
+					$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+			
+					if (!(copy($file_tmp, $file_target))){
+						echo "<h3 class=error>".__("Could not be attached")."</h3>";
+					} else {
+						// Delete temporal file
+						echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+						$location = $file_target;
+						unlink ($file_tmp);
+					}
+				}
+			}
+		}
+
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
 	}
@@ -137,6 +246,7 @@ if ($update_contract) { // if modified any parameter
 	$date_end = (string) get_parameter ('date_end');
 	$private = (int) get_parameter ('private');
 	$status = (int) get_parameter ('status');
+	$upfiles = (string) get_parameter('upfiles');
 
 
 	$sql = sprintf ('UPDATE tcontract SET contract_number = "%s",
@@ -150,6 +260,38 @@ if ($update_contract) { // if modified any parameter
 	if ($result === false) {
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
+		// ATTACH A FILE IF IS PROVIDED
+		$upfiles = json_decode(safe_output($upfiles), true);
+		if (!empty($upfiles)) {
+			foreach ($upfiles as $file) {
+
+				if (is_array($file)) {
+					if ($file['description']) {
+						$file_description = $file['description'];
+					} else {
+						$file_description = __('No description available');
+					}
+					$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
+					
+					$file_tmp = sys_get_temp_dir().'/'.$file["name"];
+					$size = filesize ($file_tmp);
+					$filename_encoded = $file_result . "_" . $file["name"];
+				
+					// Copy file to directory and change name
+					$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+			
+					if (!(copy($file_tmp, $file_target))){
+						echo "<h3 class=error>".__("Could not be attached")."</h3>";
+					} else {
+						// Delete temporal file
+						echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+						$location = $file_target;
+						unlink ($file_tmp);
+					}
+				}
+			}
+		}
+
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
 	}
@@ -244,6 +386,39 @@ if ($id || $new_contract) {
 
 		$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 		
+		// Optional file update
+		$html = "";
+		$html .= "<div id=\"contract_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+		$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
+		$html .= 		"<table width=\"99%\">";
+		$html .= 			"<td width=\"45%\">";
+		$html .= 				__('Drop the file here');
+		$html .= 			"<td>";
+		$html .= 				__('or');
+		$html .= 			"<td width=\"45%\">";
+		$html .= 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
+		$html .= 			"<tr>";
+		$html .= 		"</table>";
+		$html .= 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
+		$html .= 		"<input type=\"hidden\" name=\"upfiles\" id=\"upfiles\" />"; // JSON STRING
+		$html .= 	"</div>";
+		$html .= 	"<ul></ul>";
+		$html .= "</div>";
+
+		$table_description = new stdClass;
+		$table_description->width = '99%';
+		$table_description->id = 'contract_file_description';
+		$table_description->class = 'search-table-button';
+		$table_description->data = array();
+		$table_description->data[0][0] = print_textarea ("file_description", 3, 40, '', '', true, __('Description'));
+		$table_description->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+		$html .= "<div id='contract_file_description_table_hook' style='display:none;'>";
+		$html .= print_table($table_description, true);
+		$html .= "</div>";
+
+		$table->colspan[5][0] = 4;
+		$table->data[5][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
+
 		if ($id) {
 			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
 			$button .= print_input_hidden ('id', $id, true);
@@ -293,6 +468,57 @@ if ($id || $new_contract) {
 	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	echo "</form>";
+	
+	if ($id && ($write_permission || $manage_permission)) {
+		//File list		
+		echo "<h2>".__('Files')."</h2>";
+
+		// Files attached to this incident
+		$files = crm_get_contract_files ($id);
+		if ($files === false) {
+			$files = array();
+			echo '<h4 id="no_files_message">'.__('No files were added to the contract').'</h4>';
+			$hidden = "style=\"display:none;\"";
+		}
+
+		echo "<div style='width: 98%; margin: 0 auto;'>";
+		echo "<table id='table-incident_files' $hidden class=listing cellpadding=0 cellspacing=0 width='100%'>";
+		echo "<tr>";
+		echo "<th>".__('Filename');
+		echo "<th>".__('Timestamp');
+		echo "<th>".__('Description');
+		echo "<th>".__('ID user');
+		echo "<th>".__('Size');
+
+		if ($manage_permission) {
+			echo "<th>".__('Delete');
+		}
+
+		foreach ($files as $file) {
+
+			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
+
+			$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
+
+			echo "<tr>";
+			echo "<td valign=top>";
+			echo '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
+			echo "<td valign=top class=f9>".$file['timestamp'];
+			echo "<td valign=top class=f9>". $file["description"];
+			echo "<td valign=top>". $file["id_usuario"];
+			echo "<td valign=top>". byte_convert ($file['size']);
+
+			// Delete attachment
+			if ($manage_permission) {
+				echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id.'&id_attachment='.$file["id_attachment"].'&delete_file=1">
+				<img src="images/cross.png"></a>';
+			}
+
+		}
+
+		echo "</table>";
+		echo "</div>";
+	}
 } else {
 	
 	// Contract listing
@@ -480,6 +706,9 @@ if ($id || $new_contract) {
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="include/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="include/js/jquery.knob.js"></script>
 
 <script type="text/javascript">
 	
@@ -507,6 +736,9 @@ $(document).ready (function () {
 			enable_dates();
 		}
 	});
+	
+	// Init the file upload
+	form_upload();
 	
 });
 
@@ -548,6 +780,191 @@ function refresh_company_combo () {
 		},
 		"html"
 	);
+
+}
+
+function form_upload () {
+	// Input will hold the JSON String with the files data
+	var input_upfiles = $('input#upfiles');
+	// JSON Object will hold the files data
+	var upfiles = {};
+
+	$('#drop_file #browse_button').click(function() {
+		// Simulate a click on the file input button to show the file browser dialog
+		$("#file-upfile").click();
+	});
+
+	// Initialize the jQuery File Upload plugin
+	$('#contract_files').fileupload({
+		
+		url: 'ajax.php?page=operation/contracts/contract_detail&upload_file=true',
+		
+		// This element will accept file drag/drop uploading
+		dropZone: $('#drop_file'),
+
+		// This function is called when a file is added to the queue;
+		// either via the browse button, or via drag/drop:
+		add: function (e, data) {
+			data.context = addListItem(0, data.files[0].name, data.files[0].size);
+
+			// Automatically upload the file once it is added to the queue
+			data.context.addClass('working');
+			var jqXHR = data.submit();
+		},
+
+		progress: function(e, data) {
+
+			// Calculate the completion percentage of the upload
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+
+			// Update the hidden input field and trigger a change
+			// so that the jQuery knob plugin knows to update the dial
+			data.context.find('input').val(progress).change();
+
+			if (progress >= 100) {
+				data.context.removeClass('working');
+				data.context.removeClass('error');
+				data.context.addClass('loading');
+			}
+		},
+
+		fail: function(e, data) {
+			// Something has gone wrong!
+			data.context.removeClass('working');
+			data.context.removeClass('loading');
+			data.context.addClass('error');
+		},
+		
+		done: function (e, data) {
+			
+			var result = JSON.parse(data.result);
+			
+			if (result.status) {
+				data.context.removeClass('error');
+				data.context.removeClass('loading');
+				data.context.addClass('working');
+
+				// Increase the counter
+				if (upfiles.length == undefined) {
+					upfiles.length = 0;
+				} else {
+					upfiles.length += 1;
+				}
+				var index = upfiles.length;
+				// Create the new element
+				upfiles[index] = {};
+				upfiles[index].name = result.name;
+				upfiles[index].location = result.location;
+				// Save the JSON String into the input
+				input_upfiles.val(JSON.stringify(upfiles));
+
+				// FORM
+				addForm (data.context, index);
+				
+			} else {
+				// Something has gone wrong!
+				data.context.removeClass('working');
+				data.context.removeClass('loading');
+				data.context.addClass('error');
+				if (result.message) {
+					var info = data.context.find('i');
+					info.css('color', 'red');
+					info.html(result.message);
+				}
+			}
+		}
+
+	});
+
+	// Prevent the default action when a file is dropped on the window
+	$(document).on('drop_file dragover', function (e) {
+		e.preventDefault();
+	});
+
+	function addListItem (progress, filename, filesize) {
+		var tpl = $('<li>'+
+						'<input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+						' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" />'+
+						'<p></p>'+
+						'<span></span>'+
+						'<div class="contract_file_form"></div>'+
+					'</li>');
+		
+		// Append the file name and file size
+		tpl.find('p').text(filename);
+		if (filesize > 0) {
+			tpl.find('p').append('<i>' + formatFileSize(filesize) + '</i>');
+		}
+
+		// Initialize the knob plugin
+		tpl.find('input').val(0);
+		tpl.find('input').knob({
+			'draw' : function () {
+				$(this.i).val(this.cv + '%')
+			}
+		});
+
+		// Listen for clicks on the cancel icon
+		tpl.find('span').click(function() {
+
+			if (tpl.hasClass('working') || tpl.hasClass('error') || tpl.hasClass('suc')) {
+
+				if (tpl.hasClass('working') && typeof jqXHR != 'undefined') {
+					jqXHR.abort();
+				}
+
+				tpl.fadeOut();
+				tpl.slideUp(500, "swing", function() {
+					tpl.remove();
+				});
+
+			}
+
+		});
+		
+		// Add the HTML to the UL element
+		var item = tpl.appendTo($('#contract_files ul'));
+		item.find('input').val(progress).change();
+
+		return item;
+	}
+
+	function addForm (item, array_index) {
+		
+		item.find(".contract_file_form").html($("#contract_file_description_table_hook").html());
+
+		item.find("#submit-crt_btn").click(function(e) {
+			e.preventDefault();
+			
+			$(this).prop('value', "<?php echo __('Update'); ?>");
+			$(this).removeClass('create');
+			$(this).addClass('upd');
+
+			// Add the description to the array
+			upfiles[array_index].description = item.find("#textarea-file_description").val();	
+			// Save the JSON String into the input
+			input_upfiles.val(JSON.stringify(upfiles));
+		});
+
+		// Listen for clicks on the cancel icon
+		item.find('span').click(function() {
+			// Remove the element from the array
+			upfiles[array_index] = {};
+			// Save the JSON String into the input
+			input_upfiles.val(JSON.stringify(upfiles));
+			// Remove the tmp file
+			$.ajax({
+				type: 'POST',
+				url: 'ajax.php',
+				data: {
+					page: "operation/contracts/contract_detail",
+					remove_tmp_file: true,
+					location: upfiles[array_index].location
+				}
+			});
+		});
+
+	}
 
 }
 

@@ -131,6 +131,7 @@ CREATE TABLE `tattachment` (
   `size` bigint(20) NOT NULL default '0',
   `timestamp` date NOT NULL default '0000-00-00',
   `id_invoice` bigint(20) NOT NULL default '0',
+  `id_contract` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id_attachment`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

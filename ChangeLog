@@ -1,3 +1,13 @@
+2014-10-02  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  integriadb_data.sql
+	  include/functions_crm.php
+	  operation/contracts/contract_detail.php: Improved contract
+	view to attach files. Ticket #1385.
+	  
+	* extras/mr/13.sql: Added file.
+
 2014-09-22  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* extras/create_ticket_form.php: Added file.

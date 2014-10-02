@@ -1064,4 +1064,40 @@ function crm_merge_newsletter_address ($id_newsletter_source, $id_newsletter_des
 	
 	return '<h3 class="suc">'.$success.' of '.$total_address.'&nbsp;'.__('addresses have been imported').'</h3>';
 }
+
+function crm_attach_contract_file ($id, $file_temp, $file_description, $file_name = "") {
+	global $config;
+	
+	$file_temp = safe_output ($file_temp); // Decoding HTML entities
+	$filesize = filesize($file_temp); // In bytes
+	if ($file_name != "") {
+		$filename = $file_name;
+	} else {
+		$filename = basename($file_temp);
+	}
+	
+	$filename = str_replace (array(" ", "(", ")"), "_", $filename); // Replace blank spaces
+	$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
+	
+	$timestamp = date('Y-m-d');
+	$sql = sprintf ('INSERT INTO tattachment (id_contract, id_usuario,
+			filename, description, size, timestamp)
+			VALUES (%d, "%s", "%s", "%s", %d, "%s")',
+			$id, $config['id_user'], $filename, $file_description, $filesize, $timestamp);
+	
+	$id_attachment = process_sql ($sql, 'insert_id');
+	
+	return $id_attachment;
+}
+
+function crm_get_contract_files ($id_contract, $order_desc = false) {
+	if($order_desc) {
+		$order = "id_attachment DESC";
+	}
+	else {
+		$order = "";
+	}
+	
+	return get_db_all_rows_field_filter ('tattachment', 'id_contract', $id_contract, $order);
+}
 ?>
