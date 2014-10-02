@@ -160,6 +160,7 @@ if ($get_contact_search) {
 if ($set_priority) {
 	$id_ticket = get_parameter('id_ticket');
 	$values['prioridad'] = get_parameter ('id_priority');
+	$values['actualizacion'] = date('Y:m:d H:i:s');
 	
 	$old_incident = get_incident ($id_ticket);
 	
@@ -183,6 +184,7 @@ if ($set_priority) {
 if ($set_resolution) {
 	$id_ticket = get_parameter('id_ticket');
 	$values['resolution'] = get_parameter ('id_resolution');
+	$values['actualizacion'] = date('Y:m:d H:i:s');
 	
 	$old_incident = get_incident ($id_ticket);
 	
@@ -204,6 +206,7 @@ if ($set_resolution) {
 if ($set_status) {
 	$id_ticket = get_parameter('id_ticket');
 	$values['estado'] = get_parameter ('id_status');
+	$values['actualizacion'] = date('Y:m:d H:i:s');
 	
 	$old_incident = get_incident ($id_ticket);
 	
@@ -233,6 +236,7 @@ if ($set_status) {
 if ($set_owner) {
 	$id_ticket = get_parameter('id_ticket');
 	$values['id_usuario'] = get_parameter ('id_user');
+	$values['actualizacion'] = date('Y:m:d H:i:s');
 	
 	$old_incident = get_incident ($id_ticket);
 	
