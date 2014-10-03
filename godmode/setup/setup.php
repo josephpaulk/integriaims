@@ -58,6 +58,7 @@ if ($update) {
 	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_NAME"]);
 	$config["loginhash_pwd"] = get_parameter("loginhash_pwd", "");
 	$config["csv_standard_encoding"] = (int) get_parameter("csv_standard_encoding");
+	$config["enable_update_manager"] = get_parameter("enable_update_manager");
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -93,6 +94,7 @@ if ($update) {
 	update_config_token ("loginhash_pwd", $config["loginhash_pwd"]);
 
 	update_config_token ("csv_standard_encoding", $config["csv_standard_encoding"]);
+	update_config_token ("enable_update_manager", $config["enable_update_manager"]);
 	
 	if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
@@ -214,9 +216,11 @@ $table->data[7][1] .=  __('Excel') . '&nbsp;' . print_radio_button ('csv_standar
 $table->data[7][1] .= print_help_tip (__("The Excel type may not be compatible with other applications"), true);
 $table->data[7][1] .=  '&nbsp;&nbsp;' . __('Other') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 1, '', $csv_standard_encoding, true);
 
-$table->data[8][0] = print_input_hidden ('update', 1, true);
-$table->data[8][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->colspan[8][0] = 2;
+$table->data[8][0] = print_checkbox ("enable_update_manager", 1, $config["enable_update_manager"], true, __('Enable update manager updates'));
+
+$table->data[9][0] = print_input_hidden ('update', 1, true);
+$table->data[9][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
+$table->colspan[9][0] = 2;
 
 echo "<form name='setup' method='post'>";
 

@@ -1,3 +1,10 @@
+2014-10-03  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* general/header.php
+	  godmode/setup/setup.php
+	  include/functions_config.php: Added enable/disable check updates
+	option in setup. Ticket #1386.
+
 2014-10-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/incidents/incident_dashboard_detail.php,

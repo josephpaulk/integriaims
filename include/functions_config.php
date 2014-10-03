@@ -294,6 +294,9 @@ function load_config() {
 	if (!isset ($config["active_validate"])) {
 		$config["active_validate"] = 1;
 	}
+	if (!isset ($config["enable_update_manager"])) {
+		$config["enable_update_manager"] = true;
+	}
 }
 
 function config_prepare_session() {

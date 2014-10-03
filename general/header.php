@@ -65,11 +65,13 @@ $check_directory_permissions = check_directory_permissions();
 
 if ($is_login && dame_admin($config['id_user'])) { //check if user has logged and user is admin. Check update manager once.
 
-	if ($config["enteprise"] == 1) {
-		enterprise_include("include/functions_update_manager.php");
-		$result_check_update_manager = update_manager_check_packages_for_header();
-	} else {
-		$result_check_update_manager = update_manager_check_online_free_packages (false);
+	if ($config["enable_update_manager"]) {
+		if ($config["enteprise"] == 1) {
+			enterprise_include("include/functions_update_manager.php");
+			$result_check_update_manager = update_manager_check_packages_for_header();
+		} else {
+			$result_check_update_manager = update_manager_check_online_free_packages (false);
+		}
 	}
 
 	print_input_hidden ('result_check_update_manager', $result_check_update_manager);
