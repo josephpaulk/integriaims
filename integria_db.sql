@@ -68,6 +68,7 @@ CREATE TABLE `tgrupo` (
   `nivel` tinyint(1) NOT NULL default '0',
   `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
+  `email_from` varchar(150) default '',
   PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

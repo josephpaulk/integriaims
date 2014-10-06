@@ -18,3 +18,9 @@
 -- ---------------------------------------------------------------------
 
 ALTER TABLE `tattachment` ADD `id_contract` mediumint(8) unsigned NOT NULL;
+
+-- ---------------------------------------------------------------------
+-- Table tgrupo
+-- ---------------------------------------------------------------------
+
+ALTER TABLE `tgrupo` ADD `email_from` varchar(150) default '';

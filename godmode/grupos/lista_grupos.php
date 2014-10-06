@@ -77,18 +77,19 @@ if ($create_group) {
 	$default_profile = (int) get_parameter ('default_profile', 0);
 	$user_level = (int) get_parameter ('user_level', 0);
 	$simple_mode = (int) get_parameter ('simple_mode', 0);
-	$incident_type = (int) get_parameter ('incident_type', 0);	
+	$incident_type = (int) get_parameter ('incident_type', 0);
+	$email_from = (string) get_parameter ('email_from', "");	
 
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, 
 					soft_limit, hard_limit, enforce_soft_limit, id_sla, parent, id_inventory_default,
 					autocreate_user, grant_access, send_welcome, default_company, welcome_email, 
-					email_queue, default_profile, nivel, simple_mode, id_incident_type) 
+					email_queue, default_profile, nivel, simple_mode, id_incident_type, email_from) 
 					VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s", %d, %d, 
-					%d, %d, %d, "%s", "%s", %d, %d, %d, %d)', 
+					%d, %d, %d, "%s", "%s", %d, %d, %d, %d, "%s")', 
 						$name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, 
 						$enforce_soft_limit, $id_sla, $parent, $id_inventory, $autocreate_user, $grant_access,
 						$send_welcome, $default_company, $welcome_email, $email_queue, $default_profile, 
-						$user_level, $simple_mode, $incident_type);
+						$user_level, $simple_mode, $incident_type, $email_from);
 						
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
@@ -123,6 +124,7 @@ if ($update_group) {
 	$user_level = (int) get_parameter ('user_level', 0);
 	$simple_mode = (int) get_parameter ('simple_mode', 0);
 	$incident_type = (int) get_parameter ('incident_type', 0);
+	$email_from = (string) get_parameter ('email_from', "");
 	
 	$sql = sprintf ('UPDATE tgrupo
 		SET parent = %d, nombre = "%s", icon = "%s", forced_email = %d, 
@@ -130,13 +132,13 @@ if ($update_group) {
 		enforce_soft_limit = %d, id_sla = %d, id_inventory_default = %d, 
 		autocreate_user = %d, grant_access = %d, send_welcome = %d,
 		default_company = %d, welcome_email = "%s", email_queue = "%s", 
-		default_profile = %d, nivel = %d, simple_mode = %d, id_incident_type = %d
+		default_profile = %d, nivel = %d, simple_mode = %d, id_incident_type = %d, email_from = "%s"
 		WHERE id_grupo = %d',
 		 $parent, $name, $icon, $forced_email, $banner, $id_user_default, 
 		 $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $id_inventory, 
 		 $autocreate_user, $grant_access, $send_welcome, $default_company, 
 		 $welcome_email, $email_queue, $default_profile,$user_level, $simple_mode, 
-		 $incident_type, $id);
+		 $incident_type, $email_from, $id);
 
 	$result = process_sql ($sql);
 

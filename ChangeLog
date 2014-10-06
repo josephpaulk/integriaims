@@ -1,5 +1,14 @@
 2014-10-06  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* integria_db.sql
+	  extras/mr/13.sql
+	  godmode/grupos/configurar_grupo.php
+	  godmode/grupos/lista_grupos.php
+	  include/functions_incidents: Added 'Mail from' field
+	to group. Ticket #1274.
+
+2014-10-06  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/functions_form.php
 	  include/functions_incidents.php
 	  include/ajax/incidents.php

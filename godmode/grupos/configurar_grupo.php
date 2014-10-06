@@ -40,6 +40,7 @@ $soft_limit = 5;
 $hard_limit = 20;
 $enforce_soft_limit = 1;
 $id_sla = 0;
+$email_from = '';
 
 $creacion_grupo = (bool) get_parameter ('creacion_grupo');
 	
@@ -69,6 +70,7 @@ if ($id) {
 		$user_level = $group["nivel"];
 		$simple_mode = $group["simple_mode"];
 		$incident_type = $group["id_incident_type"];
+		$email_from = $group["email_from"];
 		
 		//Inventory == zero is an empty string
 		if ($id_inventory == 0) {
@@ -156,6 +158,8 @@ $table->data[5][1] = print_select ($slas,
 $table->data[6][0] = print_input_text ('inventory_name', $inventory_name,'', 25, 0, true, __('Default Inventory object'), false);	
 $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
+
+$table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
 
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
