@@ -1,3 +1,11 @@
+2014-10-06  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_form.php
+	  include/functions_incidents.php
+	  include/ajax/incidents.php
+	  operation/incidents/incident_search.php: Added 'SLA' filter in
+	search tickets. Ticket #1383.
+
 2014-10-03  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* general/header.php

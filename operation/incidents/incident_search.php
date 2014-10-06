@@ -40,7 +40,8 @@ if (defined ('AJAX')) {
 	$filter['first_date'] = $form_values['search_first_date'];
 	$filter['last_date'] = $form_values['search_last_date'];
 	$filter['group_by_project'] = $form_values['search_group_by_project'];
-	
+	$filter['sla_state'] = $form_values['search_sla_state'];
+
 	$result = create_custom_search ($search_name, 'incidents', $filter);
 }
 
@@ -69,6 +70,7 @@ $filter['from_date'] = (string) get_parameter('search_from_date', '');
 $filter['first_date'] = (string) get_parameter('search_first_date', '');
 $filter['last_date'] = (string) get_parameter('search_last_date', '');
 $filter['group_by_project'] = (bool) get_parameter('search_group_by_project');
+$filter['sla_state'] = (int) get_parameter ('search_sla_state');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 

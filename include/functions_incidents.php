@@ -72,6 +72,7 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 	$filters['resolution'] = isset ($filters['resolution']) ? $filters['resolution'] : '';
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
 	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
+	$filters["sla_state"] = isset ($filters['sla_state']) ? $filters['sla_state'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -166,6 +167,19 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 		$order_by_array = $filters['order_by'];
 	}
 
+	if (!empty($filters['sla_state'])) {
+		switch ($filters['sla_state']) {
+			case 0:
+				$sla_filter = ' ';
+			break;
+			case 1:
+				$sla_filter = "AND (sla_disabled = 0 AND affected_sla_id <> 0)";
+			break;
+			case 2:
+				$sla_filter = "AND (sla_disabled = 0 AND affected_sla_id = 0)";
+			break;
+		}
+	}
 	//Use config block size if no other was given
 	if ($limit) {
 		if (!isset($filters["limit"])) {
@@ -190,9 +204,10 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 			%s
 			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))',
+			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+			%s',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string']);
+			$filters['string'],$filters['string'], $filters['string'], $sla_filter);
 		
 		$count = get_db_value_sql($sql);
 		
@@ -209,9 +224,11 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
 			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+			%s
 			ORDER BY %s actualizacion DESC',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $order_by);
+			$filters['string'],$filters['string'], $filters['string'], $sla_filter, $order_by);
+
 
 		if (isset($filters["limit"]) && $filters["limit"] > 0) {
 			$sql_limit = sprintf (' LIMIT %d OFFSET %d', $filters["limit"], $filters["offset"]);
@@ -2681,6 +2698,7 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
 	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
 	$filters["id_task"] = isset ($filters['id_task']) ? $filters['id_task'] : -1;
+	$filters["sla_state"] = isset ($filters['sla_state']) ? $filters['sla_state'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -2770,6 +2788,20 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 		
 	if (! empty ($filters['closed_by']))
 		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
+		
+	if (!empty($filters['sla_state'])) {
+		switch ($filters['sla_state']) {
+			case 0:
+				$sla_filter = ' ';
+			break;
+			case 1:
+				$sla_filter = "AND (sla_disabled = 0 AND affected_sla_id <> 0)";
+			break;
+			case 2:
+				$sla_filter = "AND (sla_disabled = 0 AND affected_sla_id = 0)";
+			break;
+		}
+	}
 	
 	if ($filters['order_by'] && !is_array($filters['order_by'])) {
 		$order_by_array = json_decode(clean_output($filters["order_by"]), true);
@@ -2802,10 +2834,11 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 				%s
 				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))',
+				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+				%s',
 				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-				$filters['string'],$filters['string'], $filters['string']);
-		
+				$filters['string'],$filters['string'], $filters['string'], $sla_filter);
+
 			$count = get_db_value_sql($sql);
 			
 			if ($count === false) {
@@ -2820,10 +2853,11 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
 				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+				%s
 				GROUP BY id_task',
 				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-				$filters['string'],$filters['string'], $filters['string']);
-		
+				$filters['string'],$filters['string'], $filters['string'], $sla_filter);
+
 			$tasks = get_db_all_rows_sql ($sql);
 			
 			if ($tasks === false) {
@@ -2840,9 +2874,10 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
 				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
 				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+				%s
 				ORDER BY %s actualizacion DESC',
 				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-				$filters['string'],$filters['string'], $filters['string'], $order_by);
+				$filters['string'],$filters['string'], $filters['string'], $sla_filter, $order_by);
 
 			$incidents = get_db_all_rows_sql ($sql);
 

@@ -925,6 +925,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_editor = (string) get_parameter ('search_editor');
 		$search_closed_by = (string) get_parameter ('search_creator');
 		$group_by_project = (bool) get_parameter('search_group_by_project');
+		$sla_state = (int)get_parameter('search_sla_state', 0);
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -950,6 +951,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
 		$group_by_project = (bool) $filter['group_by_project'];
+		$sla_state = (int) $filter['sla_state'];
 
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
@@ -984,8 +986,8 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
-	$table->colspan[5][0] = 4;
-	$table->colspan[6][1] = 3;
+	$table->colspan[6][0] = 4;
+	$table->colspan[7][1] = 3;
 	$table->rowspan = array ();
 	$table->rowspan[2][2] = 2;
 	
@@ -1062,6 +1064,11 @@ function form_search_incident ($return = false, $filter=false) {
 		
 	$table->data[4][3] = print_checkbox_extended ('search_group_by_project', 1, $group_by_project, false, '', '', true, __('Group by project/task'));
 
+	$sla_states = array();
+	$sla_states[1] = __('SLA is fired');
+	$sla_states[2] = __('SLA is not fired');
+	$table->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('All'), 0, true, false, false, __('SLA'));
+
 	$table_type_fields = new stdclass;
 	$table_type_fields->width = "100%";
 	$table_type_fields->class = "search-table";
@@ -1100,10 +1107,10 @@ function form_search_incident ($return = false, $filter=false) {
 		$table_type_fields_html = print_table($table_type_fields, true);
 	}
 
-	$table->data[5][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
+	$table->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
 	
-	$table->data[6][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" href="#">'.__('Advanced search').' >></a></div>';
-	$table->data[6][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" href="#">'.__('Advanced search').' >></a></div>';
+	$table->data[7][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= print_table ($table, true);

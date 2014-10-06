@@ -47,6 +47,7 @@ if ($get_incidents_search) {
 	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
 	$filter['first_date'] = (string) get_parameter ('search_first_date');
 	$filter['last_date'] = (string) get_parameter ('search_last_date');	
+	$filter['sla_state'] = (string) get_parameter ('search_sla_state');	
 	
 	$ajax = get_parameter("ajax");
 	
