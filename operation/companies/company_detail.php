@@ -225,6 +225,12 @@ if ($id) {
 	$op = get_parameter ("op", "");
 	
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
+	if ($op == "projects")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=projects"><span>'.__("Projects").'</span></a></li>';
+	
 	if ($op == "files")
 		echo '<li class="ui-tabs-selected">';
 	else
@@ -298,6 +304,9 @@ if ($id) {
 			break;
 		case "contacts":
 			echo strtoupper(__('Contacts'));
+			break;
+		case "projects":
+			echo strtoupper(__('Projects'));
 			break;
 		default:
 			echo strtoupper(__('Company details'));
@@ -860,6 +869,20 @@ elseif ($op == "leads") {
 		
 	}
 }
+else if ($op == 'projects') {
+	$sql = "SELECT DISTINCT id_project FROM trole_people_task, ttask WHERE ttask.id = trole_people_task.id_task
+			AND id_user IN (SELECT id_usuario FROM tusuario WHERE id_company=$id)";
+
+	$company_projects = get_db_all_rows_sql($sql);
+	if ($company_projects == false) {
+		echo '<h4>'.__("No projects").'</h4>';
+	}
+
+	crm_print_company_projects_tree($company_projects);
+	
+	//div to show user info
+	echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";
+}
 
 // No id passed as parameter
 	
@@ -1167,6 +1190,8 @@ $(document).ready (function () {
 	};
 	add_validate_form_element_rules('#text-fiscal_id', rules, messages);
 	
+	hide_all_rows();
+	
 });
 
 function changeAction () {
@@ -1203,4 +1228,15 @@ function clearParent () {
 	$("#text-parent_name").val('<?php echo __('None') ?>');
 }
 
+function hide_all_rows() {
+	$("tr[class$='-project']").hide();
+}
+
+function show_detail(id_project) {
+	if ($("tr[class='"+id_project+"-project']").css('display') != "none") {
+		$("tr[class='"+id_project+"-project']").hide();
+	} else {
+		$("tr[class='"+id_project+"-project']").show();
+	}
+} 
 </script>

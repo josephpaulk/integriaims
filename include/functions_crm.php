@@ -1100,4 +1100,111 @@ function crm_get_contract_files ($id_contract, $order_desc = false) {
 	
 	return get_db_all_rows_field_filter ('tattachment', 'id_contract', $id_contract, $order);
 }
+
+function crm_print_company_projects_tree($projects) {
+	
+	require_once ("include/functions_tasks.php");  
+	
+	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+		$img = print_image ("images/input_create.png", true, array ("style" => 'vertical-align: middle;', "id" => $img_id));
+		$img_project = print_image ("images/note.png", true, array ("style" => 'vertical-align: middle;'));
+		
+		foreach ($projects as $project) {
+			$project_name = get_db_value('name', 'tproject', 'id', $project['id_project']);
+			//print project name
+			echo '<tr><td colspan="10" valign="top">';
+				echo "
+				<a onfocus='JavaScript: this.blur()' href='javascript: show_detail(\"" . $project['id_project']. "\")'>" .
+				$img . "&nbsp;" . $img_project ."&nbsp;" .  safe_output($project_name)."&nbsp;</a>"."&nbsp;&nbsp;";
+			echo '</td></tr>';
+
+			$id_project = $project['id_project'];
+			$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
+			$total_hr = get_project_workunit_hours ($id_project);
+			$total_planned = get_planned_project_workunit_hours($id_project);
+			$project_data = get_db_row ('tproject', 'id', $id_project);			
+			$start_date = $project_data["start"];
+			$end_date = $project_data["end"];
+
+			// Project detail
+			$table_detail = "<table class='advanced_details_table alternate'>";
+			
+			$table_detail .= "<tr>";
+			$table_detail .= '<td><b>'.__('Start date').' </b>';
+			$table_detail .= "</td><td>";
+			$table_detail .= $start_date;
+			$table_detail .= "</td></tr>";
+			
+			$table_detail .= "<tr>";
+			$table_detail .= '<td><b>'.__('End date').' </b>';
+			$table_detail .= "</td><td>";
+			$table_detail .= $end_date;
+			$table_detail .= "</td></tr>";
+			
+			$table_detail .= "<tr>";
+			$table_detail .= '<td><b>'.__('Total people involved').' </b>';
+			$table_detail .= "</td><td>";
+			$table_detail .= $people_inv;
+			$table_detail .= "</td></tr>";
+			
+			//People involved (avatars)
+			//Get users with tasks
+			$sql = sprintf("SELECT DISTINCT id_user FROM trole_people_task, ttask WHERE ttask.id_project= %d AND ttask.id = trole_people_task.id_task", $id_project);
+
+			$users_aux = get_db_all_rows_sql($sql);
+
+			if(empty($users_aux)) {
+				$users_aux = array();
+			}
+
+			foreach ($users_aux as $ua) {
+				$users_involved[] = $ua['id_user'];
+			}
+
+			//Delete duplicated items
+			if (empty($users_involved)) {
+				$users_involved = array();
+			}
+			else {
+				$users_involved = array_unique($users_involved);
+			}
+
+			$people_involved = "<div style='padding-bottom: 20px;'>";
+			foreach ($users_involved as $u) {
+				$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
+				if ($avatar != "") {
+					$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
+				}
+			}
+			$people_involved .= "</div>";
+
+			$table_detail .= "<tr><td colspan='10'>";
+			$table_detail .= $people_involved;
+			$table_detail .= "</td></tr>";
+			
+			$table_detail .= "<tr>";
+			$table_detail .= '<td><b>'.__('Total workunit (hr)').' </b>';
+			$table_detail .= "</td><td>";
+			$table_detail .= $total_hr . " (".format_numeric ($total_hr/$config["hours_perday"]). " ".__("days"). ")";
+			$table_detail .= "</td></tr>";
+
+			$table_detail .= "<tr>";
+			$table_detail .= '<td><b>'.__('Planned workunit (hr)').' </b>';
+			$table_detail .= "</td><td>";
+			$table_detail .= $total_planned . " (".format_numeric ($total_planned/$config["hours_perday"]). " ". __("days"). ")";
+			$table_detail .= "</td></tr>";
+			
+			$table_detail .= "</table>";
+
+			$class = $project['id_project']."-project";
+			$tr_status = 'class="'.$class.'"';
+			
+			echo '<tr '.$tr_status.'><td>';
+				echo $table_detail;
+			echo '</td></tr>';
+			
+		}
+		
+	echo '</table>';
+}
 ?>

@@ -87,3 +87,32 @@ function loadCompany(id_company) {
 
 	$("#company_search_window").dialog('close');
 }
+
+function openUserInfo(id_user) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&get_user_info=1&id_user="+id_user,
+		dataType: "html",
+		success: function(data){
+			
+			$("#user_info_window").html (data);
+			$("#user_info_window").show ();
+			
+			$("#user_info_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 420,
+					height: 400
+				});
+			$("#user_info_window").dialog('open');
+
+		}
+	});
+}

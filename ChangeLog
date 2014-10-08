@@ -1,3 +1,10 @@
+2014-10-08  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_crm.php
+	  include/js/integria_crm.js
+	  operation/companies/company_detail.php: Added project tab
+	to company detail. Ticket #1241.
+
 2014-10-06  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql
