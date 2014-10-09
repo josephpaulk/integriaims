@@ -116,22 +116,27 @@ if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
 	echo "<div>|</div></li>";
 }
 
-
 // Custom Screens
 if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
 	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+
 	if (!empty($custom_screens)) {
+		$i == 0;
 		foreach ($custom_screens as $custom_screen_id => $custom_screen) {
 			if (isset($custom_screen['menuEnabled']) && (bool) $custom_screen['menuEnabled']) {
-				if ($sec == "custom_screen-$custom_screen_id")
-					echo "<li id='current' class='custom_screen'>";
-				else
-					echo "<li class='custom_screen'>";
-				echo "<a href='index.php?sec=custom_screen-$custom_screen_id&sec2=enterprise/operation/custom_screens/custom_screens&id=$custom_screen_id'>" . $custom_screen['name'] . "</a>";
-				echo "<div>|</div></li>";
+				if ($i == 0) { //First custom screen
+					$custom_link = 'index.php?sec=custom_screen-'.$custom_screen_id.'&sec2=enterprise/operation/custom_screens/custom_screens&id='.$custom_screen_id;
+				}
 			}
+			$i++;
 		}
+		if ($sec == "custom_screen" )
+			echo "<li id='current' class='custom_screen'>";
+		else
+			echo "<li class='custom_screen'>";
+		echo "<a href='" . $custom_link . "'>".__('Custom screens')."</a></li>";
 	}
+	
 }
 
 echo "</ul>";
@@ -173,9 +178,39 @@ if ($download_acl) {
 
 echo '</ul>';
 echo '</div>';
+
+echo '<div class="submenu custom_submenu">';
+echo '<ul class="submenu">';
+if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+	if (!empty($custom_screens)) {
+		foreach ($custom_screens as $custom_screen_id => $custom_screen) {
+			if (isset($custom_screen['menuEnabled']) && (bool) $custom_screen['menuEnabled']) {
+				if ($sec == "custom_screen-$custom_screen_id")
+					echo "<li id='current' class='custom_screen'>";
+				else
+					echo "<li class='custom_screen'>";
+					
+				$len = strlen($custom_screen['name']);
+				if ($len <= 12) {
+					$str_custom_name = $custom_screen['name'];
+					$title = "";
+				} else {
+					$str_custom_name = substr($custom_screen['name'], 0, 9)."...";
+					$title = "title='" . $custom_screen['name'] . "'";
+				}
+				echo "<a href='index.php?sec=custom_screen-$custom_screen_id&sec2=enterprise/operation/custom_screens/custom_screens&id=$custom_screen_id' $title>" . $str_custom_name . "</a></li>";
+			}
+		}
+	}
+}
+echo '</ul>';
+echo '</div>';
+
 ?>
 <script type="text/javascript">	
 var wizard_tab_showed = 0;
+var screen_tab_showed = 0;
 
 /* <![CDATA[ */
 $(document).ready (function () {
@@ -184,6 +219,11 @@ $(document).ready (function () {
 	$('li.support a').hover(agent_wizard_tab_show, agent_wizard_tab_hide);
 	
 	$('.support_submenu').hover(agent_wizard_tab_show, agent_wizard_tab_hide);
+	
+	$('li.custom_screen a').hover(custom_screen_tab_show, custom_screen_tab_hide);
+	
+	$('.custom_submenu').hover(custom_screen_tab_show, custom_screen_tab_hide);
+
 });
 
 // Set the position and width of the subtab
@@ -214,7 +254,34 @@ function agent_wizard_tab_hide() {
 
 $(window).resize(function() {
 	agent_wizard_tab_setup();
+	custom_screen_tab_setup();
 });
+
+// Set the position and width of the subtab
+function custom_screen_tab_setup() {		
+	$('.custom_submenu').css('left', $('li.custom_screen a').offset().left - $('#wrap').offset().left)
+	$('.custom_submenu').css('top', $('li.custom_screen a').offset().top + $('li.custom_screen a').height() + 12)
+	$('.custom_submenu').css('width', $('li.custom_screen a').width() + 6)
+}
+
+function custom_screen_tab_show() {
+	custom_screen_tab_setup();
+	screen_tab_showed = screen_tab_showed + 1;
+	
+	if(screen_tab_showed == 1) {
+		$('.custom_submenu').show("fast");
+	}
+}
+
+function custom_screen_tab_hide() {
+	screen_tab_showed = screen_tab_showed - 1;
+
+	setTimeout(function() {
+		if(screen_tab_showed <= 0) {
+			$('.custom_submenu').hide("fast");
+		}
+	},500);
+}
 
 /* ]]> */
 </script>

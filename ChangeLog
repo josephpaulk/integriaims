@@ -1,5 +1,10 @@
 2014-10-09  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/main_menu.php: Improved custom screens
+	sections in header. Ticket #1231.
+
+2014-10-09  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/functions_crm.php: Fixed bug listing
 	people involved in a project.
 
