@@ -1156,6 +1156,8 @@ function crm_print_company_projects_tree($projects) {
 			if(empty($users_aux)) {
 				$users_aux = array();
 			}
+			
+			$users_involved = array();
 
 			foreach ($users_aux as $ua) {
 				$users_involved[] = $ua['id_user'];
