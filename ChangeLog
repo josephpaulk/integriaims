@@ -1,5 +1,14 @@
 2014-10-09  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* integria_db.sql
+	  extras/mr/13.sql
+	  operation/projects/project.php
+	  operation/projects/project_detail.php
+	  include/functions_db: Added 'CC' field
+	to project detail. Ticket #1217.
+
+2014-10-09  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* operation/main_menu.php: Improved custom screens
 	sections in header. Ticket #1231.
 

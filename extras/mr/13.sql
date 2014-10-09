@@ -24,3 +24,9 @@ ALTER TABLE `tattachment` ADD `id_contract` mediumint(8) unsigned NOT NULL;
 -- ---------------------------------------------------------------------
 
 ALTER TABLE `tgrupo` ADD `email_from` varchar(150) default '';
+
+-- ---------------------------------------------------------------------
+-- Table tproject
+-- ---------------------------------------------------------------------
+
+ALTER TABLE `tproject` ADD `cc` varchar(150) default '';

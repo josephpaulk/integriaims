@@ -89,6 +89,7 @@ CREATE TABLE `tproject` (
   `id_owner` varchar(60)  NOT NULL default '',
   `disabled` int(2) unsigned NOT NULL default '0',
   `id_project_group` mediumint(8) unsigned NOT NULL default '0',
+  `cc` varchar(150) default '',
   PRIMARY KEY  (`id`),
   KEY `iproject_idx_1` (`id_project_group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

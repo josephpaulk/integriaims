@@ -110,6 +110,7 @@ if ($action == 'insert') {
 	$start_date = (string) get_parameter ('start_date');
 	$end_date = (string) get_parameter ('end_date');
 	$id_project_group = (int) get_parameter ('id_project_group');
+	$cc = get_parameter("cc", "");
 	
 	$error_msg = "";
 	
@@ -126,10 +127,10 @@ if ($action == 'insert') {
 	}
 	else {
 		$sql = sprintf ('INSERT INTO tproject
-			(name, description, start, end, id_owner, id_project_group)
-			VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
+			(name, description, start, end, id_owner, id_project_group, cc)
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d, "%s")',
 			$name, $description, $start_date, $end_date, $id_owner,
-			$id_project_group);
+			$id_project_group, $cc);
 		$id_project = process_sql ($sql, 'insert_id');
 	}
 	

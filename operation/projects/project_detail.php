@@ -31,6 +31,7 @@ $start_date = "";
 $id_project = -1; // Create mode by default
 $result_output = "";
 $id_project_group = 0;
+$cc = "";
 
 $action = (string) get_parameter ('action');
 $id_project = (int) get_parameter ('id_project');
@@ -79,12 +80,13 @@ if ($action == 'update') {
 	$start_date = get_parameter ('start_date');
 	$end_date = get_parameter ('end_date');
 	$id_project_group = get_parameter ("id_project_group");
+	$cc = get_parameter('cc', '');
 	$sql = sprintf ('UPDATE tproject SET 
 			name = "%s", description = "%s", id_project_group = %d,
-			start = "%s", end = "%s", id_owner = "%s"
+			start = "%s", end = "%s", id_owner = "%s", cc = "%s"
 			WHERE id = %d',
 			$name, $description, $id_project_group,
-			$start_date, $end_date, $user, $id_project);
+			$start_date, $end_date, $user, $cc, $id_project);
 	$result = process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project updated", "Project $name");
 	if ($result !== false) {
@@ -105,6 +107,7 @@ if ($id_project) {
 	$end_date = $project["end"];
 	$owner = $project["id_owner"];
 	$id_project_group = $project["id_project_group"];
+	$cc = $project["cc"];
 } 
 
 
@@ -209,6 +212,10 @@ if (!$clean_output) {
 } else {
 	$project_info .= get_db_value ("name", "tproject_group", "id", $id_project_group);
 }
+
+// CC
+$project_info .= '<tr><td class="datos" colspan=3><b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b><br>';
+$project_info .= '<input type="text" name="cc" size=70 value="'.$cc.'">';
 
 // Description
 $project_info .= "<tr><td colspan=4><b>".__("Description")."</b><br>";
