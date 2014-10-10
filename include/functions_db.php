@@ -1066,6 +1066,7 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 		if ($cc != "") {
 			integria_sendmail ($cc, $subject, $text);
 		}
+	}
 }
 
 // TODO: Make todo mail using a template, like the other mails !
