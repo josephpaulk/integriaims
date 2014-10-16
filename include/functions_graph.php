@@ -937,12 +937,24 @@ function graph_incident_sla_compliance($id_incident, $width=200, $height=200, $t
 
 function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	global $config;
+
+	$data = array();
 	
 	//Get time and calculate start date based on period
 	$now = time();
 	//This array sets the color of sla graph
 	$colors = array(0 => '#FF0000', 1 => '#38B800');
-	$start_period = $now - $period;
+	$start_time = $now - $period;
+
+	//Get the last sla graph data after the start period
+	$sql = sprintf ("SELECT value as data
+					FROM tincident_sla_graph_data
+					WHERE id_incident = %d
+						AND utimestamp <= %d
+					ORDER BY utimestamp DESC
+					LIMIT 1",
+					$incident, $start_time);
+	$first_data = get_db_all_rows_sql($sql);
 	
 	//Get all sla graph data
 	$sql = sprintf ("SELECT value as data, utimestamp
@@ -950,19 +962,16 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 					WHERE id_incident = %d
 						AND utimestamp > %d
 					ORDER BY utimestamp ASC",
-					$incident, $start_period);
-
+					$incident, $start_time);
 	$aux_data = get_db_all_rows_sql($sql);
 	
 	//Check if we have data for this interval
-	if ($aux_data == false) {
-		//There is no data print a fake graph because there is no data
-		//We asume the SLA compliance was OK
+	if (empty($aux_data) || empty($aux_data[0])) {
+		if (!empty($first_data) && !empty($first_data[0])) {
+			$data[] = array("data" => $first_data[0]["data"], "utimestamp" => $period);
+		}
 		
-		$data [0]= array("data" => 1, "utimestamp" => $now);
-		$data [1]= array("data" => 1, "utimestamp" => $now-$period);
-		
-		return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'], false,'',$ttl);
+		return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'], false, $config['base_url'], $ttl);
 	}
 	
 	//Set previous value and time to create sla data array ranges
@@ -971,14 +980,16 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	//Compare period set by user with max period of data stored
 	$time_diff = ($now - $previous_time);
 
+	// Store the previous value that existed before the period start
+	if (!empty($first_data) && !empty($first_data[0])) {
+		$data[] = array("data" => $first_data[0]["data"], "utimestamp" => $previous_time - $start_time);
+	}
 	//If period of data stored is lower than the period set by user
 	//the period is stablished by the maximun period of data stored
-	if ($period > $time_diff) {
+	else if ($period > $time_diff) {
 		$period = $time_diff;
 	}
-	
-	$data = array();
-	
+
 	for ($i = 0; $i < count($aux_data); $i++) {
 
 		$value = $aux_data[$i]["data"];
@@ -990,11 +1001,11 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 			$range = $now - $timestamp;
 		}
 		
-		array_push($data, array("data" => $value, "utimestamp" => $range));
+		$data[] = array("data" => $value, "utimestamp" => $range);
 	}
 	
 	//Draw the graph
-	return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'], false,'',$ttl);
+	return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'], false, '', $ttl);
 }
 
 function graph_incident_user_activity ($incident, $width=200, $height=200, $ttl=1) {

@@ -1,3 +1,8 @@
+2014-10-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_graph.php: Fixed many errors on the
+	function "graph_sla_slicebar".
+
 2014-10-16  Sancho lerena <slerena@artica.es>
 
 	* integria_dbdata.sql,
