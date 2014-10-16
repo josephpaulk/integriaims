@@ -1,5 +1,11 @@
 2014-10-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/main_menu.php: Now the 'Custom screens' item
+	doesn't appear when there aren't custom screens with the
+	'show on menu' option enabled.
+
+2014-10-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/functions_graph.php: Fixed many errors on the
 	function "graph_sla_slicebar".
 
