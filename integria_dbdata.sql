@@ -14,8 +14,8 @@
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
 ('language_code','en_GB'),
 ('block_size','25'),
-('db_scheme_version','4.1.15'),
-('db_scheme_build','140814'),
+('db_scheme_version','4.1.16'),
+('db_scheme_build','141015'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management System'),
@@ -49,6 +49,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('current_package', 0),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
+('login_background', 'flowers.jpg'),
 ('minor_release', 13);
 
 -- Default password is 'integria'
@@ -72,7 +73,7 @@ INSERT INTO `tlanguage` VALUES ('pl','Polski');
 
 INSERT INTO `tlink` VALUES  (1,'Integria Project','http://integria.sourceforge.net'), (2,'Artica ST','http://www.artica.es'), (3, 'Report a bug', 'https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
 
-INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
+INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0, "");
 
 ALTER TABLE tproject AUTO_INCREMENT = 1;
 

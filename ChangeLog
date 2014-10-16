@@ -1,3 +1,9 @@
+2014-10-16  Sancho lerena <slerena@artica.es>
+
+	* integria_dbdata.sql,
+	integria_demo.sql: Fixed bad insert due new column
+	in project table.
+
 2014-10-16  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/common/download_file.php

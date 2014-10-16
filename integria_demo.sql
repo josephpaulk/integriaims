@@ -485,7 +485,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `tproject` WRITE;
 /*!40000 ALTER TABLE `tproject` DISABLE KEYS */;
-INSERT INTO `tproject` VALUES (1,'Super&#x20;Vaporware&#x20;v1.0','','2013-05-01','2013-05-01','admin',0,0);
+INSERT INTO `tproject` VALUES (1,'Super&#x20;Vaporware&#x20;v1.0','','2013-05-01','2013-05-01','admin',0,0, "");
+
 /*!40000 ALTER TABLE `tproject` ENABLE KEYS */;
 UNLOCK TABLES;
 
