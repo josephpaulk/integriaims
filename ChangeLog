@@ -1,3 +1,9 @@
+2014-10-16  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/common/download_file.php
+	  operation/contracts/contract_detail.php: Fixed
+	bug #1385.
+
 2014-10-10  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_db: Added missed '{'.

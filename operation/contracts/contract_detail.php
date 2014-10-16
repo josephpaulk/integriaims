@@ -473,7 +473,7 @@ if ($id || $new_contract) {
 		//File list		
 		echo "<h2>".__('Files')."</h2>";
 
-		// Files attached to this incident
+		// Files attached to this contract
 		$files = crm_get_contract_files ($id);
 		if ($files === false) {
 			$files = array();
@@ -496,7 +496,7 @@ if ($id || $new_contract) {
 
 		foreach ($files as $file) {
 
-			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
+			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=contract";
 
 			$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
 

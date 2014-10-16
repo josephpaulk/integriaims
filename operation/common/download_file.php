@@ -190,6 +190,23 @@ switch ($type) {
 		}
 
 		break;
+	case "contract":
+
+		$read_permission = check_crm_acl ('contract', 'cr');
+
+		if (!$read_permission) {
+			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
+			require ($general_error);
+			exit;
+		}
+		
+		$data = get_db_row ("tattachment", "id_attachment", $id_attachment);
+		$data["filename"] = safe_output($data["filename"]);
+		
+		$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
+		$last_name = $data["filename"];
+		
+		break;
 	default:
 }
 
