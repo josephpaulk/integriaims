@@ -109,6 +109,7 @@ CREATE TABLE `ttask` (
   `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   `count_hours` TINYINT (1) DEFAULT '1',
+  `cc` varchar(150) default '',
   PRIMARY KEY  (`id`),
   KEY `itask_idx_1` (`id_project`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)

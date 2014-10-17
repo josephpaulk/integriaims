@@ -1,3 +1,12 @@
+2014-10-17  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  integria_demo.sql
+	  extras/mr/13.sql
+	  include/functions_db.php
+	  operation/projects/task_detail.php: Fixed
+	bug #1217. Added field "CC" to task detail.
+
 2014-10-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/main_menu.php: Now the 'Custom screens' item

@@ -95,6 +95,7 @@ $priority = 1;
 $result_output = "";
 $parent = 0;
 $count_hours = 1;
+$cc = "";
 
 
 // Create task
@@ -118,13 +119,14 @@ if ($operation == "insert") {
 		$periodicity = (string) get_parameter ('periodicity', 'none');
 		$estimated_cost = (int) get_parameter ('estimated_cost');
 		$count_hours = (int) get_parameter("count_hours");
+		$cc = get_parameter('cc', '');
 	
 		$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
 			completion, start, end, id_parent_task, hours, estimated_cost,
-			periodicity, count_hours)
-			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %f, "%s", %d)',
+			periodicity, count_hours, cc)
+			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %f, "%s", %d, "%s")',
 			$id_project, $name, $description, $priority, $completion, $start, $end,
-			$parent, $hours, $estimated_cost, $periodicity, $count_hours);
+			$parent, $hours, $estimated_cost, $periodicity, $count_hours, $cc);
 		$id_task = process_sql ($sql, 'insert_id');
 		if ($id_task !== false) {
 			$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
@@ -187,16 +189,18 @@ if ($operation == "update") {
 	$start = get_parameter ('start_date', date ("Y-m-d"));
 	$end = get_parameter ('end_date', date ("Y-m-d"));
 	$count_hours = get_parameter("count_hours");
+	$cc = get_parameter('cc', '');
 	
 	$sql = sprintf ('UPDATE ttask SET name = "%s", description = "%s",
 			priority = %d, completion = %d,
 			start = "%s", end = "%s", hours = %d,
 			periodicity = "%s", estimated_cost = "%f",
-			id_parent_task = %d, count_hours = %d
+			id_parent_task = %d, count_hours = %d,
+			cc = "%s"
 			WHERE id = %d',
 			$name, $description, $priority, $completion, $start, $end,
 			$hours, $periodicity, $estimated_cost, $parent, $count_hours,
-			$id_task);
+			$cc, $id_task);
 	
 	if ($id_task != $parent) {
 		$result = process_sql ($sql);
@@ -250,6 +254,7 @@ if ($operation == "view") {
 	$parent = $task['id_parent_task'];
 	$periodicity = $task['periodicity'];
 	$count_hours = $task['count_hours'];
+	$cc = $task['cc'];
 		
 } 
 
@@ -327,13 +332,14 @@ $table->data[2][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
 	        false, '', '', true, __('Completion based on hours'))
 	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
 
-$table->colspan[3][0] = 3;
+$table->data[3][0] = print_input_text ('cc', $cc, '', 60, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
 
+$table->colspan[4][0] = 3;
 $completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
 
-$table->data[3][0] = print_label ($completion_label, '', '', true,
+$table->data[4][0] = print_label ($completion_label, '', '', true,
 	'<div id="slider" style="margin-top: 5px;"><div class="ui-slider-handle"></div></div>');
-$table->data[3][0] .= print_input_hidden ('completion', $completion, true);
+$table->data[4][0] .= print_input_hidden ('completion', $completion, true);
 
 //////TABLA ADVANCED
 $table_advanced->width = '98%';
@@ -372,8 +378,8 @@ $table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);
 $table->colspan['row_links'][0] = 3;
 $table->data['row_links'][0] = print_container('task_links', __('Task links'), print_table($table_advanced, true), 'open', true, false);
 
-$table->colspan[4][0] = 3;
-$table->data[4][0] = print_textarea ('description', 8, 30, $description, '',
+$table->colspan[5][0] = 3;
+$table->data[5][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
 $button = '';

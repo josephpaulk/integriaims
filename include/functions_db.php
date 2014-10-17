@@ -1022,7 +1022,8 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 	$project  = get_db_row ("tproject", "id", $task["id_project"]);
 	$id_project = $task["id_project"];
 	$id_manager = $project["id_owner"];
-	$cc = $project["cc"];
+	$cc_project = $project["cc"];
+	$cc_task = $task["cc"];
 
 	$MACROS["_time_used_"] = $workunit["duration"];
 	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
@@ -1061,12 +1062,15 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 	
 	if (!user_is_disabled ($id_manager)) {
 		// Send an email to project manager
-		integria_sendmail (get_user_email($id_manager), $subject, $text, false, "", "", 0, $cc);
-	} else {
-		if ($cc != "") {
-			integria_sendmail ($cc, $subject, $text);
-		}
+		integria_sendmail (get_user_email($id_manager), $subject, $text);
 	}
+	if ($cc_project != "") {
+		integria_sendmail ($cc_project, $subject, $text);
+	}
+	if ($cc_task != "") {
+		integria_sendmail ($cc_task, $subject, $text);
+	}
+	
 }
 
 // TODO: Make todo mail using a template, like the other mails !

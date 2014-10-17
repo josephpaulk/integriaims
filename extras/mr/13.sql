@@ -30,3 +30,10 @@ ALTER TABLE `tgrupo` ADD `email_from` varchar(150) default '';
 -- ---------------------------------------------------------------------
 
 ALTER TABLE `tproject` ADD `cc` varchar(150) default '';
+
+-- ---------------------------------------------------------------------
+-- Table ttask
+-- ---------------------------------------------------------------------
+
+ALTER TABLE `ttask` ADD `cc` varchar(150) default '';
+
