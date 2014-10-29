@@ -188,4 +188,27 @@ function groups_get_group_name($id_group) {
 	
 	return $name;
 }
+
+function groups_get_user_groups($id_user) {
+	global $config;
+	
+	if ($id_user == "") {
+		$id_user = $config['id_user'];
+	}
+
+	$groups = get_db_all_rows_filter('tusuario_perfil', array('id_usuario'=>$id_user), 'id_grupo');
+	if ($groups === false) {
+		$groups = array();
+	}
+
+	$group_ids = "(0";
+	$i = 0;
+	foreach ($groups as $group) {
+		$group_ids .= ",".$group['id_grupo'];
+	}
+
+	$group_ids .= ")";
+	
+	return $group_ids;
+}
 ?>

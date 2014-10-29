@@ -1102,17 +1102,15 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/holidays_calendar'>".__('Holidays calendar')."</a></li>";
 	}
 	
-	if (dame_admin ($config['id_user'])) {
-		if ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
-		echo '</li>';
+	if ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
+	echo '</li>';
 
-		enterprise_hook ('show_programmed_reports', array($sec2));
-	}
-		
+	enterprise_hook ('show_programmed_reports', array($sec2));
+	
 	echo "</ul></div>";	
 
 	// PEOPLE MANAGEMENT

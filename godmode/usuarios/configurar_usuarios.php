@@ -99,110 +99,119 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 // UPDATE USER
 ///////////////////////////////
 if ($action == 'update')  {
-	if (isset ($_POST["pass1"])) {
-		$nombre_real = get_parameter ("nombre_real");
-		$nombre_viejo = get_parameter ("update_user");
-		$nombre = $nombre_viejo ;
-		$password = get_parameter ("pass1");
-		$password2 = get_parameter ("pass2");
-		$lang = get_parameter ("lang");
-		$disabled = get_parameter ("disabled");
-		$simple_mode = get_parameter ("simple_mode");
-		$id_company = get_parameter ("id_company");
-		$num_employee = get_parameter ("num_employee");
-		$enable_login = get_parameter ("enable_login");
-		$location = get_parameter ("location", "");
-		
-		//chech if exists num employee
-		$already_exists = false;
-		if (isset($num_employee) && ($num_employee != '')) {
-			$sql_num = "SELECT num_employee FROM tusuario
-							WHERE id_usuario<>'$update_user'
-							AND num_employee<>''";
+	$enable_login = get_parameter("enable_login");
+	
+	enterprise_include ('include/functions_license.php', true);
 
-			$result = process_sql($sql_num);
-			if ($result === false) {
-				$already_exists = false;
-			} else {
-				foreach ($result as $res) {
-					if ($res['num_employee'] == $num_employee) {
-						$already_exists = true;
+	$users_check = enterprise_hook('license_check_users_num');
+
+	if ($users_check === true || $users_check === ENTERPRISE_NOT_HOOK || !$enable_login) {
+		if (isset ($_POST["pass1"])) {
+			$nombre_real = get_parameter ("nombre_real");
+			$nombre_viejo = get_parameter ("update_user");
+			$nombre = $nombre_viejo ;
+			$password = get_parameter ("pass1");
+			$password2 = get_parameter ("pass2");
+			$lang = get_parameter ("lang");
+			$disabled = get_parameter ("disabled");
+			$simple_mode = get_parameter ("simple_mode");
+			$id_company = get_parameter ("id_company");
+			$num_employee = get_parameter ("num_employee");
+			$location = get_parameter ("location", "");
+			
+			//chech if exists num employee
+			$already_exists = false;
+			if (isset($num_employee) && ($num_employee != '')) {
+				$sql_num = "SELECT num_employee FROM tusuario
+								WHERE id_usuario<>'$update_user'
+								AND num_employee<>''";
+
+				$result = process_sql($sql_num);
+				if ($result === false) {
+					$already_exists = false;
+				} else {
+					foreach ($result as $res) {
+						if ($res['num_employee'] == $num_employee) {
+							$already_exists = true;
+						}
 					}
 				}
-			}
-		}
-		
-		if ($password <> $password2){
-			echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
-		}
-		else if ($already_exists) {
-			echo "<h3 class='error'>".__('Number employee already exists.')."</h3>";
-		}
-		else {
-			if (isset($_POST["nivel"])) {
-				$nivel = get_parameter ("nivel");
-			}
-			$direccion = trim (ascii_output(get_parameter ("direccion")));
-			$telefono = get_parameter ("telefono");
-			$comentarios = get_parameter ("comentarios");
-			$avatar = get_parameter ("avatar");
-			$avatar = substr($avatar, 0, strlen($avatar)-4);
-
-			if (dame_password ($nombre_viejo) != $password){
-				$password = md5($password);
-				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
-			}
-			else {
-				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '".$nombre_viejo."'";
 			}
 			
-			$resq2 = process_sql($sql);
+			if ($password <> $password2){
+				echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
+			}
+			else if ($already_exists) {
+				echo "<h3 class='error'>".__('Number employee already exists.')."</h3>";
+			}
+			else {
+				if (isset($_POST["nivel"])) {
+					$nivel = get_parameter ("nivel");
+				}
+				$direccion = trim (ascii_output(get_parameter ("direccion")));
+				$telefono = get_parameter ("telefono");
+				$comentarios = get_parameter ("comentarios");
+				$avatar = get_parameter ("avatar");
+				$avatar = substr($avatar, 0, strlen($avatar)-4);
 
-			// Add group / to profile
-			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			if (isset($_POST["grupo"])) {
-				if ($_POST["grupo"] <> "") {
-					$grupo = $_POST["grupo"];
-					$perfil = $_POST["perfil"];
-					$id_usuario_edit = $_SESSION["id_usuario"];
-					$res = enterprise_hook('associate_userprofile');
-					if($res === false) {
-						echo "<h3 class='error'>".__('There was a problem assigning user profile')."</h3>";
+				if (dame_password ($nombre_viejo) != $password){
+					$password = md5($password);
+					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
+				}
+				else {
+					$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '".$nombre_viejo."'";
+				}
+				
+				$resq2 = process_sql($sql);
+
+				// Add group / to profile
+				// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				if (isset($_POST["grupo"])) {
+					if ($_POST["grupo"] <> "") {
+						$grupo = $_POST["grupo"];
+						$perfil = $_POST["perfil"];
+						$id_usuario_edit = $_SESSION["id_usuario"];
+						$res = enterprise_hook('associate_userprofile');
+						if($res === false) {
+							echo "<h3 class='error'>".__('There was a problem assigning user profile')."</h3>";
+						}
 					}
 				}
-			}
 
-			//Add custom fields
-			foreach ($user_fields as $u) {
+				//Add custom fields
+				foreach ($user_fields as $u) {
 
-				$custom_value = get_parameter("custom_".$u["id"]);
-				
-				$sql = sprintf('SELECT data FROM tuser_field_data WHERE id_user = "%s" AND id_user_field = %d',
-								$update_user, $u["id"]);
-				
-				$current_data = process_sql($sql);
-				
-				if ($current_data) {
-					$sql = sprintf('UPDATE tuser_field_data SET data = "%s" WHERE id_user = "%s" AND id_user_field = %d',
-							$custom_value, $update_user, $u["id"]);
-				} else {
-					$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
-							$custom_value, $update_user, $u["id"]);
+					$custom_value = get_parameter("custom_".$u["id"]);
+					
+					$sql = sprintf('SELECT data FROM tuser_field_data WHERE id_user = "%s" AND id_user_field = %d',
+									$update_user, $u["id"]);
+					
+					$current_data = process_sql($sql);
+					
+					if ($current_data) {
+						$sql = sprintf('UPDATE tuser_field_data SET data = "%s" WHERE id_user = "%s" AND id_user_field = %d',
+								$custom_value, $update_user, $u["id"]);
+					} else {
+						$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
+								$custom_value, $update_user, $u["id"]);
+					}
+
+					$res = process_sql($sql);
+
+					if ($res === false) {
+						echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+					}
 				}
 
-				$res = process_sql($sql);
-
-				if ($res === false) {
-					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
-				}
+				$modo = "edicion";
+				echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 			}
-
-			$modo = "edicion";
-			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		}
-	}
-	else {
-		echo "<h3 class='error'>".__('There was a problem updating user')."</h3>";
+		else {
+			echo "<h3 class='error'>".__('There was a problem updating user')."</h3>";
+		}
+	} else {
+		echo "<h3 class='error'>".__('The number of users has reached the license limit')."</h3>";
 	}
 } 
 
@@ -210,11 +219,14 @@ if ($action == 'update')  {
 // CREATE USER
 ///////////////////////////////
 if ($action == 'create'){
+	
+	$enable_login = get_parameter("enable_login");
+
 	enterprise_include ('include/functions_license.php', true);
 
 	$users_check = enterprise_hook('license_check_users_num');
 
-	if ($users_check === true || $users_check === ENTERPRISE_NOT_HOOK) {
+	if ($users_check === true || $users_check === ENTERPRISE_NOT_HOOK || !$enable_login) {
 
 		// Get data from POST
 		$nombre = strtolower(get_parameter ("nombre"));
@@ -240,7 +252,6 @@ if ($action == 'create'){
 			
 		$ahora = date("Y-m-d H:i:s");
 		$num_employee = get_parameter("num_employee");
-		$enable_login = get_parameter("enable_login");
 		$location = get_parameter ("location", "");
 		$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login, '$location')";
 
@@ -674,5 +685,3 @@ messages = {
 add_validate_form_element_rules('input[name="nombre"]', rules, messages);
 
 </script>
-
-

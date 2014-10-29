@@ -1,3 +1,19 @@
+2014-10-29  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  integria_dbdata.sql
+	  extras/mr/14.sql
+	  godmode/usuarios/configurar_usuarios.php
+	  include/functions.php
+	  include/functions_db.php
+	  include/functions_form.php
+	  include/functions_groups.php
+	  operation/side_menu.php
+	  operation/incidents/incident_detail.php
+	  operation/inventories/inventory_reports.php
+	  operation/inventories/inventory_reports_detail.php: Fixed
+	several bugs #1497, #1255, #1488, #1486, #1453, #1451, #1399.
+
 2014-10-17  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql

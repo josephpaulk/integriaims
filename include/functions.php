@@ -95,6 +95,9 @@ function clean_output_breaks ($string) {
 	return preg_replace ('/&#x0a;/', "<br>", $string);
 }
 
+function replace_return_by_breaks ($string) {
+	return preg_replace ('/\n/', "<br>", $string);
+}
 
 function replace_breaks ($string) {
 	$string = preg_replace ('/<br \/>/', "\n", $string);

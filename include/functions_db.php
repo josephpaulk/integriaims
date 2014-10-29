@@ -1262,7 +1262,7 @@ function get_groups_id ($order = 'nombre') {
  * 
  * @return A list of the groups the user has reading privileges.
  */
-function get_user_groups ($id_user = 0, $permission = 'IR') {
+function get_user_groups ($id_user = 0, $permission = 'IR', $all=true) {
 	if ($id_user === 0) {
 		global $config;
 		$id_user = $config['id_user'];
@@ -1275,6 +1275,9 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
 	// loop below.
 	if (get_admin_user($id_user)){
 		foreach ($groups as $group) {
+			if (!$all && ($group["id_grupo"] == 1)) {
+				continue;
+			}
 			$user_groups[$group['id_grupo']] = $group['nombre'];
 		}
 		return $user_groups;
@@ -1284,6 +1287,9 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
 		return $user_groups;
 
 	foreach ($groups as $group) {
+		if (!$all && ($group["id_grupo"] == 1)) {
+			continue;
+		}
 		if (! give_acl ($id_user, $group["id_grupo"], $permission))
 			continue;
 		$user_groups[$group['id_grupo']] = $group['nombre'];

@@ -1004,8 +1004,8 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	$table->data[0][2] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
-			'', __('All'), 1, true, false, false, __('Group'));
-	
+			'', '', '', true, false, false, __('Group'));
+
 	$params_owner = array();
 	$params_owner['input_id'] = 'text-search_id_user';
 	$params_owner['input_name'] = 'search_id_user';

@@ -1069,6 +1069,7 @@ CREATE TABLE `tinventory_reports` (
   `id` mediumint unsigned NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `sql` text,
+  `id_group` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1184,6 +1185,12 @@ CREATE TABLE `tworkflow_condition` (
   `id_owner` varchar(200)  NOT NULL default '',
   `status` int unsigned NOT NULL default 0,
   `priority` int NOT NULL,
+  `sla` int NOT NULL default 0,
+  `string_match` varchar(250)  NOT NULL default '',
+  `resolution` int NOT NULL default 0,
+  `id_task` int(10) NOT NULL default 0,
+  `id_ticket_type` int(10) NOT NULL default 0,
+  `type_fields` varchar(300)  NOT NULL default '',
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_rule`) REFERENCES tworkflow_rule(`id`)
        ON DELETE CASCADE

@@ -18,13 +18,6 @@ check_login ();
 
 require_once ('include/functions_inventories.php');
 
-if (! dame_admin ($config['id_user'])) {
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory reports");
-	include ("general/noaccess.php");
-	return;
-}
-
 echo '<h1>'.__('Inventory reports').'</h1>';
 
 $delete = (bool) get_parameter ('delete_report');
@@ -41,7 +34,14 @@ if ($delete) {
 	}
 }
 
-$reports = get_db_all_rows_in_table ('tinventory_reports');
+if (dame_admin ($config['id_user'])) {
+	$reports = get_db_all_rows_in_table ('tinventory_reports');
+} else {
+	$all_groups_str = groups_get_user_groups($config['id_user']);
+	$sql = "SELECT * FROM tinventory_reports WHERE id_group IN ".$all_groups_str;
+	$reports = get_db_all_rows_sql($sql);
+}
+
 if ($reports === false) {
 
 	echo '<h2 class="error">'.__('No reports were found').'</h2>';
@@ -56,7 +56,9 @@ if ($reports === false) {
 	$table->head[1] = __('View');
 	$table->head[2] = __('PDF');
 	$table->head[3] = __('CSV');
-	$table->head[4] = __('Delete');
+	if(dame_admin ($config['id_user'])) {
+		$table->head[4] = __('Delete');
+	}
 	$table->size = array ();
 
 	foreach ($reports as $report) {
@@ -69,9 +71,12 @@ if ($reports === false) {
 		$data[1] = print_html_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("HTML report"));
 		$data[2] = print_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("PDF report"));
 		$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.png'></a>";
-		$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
-		$data[4] .= '<img src="images/cross.png">';
-		$data[4] .= '</a>';
+		
+		if(dame_admin ($config['id_user'])) {
+			$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
+			$data[4] .= '<img src="images/cross.png">';
+			$data[4] .= '</a>';
+		}
 		
 		array_push ($table->data, $data);
 	}
@@ -81,7 +86,9 @@ if ($reports === false) {
 
 echo '<form method="post" action="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">';
 echo '<div class="button" style="width: 99%">';
-print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
+if(dame_admin ($config['id_user'])) {
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
+}
 echo '</div>';
 echo '</form>';
 

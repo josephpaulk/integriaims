@@ -17,14 +17,80 @@ check_login ();
 
 require_once ('include/functions_inventories.php');
 
-if (! dame_admin ($config['id_user'])) {
+$create = (bool) get_parameter ('create_report');
+$update = (bool) get_parameter ('update_report');
+$name = (string) get_parameter ('name');
+$sql = (string) get_parameter ('sql');
+$id_group = get_parameter('id_group', 0);
+$id = (int) get_parameter ('id');
+
+if ($id) {
+	$report = get_db_row ('tinventory_reports', 'id', $id);
+	if ($report === false)
+		return;
+	$name = $report['name'];
+	$sql = $report['sql'];
+	$id_group = $report['id_group'];
+	
+	$user_in_group = get_db_value_filter('id_grupo', 'tusuario_perfil', array('id_usuario'=>$config['id_user'],'id_grupo'=>$id_group));	
+	if ($id_group == 1) {
+		$user_in_group = 1;
+	}
+}
+
+
+if ((!dame_admin ($config['id_user'])) && ($user_in_group == false)) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory reports");
 	include ("general/noaccess.php");
 	return;
 }
 
-$id = (int) get_parameter ('id');
+$result_msg = '';
+if ($create) {
+	$values['name'] = (string) get_parameter ('name');
+	$values['sql'] = (string) get_parameter ('sql');
+	$values['id_group'] = get_parameter('id_group', 0);
+	
+	$result = false;
+	if (! empty ($values['name']))
+		$result = process_sql_insert ('tinventory_reports', $values);
+	
+	if ($result) {
+		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
+		$id = $result;
+	} else {
+		$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
+		$id = false;
+	}
+}
+
+if ($update) {
+	$values['name'] = (string) get_parameter ('name');
+	$values['sql'] = (string) get_parameter ('sql');
+	$values['id_group'] = get_parameter('id_group');
+	
+	$result = false;
+	if (! empty ($values['name']))
+		$result = process_sql_update ('tinventory_reports', $values, array ('id' => $id));
+	if ($result) {
+		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+	} else {
+		$result_msg = '<h3 class="error">'.__('Could not be updated').'</h3>';
+	}
+}
+
+if ($id) {
+	clean_cache_db();
+
+	$report = get_db_row ('tinventory_reports', 'id', $id);
+	if ($report === false)
+		return;
+	$name = $report['name'];
+	$sql = $report['sql'];
+	$id_group = $report['id_group'];
+}
+
 $render = get_parameter ("render",0);
 $render_html = get_parameter ("render_html",0);
 
@@ -85,51 +151,6 @@ if ($render_html == 1){
     return;
 }
 
-$create = (bool) get_parameter ('create_report');
-$update = (bool) get_parameter ('update_report');
-$name = (string) get_parameter ('name');
-$sql = (string) get_parameter ('sql');
-
-$result_msg = '';
-if ($create) {
-	$values['name'] = $name;
-	$values['sql'] = $sql;
-	
-	$result = false;
-	if (! empty ($values['name']))
-		$result = process_sql_insert ('tinventory_reports', $values);
-	
-	if ($result) {
-		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
-		$id = $result;
-	} else {
-		$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
-		$id = false;
-	}
-}
-
-if ($update) {
-	$values['name'] = $name;
-	$values['sql'] = $sql;
-	
-	$result = false;
-	if (! empty ($values['name']))
-		$result = process_sql_update ('tinventory_reports', $values, array ('id' => $id));
-	if ($result) {
-		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
-	} else {
-		$result_msg = '<h3 class="error">'.__('Could not be updated').'</h3>';
-	}
-}
-
-if ($id) {
-	$report = get_db_row ('tinventory_reports', 'id', $id);
-	if ($report === false)
-		return;
-	$name = $report['name'];
-	$sql = $report['sql'];
-}
-
 echo "<h1>".__('Inventory reports')."</h1>";
 
 echo $result_msg;
@@ -137,18 +158,27 @@ echo $result_msg;
 $table->width = '99%';
 $table->class = 'search-table-button';
 $table->data = array ();
-
+$table->colspan = array ();
+$table->colspan[1][0] = 2;
+$table->colspan[2][0] = 2;
+	
 $table->data[0][0] = print_input_text ('name', $name, '', 40, 255, true, __('Name'));
+
+$groups = get_user_groups ($config['id_user'], "VR");
+$groups[0] = __('None');
+$table->data[0][1] = print_select ($groups, "id_group", $id_group, '', '', 0, true, false, false, __('Group'));
 
 $table->data[1][0] = print_textarea ('sql', 10, 100, $sql, '', true, __('Report SQL sentence'));
 
-if ($id) {
-	$button = print_input_hidden ('update_report', 1, true);
-	$button .= print_input_hidden ('id', $id, true);
-	$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
-} else {
-	$button = print_input_hidden ('create_report', 1, true);
-	$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+if (dame_admin ($config['id_user'])) {
+	if ($id) {
+			$button = print_input_hidden ('update_report', 1, true);
+			$button .= print_input_hidden ('id', $id, true);
+			$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
+	} else {
+		$button = print_input_hidden ('create_report', 1, true);
+		$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+	}
 }
 
 $table->data[2][0] = $button;
