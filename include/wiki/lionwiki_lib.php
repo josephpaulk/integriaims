@@ -493,6 +493,8 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 					$action = ''; // display content ...
 				}
 				
+				$par = 1; //reset counter
+				
 				//Show all page not only the section.
 				$CON = $content;
 			}
