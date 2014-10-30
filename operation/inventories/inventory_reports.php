@@ -64,9 +64,13 @@ if ($reports === false) {
 	foreach ($reports as $report) {
 		$data = array ();
 		
-		$data[0] = '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
-		$data[0] .= $report['name'];
-		$data[0] .= '</a>';
+		if (dame_admin ($config['id_user'])) {
+			$data[0] = '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
+			$data[0] .= $report['name'];
+			$data[0] .= '</a>';
+		} else {
+			$data[0] .= $report['name'];
+		}
 		
 		$data[1] = print_html_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("HTML report"));
 		$data[2] = print_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("PDF report"));

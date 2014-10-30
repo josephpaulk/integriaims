@@ -1,5 +1,9 @@
 2014-10-30  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/inventories/inventory_reports.php: Ticket #1515.
+
+2014-10-30  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/wiki/lionwiki_lib.php: Ticket #1168.
 
 2014-10-29  Vanessa Gil <vanessa.gil@artica.es>
