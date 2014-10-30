@@ -1100,18 +1100,34 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/holidays_calendar'>".__('Holidays calendar')."</a></li>";
-	}
-	
-	if ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
-	echo '</li>';
+		
+		if ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
+		echo '</li>';
 
-	enterprise_hook ('show_programmed_reports', array($sec2));
-	
-	echo "</ul></div>";	
+		enterprise_hook ('show_programmed_reports', array($sec2));
+
+		echo "</ul></div>";	
+	}
+	else {
+		echo "<div class='portlet'>";
+		echo "<h3>".__('People reporting')."</h3>";
+		echo "<ul class='sidemenu'>";
+		
+		if ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
+		echo '</li>';
+
+		enterprise_hook ('show_programmed_reports', array($sec2));
+		
+		echo "</ul></div>";	
+	}
 
 	// PEOPLE MANAGEMENT
 	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED){
