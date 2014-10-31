@@ -921,9 +921,14 @@ function graph_incident_sla_compliance($id_incident, $width=200, $height=200, $t
 	}
 	
 	$data = array();
-	$data["FAIL"] = $percent_fail;
-	$data["OK"] = $percent_ok;
-
+	
+	if ($config["flash_charts"]) {
+		$data["FAIL"] = $percent_fail;
+		$data["OK"] = $percent_ok;
+	} else {
+		$data["OK"] = $percent_ok;
+		$data["FAIL"] = $percent_fail;
+	}
 	
 	if (isset($data))
 		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);

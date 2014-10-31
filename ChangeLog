@@ -1,3 +1,10 @@
+2014-10-31  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_graph.php
+	  include/functions_groups.php
+	  operation/inventories/inventory_reports.php: Ticket #1516,
+	Ticket #1518.
+
 2014-10-30  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/side_menu.php: Fixed style. Ticket #1515.

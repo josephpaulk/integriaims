@@ -56,9 +56,8 @@ if ($reports === false) {
 	$table->head[1] = __('View');
 	$table->head[2] = __('PDF');
 	$table->head[3] = __('CSV');
-	if(dame_admin ($config['id_user'])) {
-		$table->head[4] = __('Delete');
-	}
+	$table->head[4] = __('Delete');
+	
 	$table->size = array ();
 
 	foreach ($reports as $report) {
@@ -76,11 +75,9 @@ if ($reports === false) {
 		$data[2] = print_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("PDF report"));
 		$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.png'></a>";
 		
-		if(dame_admin ($config['id_user'])) {
-			$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
-			$data[4] .= '<img src="images/cross.png">';
-			$data[4] .= '</a>';
-		}
+		$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
+		$data[4] .= '<img src="images/cross.png">';
+		$data[4] .= '</a>';
 		
 		array_push ($table->data, $data);
 	}

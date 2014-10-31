@@ -201,10 +201,15 @@ function groups_get_user_groups($id_user) {
 		$groups = array();
 	}
 
-	$group_ids = "(0";
+	$group_ids = "(";
 	$i = 0;
 	foreach ($groups as $group) {
-		$group_ids .= ",".$group['id_grupo'];
+		if ($i == 0) {
+			$group_ids .= $group['id_grupo'];
+		} else {
+			$group_ids .= ",".$group['id_grupo'];
+		}
+		$i++;
 	}
 
 	$group_ids .= ")";
