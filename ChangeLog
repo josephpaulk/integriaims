@@ -1,3 +1,9 @@
+2014-10-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_incidents.php: Fixed the count of the tickets
+	on the function "filter_incidents". Fixed the pagination of the
+	ticket search on the function "incidents_search_result".
+	
 2014-10-31  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_graph.php

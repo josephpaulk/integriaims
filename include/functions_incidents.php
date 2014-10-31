@@ -197,101 +197,85 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 		}
 	}
 	
-	if ($count) {
-		//Just count items
-		$sql = sprintf ('SELECT COUNT(id_incidencia) FROM tincidencia FD
-			WHERE estado IN (%s)
-			%s
-			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
-			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-			%s',
-			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $sla_filter);
-		
-		$count = get_db_value_sql($sql);
-		
-		if ($count === false) {
-			return 0;
-		}
-
-		return $count;
-	} else {
-		//Select all items and return all information
-		$sql = sprintf ('SELECT * FROM tincidencia FD
-			WHERE estado IN (%s)
-			%s
-			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
-			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-			%s
-			ORDER BY %s actualizacion DESC',
-			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-			$filters['string'],$filters['string'], $filters['string'], $sla_filter, $order_by);
+	//Select all items and return all information
+	$sql = sprintf ('SELECT * FROM tincidencia FD
+		WHERE estado IN (%s)
+		%s
+		AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
+		OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
+		OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
+		%s
+		ORDER BY %s actualizacion DESC',
+		$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
+		$filters['string'],$filters['string'], $filters['string'], $sla_filter, $order_by);
 
 
-		if (isset($filters["limit"]) && $filters["limit"] > 0) {
-			$sql_limit = sprintf (' LIMIT %d OFFSET %d', $filters["limit"], $filters["offset"]);
-			$sql .= $sql_limit;
-		}
-		
-		$incidents = get_db_all_rows_sql ($sql);
-
-
-		if ($incidents === false)
-			return false;
-	
-		$result = array ();
-		foreach ($incidents as $incident) {
-			
-			//Check external users ACLs
-			$external_check = enterprise_hook("manage_external", array($incident));
-
-			if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
-				continue;
-			} else {
-			
-				//Normal ACL pass if IR for this group or if the user is the incident creator
-				//or if the user is the owner or if the user has workunits
-				
-				$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-				
-				if (!$check_acl)
-					continue;		
-					
-			}
-			
-			$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
-			
-			if ($filters['id_inventory']) {
-				$found = false;
-				foreach ($inventories as $inventory) {
-					if ($inventory['id'] == $filters['id_inventory']) {
-						$found = true;
-						break;
-					}
-				}
-			
-				if (! $found)
-					continue;
-			}
-		
-			if ($filters['id_company']) {
-				$found = false;
-				$user_creator = $incident['id_creator'];
-				$user_company = get_db_value('id_company', 'tusuario', 'id_usuario', $user_creator);
-
-				//If company do no match, dismiss incident
-				if ($filters['id_company'] != $user_company) {
-					continue;
-				}
-			}
-			
-			array_push ($result, $incident);
-		}
-		
-		return $result;
+	if (!$count && isset($filters["limit"]) && $filters["limit"] > 0) {
+		$sql_limit = sprintf (' LIMIT %d OFFSET %d', $filters["limit"], $filters["offset"]);
+		$sql .= $sql_limit;
 	}
+	
+	$incidents = get_db_all_rows_sql ($sql);
+
+	if ($incidents === false) {
+		if ($count)
+			return 0;
+		else
+			return false;
+	}
+
+	$result = array ();
+	foreach ($incidents as $incident) {
+		
+		//Check external users ACLs
+		$external_check = enterprise_hook("manage_external", array($incident));
+
+		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+			continue;
+		} else {
+		
+			//Normal ACL pass if IR for this group or if the user is the incident creator
+			//or if the user is the owner or if the user has workunits
+			
+			$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
+			
+			if (!$check_acl)
+				continue;
+		}
+		
+		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+		
+		if ($filters['id_inventory']) {
+			$found = false;
+			foreach ($inventories as $inventory) {
+				if ($inventory['id'] == $filters['id_inventory']) {
+					$found = true;
+					break;
+				}
+			}
+		
+			if (! $found)
+				continue;
+		}
+	
+		if ($filters['id_company']) {
+			$found = false;
+			$user_creator = $incident['id_creator'];
+			$user_company = get_db_value('id_company', 'tusuario', 'id_usuario', $user_creator);
+
+			//If company do no match, dismiss incident
+			if ($filters['id_company'] != $user_company) {
+				continue;
+			}
+		}
+		
+		array_push ($result, $incident);
+	}
+	
+	if ($count)
+		return count($result);
+	else
+		return $result;
 }
 
 
@@ -2208,8 +2192,6 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$params .= "&search_".$key."=".$value;
 	}
 
-	$count = filter_incidents ($filter, true);
-
 	//Only show incident for last year if there isn't a search by dates
 	if (!$filter['first_date'] && !$filter['last_date']) {
 
@@ -2229,19 +2211,28 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$aux_text = "(".$count_this_year.")".print_help_tip(__("Tickets created last year"),true);
 	}
 
-	$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
-	$offset = get_parameter("offset");
-	pagination ($count, $url, $offset);
-
 	//Add offset to filter parameters
+	$offset = get_parameter("offset");
 	$filter["offset"] = $offset;
 
+	// Store the previous limit filter
+	$limit_aux = $filter["limit"];
+	// Set the limit filter to 0 to retrieve all the tickets for the array pagination
+	$filter["limit"] = 0;
+
+	// All the tickets the user sees are retrieved
 	$incidents = filter_incidents($filter);
+	$count = count($incidents);
+
+	// Set the limit filter to its previous value
+	$filter["limit"] = $limit_aux;
+
+	$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
+	$incidents = print_array_pagination($incidents, $url, $offset);
 	
-	if ($return_incidents) {
+	if ($return_incidents)
 		return $incidents;
-	}
-	
+
 	$statuses = get_indicent_status ();
 	$resolutions = get_incident_resolutions ();
 	
@@ -2439,7 +2430,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	echo "</tbody>";
 	echo "</table>";
 
-	pagination ($count, $url, $offset, false, $aux_text);
+	pagination($count, $url, $offset, false, $aux_text);
 
 	if ($print_result_count) {
 		echo "<h5>".$count.__(" ticket(s) found")."</h5>";
