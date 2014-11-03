@@ -1,3 +1,8 @@
+2014-11-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_incidents.php: Fixed the count of the tickets
+	on the search list.
+
 2014-10-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_incidents.php: Fixed the count of the tickets

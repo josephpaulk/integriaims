@@ -2222,7 +2222,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 
 	// All the tickets the user sees are retrieved
 	$incidents = filter_incidents($filter);
-	$count = count($incidents);
+	$count = empty($incidents) ? 0 : count($incidents);
 
 	// Set the limit filter to its previous value
 	$filter["limit"] = $limit_aux;
