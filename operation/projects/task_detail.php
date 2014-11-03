@@ -323,6 +323,7 @@ $table->data[1][2] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
 
 $table->data[2][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
+$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: show_calculation();'>" . print_image('images/play.gif', true, array('title' => __('Calculate hours'))) . "</a>";
 
 $table->data[2][1] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
 	11, true, __('Estimated cost'));
@@ -421,6 +422,8 @@ foreach ($links_2 as $k => $l) {
 }
 echo '</form>';
 echo "<div id='task_search_modal'></div>";
+
+echo "<div class= 'dialog ui-dialog-content' title='".__("Calculator")."' id='calculator_window'></div>";
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>

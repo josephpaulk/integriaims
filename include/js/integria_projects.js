@@ -693,3 +693,50 @@ function validate_link_gantt (link) {
 
 	return valid;
 }
+
+function show_calculation (mode) {
+
+	if (mode == 'calculate') {
+		var days = $('#text-days').val();
+		var people = $('#text-people').val();
+	} else {
+		var days = 0;
+		var people = 0;
+	}
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/projects&get_calculator=1&days="+days+"&people="+people,
+		dataType: "html",
+		success: function(data){
+			$("#calculator_window").html (data);
+			$("#calculator_window").show ();
+
+			$("#calculator_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 520,
+					height: 250
+				});
+			$("#calculator_window").dialog('open');
+			
+			//catch calculator submit request
+			$("#submit-calculate").click(function(){
+				show_calculation('calculate');
+			})
+			
+			//catch set value
+			$("#submit-set_value").click(function(){
+				var total = $('#text-total').val();
+				$('#text-hours').val(total);
+				$("#calculator_window").dialog('close');	
+			})
+		}
+	});
+}

@@ -1,3 +1,10 @@
+2014-11-03  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/ajax/projects.php
+	  include/js/integria_projects.js
+	  operation/projects/task_detail.php: Added estimated
+	hours calculator. Ticket #1535.
+
 2014-11-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_incidents.php: Fixed the count of the tickets

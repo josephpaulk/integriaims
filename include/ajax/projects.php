@@ -30,6 +30,7 @@ $create_task = (int) get_parameter('create_task');
 $get_task_statistics = (int) get_parameter('get_task_statistics');
 $get_task_completion_hours = (int) get_parameter('get_task_completion_hours');
 $check_link = (int) get_parameter("check_link");
+$get_calculator = (int) get_parameter("get_calculator");
 
 function fix_date ($date, $default='') {
 	$date_array = preg_split ('/[\-\s]/', $date);
@@ -506,4 +507,33 @@ if ($check_link) {
 	exit;
 }
 
+if ($get_calculator) {
+	
+	$days = get_parameter('days', 0);
+	$people = get_parameter('people', 0);
+	
+	$hours_per_day = $config['hours_perday'];
+	$total = $days * $people * $hours_per_day;
+	
+	$table->width = "99%";
+	$table->class = "search-table-button";
+	$table->data = array ();
+	$table->colspan = array ();
+	$table->colspan[3][1] = 2;
+	$table->data[0][0] = print_label(__('Days'), '', 'text', true);
+	$table->data[0][1] = print_input_text ('days', $days, '', 15, 15, true);
+	$table->data[1][0] = print_label(__('People'), '', 'text', true);
+	$table->data[1][1] = print_input_text ('people', $people, '', 15, 15, true);
+	$table->data[2][0] = print_label(__('Total hours'), '', 'text', true);
+	$table->data[2][1] = print_input_text ('total', $total, '', 15, 15, true, '',true);
+	
+	$table->data[3][1] = print_submit_button (__('Set value'), 'set_value', false, 'class="sub upd"', true);
+	$table->data[3][1] .= print_submit_button (__('Calculate'), 'calculate', false, 'class="sub search"', true);
+	
+	'<form id="calculator_form">';
+	print_table ($table, false);
+	'</form>';
+	
+	exit;
+}
 ?>
