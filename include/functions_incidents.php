@@ -1369,7 +1369,12 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_resolution_"] = $resolution;
 	$MACROS["_time_used_"] = $timeused;
 	$MACROS["_incident_main_text_"] = $description;
-	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
+	if ($config['access_public'] == '') {
+		$access_dir = $config["base_url"];
+	} else {
+		$access_dir = $config['access_public'];
+	}
+	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
 	$MACROS["_incident_epilog_"] = $row["epilog"];
 	$MACROS["_incident_closed_by_"] = $row["closed_by"];
 

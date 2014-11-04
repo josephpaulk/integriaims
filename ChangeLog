@@ -1,3 +1,11 @@
+2014-11-04  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_incidents.php
+	  include/integria_cron.php
+	  include/help/en/help_macros_workflow.php: Ticketing system
+	returns the link to the ticket using public access instead
+	of private ip. Ticket #1520.
+
 2014-11-03  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/ajax/projects.php

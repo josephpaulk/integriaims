@@ -11,7 +11,7 @@ Following strings will be replaced on runtime on the templates who use it:
 <li>_incident_title_: Title of the ticket.
 <li>_username_: Name of the user who receive the mail (login name)</li>
 <li>_fullname_: Fullname of the user who receive the mail</li>
-<li>_incident_id: ID of ticket.
+<li>_incident_id_: ID of ticket.
 <li>_access_url_: Incident URL
 <li>_creation_timestamp_: Date/Time of ticket creation.
 <li>_update_timestamp_: Last time ticket was updated.
