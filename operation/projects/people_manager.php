@@ -139,6 +139,54 @@ if ($operation == "delete"){
 	}
 }
 
+if ($operation == 'insert_all') {
+	$all_people = get_parameter('people');
+	
+	if (empty($all_people)) {
+		$update_mode = 0;
+		$create_mode = 1;
+		$result_output = "<h3 class='error'>".__('You must select user/role')."</h3>";
+	} else {
+	
+		foreach ($all_people as $person) {
+			$result = explode('/', $person);
+
+			$id_user = $result[0];
+			$id_role = $result[1];
+			
+			$filter['id_role']= $id_role;
+			$filter['id_user']= $id_user;
+			$filter['id_task']= $id_task;
+			
+			$role_name = get_db_value('name', 'trole', 'id', $id_role);
+			
+			$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);
+			
+			if ( $result_sql !== false) {
+				echo "<h3 class='error'>".__('Not created. Role already exists: ').$id_user.' / '.$role_name."</h3>";
+			}
+			else {
+				$sql = "INSERT INTO trole_people_task
+					(id_task, id_user, id_role) VALUES
+					($id_task, '$id_user', '$id_role')";
+
+				task_tracking ($id_task, TASK_MEMBER_ADDED);
+				$id_task_inserted = process_sql ($sql, 'insert_id');
+				
+				if ($id_task_inserted !== false) {
+					$result_output .= "<h3 class='suc'>".__('Successfully created: ').$id_user.' / '.$role_name."</h3>";
+					audit_db ($config["id_user"], $config["REMOTE_ADDR"],
+						"User/Role added to task", "User $id_user added to task " . get_db_value ("name", "ttask", "id", $id_task));
+				}
+				else {
+					$update_mode = 0;
+					$create_mode = 1;
+					$result_output .= "<h3 class='error'>".__('Not created. Error inserting data: ').$id_user.' / '.$role_name."</h3>";
+				}
+			}
+		}
+	}
+}
 
 // ---------------------
 // Edition / View mode
@@ -247,7 +295,43 @@ if ($id_task != -1){
 	
 	// Task people manager editor
 	// ===============================
+	echo '<br>';
 	echo "<h3>".__('Role/Group assignment')."</h3>";
+	echo '<br>';
+	echo "<h4>".__('Add users already involved in this project')."</h4>";
+	$table->width = '98%';
+	$table->class = 'search-table-button';
+	$table->id = "project_people";
+	$table->size = array ();
+
+	$table->head = array();
+	$table->style = array();
+	$table->data = array ();
+	$table->colspan[2][1] = 2;
+
+	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
+	$people = get_db_all_rows_sql($sql);
+
+	if ($people === false) {
+		$people = array();
+	}
+	$people_project = array();
+	foreach ($people as $person) {
+		$role_name = get_db_value('name', 'trole', 'id', $person['id_role']);
+		$people_project[$person['id_user'].'/'.$person['id_role']] = $person['id_user'] .' / '. $role_name;
+	}
+
+	$table->data[0][0] = print_label(__('People involved in project').' / '.__('Role'), '', 'text', true);
+	$table->data[1][0] = print_select ($people_project, "people[]", '', '', '', 0, true, true, false, false, false, 'width: 300px;');
+	$table->data[2][1] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub next"', true);
+
+	echo "<form id='form-project_people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert_all'>";
+	print_table($table);
+	echo "</form>";
+
+	echo '<br>';
+	echo "<h4>".__('Add other users')."</h4>";
+	
 	echo "<form id='form-people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 	echo "<table cellpadding=4 cellspacing=4 width=99% class='search-table-button'>";
 
@@ -265,7 +349,7 @@ if ($id_task != -1){
 	$params['return_help'] = false;
 	
 	user_print_autocomplete_input($params);
-	echo "<tr><td colspan=2>";
+	echo "<tr><td colspan=4>";
 	echo "<input type=submit class='sub next' value='".__('Update')."'>";
 
 	echo "</table>";
@@ -290,7 +374,7 @@ if ($id_task != -1){
 	$params['return_help'] = false;
 	
 	user_print_autocomplete_input($params);
-	echo "<tr><td colspan=2>";
+	echo "<tr><td colspan=4>";
 	echo "<input type=submit class='sub next' value='".__('Update')."'>";
 
 	echo "</table>";
