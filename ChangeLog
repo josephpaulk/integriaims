@@ -1,5 +1,17 @@
 2014-11-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* godmode/setup/setup_maintenance.php: Added a new token to setup
+	the days to delete the data of the files tracking.
+
+	* include/help/en/help_old_files_track.php,
+	  include/help/es/help_old_files_track.php: Added files. Help files
+	for the setup of the deletion of old files tracking data.
+
+	* include/integria_cron.php: Added the function "delete_old_files_track_data"
+	to delete the old files tracking data.
+
+2014-11-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* extras/mr/15.sql: Added file. New MR15 with changes on the table
 	'tattachment' and the adition of the table 'tattachment_track'.
 

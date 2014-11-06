@@ -45,6 +45,7 @@ if ($update) {
 	$config["max_days_session"] = (int) get_parameter ("max_days_session", 7);
 	$config["max_days_workflow_events"] = (int) get_parameter ("max_days_workflow_events", 900);
 	$config["max_days_fs_files"] = (int) get_parameter ("max_days_fs_files", 7);
+	$config["max_days_files_track"] = (int) get_parameter ("max_days_files_track", 15);
 	
 	update_config_token ("max_days_events", $config["max_days_events"]);
 	update_config_token ("max_days_incidents", $config["max_days_incidents"]);
@@ -54,6 +55,7 @@ if ($update) {
 	update_config_token ("max_days_session", $config["max_days_session"]);
 	update_config_token ("max_days_workflow_events", $config["max_days_workflow_events"]);
 	update_config_token ("max_days_fs_files", $config["max_days_fs_files"]);
+	update_config_token ("max_days_files_track", $config["max_days_files_track"]);
 }
 
 $table->width = '99%';
@@ -106,10 +108,9 @@ $row[$cell] = print_input_text ("max_days_fs_files", $config["max_days_fs_files"
 $row[$cell] .= integria_help ("old_fs_files", true);
 $cell++;
 
-// New cell
-// $row[$cell] = print_input_text ("", $config[""], '', 4, 4, true, __(''));
-// $row[$cell] .= integria_help ("", true);
-// $cell++;
+$row[$cell] = print_input_text ("max_days_files_track", $config["max_days_files_track"], '', 4, 4, true, __('Days to delete old file tracking data'));
+$row[$cell] .= integria_help ("old_files_track", true);
+$cell++;
 
 $table->data[] = $row;
 

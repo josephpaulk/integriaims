@@ -1091,6 +1091,24 @@ function delete_old_fs_files_data () {
 	}
 }
 
+/**
+ * This function deletes the tattachment_track data older than X days
+ */
+function delete_old_files_track_data () {
+	global $config;
+
+	if (!isset($config["max_days_files_track"]))
+		$config["max_days_files_track"] = 15; // 15 is the default value
+
+	$DELETE_DAYS = (int) $config["max_days_files_track"];
+	
+	if ($DELETE_DAYS > 0) {
+		$limit = time() - ($DELETE_DAYS * 86400);
+		$sql = sprintf("DELETE FROM tattachment_track WHERE timestamp < '%s'", date("Y-m-d H-i-s", $limit));
+		$res = process_sql($sql);
+	}
+}
+
 function cron_validate_all_newsletter_address() {
 	global $config;
 	
