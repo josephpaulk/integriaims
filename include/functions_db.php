@@ -2724,4 +2724,35 @@ function get_valid_users_num () {
 	return get_db_value_filter("COUNT(id_usuario)", "tusuario", $filter);
 }
 
+function db_check_minor_relase_available () {
+	global $config;
+	
+	$dir = $config["homedir"]."extras/mr";
+
+	if (file_exists($dir) && is_dir($dir)) {
+		if (is_readable($dir)) {
+			$files = scandir($dir); // Get all the files from the directory ordered by asc
+			if ($files !== false) {
+				$pattern = "/^\d+\.sql$/";
+				$sqlfiles = preg_grep($pattern, $files); // Get the name of the correct files
+				$files = null;
+				$pattern = "/\.sql$/";
+				$replacement = "";
+				$sqlfiles_num = preg_replace($pattern, $replacement, $sqlfiles); // Get the number of the file
+
+				$sqlfiles = null;
+				
+				if ($sqlfiles_num) {
+					foreach ($sqlfiles_num as $sqlfile_num) {
+						$file = "$dir/$sqlfile_num.sql";
+						if ($config["minor_release"] < $sqlfile_num) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
 ?>

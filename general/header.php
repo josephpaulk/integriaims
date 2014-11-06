@@ -62,6 +62,10 @@ $check_email_queue = check_email_queue();
 $result_check_update_manager = '';
 $check_alarm_calendar = check_alarm_calendar();
 $check_directory_permissions = check_directory_permissions();
+$check_minor_release_available = false;
+if (dame_admin($config['id_user'])) {
+	$check_minor_release_available = db_check_minor_relase_available ();
+}
 
 if ($is_login && dame_admin($config['id_user'])) { //check if user has logged and user is admin. Check update manager once.
 
@@ -77,7 +81,7 @@ if ($is_login && dame_admin($config['id_user'])) { //check if user has logged an
 	print_input_hidden ('result_check_update_manager', $result_check_update_manager);
 }
 
-if (!$check_cron_exec || !$check_email_queue || ($result_check_update_manager != '') || ($check_alarm_calendar) || ($check_directory_permissions)) {
+if (!$check_cron_exec || !$check_email_queue || ($result_check_update_manager != '') || ($check_alarm_calendar) || ($check_directory_permissions) || ($check_minor_release_available)) {
 	$got_alerts = 1;
 	echo '<a href: >'.print_image('images/header_warning.png', true, array("onclick" => "openAlerts()","alt" => __('Warning'), "id" => "alerts", 'title' => __('Warning'))).'</a>';
 }

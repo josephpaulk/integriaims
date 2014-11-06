@@ -34,6 +34,7 @@ if ($get_alerts) {
 	$update_manager_msg = get_parameter ('update_manager_msg', '');
 	$check_alarm_calendar = check_alarm_calendar();
 	$check_directory_permissions = check_directory_permissions();
+	$check_minor_release_available = db_check_minor_relase_available ();
 	
 	$alerts = '';
 	
@@ -81,6 +82,9 @@ if ($get_alerts) {
 		if ($mr != '') {
 			$alerts .= '<h4>'.$mr.'</h4>';
 		}
+	}
+	if ($check_minor_release_available) {
+		$alerts .= '<h4>'.__('You must logout and login again to update database schema.').'</h4>';
 	}
 	
 	echo $alerts;
