@@ -116,6 +116,7 @@ CREATE TABLE `ttask` (
      ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
 -- Table structure for table `tattachment`
 --
 
@@ -135,6 +136,9 @@ CREATE TABLE `tattachment` (
   `timestamp` date NOT NULL default '0000-00-00',
   `id_invoice` bigint(20) NOT NULL default '0',
   `id_contract` mediumint(8) unsigned NOT NULL,
+  `public_key` varchar(100) NULL,
+  `file_sharing` tinyint(1) unsigned NULL DEFAULT 0,
+  UNIQUE (`public_key`),
   PRIMARY KEY  (`id_attachment`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1262,3 +1266,15 @@ CREATE TABLE `tcustom_screen_data` (
         FOREIGN KEY (`id_widget_type`) REFERENCES tcustom_screen_widget(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ---------------------------------------------------------------------
+-- Table tattachment_track (05/11/2014)
+-- ---------------------------------------------------------------------
+CREATE TABLE `tattachment_track` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_attachment` bigint(20) unsigned NOT NULL,
+  `timestamp` datetime NOT NULL,
+  `id_user` varchar(60) NOT NULL default '',
+  `action` enum('download', 'creation', 'modification', 'deletion') NOT NULL,
+  `data` text NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

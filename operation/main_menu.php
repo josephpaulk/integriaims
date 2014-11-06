@@ -36,6 +36,7 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 $incidents_acl = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
 $kb_acl = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
 $download_acl = give_acl($config["id_user"], 0, "FRR");
+$file_sharing_acl = $download_acl;
 
 // Support submenus links
 if($simple_mode) {
@@ -46,6 +47,7 @@ else {
 }
 $kb_link = 'index.php?sec=kb&sec2=operation/kb/browse';
 $download_link = 'index.php?sec=download&sec2=operation/download/browse&show_types=1';
+$file_sharing_link = 'index.php?sec=file_sharing&sec2=operation/file_sharing/manage';
 
 $support_link = 'javascript:';
 if ($incidents_acl) {
@@ -57,11 +59,14 @@ else if ($kb_acl) {
 else if ($download_acl) {
 	$support_link = $download_link;
 }
+else if ($file_sharing_acl) {
+	$support_link = $file_sharing_link;
+}
 
 // Support
-if ($incidents_acl || $kb_acl || $download_acl) {
+if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl) {
     // Incident
-    if ($sec == "incidents" || $sec == "download" || $sec == "kb")
+    if ($sec == "incidents" || $sec == "download" || $sec == "kb" || $sec == "file_sharing")
 	    echo "<li id='current' class='support'>";
     else
 	    echo "<li class='support'>";
@@ -176,6 +181,15 @@ if ($download_acl) {
 				echo "<li class='files'>";
 		echo "<a href='" . $download_link . "'>".__('File Releases')."</a></li>";
 	}
+}
+
+// FILE SHARING
+if ($file_sharing_acl) {
+	if ($sec == "file_sharing" )
+			echo "<li id='current' class='files'>";
+	else
+			echo "<li class='files'>";
+	echo "<a href='" . $file_sharing_link . "'>".__('File Sharing')."</a></li>";
 }
 
 echo '</ul>';

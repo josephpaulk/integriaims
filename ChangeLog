@@ -1,3 +1,49 @@
+2014-11-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* extras/mr/15.sql: Added file. New MR15 with changes on the table
+	'tattachment' and the adition of the table 'tattachment_track'.
+
+	* integria_db.sql: Updated with the changes of the MR15.
+
+	* images/clipboard.png: Added file.
+
+	* godmode/setup/setup_maintenance.php: Added a new token to setup
+	the days to delete the data of the files of the new "File Sharing"
+	section.
+
+	* include/help/en/help_old_fs_files.php,
+	  include/help/es/help_old_fs_files.php: Added files. Help files
+	for the setup of the deletion of old shared files.
+
+	* operation/file_sharing/FileSharingAdapters.js,
+	  operation/file_sharing/FileSharingFile.class.php,
+	  operation/file_sharing/FileSharingListController.js,
+	  operation/file_sharing/FileSharingPackage.class.php,
+	  operation/file_sharing/list.php,
+	  operation/file_sharing/manage.php,
+	  operation/file_sharing/upload.php: Added files. This files conform
+	the new "File Sharing" section.
+	
+	* operation/main_menu.php: Added the "File Sharing" section inside
+	"Support".
+
+	* include/styles/integria.css: Updated to give styles to the new
+	elements of the new "File Sharing" section.
+
+	* include/integria_cron.php: Added the function "delete_old_fs_files_data"
+	to delete the old files of the "File Sharing" section from the db
+	and the disk. Modified the function "delete_tmp_files" to delete
+	the temporary folders created when uploading files to the
+	"File Sharing" section.
+
+	* godmode/setup/offline_update.php,
+	  operation/download/browse.php: Modified a class to made a visual fix.
+
+	* operation/common/download_file.php: Added code to download the files
+	of the "File Sharing" section.
+
+	* include/functions.php: Fixes on the function "delete_directory".
+
 2014-11-06  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* general/header/header.php

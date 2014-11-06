@@ -1163,13 +1163,13 @@ function delete_directory ($dirname) {
 	while ($file = readdir($dir_handle)) {
 		if ($file != "." && $file != "..") {
 			if (!is_dir($dirname."/".$file))
-				unlink($dirname."/".$file);
+				@unlink($dirname."/".$file);
 			else
-				um_delete_directory($dirname . '/' . $file);
+				delete_directory($dirname . '/' . $file);
 		}
 	}
 	closedir($dir_handle);
-	rmdir($dirname);
+	@rmdir($dirname);
 	
 	return true;
 }

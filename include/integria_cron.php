@@ -41,25 +41,29 @@ $human_notification_period = give_human_time ($config["notification_period"]*360
 function delete_tmp_files(){
 
 	if (function_exists(sys_get_temp_dir))
-        	$dir =  sys_get_temp_dir ();
+		$dir =  sys_get_temp_dir ();
 	else
 		$dir = "/tmp";
 
-        if ($dh = opendir($dir)){
-                while(($file = readdir($dh))!== false){
-                        if (strpos("___".$file, "integria_serialize")){
-                            if (file_exists($dir."/".$file)) {
-                                $fdate = filemtime($dir."/".$file);
-                                $now = time();
-                                if ($now - $fdate > 3600){
-                                        @unlink($dir."/".$file);
-                                } 
-                            }
-                        }
-
-                }
-                closedir($dh);
-        }
+	if ($dh = opendir($dir)) {
+		while(($file = readdir($dh))!== false) {
+			if (strpos("___".$file, "integria_serialize") || strpos("___".$file, "tmpIntegriaFileSharing")) {
+				if (file_exists($dir."/".$file)) {
+					if (is_dir($dir."/".$file)) {
+						delete_directory($dir."/".$file);
+					}
+					else {
+						$fdate = filemtime($dir."/".$file);
+						$now = time();
+						if ($now - $fdate > 3600){
+							@unlink($dir."/".$file);
+						} 
+					}
+				}
+			}
+		}
+		closedir($dh);
+	}
 }
  
 /** 
@@ -205,8 +209,8 @@ function run_daily_check () {
 	delete_old_wo_data();
 	delete_old_sessions_data();
 	delete_old_workflow_event_data();
+	delete_old_fs_files_data();
 }
-
 
 /**
  * Auto close incidents mark as "pending to be deleted" and no activity in X hrs
@@ -219,29 +223,29 @@ function run_auto_incident_close () {
 	if (empty($config["auto_incident_close"]) || $config["auto_incident_close"] <= 0)
 		return;
 
-    require_once ($config["homedir"]."/include/functions_incidents.php");
+	require_once ($config["homedir"]."/include/functions_incidents.php");
 
-    $utimestamp = date("U");
+	$utimestamp = date("U");
 	$limit = date ("Y-m-d H:i:s", $utimestamp - $config["auto_incident_close"] * 86400);
 
-    	// For each incident
+		// For each incident
 	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4,5) AND actualizacion < '$limit'");
-    $mailtext = __("This ticket has been closed automatically by Integria after waiting confirmation to close this ticket for 
+	$mailtext = __("This ticket has been closed automatically by Integria after waiting confirmation to close this ticket for 
 ").$config["auto_incident_close"]."  ".__("days");
 
-    if ($incidents) {
-	    foreach ($incidents as $incident) {
+	if ($incidents) {
+		foreach ($incidents as $incident) {
 			
-            // Set status to "Closed" (# 7) and solution to 7 (Expired)
-            process_sql ("UPDATE tincidencia SET resolution = 7, estado = 7 WHERE id_incidencia = ".$incident["id_incidencia"]);
+			// Set status to "Closed" (# 7) and solution to 7 (Expired)
+			process_sql ("UPDATE tincidencia SET resolution = 7, estado = 7 WHERE id_incidencia = ".$incident["id_incidencia"]);
 
 			// Add workunit
 			create_workunit ($incident["id_incidencia"], $mailtext, $incident["id_usuario"], 0,  0, "", 1);
 	
-            // Send mail warning about this autoclose
-            mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
-        }
-    }
+			// Send mail warning about this autoclose
+			mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
+		}
+	}
 
 }
 
@@ -259,7 +263,7 @@ function run_autowu () {
 	global $config;
 
 	$now = date ("Y-m-d");
- 	// getWorkingDays($startDate,$endDate,$holidays){
+	// getWorkingDays($startDate,$endDate,$holidays){
 
 	$autowu = $config["autowu_completion"];
 
@@ -438,7 +442,7 @@ function check_sla_min ($incident) {
 	if (! $id_sla)
 		return false;
 	
-    $sla = get_db_row("tsla", "id", $id_sla);
+	$sla = get_db_row("tsla", "id", $id_sla);
 
 	/* Check if it was already notified in a specified time interval */
 	$sql = sprintf ('SELECT COUNT(id) FROM tevent
@@ -456,7 +460,7 @@ function check_sla_min ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    $MACROS["_sitename_"] = $config["sitename"];
+	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -493,7 +497,7 @@ function check_sla_max ($incident) {
 	if (! $id_sla)
 		return false;
 	
-        $sla = get_db_row("tsla", "id", $id_sla);
+		$sla = get_db_row("tsla", "id", $id_sla);
 
 	/* Check if it was already notified in a specified time interval */
 	$sql = sprintf ('SELECT COUNT(id) FROM tevent
@@ -510,7 +514,7 @@ function check_sla_max ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    $MACROS["_sitename_"] = $config["sitename"];
+	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -561,7 +565,7 @@ function check_sla_inactivity ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    $MACROS["_sitename_"] = $config["sitename"];
+	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -592,7 +596,7 @@ function run_mail_queue () {
 	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 
-   	$utimestamp = date("U");
+	$utimestamp = date("U");
 	// $current_date = date ("Y/m/d H:i:s");
 
 	// get pending mails 
@@ -602,44 +606,44 @@ function run_mail_queue () {
 	foreach ($mails as $email){
 			
 		// Use local mailer if host not provided - Attach not supported !!
-        	//Headers must be comma separated
-        	if (isset($email["extra_headers"])) {
-        		$extra_headers = explode(",", $email["extra_headers"]);
-        	} else {
+			//Headers must be comma separated
+			if (isset($email["extra_headers"])) {
+				$extra_headers = explode(",", $email["extra_headers"]);
+			} else {
 			$extra_headers = array();
 		}		
 
 		if ($config["smtp_host"] == ""){
 			
 			// Use internal mail() function
-                        $headers   = array();
-                        $headers[] = "MIME-Version: 1.0";
-                        $headers[] = "Content-type: text/plain; charset=utf-8";
+						$headers   = array();
+						$headers[] = "MIME-Version: 1.0";
+						$headers[] = "Content-type: text/plain; charset=utf-8";
 
-                        $headers = array_merge($headers, $extra_headers);
+						$headers = array_merge($headers, $extra_headers);
 
 			if ($email["from"] == "")
-                                $from = $config["mail_from"];
-                        else
-                                $from = $email["from"]; 
+								$from = $config["mail_from"];
+						else
+								$from = $email["from"]; 
 
-                        $headers[] = "From: ". $from;
-                        $headers[] = "Subject: ". safe_output($email["subject"]);
-                        
-                        if ($email["cc"]) {
+						$headers[] = "From: ". $from;
+						$headers[] = "Subject: ". safe_output($email["subject"]);
+						
+						if ($email["cc"]) {
 							$aux_cc = implode(",",$email["cc"]);
 							$headers[] = "Cc: ".$aux_cc;
 						}
 
-                        $dest_email = trim(ascii_output($email['recipient']));
-                        $body = safe_output($email['body']);
-                        $error = mail($dest_email, safe_output($email["subject"]), $body, implode("\r\n", $headers));
-                        if (!$error) {
+						$dest_email = trim(ascii_output($email['recipient']));
+						$body = safe_output($email['body']);
+						$error = mail($dest_email, safe_output($email["subject"]), $body, implode("\r\n", $headers));
+						if (!$error) {
 				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-                        } else {
+						} else {
 				// no errors found
 				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
-                        }
+						}
 
 		} else {
 			// Use swift mailer library to connect to external SMTP
@@ -696,7 +700,7 @@ function run_mail_queue () {
 			// SMTP error management!
 			} catch (Exception $e) {
 				$retries = $email["attempts"] + 1;
- 				if ($retries > $config["smtp_queue_retries"]) {
+				if ($retries > $config["smtp_queue_retries"]) {
 					$status = 1;
 					insert_event ('MAIL_FAILURE', 0, 0, $email["recipient"]. " - ". $e);
 				}
@@ -766,7 +770,7 @@ function run_newsletter_queue () {
 		$total = $config["batch_newsletter"];
 	}
 	
-   	$utimestamp = date("U");
+	$utimestamp = date("U");
 	$current_date = date ("Y/m/d H:i:s");
 
 	// Select valid QUEUES for processing
@@ -782,7 +786,7 @@ function run_newsletter_queue () {
 		$issue = get_db_row ("tnewsletter_content", "id", $queue["id_newsletter_content"]);
 
 		//Add void pixel to track campaings
-        $issue["html"] .= "<img src='".$config["public_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
+		$issue["html"] .= "<img src='".$config["public_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
 
 		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
 		
@@ -860,11 +864,11 @@ function run_newsletter_queue () {
  * This function deletes tsesion data with more than X days
  */
 function delete_old_audit_data () {
-    global $config;
+	global $config;
    
-    $DELETE_DAYS = (int) $config["max_days_audit"];
-    
-    if ($DELETE_DAYS > 0) {
+	$DELETE_DAYS = (int) $config["max_days_audit"];
+	
+	if ($DELETE_DAYS > 0) {
 		$limit = strtotime ("now") - ($DELETE_DAYS * 86400);
 		$sql = "DELETE FROM tsesion WHERE utimestamp < $limit";
 		process_sql ($sql);
@@ -875,11 +879,11 @@ function delete_old_audit_data () {
  * This function deletes tevent data with more than X days. This function doesn't delete workflow events.
  */
 function delete_old_event_data () {
-    global $config;
+	global $config;
    
-    $DELETE_DAYS = (int) $config["max_days_events"];
-    
-    if ($DELETE_DAYS > 0) {
+	$DELETE_DAYS = (int) $config["max_days_events"];
+	
+	if ($DELETE_DAYS > 0) {
 		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
 		$sql = "DELETE FROM tevent WHERE timestamp < '$limit'
 			AND `type` NOT LIKE '%WORKFLOW%'";
@@ -1001,11 +1005,11 @@ function delete_old_incidents () {
  * belong to tasks that belong to disabled projects.
  */
 function delete_old_wu_data () {
-    global $config;
+	global $config;
    
-    $DELETE_DAYS = (int) $config["max_days_wu"];
-    
-    if ($DELETE_DAYS > 0) {
+	$DELETE_DAYS = (int) $config["max_days_wu"];
+	
+	if ($DELETE_DAYS > 0) {
 		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
 		$sql = "DELETE FROM tworkunit
 				WHERE timestamp < '$limit'
@@ -1026,11 +1030,11 @@ function delete_old_wu_data () {
  * This function deletes ttodo data with more than X days and closed.
  */
 function delete_old_wo_data () {
-    global $config;
+	global $config;
    
-    $DELETE_DAYS = (int) $config["max_days_wo"];
-    
-    if ($DELETE_DAYS > 0) {
+	$DELETE_DAYS = (int) $config["max_days_wo"];
+	
+	if ($DELETE_DAYS > 0) {
 		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
 		$sql = "DELETE FROM ttodo
 				WHERE last_update < '$limit'
@@ -1044,14 +1048,46 @@ function delete_old_wo_data () {
  * This function deletes tsessions_php data with more than X days
  */
 function delete_old_sessions_data () {
-    global $config;
+	global $config;
    
-    $DELETE_DAYS = (int) $config["max_days_session"];
-    
-    if ($DELETE_DAYS > 0) {
+	$DELETE_DAYS = (int) $config["max_days_session"];
+	
+	if ($DELETE_DAYS > 0) {
 		$limit = strtotime ("now") - ($DELETE_DAYS * 86400);
 		$sql = "DELETE FROM tsessions_php WHERE last_active < $limit";
 		process_sql ($sql);
+	}
+}
+
+/**
+ * This function deletes the files uploaded to the files sharing section
+ * and its data in tattachment older than X days
+ */
+function delete_old_fs_files_data () {
+	global $config;
+
+	if (!isset($config["max_days_fs_files"]))
+		$config["max_days_fs_files"] = 7; // 7 is the default value
+
+	$DELETE_DAYS = (int) $config["max_days_fs_files"];
+	
+	if ($DELETE_DAYS > 0) {
+		require_once($config["homedir"].'/operation/file_sharing/FileSharingPackage.class.php');
+
+		$limit = time() - ($DELETE_DAYS * 86400);
+
+		$sql = sprintf("SELECT id_attachment
+						FROM tattachment
+						WHERE file_sharing = 1
+							AND timestamp < '%s'", date("Y-m-d", $limit));
+		$old_files = get_db_all_rows_sql($sql);
+
+		if (!empty($old_files)) {
+			foreach ($old_files as $file) {
+				$package = new FileSharingPackage($file['id_attachment']);
+				$package->delete();
+			}
+		}
 	}
 }
 
@@ -1079,11 +1115,11 @@ function cron_validate_all_newsletter_address() {
  * This function deletes tevent workflow data with more than X days.
  */
 function delete_old_workflow_event_data () {
-    global $config;
+	global $config;
    
-    $DELETE_DAYS = (int) $config["max_days_workflow_events"];
-    
-    if ($DELETE_DAYS > 0) {
+	$DELETE_DAYS = (int) $config["max_days_workflow_events"];
+	
+	if ($DELETE_DAYS > 0) {
 		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
 		$sql = "DELETE FROM tevent WHERE timestamp < '$limit'
 			AND `type` LIKE '%WORKFLOW%'";
@@ -1142,12 +1178,12 @@ if ($incidents === false)
 	$incidents = array ();
 
 if ($incidents)
-    foreach ($incidents as $incident) {
-    	check_sla_min ($incident);
-    	check_sla_max ($incident);
-    	check_sla_inactivity ($incident);
-    	graph_sla($incident);
-    }
+	foreach ($incidents as $incident) {
+		check_sla_min ($incident);
+		check_sla_max ($incident);
+		check_sla_inactivity ($incident);
+		graph_sla($incident);
+	}
 
 // Check SLA for number of opened items.
 

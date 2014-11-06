@@ -44,6 +44,7 @@ if ($update) {
 	$config["max_days_audit"] = (int) get_parameter ("max_days_audit", 15);
 	$config["max_days_session"] = (int) get_parameter ("max_days_session", 7);
 	$config["max_days_workflow_events"] = (int) get_parameter ("max_days_workflow_events", 900);
+	$config["max_days_fs_files"] = (int) get_parameter ("max_days_fs_files", 7);
 	
 	update_config_token ("max_days_events", $config["max_days_events"]);
 	update_config_token ("max_days_incidents", $config["max_days_incidents"]);
@@ -52,6 +53,7 @@ if ($update) {
 	update_config_token ("max_days_audit", $config["max_days_audit"]);
 	update_config_token ("max_days_session", $config["max_days_session"]);
 	update_config_token ("max_days_workflow_events", $config["max_days_workflow_events"]);
+	update_config_token ("max_days_fs_files", $config["max_days_fs_files"]);
 }
 
 $table->width = '99%';
@@ -59,30 +61,64 @@ $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 
-$table->data[0][0] = print_input_text ("max_days_events", $config["max_days_events"], '', 4, 4, true, __('Days to delete events'));
-$table->data[0][0] .= integria_help ("old_events", true);
-$table->data[0][1] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete tickets'));
-$table->data[0][1] .= integria_help ("old_incidents", true);
+$row = array();
+$cell = 0;
 
-$table->data[1][0] = print_input_text ("max_days_wu", $config["max_days_wu"], '', 4, 4, true, __('Days to delete work units'));
-$table->data[1][0] .= integria_help ("old_wu", true);
-$table->data[1][1] = print_input_text ("max_days_wo", $config["max_days_wo"], '', 4, 4, true, __('Days to delete work orders'));
-$table->data[1][1] .= integria_help ("old_wo", true);
+$row[$cell] = print_input_text ("max_days_events", $config["max_days_events"], '', 4, 4, true, __('Days to delete events'));
+$row[$cell] .= integria_help ("old_events", true);
+$cell++;
 
-$table->data[2][0] = print_input_text ("max_days_audit", $config["max_days_audit"], '', 4, 4, true, __('Days to delete audit data'));
-$table->data[2][0] .= integria_help ("old_audit", true);
-$table->data[2][1] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions'));
-$table->data[2][1] .= integria_help ("old_sessions", true);
+$row[$cell] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete tickets'));
+$row[$cell] .= integria_help ("old_incidents", true);
+$cell++;
 
-$table->data[3][0] = print_input_text ("max_days_workflow_events", $config["max_days_workflow_events"], '', 4, 4, true, __('Days to delete workflow events'));
-$table->data[3][0] .= integria_help ("old_workflow_events", true);
+$row[$cell] = print_input_text ("max_days_wu", $config["max_days_wu"], '', 4, 4, true, __('Days to delete work units'));
+$row[$cell] .= integria_help ("old_wu", true);
+$cell++;
+
+$table->data[] = $row;
+
+$row = array();
+$cell = 0;
+
+$row[$cell] = print_input_text ("max_days_wo", $config["max_days_wo"], '', 4, 4, true, __('Days to delete work orders'));
+$row[$cell] .= integria_help ("old_wo", true);
+$cell++;
+
+$row[$cell] = print_input_text ("max_days_audit", $config["max_days_audit"], '', 4, 4, true, __('Days to delete audit data'));
+$row[$cell] .= integria_help ("old_audit", true);
+$cell++;
+
+$row[$cell] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions'));
+$row[$cell] .= integria_help ("old_sessions", true);
+$cell++;
+
+$table->data[] = $row;
+
+$row = array();
+$cell = 0;
+
+$row[$cell] = print_input_text ("max_days_workflow_events", $config["max_days_workflow_events"], '', 4, 4, true, __('Days to delete workflow events'));
+$row[$cell] .= integria_help ("old_workflow_events", true);
+$cell++;
+
+$row[$cell] = print_input_text ("max_days_fs_files", $config["max_days_fs_files"], '', 4, 4, true, __('Days to delete old file sharing files'));
+$row[$cell] .= integria_help ("old_fs_files", true);
+$cell++;
+
+// New cell
+// $row[$cell] = print_input_text ("", $config[""], '', 4, 4, true, __(''));
+// $row[$cell] .= integria_help ("", true);
+// $cell++;
+
+$table->data[] = $row;
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Reset to default'), 'reset_button', false, 'class="sub upd"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
 $table->data['button'][0] = $button;
-$table->colspan['button'][0] = 2;
+$table->colspan['button'][0] = 3;
 
 echo '<form id="setup_maintenance" name="setup" method="post">';
 print_table ($table);

@@ -45,7 +45,7 @@ $id_attachment = get_parameter ("id_attachment", 0);
 $type = get_parameter("type");
 
 
-if ($type !== "external_release") {
+if ($type !== "external_release" && $type !== "file_sharing") {
 	check_login();
 }
 
@@ -53,8 +53,6 @@ if ($type !== "external_release") {
 $data = array();
 $fileLocation = "";
 switch ($type) {
-
-
 	case "contact":
 
 		$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $data["id_contact"]);
@@ -184,7 +182,7 @@ switch ($type) {
 
 		$task_access = get_project_access ($config["id_user"], 0, $id_task, false, true);
 		if (! $task_access["read"]) {
-			audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to download project files withuot permission");
+			audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to download project files without permission");
 			require ($general_error);
 			exit;
 		}
@@ -207,6 +205,28 @@ switch ($type) {
 		$last_name = $data["filename"];
 		
 		break;
+	case "file_sharing":
+		$public_key = get_parameter("key");
+
+		if (!empty($public_key)) {
+			$filter = array(
+					'public_key' => $public_key,
+					'file_sharing' => 1
+				);
+			$id_attachment = get_db_value_filter("id_attachment", "tattachment", $filter);
+
+			if (empty($id_attachment)) {
+				audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to download an invalid file sharing file");
+				require ($general_error);
+				exit;
+			}
+		}
+		else {
+			audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to download an invalid file sharing file");
+			require ($general_error);
+			exit;
+		}
+		break;
 	default:
 }
 
@@ -214,8 +234,20 @@ switch ($type) {
 if ($type == "release" || $type == "external_release") {
 	$fileLocation = $config["homedir"]."/".$data["location"];
 	$short_name = preg_split ("/\//", $data["location"]);
-	$last_name = $short_name[sizeof($short_name)-1];	
-} else {
+	$last_name = $short_name[sizeof($short_name)-1];
+}
+else if ($type == "file_sharing") {
+	if (!empty($id_attachment)) {
+		require_once($config['homedir']."/operation/file_sharing/FileSharingPackage.class.php");
+		$file = new FileSharingPackage($id_attachment);
+		$fileLocation = $file->getFullpath();
+		$last_name = $file->getName();
+		$file->trackingDownload();
+
+		$data = $id_attachment;
+	}
+}
+else {
 	$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 	$last_name = $data["filename"];			
 }
