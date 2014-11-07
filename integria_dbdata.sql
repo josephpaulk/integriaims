@@ -45,12 +45,14 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_audit', 15),
 ('max_days_session', 7),
 ('max_days_workflow_events', 900),
+('max_days_fs_files', 7),
+('max_days_files_track', 15),
 ('update_manager_installed', 1),
 ('current_package', 0),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
-('minor_release', 14);
+('minor_release', 15);
 
 -- Default password is 'integria'
 

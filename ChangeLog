@@ -1,5 +1,10 @@
 2014-11-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* integria_db.sql: Updated the 'minor_release' value and added
+	two new maintenance related tokens to the table 'tconfig'.
+
+2014-11-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/integria_cron.php: Added a new task to the daily
 	check.
 
