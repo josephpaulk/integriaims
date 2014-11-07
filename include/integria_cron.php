@@ -210,6 +210,7 @@ function run_daily_check () {
 	delete_old_sessions_data();
 	delete_old_workflow_event_data();
 	delete_old_fs_files_data();
+	delete_old_files_track_data();
 }
 
 /**
