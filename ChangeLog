@@ -1,3 +1,10 @@
+2014-11-12  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/offline_update.php: Improvements in
+	Offline updates. Ticket #1080.
+
+	* operation/companies/company_detail.php: Ticket #1548.
+
 2014-11-07  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_db.sql: Updated the 'minor_release' value and added

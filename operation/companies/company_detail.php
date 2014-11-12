@@ -767,7 +767,7 @@ elseif ($op == "invoices") {
 				$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
 				$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_payment_date"]. "</span>";
 				$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
-					&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
+					&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1&language='.$invoice['id_language'].'">
 					<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 				if ($lock_permission) {
 					

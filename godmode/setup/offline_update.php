@@ -24,6 +24,8 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
+require_once('include/functions_db.php');
+
 if (defined ('AJAX')) {
 	
 	$upload_file = (boolean) get_parameter("upload_file");
@@ -100,6 +102,26 @@ if (defined ('AJAX')) {
 		
 		$package = (string) get_parameter("package");
 		$package = trim($package);
+
+		$is_package = preg_match("/^[\w*\/*]*package_[\d*]/", $package);
+
+		if ($is_package) {
+
+			$current_package = get_db_value('value', 'tconfig', 'token', 'current_package');
+			$pattern = "/\.oum$/";
+			$replacement = "";
+			$package_aux = preg_replace($pattern, $replacement, $package); // Remove extension .oum
+			$pattern = "/^[\w*\/*]*package_/";
+			$package_num = preg_replace($pattern, $replacement, $package_aux); // Get the number of the package
+
+			if ($current_package >= $package_num) {
+				fclose($files_h);
+				$return["status"] = "error";
+				$return["message"]= __("Package "). $package_num . __(" is already installed.");
+				echo json_encode($return);
+				return;
+			}
+		}
 		
 		// All files extracted
 		$files_total = $package."/files.txt";
@@ -170,6 +192,7 @@ if (defined ('AJAX')) {
 						} else {
 							
 							// If the copy process fail, this code tries to restore the files backed up before
+
 							if ($files_copied_h = fopen($files_copied, "r")) {
 								while ($line_c = stream_get_line($files_copied_h, 65535, "\n")) {
 									$line_c = trim($line_c);
@@ -204,6 +227,9 @@ if (defined ('AJAX')) {
 			return;
 		}
 		
+		if ($is_package) {
+			$res = db_process_sql_update('tconfig', array('value'=>$package_num), array('token'=>'current_package'));
+		}
 		$return["status"] = "success";
 		echo json_encode($return);
 		return;
@@ -452,6 +478,8 @@ echo "<h1>" . __("Offline update") . "</h1>";
 					$('#form-offline_update ul').find('li').addClass('suc');
 					$('#form-offline_update ul').find('li').find('p').html('<?php echo __('Package updated successfully.') ?>')
 						.append("<i><?php echo __('If there are any database change, it will be applied on the next login.') ?></i>");
+						
+					check_install_package(package);
 				} else {
 					$('#form-offline_update ul').find('li').addClass('error');
 					$('#form-offline_update ul').find('li').find('p').html('<?php echo __('Package not updated.') ?>')
@@ -463,7 +491,8 @@ echo "<h1>" . __("Offline update") . "</h1>";
 		});
 		
 		// Check the status of the update
-		check_install_package(package);
+		//check_install_package(package);
+
 	}
 	
 	function check_install_package (package) {
