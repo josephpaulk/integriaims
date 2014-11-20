@@ -1,5 +1,12 @@
 2014-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* include/functions_incidents.php
+	  include/functions_graph.php
+	  include/functions_db.php: Changed the way of calculate
+	the tickets SLAs.
+
+2014-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/functions_incidents.php: Fixed an error on the
 	function "incidents_get_sla_graph_seconds".
 

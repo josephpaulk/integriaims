@@ -2094,24 +2094,25 @@ function get_sla_compliance_single_id ($id_incident) {
  * @param, incidents, array with a list of incidents
  */
 function get_sla_compliance ($incidents) {
+	global $config;
 
-	//require_once ("include/functions_incidents.php");
+	require_once ($config['homedir']."/include/functions_incidents.php");
 
-	if (($incidents == false) OR ($incidents == "")) {
+	if (empty($incidents)) {
 		return 100;
 	}
 
-	$seconds = incidents_get_sla_graph_seconds($incidents);
-	
-	$total = $seconds["OK"] + $seconds["FAIL"];
+	$slas = incidents_get_sla_graph_percentages($incidents);
 
-	if ($total > 0)
-		$percent_ok = ($seconds["OK"] / $total) * 100;
+	$sum = array_sum($slas);
+	$num = count($slas);
+
+	if ($sum > 0)
+		$avg = $sum / $num;
 	else
-		$percent_ok = 100;
-	
-	return $percent_ok;
+		$avg = 100;
 
+	return $avg;
 }
 
 function get_task_end_date_by_user ($now){

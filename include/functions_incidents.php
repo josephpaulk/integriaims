@@ -2656,22 +2656,24 @@ function incidents_get_incident_sla_graph_seconds ($id_incident) {
 	return $seconds;
 }
 
-function incidents_get_sla_graph_seconds ($incidents) {
+function incidents_get_sla_graph_percentages ($incidents) {
 
-	$total_seconds = array();
-	$total_seconds["OK"] = 0;
-	$total_seconds["FAIL"] = 0;
-	
+	$slas = array();
+
 	foreach ($incidents as $incident) {
 		
 		if ($incident['sla_disabled'] != 1) {
 			$seconds = incidents_get_incident_sla_graph_seconds($incident["id_incidencia"]);
-			$total_seconds["OK"] += $seconds["OK"];
-			$total_seconds["FAIL"] += $seconds["FAIL"];
+
+			$seconds_ok = $seconds["OK"];
+			$seconds_fail = $seconds["FAIL"];
+			$seconds_total = $seconds_ok + $seconds_fail;
+			
+			$slas[$incident['id_incidencia']] = ($seconds_ok / $seconds_total) * 100;
 		}
 	}
 
-	return $total_seconds;
+	return $slas;
 }
 
 function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false) {

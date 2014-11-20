@@ -848,23 +848,25 @@ function graph_incident_statistics_sla_compliance($incidents, $width=200, $heigh
 		$incidents = array();
 	}
 
-	$seconds = incidents_get_sla_graph_seconds($incidents);
+	$slas = incidents_get_sla_graph_percentages($incidents);
 
+	$sum = array_sum($slas);
+	$num = count($slas);
 	$data = array();
-	$total = $seconds["OK"] + $seconds["FAIL"];
-	
-	if ($total == 0) {
+
+	if (empty($sum)) {
 		$data["FAIL"] = 0;
 		$data["OK"] = 100;
-	} else {
-		$percent_fail = ($seconds["FAIL"] / $total) * 100;
-		$percent_ok = ($seconds["OK"] / $total) * 100;
-		
-		$data["FAIL"] = $percent_fail;
-		$data["OK"] = $percent_ok;
+	}
+	else {
+		$avg_ok = $sum / $num;
+		$avg_bad = 100 - $avg_ok;
+
+		$data["FAIL"] = $avg_bad;
+		$data["OK"] = $avg_ok;
 	}
 	
-	if (isset($data))
+	if (!empty($data))
 		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	else 
 		graphic_error();
