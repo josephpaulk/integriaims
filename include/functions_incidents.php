@@ -2663,10 +2663,12 @@ function incidents_get_sla_graph_seconds ($incidents) {
 	$total_seconds["FAIL"] = 0;
 	
 	foreach ($incidents as $incident) {
-
-		$seconds = incidents_get_incident_sla_graph_seconds($incident["id_incidencia"]);
-		$total_seconds["OK"] += $seconds["OK"];
-		$total_seconds["FAIL"] += $seconds["FAIL"];
+		
+		if ($incident['sla_disabled'] != 1) {
+			$seconds = incidents_get_incident_sla_graph_seconds($incident["id_incidencia"]);
+			$total_seconds["OK"] += $seconds["OK"];
+			$total_seconds["FAIL"] += $seconds["FAIL"];
+		}
 	}
 
 	return $total_seconds;

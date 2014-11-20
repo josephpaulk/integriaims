@@ -1,3 +1,8 @@
+2014-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_incidents.php: Fixed an error on the
+	function "incidents_get_sla_graph_seconds".
+
 2014-11-12  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* godmode/setup/offline_update.php: Improvements in
