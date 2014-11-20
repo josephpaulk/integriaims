@@ -551,6 +551,9 @@ function print_incidents_stats ($incidents, $return = false) {
     
 	$pdf_output = (int)get_parameter('pdf_output', 0);
 	$ttl = $pdf_output+1;
+
+	// Max graph legend string length (without the '...')
+	$max_legend_strlen = 17;
 	
 	// Necessary for flash graphs
 	include_flash_chart_script();
@@ -762,7 +765,10 @@ function print_incidents_stats ($incidents, $return = false) {
 	$most_active_incidents = get_most_active_incidents (5, $incident_id_array);
 	$incidents_label = '';
 	foreach ($most_active_incidents as $incident) {
-		$inc_title = substr(safe_output($incident['titulo']), 0, 20);
+		$inc_title = safe_output($incident['titulo']);
+		if (strlen($inc_title) > $max_legend_strlen)
+			$inc_title = substr($inc_title, 0, $max_legend_strlen) . "...";
+
 		$incidents_data[$inc_title] = $incident['worked_hours'];
 	}
 
@@ -844,7 +850,9 @@ function print_incidents_stats ($incidents, $return = false) {
 	
 	// Show graph with incidents by group
 	foreach ($incidents as $incident) {
-		$grupo = substr(safe_output(dame_grupo($incident["id_grupo"])),0,15);
+		$grupo = safe_output(dame_grupo($incident["id_grupo"]));
+		if (strlen($grupo) > $max_legend_strlen)
+			$grupo = substr($grupo, 0, $max_legend_strlen) . "...";
 
 		if (!isset( $incident_group_data[$grupo]))
 			$incident_group_data[$grupo] = 0;
@@ -853,12 +861,14 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	arsort($incident_group_data);
 	
-    // Show graph with incidents by source group
+	// Show graph with incidents by source group
 	foreach ($incidents as $incident) {
-		$grupo_src = substr(safe_output(dame_grupo($incident["id_group_creator"])),0,15);
+		$grupo_src = safe_output(dame_grupo($incident["id_group_creator"]));
+		if (strlen($grupo_src) > $max_legend_strlen)
+			$grupo_src = substr($grupo_src, 0, $max_legend_strlen) . "...";
 		
 		if (!isset( $incident_group_data2[$grupo_src]))
-			 $incident_group_data2[$grupo_src] = 0;
+			$incident_group_data2[$grupo_src] = 0;
 		
 		$incident_group_data2[$grupo_src] = $incident_group_data2[$grupo_src] + 1;
 		
@@ -2668,7 +2678,7 @@ function incidents_get_sla_graph_percentages ($incidents) {
 			$seconds_ok = $seconds["OK"];
 			$seconds_fail = $seconds["FAIL"];
 			$seconds_total = $seconds_ok + $seconds_fail;
-			
+
 			$slas[$incident['id_incidencia']] = ($seconds_ok / $seconds_total) * 100;
 		}
 	}

@@ -1,5 +1,10 @@
 2014-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* include/functions_incidents.php: Fixed the length of some
+	legend names of the ticket stats.
+
+2014-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/functions_incidents.php
 	  include/functions_graph.php
 	  include/functions_db.php: Changed the way of calculate
