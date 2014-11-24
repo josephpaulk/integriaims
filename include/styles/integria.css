@@ -1242,7 +1242,7 @@ div#login {
 
 div#footer {
 	text-align: center;
-	margin: 0px auto;
+	margin: 100px auto auto auto;
 	font-size: 10px;
 	border-top: solid 6px #FF9933;
 	padding-top: 10px;
@@ -1251,7 +1251,7 @@ div#footer {
 	background-color: #505050;
 	background-image: url('../../images/darkgrey_bg.png');
 	color:#FFF;
-	height: 55px;
+	height: 100px;
 	
    	width:100%;
 }

@@ -1,3 +1,8 @@
+2014-11-24  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/styles/integria.css: Changed position of
+	footer. Ticket #1519.
+
 2014-11-20  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_incidents.php: Fixed the length of some
