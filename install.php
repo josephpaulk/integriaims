@@ -36,7 +36,7 @@
 
 
 error_reporting(0);
-$integria_version = "v4.0 Build 131202";
+$integria_version = "v4.1.15  Build 150127";
 
 function check_extension ( $ext, $label ) {
 	echo "<tr><td>";
