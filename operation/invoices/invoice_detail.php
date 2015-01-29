@@ -134,7 +134,11 @@ if ($search_text != "") {
 		description LIKE "%%%s%%")', $search_text, $search_text, $search_text);
 }
 if ($search_invoice_status != "") {
-	$where_clause .= sprintf (' AND status = "%s"', $search_invoice_status);
+	if ($search_invoice_status == "active") {
+		$where_clause .= ' AND status <> "canceled"';
+	} else {
+		$where_clause .= sprintf (' AND status = "%s"', $search_invoice_status);
+	}
 }
 
 // last_date is in days
@@ -189,6 +193,7 @@ if ($clean_output == 0){
 		. print_help_tip (__("Type at least two characters to search"), true);
 
 	$invoice_status_ar = array();
+	$invoice_status_ar['active'] = __("Active");
 	$invoice_status_ar['pending'] = __("Pending");
 	$invoice_status_ar['paid'] = __("Paid");
 	$invoice_status_ar['canceled'] = __("Canceled");

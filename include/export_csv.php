@@ -43,11 +43,47 @@ if ($export_csv_invoices) {
 	$where_clause = get_parameter('where_clause');
 	
 	$rows = crm_get_all_invoices (clean_output($where_clause));
+	if ($rows === false)
+		return;
+	
+	$rows_aux = array();	
+	foreach ($rows as $key=>$invoice) {
+		$company_name = get_db_value('name', 'tcompany', 'id', $invoice['id_company']);
+		$rows_aux[$key]['id'] = $invoice['id'];
+		$rows_aux[$key]['id_user'] = $invoice['id_user'];
+		$rows_aux[$key]['id_task'] = $invoice['id_task'];
+		$rows_aux[$key]['id_company'] = $invoice['id_company'];
+		$rows_aux[$key]['company'] = $company_name;
+		$rows_aux[$key]['bill_id'] = $invoice['bill_id'];
+		$rows_aux[$key]['concept1'] = $invoice['concept1'];
+		$rows_aux[$key]['concept2'] = $invoice['concept2'];
+		$rows_aux[$key]['concept3'] = $invoice['concept3'];
+		$rows_aux[$key]['concept4'] = $invoice['concept4'];
+		$rows_aux[$key]['concept5'] = $invoice['concept5'];
+		$rows_aux[$key]['amount1'] = $invoice['amount1'];
+		$rows_aux[$key]['amount2'] = $invoice['amount2'];
+		$rows_aux[$key]['amount3'] = $invoice['amount3'];
+		$rows_aux[$key]['amount4'] = $invoice['amount4'];
+		$rows_aux[$key]['amount5'] = $invoice['amount5'];
+		$rows_aux[$key]['total_amount'] = $invoice['amount1']+$invoice['amount2']+$invoice['amount3']+$invoice['amount4']+$invoice['amount5'];
+		$rows_aux[$key]['tax'] = $invoice['tax'];
+		$rows_aux[$key]['currency'] = $invoice['currency'];
+		$rows_aux[$key]['description'] = $invoice['description'];
+		$rows_aux[$key]['id_attachment'] = $invoice['id_attachment'];
+		$rows_aux[$key]['locked'] = $invoice['locked'];
+		$rows_aux[$key]['locked_id_user'] = $invoice['locked_id_user'];
+		$rows_aux[$key]['invoice_create_date'] = $invoice['invoice_create_date'];
+		$rows_aux[$key]['invoice_payment_date'] = $invoice['invoice_payment_date'];
+		$rows_aux[$key]['status'] = $invoice['status'];
+		$rows_aux[$key]['invoice_type'] = $invoice['invoice_type'];
+		$rows_aux[$key]['reference'] = $invoice['reference'];
+		$rows_aux[$key]['id_language'] = $invoice['id_language'];
+		$rows_aux[$key]['internal_note'] = $invoice['internal_note'];
+	}
+	$rows = $rows_aux;
 	
 	$filename = clean_output ('invoices_export').'-'.date ("YmdHi");
 	
-	if ($rows === false)
-		return;
 }
 
 if ($export_csv_contracts) {
@@ -219,6 +255,11 @@ foreach ($rows as $row) {
 	}
 
 	$line = implode(';', $line);
+	
+	if ($export_csv_invoices) {
+		$line = str_replace (".", ",", $line);
+	}
+
 	$csv_lines[] = $line;
 }
 

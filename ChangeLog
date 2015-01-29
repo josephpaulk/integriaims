@@ -1,3 +1,10 @@
+2015-01-29  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/export_csv.php
+	  include/functions_crm.php
+	  operation/invoices/invoice_detail.php: Fixed bugs
+	#1649, #1627.
+
 2014-11-24  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/styles/integria.css: Changed position of
