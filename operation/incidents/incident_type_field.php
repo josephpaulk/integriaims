@@ -31,6 +31,8 @@ $update_field = (int) get_parameter('update_field', 0);
 $label = '';
 $type = '';
 $combo_value = '';
+$linked_value = '';
+$parent = '';
 $show_in_list = false;
 
 $id_field = get_parameter ('id_field');
@@ -43,6 +45,8 @@ if ($id_field) {
 	$type = $field_data['type'];
 	$combo_value = $field_data['combo_value'];
 	$show_in_list = (boolean) $field_data['show_in_list'];
+	$parent = $field_data['parent'];
+	$linked_value = $field_data['linked_value'];
 
 }
 
@@ -54,13 +58,33 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
 
-$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'));
+$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' =>__('Linked'));
 $table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
 $table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
 $table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'));
 $table->data[0][3] = print_checkbox ('global', 1, '', true, __('Global field'));
 
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
+
+$sql = "SELECT id,label FROM tincident_type_field	
+	WHERE id_incident_type = ".$id_incident_type.
+	" AND type='linked'";
+
+$parents_result = get_db_all_rows_sql($sql);
+
+if ($parents_result == false) {
+	$parents_result = array();
+}
+$parents = array();
+foreach ($parents_result as $result) {
+	$parents[$result['id']] = $result['label']; 
+}
+
+$table->data['id_parent_value'][0] .= print_label (__("Parent"), "label-id", 'text', true);
+$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true);
+
+$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').print_help_tip (__("Set values separated by comma. If field has parent, set this value separated by pipe. Example:Parent1|Value1,Parent2|Value2"), true));
+
 
 if ($add_field) {
 	$button = print_input_hidden('add_field', 1, true);
@@ -86,19 +110,46 @@ echo '</form>';
 
 <script  type="text/javascript">
 $(document).ready (function () {
-	if ($("#type").val() == "combo") {
-		$("#table1-id_combo_value-0").css ('display', '');
-	} else {
-		$("#table1-id_combo_value-0").css ('display', 'none');
+	
+	var type_val = $("#type").val();
+	switch (type_val) {
+		case "combo":
+			$("#table1-id_combo_value-0").css ('display', '');
+			$("#table1-id_linked_value-0").css ('display', 'none');
+			$("#table1-id_parent_value-0").css ('display', 'none');
+		break;
+		case "linked":
+			$("#table1-id_linked_value-0").css ('display', '');
+			$("#table1-id_parent_value-0").css ('display', '');
+			$("#table1-id_combo_value-0").css ('display', 'none');
+		break;
+		default:
+			$("#table1-id_combo_value-0").css ('display', 'none');
+			$("#table1-id_linked_value-0").css ('display', 'none');
+			$("#table1-id_parent_value-0").css ('display', 'none');
+		break;
 	}
-
 });
 
 $("#type").change (function () {
-	if ($("#type").val() == "combo") {
-		$("#table1-id_combo_value-0").css ('display', '');
-	} else {
-		$("#table1-id_combo_value-0").css ('display', 'none');
+	
+	var type_val = $("#type").val();
+	switch (type_val) {
+		case "combo":
+			$("#table1-id_combo_value-0").css ('display', '');
+			$("#table1-id_linked_value-0").css ('display', 'none');
+			$("#table1-id_parent_value-0").css ('display', 'none');
+		break;
+		case "linked":
+			$("#table1-id_linked_value-0").css ('display', '');
+			$("#table1-id_parent_value-0").css ('display', '');
+			$("#table1-id_combo_value-0").css ('display', 'none');
+		break;
+		default:
+			$("#table1-id_combo_value-0").css ('display', 'none');
+			$("#table1-id_linked_value-0").css ('display', 'none');
+			$("#table1-id_parent_value-0").css ('display', 'none');
+		break;
 	}
 });
 

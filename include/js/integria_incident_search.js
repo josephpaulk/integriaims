@@ -521,6 +521,28 @@ function process_massive_updates () {
 	
 }
 
+function update_linked_fields(label_childs, id_parent, value_parent) {
+
+	var fields = label_childs.split(',');
+	
+	jQuery.each (fields, function (id, val) {
+		
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: "page=operation/incidents/incident_detail&get_data_child=1&label_field=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
+			dataType: "json",
+			success: function(data){
+				$("#"+val).empty();
+				jQuery.each (data, function (id_item, value) {
+					$("#"+val).append($("<option>").val(value).html(value));
+				});	
+			}
+		});
+			
+	});
+}
+
 function show_incident_type_fields(numRow) {
 
 	id_incident_type = $("#id_incident_type").val();
@@ -557,11 +579,11 @@ function show_incident_type_fields(numRow) {
 			jQuery.each (data, function (id, value) {
 				
 				//This loops prints combos and text fields
-				//textare fields are printed later.
+				//textarea fields are printed later.
 				if (value["type"] == "textarea") {
 					textarea_elements.push(value);
 					return true; //Skip this iteration;
-				} 
+				}
 
 				resto = i % 3;
 
@@ -603,6 +625,60 @@ function show_incident_type_fields(numRow) {
 						}
 					});
 			
+				}
+				
+				if (value['type'] == "linked") {
+												
+					element=document.createElement('select');
+					element.id=value['label']; 
+					element.name=value['label_enco'];
+					element.value=value['label'];
+					element.style.width="170px";
+					element.class="type";
+					
+					var id_parent = value['parent'];
+					var id_field = value['id'];
+
+					var label_parent = value['label_parent'];
+					var value_parent = $("#"+label_parent).val();
+					var new_text = value['linked_value'].split(',');
+
+					ix = 0;
+					jQuery.each (new_text, function (id, val) {
+
+						push_array = true;
+						if (id_parent != 0) {
+							
+							pattern = '^'+value_parent;
+							if (val.match(pattern)) {
+								push_array = true;
+								len_parent = value_parent.length;
+								len_val = val.length;
+								val = val.substring(len_parent+1,len_val);
+							} else {
+								push_array = false;
+							}
+						}
+
+						if (push_array) {
+							element.options[ix] = new Option(val, id);
+							element.options[ix].setAttribute("value",val);
+
+							if (value['data'] == val) {
+								element.options[ix].setAttribute("selected",'');
+							}
+							ix++;
+						}
+					});
+
+					if (value['label_childs'] != "") {
+						
+						element.onchange = function() {
+							var value_parent = $("#"+value['label']).val();
+							update_linked_fields(value['label_childs'], value['id'], value_parent);
+						};
+					}
+
 				}
 				
 				if ((value['type'] == "text")) {
@@ -1044,4 +1120,37 @@ function delete_massive_tickets () {
 				);
 			}
 	}
+}
+
+function change_linked_type_fields_table(childs_id, id_parent) {
+
+	if (isNaN(childs_id)) {
+		fields = childs_id.split(',');
+	} else {
+		childs_id = childs_id.toString();
+	}
+
+	var fields = childs_id.split(',');
+	value_parent = $("#search_type_field_"+id_parent).val();
+
+	if (value_parent == "") {
+		value_parent = "any";
+	}
+	jQuery.each (fields, function (id, val) {
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: "page=operation/incidents/incident_detail&get_data_child=1&id_field=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
+			dataType: "json",
+			success: function(data){
+				$("#search_type_field_"+val).empty();
+				$("#search_type_field_"+val).append($("<option>").val('').html("Any"));
+				
+				jQuery.each (data, function (id_item, value) {
+					$("#search_type_field_"+val).append($("<option>").val(value).html(value));
+				});	
+			}
+		});
+			
+	});
 }

@@ -44,18 +44,28 @@ if ($add_field) { //add field to incident type
 	$value['type'] = get_parameter ('type');
 	$value['combo_value'] = get_parameter ('combo_value', '');
 	$value['show_in_list'] = (int) get_parameter ('show_in_list');
+	$value['linked_value'] = get_parameter ('linked_value', '');
+	$value['parent'] = get_parameter ('parent', '');
 	$error_combo = false;
+	$error_linked = false;
 	
 	if ($value['type'] == 'combo') {
 		if ($value['combo_value'] == '')
 			$error_combo = true;
 	}
 	
+	if ($value['type'] == 'linked') {
+		if ($value['linked_value'] == '')
+			$error_linked = true;
+	}
+	
 	if ($value['label'] == '') {
 		echo '<h3 class="error">'.__('Empty field name').'</h3>';
 	} else if ($error_combo) {
 		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
-	} else if (!$value["type"])  {
+	} else if ($error_linked) {
+		echo '<h3 class="error">'.__('Empty linked value').'</h3>';
+	} else if (!$value["type"]) {
 		echo '<h3 class="error">'.__('No type selected').'</h3>';
 	} else {
 
@@ -143,14 +153,26 @@ if ($update_field) { //update field to incident type
 	$value_update['type'] = get_parameter ('type');
 	$value_update['combo_value'] = get_parameter ('combo_value', '');
 	$value_update['show_in_list'] = (int) get_parameter ('show_in_list');
-	$error_update = false;
+	$value_update['linked_value'] = get_parameter ('linked_value', '');
+	$value_update['parent'] = get_parameter ('parent', '');
+	$error_combo_update = false;
+	$error_linked_update = false;
 
 	if ($value_update['type'] == "combo") {
 		if ($value_update['combo_value'] == '') 
-			$error_update = true;
+			$error_combo_update = true;
+	}
+	
+	if ($value_update['type'] == "linked") {
+		if ($value_update['linked_value'] == '') 
+			$error_linked_update = true;
 	} 
-	if ($error_update) {
+	
+	if ($error_combo_update) {
 		echo '<h3 class="error">'.__('Field could not be updated. Empty combo value').'</h3>';
+	} else if ($error_linked_update) {
+		echo '<h3 class="error">'.__('Field could not be updated. Empty linked value').'</h3>';
+	
 	} else {
 		$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
 		

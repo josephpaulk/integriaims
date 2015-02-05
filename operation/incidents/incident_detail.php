@@ -26,6 +26,9 @@ if (defined ('AJAX')) {
 	global $config;
 	
 	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
+	$get_data_child = (bool) get_parameter('get_data_child', 0);
+	$upload_file = (bool) get_parameter('upload_file');
+	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -36,6 +39,26 @@ if (defined ('AJAX')) {
 		$fields_final = array();
 		foreach ($fields as $f) {
 			$f["data"] = safe_output($f["data"]);
+			if ($f["type"] == "linked") {
+				$f['label_parent'] = get_db_value_filter ('label', 'tincident_type_field', array('id'=>$f['parent']));
+				$sql_labels = "SELECT label FROM tincident_type_field WHERE parent=".$f['id'];
+				$label_childs = get_db_all_rows_sql($sql_labels);
+
+				if ($label_childs != false) {
+					$i = 0;
+					foreach($label_childs as $label) {
+						if ($i == 0) 
+							$f['label_childs'] = $label['label'];
+						else 
+							$f['label_childs'] .= ','.$label['label'];
+						$i++;
+					}
+					//~ $f['label_childs'] = explode(',',$label_childs);
+				} else {
+					$f['label_childs'] = '';
+				}
+
+			}
 
 			array_push($fields_final, $f);
 		}
@@ -44,7 +67,6 @@ if (defined ('AJAX')) {
 		return;
 	}
 
-	$upload_file = (bool) get_parameter('upload_file');
 	if ($upload_file) {
 		$result = array();
 		$result["status"] = false;
@@ -84,7 +106,6 @@ if (defined ('AJAX')) {
 		return;
 	}
 
-	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
 	if ($remove_tmp_file) {
 		$result = false;
 		$tmp_file_location = (string) get_parameter('location');
@@ -93,6 +114,46 @@ if (defined ('AJAX')) {
 		}
 		echo json_encode($result);
 		return;
+	}
+	
+	if ($get_data_child) {
+		
+		$id_field = get_parameter('id_field', 0);
+		if ($id_field) {
+			$label_field = get_db_value_sql("SELECT label FROM tincident_type_field WHERE id=".$id_field);
+		} else {
+			$label_field = get_parameter('label_field');
+		}
+		$id_parent = get_parameter('id_parent');
+		$value_parent = get_parameter('value_parent');
+		$sql = "SELECT linked_value FROM tincident_type_field WHERE parent=".$id_parent."
+			AND label='".$label_field."'";
+		$field_data = get_db_value_sql($sql);
+
+		$result = false;
+		if ($field_data != "") {
+			$data = explode(',', $field_data);
+			foreach ($data as $item) {
+				if ($value_parent == 'any') {
+
+					$pos_pipe = strpos($item,'|')+1;
+					$len_item = strlen($item);
+					$value_aux = substr($item, $pos_pipe, $len_item);
+					$result[$value_aux] = $value_aux;
+					
+				} else {
+					$pattern = "/^".$value_parent."\|/";
+					if (preg_match($pattern, $item)) {
+						$value_aux = preg_replace($pattern, "",$item);
+						$result[$value_aux] = $value_aux;
+					}
+				}
+			}
+		}
+
+		echo json_encode($result);
+		return;
+		
 	}
 }
 
@@ -243,6 +304,7 @@ if ($action == 'update') {
 	
 		foreach ($labels as $label) {
 			$values['data'] = get_parameter (base64_encode($label['label']));
+			//~ $values['data'] = str_replace('&#x0d;&#x0a;', "",get_parameter (base64_encode($label['label'])));
 			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 			$values['id_incident_field'] = $id_incident_field;
 			$values['id_incident'] = $id;
@@ -459,6 +521,7 @@ if ($action == "insert" && !$id) {
 					
 					$values_insert['id_incident'] = $id;
 					$values_insert['data'] = get_parameter (base64_encode($label['label']));
+					//~ $values_insert['data'] = str_replace('&#x0d;&#x0a;', "",get_parameter (base64_encode($label['label'])));
 					$values_insert['id_incident_field'] = $id_incident_field;
 					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
 					process_sql_insert('tincident_field_data', $values_insert);
