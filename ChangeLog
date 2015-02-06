@@ -1,3 +1,19 @@
+2015-02-06  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_demo.sql
+	  include/functions_form.php
+	  include/js/integria_incident_search.js
+	  operation/incidents/incident_detail.php
+	  operation/incidents/incident_search_logic.php
+	  operation/incidents/incident_type_field.php
+	  
+	* images/help/linked_field1.png
+	  images/help/linked_field2.png
+	  images/help/linked_field3.png
+	  images/help/linked_field4.png
+	  include/help/en/help_linked_values.php
+	  include/help/es/help_linked_values.php: Added files.
+
 2015-02-05  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql

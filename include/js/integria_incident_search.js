@@ -533,10 +533,21 @@ function update_linked_fields(label_childs, id_parent, value_parent) {
 			data: "page=operation/incidents/incident_detail&get_data_child=1&label_field=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
 			dataType: "json",
 			success: function(data){
+
 				$("#"+val).empty();
 				jQuery.each (data, function (id_item, value) {
-					$("#"+val).append($("<option>").val(value).html(value));
-				});	
+					
+					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')&& (id_item != 'id_childs')) {
+						$("#"+val).append($("<option>").val(value).html(value));
+					} else if ((id_item == 'label_childs') && ( value != '')) {
+
+							parent = data['id'];
+							parent_label = data['label'];
+							parent_value = $("#"+parent_label).val();
+							update_linked_fields(value, parent, parent_value);
+					}
+				});
+				
 			}
 		});
 			
@@ -1128,9 +1139,9 @@ function change_linked_type_fields_table(childs_id, id_parent) {
 		fields = childs_id.split(',');
 	} else {
 		childs_id = childs_id.toString();
+		fields = childs_id.split(',');
 	}
 
-	var fields = childs_id.split(',');
 	value_parent = $("#search_type_field_"+id_parent).val();
 
 	if (value_parent == "") {
@@ -1147,7 +1158,12 @@ function change_linked_type_fields_table(childs_id, id_parent) {
 				$("#search_type_field_"+val).append($("<option>").val('').html("Any"));
 				
 				jQuery.each (data, function (id_item, value) {
-					$("#search_type_field_"+val).append($("<option>").val(value).html(value));
+					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')  && (id_item != 'id_childs')) {
+						$("#search_type_field_"+val).append($("<option>").val(value).html(value));
+					} else if ((id_item == 'id_childs') && ( value != '')) {
+						parent = data['id'];
+						change_linked_type_fields_table(value, parent)
+					}
 				});	
 			}
 		});

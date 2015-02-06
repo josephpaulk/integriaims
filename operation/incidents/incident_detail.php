@@ -124,6 +124,7 @@ if (defined ('AJAX')) {
 		} else {
 			$label_field = get_parameter('label_field');
 		}
+
 		$id_parent = get_parameter('id_parent');
 		$value_parent = get_parameter('value_parent');
 		$sql = "SELECT linked_value FROM tincident_type_field WHERE parent=".$id_parent."
@@ -149,6 +150,31 @@ if (defined ('AJAX')) {
 					}
 				}
 			}
+		}
+
+		$sql_id = "SELECT id FROM tincident_type_field WHERE parent=".$id_parent."
+					AND label='".$label_field."'";
+		$result['id'] = get_db_value_sql($sql_id);
+		$result['label'] = $label_field;
+				
+		$sql_labels = "SELECT label, id FROM tincident_type_field WHERE parent=".$result['id'];
+
+		$label_childs = get_db_all_rows_sql($sql_labels);
+
+		if ($label_childs != false) {
+			$i = 0;
+			foreach($label_childs as $label) {
+				if ($i == 0) {
+					$result['label_childs'] = $label['label'];
+					$result['id_childs'] = $label['id'];
+				} else { 
+					$result['label_childs'] .= ','.$label['label'];
+					$result['id_childs'] .= ','.$label['id'];
+				}
+				$i++;
+			}
+		} else {
+			$result['label_childs'] = '';
 		}
 
 		echo json_encode($result);

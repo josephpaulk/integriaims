@@ -255,7 +255,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_type_field` WRITE;
 /*!40000 ALTER TABLE `tincident_type_field` DISABLE KEYS */;
-INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0, NULL),(2,1,'Base&#x20;OS','text','',0, NULL),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0, NULL),(4,1,'Expected&#x20;behaviour','textarea','',0, NULL);
+INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0, NULL, 0, ''),(2,1,'Base&#x20;OS','text','',0, NULL,0,''),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0, NULL,0,''),(4,1,'Expected&#x20;behaviour','textarea','',0, NULL,0,'');
 /*!40000 ALTER TABLE `tincident_type_field` ENABLE KEYS */;
 UNLOCK TABLES;
 

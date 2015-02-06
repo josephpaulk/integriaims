@@ -54,9 +54,8 @@ if (defined ('AJAX')) {
 					$linked_values = explode(",", $type_field['linked_value']);
 					$values = array();
 					foreach ($linked_values as $value) {
-						$value_without_parent =  preg_replace('/^(\d*\w*)*\|/',"", $value);
-						$values[$value_without_parent] = $value_without_parent;
-						
+						$value_without_parent =  preg_replace("/^.*\|/","", $value);
+						$values[$value_without_parent] = $value_without_parent;						
 						$has_childs = get_db_all_rows_sql("SELECT * FROM tincident_type_field WHERE parent=".$type_field['id']);
 						if ($has_childs) {
 							$i = 0;
@@ -67,11 +66,15 @@ if (defined ('AJAX')) {
 									$childs .= ','.$child['id'];
 								$i++;
 							}
+							$childs = "'".$childs."'";
+
 							$script = 'javascript:change_linked_type_fields_table('.$childs.','.$type_field['id'].');';
+
 						} else {
 							$script = '';
 						}
 					}
+
 					$input = print_select ($values, 'search_type_field_'.$type_field['id'], '', $script, __('Any'), '', true, false, false, $type_field['label']);
 				}
 

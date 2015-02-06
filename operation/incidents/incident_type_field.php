@@ -83,7 +83,7 @@ foreach ($parents_result as $result) {
 $table->data['id_parent_value'][0] .= print_label (__("Parent"), "label-id", 'text', true);
 $table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true);
 
-$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').print_help_tip (__("Set values separated by comma. If field has parent, set this value separated by pipe. Example:Parent1|Value1,Parent2|Value2"), true));
+$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true));
 
 
 if ($add_field) {
