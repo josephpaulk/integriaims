@@ -1,5 +1,9 @@
 2015-02-09  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/incidents/incident_detail.php: Ticket #1747.
+
+2015-02-09  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/help/en/help_linked_values.php
 	  include/help/es/help_linked_values.php: Updated help.
 
