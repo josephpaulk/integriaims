@@ -1,39 +1,34 @@
-<h1>Condiciones de reglas de flujo de trabajo</h1>
+<h1>Linked fields</h1>
 
 <p>
-En general las reglas de workflow se dispararán UNA SOLA vez, de forma que si establece una regla para cambiar por ejemplo, el usuario asignado a la incidencia cuando una incidencia tenga más de 30 dias de vida, y el usuario asignado es X, pero luego manualmente alguien vuelve a poner ese usuario X, la regla NO se volverá a disparar. La única excepción de este comportamiento es cuando la condición es el tiempo de actualización.
+Son campos personalizados relacionados entre sí. Los vamos a explicar con un ejemplo: <br><br>
+TIPO,VEHICULO,MARCA,MODELO,MOTOR <br><br>
 
-</p>
+Primero crearemos el campo TIPO. En este caso, no seleccionamos campo padre porque es el primero en nuestra jerarquía. Los valores irán separados por coma.
 <p>
-
-Si establece una regla para que salte cuando el ticket lleva más de X tiempo sin actualizar, se creará automáticamente una acción por defecto para “actualizar el ticket”. Esto hará que no salte continuamente la condición. Pasado ese X tiempo, el sistema podrá ejecutar de nuevo la misma regla de Workflow. Esta es la excepción, ya que para ninguna otra condición (Prioridad, Propietaro, Estado, Creacion ó Grupo), se podrá volver a ejecutar una regla.
-
-</p>
-<p>
-Caso típico de uso para este tipo de condición:
-<br>
-<br>
-Necesita enviar un email de aviso a un coordinador, cuando una incidencia de prioridad muy alta y de un grupo determinado lleva más de 5 días sin actualizaciones. 
-<br>
-<br>
-Simplemente tiene que rellenar en la condición “Match all fields”, el grupo específico y la prioriad muy alta, solo para incidencias asignadas. En “Time Update” escogeremos un mes.
+<?php print_image("images/help/linked_field1.png", false); ?>
 </p>
 
-<p>
-<?php print_image("images/help/workflow_conditions.png", false); ?>
-</p>
+<br><br>
+
+Después crearemos el campo MARCA. Habrá que seleccionar el campo padre TIPO. Después rellenaremos el campo con los valores separados por coma
+como en el caso anterior. <br> 
+Como este campo sí tiene un padre, habrá que asociar los valores. Para ello, pondremos delante el valor del campo padre separado de |
 
 <p>
-Al añadir la acción de enviar un mail, se creará automáticamente la accion de actualizar el ticket, que dejaremos tal cual, para actualizar el ticket y evitar que siga saltando la regla. 
+<?php print_image("images/help/linked_field2.png", false); ?>
 </p>
 
+El siguiente campo que vamos a crear es MODELO. Se selecciona el padre MARCA y se ponen los valores.
+
 <p>
-<?php print_image("images/help/workflow_actions.png", false, false); ?>
-</p>
-<p>
-<?php print_image("images/help/workflow_actions2.png", false, false); ?>
-</p>
-<p>
-Al pasar una semana, si no se ha actualizado la incidencia, volverá a saltar la regla y asi de forma indefinida.
+<?php print_image("images/help/linked_field3.png", false); ?>
 </p>
 
+Por último, creamos el campo MOTOR.
+
+<p>
+<?php print_image("images/help/linked_field4.png", false); ?>
+</p>
+
+</p>
