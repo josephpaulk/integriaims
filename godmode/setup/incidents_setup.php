@@ -78,6 +78,7 @@ if ($update) {
 	$config["change_incident_datetime"] = (int) get_parameter ("change_incident_datetime", 0);
 	$config["enabled_ticket_editor"] = get_parameter ("enabled_ticket_editor", 0);
 	$config["email_ticket_on_creation_and_closing"] = (int) get_parameter ("email_ticket_on_creation_and_closing", 0);
+	$config["ticket_owner_is_creator"] = (int) get_parameter ("ticket_owner_is_creator", 0);
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
 	update_config_token ("mask_emails", $config["mask_emails"]);
@@ -93,6 +94,7 @@ if ($update) {
 	update_config_token ("change_incident_datetime", $config["change_incident_datetime"]);
 	update_config_token ("enabled_ticket_editor", $config["enabled_ticket_editor"]);
 	update_config_token ("email_ticket_on_creation_and_closing", $config["email_ticket_on_creation_and_closing"]);
+	update_config_token ("ticket_owner_is_creator", $config["ticket_owner_is_creator"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -243,6 +245,10 @@ echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change",
 echo "<td style='vertical-align: top;'>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_checkbox ("email_ticket_on_creation_and_closing", 1, $config["email_ticket_on_creation_and_closing"], true, __('Send email only on creation and closing '))."</td>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td style='vertical-align: top;'>".print_checkbox ("ticket_owner_is_creator", 1, $config["ticket_owner_is_creator"], true, __('Owner user creator is the same user who creates the ticket'))."</td>";
 echo "</tr>";
 
 echo "<tr>";

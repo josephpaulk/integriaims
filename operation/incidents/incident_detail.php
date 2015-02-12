@@ -831,10 +831,16 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 }
 
 //Check owner for incident
-if ($create_incident) 
-	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
-else
+if ($create_incident) {
+
+	if ($config['ticket_owner_is_creator']) {
+		$assigned_user_for_this_incident = $usuario;
+	} else {
+		$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
+	}
+} else {
 	$assigned_user_for_this_incident = $usuario;
+}
 
 if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);

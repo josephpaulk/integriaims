@@ -1,5 +1,11 @@
 2015-02-12  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* godmode/setup/incidents_setup.php
+	  operation/incidents/incident_detail.php: Fixed bug
+	#1707.
+
+2015-02-12  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* operation/contacts/contact_manage.php: Fixed bug
 	updating contacts.
 
