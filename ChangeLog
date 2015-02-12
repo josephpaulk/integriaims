@@ -1,6 +1,11 @@
 2015-02-12  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/contacts/contact_manage.php: Fixed bug
+	updating contacts.
+
+2015-02-12  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/contacts/contact_manage.php: Fixed bug
 	#1607.
 
 2015-02-11  Vanessa Gil <vanessa.gil@artica.es>

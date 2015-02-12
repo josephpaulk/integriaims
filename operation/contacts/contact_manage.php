@@ -123,12 +123,7 @@ if ($create_contact) {
 
 // Update
 if ($update_contact && $id) { // if modified any parameter
-	if (!$write_permission && !$manage_permission) {
-       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a contact in a group without access");
-       require ("general/noaccess.php");
-       exit;
-	}
-
+	
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
 	$mobile = (string) get_parameter ('mobile');
@@ -137,20 +132,30 @@ if ($update_contact && $id) { // if modified any parameter
 	$disabled = (int) get_parameter ('disabled');
 	$description = (string) get_parameter ('description');
 	$id_company = (int) get_parameter ('id_company');
-
-	$sql = sprintf ('UPDATE tcompany_contact
-		SET description = "%s", fullname = "%s", phone = "%s",
-		mobile = "%s", email = "%s", position = "%s",
-		id_company = %d, disabled = %d WHERE id = %d',
-		$description, $fullname, $phone, $mobile, $email, $position,
-		$id_company, $disabled, $id);
-
-	$result = process_sql ($sql);
-	if ($result === false) {
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+	
+	if (!$id_company) {
+		echo "<h3 class='error'>".__('Error updating contact. Company is empty')."</h3>";
 	} else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		audit_db ($config['id_user'], '', "Contact updated", "Contact named '$fullname' has been updated");
+		if (!$write_permission && !$manage_permission) {
+		   audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a contact in a group without access");
+		   require ("general/noaccess.php");
+		   exit;
+		}
+
+		$sql = sprintf ('UPDATE tcompany_contact
+			SET description = "%s", fullname = "%s", phone = "%s",
+			mobile = "%s", email = "%s", position = "%s",
+			id_company = %d, disabled = %d WHERE id = %d',
+			$description, $fullname, $phone, $mobile, $email, $position,
+			$id_company, $disabled, $id);
+
+		$result = process_sql ($sql);
+		if ($result === false) {
+			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		} else {
+			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			audit_db ($config['id_user'], '', "Contact updated", "Contact named '$fullname' has been updated");
+		}
 	}
 }
 
