@@ -80,39 +80,44 @@ if ($get_contacts && $id) {
 
 // Create
 if ($create_contact) {
-	if (!$write_permission && !$manage_permission) {
-		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
-		require ("general/noaccess.php");
-		exit;
-	}
 
-	$fullname = (string) get_parameter ('fullname');
-	$phone = (string) get_parameter ('phone');
-	$mobile = (string) get_parameter ('mobile');
-	$email = (string) get_parameter ('email');
-	$position = (string) get_parameter ('position');
-	
-	$disabled = (int) get_parameter ('disabled');
-	$description = (string) get_parameter ('description');
-
-	$sql = sprintf ('INSERT INTO tcompany_contact (fullname, phone, mobile,
-		email, position, id_company, disabled, description)
-		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s")',
-		$fullname, $phone, $mobile, $email, $position,
-		$id_company, $disabled, $description);
-
-	$id = process_sql ($sql, 'insert_id');
-	
-	if (defined ('AJAX')) {
-		echo json_encode ($id);
-		return;
-	}
-	
-	if ($id === false) {
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+	if (!$id_company) {
+		echo "<h3 class='error'>".__('Error creating contact. Company is empty')."</h3>";
 	} else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Contact created", "Contact named '$fullname' has been added");
+		if (!$write_permission && !$manage_permission) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
+			require ("general/noaccess.php");
+			exit;
+		}
+
+		$fullname = (string) get_parameter ('fullname');
+		$phone = (string) get_parameter ('phone');
+		$mobile = (string) get_parameter ('mobile');
+		$email = (string) get_parameter ('email');
+		$position = (string) get_parameter ('position');
+		
+		$disabled = (int) get_parameter ('disabled');
+		$description = (string) get_parameter ('description');
+
+		$sql = sprintf ('INSERT INTO tcompany_contact (fullname, phone, mobile,
+			email, position, id_company, disabled, description)
+			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s")',
+			$fullname, $phone, $mobile, $email, $position,
+			$id_company, $disabled, $description);
+
+		$id = process_sql ($sql, 'insert_id');
+		
+		if (defined ('AJAX')) {
+			echo json_encode ($id);
+			return;
+		}
+		
+		if ($id === false) {
+			echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		} else {
+			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+			audit_db ($config['id_user'], $REMOTE_ADDR, "Contact created", "Contact named '$fullname' has been added");
+		}
 	}
 }
 
