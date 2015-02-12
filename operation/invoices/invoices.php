@@ -326,10 +326,7 @@ else {
 			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 			<img src="images/lock_open.png" title="'.__('Lock').'"></a>';
 	}
-	echo ' <a href="?sec=customers&sec2=operation/companies/company_detail
-		&delete_invoice=1&id='.$id_company.'&op=invoices&id_invoice='.$id_invoice.'" 
-		onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-		<img src="images/cross.png" title="'.__('Delete').'"></a>';
+	echo " <a href='#' onClick='javascript: show_validation_delete(\"delete_company_invoice\",".$id_invoice.",".$id_company.");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 }
 echo "</h3>";
 

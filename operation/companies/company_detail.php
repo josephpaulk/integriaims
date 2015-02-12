@@ -120,68 +120,6 @@ if (($create_company) OR ($update_company)) {
 	}
 }
 
-// Delete company
-// ----------------
-
-if ($delete_company) { // if delete
-
-	$name = get_db_value ('name', 'tcompany', 'id', $id);
-
-	if (!$write_permission && !$manage_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company");
-		include ("general/noaccess.php");
-		exit;
-	}
-
-	$sql_invoices = "SELECT COUNT(id) as total FROM tinvoice WHERE id_company = $id";
-	$check_invoices = process_sql($sql_invoices);
-
-	if ($check_invoices['total'] != 0) {
-		echo "<h3 class='error'>".__('Error deleting. Company has invoices.')."</h3>";
-	} else {
-		// Delete contacts for that company
-		$sql= sprintf ('DELETE FROM tcompany_contact WHERE id_company = %d', $id);
-		process_sql ($sql);
-		
-		$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
-
-		$result = process_sql ($sql);
-		
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company $name");
-		
-		if ($result) {
-			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
-		}
-	}
-	$id = 0;
-}
-
-// Delete INVOICE
-// ----------------
-if ($delete_invoice == 1){
-	
-	if (!check_crm_acl ('invoice', 'cw', $config['id_user'], $id) &&
-		!check_crm_acl ('invoice', 'cm', $config['id_user'], $id)) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete an invoice");
-		include ("general/noaccess.php");
-		exit;
-	}
-	
-	$id_invoice = get_parameter ("id_invoice", "");
-	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
-	
-	if ($invoice["id"] && !crm_is_invoice_locked ($invoice["id"])) {
-		// Todo: Delete the invoice files from disk
-		if ($invoice["id_attachment"] != ""){
-			process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
-		}
-		$res = process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
-		if ($res > 0) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice deleted", "Invoice ID: $id_invoice");
-		}
-	}
-}
-
 // Lock/Unlock INVOICE
 // ----------------
 if ($lock_invoice == 1){
@@ -318,6 +256,11 @@ if ($id) {
 	$company = get_db_row ('tcompany', 'id', $id);
 	
 	echo '<div class="under_tabs_info">' . sprintf(__('Company: %s'), $company['name']) . '</div><br>';
+	
+	$message = get_parameter('message', '');
+	if ($message != '') {
+		echo "<h3 class='suc'>".__($message)."</h3>";
+	}
 }
 
 // EDIT / CREATE FORM
@@ -381,7 +324,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 
 	if ($id > 0 && ($write_permission || $manage_permission)) {
-		$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1' title='".__('Delete company')."'><img src='images/cross.png'></a>";
+		$table->data[0][0] .= "&nbsp;<a href='#' onClick='javascript: show_validation_delete(\"delete_company\",".$id.",0,0);' title='".__('Delete company')."'><img src='images/cross.png'></a>";
 	}
 
 
@@ -784,10 +727,7 @@ elseif ($op == "invoices") {
 						<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
 				}
 				if (!$is_locked) {
-					$data[7] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
-						&delete_invoice=1&id='.$id.'&op=invoices&id_invoice='.$invoice["id"].'
-						&offset='.$offset.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
-						return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
+					$data[7] .= "<a href='#' onClick='javascript: show_validation_delete(\"delete_company_invoice\",".$invoice["id"].",".$id.",".$offset.");'><img src='images/cross.png' title='".__('Delete')."'></a>";	
 				} else {
 					if ($locked_id_user) {
 						$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18"
@@ -887,6 +827,12 @@ else if ($op == 'projects') {
 // No id passed as parameter
 	
 if ((!$id) AND ($new_company == 0)){
+
+	$message = get_parameter('message', '');
+
+	if ($message != '') {
+	 echo "<h3 class='suc'>".__($message)."</h3>";
+	}
 	
 	// Search // General Company listing
 	echo "<div id='inventory-search-content'>";
@@ -1096,12 +1042,7 @@ if ((!$id) AND ($new_company == 0)){
 
 			$manage_permission = check_crm_acl ('company', 'cm', $config['id_user'], $company['id']);
 			if ($manage_permission) {
-				$data[8] ='<a href="index.php?sec=customers&
-								sec2=operation/companies/company_detail'.$search_params.'&
-								delete_company=1&id='.$company['id'].'&offset='.$offset.'"
-								onClick="if (!confirm(\''.__('Are you sure?').'\'))
-								return false;">
-								<img src="images/cross.png"></a>';
+				$data[8] ="<a href='#' onClick='javascript: show_validation_delete(\"delete_company\",".$company['id'].",0,".$offset.",\"".$search_params."\");'><img src='images/cross.png'></a>";
 			} else {
 				$data[8] = '';
 			}
@@ -1116,6 +1057,7 @@ if ((!$id) AND ($new_company == 0)){
 
 echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";
 
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>

@@ -89,6 +89,12 @@ if (!$section_read_permission && !$section_write_permission && !$section_manage_
 	exit;
 }
 
+$message = get_parameter('message', '');
+
+if ($message != '') {
+	echo "<h3 class='suc'>".__($message)."</h3>";
+}
+ 
 echo "<h1>".__('Contract management')."</h1>";
 
 if ($id || $id_company) {
@@ -299,21 +305,6 @@ if ($update_contract) { // if modified any parameter
 	$id = 0;
 }
 
-// DELETE
-if ($delete_contract) {
-	
-	if (!$write_permission && !$manage_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a contract");
-		require ("general/noaccess.php");
-		exit;
-	}
-
-	$sql = sprintf ('DELETE FROM tcontract WHERE id = %d', $id);
-	process_sql ($sql);
-	audit_db ($config['id_user'], $REMOTE_ADDR, "Contract deleted", "Contract named '$name' has been deleted");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
-	$id = 0;
-}
 
 // FORM (Update / Create)
 if ($id || $new_contract) {
@@ -683,7 +674,8 @@ if ($id || $new_contract) {
 				else {
 					$data[5] = __('Public');
 				}
-				$data[6] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&'.$search_params.'&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+
+				$data[6] = "<a href='#' onClick='javascript: show_validation_delete(\"delete_contract\",".$contract["id"].",0,0,\"".$search_params."\");'><img src='images/cross.png'></a>";
 			}
 			array_push ($table->data, $data);
 		}	
@@ -699,6 +691,8 @@ if ($id || $new_contract) {
 		echo '</form>';
 	}
 }
+
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
@@ -709,6 +703,7 @@ if ($id || $new_contract) {
 <script type="text/javascript" src="include/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="include/js/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="include/js/jquery.knob.js"></script>
+<script type="text/javascript" src="include/js/integria_crm.js"></script>
 
 <script type="text/javascript">
 	

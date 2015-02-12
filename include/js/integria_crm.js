@@ -116,3 +116,65 @@ function openUserInfo(id_user) {
 		}
 	});
 }
+
+function delete_item (mode, id, id_company, offset, search_params) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/crm&delete_item=1&mode="+ mode+"&id="+id,
+		dataType: "html",
+		async:false,
+		success: function (data) {
+
+			switch (mode) {
+				case 'delete_company':
+					window.location.assign("index.php?sec=customers&sec2=operation/companies/company_detail&id=0&offset="+offset+"&search_params="+search_params+"message="+data);
+				break;
+				case 'delete_contract':
+					window.location.assign("index.php?sec=customers&sec2=operation/contracts/contract_detail&search_params="+search_params+"&message="+data);
+				break;
+				case 'delete_invoice':
+					window.location.assign("index.php?sec=customers&sec2=operation/invoices/invoice_detail&offset="+offset+"&search_params="+search_params+"&message="+data);
+				break;
+				case 'delete_company_invoice':
+					window.location.assign("index.php?sec=customers&sec2=operation/companies/company_detail&id="+id_company+"&op=invoices&offset="+offset+"&message="+data);
+				break;
+				case 'delete_lead':
+					window.location.assign("index.php?sec=customers&sec2=operation/leads/lead&tab=search&offset="+offset+"&message="+data);
+				break;
+			}
+		}
+	});
+}
+
+function show_validation_delete (mode, id, id_company, offset, search_params) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/crm&get_delete_validation=1",
+		dataType: "html",
+		success: function(data){
+			$("#item_delete_window").html (data);
+			$("#item_delete_window").show ();
+
+			$("#item_delete_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 210,
+					height: 180
+				});
+			$("#item_delete_window").dialog('open');
+			$("#validation_delete_form").submit(function (e){
+				e.preventDefault();
+				delete_item (mode, id, id_company, offset, search_params);
+			});
+		}
+	});
+}

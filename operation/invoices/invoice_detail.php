@@ -48,6 +48,11 @@ if (!$read) {
 	exit;
 }
 
+$message = get_parameter('message', '');
+if ($message != '') {
+	echo "<h3 class='suc'>".__($message)."</h3>";
+}
+
 echo "<h1>".__('Invoice listing');
 
 echo "<div id='button-bar-title'>";
@@ -320,10 +325,7 @@ if ($invoices != false) {
 				<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
 			}
 			if (!$is_locked) {
-				$data[7] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
-				&delete_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'
-				&offset='.$offset.$search_params.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
-				return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
+				$data[7] .= "<a href='#' onClick='javascript: show_validation_delete(\"delete_invoice\",".$invoice["id"].",0,".$offset.",\"".$search_params."\");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 			} else {
 				if ($locked_id_user) {
 					$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
@@ -356,11 +358,14 @@ if (($write || $manage) AND ($clean_output == 0)) {
 	echo '</form>';
 }
 
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/integria_crm.js"></script>
 
 <script type="text/javascript">
 

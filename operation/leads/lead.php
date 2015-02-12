@@ -30,8 +30,13 @@ if (!$section_read_permission) {
 $id = (int) get_parameter ('id');
 $tab = (string) get_parameter("tab");
 
-$title = "";
+$message = get_parameter('message', '');
+if ($message != '') {
+	echo "<h3 class='suc'>".__($message)."</h3>";
+}
 
+$title = "";
+	
 switch ($tab) {
 	case "pipeline":
 		$title = __('Lead pipeline');

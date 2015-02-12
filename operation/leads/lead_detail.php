@@ -810,13 +810,7 @@ if ($id || $new) {
 
 		// Show delete control if its owned by the user
 		if ($id && ( ($config["id_user"] == $owner) || dame_admin($config["id_user"]) ) ){
-			$table->data[6][0] .= ' <a title="'.__('Delete this lead').'"
-							href="index.php?sec=customers&
-							sec2=operation/leads/lead&tab=search&
-							delete=1&id='.$id.'&offset='.$offset.'"
-							onClick="if (!confirm(\''.__('Are you sure?').'\'))
-							return false;">
-							<img src="images/cross.png"></a>';
+			$table->data[6][0] .= " <a title='".__('Delete this lead')."' href='#' onClick='javascript: show_validation_delete(\"delete_lead\",".$id.",0,".$offset.");'><img src='images/cross.png'></a>";
 		}
 
 		// Show "close" control if it's owned by the user
@@ -1251,21 +1245,11 @@ if ($id || $new) {
 
 			// Show delete control if its owned by the user
 			if (($config["id_user"] == $lead["owner"] && ($section_write_permission || $section_manage_permission)) || dame_admin($config["id_user"])) {
-				$data[10] .= '<a href="index.php?sec=customers&
-								sec2=operation/leads/lead&tab=search&
-								delete=1&id='.$lead["id"].'&offset='.$offset.'"
-								onClick="if (!confirm(\''.__('Are you sure?').'\'))
-								return false;">
-								<img src="images/cross.png"></a>';
+				$data[10] .= "<a href='#' onClick='javascript: show_validation_delete(\"delete_lead\",".$lead["id"].",0,".$offset.");'><img src='images/cross.png'></a>";
 			} else {
 				if ($lead["owner"] == ""){
-					if ($section_write_permission || $section_manage_permission) {
-						$data[10] .= '<a href="index.php?sec=customers&
-										sec2=operation/leads/lead&tab=search&
-										delete=1&id='.$lead["id"].'&offset='.$offset.'"
-										onClick="if (!confirm(\''.__('Are you sure?').'\'))
-										return false;">
-										<img src="images/cross.png"></a>';
+					if ($section_write_permission || $section_manage_permission) {				
+						$data[10] .= "<a href='#' onClick='javascript: show_validation_delete(\"delete_lead\",".$lead["id"].",0,".$offset.");'><img src='images/cross.png'></a>";
 					}
 				}
 			}
@@ -1307,12 +1291,14 @@ if ($id || $new) {
 	echo print_container('massive_oper_leads', __('Massive operations over selected items'), $massive_oper_leads, 'closed', true, '20px');
 }
 
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/integria_crm.js"></script>
 
 <script type="text/javascript" >
 

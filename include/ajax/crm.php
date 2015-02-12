@@ -19,6 +19,8 @@ include_once('include/functions_crm.php');
 
 $get_company_search = get_parameter ('get_company_search', 0);
 $get_company_name = get_parameter ('get_company_name', 0);
+$get_delete_validation = get_parameter ('get_delete_validation', 0);
+$delete_item = get_parameter('delete_item', 0);
 
 if ($get_company_name) {
 	$id_company = get_parameter('id_company');
@@ -161,5 +163,105 @@ if ($get_company_search) {
 	return;
 }
 
+if ($get_delete_validation) {
+	
+	$table->width = '99%';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'align:center';
+	$table->data = array ();
+	$table->data[0][0] = '<b>'.__('Are you sure?').'</b><br>';
+	$table->data[1][0] = "<br>";
+	$table->data[2][0] = print_submit_button (__('Delete'), "delete_btn", false, 'class="sub close" width="160px;"', true);
+	
+	echo '<form id="validation_delete_form" method="post">';
+	print_table ($table);
+	echo '</form>';
+}
+
+if ($delete_item) {
+	$mode = get_parameter('mode');
+	$id = get_parameter('id');
+	switch ($mode) {
+		case 'delete_company':
+			$name = get_db_value ('name', 'tcompany', 'id', $id);
+
+			$sql_invoices = "SELECT COUNT(id) as total FROM tinvoice WHERE id_company = $id";
+			$check_invoices = process_sql($sql_invoices);
+
+			if ($check_invoices['total'] != 0) {
+				echo __('Error deleting. Company has invoices.');
+			} else {
+				// Delete contacts for that company
+				$sql= sprintf ('DELETE FROM tcompany_contact WHERE id_company = %d', $id);
+				process_sql ($sql);
+				
+				$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
+
+				$result = process_sql ($sql);			
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company $name");
+				
+				if ($result) {
+					echo __('Successfully deleted');
+					return;
+				}
+			}
+			return;
+				
+		break;
+		case 'delete_contract':
+			$sql = sprintf ('DELETE FROM tcontract WHERE id = %d', $id);
+			process_sql ($sql);
+			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract deleted", "Contract named '$name' has been deleted");
+			$message = 'Successfully deleted';
+			echo 'Successfully deleted';
+			return;
+		break;
+		case 'delete_company_invoice':
+		case 'delete_invoice':
+			$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id");
+	
+			if ($invoice["id"] && !crm_is_invoice_locked ($invoice["id"])) {
+				// Todo: Delete the invoice files from disk
+				if ($invoice["id_attachment"] != ""){
+					process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+				}
+				$res = process_sql ("DELETE FROM tinvoice WHERE id = $id");
+				if ($res > 0) {
+					echo 'Successfully deleted';
+					$company_name = get_db_value('name', 'tcompany', 'id', $invoice['id_company']);
+					audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice deleted", "Invoice Bill ID: ".$invoice['bill_id'].", Company: $company_name");
+				}
+			}
+			return;
+		break;
+		case 'delete_lead':
+			//check if lead exists
+			$exists = get_db_value  ('id', 'tlead', 'id', $id);
+
+			if (!$exists) {
+				echo 'Error deleting lead';
+			} else {
+				$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
+				$sql = sprintf ('DELETE FROM tlead WHERE id = %d', $id);
+				process_sql ($sql);
+				audit_db ($config['id_user'], $REMOTE_ADDR, "Lead deleted", "Lead named '$fullname' has been deleted");
+
+				$sql = sprintf ('DELETE FROM tlead_activity WHERE id_lead = %d', $id);
+				process_sql ($sql);
+
+				$sql = sprintf ('DELETE FROM tlead_history WHERE id_lead = %d', $id);
+				process_sql ($sql);
+
+				$sql = sprintf ('SELECT id FROM tlead WHERE id = %d', $id);
+				$result = process_sql ($sql);
+				if (!$result) {
+					echo 'Successfully deleted';
+				}
+			}
+			return;
+		break;
+	}
+}
 
 ?>
