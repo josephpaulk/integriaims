@@ -1,3 +1,9 @@
+2015-02-13  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/js/integria_incident_search.js
+	  operation/incidents/incident_detail.php: Fixed bug
+	in custom fields.
+
 2015-02-12  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* godmode/setup/incidents_setup.php

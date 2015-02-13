@@ -526,31 +526,29 @@ function update_linked_fields(label_childs, id_parent, value_parent) {
 	var fields = label_childs.split(',');
 	
 	jQuery.each (fields, function (id, val) {
-		
+	
 		$.ajax({
 			type: "POST",
 			url: "ajax.php",
-			data: "page=operation/incidents/incident_detail&get_data_child=1&label_field=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
+			data: "page=operation/incidents/incident_detail&get_data_child=1&label_field_enco=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
 			dataType: "json",
 			success: function(data){
-
-				$("#"+val).empty();
+				//~ $("#"+val).empty();
+					$("select[name="+val+"]").empty();
 				jQuery.each (data, function (id_item, value) {
 					
-					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')&& (id_item != 'id_childs')) {
-						$("#"+val).append($("<option>").val(value).html(value));
-					} else if ((id_item == 'label_childs') && ( value != '')) {
-
+					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')&& (id_item != 'id_childs') && (id_item != 'label_childs_enco') && (id_item != 'label_enco')) {
+						$("select[name="+val+"]").append($("<option>").val(value).html(value));
+					} else if ((id_item == 'label_childs_enco') && ( value != '')) {
 							parent = data['id'];
-							parent_label = data['label'];
-							parent_value = $("#"+parent_label).val();
-							update_linked_fields(value, parent, parent_value);
+							parent_label = data['label_enco'];
+							parent_value = $("select[name='"+parent_label+"']").val();
+				
+							update_linked_fields('"'+value+'"', parent, parent_value);
 					}
 				});
-				
 			}
-		});
-			
+		});	
 	});
 }
 
@@ -649,9 +647,8 @@ function show_incident_type_fields(numRow) {
 					
 					var id_parent = value['parent'];
 					var id_field = value['id'];
-
-					var label_parent = value['label_parent'];
-					var value_parent = $("#"+label_parent).val();
+					var label_parent = value['label_parent_enco'];
+					var value_parent = $("select[name='"+label_parent+"']").val();
 					var new_text = value['linked_value'].split(',');
 
 					ix = 0;
@@ -685,11 +682,11 @@ function show_incident_type_fields(numRow) {
 					if (value['label_childs'] != "") {
 						
 						element.onchange = function() {
-							var value_parent = $("#"+value['label']).val();
-							update_linked_fields(value['label_childs'], value['id'], value_parent);
+							//~ var value_parent = $("#"+value['label']).val();
+							var value_parent = $("select[name='"+value['label_enco']+"']").val();
+							update_linked_fields('"'+value['label_childs_enco']+'"', value['id'], value_parent);
 						};
 					}
-
 				}
 				
 				if ((value['type'] == "text")) {

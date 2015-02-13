@@ -41,19 +41,23 @@ if (defined ('AJAX')) {
 			$f["data"] = safe_output($f["data"]);
 			if ($f["type"] == "linked") {
 				$f['label_parent'] = get_db_value_filter ('label', 'tincident_type_field', array('id'=>$f['parent']));
+				$f['label_parent_enco'] = base64_encode($f['label_parent']);
 				$sql_labels = "SELECT label FROM tincident_type_field WHERE parent=".$f['id'];
 				$label_childs = get_db_all_rows_sql($sql_labels);
 
 				if ($label_childs != false) {
 					$i = 0;
 					foreach($label_childs as $label) {
-						if ($i == 0) 
+						if ($i == 0) {
 							$f['label_childs'] = $label['label'];
-						else 
+							$f['label_childs_enco'] = base64_encode($label['label']);
+						}
+						else { 
 							$f['label_childs'] .= ','.$label['label'];
+							$f['label_childs_enco'] .= ','.base64_encode($label['label']);
+						}
 						$i++;
 					}
-					//~ $f['label_childs'] = explode(',',$label_childs);
 				} else {
 					$f['label_childs'] = '';
 				}
@@ -125,6 +129,12 @@ if (defined ('AJAX')) {
 			$label_field = get_parameter('label_field');
 		}
 
+		$label_field_enco = get_parameter('label_field_enco',0);
+		if ($label_field_enco) {
+			$label_field_enco = str_replace("&quot;","",$label_field_enco);
+			$label_field = base64_decode($label_field_enco);
+		}
+
 		$id_parent = get_parameter('id_parent');
 		$value_parent = get_parameter('value_parent');
 		$sql = "SELECT linked_value FROM tincident_type_field WHERE parent=".$id_parent."
@@ -156,6 +166,7 @@ if (defined ('AJAX')) {
 					AND label='".$label_field."'";
 		$result['id'] = get_db_value_sql($sql_id);
 		$result['label'] = $label_field;
+		$result['label_enco'] = base64_encode($label_field);
 				
 		$sql_labels = "SELECT label, id FROM tincident_type_field WHERE parent=".$result['id'];
 
@@ -167,14 +178,17 @@ if (defined ('AJAX')) {
 				if ($i == 0) {
 					$result['label_childs'] = $label['label'];
 					$result['id_childs'] = $label['id'];
+					$result['label_childs_enco'] = base64_encode($label['label']);
 				} else { 
 					$result['label_childs'] .= ','.$label['label'];
 					$result['id_childs'] .= ','.$label['id'];
+					$result['label_childs_enco'] .= ','.base64_encode($label['label']);
 				}
 				$i++;
 			}
 		} else {
 			$result['label_childs'] = '';
+			$result['label_childs_enco'] = '';
 		}
 
 		echo json_encode($result);
