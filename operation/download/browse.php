@@ -99,7 +99,10 @@ if (defined ('AJAX')) {
 			$id_category = get_parameter ("id_category", "");
 			$id_type = get_parameter ("id_type", -1);
 			$public = (int) get_parameter ("public", 0);
-			$external_id = (string) get_parameter ("external_id");
+			$external_id = (string) get_parameter ("external_id", "");
+			if (empty($external_id)) {
+				$external_id = sha1(random_string(12).date());
+			}
 
 			$sql_insert = "INSERT INTO tdownload (name, location, description, id_category, id_user, date, public, external_id) 
 			  		 VALUE ('$name','attachment/downloads/$filename', '$description', '$id_category', '".$config["id_user"]."', '$timestamp', $public, '$external_id') ";
@@ -194,7 +197,11 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$id_category = get_parameter ("id_category","");
 	$id_type = get_parameter ("id_type", 0);
 	$public = (int) get_parameter ("public",0);
-	$external_id = (string) get_parameter ("external_id");
+	$external_id = (string) get_parameter ("external_id", "");
+
+	if (empty($external_id)) {
+		$external_id = sha1(random_string(12).date());
+	}
 
 	$sql_update ="UPDATE tdownload
 	SET public = $public, external_id = '$external_id', name = '$name', description = '$description', id_category = $id_category WHERE id = $id";
@@ -550,6 +557,10 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 
 }
 
+//external_id hidden
+echo '<div id="external_id_hidden" style="display:none;">';
+	print_input_text('external_id_hidden', $external_id);
+echo '</div>';
 ?>
 
 <script src="include/js/jquery.fileupload.js"></script>
@@ -765,6 +776,11 @@ function form_upload () {
 			item.removeClass('working');
 			item.removeClass('error');
 			item.addClass('loading');
+			
+			if (item.find("#text-external_id").val() == "") {
+				external_id = $("#text-external_id_hidden").val();
+				item.find("#text-external_id").val(external_id);
+			}
 
 			$.ajax({
 				type: 'POST',

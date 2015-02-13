@@ -1155,7 +1155,7 @@ function change_linked_type_fields_table(childs_id, id_parent) {
 				$("#search_type_field_"+val).append($("<option>").val('').html("Any"));
 				
 				jQuery.each (data, function (id_item, value) {
-					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')  && (id_item != 'id_childs')) {
+					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')&& (id_item != 'id_childs') && (id_item != 'label_childs_enco') && (id_item != 'label_enco')) {
 						$("#search_type_field_"+val).append($("<option>").val(value).html(value));
 					} else if ((id_item == 'id_childs') && ( value != '')) {
 						parent = data['id'];
