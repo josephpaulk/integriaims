@@ -1,3 +1,8 @@
+2015-02-16  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_inventories.php: Fixed bug
+	#1800.
+
 2015-02-13  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/download/browse.php: Fixed bug

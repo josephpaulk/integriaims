@@ -1037,7 +1037,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 				
 				if ($info_inventory['id_contract'] != 0) {
 					$contract = $info_inventory['id_contract'];
-					$name_contract = get_db_value('name', 'tcontract', 'id', $info_inventory['id_manufacturer']);
+					$name_contract = get_db_value('name', 'tcontract', 'id', $info_inventory['id_contract']);
 				} else {
 					$name_contract = '--';
 				}
