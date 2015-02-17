@@ -1,5 +1,9 @@
 2015-02-17  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/functions_incidents.php: Fixed bug #1629.
+
+2015-02-17  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/functions_form.php
 	  operation/incidents/incident_detail.php
 	  operation/incidents/incident_search_logic.php: Fixed problem
