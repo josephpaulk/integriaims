@@ -1134,7 +1134,7 @@ function form_search_incident ($return = false, $filter=false) {
 
 	$table->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
 	
-	$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" href="#">'.__('Advanced search').' >></a></div>';
+	$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" id="show_advanced_search" href="javascript:show_ad_search();">'.__('Advanced search').'></a></div>';
 	$table->data[7][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
