@@ -482,3 +482,30 @@ $(document).ready(function() {
 		$('#' + $(this).attr('id') + ' img').attr('src', new_arrow);
 	});
 });
+
+function openInventoryMoreInfo (id_inventory) {
+
+$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&id_inventory=" + id_inventory + "&printTableMoreInfo=1",
+		success: function(data){
+			$("#info_inventory_window").html (data);
+			$("#info_inventory_window").show ();
+
+			$("#info_inventory_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					title: "Extended info",
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 620,
+					height: 300
+				});
+			$("#info_inventory_window").dialog('open');
+		}
+	});
+}

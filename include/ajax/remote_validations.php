@@ -51,6 +51,7 @@ $search_existing_user_num = (bool) get_parameter ('search_existing_user_num');
 $search_existing_user_email = (bool) get_parameter ('search_existing_user_email');
 $search_existing_role = (bool) get_parameter ('search_existing_role');
 $search_existing_group = (bool) get_parameter ('search_existing_group');
+$search_duplicate_name = (bool) get_parameter ('search_duplicate_name');
 
 if ($search_existing_project) {
 	require_once ('include/functions_db.php');
@@ -915,6 +916,23 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
+}
+
+if ($search_duplicate_name) {			
+	if ((!isset($config['duplicate_inventory_name'])) || ($config['duplicate_inventory_name'])) {
+		echo json_encode(true);
+		return;
+	} else {
+		$inventory_name = get_parameter ('inventory_name');
+		$exists = get_db_value ('id', 'tinventory', 'name', $inventory_name);
+		if ($exists) {
+			echo json_encode(false);
+			return;
+		} else {
+			echo json_encode(true);
+			return;
+		}
+	}
 }
 
 ?>

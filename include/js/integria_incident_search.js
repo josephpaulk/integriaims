@@ -1167,3 +1167,51 @@ function change_linked_type_fields_table(childs_id, id_parent) {
 			
 	});
 }
+
+function show_ad_search() {
+		table = $("#search_incident_form").children ("table");
+		$("tr", table).show ();
+		$(this).remove ();
+		return false;
+}
+
+// Change the type fields table
+function change_type_fields_table() {
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_search_logic&get_type_fields_table=1&id_incident_type="+$("#search_id_incident_type").val(),
+		dataType: "html",
+		success: function(data) {
+			$("#table_type_fields").html (data);
+		}
+	});
+}
+
+// Show the modal window of inventory search
+function show_search_inventory(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
+		dataType: "html",
+		success: function(data) {
+			$("#search_inventory_window").html (data);
+			$("#search_inventory_window").show ();
+			
+			$("#search_inventory_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#search_inventory_window").dialog('open');
+		}
+	});
+}

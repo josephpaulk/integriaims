@@ -24,6 +24,7 @@ $get_user_associated = get_parameter('get_user_associated', 0);
 $get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
 $select_fields = get_parameter('select_fields', 0);
 $printTable = get_parameter('printTable', 0);
+$printTableMoreInfo = get_parameter('printTableMoreInfo', 0);
 	
 if ($select_fields) {
 	$id_object_type = get_parameter('id_object_type');
@@ -322,5 +323,41 @@ if ($get_user_associated) {
 	return;
 }
 
+if ($printTableMoreInfo) {
+
+	$id_inventory = get_parameter('id_inventory');
+	
+	$id_object_type = get_db_value_sql('SELECT id_object_type FROM tinventory WHERE id='.$id_inventory);
+
+	if ($id_object_type) {
+		$object_fields = get_db_all_rows_sql("SELECT * FROM tobject_type_field WHERE id_object_type=".$id_object_type);
+
+		if ($object_fields == false) {
+			$object_fields = array();
+		}
+		$table_info->class = 'list';
+		$table_info->width = '98%';
+		$table_info->data = array ();
+		
+		$i = 0;
+		foreach ($object_fields as $field) {
+			$value = get_db_value_sql("SELECT data FROM tobject_field_data WHERE id_inventory=".$id_inventory." AND id_object_type_field=".$field['id']);
+
+			if ($value == "") {
+				$value = "--";
+			}
+			$table_info->data[$i][0] = print_label ($field['label'], '','',true);
+			$table_info->data[$i][1] = $value;
+			$i++;
+		}
+		
+		print_table($table_info);
+		return;
+	} else {
+		echo "<b>".__('No data to show')."</b>";
+		return;
+	}
+	
+}
 ?>
 

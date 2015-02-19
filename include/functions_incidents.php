@@ -2427,14 +2427,22 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 			
 			if ($config["show_creator_incident"] == 1){	
 				echo "<td class='f9'>";
-				$incident_creator = $incident["id_creator"];
+				if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
+					$incident_creator = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_creator"]);
+				} else {
+					$incident_creator = $incident["id_creator"];
+				}
 				echo substr($incident_creator,0,12);
 				echo "</td>";
 			}
 			
 			if ($config["show_owner_incident"] == 1){	
 				echo "<td class='f9'>";
-				$incident_owner = $incident["id_usuario"];
+				if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
+					$incident_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_usuario"]);
+				} else {
+					$incident_owner = $incident["id_usuario"];
+				}
 				echo substr($incident_owner,0,12);
 				echo "</td>";
 			}

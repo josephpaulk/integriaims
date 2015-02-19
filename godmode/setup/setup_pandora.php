@@ -46,8 +46,9 @@ if ($update) {
 	$config["pandora_user"] = get_parameter ("pandora_user");
 	$config["pandora_pass"] = get_parameter ("pandora_pass");
 	$config["default_contract"] = get_parameter ("default_contract");
+	$config["duplicate_inventory_name"] = get_parameter ("duplicate_inventory_name");
 
-        $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
+    $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
 	$config["inventory_default_owner"] = (string) get_parameter("inventory_default_owner", "");
 	
 	$companies = get_parameter("companies", explode(',',$config["inventory_default_companies"]));
@@ -58,11 +59,12 @@ if ($update) {
 
 	$config["inventory_default_users"] = join(',', $users);
 
-        update_config_token ("remote_inventory_type", $config["remote_inventory_type"]);
+    update_config_token ("remote_inventory_type", $config["remote_inventory_type"]);
 	update_config_token ("inventory_default_owner", $config["inventory_default_owner"]);
 
 	update_config_token ("inventory_default_companies", $config["inventory_default_companies"]);
 	update_config_token ("inventory_default_users", $config["inventory_default_users"]);
+	update_config_token ("duplicate_inventory_name", $config["duplicate_inventory_name"]);
 
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");
@@ -96,6 +98,8 @@ $table->data[1][1] = print_input_text ("pandora_pass", $config["pandora_pass"], 
 
 $contracts = get_contracts();
 $table->data[2][0] = print_select ($contracts, 'default_contract', $config["default_contract"], '', __('Select'), '',  true, 0, true, __('Default Contract')) ;
+
+$table->data[2][1] = print_checkbox ("duplicate_inventory_name", 1, $config["duplicate_inventory_name"], true, __('Allow inventory objects with the same name'));
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);

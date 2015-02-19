@@ -18,6 +18,8 @@ global $config;
 include_once ("include/functions_graph.php");
 include_once ("include/functions_user.php");
 
+echo "<div class= 'dialog ui-dialog-content' id='info_inventory_window'></div>";
+
 //id could be passed by another view, if not, we try to get from parameters
 if(!$id) {
 	$id = get_parameter("id", false);

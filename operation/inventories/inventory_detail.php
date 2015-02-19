@@ -792,9 +792,19 @@ var rules, messages;
 // Rules: #text-name
 rules = {
 	required: true,
+	remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_duplicate_name: 1,
+				inventory_name: function() { return $("#text-name").val() }
+			}
+		}
 };
 messages = {
 	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('Duplicate name')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 

@@ -1,3 +1,18 @@
+2015-02-19  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/incidents_setup.php
+	  godmode/setup/setup_pandora.php
+	  include/functions_incidents.php
+	  include/functions_inventories.php
+	  include/ajax/inventories.php
+	  include/ajax/remote_validations.php
+	  include/js/integria.js
+	  include/js/integria_incident_search.js
+	  operation/incidents/incident_dashboard_detail.php
+	  operation/incidents/incident_detail.php
+	  operation/inventories/inventory_detail.php: Some improvements
+	added.
+
 2015-02-17  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_incidents.php: Fixed bug #1629.

@@ -716,10 +716,19 @@ function fill_inventories_table($inventories, &$table) {
 		
 		if (give_acl ($config['id_user'], $id_group, "VW")) {
 			$table->head[4] = __('Edit');
+			$table->align[4] = 'center';
 			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&check_inventory=1&id='.$inventory['id'].'">'.
 					'<img src="images/wrench.png" /></a>';
 		}
+		
+		$table->head[5] = __('More info');
+		$data[5] = '<a href="javascript: openInventoryMoreInfo(' . $inventory['id'] . ');" id="show_info-'.$inventory["id"].'">';
+		$data[5] .= print_image ("images/information.png", true,
+				array ("title" => __('Show object type fields')));
+		$data[5] .= '</a>&nbsp;';
+	
 		array_push ($table->data, $data);
+
 	}
 }
 
