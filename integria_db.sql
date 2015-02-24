@@ -971,6 +971,8 @@ CREATE TABLE `tobject_type_field` (
   `combo_value` text default NULL,
   `external_table_name` text default null,
   `external_reference_field` text default null,
+  `parent_table_name` text default null,
+  `parent_reference_field` text default null,
   `unique` int(1) default 0,
   `inherit` int(1) default 0,
   `show_list` TINYINT(1) unsigned DEFAULT 1,

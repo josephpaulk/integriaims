@@ -754,6 +754,14 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory=false, $
 					if ($key == 'label') {
 						$all_fields[$id]['label_enco'] = base64_encode($f);
 					}
+					if ($key == 'parent_table_name') {
+						if ($f != '') {
+							$label_parent = get_db_value_sql("SELECT label FROM tobject_type_field WHERE external_table_name='".$f."'");
+							$all_fields[$id]['label_parent_enco'] = base64_encode($label_parent);
+							$id_parent_table = get_db_value_sql("SELECT external_reference_field FROM tobject_type_field WHERE external_table_name='".$f."'");
+							$all_fields[$id]['id_parent_table'] = $id_parent_table;
+						}
+					}
 					$all_fields[$id][$key] = safe_output($f);
 					$all_fields[$key]['data'] = "";
 				}
@@ -763,6 +771,14 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory=false, $
 			foreach ($field as $key=>$f) {
 				if ($key == 'label') {
 					$all_fields[$id]['label_enco'] = base64_encode($f);
+				}
+				if ($key == 'parent_table_name') {
+					if ($f != '') {
+						$label_parent = get_db_value_sql("SELECT label FROM tobject_type_field WHERE external_table_name='".$f."'");
+						$id_parent_table = get_db_value_sql("SELECT external_reference_field FROM tobject_type_field WHERE external_table_name='".$f."'");
+						$all_fields[$id]['label_parent_enco'] = base64_encode($label_parent);
+						$all_fields[$id]['id_parent_table'] = $id_parent_table;
+					}
 				}
 				$all_fields[$id][$key] = safe_output($f);
 				$all_fields[$key]['data'] = "";

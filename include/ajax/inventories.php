@@ -67,6 +67,8 @@ if ($get_external_data) {
 	$id_table = (string) get_parameter('id_table');
 	$element_name = get_parameter('element_name');
 	$id_object_type_field = get_parameter('id_object_type_field');
+	$id_parent_value = get_parameter('id_parent_value', 0);
+	$id_parent_table = get_parameter('id_parent_table', "");
 
 	//We use MYSQL_QUERY becase we need this to fail silently to not show
 	//SQL errors on screen
@@ -80,13 +82,23 @@ if ($get_external_data) {
 	$sql_ext = "SHOW COLUMNS FROM ".$table_name;
 	$desc_ext = get_db_all_rows_sql($sql_ext);
 
+	$parent_reference_field = get_db_value_sql('SELECT parent_reference_field FROM tobject_type_field WHERE id='.$id_object_type_field);
+	
 	$fields = array();
 	foreach ($desc_ext as $key=>$ext) {
+		if ($parent_reference_field == $ext['Field']) {
+			continue;
+		}
 		$fields[$ext['Field']] = $ext['Field'];
 	}
-	
-	$external_data = get_db_all_rows_in_table($table_name);
-		
+
+	if ($id_parent_value) {
+		$table_name_parent = get_db_value_sql("SELECT parent_table_name FROM tobject_type_field WHERE id=".$id_object_type_field);
+		$external_data = get_db_all_rows_sql("SELECT * FROM $table_name WHERE $id_parent_table=".$id_parent_value);
+	} else {
+		$external_data = get_db_all_rows_in_table($table_name);
+	}
+
 	if ($external_data !== false) {
 	
 		$table->class = 'listing';
