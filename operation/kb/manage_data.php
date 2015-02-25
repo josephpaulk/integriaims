@@ -53,13 +53,20 @@ if (isset($_GET["create2"])){ // Create group
 // Attach DELETE
 // ==============
 if (isset($_GET["delete_attach"])){
+
 	$id_attachment = get_parameter ("delete_attach", 0);
 	$id_kb = get_parameter ("update", 0);
 	$attach_row = get_db_row ("tattachment", "id_attachment", $id_attachment);
 	$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$attach_row["filename"];
 	
+	$item_accesibility =  enterprise_hook ('check_kb_item_accessibility_extra', array ($id_user, $id_kb));
+	
+	if ($item_accesibility == ENTERPRISE_NOT_HOOK) {
+		$item_accesibility = true;
+	}
+
 	//~ if ($id_kb && ! check_kb_item_accesibility($id_user, $id_kb)) {
-	if ($id_kb && ! check_fr_item_accessibility_extra($id_user, $id_kb)) {
+	if ($id_kb && ($item_accesibility != true)) {
 		audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
 		require ("general/noaccess.php");
 		exit;
