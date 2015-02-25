@@ -93,21 +93,27 @@ if (defined ('AJAX')) {
 		$name = get_parameter ("name","");
 
 		if ($name != "") {
-
 			$filename = get_parameter ("filename","");
 			$description = get_parameter ("description", "");
 			$id_category = get_parameter ("id_category", "");
-			$id_type = get_parameter ("id_type", -1);
-			$public = (int) get_parameter ("public", 0);
+			$id_type = (int) get_parameter ("id_type", -1);
+			$public = (int) get_parameter ("public");
 			$external_id = (string) get_parameter ("external_id", "");
 			if (empty($external_id)) {
 				$external_id = sha1(random_string(12).date());
 			}
-
-			$sql_insert = "INSERT INTO tdownload (name, location, description, id_category, id_user, date, public, external_id) 
-			  		 VALUE ('$name','attachment/downloads/$filename', '$description', '$id_category', '".$config["id_user"]."', '$timestamp', $public, '$external_id') ";
 			
-			$id = process_sql($sql_insert, "insert_id");	
+			$values = array(
+					'name' => $name,
+					'location' => "attachment/downloads/$filename",
+					'description' => $description,
+					'id_category' => $id_category,
+					'id_user' => $config["id_user"],
+					'date' => $timestamp,
+					'public' => $public,
+					'external_id' => $external_id
+				);
+			$id = process_sql_insert("tdownload", $values);	
 			if ($id) {
 
 				$result["status"] = true;
@@ -378,7 +384,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Name'));
 	$table->data[0][1] = print_input_text ('external_id', $external_id, '', 60, 100, true, __('External ID'));
-	$table->data[1][0] = print_checkbox ("public", 1, $public, true, __('Public'));
+	$table->data[1][0] = print_checkbox ("public", 1, $public, true, __('Public link'));
 	$table->data[1][1] = combo_download_categories ($id_category, 0, __('Main category'), true);
 	$table->data[1][2] = print_select (get_file_types(true, true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
 	$table->data[2][0] = print_textarea ("description", 5, 40, $description, '', true, __('Description'));
@@ -789,12 +795,24 @@ function form_upload () {
 					page: "operation/download/browse",
 					insert_fr: true,
 					filename: filename,
-					name: function() { return item.find("#text-name").val() },
-					external_id: function() { return item.find("#text-external_id").val() },
-					public: function() { return item.find("#checkbox-public").prop("checked") },
-					id_category: function() { return item.find("#id_category").val() },
-					id_type: function() { return item.find("#id_type").val() },
-					description: function() { return item.find("#textarea-description").val() },
+					name: function() {
+						return item.find("#text-name").val();
+					},
+					external_id: function() {
+						return item.find("#text-external_id").val();
+					},
+					public: function() {
+						return item.find("#checkbox-public").prop("checked") ? 1 : 0;
+					},
+					id_category: function() {
+						return item.find("#id_category").val();
+					},
+					id_type: function() {
+						return item.find("#id_type").val();
+					},
+					description: function() {
+						return item.find("#textarea-description").val();
+					},
 				},
 				dataType: "json",
 				success: function (data) {

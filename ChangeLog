@@ -1,3 +1,8 @@
+2015-02-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/kb/download/browse.php: Fixed bug creating
+	file releases.
+
 2015-02-25  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/kb/manage_data.php: Fixed bug deleting
