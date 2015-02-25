@@ -1652,4 +1652,24 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 	
 	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div><br>';
 }
+
+function inventories_get_external_tables ($id_object_type) {
+	global $config;
+	
+	$sql = "SELECT external_table_name FROM tobject_type_field WHERE id_object_type=".$id_object_type;
+	
+	$tables = get_db_all_rows_sql($sql);
+	
+	if ($tables == false) {
+		$tables = array();
+	}
+	
+	$ext_tables = array();
+	foreach ($tables as $ext) {
+		$ext_tables[$ext['external_table_name']] = $ext['external_table_name'];
+	}
+	
+	$external_tables = array_unique($ext_tables);
+	return $external_tables;
+}
 ?>
