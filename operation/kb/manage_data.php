@@ -58,14 +58,16 @@ if (isset($_GET["delete_attach"])){
 	$attach_row = get_db_row ("tattachment", "id_attachment", $id_attachment);
 	$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$attach_row["filename"];
 	
-	if ($id_kb && ! check_kb_item_accesibility($id_user, $id_kb)) {
+	//~ if ($id_kb && ! check_kb_item_accesibility($id_user, $id_kb)) {
+	if ($id_kb && ! check_fr_item_accessibility_extra($id_user, $id_kb)) {
 		audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
 		require ("general/noaccess.php");
 		exit;
 	}
 	
 	$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
-	mysql_query($sql);
+	process_sql($sql);
+
 	unlink ($nombre_archivo);
 	//insert_event ("KB ITEM UPDATED", $id_kb, 0, "File ".$attach_row["filename"]." deleted");
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Deleted kb item $id_kb - ".$attach_row["filename"]);
