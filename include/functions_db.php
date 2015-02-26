@@ -865,7 +865,7 @@ function project_manager_check ($id_project, $id_user = false) {
 	return false;
 }
 
-function incident_tracking ($id_incident, $state, $aditional_data = 0) {
+function incident_tracking ($id_incident, $state, $aditional_data = 0, $user = '') {
 	global $config;
 	
     if ($id_incident == 0)
@@ -873,72 +873,75 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 
 	switch ($state) {
 	case INCIDENT_CREATED:
-		$description = __('Created');
+		$description = 'Created';
 		break;
 	case INCIDENT_UPDATED:
-		$description = __('Updated');
+		$description = 'Updated';
 		break;
 	case INCIDENT_WORKUNIT_ADDED:
-		$description = __('Workunit added');
+		$description = 'Workunit added';
 		break;
 	case INCIDENT_FILE_ADDED:
-		$description = __('File added');
+		$description = 'File added';
 		break;
 	case INCIDENT_NOTE_ADDED:
-		$description = __('Note added');
+		$description = 'Note added';
 		break;
 	case INCIDENT_FILE_REMOVED:
-		$description = __('File removed');
+		$description = 'File removed';
 		break;
 	case INCIDENT_PRIORITY_CHANGED:
-		$description = __('Priority changed');
+		$description = 'Priority changed';
 		$priorities = get_priorities ();
 		$description .= " -> ".$priorities[$aditional_data];
 		break;
 	case INCIDENT_STATUS_CHANGED:
-		$description = __('Status changed');
+		$description = 'Status changed';
 		$description .= " -> ".get_db_value ("name", "tincident_status", "id", $aditional_data);
 		break;
 	case INCIDENT_RESOLUTION_CHANGED:
-		$description = __('Resolution changed');
+		$description = 'Resolution changed';
 		$description .= " -> ".get_db_value ("name", "tincident_resolution", "id", $aditional_data);
 		break;
 	case INCIDENT_NOTE_DELETED:
-		$description = __('Note deleted');
+		$description = 'Note deleted';
 		break;
 	case INCIDENT_USER_CHANGED:
-		$description = __('Assigned user changed');
+		$description = 'Assigned user changed';
 		$description .= ' -> '.get_db_value ('nombre_real', 'tusuario', 'id_usuario', $aditional_data);
 		break;
 	case INCIDENT_DELETED:
-		$description = __('Incident deleted');
+		$description = 'Incident deleted';
 		break;
 	case INCIDENT_CONTACT_ADDED:
-		$description = __('Contact added');
+		$description = 'Contact added';
 		$description .= ' -> '.get_db_value ('fullname', 'tcompany_contact', 'id', $aditional_data);
 		break;
 	case INCIDENT_INVENTORY_ADDED:
-		$description = __('Added inventory object ');
+		$description = 'Added inventory object ';
 		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
 	case INCIDENT_GROUP_CHANGED:
-		$description = __("Group has changed");
+		$description = "Group has changed";
 		$description .= " -> ".get_db_value ("nombre", "tgrupo", "id_grupo", $aditional_data);
 		break;
 	case INCIDENT_INVENTORY_REMOVED:
-		$description = __('Removed inventory object ');
+		$description = 'Removed inventory object ';
 		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
 	default:
-		$description = __('Unknown update');
+		$description = 'Unknown update';
 		break;
 	}
-	$fecha = print_mysql_timestamp();	
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket updated", $description);
+	$fecha = print_mysql_timestamp();
+	if ($user == '') {
+		$user = $config['id_user'];
+	}
+	audit_db ($user, $config["REMOTE_ADDR"], "Ticket updated", $description);
 	$sql = sprintf ('INSERT INTO tincident_track (id_user, id_incident,
 		timestamp, state, id_aditional, description)
 		VALUES ("%s", %d, "%s", %d, "%s", "%s")',
-		$config['id_user'], $id_incident, $fecha, $state, $aditional_data, $description);
+		$user, $id_incident, $fecha, $state, $aditional_data, $description);
 	return process_sql ($sql, 'insert_id');
 }
 

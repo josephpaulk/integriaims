@@ -58,14 +58,16 @@ function lock_task_workunit ($id_workunit) {
 	return (bool) process_sql ($sql);
 }
 
-function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1, $work_home = 0) {
+function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1, $work_home = 0, $workflow = false) {
 	$fecha = print_mysql_timestamp();
 	$sql = sprintf ('UPDATE tincidencia
 		SET affected_sla_id = 0, actualizacion = "%s"  
 		WHERE id_incidencia = %d', $fecha, $incident_id);
 	process_sql ($sql);
-	
-	incident_tracking ($incident_id, INCIDENT_WORKUNIT_ADDED);
+
+	if (!$workflow) {
+		incident_tracking ($incident_id, INCIDENT_WORKUNIT_ADDED);
+	}
 	
 	// Add work unit if enabled
 	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public, work_home)

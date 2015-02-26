@@ -1,3 +1,8 @@
+2015-02-26  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_db.php
+	  include/functions_workunits.php: Fixed ticket #1628.
+
 2015-02-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/kb/download/browse.php: Fixed bug creating
