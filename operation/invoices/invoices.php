@@ -115,6 +115,7 @@ if ($operation_invoices == "add_invoice"){
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
+	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	$tax = get_parameter ("tax", 0.00);
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
@@ -152,11 +153,11 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
+	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -212,6 +213,7 @@ if ($operation_invoices == "update_invoice"){
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter('internal_note', "");
+	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	
 	// Updating the invoice
 	$values = array();
@@ -236,6 +238,7 @@ if ($operation_invoices == "update_invoice"){
 
 	$values['invoice_create_date'] = $invoice_create_date;
 	$values['invoice_payment_date'] = $invoice_payment_date;
+	$values['invoice_expiration_date'] = $invoice_expiration_date;
 	
 	$values['invoice_type'] = $invoice_type;
 	$values['id_language'] = $language;
@@ -275,6 +278,7 @@ if ($id_invoice > 0){
 	$id_attachment = $invoice["id_attachment"];
 	$invoice_create_date = $invoice["invoice_create_date"];
 	$invoice_payment_date = $invoice["invoice_payment_date"];
+	$invoice_expiration_date = $invoice["invoice_expiration_date"];
 	$id_company = $invoice["id_company"];
 	$tax = $invoice["tax"];
 	$currency = $invoice["currency"];
@@ -303,6 +307,7 @@ if ($id_invoice > 0){
 	$id_attachment = "";
 	$invoice_create_date = date("Y-m-d");
 	$invoice_payment_date = "";
+	$invoice_expiration_date = "";
 	$tax = 0;
 	$currency = "EUR";
 	$invoice_status = "pending";
@@ -373,6 +378,7 @@ $table->data[2][0] = print_select ($invoice_status_ar, 'invoice_status',
 
 $table->data[2][1] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
 $table->data[3][0] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
+
 if ($id_invoice != -1) {
 	$disabled = true;
 } else {
@@ -383,24 +389,26 @@ if ($id_invoice == -1) {
 	$table->data[3][0] .= print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
 }
 
-$table->data[3][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
+$table->data[3][1] = print_input_text ('invoice_expiration_date', $invoice_expiration_date, '', 15, 50, true,__('Invoice expiration date'));
+
+$table->data[4][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
 	$language, '', '', '', true, false, false, __('Language'));
 
-$table->data[4][0] = "<h4>".__('Concept')."</h4>";
-$table->data[4][1] = "<h4>".__('Amount')."</h4>";
-$table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
-$table->data[5][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
-$table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
-$table->data[6][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
-$table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
-$table->data[7][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
-$table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
-$table->data[8][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
-$table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
-$table->data[9][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
+$table->data[5][0] = "<h4>".__('Concept')."</h4>";
+$table->data[5][1] = "<h4>".__('Amount')."</h4>";
+$table->data[6][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
+$table->data[6][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
+$table->data[7][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
+$table->data[7][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
+$table->data[8][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
+$table->data[8][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
+$table->data[9][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
+$table->data[9][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
+$table->data[10][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
+$table->data[10][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
 
-$table->data[10][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
-$table->data[10][1] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+$table->data[11][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
+$table->data[11][1] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
 
 if ($id_invoice != -1) {
 	$amount = get_invoice_amount ($id_invoice);
@@ -408,15 +416,15 @@ if ($id_invoice != -1) {
 	$tax_amount = $amount * ($tax/100);
 	$total = round($amount + $tax_amount, 2);
 	
-	$table->data[11][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
-	$table->data[11][1] = print_label(__('Total amount without taxes: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	$table->data[12][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	$table->data[12][1] = print_label(__('Total amount without taxes: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
 }
 
-$table->colspan[13][0] = 2;
-$table->data[13][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
-
 $table->colspan[14][0] = 2;
-$table->data[14][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
+$table->data[14][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+
+$table->colspan[15][0] = 2;
+$table->data[15][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail
@@ -507,6 +515,7 @@ if ($id_invoice != -1) {
 	
 // Datepicker
 add_ranged_datepicker ("#text-invoice_create_date", "#text-invoice_payment_date", null);
+add_ranged_datepicker ("#text-invoice_payment_date", "#text-invoice_expiration_date", null);
 
 // Form validation
 trim_element_on_submit('#text-bill_id');

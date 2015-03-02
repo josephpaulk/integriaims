@@ -1,5 +1,14 @@
 2015-02-02  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* integria_db.sql
+	  integria_dbdata.sql
+	  operation/invoices/invoices.php: Ticket 
+	#1843.
+
+	* extras/mr/18.sql: Added file.
+
+2015-02-02  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* godmode/setup/audit.php
 	  include/export_csv.php
 	  operation/inventories/manage_objects.php: Fixed ticket 

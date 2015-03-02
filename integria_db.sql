@@ -493,6 +493,7 @@ CREATE TABLE `tinvoice` (
   `reference` text NOT NULL default '',
   `id_language` varchar(6) NOT NULL default '',
   `internal_note` mediumtext NOT NULL,
+  `invoice_expiration_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)
