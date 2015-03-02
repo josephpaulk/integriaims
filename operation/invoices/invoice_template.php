@@ -73,6 +73,16 @@
 								echo '</td>';
 							echo '</tr>';
 							}
+							if ($invoice["invoice_expiration_date"]) {
+							echo '<tr>';
+								echo '<td style="text-align:left; font-size:14px; color:black;">';
+									echo __('Expiration date'). ': ';
+								echo '</td>';
+								echo '<td style="text-align:right; font-size:14px;">';
+									echo $invoice['invoice_expiration_date'];
+								echo '</td>';
+							echo '</tr>';
+							}
 							?>
 						</table>
 					</td>
