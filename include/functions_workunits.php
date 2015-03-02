@@ -90,7 +90,7 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 		return false;
 	}
 	
-	return true;
+	return $id_workunit;
 }
 
 function create_new_table_multiworkunit ($number=false, $date=false) {

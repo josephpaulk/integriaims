@@ -1,3 +1,14 @@
+2015-03-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_workunits.php: Now the function
+	"create_workunit" returns the created workunit id on success.
+	
+	* operation/incidents/incident_dashboard_detail.php: Now
+	the workunits created inside tickets are called comments.
+	
+	* operation/incidents/incident_workunits.php: Now the comments
+	are added via ajax. Ticket #1759.
+
 2015-02-26  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_db.php

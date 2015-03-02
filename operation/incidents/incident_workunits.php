@@ -22,6 +22,8 @@ $creacion_incidente = "";
 $id_incident = (int) get_parameter ('id');
 $title = '';
 
+// INFO: The workunits are treated like commits into the tickets sections
+
 require_once ('include/functions_workunits.php');
 
 //Check if we have id passed by parameter or by script loading
@@ -65,28 +67,46 @@ if ($insert_workunit) {
 	// Adding a new workunit to a incident in NEW status
 	// Status go to "Assigned" and Owner is the writer of this Workunit
 	if (($incident["estado"] == 1) AND ($incident["id_creator"] != $config['id_user'])){
-		$sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id);
+		$sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id_incident);
 
-
-		incident_tracking ($id, INCIDENT_STATUS_CHANGED, 3);
+		incident_tracking ($id_incident, INCIDENT_STATUS_CHANGED, 3);
 	
-		incident_tracking ($id, INCIDENT_USER_CHANGED, $config["id_user"]);
+		incident_tracking ($id_incident, INCIDENT_USER_CHANGED, $config["id_user"]);
 
 	} else {
-		$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
+		$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id_incident);
 	}
 
 	process_sql ($sql);
 
-	create_workunit ($id, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
-
-	$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
-
-	echo $result_msg;
+	$workunit_id = create_workunit ($id_incident, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
+	if (defined('AJAX')) {
+		// Clean the output
+		// A non empty ouptput will treated as a successful response
+		ob_clean();
+		
+		if ($workunit_id !== false) {
+			// Return the updated list
+			$workunits = get_incident_workunits($id_incident);
+			if ($workunits) {
+				ob_clean();
+				
+				foreach ($workunits as $workunit) {
+					$workunit_data = get_workunit_data($workunit["id_workunit"]);
+					
+					echo '<div class="comment">';
+					show_workunit_data ($workunit_data, $title);
+					echo '</div>';
+				}
+			}
+		}
+		return;
+	}
+	else {
+		$result_msg = '<h3 class="suc">'.__('Comment added successfully').'</h3>';
+		echo $result_msg;
+	}
 }
-
-//Add workunit form
-//echo "<h3>".__('Add workunit')."</h3>";
 
 $table->width = '100%';
 $table->class = 'integria_form';
@@ -115,51 +135,130 @@ $button = '<div style="width: 100%; text-align: right;">';
 $button .= '<span id="sending_data" style="display: none;">' . __('Sending data...') . '<img src="images/spinner.gif" /></span>';
 $button .= print_submit_button (__('Add'), 'addnote', false, 'class="sub create"', true);
 $button .= print_input_hidden ('insert_workunit', 1, true);
-$button .= print_input_hidden ('id', $id, true);
+$button .= print_input_hidden ('id', $id_incident, true);
 $button .= '</div>';
 
 $table->data[2][0] = $button;
 
 if (!$clean_output) {
 
-echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">';
+	echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_incident.'&tab=workunits#incident-operations">';
 
-echo "<div style='width: 98%;'>";
-print_table ($table);
-echo "</div>";
+	echo "<div style='width: 98%;'>";
+	print_table ($table);
+	echo "</div>";
 
-echo "</form>";
+	echo "</form>";
 
 	echo '<ul class="ui-tabs-nav">';
 	echo '<li class="ui-tabs-title">';
-	echo "<h2>".__('Workunits')."</h2>";
+	echo "<h2>".__('Comments')."</h2>";
 	echo '</li>';
 	echo '</ul>';
 } else {
-	echo "<h1 class='ticket_clean_report_title'>".__('Workunits')."</h1>";
+	echo "<h1 class='ticket_clean_report_title'>".__('Comments')."</h1>";
 }
+
+echo '<div id="comment-list">';
 
 // Workunit view
 $workunits = get_incident_workunits ($id_incident);
 
 if (!$workunits) {
-	echo '<h4>'.__('No workunit was done in this ticket').'</h4>';
+	echo '<h4>'.__('No comment was done in this ticket').'</h4>';
 	return;
 }
 
 foreach ($workunits as $workunit) {
 	$workunit_data = get_workunit_data ($workunit['id_workunit']);
+	
+	echo '<div class="comment">';
 	show_workunit_data ($workunit_data, $title);
+	echo '</div>';
 }
 
-//~ echo '<ul class="ui-tabs-nav">';
-//~ echo '<li class="ui-tabs-title">';
-//~ echo "<h2>".__('Incident details')."</h2>";
-//~ echo '</li>';
-//~ echo '</ul>';
-//~ 
-//~ echo "<div class='incident_details'><p>";
-//~ echo clean_output_breaks ($incident["descripcion"]);
-//~ echo "</div>";
+echo '</div>';
 
 ?>
+
+<script type="text/javascript">
+
+// Comment form controller
+var $commentForm = $("form#form-add-workunit");
+var $commentList = $("div#comment-list");
+
+var $commentProfile = $commentForm.find('select#work_profile');
+var $commentDuration = $commentForm.find('input#text-duration');
+var $commentHaveCost = $commentForm.find('input#checkbox-have_cost');
+var $commentPublic = $commentForm.find('input#checkbox-public');
+var $commentText = $commentForm.find('textarea#textarea-nota');
+
+var $spinner = $("span#sending_data");
+
+$commentForm.submit(function(e) {
+	e.preventDefault();
+	
+	$spinner.show();
+	
+	var enableInputs = function() {
+		$commentForm.find('input, textarea, button, select').prop("disabled", false);
+	}
+	var disableInputs = function() {
+		$commentForm.find('input, textarea, button, select').prop("disabled", true);
+	}
+	var cleanInputs = function() {
+		$commentProfile.val(0);
+		$commentDuration.val(0);
+		$commentHaveCost.prop("checked", false);
+		$commentPublic.prop("checked", true);
+		$commentText.val("");
+	}
+	
+	var errorMessage = "<?php echo __('Error') . '. ' . __('The comment was not created'); ?>";
+	
+	$.ajax({
+		url: 'ajax.php',
+		type: 'POST',
+		dataType: 'html',
+		data: {
+			page: 'operation/incidents/incident_workunits',
+			id: <?php echo json_encode($id_incident); ?>,
+			insert_workunit: 1,
+			nota: function () {
+				return $commentText.val();
+			},
+			duration: function () {
+				return $commentDuration.val();
+			},
+			have_cost: function () {
+				return $commentHaveCost.prop("checked") ? 1 : 0;
+			},
+			work_profile: function () {
+				return $commentProfile.val();
+			},
+			public: function () {
+				return $commentPublic.prop("checked") ? 1 : 0;
+			}
+		},
+	})
+	.done(function(data) {
+		if (data.length > 0) {
+			cleanInputs();
+			
+			$commentList.html(data);
+		}
+		else {
+			alert(errorMessage);
+		}
+	})
+	.fail(function() {
+		alert(errorMessage);
+	})
+	.always(function() {
+		$spinner.hide();
+		enableInputs();
+	});
+	
+});
+
+</script>
