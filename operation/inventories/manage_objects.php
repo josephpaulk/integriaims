@@ -218,6 +218,9 @@ if (! $id && ! $create) {
 		
 		echo '<table width="90%" class="listing">';
 		foreach ($objects as $object) {
+			
+			$has_external_fields = get_db_value_sql("SELECT COUNT(id) FROM tobject_type_field WHERE type='external' AND id_object_type=".$object['id']);
+			
 			$data = array ();
 			
 			$data[0] = objects_get_icon ($object['id'], true);
@@ -225,8 +228,12 @@ if (! $id && ! $create) {
 				$object['id'].'">'.$object['name'].'</a>';
 			$data[1] = substr ($object["description"], 0, 200);
 			$data[2] = objects_count_fields($object['id']);
-			$data[3] = '<a title=' . __("Edit external tables") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_external_tables&id='.
-				$object["id"].'><img src="images/resolution.png"></a>';
+			if ($has_external_fields) {
+				$data[3] = '<a title=' . __("Edit external tables") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_external_tables&id='.
+					$object["id"].'><img src="images/resolution.png"></a>';
+			} else {
+				$data[3] = '<img src="images/resolution_disabled.png">';
+			}
 			$data[3] .= '<a title=' . __("Fields") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id='.
 				$object["id"].'><img src="images/page_white_text.png"></a>';
 			$data[3] .= '<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))

@@ -1,3 +1,12 @@
+2015-02-02  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/audit.php
+	  include/export_csv.php
+	  operation/inventories/manage_objects.php: Fixed ticket 
+	#1704.
+
+	* images/resolution_disabled.png: Added image.
+
 2015-03-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_workunits.php: Now the function

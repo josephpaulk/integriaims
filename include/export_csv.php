@@ -32,6 +32,7 @@ $export_csv_contacts = get_parameter('export_csv_contacts', 0);
 $export_csv_contracts = get_parameter('export_csv_contracts', 0);
 $export_csv_invoices = get_parameter('export_csv_invoices', 0);
 $export_csv_inventory = get_parameter('export_csv_inventory', 0);
+$export_csv_audit = get_parameter('export_csv_audit', 0);
 
 if ($export_csv_invoices) {
 	
@@ -221,6 +222,26 @@ if ($export_csv_inventory) {
 	}
 
 	$rows = $aux_rows;
+}
+
+if ($export_csv_audit) {
+	
+	$permission = give_acl ($config["id_user"], 0, "IM");
+	if (!$permission) {
+		exit;
+	}
+	
+	$where_clause = clean_output (get_parameter('where_clause'));
+	$date = get_parameter('date');	
+	
+	$filename = clean_output ('audit_export').'-'.date ("YmdHi");
+
+	$sql = sprintf ('SELECT * FROM tsesion %s ORDER by utimestamp DESC', $where_clause);
+
+	$rows = get_db_all_rows_sql ($sql);
+	
+	if ($rows === false)
+		return;
 }
 
 if (empty($rows))
