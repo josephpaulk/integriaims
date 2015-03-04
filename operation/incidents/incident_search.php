@@ -32,7 +32,7 @@ if (defined ('AJAX')) {
 	$filter['id_inventory'] = $form_values['id_inventory'];
 	$filter['id_incident_type'] = $form_values['search_id_incident_type'];
 	$filter['id_user'] = $form_values['search_id_user'];
-	$filter['id_creator'] = $form_values['search_id_creator'];
+	$filter['id_creator'] = $form_values['search_creator'];
 	$filter['editor'] = $form_values['search_editor'];
 	$filter['closed_by'] = $form_values['search_closed_by'];
 	$filter['order_by'] = $form_values['search_order_by'];

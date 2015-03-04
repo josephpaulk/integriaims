@@ -1,3 +1,8 @@
+2015-02-04  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/incidents/incident_search.php: Fixed
+	bug #1839.
+
 2015-02-02  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/invoices/invoice_template.php: Added
