@@ -80,11 +80,12 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 		$mail = $values[3];
 		$tlf = $values[4];
 		$desc = $values[5];
-		$disabled = $values[6];
-		$id_company = $values[7];
-		$simple_mode = $values[8];
-		$num_employee = $values[9];
-		$enable_login = $values[10];
+		$avatar = $values[6];
+		$disabled = $values[7];
+		$id_company = $values[8];
+		$simple_mode = $values[9];
+		$num_employee = $values[10];
+		$enable_login = $values[11];
 		$force_change_pass = 0;
 		
 		if ($pass_policy) {
