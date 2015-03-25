@@ -1,3 +1,7 @@
+2015-03-25  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_crm.php: Fixed bug #1904.
+
 2015-03-24  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_user.php: Fixed bug importing users from csv.

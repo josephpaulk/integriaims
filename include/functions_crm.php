@@ -207,7 +207,7 @@ function crm_get_all_contracts ($where_clause, $order_by='date_end') {
 function crm_get_all_invoices ($where_clause, $order_by='') {
 	global $config;
 	
-	$sql = "SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date, id DESC";
+	$sql = "SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date DESC";
 	
 	if ($order_by != '') {
 		$sql = "SELECT * FROM tinvoice WHERE $where_clause ORDER BY $order_by DESC";
