@@ -66,8 +66,10 @@ $alta = get_parameter("alta");
 if (($action == 'edit' || $action == 'update') && !$alta) {
 	$modo = "edicion";
 	$update_user = get_parameter ("update_user", "");
+
 	// Read user data to include in form
-	$sql = "SELECT * FROM tusuario WHERE id_usuario = '".$update_user."'";
+	$sql = "SELECT * FROM tusuario WHERE id_usuario = '".safe_output($update_user)."'";
+
 	$rowdup = get_db_row_sql ($sql);
 
 	if ($rowdup === false) {
