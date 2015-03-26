@@ -926,6 +926,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_closed_by = (string) get_parameter ('search_creator');
 		$group_by_project = (bool) get_parameter('search_group_by_project');
 		$sla_state = (int)get_parameter('search_sla_state', 0);
+		$id_task = (int) get_parameter('search_id_task', 0);
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -952,6 +953,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_closed_by = (string) $filter['closed_by'];
 		$group_by_project = (bool) $filter['group_by_project'];
 		$sla_state = (int) $filter['sla_state'];
+		$id_task = (int) $filter['id_task'];
 
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
@@ -1068,6 +1070,8 @@ function form_search_incident ($return = false, $filter=false) {
 	$sla_states[1] = __('SLA is fired');
 	$sla_states[2] = __('SLA is not fired');
 	$table->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('All'), 0, true, false, false, __('SLA'));
+	
+	$table->data[5][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), 'search_id_task');
 
 	$table_type_fields = new stdclass;
 	$table_type_fields->width = "100%";

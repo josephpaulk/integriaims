@@ -73,6 +73,7 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 	$filters["offset"] = isset ($filters['offset']) ? $filters['offset'] : 0;
 	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
 	$filters["sla_state"] = isset ($filters['sla_state']) ? $filters['sla_state'] : 0;
+	$filters["id_task"] = isset ($filters['id_task']) ? $filters['id_task'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -95,6 +96,8 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
 	if (! empty ($filters['resolution']) && $filters['resolution'] > -1)
 		$sql_clause .= sprintf (' AND resolution = %d', $filters['resolution']);
+	if ($filters['id_task'] != 0)
+		$sql_clause .= sprintf (' AND id_task = %d', $filters['id_task']);
 
 	//Incident type 0 means all and incident type -1 means without type
 	if ($filters["id_incident_type"] != -1) {
@@ -3024,11 +3027,16 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 		}
 		$i++;
 	}
-	$sql = "SELECT t1.name as n_task, t2.name as n_project, t1.id as id_task FROM ttask t1, tproject t2
-		WHERE t1.id_project=t2.id AND t1.id IN ($tickets_str)
-		ORDER BY t2.name";
-		
-	$tickets = get_db_all_rows_sql($sql);
+	
+	if (!empty($tasks_in_tickets)) {
+		$sql = "SELECT t1.name as n_task, t2.name as n_project, t1.id as id_task FROM ttask t1, tproject t2
+			WHERE t1.id_project=t2.id AND t1.id IN ($tickets_str)
+			ORDER BY t2.name";
+		$tickets = get_db_all_rows_sql($sql);
+	} else {
+		$tickets = false;
+	}
+	
 	if ($tickets === false) {
 		$tickets = array();
 	}

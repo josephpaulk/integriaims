@@ -1,3 +1,10 @@
+2015-03-26  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_form.php
+	  include/functions_incidents.php
+	  include/ajax/incidents.php
+	  operation/incidents/incident_search.php: Fixed bug #1969.
+
 2015-03-25  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_crm.php: Fixed bug #1904.
