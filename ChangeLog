@@ -1,5 +1,9 @@
 2015-03-26  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/functions_user.php: Fixed bug deleting users.
+
+2015-03-26  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* godmode/usuarios/configurar_usuarios.php: Fixed bug #2040.
 
 2015-03-26  Vanessa Gil <vanessa.gil@artica.es>
