@@ -65,11 +65,10 @@ $alta = get_parameter("alta");
 ///////////////////////////////
 if (($action == 'edit' || $action == 'update') && !$alta) {
 	$modo = "edicion";
-	$update_user = get_parameter ("update_user", "");
+	$update_user = safe_output(get_parameter ("update_user", ""));
 
 	// Read user data to include in form
-	$sql = "SELECT * FROM tusuario WHERE id_usuario = '".safe_output($update_user)."'";
-
+	$sql = "SELECT * FROM tusuario WHERE id_usuario = '".safe_input($update_user)."'";
 	$rowdup = get_db_row_sql ($sql);
 
 	if ($rowdup === false) {
@@ -158,7 +157,7 @@ if ($action == 'update')  {
 
 				if (dame_password ($nombre_viejo) != $password){
 					$password = md5($password);
-					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
+					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".safe_output($nombre_real)."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
 				}
 				else {
 					$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '".$nombre_viejo."'";

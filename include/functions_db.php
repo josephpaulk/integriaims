@@ -1412,7 +1412,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 			$users = array ();
 		foreach ($users as $user) {
 			if ($only_name)
-				$values[$user['id_usuario']] = $user['nombre_real'];
+				$values[safe_output($user['id_usuario'])] = $user['nombre_real'];
 			else
 				$values[$user['id_usuario']] = $user;
 		}
@@ -1459,7 +1459,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 					}
 				}
 				if ($only_name)
-					$values[$user['id_usuario']] = $user['nombre_real'];
+					$values[safe_output($user['id_usuario'])] = $user['nombre_real'];
 				else
 					$values[$user['id_usuario']] = $user;
 			}

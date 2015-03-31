@@ -182,22 +182,21 @@ function user_delete_user($id_user) {
 	// Delete user
 	// Delete cols from table tgrupo_usuario
 	if ($config["enteprise"] == 1){
-		$query_del1 = "DELETE FROM tusuario_perfil WHERE id_usuario = '".safe_output($id_user)."'";
+		$query_del1 = "DELETE FROM tusuario_perfil WHERE id_usuario = '".$id_user."'";
 		$resq1 = mysql_query($query_del1);
 	}
 
 	// Delete trole_people_task entries 
-	mysql_query("DELETE FROM trole_people_task WHERE id_user = '".safe_output($id_user)."'");
+	mysql_query("DELETE FROM trole_people_task WHERE id_user = '".$id_user."'");
 
 	// Delete trole_people_project entries
-	mysql_query ("DELETE FROM trole_people_project WHERE id_user = '".safe_output($id_user)."'");	
+	mysql_query ("DELETE FROM trole_people_project WHERE id_user = '".$id_user."'");	
 
-	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".safe_output($id_user)."'";
+	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$id_user."'";
 	$resq2 = mysql_query($query_del2);
 
 	//Delet custom fields
-
-	$query_del3 = "DELETE FROM tuser_field_data WHERE id_user = '".safe_output($id_user)."'";
+	$query_del3 = "DELETE FROM tuser_field_data WHERE id_user = '".$id_user."'";
 	$resq3 = mysql_query($query_del3);
 
 	if (! $resq2) 

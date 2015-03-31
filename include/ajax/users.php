@@ -37,7 +37,7 @@ if ($search_users) {
 	
 	foreach ($users as $user) {
 		if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
-			array_push($res, array("label" => safe_output($user['nombre_real'])." (".$user['id_usuario'].")", "value" => $user['id_usuario']));
+			array_push($res, array("label" => safe_output($user['nombre_real'])." (".safe_output($user['id_usuario']).")", "value" => safe_output($user['id_usuario'])));
 		}
 	}
 	
