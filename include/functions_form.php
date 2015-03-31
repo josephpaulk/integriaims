@@ -1141,6 +1141,10 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" id="show_advanced_search" href="javascript:show_ad_search();">'.__('Advanced search').'></a></div>';
 	$table->data[7][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
+	//Store serialize filter
+	serialize_in_temp($filter, $config["id_user"]);
+	$table->data[7][2] = print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub csv"', true);
+		
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';

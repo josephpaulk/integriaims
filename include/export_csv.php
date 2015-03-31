@@ -33,6 +33,7 @@ $export_csv_contracts = get_parameter('export_csv_contracts', 0);
 $export_csv_invoices = get_parameter('export_csv_invoices', 0);
 $export_csv_inventory = get_parameter('export_csv_inventory', 0);
 $export_csv_audit = get_parameter('export_csv_audit', 0);
+$export_csv_tickets = get_parameter('export_csv_tickets', 0);
 
 if ($export_csv_invoices) {
 	
@@ -243,6 +244,17 @@ if ($export_csv_audit) {
 	if ($rows === false)
 		return;
 }
+
+if ($export_csv_tickets) {
+	$filter = unserialize_in_temp($config["id_user"]);
+	$rows = incidents_search_result($filter, false, true, false);
+
+	if ($rows === false)
+		return;	
+
+	$filename = clean_output ('tickets_export').'-'.date ("YmdHi");
+}
+
 
 if (empty($rows))
 	die(__('Empty data'));
