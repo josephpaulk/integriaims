@@ -421,7 +421,10 @@ elseif ($op == "activities") {
 	$sql = "SELECT * FROM tcompany_activity WHERE id_company = $id ORDER BY date DESC";
 
 	$activities = get_db_all_rows_sql ($sql);
-	
+	if ($activities == false) {
+		$activities = array();
+	}
+
 	if ($act_contacts !== false) {
 		$activities = array_merge($activities, $act_contacts);
 	}
