@@ -1,5 +1,10 @@
 2015-04-06  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* index.php
+	  general/login_page.php: Ticket #1836.
+
+2015-04-06  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* operation/companies/company_detail.php: Ticket #2001.
 
 2015-03-31  Vanessa Gil <vanessa.gil@artica.es>

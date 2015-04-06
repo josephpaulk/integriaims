@@ -74,6 +74,16 @@ if (isset ($login_failed)) {
 	echo '</div>';
 }
 
+if (isset ($disable_login)) {
+	echo '<div class="databox_login_msg" >';
+	echo '<h3>';
+	echo __('This user has disabled login');
+	echo '</h3><br>';
+	$nick = get_parameter ($nick);
+
+	echo '</div>';
+}
+
 //Login table begins
 echo "<table class='login_table'>";	
 

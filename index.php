@@ -360,7 +360,13 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 				$pass = $first . "****" . $last;
 				
 				if ($expired_pass == false) {
-					$login_failed = true;
+					$enable_login = get_db_value_sql("SELECT enable_login FROM tusuario WHERE id_usuario='".$nick_in_db."'");
+					if (!$enable_login) {
+						$disable_login = true;
+					} else {
+						$login_failed = true;
+						unset($disable_login);
+					}
 				} else {
 					unset($login_failed);
 				}
