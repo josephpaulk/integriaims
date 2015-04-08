@@ -1180,6 +1180,7 @@ CREATE TABLE `tworkflow_rule` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `description` mediumtext DEFAULT NULL,
   `type` int NOT NULL default 0,
+  `disabled` int default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
