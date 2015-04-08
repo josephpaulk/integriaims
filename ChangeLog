@@ -1,3 +1,10 @@
+2015-04-08  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* index.php
+	  general/header.php
+	  include/functions.php
+	  include/ajax/header.php: Ticket #1830.
+
 2015-04-06  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* index.php

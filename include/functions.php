@@ -1457,4 +1457,15 @@ function get_news($arguments) {
 	
 	return $news;
 }
+
+function check_browser() {
+	$browser_info = getenv("HTTP_USER_AGENT");
+	
+	if (preg_match("/Firefox/i",$browser_info) || preg_match("/Chrome/i",$browser_info)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 ?>

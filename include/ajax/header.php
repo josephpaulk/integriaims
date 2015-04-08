@@ -35,6 +35,7 @@ if ($get_alerts) {
 	$check_alarm_calendar = check_alarm_calendar();
 	$check_directory_permissions = check_directory_permissions();
 	$check_minor_release_available = db_check_minor_relase_available ();
+	$check_browser = check_browser();
 	
 	$alerts = '';
 	
@@ -85,6 +86,9 @@ if ($get_alerts) {
 	}
 	if ($check_minor_release_available) {
 		$alerts .= '<h4>'.__('You must logout and login again to update database schema.').'</h4>';
+	}
+	if ($check_browser) {
+		$alerts .= '<h4>'.__('Recommended browsers are Firefox and Chrome. You are using another browser.').'</h4>';
 	}
 	
 	echo $alerts;
