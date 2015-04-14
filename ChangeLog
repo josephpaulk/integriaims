@@ -1,3 +1,7 @@
+2015-04-14  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* general/home.php: Ticket #1830.
+
 2015-04-08  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql

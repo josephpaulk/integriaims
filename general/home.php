@@ -318,6 +318,29 @@ if ($info) {
 		echo "<h1>". __("Welcome to Integria")."</h1>";
 	 }
 }
+
+$check_browser = check_browser();
+
+if ($check_browser) {	
+	$browser_message = '<h4>'.__('Recommended browsers are Firefox and Chrome. You are using another browser.').'</h4>';
+	echo "<div class= 'dialog ui-dialog-content' title='".__("Info")."' id='browser_dialog'>$browser_message</div>";
+	echo "<script type='text/javascript'>";
+	echo "	$(document).ready (function () {";
+	echo "		$('#browser_dialog').dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: 'black'
+					},
+					width: 400,
+					height: 150
+				});";
+	echo "		$('#browser_dialog').dialog('open');";
+	echo "	});";
+	echo "</script>";
+}
 ?>
 
 
