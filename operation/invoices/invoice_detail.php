@@ -103,6 +103,14 @@ if ($delete_invoice == 1 && $id_invoice){
 		if ($res > 0) {
 			$company_name = get_db_value('name', 'tcompany', 'id', $invoice['id_company']);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice deleted", "Invoice Bill ID: ".$invoice['bill_id'].", Company: $company_name");
+			
+			//update last activity
+			$datetime =  date ("Y-m-d H:i:s");
+			$comments = __("Invoice deleted by ".$config['id_user']);
+			$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $invoice['id_company'], $config["id_user"], $datetime, $comments);
+			process_sql ($sql_add);
+			$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $invoice['id_company']);
+			$result_activity = process_sql ($sql_activity);
 		}
 	}
 }

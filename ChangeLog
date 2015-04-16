@@ -1,3 +1,9 @@
+2015-04-16  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/contracts.php
+	  operation/invoices/invoice_detail.php
+	  operation/invoices/invoices.php: Ticket #2001.
+
 2015-04-14  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* general/home.php: Ticket #1830.

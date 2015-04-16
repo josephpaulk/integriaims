@@ -177,6 +177,14 @@ if ($operation_invoices == "add_invoice"){
 		
 		$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice created", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
+		
+		//update last activity
+		$datetime =  date ("Y-m-d H:i:s");
+		$comments = __("Invoice created by ".$config['id_user']);
+		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+		process_sql ($sql_add);
+		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+		$result_activity = process_sql ($sql_activity);
 			
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 		
@@ -251,6 +259,15 @@ if ($operation_invoices == "update_invoice"){
 	if ($ret !== false) {
 		$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice updated", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
+		
+		//update last activity
+		$datetime =  date ("Y-m-d H:i:s");
+		$comments = __("Invoice ".$id_invoice." updated by ".$config['id_user']);
+		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+		process_sql ($sql_add);
+		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+		$result_activity = process_sql ($sql_activity);
+		
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
 		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';

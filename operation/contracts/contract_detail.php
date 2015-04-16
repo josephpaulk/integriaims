@@ -198,6 +198,14 @@ if ($create_contract) {
 	if ($id === false)
 		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	else {
+		//update last activity
+		$datetime =  date ("Y-m-d H:i:s");
+		$comments = __("Created contract by ".$config['id_user']);
+		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+		process_sql ($sql_add);
+		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+		$result_activity = process_sql ($sql_activity);
+		
 		// ATTACH A FILE IF IS PROVIDED
 		$upfiles = json_decode(safe_output($upfiles), true);
 
@@ -266,6 +274,15 @@ if ($update_contract) { // if modified any parameter
 	if ($result === false) {
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
+		//update last activity
+		$datetime =  date ("Y-m-d H:i:s");
+		$comments = __("Update contract ".$id. " by ".$config['id_user']);
+		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+		process_sql ($sql_add);
+		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+		$result_activity = process_sql ($sql_activity);
+		
+	
 		// ATTACH A FILE IF IS PROVIDED
 		$upfiles = json_decode(safe_output($upfiles), true);
 		if (!empty($upfiles)) {
