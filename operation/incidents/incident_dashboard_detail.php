@@ -708,6 +708,8 @@ print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
 
 //div to show user info
 echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";
+
+echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='ticket_childs'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>

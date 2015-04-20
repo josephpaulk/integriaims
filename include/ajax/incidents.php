@@ -28,6 +28,7 @@ $set_owner = get_parameter('set_owner', 0);
 $set_ticket_score = get_parameter('set_ticket_score', 0);
 $get_user_info = get_parameter('get_user_info', 0);
 $hours_to_dms = get_parameter('hours_to_dms', 0);
+$check_incident_childs = get_parameter('check_incident_childs', 0);
 
 if ($get_incidents_search) {
 	
@@ -233,6 +234,20 @@ if ($set_status) {
 	}
 	
 	audit_db ($old_incident['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
+	
+	if ($values['estado'] == 7) {
+		$values_childs['estado'] = $values['estado'];
+		$values_childs['closed_by'] = $values['closed_by'];
+		
+		$childs = incidents_get_incident_childs($id_ticket);
+
+		if (!empty($childs)) {
+			foreach ($childs as $id_child=>$name) {
+				$result_child = process_sql_update('tincidencia', $values_childs, array('id_incidencia' => $id_child));
+				audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_child);
+			}
+		}
+	}
 }
 
 if ($set_owner) {
@@ -346,6 +361,37 @@ if ($hours_to_dms) {
 	$result = incidents_hours_to_dayminseg ($hours);	
 	
 	echo json_encode($result);
+	return;
+}
+
+if ($check_incident_childs) {
+	
+	$id_incident = get_parameter('id_incident');
+	
+	$sql = "SELECT id_incidencia, titulo FROM tincidencia WHERE id_parent=".$id_incident. " AND estado<>7";
+	$incident_childs = get_db_all_rows_sql($sql);
+	
+	if ($incident_childs == false) {
+		$incident_childs = array();
+	}
+	
+	if (!empty($incident_childs)) {
+		echo "<table>";
+		echo "<tr>";
+		echo "<td align='left' colspan=2>";
+		echo '<b>'. __("Following tickets will be closed: ").'</b>';
+		echo "</td>";
+		echo "</tr>";
+
+		foreach ($incident_childs as $child) {
+			echo "<tr align='left'>";
+			echo "<td>";
+				echo $child['id_incidencia'].' - '.$child['titulo'];
+			echo "</td>";
+		}
+		echo "</table>";
+	}
+	
 	return;
 }
 

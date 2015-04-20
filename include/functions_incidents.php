@@ -3190,4 +3190,21 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 	echo '</tbody>';
 	echo '</table>';
 }
+
+function incidents_get_incident_childs ($id_incident) {
+	
+	$sql = "SELECT id_incidencia, titulo FROM tincidencia WHERE id_parent=".$id_incident. " AND estado<>7";
+	$incident_childs = get_db_all_rows_sql($sql);
+	
+	if ($incident_childs == false) {
+		$incident_childs = array();
+	}
+	
+	$childs_result = array();
+	foreach ($incident_childs as $child) {
+		$childs_result[$child['id_incidencia']] = $child['titulo'];
+	}
+	
+	return $childs_result;
+}
 ?>

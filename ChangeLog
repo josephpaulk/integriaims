@@ -1,3 +1,11 @@
+2015-04-20  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_incidents.php
+	  include/ajax/incidents.php
+	  operation/incidents/incident_dashboard_detail.php
+	  operation/incidents/incident_detail.php: Close incidents
+	when the father is closed.
+
 2015-04-16  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/contracts.php

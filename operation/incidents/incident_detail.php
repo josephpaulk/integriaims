@@ -395,6 +395,19 @@ if ($action == 'update') {
 	$result = process_sql_update('tincidencia', $values, array('id_incidencia' => $id));
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id);
+	
+	if ($estado == 7) {
+		$values_childs['estado'] = $estado;
+		$values_childs['closed_by'] = $closed_by;
+		
+		$childs = incidents_get_incident_childs($id);
+		if (!empty($childs)) {
+			foreach ($childs as $id_child=>$name) {
+				$result_child = process_sql_update('tincidencia', $values_childs, array('id_incidencia' => $id_child));
+				audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_child);
+			}
+		}
+	}
 
 	$old_incident_inventories = array_keys(get_inventories_in_incident($id));
 	
@@ -1107,6 +1120,8 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='paren
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='contact_search_window'></div>";
 
+echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='ticket_childs'></div>";
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -1286,6 +1301,33 @@ $(document).ready (function () {
 			$("#text-closed_by").val("<?php echo $config['id_user'] ?>");
 			pulsate("#epilog_wrapper");
 			pulsate("#closed_by_wrapper");
+			
+			id_incident = $('#text-id_incident_hidden').val();
+
+			$.ajax({
+				type: "POST",
+				url: "ajax.php",
+				data: "page=include/ajax/incidents&check_incident_childs=1&id_incident="+id_incident,
+				dataType: "html",
+				success: function (data) {
+					$("#ticket_childs").html (data);
+					$("#ticket_childs").show ();
+
+					$("#ticket_childs").dialog ({
+							resizable: true,
+							draggable: true,
+							modal: true,
+							overlay: {
+								opacity: 0.5,
+								background: "black"
+							},
+							width: 420,
+							height: 350
+						});
+					$("#ticket_childs").dialog('open');
+				}
+			});
+			
 		} else {
 			$("#epilog_wrapper").hide();
 			$("#closed_by_wrapper").hide();
