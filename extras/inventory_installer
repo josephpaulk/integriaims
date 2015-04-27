@@ -1,11 +1,10 @@
 #!/bin/sh
 
-# Integria IMS Console Installer (c) 2008-2013 Artica ST
+# Integria IMS Console Installer (c) 2008-2015 Artica ST
 # Linux/FreeBSD Version (generic), for SuSe, Debian/Ubuntu, RHEL/CentOS,
 # Fedora and FreeBSD only
 # other Linux distros could not work properly without modifications
 # Please see http://www.integriaims.com
-# v4.0dev
 # This code is licensed under GPL 2.0 license.
 # **********************************************************************
 
