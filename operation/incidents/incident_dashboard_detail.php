@@ -653,6 +653,15 @@ if ($clean_output) {
 	}
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Comments').'</span></a>';
 	echo '</li>';
+	
+	if ($tab === "tickets") {
+		echo '<li class="ui-tabs-selected">';
+	} else {
+		echo '<li class="ui-tabs">';
+	}
+
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tickets#incident-operations"><span>'.__('Tickets').'</span></a>';
+	echo '</li>';
 
 	echo '<li class="ui-tabs-title">';
 	switch ($tab) {
@@ -670,6 +679,9 @@ if ($clean_output) {
 			break;
 		case "tracking":
 			echo "<h2>".__('Tracking')."</h2>";
+			break;
+		case "tickets":
+			echo "<h2>".__('Tickets')."</h2>";
 			break;
 		default:
 			break;
@@ -693,6 +705,9 @@ if ($clean_output) {
 			break;
 		case "tracking":
 			include("incident_tracking.php");
+			break;
+		case "tickets":
+			include("incident_tickets.php");
 			break;
 		default:
 			break;

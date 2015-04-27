@@ -1,3 +1,13 @@
+2015-04-27  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_incidents.php
+	  include/ajax/incidents.php
+	  operation/incidents/incident_dashboard_detail.php
+	  operation/incidents/incident_detail.php: Added tab with
+	associated tickets.
+	
+	* operation/incidents/incident_tickets.php: Added file.
+
 2015-04-20  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_incidents.php

@@ -368,6 +368,11 @@ if ($check_incident_childs) {
 	
 	$id_incident = get_parameter('id_incident');
 	
+	if ($id_incident == 0) {
+		echo false;
+		return;
+	}
+	
 	$sql = "SELECT id_incidencia, titulo FROM tincidencia WHERE id_parent=".$id_incident. " AND estado<>7";
 	$incident_childs = get_db_all_rows_sql($sql);
 	

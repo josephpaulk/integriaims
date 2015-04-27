@@ -1303,30 +1303,32 @@ $(document).ready (function () {
 			pulsate("#closed_by_wrapper");
 			
 			id_incident = $('#text-id_incident_hidden').val();
+			
+			if (id_incident != 0) {
+				$.ajax({
+					type: "POST",
+					url: "ajax.php",
+					data: "page=include/ajax/incidents&check_incident_childs=1&id_incident="+id_incident,
+					dataType: "html",
+					success: function (data) {
+						$("#ticket_childs").html (data);
+						$("#ticket_childs").show ();
 
-			$.ajax({
-				type: "POST",
-				url: "ajax.php",
-				data: "page=include/ajax/incidents&check_incident_childs=1&id_incident="+id_incident,
-				dataType: "html",
-				success: function (data) {
-					$("#ticket_childs").html (data);
-					$("#ticket_childs").show ();
-
-					$("#ticket_childs").dialog ({
-							resizable: true,
-							draggable: true,
-							modal: true,
-							overlay: {
-								opacity: 0.5,
-								background: "black"
-							},
-							width: 420,
-							height: 350
-						});
-					$("#ticket_childs").dialog('open');
-				}
-			});
+						$("#ticket_childs").dialog ({
+								resizable: true,
+								draggable: true,
+								modal: true,
+								overlay: {
+									opacity: 0.5,
+									background: "black"
+								},
+								width: 420,
+								height: 350
+							});
+						$("#ticket_childs").dialog('open');
+					}
+				});
+			}
 			
 		} else {
 			$("#epilog_wrapper").hide();
