@@ -1172,7 +1172,7 @@ function show_ad_search() {
 		table = $("#search_incident_form").children ("table");
 		$("tr", table).show ();
 		$(this).remove ();
-		return false;
+		//~ return false;
 }
 
 // Change the type fields table

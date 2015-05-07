@@ -52,6 +52,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
+('inventory_default_owner', 'admin'),
 ('minor_release', 19);
 
 -- Default password is 'integria'
@@ -117,7 +118,13 @@ INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,0),
 (8,'CPU','','server.png',0,0),
 (9,'HD','','harddisk.png',0,0),
 (10,'Video','','system-monitor.png',0,0),
-(11,'Patches','','attachment.png',0,0);
+(11,'Patches','','attachment.png',0,0),
+(12,'Monitors','','display.png',0,0),
+(13,'Motherboard','','file-manager.png',0,0),
+(14,'Printers','','printer.png',0,0),
+(15,'product_ID','','card-id.png',0,0),
+(16,'product_key','','keys.png',0,0),
+(17,'Users','','human.png',0,0);
 
 INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','','','',1,0,1),
 (2,1,'CPU','text','','','','','',0,0,1),
@@ -153,7 +160,17 @@ INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','
 (36,10,'Type','text','','','','','',0,0,0),
 (37,11,'Description','text','','','','','',0,0,0),
 (38,11,'Extra','text','','','','','',0,0,0),
-(39,11,'Internal&#x20;Code','text','','','','','',0,0,0);
+(39,11,'Internal&#x20;Code','text','','','','','',0,0,0),
+(40,12,'Description','text','','','','','',0,0,0),
+(41,13,'Name','text','','','','','',0,0,0),
+(42,13,'Id','text','','','','','',0,0,0),
+(43,14,'Name','text','','','','','',0,0,0),
+(44,17,'User','text','','','','','',0,0,0),
+(45,NULL,'OS Version','text',NULL,NULL,NULL,'','',0,0,1),
+(46,NULL,'Group','text',NULL,NULL,NULL,'','',0,0,1),
+(47,NULL,'Domain','text',NULL,NULL,NULL,'','',0,0,1),
+(48,NULL,'Hostname','text',NULL,NULL,NULL,'','',0,0,1),
+(49,NULL,'Architecture','text',NULL,NULL,NULL,'','',0,0,1);
 
 
 INSERT INTO `tupdate_settings` VALUES ('customer_key', 'INTEGRIA-FREE'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('dbport', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');

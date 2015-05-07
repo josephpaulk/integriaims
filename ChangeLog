@@ -1,3 +1,10 @@
+2015-05-07  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_dbdata.sql
+	  include/functions_incidents.php
+	  include/js/integria_incident_search.js: Fixed bug searching
+	tickets and added dato to inventory fields.
+
 2015-04-27  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_incidents.php

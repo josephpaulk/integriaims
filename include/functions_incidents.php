@@ -2241,15 +2241,15 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	// All the tickets the user sees are retrieved
 	$incidents = filter_incidents($filter);
 	$count = empty($incidents) ? 0 : count($incidents);
+	
+	if ($return_incidents)
+		return $incidents;
 
 	// Set the limit filter to its previous value
 	$filter["limit"] = $limit_aux;
 
 	$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
 	$incidents = print_array_pagination($incidents, $url, $offset);
-	
-	if ($return_incidents)
-		return $incidents;
 
 	$statuses = get_indicent_status ();
 	$resolutions = get_incident_resolutions ();
