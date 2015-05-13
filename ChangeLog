@@ -1,3 +1,15 @@
+2015-05-13  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  include/js/integria_incident_search.js
+	  operation/incidents/incident_type_field.php: Added numeric type.
+
+	* extras/mr/20.sql: Added file.
+
+	* include/functions_incidents.php
+	  include/ajax/incidents.php: Allow only one level of
+	ticket hierarchy.
+
 2015-05-07  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_dbdata.sql

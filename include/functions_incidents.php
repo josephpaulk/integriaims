@@ -50,7 +50,7 @@ include_once ($config["homedir"]."/include/graphs/fgraph.php");
 enterprise_include("include/functions_users.php");
 enterprise_include("include/functions_incidents.php");
 
-function filter_incidents ($filters, $count=false, $limit=true) {
+function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false) {
 	global $config;
 	
 	/* Set default values if none is set */
@@ -190,6 +190,9 @@ function filter_incidents ($filters, $count=false, $limit=true) {
 		}
 	}
 
+	if ($no_parents) {
+		$sql_clause .= " AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)";
+	}
 	$order_by = "";
 
 	if ($order_by_array) {
@@ -2201,7 +2204,7 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 }
 
 /*Filters or display result for incident search*/
-function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false) {
+function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false) {
 	global $config;
 	
 	$params = "";
@@ -2224,7 +2227,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$filter_year['first_date'] = $year_ago;
 		$filter_year['last_date'] = $now;
 
-		$count_this_year = filter_incidents($filter_year, true);
+		$count_this_year = filter_incidents($filter_year, true, false, $no_parents);
 
 		$aux_text = "(".$count_this_year.")".print_help_tip(__("Tickets created last year"),true);
 	}
@@ -2239,7 +2242,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	$filter["limit"] = 0;
 
 	// All the tickets the user sees are retrieved
-	$incidents = filter_incidents($filter);
+	$incidents = filter_incidents($filter, false, true, $no_parents);
 	$count = empty($incidents) ? 0 : count($incidents);
 	
 	if ($return_incidents)

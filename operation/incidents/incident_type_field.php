@@ -58,7 +58,7 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
 
-$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' =>__('Linked'));
+$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' =>__('Linked'), 'numeric' =>__('Numeric'));
 $table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
 $table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
 $table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'));

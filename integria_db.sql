@@ -937,7 +937,7 @@ CREATE TABLE `tincident_type_field` (
   `id` mediumint(8) unsigned NOT NULL auto_increment, 
   `id_incident_type` mediumint(8) unsigned NOT NULL, 
   `label` varchar(100) NOT NULL default '', 
-  `type` enum ('textarea', 'text', 'combo', 'linked') default 'text',
+  `type` enum ('textarea', 'text', 'combo', 'linked', 'numeric') default 'text',
   `combo_value` text default NULL,
   `show_in_list` tinyint(1) unsigned NOT NULL default 0,
   `global_id` mediumint(8) unsigned,

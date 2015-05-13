@@ -700,6 +700,17 @@ function show_incident_type_fields(numRow) {
 					
 				}
 				
+				if ((value['type'] == "numeric")) {
+
+					element=document.createElement('input');
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='number';
+					element.size=40;
+					
+				}
+				
 				lbl.appendChild(element);
 
 				objTd.appendChild(lbl);

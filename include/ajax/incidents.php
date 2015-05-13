@@ -57,7 +57,8 @@ if ($get_incidents_search) {
 	
 	form_search_incident (false, $filter_form);
 	
-	incidents_search_result($filter,$ajax);
+	$no_parents = true;
+	incidents_search_result($filter,$ajax, false, false, $no_parents);
 }
 
 if ($get_incident_name) {
