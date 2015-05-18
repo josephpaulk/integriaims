@@ -137,6 +137,8 @@ if (defined ('AJAX')) {
 
 		$id_parent = get_parameter('id_parent');
 		$value_parent = get_parameter('value_parent');
+		$value_parent = safe_input(safe_output(base64_decode($value_parent)));
+
 		$sql = "SELECT linked_value FROM tincident_type_field WHERE parent=".$id_parent."
 			AND label='".$label_field."'";
 		$field_data = get_db_value_sql($sql);

@@ -1,3 +1,11 @@
+2015-05-18  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_dbdata.sql
+	  include/ajax/incidents.php
+	  include/js/integria_incident_search.js
+	  operation/incidents/incident_detail.php: Fixed linked
+	fields.
+
 2015-05-13  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql

@@ -523,6 +523,7 @@ function process_massive_updates () {
 
 function update_linked_fields(label_childs, id_parent, value_parent) {
 
+	value_parent=btoa(value_parent);
 	var fields = label_childs.split(',');
 	
 	jQuery.each (fields, function (id, val) {
@@ -532,6 +533,7 @@ function update_linked_fields(label_childs, id_parent, value_parent) {
 			url: "ajax.php",
 			data: "page=operation/incidents/incident_detail&get_data_child=1&label_field_enco=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
 			dataType: "json",
+			async: false,
 			success: function(data){
 				//~ $("#"+val).empty();
 					$("select[name="+val+"]").empty();
@@ -566,6 +568,7 @@ function show_incident_type_fields(numRow) {
 		url: "ajax.php",
 		data: "page=operation/incidents/incident_detail&show_type_fields=1&id_incident_type=" + id_incident_type +"&id_incident=" +id_incident,
 		dataType: "json",
+		async: false,
 		success: function(data){
 
 			//FIRST DELETE OLD ROWS CREATED BY THIS FUNCTION BEFORE
