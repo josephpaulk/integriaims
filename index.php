@@ -131,17 +131,19 @@ if ($change_pass == 1) {
 
 	if ($check_status != 0) {
 		
+		$password_old = (string) get_parameter ('old_password', '');
 		$password_new = (string) get_parameter ('new_password', '');
 		$password_confirm = (string) get_parameter ('confirm_new_password', '');
 		$id = (string) get_parameter ('login', '');
 
-		$changed_pass = login_update_password_check ($password_new, $password_confirm, $id);
+		$changed_pass = login_update_password_check ($password_new, $password_confirm, $id, $password_old);
 
 		if ($changed_pass) {
 			//$_POST['renew_password'] = 0;
 			require ("general/login_page.php");
 		} else {
-			$expired_pass = true;
+			//~ $expired_pass = true;
+			$login_failed = true;
 		}
 	}
 }

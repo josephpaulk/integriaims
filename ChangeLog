@@ -1,3 +1,8 @@
+2015-05-21  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* index.php: Fixed security vulnerability
+	in password change.
+
 2015-05-18  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_dbdata.sql
