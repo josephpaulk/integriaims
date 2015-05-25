@@ -50,6 +50,8 @@ if ($get_incidents_search) {
 	$filter['last_date'] = (string) get_parameter ('search_last_date');	
 	$filter['sla_state'] = (string) get_parameter ('search_sla_state');
 	$filter['id_task'] = (int) get_parameter ('search_id_task');	
+	$filter['left_sla'] = (int) get_parameter ('search_left_sla');
+	$filter['right_sla'] = (int) get_parameter ('search_right_left');
 	
 	$ajax = get_parameter("ajax");
 	

@@ -166,11 +166,11 @@ INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','
 (42,13,'Id','text','','','','','',0,0,0),
 (43,14,'Name','text','','','','','',0,0,0),
 (44,17,'User','text','','','','','',0,0,0),
-(45,NULL,'OS Version','text',NULL,NULL,NULL,'','',0,0,1),
-(46,NULL,'Group','text',NULL,NULL,NULL,'','',0,0,1),
-(47,NULL,'Domain','text',NULL,NULL,NULL,'','',0,0,1),
-(48,NULL,'Hostname','text',NULL,NULL,NULL,'','',0,0,1),
-(49,NULL,'Architecture','text',NULL,NULL,NULL,'','',0,0,1);
+(45,2,'OS Version','text',NULL,NULL,NULL,'','',0,0,1),
+(46,2,'Group','text',NULL,NULL,NULL,'','',0,0,1),
+(47,2,'Domain','text',NULL,NULL,NULL,'','',0,0,1),
+(48,2,'Hostname','text',NULL,NULL,NULL,'','',0,0,1),
+(49,2,'Architecture','text',NULL,NULL,NULL,'','',0,0,1);
 
 
 INSERT INTO `tupdate_settings` VALUES ('customer_key', 'INTEGRIA-FREE'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('dbport', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');

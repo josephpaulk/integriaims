@@ -1201,6 +1201,7 @@ CREATE TABLE `tworkflow_condition` (
   `id_task` int(10) NOT NULL default 0,
   `id_ticket_type` int(10) NOT NULL default 0,
   `type_fields` varchar(300)  NOT NULL default '',
+  `percent_sla` int unsigned NOT NULL default 0,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_rule`) REFERENCES tworkflow_rule(`id`)
        ON DELETE CASCADE

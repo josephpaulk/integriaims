@@ -660,7 +660,7 @@ if ($clean_output) {
 		echo '<li class="ui-tabs">';
 	}
 
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tickets#incident-operations"><span>'.__('Tickets').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tickets#incident-operations"><span>'.__('Associated tickets').'</span></a>';
 	echo '</li>';
 
 	echo '<li class="ui-tabs-title">';

@@ -42,6 +42,8 @@ if (defined ('AJAX')) {
 	$filter['group_by_project'] = $form_values['search_group_by_project'];
 	$filter['sla_state'] = $form_values['search_sla_state'];
 	$filter['id_task'] = $form_values['search_id_task'];
+	$filter['left_sla'] = $form_values['search_left_sla'];
+	$filter['right_sla'] = $form_values['search_right_sla'];
 
 	$result = create_custom_search ($search_name, 'incidents', $filter);
 }
@@ -73,6 +75,8 @@ $filter['last_date'] = (string) get_parameter('search_last_date', '');
 $filter['group_by_project'] = (bool) get_parameter('search_group_by_project');
 $filter['sla_state'] = (int) get_parameter ('search_sla_state');
 $filter['id_task'] = (int) get_parameter('search_id_task');
+$filter['left_sla'] = (int) get_parameter ('search_left_sla');
+$filter['right_sla'] = (int) get_parameter ('search_right_sla');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 

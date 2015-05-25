@@ -1,3 +1,18 @@
+2015-05-25  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  integria_dbdata.sql
+	  include/functions_form.php
+	  include/functions_incidents.php
+	  include/ajax/incidents.php
+	  operation/incidents/incident_dashboard_detail.php
+	  operation/incidents/incident_search.php: Added SLA compliance 
+	interval in ticket search.
+
+	* extras/mr/21.sql: Added file.
+	
+	* include/language/index.pot: Updated translations to launchpad.
+
 2015-05-21  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* index.php: Fixed security vulnerability

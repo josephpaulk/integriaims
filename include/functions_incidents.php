@@ -74,6 +74,8 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
 	$filters["sla_state"] = isset ($filters['sla_state']) ? $filters['sla_state'] : 0;
 	$filters["id_task"] = isset ($filters['id_task']) ? $filters['id_task'] : 0;
+	$filters["left_sla"] = isset ($filters['left_sla']) ? $filters['left_sla'] : 0;
+	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -271,6 +273,24 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 
 			//If company do no match, dismiss incident
 			if ($filters['id_company'] != $user_company) {
+				continue;
+			}
+		}
+		
+		if ($filters['left_sla']) {
+			$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+
+			//If sla do not match, dismiss incident
+			if ($filters['left_sla'] > $percent_sla_incident) {
+				continue;
+			}
+		}
+		
+		if ($filters['right_sla']) {
+			$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+
+			//If sla do not match, dismiss incident
+			if ($filters['right_sla'] < $percent_sla_incident) {
 				continue;
 			}
 		}
@@ -2724,6 +2744,8 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 	$filters["group_by_project"] = isset ($filters['group_by_project']) ? $filters['group_by_project'] : 0;
 	$filters["id_task"] = isset ($filters['id_task']) ? $filters['id_task'] : -1;
 	$filters["sla_state"] = isset ($filters['sla_state']) ? $filters['sla_state'] : 0;
+	$filters["left_sla"] = isset ($filters['left_sla']) ? $filters['left_sla'] : 0;
+	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -2951,6 +2973,24 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 
 					//If company do no match, dismiss incident
 					if ($filters['id_company'] != $user_company) {
+						continue;
+					}
+				}
+				
+				if ($filters['left_sla']) {
+					$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+
+					//If sla do not match, dismiss incident
+					if ($filters['left_sla'] > $percent_sla_incident) {
+						continue;
+					}
+				}
+
+				if ($filters['right_sla']) {
+					$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+					
+					//If sla do not match, dismiss incident
+					if ($filters['right_sla'] < $percent_sla_incident) {
 						continue;
 					}
 				}

@@ -927,6 +927,8 @@ function form_search_incident ($return = false, $filter=false) {
 		$group_by_project = (bool) get_parameter('search_group_by_project');
 		$sla_state = (int)get_parameter('search_sla_state', 0);
 		$id_task = (int) get_parameter('search_id_task', 0);
+		$left_sla = (int)get_parameter('search_left_sla', 0);
+		$right_sla = (int)get_parameter('search_right_sla', 0);
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -954,6 +956,8 @@ function form_search_incident ($return = false, $filter=false) {
 		$group_by_project = (bool) $filter['group_by_project'];
 		$sla_state = (int) $filter['sla_state'];
 		$id_task = (int) $filter['id_task'];
+		$left_sla = (int) $filter['left_sla'];
+		$right_sla = (int) $filter['right_sla'];
 
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
@@ -1072,6 +1076,10 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('All'), 0, true, false, false, __('SLA'));
 	
 	$table->data[5][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), 'search_id_task');
+	
+	$table->data[5][2] = print_input_text ('search_left_sla', $left_sla,'', 7, 0, true, __('SLA > (%)'), false);
+	
+	$table->data[5][3] = print_input_text ('search_right_sla', $right_sla,'', 7, 0, true, __('SLA < (%)'), false);
 
 	$table_type_fields = new stdclass;
 	$table_type_fields->width = "100%";
