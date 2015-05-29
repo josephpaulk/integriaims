@@ -38,7 +38,6 @@ $lang = "";
 $nombre_real = "";
 $nivel = 0;
 $disabled = 0;
-$simple_mode = 0;
 $id_company = 0;
 $location = "";
 // Default is create mode (creacion)
@@ -87,7 +86,6 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 		$avatar = $rowdup["avatar"];
 		$lang = $rowdup["lang"];
 		$disabled = $rowdup["disabled"];
-		$simple_mode = $rowdup["simple_mode"];
 		$id_company = $rowdup["id_company"];
 		$num_employee = $rowdup["num_employee"];
 		$enable_login = $rowdup["enable_login"];
@@ -115,7 +113,6 @@ if ($action == 'update')  {
 			$password2 = get_parameter ("pass2");
 			$lang = get_parameter ("lang");
 			$disabled = get_parameter ("disabled");
-			$simple_mode = get_parameter ("simple_mode");
 			$id_company = get_parameter ("id_company");
 			$num_employee = get_parameter ("num_employee");
 			$location = get_parameter ("location", "");
@@ -157,10 +154,10 @@ if ($action == 'update')  {
 
 				if (dame_password ($nombre_viejo) != $password){
 					$password = md5($password);
-					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".safe_output($nombre_real)."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
+					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".safe_output($nombre_real)."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
 				}
 				else {
-					$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '".$nombre_viejo."'";
+					$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '".$nombre_viejo."'";
 				}
 				
 				$resq2 = process_sql($sql);
@@ -241,7 +238,6 @@ if ($action == 'create'){
 		$direccion = rtrim(get_parameter ("direccion"));
 		$telefono = get_parameter ("telefono");
 		$id_company = get_parameter ("id_company");
-		$simple_mode = get_parameter ("simple_mode");
 		$comentarios = get_parameter ("comentarios");
 		if (isset($_POST["nivel"])) {
 			$nivel = get_parameter ("nivel",0);
@@ -254,7 +250,7 @@ if ($action == 'create'){
 		$ahora = date("Y-m-d H:i:s");
 		$num_employee = get_parameter("num_employee");
 		$location = get_parameter ("location", "");
-		$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login, '$location')";
+		$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company', $enable_login, '$location')";
 
 		$resq1 = process_sql($sql_insert);
 		
@@ -545,23 +541,6 @@ echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$wor
 echo "&nbsp;&nbsp;";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$update_user'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center></td>";
 
-
-echo '<tr><td class="datos2">'. __('Simple mode');
-echo '<td class="datos2">';
-
-if($simple_mode) {
-	$active_chk = ' checked';
-	$disabled_chk = '';
-}
-else {
-	$active_chk = '';
-	$disabled_chk = ' checked';
-}
-
-echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="simple_mode" value="1"'.$active_chk.'>';
-echo "&nbsp;&nbsp;";
-echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="simple_mode" value="0"'.$disabled_chk.'>';
-echo '</tr>';
 echo '<tr>';
 if ($modo == "edicion") { // Only show groups for existing users
 	enterprise_hook ('manage_profiles');

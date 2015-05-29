@@ -16,9 +16,6 @@
 if (!isset($config["id_user"]))
 	return;
 
-// Get if the user has simple mode
-$simple_mode = get_db_value('simple_mode','tusuario','id_usuario',$config['id_user']);
-
 echo "<ul>";
 
 // Projects
@@ -38,13 +35,8 @@ $kb_acl = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
 $download_acl = give_acl($config["id_user"], 0, "FRR");
 $file_sharing_acl = $download_acl;
 
-// Support submenus links
-if($simple_mode) {
-	$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents_simple/incidents';
-}
-else {
-	$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
-}
+$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
+
 $kb_link = 'index.php?sec=kb&sec2=operation/kb/browse';
 $download_link = 'index.php?sec=download&sec2=operation/download/browse&show_types=1';
 $file_sharing_link = 'index.php?sec=file_sharing&sec2=operation/file_sharing/manage';

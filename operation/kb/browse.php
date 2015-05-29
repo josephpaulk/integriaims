@@ -383,7 +383,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "<th>".__('Timestamp')."</th>";
 		
 		if (give_acl($config["id_user"], 0, "KW")) {
-			echo "<th>".__('Delete')."</th>";
+			echo "<th>".__('Action')."</th>";
 		}
 		
 		while ($row=mysql_fetch_array($result)){
@@ -412,7 +412,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			if (give_acl($config["id_user"], 0, "KW")) {
 				// Delete
 				echo "<td class='f9' align='center' >";
-				echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+				echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$row['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
+				echo "&nbsp;&nbsp;";
+				echo '<a href="index.php?sec=kb&sec2=operation/kb/browse&delete_data='.$row["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			}	
 
 		}

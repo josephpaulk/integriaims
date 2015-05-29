@@ -349,7 +349,6 @@ ALTER TABLE `tgrupo` ADD `default_profile` int(10) unsigned NOT NULL default 0;
 
 /* 15/07/2013 */
 ALTER TABLE `tgrupo` ADD `nivel` tinyint(1) NOT NULL default '0';
-ALTER TABLE `tgrupo` ADD `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0;
 ALTER TABLE `tgrupo` ADD `id_incident_type` mediumint(8) unsigned NULL;
 
 /* 16/07/2013 */

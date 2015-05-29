@@ -50,9 +50,8 @@ function api_create_users ($return_type, $user, $params){
 	$email = $params[3];
 	$password = $params[4];
 	$description = $params[5];
-	$simplemode = $params[6];
-	$realname = $params[7];
-	$external = $params[8];
+	$realname = $params[6];
+	$external = $params[7];
 
 	// 1 means "admin" 
 	if ($external == 1)
@@ -71,8 +70,8 @@ function api_create_users ($return_type, $user, $params){
 
 	$sql = sprintf ('INSERT INTO tusuario
 			(nombre_real, id_usuario, password, comentarios,
-			fecha_registro, direccion, simple_mode, nivel)
-			VALUES ("%s", "%s", md5("%s"), "%s", "%s", "%s", %d, %d)', $realname, $username, $password, $description, $timestamp, $email, $simplemode, $external);
+			fecha_registro, direccion, nivel)
+			VALUES ("%s", "%s", md5("%s"), "%s", "%s", "%s", %d)', $realname, $username, $password, $description, $timestamp, $email, $external);
 
 	$new_id = process_sql ($sql, 'insert_id');
 	if ($new_id !== false) {

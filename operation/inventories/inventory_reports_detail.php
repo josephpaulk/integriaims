@@ -104,6 +104,7 @@ if ($render == 1){
 	ob_end_clean();
 
 	// We'll be outputting a CSV
+	header ('Content-Type: text/csv; charset=UTF-8');
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));

@@ -83,9 +83,8 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 		$avatar = $values[6];
 		$disabled = $values[7];
 		$id_company = $values[8];
-		$simple_mode = $values[9];
-		$num_employee = $values[10];
-		$enable_login = $values[11];
+		$num_employee = $values[9];
+		$enable_login = $values[10];
 		$force_change_pass = 0;
 		
 		if ($pass_policy) {
@@ -103,7 +102,6 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 			'avatar' => $avatar,
 			'disabled' => $disabled,
 			'id_company' => $id_company,
-			'simple_mode' => $simple_mode,
 			'num_employee' => $num_employee,
 			'enable_login' => $enable_login,
 			'force_change_pass' => $force_change_pass);

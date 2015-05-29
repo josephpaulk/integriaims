@@ -28,6 +28,11 @@ if (! isset ($_GET["view"])) {
 	return;
 }
 
+$edit_perm = false;
+if (give_acl ($config["id_user"], 0, "KW")){
+	$edit_perm = true;
+}
+
 $id = (int) get_parameter ('view');
 
 if ($id && ! check_kb_item_accessibility($config["id_user"], $id)) {
@@ -56,6 +61,11 @@ $report_image = print_report_image ("index.php?sec=kb&sec2=operation/kb/browse_d
 if ($report_image) {
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo $report_image;
+}
+
+if ($edit_perm){
+	echo "&nbsp;&nbsp;&nbsp;";
+	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
 }
 echo '</h2>';
 
@@ -95,7 +105,7 @@ echo $category;
 
 echo "<td align=right>";
 if (give_acl ($config["id_user"], 0, "KW")){
-	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/page_white_text.png'></a>";
+	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
 }
 
 echo "</table>";

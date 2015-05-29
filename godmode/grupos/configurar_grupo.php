@@ -68,7 +68,6 @@ if ($id) {
 		$email_queue = $group["email_queue"];
 		$default_profile = $group["default_profile"];
 		$user_level = $group["nivel"];
-		$simple_mode = $group["simple_mode"];
 		$incident_type = $group["id_incident_type"];
 		$email_from = $group["email_from"];
 		
@@ -164,7 +163,7 @@ $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, tru
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
 
-enterprise_hook("groups_email_queue_form", array($autocreate_user, $grant_access, $send_welcome, $default_company, $welcome_email, $email_queue,$default_profile,$user_level, $simple_mode, $incident_type));
+enterprise_hook("groups_email_queue_form", array($autocreate_user, $grant_access, $send_welcome, $default_company, $welcome_email, $email_queue,$default_profile,$user_level, $incident_type));
 
 echo '<div class="button" style="width: '.$table->width.'">';
 

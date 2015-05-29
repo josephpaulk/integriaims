@@ -30,7 +30,6 @@ CREATE TABLE `tusuario` (
   `pwdhash` varchar(100) default '',
   `disabled` int default 0,
   `id_company` int(10) unsigned NULL default 0,
-  `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
   `force_change_pass` tinyint(1) unsigned NOT NULL default 0,
   `last_pass_change` DATETIME  NOT NULL DEFAULT 0,
   `last_failed_login` DATETIME  NOT NULL DEFAULT 0,
@@ -66,7 +65,6 @@ CREATE TABLE `tgrupo` (
   `welcome_email` text,
   `default_profile` int(10) unsigned NOT NULL default 0,
   `nivel` tinyint(1) NOT NULL default '0',
-  `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
   `email_from` varchar(150) default '',
   PRIMARY KEY  (`id_grupo`)

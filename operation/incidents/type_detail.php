@@ -389,14 +389,18 @@ if ($id || $new_type) {
 				$data[4] = "";
 				
 				if (!$field["global_id"]) {
-					$data[4] = "<a
-					href='" . $url_update . "'>
-					<img src='images/wrench.png' border=0 /></a>";
+					if (get_admin_user ($config['id_user'])) {
+						$data[4] = "<a
+						href='" . $url_update . "'>
+						<img src='images/wrench.png' border=0 /></a>";
+					}
 				} 
-					
-				$data[4] .= "<a
-				onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
-				<img src='images/cross.png' border=0 /></a>";	
+			
+				if (get_admin_user ($config['id_user'])) {
+					$data[4] .= "<a
+					onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
+					<img src='images/cross.png' border=0 /></a>";
+				}	
 				
 				array_push ($table->data, $data);
 			}
@@ -449,7 +453,9 @@ if ($id || $new_type) {
 		$table->style[0] = 'font-weight: bold';
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Wizard');
-		$table->head[2] = __('Delete');
+		if (get_admin_user ($config['id_user'])) {
+			$table->head[2] = __('Delete');
+		}
 		
 		foreach ($types as $type) {
 			$data = array ();
@@ -457,12 +463,15 @@ if ($id || $new_type) {
 			$data[0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.
 				$type['id'].'">'.$type['name'].'</a>';
 			$data[1] = get_db_value ('name', 'tincident_type', 'id', $type['id_wizard']);
-			$data[2] = '<a href="index.php?sec=incidents&
-						sec2=operation/incidents/type_detail&
-						delete_type=1&id='.$type['id'].'"
-						onClick="if (!confirm(\''.__('Are you sure?').'\'))
-						return false;">
-						<img src="images/cross.png"></a>';
+			
+			if (get_admin_user ($config['id_user'])) {
+				$data[2] = '<a href="index.php?sec=incidents&
+							sec2=operation/incidents/type_detail&
+							delete_type=1&id='.$type['id'].'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png"></a>';
+			}
 			array_push ($table->data, $data);
 		}
 		print_table ($table);

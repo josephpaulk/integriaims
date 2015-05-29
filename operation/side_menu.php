@@ -28,7 +28,6 @@ global $show_agenda;
 global $show_setup;
 global $show_wiki;
 
-global $simple_mode;
 
 // PROJECTS
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {
@@ -408,27 +407,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Incidents')."</h3>";
-	if($simple_mode) {
-		echo "<ul class='sidemenu'>";
-		// My incidents
-		if ($sec2 == "operation/incidents_simple/incidents")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('My tickets')."</a></li>";
-		
-		// New ticket
-		if (give_acl ($config['id_user'], 0, "IW")) {
-			if ($sec2 == "operation/incidents_simple/incident_new")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident_new'>".__('New ticket')."</a></li>";
-		}
-		
-		echo "</ul>";
-	}
-	else {
+	
 		echo "<ul class='sidemenu'>";
 		$id_incident = get_parameter ('id');
 
@@ -501,7 +480,6 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "</ul>";
 			echo "</div>";
 		}
-	}
 	
 	//Workflow rules
 	if (get_admin_user($config['id_user'])) {

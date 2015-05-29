@@ -268,13 +268,9 @@ if ($info) {
 			$incidents_home .= "<td>";
 			$incidents_home .= human_time_comparation ($row_2["actualizacion"]);
 			$incidents_home .= "<td>";
-			if($simple_mode) {
-				// TODO: Check this link.
-				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=$idi'>";
-			}
-			else {
-				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$idi'>";
-			}
+			
+			$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$idi'>";
+
 			$incidents_home .= $row_2["titulo"];
 			$incidents_home .= "</b></a>";
 			$incidents_home .= "</td>";
@@ -292,12 +288,8 @@ if ($info) {
 		$incidents_home .= "</div>";		
 	}
 	
-	if($simple_mode) {
-		$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>";
-	}
-	else {
-		$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>";
-	}
+	$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>";
+
 	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('Incidents') . "'>";
 	$much_more .= "</a>";
 	

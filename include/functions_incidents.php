@@ -2224,7 +2224,7 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 }
 
 /*Filters or display result for incident search*/
-function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false) {
+function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false) {
 	global $config;
 	
 	$params = "";
@@ -2264,6 +2264,21 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	// All the tickets the user sees are retrieved
 	$incidents = filter_incidents($filter, false, true, $no_parents);
 	$count = empty($incidents) ? 0 : count($incidents);
+
+	if ($resolve_names) {
+		$incidents_aux = array();
+		$i=0;
+		foreach ($incidents as $inc) {
+			$incidents_aux[$i]=$inc;
+			$incidents_aux[$i]['estado'] = incidents_get_incident_status_text ($inc['estado']);
+			$incidents_aux[$i]['resolution'] = incidents_get_incident_resolution_text ($inc['resolution']);
+			$incidents_aux[$i]['prioridad'] = incidents_get_incident_priority_text ($inc['prioridad']);
+			$incidents_aux[$i]['id_grupo'] = incidents_get_incident_group_text ($inc['id_grupo']);
+			$incidents_aux[$i]['id_group_creator'] = incidents_get_incident_group_text ($inc['id_group_creator']);
+			$i++;
+		}
+		$incidents = $incidents_aux;
+	}
 	
 	if ($return_incidents)
 		return $incidents;
