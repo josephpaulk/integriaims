@@ -1397,13 +1397,12 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 function inventories_load_file ($objects_file) {
 	$file_handle = fopen($objects_file, "r");
 	global $config;
-	
-	
+		
 	while (!feof($file_handle)) {
 		$create = true;
 		
 		$line = fgets($file_handle);
-		
+	
 		if (($line == '') || (!isset($line))) {
 			continue;
 		}
@@ -1430,7 +1429,7 @@ function inventories_load_file ($objects_file) {
 			'id_manufacturer' => $id_manufacturer,
 			'id_parent' => $id_parent,
 			'last_update' => date ("Y/m/d", get_system_time()));
-			
+	
 			if ($name == '') {
 				echo "<h3 class='error'>" . __ ('Inventory name empty') ."</h3>";
 				$create = false;
@@ -1459,7 +1458,7 @@ function inventories_load_file ($objects_file) {
 					$create = false;
 				}
 			}
-			
+				
 			if (($id_object_type != 0) && ($id_object_type != '')) {
 				$exists_object_type = get_db_value('id', 'tobject_type', 'id', $id_object_type);
 				
@@ -1467,7 +1466,14 @@ function inventories_load_file ($objects_file) {
 					echo "<h3 class='error'>" . __ ('Object type ') . $id_object_type . __(' doesn\'t exist')."</h3>";
 					$create = false;
 				} else {
-					$all_fields = inventories_get_all_type_field ($id_object_type);
+					//~ $all_fields = inventories_get_all_type_field ($id_object_type);
+					$sql = "SELECT * FROM tobject_type_field WHERE id_object_type=".$id_object_type;
+
+					$all_fields = get_db_all_rows_sql($sql);
+
+					if ($all_fields == false) {
+						$all_fields = array();
+					}
 					
 					$value_data = array();
 					$i = 8;
@@ -1479,8 +1485,8 @@ function inventories_load_file ($objects_file) {
 							case 'combo':
 								$combo_val = explode(",", $field['combo_value']);
 								$k = array_search($data, $combo_val);
-								
-								if (!$k) {
+						
+								if ($k === false) {
 									echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' doesn\'t match. Valid values: ').$field['combo_value']."</h3>";
 									$create = false;
 								}

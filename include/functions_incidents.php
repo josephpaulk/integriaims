@@ -2270,11 +2270,12 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$i=0;
 		foreach ($incidents as $inc) {
 			$incidents_aux[$i]=$inc;
-			$incidents_aux[$i]['estado'] = incidents_get_incident_status_text ($inc['estado']);
-			$incidents_aux[$i]['resolution'] = incidents_get_incident_resolution_text ($inc['resolution']);
-			$incidents_aux[$i]['prioridad'] = incidents_get_incident_priority_text ($inc['prioridad']);
-			$incidents_aux[$i]['id_grupo'] = incidents_get_incident_group_text ($inc['id_grupo']);
-			$incidents_aux[$i]['id_group_creator'] = incidents_get_incident_group_text ($inc['id_group_creator']);
+			$incidents_aux[$i]['estado'] = incidents_get_incident_status_text ($inc['id_incidencia']);
+			$incidents_aux[$i]['resolution'] = incidents_get_incident_resolution_text ($inc['id_incidencia']);
+			$incidents_aux[$i]['prioridad'] = incidents_get_incident_priority_text ($inc['id_incidencia']);
+			$incidents_aux[$i]['id_grupo'] = incidents_get_incident_group_text ($inc['id_incidencia']);
+			$incidents_aux[$i]['id_group_creator'] = incidents_get_incident_group_text ($inc['id_incidencia']);
+			$incidents_aux[$i]['id_incident_type'] = incidents_get_incident_type_text ($inc['id_incidencia']);
 			$i++;
 		}
 		$incidents = $incidents_aux;
