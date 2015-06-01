@@ -22,6 +22,7 @@ require_once('include/functions_crm.php');
 include_once('include/functions_user.php');
 
 $id = (int) get_parameter ('id');
+$id_invoice = (int) get_parameter('id_invoice');
 
 $section_read_permission = check_crm_acl ('company', 'cr');
 $section_write_permission = check_crm_acl ('company', 'cw');
@@ -33,7 +34,8 @@ if (!$section_read_permission && !$section_write_permission && !$section_manage_
 	exit;
 }
 
-if ($id) {
+//~ if ($id) {
+if ($id && !isset($id_invoice)) {
 	$read_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
 	$write_permission = check_crm_acl ('company', 'cw', $config['id_user'], $id);
 	$manage_permission = check_crm_acl ('company', 'cm', $config['id_user'], $id);
@@ -613,7 +615,7 @@ elseif ($op == "invoices") {
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 
 	if (($operation_invoices != "") OR ($new_invoice != 0) OR ($view_invoice != 0 ) ){
-				
+			
 		$id_invoice = get_parameter ("id_invoice", -1);
 		if ($id_invoice) {
 			$is_locked = crm_is_invoice_locked ($id_invoice);
@@ -656,7 +658,8 @@ elseif ($op == "invoices") {
 
 	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
 		
-		$invoices = crm_get_all_invoices ("id_company = $id");
+		$parent_company = get_db_value ('id_parent', 'tcompany', 'id', $id);
+		$invoices = crm_get_all_invoices ("id_company = $id OR id_company = $parent_company");
 		
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
 		

@@ -1,3 +1,11 @@
+2015-06-01  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_incidents.php: Added fields
+	for export to csv.
+	  
+	* operation/companies/company_detail.php: Changed
+	invoice acls.
+
 2015-05-29  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_incidents.php

@@ -295,6 +295,17 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			}
 		}
 		
+		if ($incident['id_incident_type']) {
+			$incident['id_incident_type_name'] = incidents_get_incident_type_text ($incident['id_incidencia']);
+			$fields = get_db_all_rows_sql("SELECT id, label FROM tincident_type_field WHERE id_incident_type=".$incident['id_incident_type']);
+			if ($fields !== false) {
+				foreach ($fields as $field) {
+					$data = get_db_value_sql("SELECT data FROM tincident_field_data WHERE id_incident_field=".$field['id']." AND id_incident=".$incident['id_incidencia']);
+					$incident[safe_output($field['label'])] = $data; 
+				}
+			}
+		}
+
 		array_push ($result, $incident);
 	}
 	
@@ -2275,7 +2286,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 			$incidents_aux[$i]['prioridad'] = incidents_get_incident_priority_text ($inc['id_incidencia']);
 			$incidents_aux[$i]['id_grupo'] = incidents_get_incident_group_text ($inc['id_incidencia']);
 			$incidents_aux[$i]['id_group_creator'] = incidents_get_incident_group_text ($inc['id_incidencia']);
-			$incidents_aux[$i]['id_incident_type'] = incidents_get_incident_type_text ($inc['id_incidencia']);
+			//~ $incidents_aux[$i]['id_incident_type'] = incidents_get_incident_type_text ($inc['id_incidencia']);
 			$i++;
 		}
 		$incidents = $incidents_aux;
