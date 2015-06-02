@@ -789,24 +789,29 @@ trim_element_on_submit('#text-name');
 validate_form("#inventory_status_form");
 validate_user ("#inventory_status_form", "#text-owner", "<?php echo __('Invalid user')?>");
 var rules, messages;
-// Rules: #text-name
-rules = {
-	required: true,
-	remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-				page: "include/ajax/remote_validations",
-				search_duplicate_name: 1,
-				inventory_name: function() { return $("#text-name").val() }
+
+var id_object = $("#text-id_object_hidden").val();
+
+if (!id_object) {
+	// Rules: #text-name
+	rules = {
+		required: true,
+		remote: {
+				url: "ajax.php",
+				type: "POST",
+				data: {
+					page: "include/ajax/remote_validations",
+					search_duplicate_name: 1,
+					inventory_name: function() { return $("#text-name").val() }
+				}
 			}
-		}
-};
-messages = {
-	required: "<?php echo __('Name required')?>",
-	remote: "<?php echo __('Duplicate name')?>"
-};
-add_validate_form_element_rules('#text-name', rules, messages);
+	};
+	messages = {
+		required: "<?php echo __('Name required')?>",
+		remote: "<?php echo __('Duplicate name')?>"
+	};
+	add_validate_form_element_rules('#text-name', rules, messages);
+}
 
 </script>
 
