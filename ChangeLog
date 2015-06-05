@@ -1,5 +1,12 @@
 2015-06-04  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* extras/mr/23.sql: Added file.
+
+	* operation/inventories/manage_objects_type_fields.php: Added
+	help tip.
+
+2015-06-04  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_db.sql
 	  integria_dbdata.sql
 	  operation/inventories/manage_objects_type_fields.php
