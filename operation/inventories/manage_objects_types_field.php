@@ -46,6 +46,7 @@ switch ($action) {
 			$unique = 0;
 			$inherit = 0;
 			$show_list = 0;
+			$not_allow_updates = 0;
 			break;
 	case "update":
 			$object_type_field = get_db_row_filter('tobject_type_field', array('id' => $id_object_type_field));
@@ -59,6 +60,7 @@ switch ($action) {
 			$unique = $object_type_field["unique"];
 			$inherit = $object_type_field["inherit"];
 			$show_list = $object_type_field["show_list"];
+			$not_allow_updates = $object_type_field["not_allow_updates"];
 			break;			
 }
 
@@ -104,6 +106,8 @@ $table->data[9][0] = '<label>' . __('Inherit') . print_help_tip(__('With this va
 $table->data[10][0] = print_checkbox ('inherit', 1, $inherit, __('Inherit'));
 $table->data[11][0] = '<label>' . __('Show in list') . print_help_tip(__('With this value checked this field will be displayed in search list.'), true) . '</label>';
 $table->data[12][0] = print_checkbox ('show_list', 1, $show_list, __('Show in list'));
+$table->data[13][0] = '<label>' . __('Not allow updates') . print_help_tip(__(''), true) . '</label>';
+$table->data[14][0] = print_checkbox ('not_allow_updates', 1, $not_allow_updates, __('Not allow updates'));
 
 if (empty($id_object_type_field)) {
 	$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
@@ -118,7 +122,7 @@ if (empty($id_object_type_field)) {
 	$button .= print_input_hidden ('action', 'update', true);
 }
 
-$table->data[13][0] = $button;
+$table->data[15][0] = $button;
 
 echo "<form id='form-manage_objects_types_field' method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list'>";
 print_table ($table);

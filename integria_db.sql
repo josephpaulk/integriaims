@@ -975,6 +975,7 @@ CREATE TABLE `tobject_type_field` (
   `unique` int(1) default 0,
   `inherit` int(1) default 0,
   `show_list` TINYINT(1) unsigned DEFAULT 1,
+  `not_allow_updates` TINYINT(1) unsigned DEFAULT 0,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

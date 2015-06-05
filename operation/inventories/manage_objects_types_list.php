@@ -44,7 +44,8 @@ $external_table_name = '';
 $external_reference_field = '';
 $parent_table_name = '';
 $parent_reference_field = '';
-$show_list = get_parameter('show_list', 0);	
+$show_list = get_parameter('show_list', 0);
+$not_allow_updates = get_parameter('not_allow_updates', 0);	
 
 //**********************************************************************
 // Tabs
@@ -83,11 +84,11 @@ switch ($type) {
 switch ($action_db) {
 	case "insert":
 			$sql = sprintf ('INSERT INTO tobject_type_field (id_object_type, label, type, combo_value, 
-							external_table_name, external_reference_field, `unique`, inherit, show_list, parent_table_name, parent_reference_field) 
+							external_table_name, external_reference_field, `unique`, inherit, show_list, parent_table_name, parent_reference_field, not_allow_updates) 
 					VALUES (%d, "%s", "%s", "%s", 
-						    "%s", "%s", %d, %d, %d, "%s", "%s")',
+						    "%s", "%s", %d, %d, %d, "%s", "%s", %d)',
 					$id_object_type, $label, $type, $combo_value,
-					$external_table_name, $external_reference_field, $unique, $inherit, $show_list, $parent_table_name, $parent_reference_field);
+					$external_table_name, $external_reference_field, $unique, $inherit, $show_list, $parent_table_name, $parent_reference_field, $not_allow_updates);
 					
 			$id_object_type_field = process_sql ($sql, 'insert_id');
 			
@@ -103,12 +104,12 @@ switch ($action_db) {
 	case "update":
 			$sql = sprintf ('UPDATE tobject_type_field SET label = "%s", type = "%s",
 							combo_value = "%s", external_table_name = "%s", external_reference_field = "%s",
-							`unique` = %d, inherit = %d, show_list = %d, parent_table_name = "%s", parent_reference_field = "%s"
+							`unique` = %d, inherit = %d, show_list = %d, parent_table_name = "%s", parent_reference_field = "%s", not_allow_updates = %d
 							WHERE id = %d', 
 							$label, $type, 
 							$combo_value, $external_table_name, $external_reference_field, 
 							$unique, $inherit, $show_list, $parent_table_name, $parent_reference_field, 
-							$id_object_type_field);
+							$not_allow_updates, $id_object_type_field);
 
 			$result = process_sql ($sql);
 			
