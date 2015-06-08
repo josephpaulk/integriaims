@@ -1,3 +1,11 @@
+2015-06-08  Vanessa Gil <vanessa.gil@artica.es>
+	
+
+	* godmode/setup/incidents_setup.php
+	  include/functions_db.php
+	  operation/incidents/incident_detail.php: Added
+	token in setup to not allow select a empty ticket type.
+
 2015-06-04  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* extras/mr/23.sql: Added file.

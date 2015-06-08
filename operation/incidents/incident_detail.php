@@ -811,7 +811,7 @@ if($id_grupo==0) {
 $groups = get_user_groups ($config['id_user'], "IW", false);
 $table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group')) . "<div id='group_spinner'></div>";
 
-$types = get_incident_types ();
+$types = get_incident_types (true, $config['required_ticket_type']);
 $table->data[0][2] = print_label (__('Ticket type'), '','',true);
 
 //Disabled incident type if any, type changes not allowed
@@ -820,7 +820,14 @@ if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_
 } else {
 	$disabled_itype = true;
 }
-$table->data[0][2] .= print_select($types, 'id_incident_type', $id_incident_type, '', 'Select', '', true, 0, true, false, $disabled_itype);
+
+if ($config['required_ticket_type']) {
+	$select = '';
+} else {
+	$select = 'select';
+}
+
+$table->data[0][2] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
 
 $disabled = false;
 

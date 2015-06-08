@@ -1653,13 +1653,15 @@ function get_incidents_on_inventory ($id_inventory, $only_names = true) {
 	return $incidents;
 }
 
-function get_incident_types ($only_names = true) {
+function get_incident_types ($only_names = true, $no_empty = false) {
 	$types = get_db_all_rows_in_table ('tincident_type');
 	if ($types == false)
 		return array ();
 
-	//Add without type option
-	array_push($types, array("id" => -1, "name" => __("Without type"))); 		
+	if (!$no_empty) {
+		//Add without type option
+		array_push($types, array("id" => -1, "name" => __("Without type")));
+	}	
 
 	if ($only_names) {
 		$result = array ();
