@@ -44,10 +44,7 @@ if (defined ('AJAX')) {
 
 		//If there is a father the just print the object (we only filter in first level)
 		if ($id_father) {
-
-			$sql = "SELECT * FROM tinventory WHERE tinventory.id_object_type = $id_item";
-
-			$sql .= " AND id_parent = $id_father";
+			$sql = "SELECT * FROM tinventory WHERE id_parent = $id_father";			
 		}
 		
 		$cont_aux = get_db_all_rows_sql($sql);
