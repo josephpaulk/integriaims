@@ -808,7 +808,7 @@ if($id_grupo==0) {
 	$id_grupo_incident = $id_grupo;
 }
 
-$groups = get_user_groups ($config['id_user'], "IW", false);
+$groups = users_get_groups_for_select ($config['id_user'], "IW", false,  true);
 $table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group')) . "<div id='group_spinner'></div>";
 
 $types = get_incident_types (true, $config['required_ticket_type']);

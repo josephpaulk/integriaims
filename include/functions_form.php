@@ -1008,9 +1008,8 @@ function form_search_incident ($return = false, $filter=false) {
 			'', __('Any'), 0, true, false, true,
 			__('Status'));
 	
-	$table->data[0][2] = print_select (get_user_groups (),
-			'search_id_group', $id_group,
-			'', '', '', true, false, false, __('Group'));
+	$groups = users_get_groups_for_select ($config['id_user'], "IW", true, true);
+	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
 	$params_owner = array();
 	$params_owner['input_id'] = 'text-search_id_user';

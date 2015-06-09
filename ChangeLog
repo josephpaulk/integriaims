@@ -1,6 +1,14 @@
+2015-06-09  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* include/functions_form.php
+	  include/functions_db.php
+	  include/functions_groups.php
+	  include/functions_user.php
+	  operation/incidents/incident_detail.php: Show the hierarchy 
+	of groups in combos.
+
 2015-06-09  Vanessa Gil <vanessa.gil@artica.es>
 	
-
 	* include/functions_form.php: Detecting URLs in
 	workunits.
 

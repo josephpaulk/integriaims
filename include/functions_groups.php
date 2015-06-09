@@ -216,4 +216,88 @@ function groups_get_user_groups($id_user) {
 	
 	return $group_ids;
 }
+
+function groups_flatten_tree_groups($tree, $deep) {
+	foreach ($tree as $key => $group) {
+		$return[$key] = $group;
+		unset($return[$key]['branch']);
+		$return[$key]['deep'] = $deep;
+		
+		if (!empty($group['branch'])) {
+			$return = $return +
+				groups_flatten_tree_groups($group['branch'], $deep + 1);
+		}
+	}
+	
+	return $return;
+}
+
+
+/**
+ * Make with a list of groups a treefied list of groups.
+ *
+ * @param array $groups The list of groups to create the treefield list.
+ * @param integer $parent The id_group of parent actual scan branch.
+ * @param integer $deep The level of profundity in the branch.
+ *
+ * @return array The treefield list of groups.
+ */
+function groups_get_groups_tree_recursive($groups) {
+	$return = array();
+	
+	$tree = $groups;
+	foreach($groups as $key => $group) {
+		if ($group['id_grupo'] == 0) {
+			continue;
+		}
+		
+		// If the user has ACLs on a gruop but not in his father,
+		// we consider it as a son of group "all"
+		if(!in_array($group['parent'], array_keys($groups))) {
+			$group['parent'] = 0;  
+		}
+		
+		$tree[$group['parent']]['hash_branch'] = 1;
+		$tree[$group['parent']]['branch'][$key] = &$tree[$key];
+		
+	}
+	
+	// Depends on the All group we give different format
+	if (isset($groups[0])) {
+		$tree = array($tree[0]);
+	}
+	else {
+		$tree = $tree[0]['branch'];
+	}
+	
+	$return = groups_flatten_tree_groups($tree, 0);
+	
+	return $return;
+}
+
+/**
+ * Return a array of id_group of childrens (to branches down)
+ *
+ * @param integer $parent The id_group parent to search the childrens.
+ * @param array $groups The groups, its for optimize the querys to DB.
+ */
+function groups_get_childrens($parent, $groups = null) {
+	if (empty($groups)) {
+		$groups = db_get_all_rows_in_table('tgrupo');
+	}
+	
+	$return = array();
+	
+	foreach ($groups as $key => $group) {
+		if ($group['id_grupo'] == 0) {
+			continue;
+		}
+		
+		if ($group['parent'] == $parent) {
+			$return = $return + array($group['id_grupo'] => $group) + groups_get_childrens($group['id_grupo'], $groups);
+		}
+	}
+	
+	return $return;
+}
 ?>

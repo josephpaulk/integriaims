@@ -215,4 +215,40 @@ function user_is_disabled ($id_user) {
 	
 	return false;
 }
+
+function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGroup = true,  $returnAllColumns = false, $id_groups = null, $keys_field = 'id_grupo') {
+	if ($id_groups === false) {
+		$id_groups = null;
+	}
+	
+	$user_groups = get_user_groups ($id_user, $privilege, $returnAllGroup, $returnAllColumns);
+	
+	if ($id_groups !== null) {
+		$childrens = groups_get_childrens($id_groups);
+		foreach ($childrens as $child) {
+			unset($user_groups[$child['id_grupo']]);
+		}
+		unset($user_groups[$id_groups]);
+	}
+	
+	if (empty($user_groups)) {
+		$user_groups_tree = array();
+	}
+	else {
+		// First group it's needed to retrieve its parent group
+		$first_group = reset(array_slice($user_groups, 0, 1));
+		$parent_group = $first_group['parent'];
+		
+		$user_groups_tree = groups_get_groups_tree_recursive($user_groups, $parent_group);
+	}
+	$fields = array();
+	
+	foreach ($user_groups_tree as $group) {
+		$groupName = ui_print_truncate_text($group['nombre'], GENERIC_SIZE_TEXT, false, true, false);
+		
+		$fields[$group[$keys_field]] = str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;", $group['deep']) . $groupName;
+	}
+	
+	return $fields;
+}
 ?>
