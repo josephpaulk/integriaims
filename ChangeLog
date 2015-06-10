@@ -1,3 +1,10 @@
+2015-06-10  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* include/functions_inventories.php
+	  include/js/integria_inventory.js
+	  operation/inventories/inventory_search.php: Show the 
+	inventory list sorted by name or last update.
+
 2015-06-09  Vanessa Gil <vanessa.gil@artica.es> 
 	
 	* include/functions_form.php

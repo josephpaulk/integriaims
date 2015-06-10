@@ -33,6 +33,7 @@ if (defined ('AJAX')) {
 	$sql_search = get_parameter('sql_search', '');
 	$id_object_type = get_parameter("id_object_type");
 	$end = get_parameter("end");
+	$last_update = get_parameter("last_update");
 
 	$ref_tree = (string)get_parameter("ref_tree");
 
@@ -41,12 +42,22 @@ if (defined ('AJAX')) {
 		$sql = base64_decode($sql_search);
 	
 		$sql .= " AND tinventory.id_object_type = $id_item";
+		if ($last_update == 1) {
+			$sql .= " ORDER BY tinventory.last_update DESC";
+		} else {
+			$sql .= " ORDER BY tinventory.name ASC";
+		}
 
 		//If there is a father the just print the object (we only filter in first level)
 		if ($id_father) {
-			$sql = "SELECT * FROM tinventory WHERE id_parent = $id_father";			
+			$sql = "SELECT * FROM tinventory WHERE id_parent = $id_father";
+			if ($last_update == 1) {
+				$sql .= " ORDER BY last_update DESC";
+			} else {
+				$sql .= " ORDER BY name ASC";
+			}			
 		}
-		
+
 		$cont_aux = get_db_all_rows_sql($sql);
 
 		$count_blanks = strlen($ref_tree);		
@@ -399,7 +410,7 @@ if (!$clean_output) {
 $page = (int)get_parameter('page', 1);
 switch ($mode) {
 	case 'tree':
-		inventories_print_tree($sql_search, $sql_search_obj_type);
+		inventories_print_tree($sql_search, $sql_search_obj_type, $last_update);
 		break;
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);

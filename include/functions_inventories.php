@@ -855,7 +855,7 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 	return $all_fields_ext;
 }
 
-function inventories_print_tree ($sql_search, $sql_search_obj_type) {
+function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update = 0) {
 	global $config;
 	global $enteprise_load;
 	
@@ -958,9 +958,9 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type) {
 		}
 
 		if ($enteprise_load !== ENTERPRISE_NOT_HOOK) {
-			$inventories_stock = inventory_get_count_inventories($element['id'], base64_decode($sql_search), $config['id_user'], true); //all inventories to calculate stock
+			$inventories_stock = inventory_get_count_inventories($element['id'], base64_decode($sql_search), $config['id_user'], true, $last_update); //all inventories to calculate stock
 		} else {
-			$inventories_stock = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search), true); //all inventories to calculate stock
+			$inventories_stock = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search), true, $last_update); //all inventories to calculate stock
 		}				
 		
 		// STOCK
@@ -982,7 +982,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type) {
 
 		echo "<li style='margin: 0px 0px 0px 0px;'>
 
-			<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\")'>" .
+			<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\", \"" . $last_update . "\")'>" .
 			$img . "&nbsp;" . $element["img"] ."&nbsp;" . safe_output($element['name'])."</a>"."&nbsp;&nbsp;"."($total_stock:$new_stock:$unused_stock:$min_stock)".print_help_tip(__("Total").':'.__("New").':'.__("Unused").':'.__("Min. stock"), true);
 
 		if ($end) {
@@ -1147,12 +1147,18 @@ function inventories_link_get_name($id_inventory) {
 	return $name;
 }
 
-function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', $get_inventories = false) {
+function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', $get_inventories = false, $last_update = false) {
 
 	if ($id_item == 0) { //no type
 		$sql_search .= " AND tinventory.id_object_type IS NULL";
 	} else {
 		$sql_search .= " AND tinventory.id_object_type = $id_item";
+	}
+
+	if ($last_update) {
+		$sql_search .= " ORDER BY last_update DESC";
+	} else {
+		$sql_search .= " ORDER BY name ASC";
 	}
 
 	$cont = get_db_all_rows_sql($sql_search);
@@ -1186,6 +1192,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			
 	if ($last_update) {
 		$sql_search .= " ORDER BY last_update DESC";
+	} else {
+		$sql_search .= " ORDER BY name ASC";
 	}
 
 	$clean_output = get_parameter("clean_output");

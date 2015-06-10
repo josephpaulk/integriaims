@@ -593,7 +593,7 @@ function incident_show_inventory_search(search_free, id_object_type_search, owne
  * less_branchs int use in ajax php as binary structure 0b00, 0b01, 0b10 and 0b11
  * id_father int use in js and ajax php, its useful when you have a two subtrees with same agent for diferent each one
  */
-function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree, end) {
+function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree, end, last_update) {
 	
 	hiddenDiv = $('#tree_div'+ref_tree+'_'+type+'_'+div_id).attr('hiddenDiv');
 	loadDiv = $('#tree_div'+ref_tree+'_'+type+'_'+div_id).attr('loadDiv');
@@ -615,7 +615,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 			type: "POST",
 			url: "ajax.php",
 			data: "page=operation/inventories/inventory_search&print_subtree=1&type=" + 
-				type + "&id_item=" + div_id + "&less_branchs=" + less_branchs+ "&sql_search=" + sql_search + "&id_father=" + id_father + "&ref_tree=" + ref_tree + "&end=" + end,
+				type + "&id_item=" + div_id + "&less_branchs=" + less_branchs+ "&sql_search=" + sql_search + "&id_father=" + id_father + "&ref_tree=" + ref_tree + "&end=" + end + "&last_update=" + last_update,
 			success: function(msg){
 				if (msg.length != 0) {
 					
@@ -697,7 +697,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 	}
 }
 
-function loadTable(type, div_id, less_branchs, id_father, sql_search, ref_tree, end) {
+function loadTable(type, div_id, less_branchs, id_father, sql_search, ref_tree, end, last_update) {
 	id_item = div_id;
 
 	$.ajax({
@@ -709,7 +709,7 @@ function loadTable(type, div_id, less_branchs, id_father, sql_search, ref_tree, 
 		}
 	});
 
-	loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree, end);		
+	loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree, end, last_update);		
 }
 
 function show_issue_date() {
