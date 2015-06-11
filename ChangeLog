@@ -1,3 +1,8 @@
+2015-06-11  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* operation/inventory/inventory_search.php: Fixed
+	bug on inventory list.
+
 2015-06-10  Vanessa Gil <vanessa.gil@artica.es> 
 	
 	* include/functions_inventories.php

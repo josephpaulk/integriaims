@@ -50,7 +50,7 @@ if (defined ('AJAX')) {
 
 		//If there is a father the just print the object (we only filter in first level)
 		if ($id_father) {
-			$sql = "SELECT * FROM tinventory WHERE id_parent = $id_father";
+			$sql = "SELECT * FROM tinventory WHERE id_parent = $id_father AND id_object_type = $id_item";
 			if ($last_update == 1) {
 				$sql .= " ORDER BY last_update DESC";
 			} else {
@@ -190,6 +190,12 @@ if (defined ('AJAX')) {
 				WHERE tinventory.id_object_type = tobject_type.id".$clause;
 		
 		$cont = get_db_all_rows_sql($sql);
+
+		// Add no object type
+		$last_key = count($cont);
+		$cont[$last_key]['name'] = __('No object type');
+		$cont[$last_key]['icon'] ="box.png";
+		$cont[$last_key]['id'] = 0;
 
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
