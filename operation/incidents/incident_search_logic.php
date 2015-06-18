@@ -97,18 +97,7 @@ if (defined ('AJAX')) {
 echo "<div id='incident-search-content'>";
 echo "<h1>" .__('Ticket search');
 echo "<div id='button-bar-title'>";
-echo "<ul>";
-echo "<li>";
-echo "<a id='stats_form_submit' href='#'>" .
-	print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics"))) .
-	"</a>";
-echo "</li>";
-echo "<li>";
-echo "<a id='graph_incidents' href='#'>" .
-	print_image ("images/chart_pie.png", true, array("title" => __("Graph incidents"))) .
-	"</a>";
-echo "</li>";
-echo "</ul>";
+
 echo "</div>";
 echo "</h1>";
 
@@ -121,8 +110,8 @@ print_autorefresh_button();
 
 echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 6px;'>";
 echo "<ul>";	
-echo "<li style='padding: 3px;'>";
-echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
+echo "<li style='padding: 4px;'>";
+echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."&nbsp;".integria_help ("custom_search", true)."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";

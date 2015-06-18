@@ -18,6 +18,14 @@ require_once ('include/functions_incidents.php');
 $filter = array ();
 
 $custom_search = (int) get_parameter ('custom_search');
+$show_list = (bool) get_parameter('show_list', 0);
+$show_stats = (bool) get_parameter('show_stats', 0);
+
+$simple_mode = true;
+if ($show_stats) {
+	$simple_mode = false;
+}
+
 if ($custom_search) {
 
 	$search = get_custom_search ($custom_search, 'incidents');
@@ -32,25 +40,6 @@ if ($custom_search) {
 		$filter['first_date'] = $data_start;
 		$filter['last_date'] = $data_end;
 	}
-} else {
-	$filter['string'] = (string) get_parameter ('search_string');
-	$filter['status'] = (int) get_parameter ('status', -10 ); // By default, not closed
-	$filter['priority'] = (int) get_parameter ('search_priority', -1);
-	$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
-	$filter['status'] = (int) get_parameter ('search_status', -10); // by default not closed
-	$filter['id_product'] = (int) get_parameter ('search_id_product');
-	$filter['id_company'] = (int) get_parameter ('search_id_company');
-	$filter['id_inventory'] = (int) get_parameter ('search_id_inventory');
-	$filter['serial_number'] = (string) get_parameter ('search_serial_number');
-	$filter['id_building'] = (int) get_parameter ('search_id_building');
-	$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
-	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-	$filter['first_date'] = (string) get_parameter ('search_first_date');
-	$filter['last_date'] = (string) get_parameter ('search_last_date');
-}
 
 $statuses = get_indicent_status ();
 $resolutions = get_incident_resolutions ();
@@ -129,12 +118,13 @@ $table->style[0] = 'font-weight: bold';
 $table->head = array ();
 $table->head[0] = __('ID');
 $table->head[1] = __('SLA');
-$table->head[2] = __('Ticket');
-$table->head[3] = __('Group')."<br><em>".__("Company")."</em>";
-$table->head[4] = __('Status')."<br /><em>".__('Resolution')."</em>";
-$table->head[5] = __('Priority');
-$table->head[6] = __('Updated')."<br /><em>".__('Started')."</em>";
-$table->head[7] = __('Responsible');
+$table->head[2] = __('% SLA');
+$table->head[3] = __('Ticket');
+$table->head[4] = __('Group')."<br><em>".__("Company")."</em>";
+$table->head[5] = __('Status')."<br /><em>".__('Resolution')."</em>";
+$table->head[6] = __('Priority');
+$table->head[7] = __('Updated')."<br /><em>".__('Started')."</em>";
+$table->head[8] = __('Responsible');
 $table->data = array ();
 
 $filter['limit'] = 0;
@@ -142,51 +132,58 @@ $incidents = filter_incidents ($filter);
 unset($filter['limit']);
 
 if ($incidents) {
-	print_incidents_stats ($incidents);
+	print_incidents_stats_simply ($incidents, false, $simple_mode);
 	echo '<div style="clear: both"></div>';
 }
+if ($show_list) {
 
-if ($incidents === false) {
-	$table->colspan[0][0] = 9;
-	$table->data[0][0] = __('Nothing was found');
-	$incidents = array ();
-}
-
-foreach ($incidents as $incident) {
-	$data = array ();
-	
-	$data[0] = '#'.$incident['id_incidencia'];
-	$data[1] = '';
-	if ($incident["affected_sla_id"] != 0)
-		$data[1] = '<img src="images/exclamation.png" />';
-	$data[2] = '<a href="'.$config["base_url"].'/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
-		$incident['titulo'].'</a>';
-	$data[3] = get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
-		
-	if ($config["show_creator_incident"] == 1){	
-		$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
-		if($id_creator_company != 0) {
-			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
-			$data[3].= "<br><span style='font-style:italic'>$company_name</span>";
-		}
+	if ($incidents === false) {
+		$table->colspan[0][0] = 9;
+		$table->data[0][0] = __('Nothing was found');
+		$incidents = array ();
 	}
+
+	foreach ($incidents as $incident) {
+		$data = array ();
+		
+		$data[0] = '#'.$incident['id_incidencia'];
+		$data[1] = '';
+		if ($incident["affected_sla_id"] != 0)
+			$data[1] = '<img src="images/exclamation.png" />';
+		if ($incident["affected_sla_id"] != 0)
+		$data[2] = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+		else
+		$data[2] = "";
+		$data[3] = '<a href="'.$config["base_url"].'/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
+			$incident['titulo'].'</a>';
+		$data[4] = get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
+			
+		if ($config["show_creator_incident"] == 1){	
+			$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
+			if($id_creator_company != 0) {
+				$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
+				$data[4].= "<br><span style='font-style:italic'>$company_name</span>";
+			}
+		}
+		
+		$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
+		
+		$data[5] = '<strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>';
+		$data[6] = print_priority_flag_image ($incident['prioridad'], true);
+		$data[7] = human_time_comparation ($incident["actualizacion"]);
+		$data[7] .= '<br /><em>';
+		$data[7] .=  human_time_comparation ($incident["inicio"]);
+		$data[7] .= '</em>';
+		
+		$data[8] = $incident['id_usuario'];
+		
+		array_push ($table->data, $data);
+	}
+
+	echo '<h2>'.__('Ticket list').'</h2>';
+
+	print_table ($table);
 	
-	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
-	
-	$data[4] = '<strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>';
-	$data[5] = print_priority_flag_image ($incident['prioridad'], true);
-	$data[6] = human_time_comparation ($incident["actualizacion"]);
-	$data[6] .= '<br /><em>';
-	$data[6] .=  human_time_comparation ($incident["inicio"]);
-	$data[6] .= '</em>';
-	
-	$data[7] = $incident['id_usuario'];
-	
-	array_push ($table->data, $data);
 }
-
-echo '<h2>'.__('Ticket list').'</h2>';
-
-print_table ($table);
 
 ?>

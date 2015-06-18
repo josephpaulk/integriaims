@@ -433,6 +433,15 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li>";
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create ticket')."</a></li>";
 		}
+		
+		if (give_acl ($config['id_user'], 0, "IR")) {
+			// Incident reports
+			if ($sec2 == 'operation/incidents/incident_reports')
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports' id='link_incident_report'>".__('Reports')."</a></li>";
+		}
 
 		if ($sec2 == 'operation/incidents/incident' || $sec2 == 'operation/incidents/incident_dashboard'
 			|| $sec2 == 'operation/incidents/incident_search' || $sec2 == 'operation/incidents/incident_dashboard_detail') {

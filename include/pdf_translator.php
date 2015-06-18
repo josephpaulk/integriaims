@@ -56,7 +56,7 @@ class PDFTranslator {
 							$this->margin_footer);
 		
 		// FOR DEBUG
-		// $this->mpdf->showImageErrors = true; 
+		//~ $this->mpdf->showImageErrors = true; 
 	}
 	
 	public function showPDF() {

@@ -2756,6 +2756,7 @@ h3.update_online {
 }
 
 /* REPORTING CSS */
+div.container_top5_group_time_container,
 div.incident_report_parameters_container,
 div.container_incident_statistics_container,
 div.container_top5_incidents_container,
@@ -2793,6 +2794,20 @@ div.history_invoiced_container {
 	margin: 5px;
 }
 
+div.container_ticket_oc_container,
+div.container_ticket_activity_container {
+	float:right !important;
+	width: 96% !important;
+}
+
+#container_top5_group_time {
+	font-size: 11px; !important;
+}
+
+.container_top5_group_time_container {
+	min-height: 55px !important;
+}
+
 div.funnel_container {
 	clear: left;
 }
@@ -2810,6 +2825,9 @@ div.history_invoiced_container {
 	width: 96%;
 }
 
+
+div.container_top5_group_time_container,
+div.container_openclose_incidents_container,
 div.container_incident_statistics_container,
 div.container_top5_incidents_container,
 div.container_sla_compliance_container,
@@ -2829,8 +2847,6 @@ div.container_sla_compliance_container {
 div.container_status_incidents_container,
 div.container_priority_incidents_container,
 div.container_longest_closed_container,
-div.container_openclose_incidents_container,
-div.container_top5_group_time_container,
 div.container_top5_user_time_container,
 div.funnel_container,
 div.conversion_rate_container,

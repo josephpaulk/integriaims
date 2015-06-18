@@ -1100,7 +1100,7 @@ function print_autorefresh_button ($name = "autorefresh", $text = "", $return = 
 	$html .= "<div style='float: right;'>";
 	$html .= "<div id='button-bar-title' style='float: left; margin-right: 5px; padding-bottom: 3px; margin-top: 6px;'>";
 	$html .= "<ul>";	
-	$html .= "<li style='padding: 3px;'>";
+	$html .= "<li style='padding: 4px;'>";
 	$html .= "<a reload_enabled='0' name='$name' id='button-$name' href='javascript:' onclick='toggleAutorefresh (\"button-$name\", \"$token\", \"$form_id\")'>$text</a>";
 	$html .= "</li>";
 	$html .= "</ul>";

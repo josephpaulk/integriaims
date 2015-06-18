@@ -29,6 +29,7 @@ $set_ticket_score = get_parameter('set_ticket_score', 0);
 $get_user_info = get_parameter('get_user_info', 0);
 $hours_to_dms = get_parameter('hours_to_dms', 0);
 $check_incident_childs = get_parameter('check_incident_childs', 0);
+$check_custom_search = get_parameter('check_custom_search', 0);
 
 if ($get_incidents_search) {
 	
@@ -405,4 +406,22 @@ if ($check_incident_childs) {
 	return;
 }
 
+if ($check_custom_search) {
+	$sql = sprintf ('SELECT COUNT(id) FROM tcustom_search
+		WHERE id_user = "%s" AND section = "incidents"
+		ORDER BY name', $config['id_user']);
+	$count_search = get_db_value_sql($sql);
+	
+	if (!$count_search) {
+		$result = __("Ticket reports are based on custom searches. In order to elaborate a report, first it is required to define a customized search that will be used as a base for the report.");
+		$result .= integria_help ("custom_search", true);
+		$result .= '<br><br><a href="index.php?sec=incidents&sec2=operation/incidents/incident_search">'.__('Go to Custom search').'</a>';
+
+	} else {
+		$result = false;
+	}
+	
+	echo json_encode($result);
+	return;
+}
 ?>

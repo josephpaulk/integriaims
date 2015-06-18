@@ -1,3 +1,23 @@
+2015-06-17  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* godmode/grupos/lista_grupos.php
+	  include/config_process.php
+	  include/functions_html.php
+	  include/functions_incidents.php
+	  include/pdf_translator.php
+	  include/ajax/incidents.php
+	  include/styles/integria.css
+	  operation/side_menu.php
+	  operation/incidents/incidents_statistics.php
+	  operation/reporting/incidents_html.php: Added
+	ticket reports section.
+
+	* images/help/custom_type_search.png
+	  images/help/example_custom_search.png
+	  include/help/en/help_custom_search.php
+	  include/help/es/help_custom_search.php
+	  operation/incidents/incidents_html.php: Added files.
+
 2015-06-11  Vanessa Gil <vanessa.gil@artica.es> 
 	
 	* operation/inventory/inventory_search.php: Fixed
