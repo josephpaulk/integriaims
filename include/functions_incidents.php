@@ -3894,7 +3894,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$output ="<table class='listing' style='width: 420px; margin: 10px'>";
 	
 	$output .= "<tr>";
-	$output .= "<th style='text-align:center;'><strong>".__("Userr")."</strong></th>";
+	$output .= "<th style='text-align:center;'><strong>".__("User")."</strong></th>";
 	$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
 	$output .= "</tr>";
 	
@@ -3942,7 +3942,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 		echo $container_incident_statistics;
 		echo $container_top5_group_time;
 		echo $container_sla_compliance;
-		echo '<br>';
+		echo '<br><br>';
 	
 		// Third row
 		echo $container_status_incidents;
@@ -3952,11 +3952,11 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 		echo $container_topactive_users;
 		echo $container_top5_incidents;
 		echo $container_openclose_incidents;
+		echo '<br><br><br>';
 		
 		//~ // Fifth row
 		echo $container_ticket_oc;
-		echo '<br>';
-		echo '<br>';
+		echo '<br><br><br><br><br><br><br><br><br><br><br><br>';
 
 		//~ // Sixth row
 		echo $container_ticket_activity;

@@ -183,7 +183,6 @@ if ($show_list) {
 	echo '<h2>'.__('Ticket list').'</h2>';
 
 	print_table ($table);
-	
+	}
 }
-
 ?>

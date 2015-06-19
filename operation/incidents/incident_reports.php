@@ -18,9 +18,6 @@ check_login ();
 
 require_once ('include/functions_incidents.php');
 
-//~ $date_from = (int) get_parameter("date_from");
-//~ $date_start = (string) get_parameter("date_start");
-//~ debugPrint($_POST);
 $date_from = (int) get_parameter("search_from_date");
 $date_start = (string) get_parameter("search_first_date");
 $date_end = (string) get_parameter("search_last_date");
@@ -42,7 +39,6 @@ $table_search->style = array ();
 $table_search->colspan = array ();
 $table_search->rowspan = array ();
 $table_search->colspan[4][0] = 4;
-//~ $table->rowspan[0][1] = 2;
 $table_search->data = array ();
 
 $sql = sprintf ('SELECT id, name FROM tcustom_search
@@ -52,14 +48,8 @@ $sql = sprintf ('SELECT id, name FROM tcustom_search
 	$config['id_user']);
 $table_search->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('Select'), 0, true, false, true, __('Custom searches'));
 
-//~ $table->data[0][1] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
-
 $table_search->data[1][0] = print_checkbox_extended ('show_list', 1, $show_list, false, '', '', true, __('Show list'));
 $table_search->data[2][0] = print_checkbox_extended ('show_stats', 1, $show_stats, false, '', '', true, __('Show stats'));
-	
-//~ $table->data[0][1] = print_checkbox_extended ('show_list', 1, $show_list, false, '', '', true, __('Show list'));
-//~ $table->data[0][2] = print_checkbox_extended ('show_stats', 1, $show_stats, false, '', '', true, __('Show stats'));
-
 
 $table_search->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 $table_search->colspan[4][0] = 4;
@@ -85,33 +75,6 @@ if (isset($search)) {
 	echo "</h1>";
 	echo "<br>";
 	
-
-	
-	//~ if (($show_stats)) {
-		//~ $custom_search = get_custom_search ($id_search, 'incidents');
-//~ 
-		//~ if ($custom_search) {		
-			//~ if ($custom_search["form_values"]) {
-				//~ 
-				//~ $filter = unserialize($custom_search["form_values"]);
-				//~ $filter_form = $filter;
-				//~ 
-				//~ echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $custom_search["name"]).'</h3>';
-			//~ }
-			//~ else {
-				//~ echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $custom_search["name"]).'</h3>';	
-			//~ }
-		//~ }
-		//~ else {
-			//~ echo '<h3 class="error">'.__('Could not load custom search').'</h3>';
-		//~ }
-	//~ 
-		//~ include("incident_statistics.php");
-	//~ } else {
-		//~ include("incident_statistics.php");
-	//~ }
-	
-	
 	$custom_search = get_custom_search ($id_search, 'incidents');
 
 	if ($custom_search) {		
@@ -134,7 +97,6 @@ if (isset($search)) {
 	 
 	
 	if (($show_list)) {
-		//~ incidents_search_result($filter, false, false, true, false, $resolve_names = true, $report_mode = true);
 		
 		$statuses = get_indicent_status ();
 		$resolutions = get_incident_resolutions ();
@@ -170,7 +132,6 @@ if (isset($search)) {
 			
 			$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
 			
-			//~ $data[0] = '#'.$incident['id_incidencia'];
 			$data[0] = '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
 			$data[1] = '';
 			if ($incident["affected_sla_id"] != 0)
@@ -206,8 +167,6 @@ if (isset($search)) {
 			array_push ($table->data, $data);
 		}
 
-		//~ echo '<h2>'.__('Ticket list').'</h2>';
-
 		print_table ($table);
 	}
 }
@@ -234,9 +193,7 @@ function check_custom_search() {
 		dataType: "json",
 		success: function (data) {
 			
-//~ alert(data);
 			if (data != false) {
-				//~ alert("ña");
 				$("#custom_search").html (data);
 				$("#custom_search").show ();
 
