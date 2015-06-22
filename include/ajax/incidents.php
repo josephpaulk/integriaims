@@ -400,7 +400,7 @@ if ($check_incident_childs) {
 		}
 		echo "</table>";
 	} else {
-		echo __("If this ticket has other nested, will be deleted");
+		return false;
 	}
 	
 	return;

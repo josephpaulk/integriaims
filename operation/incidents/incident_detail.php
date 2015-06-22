@@ -1318,23 +1318,25 @@ $(document).ready (function () {
 					type: "POST",
 					url: "ajax.php",
 					data: "page=include/ajax/incidents&check_incident_childs=1&id_incident="+id_incident,
-					dataType: "html",
+					dataType: "text",
 					success: function (data) {
-						$("#ticket_childs").html (data);
-						$("#ticket_childs").show ();
+						if (data != false) {
+							$("#ticket_childs").html (data);
+							$("#ticket_childs").show ();
 
-						$("#ticket_childs").dialog ({
-								resizable: true,
-								draggable: true,
-								modal: true,
-								overlay: {
-									opacity: 0.5,
-									background: "black"
-								},
-								width: 420,
-								height: 350
-							});
-						$("#ticket_childs").dialog('open');
+							$("#ticket_childs").dialog ({
+									resizable: true,
+									draggable: true,
+									modal: true,
+									overlay: {
+										opacity: 0.5,
+										background: "black"
+									},
+									width: 420,
+									height: 350
+								});
+							$("#ticket_childs").dialog('open');
+						}
 					}
 				});
 			}
