@@ -133,9 +133,13 @@ function api_create_incident ($return_type, $user, $params){
 	$id_inventory = $params[4];
 	$id_incident_type = (int) $params[5];
 	$email_copy = $params[6];
+	$owner = $params[7];
+	$id_parent = $params[8];
 
 	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $group");
-	$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $group");
+	if ($owner == '') {
+		$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $group");
+	}
 	if($id_inventory == 0) {
 		$id_inventory = get_db_sql ("select id_inventory_default from tgrupo WHERE id_grupo = $group");
 	}
@@ -145,11 +149,11 @@ function api_create_incident ($return_type, $user, $params){
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
-			resolution, email_copy, id_incident_type)
+			resolution, email_copy, id_incident_type, id_parent)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d, "%s", %d)', $timestamp, $timestamp, $title, $description, $owner,
+			"%s", %d, "%s", %d, %d)', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution, $email_copy, $id_incident_type);
+			$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent);
 	
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
@@ -171,6 +175,29 @@ function api_create_incident ($return_type, $user, $params){
 		// Email notify to all people involved in this incident
 		if ($email_notify) {
 			mail_incident ($id, $user, "", 0, 1);
+		}
+		
+		//insert data to incident type fields
+		if ($id_incident_type != 0) {
+			$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+			$labels = get_db_all_rows_sql($sql_label);
+		
+			if ($labels === false) {
+				$labels = array();
+			}
+			
+			$num_params = 9;
+			foreach ($labels as $label) {
+				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+				
+				$values_insert['id_incident'] = $id;
+				$values_insert['data'] = $params[$num_params];
+				$values_insert['id_incident_field'] = $id_incident_field;
+				$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
+
+				process_sql_insert('tincident_field_data', $values_insert);
+				$num_params++;
+			}
 		}
 
 	} else {
@@ -339,8 +366,37 @@ function api_update_incident ($return_type, $user, $params){
 	$values['resolution'] = $params[6];
 	$values['estado'] = $params[7];
 	$values['id_usuario'] = $params[8];
+	$values['id_parent'] = $params[9];
+	$values['id_incident_type'] = $params[10];
+	$id_incident_type = $values['id_incident_type'];
 		
 	$result = process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
+	
+	if (($id_incident_type != 0)) {	//in the massive operations no change id_incident_type
+
+		$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+		$labels = get_db_all_rows_sql($sql_label);
+		
+		if ($labels === false) {
+			$labels = array();
+		}
+	
+		$num_params = 11;
+		foreach ($labels as $label) {
+			$values_type_field['data'] = $params[$num_params];
+			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+			$values_type_field['id_incident_field'] = $id_incident_field;
+			$values_type_field['id_incident'] = $id_incident;
+			
+			$exists_id = get_db_value_filter('id', 'tincident_field_data', array('id_incident' => $id_incident, 'id_incident_field'=> $id_incident_field), 'AND');
+			if ($exists_id) 
+				process_sql_update('tincident_field_data', $values_type_field, array('id_incident_field' => $id_incident_field, 'id_incident' => $id_incident), 'AND');
+			else
+				process_sql_insert('tincident_field_data', $values_type_field);
+				
+			$num_params++;
+		}
+	}
 		
 	switch($return_type) {
 		case "xml": 
