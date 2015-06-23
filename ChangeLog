@@ -1,3 +1,12 @@
+2015-06-23  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* include/functions_api.php: Improved
+	'api_create_incident' and 'api_update_incident'
+	functions.
+
+	* operation/incidents/type_detail.php: Fixed
+	bug.
+
 2015-06-22  Vanessa Gil <vanessa.gil@artica.es> 
 	
 	* include/functions_api.php: Improved

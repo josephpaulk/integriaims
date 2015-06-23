@@ -122,6 +122,8 @@ function api_create_incident ($return_type, $user, $params){
 		exit;
 	}
 
+	$timestamp = print_mysql_timestamp();
+	
 	// Read input variables
 	$title = $params[0];
 	$description = $params[3];
@@ -135,6 +137,8 @@ function api_create_incident ($return_type, $user, $params){
 	$email_copy = $params[6];
 	$owner = $params[7];
 	$id_parent = $params[8];
+	$inicio = $timestamp;
+	$actualizacion = $timestamp;
 
 	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $group");
 	if ($owner == '') {
@@ -358,6 +362,8 @@ function api_update_incident ($return_type, $user, $params){
 		return;
 	}
 	
+	$timestamp = print_mysql_timestamp();
+	
 	$values['titulo'] = $params[1];
 	$values['descripcion'] = $params[2];
 	$values['epilog'] = $params[3];
@@ -366,11 +372,23 @@ function api_update_incident ($return_type, $user, $params){
 	$values['resolution'] = $params[6];
 	$values['estado'] = $params[7];
 	$values['id_usuario'] = $params[8];
-	$values['id_parent'] = $params[9];
+	
+	$id_parent = $params[9];
+	if (($id_parent != 0) && ($id_parent != '')) {
+		$values['id_parent'] = $params[9];
+	}
+
 	$values['id_incident_type'] = $params[10];
+	$values['actualizacion'] = $timestamp;
+	if ($values['estado'] == 7) {
+		$values['cierre'] = $timestamp;
+	}
 	$id_incident_type = $values['id_incident_type'];
 		
 	$result = process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
+	
+	//Add traces and statistic information
+	incidents_set_tracking ($id_incident, 'update', $values['prioridad'], $values['estado'], $values['resolution'], $user, $values['id_grupo']);
 	
 	if (($id_incident_type != 0)) {	//in the massive operations no change id_incident_type
 

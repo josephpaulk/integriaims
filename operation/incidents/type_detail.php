@@ -155,6 +155,7 @@ if ($update_field) { //update field to incident type
 	$value_update['show_in_list'] = (int) get_parameter ('show_in_list');
 	$value_update['linked_value'] = get_parameter ('linked_value', '');
 	$value_update['parent'] = get_parameter ('parent', '');
+	$value_update['global_id'] = get_parameter("global");
 	$error_combo_update = false;
 	$error_linked_update = false;
 
