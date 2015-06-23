@@ -208,12 +208,13 @@ if (! $id && ! $create) {
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array ();
-		$table->head[0] = __('Name');
-		$table->head[1] = __('Description');
-		$table->head[2] = __('Items');
-		$table->head[3] = __('Actions');
+		$table->head[0] = __('ID');
+		$table->head[1] = __('Name');
+		$table->head[2] = __('Description');
+		$table->head[3] = __('Items');
+		$table->head[4] = __('Actions');
 		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
+		$table->style[1] = 'font-weight: bold';
 		$table->align = array ();
 		
 		echo '<table width="90%" class="listing">';
@@ -222,26 +223,27 @@ if (! $id && ! $create) {
 			$has_external_fields = get_db_value_sql("SELECT COUNT(id) FROM tobject_type_field WHERE type='external' AND id_object_type=".$object['id']);
 			
 			$data = array ();
-			
-			$data[0] = objects_get_icon ($object['id'], true);
-			$data[0] .= ' <a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id='.
+			$data[0] = ' <a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id='.
+				$object['id'].'">'.$object['id'].'</a>';
+			$data[1] = objects_get_icon ($object['id'], true);
+			$data[1] .= ' <a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id='.
 				$object['id'].'">'.$object['name'].'</a>';
-			$data[1] = substr ($object["description"], 0, 200);
-			$data[2] = objects_count_fields($object['id']);
+			$data[2] = substr ($object["description"], 0, 200);
+			$data[3] = objects_count_fields($object['id']);
 			if ($has_external_fields) {
-				$data[3] = '<a title=' . __("Edit external tables") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_external_tables&id='.
+				$data[4] = '<a title=' . __("Edit external tables") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_external_tables&id='.
 					$object["id"].'><img src="images/resolution.png"></a>';
 			} else {
-				$data[3] = '<img src="images/resolution_disabled.png">';
+				$data[4] = '<img src="images/resolution_disabled.png">';
 			}
-			$data[3] .= '<a title=' . __("Fields") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id='.
+			$data[4] .= '<a title=' . __("Fields") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id='.
 				$object["id"].'><img src="images/page_white_text.png"></a>';
-			$data[3] .= '<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
+			$data[4] .= '<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;">';
-			$data[3] .= print_input_hidden ('delete_object', 1, true);
-			$data[3] .= print_input_hidden ('id', $object["id"], true);
-			$data[3] .= print_input_image ('delete', 'images/cross.png', 1, '', true, '',array('title' => __('Delete')));
-			$data[3] .= '</form>';
+			$data[4] .= print_input_hidden ('delete_object', 1, true);
+			$data[4] .= print_input_hidden ('id', $object["id"], true);
+			$data[4] .= print_input_image ('delete', 'images/cross.png', 1, '', true, '',array('title' => __('Delete')));
+			$data[4] .= '</form>';
 			
 			array_push ($table->data, $data);
 		}

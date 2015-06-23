@@ -1123,6 +1123,11 @@ echo '<div id="id_incident_hidden" style="display:none;">';
 	print_input_text('id_incident_hidden', $id);
 echo '</div>';
 
+//id_user hidden
+echo '<div id="id_user_hidden" style="display:none;">';
+	print_input_text('id_user_hidden', $config['id_user']);
+echo '</div>';
+
 echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."' id='inventory_search_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
@@ -1199,14 +1204,16 @@ $(document).ready (function () {
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
 		
-		incident_limit("#submit-accion", id_user, id_group);
+		id_user_ticket = $('#text-id_user_hidden').val();
+		incident_limit("#submit-accion", id_user_ticket, id_group);
 	}
 	
 	$("#grupo_form").change (function () {
 		id_user = $("#text-id_user").val();
+		id_user_ticket = $('#text-id_user_hidden').val();
 		id_group = $("#grupo_form").val();
 
-		incident_limit("#submit-accion", id_user, id_group);
+		incident_limit("#submit-accion", id_user_ticket, id_group);
 		
 		var group = $("#grupo_form").val();
 		

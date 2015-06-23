@@ -1,5 +1,13 @@
 2015-06-23  Vanessa Gil <vanessa.gil@artica.es> 
 	
+	* operation/incidents/incident_detail.php: Fixed
+	bug calculating limit of tickets.
+
+	* operation/inventories/manage_objects.php: Add
+	ID column.
+
+2015-06-23  Vanessa Gil <vanessa.gil@artica.es> 
+	
 	* include/functions_api.php: Improved
 	'api_create_incident' and 'api_update_incident'
 	functions.
