@@ -2353,9 +2353,11 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	echo "<th>";
 	echo __('SLA');
 	echo "</th>";
-	echo "<th>";
-	echo __(' % SLA');
-	echo "</th>";
+	if ($report_mode) {
+		echo "<th>";
+		echo __(' % SLA');
+		echo "</th>";
+	}
 	echo "<th>";
 	echo __('Ticket');
 	echo "</th>";
@@ -2430,13 +2432,17 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '<td width="25"><img src="images/exclamation.png" /></td>';
 			else
 				echo '<td></td>';
-
-			echo "<td>";
-			 if ($incident["affected_sla_id"] != 0)
-				echo format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
-			 else 
-				echo "";
-			echo "</td>";
+			
+			// % SLA	
+			if ($report_mode) {
+				echo "<td>";
+				 if ($incident["affected_sla_id"] != 0)
+					echo format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+				 else 
+					echo "";
+				echo "</td>";
+			}
+			
 			echo '<td>';
 
 			if (!$report_mode) {							
