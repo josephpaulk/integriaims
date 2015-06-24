@@ -160,13 +160,17 @@ if ($quick_delete) {
 	}
 	$sql = "DELETE FROM tinventory WHERE id=$id_inv";
 	
-	$result = process_sql ($sql);	
+	$result = process_sql ($sql);
+	
+	if ($result) {
+		$delete_data = process_sql_delete ('tobject_field_data', array('id_inventory' => $id_inv));
+	}	
 
-        if ($result !== false) {
-                $result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-        } else {
-                $result_msg = '<h3 class="error">'.__('There was an error deleting inventory object').'</h3>';
-        }
+	if ($result !== false) {
+			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	} else {
+			$result_msg = '<h3 class="error">'.__('There was an error deleting inventory object').'</h3>';
+	}
 	
 	$id = 0;
 }

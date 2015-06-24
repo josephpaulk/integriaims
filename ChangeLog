@@ -1,5 +1,10 @@
 2015-06-24  Vanessa Gil <vanessa.gil@artica.es> 
 	
+	* operation/inventories/inventory_detail.php: Delete
+	on cascade inventory data.
+
+2015-06-24  Vanessa Gil <vanessa.gil@artica.es> 
+	
 	* include/functions_incidents.php: Improve
 	perfomance.
 
