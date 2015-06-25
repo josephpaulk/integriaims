@@ -187,7 +187,7 @@ if (defined ('AJAX')) {
 		}
 
 		$sql = "SELECT DISTINCT(tinventory.id_object_type), tobject_type.* FROM tinventory, tobject_type 
-				WHERE tinventory.id_object_type = tobject_type.id".$clause;
+				WHERE tinventory.id_object_type = tobject_type.id".$clause. " ORDER BY tobject_type.name ASC";
 		
 		$cont = get_db_all_rows_sql($sql);
 
