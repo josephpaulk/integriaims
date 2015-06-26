@@ -247,8 +247,7 @@ if ($export_csv_audit) {
 
 if ($export_csv_tickets) {
 	$filter = unserialize_in_temp($config["id_user"]);
-	//~ $rows = incidents_search_result($filter, false, true, false);
-	$rows = incidents_search_result($filter, false, true, false, false, true);
+	$rows = incidents_search_result ($filter, false, true, false, false, true, false, true);
 
 	if ($rows === false)
 		return;	

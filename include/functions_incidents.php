@@ -50,7 +50,7 @@ include_once ($config["homedir"]."/include/graphs/fgraph.php");
 enterprise_include("include/functions_users.php");
 enterprise_include("include/functions_incidents.php");
 
-function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false) {
+function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false, $csv_mode = false) {
 	global $config;
 	
 	/* Set default values if none is set */
@@ -295,16 +295,18 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			}
 		}
 		
-		if ($incident['id_incident_type']) {
-			$incident['id_incident_type_name'] = incidents_get_incident_type_text ($incident['id_incidencia']);
-			$fields = get_db_all_rows_sql("SELECT id, label FROM tincident_type_field WHERE id_incident_type=".$incident['id_incident_type']);
-			if ($fields !== false) {
-				foreach ($fields as $field) {
-					$data = get_db_value_sql("SELECT data FROM tincident_field_data WHERE id_incident_field=".$field['id']." AND id_incident=".$incident['id_incidencia']);
-					$incident[safe_output($field['label'])] = $data; 
+		if ($csv_mode) {
+			if ($incident['id_incident_type']) {
+				$incident['id_incident_type_name'] = incidents_get_incident_type_text ($incident['id_incidencia']);
+				$fields = get_db_all_rows_sql("SELECT id, label FROM tincident_type_field WHERE id_incident_type=".$incident['id_incident_type']);
+				if ($fields !== false) {
+					foreach ($fields as $field) {
+						$data = get_db_value_sql("SELECT data FROM tincident_field_data WHERE id_incident_field=".$field['id']." AND id_incident=".$incident['id_incidencia']);
+						$incident[safe_output($field['label'])] = $data; 
+					}
 				}
 			}
-		}
+	}
 
 		array_push ($result, $incident);
 	}
@@ -2235,7 +2237,7 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 }
 
 /*Filters or display result for incident search*/
-function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false, $report_mode = false) {
+function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false, $report_mode = false, $csv_mode = false) {
 	global $config;
 	
 	$params = "";
@@ -2258,7 +2260,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$filter_year['first_date'] = $year_ago;
 		$filter_year['last_date'] = $now;
 
-		$count_this_year = filter_incidents($filter_year, true, false, $no_parents);
+		$count_this_year = filter_incidents($filter_year, true, false, $no_parents, $csv_mode);
 
 		$aux_text = "(".$count_this_year.")".print_help_tip(__("Tickets created last year"),true);
 	}
@@ -2275,7 +2277,8 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	$filter["limit"] = 0;
 
 	// All the tickets the user sees are retrieved
-	$incidents = filter_incidents($filter, false, true, $no_parents);
+	$incidents = filter_incidents($filter, false, true, $no_parents, $csv_mode);
+
 	$count = empty($incidents) ? 0 : count($incidents);
 
 	if ($resolve_names) {

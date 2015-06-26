@@ -1,3 +1,9 @@
+2015-06-26  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* include/export_csv.php
+	  include/functions_incidents.php: Improve
+	performance.
+
 2015-06-25  Vanessa Gil <vanessa.gil@artica.es> 
 	
 	* operation/inventories/inventory_search.php: Added
