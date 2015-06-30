@@ -148,16 +148,27 @@ function api_create_incident ($return_type, $user, $params){
 		$id_inventory = get_db_sql ("select id_inventory_default from tgrupo WHERE id_grupo = $group");
 	}
 	$timestamp = print_mysql_timestamp();
-
-	$sql = sprintf ('INSERT INTO tincidencia
+	if($id_parent == 0) {
+		$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
-			resolution, email_copy, id_incident_type, id_parent)
+			resolution, email_copy, id_incident_type)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d, "%s", %d, %d)', $timestamp, $timestamp, $title, $description, $owner,
+			"%s", %d, "%s", %d)', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent);
+			$email_notify, $resolution, $email_copy, $id_incident_type);
+	} else {
+		$sql = sprintf ('INSERT INTO tincidencia
+				(inicio, actualizacion, titulo, descripcion,
+				id_usuario, estado, prioridad,
+				id_grupo, id_creator, notify_email, 
+				resolution, email_copy, id_incident_type, id_parent)
+				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
+				"%s", %d, "%s", %d, %d)', $timestamp, $timestamp, $title, $description, $owner,
+				$status, $priority, $group, $id_creator,
+				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent);
+	}
 	
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {

@@ -3301,7 +3301,7 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 
 function incidents_get_incident_childs ($id_incident, $only_name = true) {
 	
-	$sql = "SELECT * FROM tincidencia WHERE id_parent=".$id_incident. " AND estado<>7";
+	$sql = "SELECT * FROM tincidencia WHERE id_parent=".$id_incident;
 	$incident_childs = get_db_all_rows_sql($sql);
 	
 	if ($incident_childs == false) {

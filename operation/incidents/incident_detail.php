@@ -29,6 +29,7 @@ if (defined ('AJAX')) {
 	$get_data_child = (bool) get_parameter('get_data_child', 0);
 	$upload_file = (bool) get_parameter('upload_file');
 	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
+	$get_owner = (bool) get_parameter('get_owner', 0);
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -196,6 +197,20 @@ if (defined ('AJAX')) {
 		echo json_encode($result);
 		return;
 		
+	}
+	
+	if ($get_owner) {
+		$id_group = get_parameter('id_group');
+		
+		if ($config['ticket_owner_is_creator']) {
+			$assigned_user_for_this_incident = $config['id_user'];
+		} else {
+			$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_group);
+		}
+		
+		echo json_encode($assigned_user_for_this_incident);
+		return;
+
 	}
 }
 
@@ -1154,7 +1169,10 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='ticke
 add_datepicker("#text-creation_date");
 
 $(document).ready (function () {
-	
+
+	id_group = $("#grupo_form").val();
+	set_ticket_owner(id_group);
+
 	// Incident type combo change event
 	$("#id_incident_type").change( function() {
 		var selected = $(this).val();
@@ -1203,7 +1221,6 @@ $(document).ready (function () {
 	
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
-		
 		id_user_ticket = $('#text-id_user_hidden').val();
 		incident_limit("#submit-accion", id_user_ticket, id_group);
 	}
@@ -1212,8 +1229,11 @@ $(document).ready (function () {
 		id_user = $("#text-id_user").val();
 		id_user_ticket = $('#text-id_user_hidden').val();
 		id_group = $("#grupo_form").val();
+		id_incident = <?php echo $id?>;
 
-		incident_limit("#submit-accion", id_user_ticket, id_group);
+		if (id_incident == 0) {
+			incident_limit("#submit-accion", id_user_ticket, id_group);
+		}
 		
 		var group = $("#grupo_form").val();
 		
@@ -1653,6 +1673,19 @@ function form_upload () {
 
 }
 
+function set_ticket_owner(id_group) {
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&get_owner=1&id_group="+ id_group,
+		dataType: "json",
+		success: function (data) {
+			$("#text-id_user").val(data);
+		}
+	});
+}
+
 // Form validation
 trim_element_on_submit('#text-titulo');
 trim_element_on_submit('#text-email_copy');
@@ -1660,24 +1693,24 @@ trim_element_on_submit('#text-email_copy');
 validate_form("#incident_status_form");
 var rules, messages;
 // Rules: #text-titulo
-rules = {
-	required: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-			page: "include/ajax/remote_validations",
-			search_existing_incident: 1,
-			incident_name: function() { return $('#text-titulo').val() },
-			incident_id: "<?php echo $id_incident?>"
-        }
-	}
-};
-messages = {
-	required: "<?php echo __('Title required')?>",
-	remote: "<?php echo __('This ticket already exists')?>"
-};
-add_validate_form_element_rules('#text-titulo', rules, messages);
+//~ rules = {
+	//~ required: true,
+	//~ remote: {
+		//~ url: "ajax.php",
+        //~ type: "POST",
+        //~ data: {
+			//~ page: "include/ajax/remote_validations",
+			//~ search_existing_incident: 1,
+			//~ incident_name: function() { return $('#text-titulo').val() },
+			//~ incident_id: "<?php echo $id_incident?>"
+        //~ }
+	//~ }
+//~ };
+//~ messages = {
+	//~ required: "<?php echo __('Title required')?>",
+	//~ remote: "<?php echo __('This ticket already exists')?>"
+//~ };
+//~ add_validate_form_element_rules('#text-titulo', rules, messages);
 
 </script>
 

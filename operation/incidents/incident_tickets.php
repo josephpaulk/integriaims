@@ -19,20 +19,13 @@ if (check_login () != 0) {
 }
 
 $id_incident = (int) get_parameter ('id');
-//~ echo "aqui";
 $incidents = incidents_get_incident_childs ($id_incident, false);
-//~ $incidents = get_incidents ($filter);
-//~ debugPrint($incidents);
+
 
 if (count ($incidents) == 0) {
 	echo '<h3 class="error">'.__('There\'s no tickets associated to this ticket').'</h3>';
 }
 else {
-	//~ fill_inventories_table($inventories, $table);
-//~ 
-	//~ print_table ($table);
-//~ 
-	//~ unset($table);
 	
 	$table->class = 'listing';
 	$table->width = '99%';
@@ -43,18 +36,14 @@ else {
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Creator');
 	$table->head[5] = __('Owner');
-	//~ $table->align[4] = 'center';
-	//~ $table->align[5] = 'center';
 	$table->size = array ();
 	$table->size[0] = '40px';
-	//~ $table->size[5] = '40px';
 	$table->data = array();
 	
 	$data = array();
 	foreach ($incidents as $incident) {
 		//Print incident link if not ajax, if ajax link to js funtion to replace parent
-			$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
-			//~ echo '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
+		$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
 		$data[0] = '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong>';
 		$data[1] = '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong>';
 		$data[2] = get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);

@@ -27,7 +27,7 @@ $id_object_type = get_parameter('id_object_type');
 
 if ($upload_file) {
 	if ($_FILES["file"]["error"] == 0) {
-		if ($_FILES["file"]["type"] != 'text/csv') {
+		if (($_FILES["file"]["type"] != 'text/csv') && ($_FILES["file"]["type"] != 'application/vnd.ms-excel')) {
 			echo "<h3 class='error'>" . __ ('Unsupported file type') . "</h3>";
 		}
 		else {

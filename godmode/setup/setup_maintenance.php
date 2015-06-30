@@ -38,9 +38,9 @@ $update = (bool) get_parameter ("update");
 
 if ($update) {
 	$config["max_days_events"] = (int) get_parameter ("max_days_events", 30);
-	$config["max_days_incidents"] = (int) get_parameter ("max_days_incidents", 365);
-	$config["max_days_wu"] = (int) get_parameter ("max_days_wu", 365);
-	$config["max_days_wo"] = (int) get_parameter ("max_days_wo", 365);
+	$config["max_days_incidents"] = (int) get_parameter ("max_days_incidents", 0);
+	$config["max_days_wu"] = (int) get_parameter ("max_days_wu", 0);
+	$config["max_days_wo"] = (int) get_parameter ("max_days_wo", 0);
 	$config["max_days_audit"] = (int) get_parameter ("max_days_audit", 15);
 	$config["max_days_session"] = (int) get_parameter ("max_days_session", 7);
 	$config["max_days_workflow_events"] = (int) get_parameter ("max_days_workflow_events", 900);

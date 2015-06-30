@@ -1,3 +1,26 @@
+2015-06-30  Vanessa Gil <vanessa.gil@artica.es> 
+	
+	* integria_dbdata.sql
+	  godmode/setup/setup_maintenance.php: Change
+	'Days to delete tickets', 'Days to delete work
+	units' and 'Days to delete work orders' values by
+	default.
+	
+	* include/functions_api.php: Fixed bug creating
+	tickets.
+	
+	* include/functions_incidents.php: Show all
+	associated incidents.
+
+	* operation/incidents/incident_tickets.php: Clean
+	code.
+
+	* operation/incidents/incident_detail.php: Changed
+	owner by default. Fixed bug editing tickets.
+
+	* operation/inventories/inventory_import_objects.php:
+	Added header to excel.
+
 2015-06-26  Vanessa Gil <vanessa.gil@artica.es> 
 	
 	* include/export_csv.php
