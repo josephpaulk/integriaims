@@ -82,7 +82,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	
 	// Not closed
 	if ($filters["status"] == -10)
-		$filters['status'] = "1,2,3,4,5,6";
+		$filters['status'] = "0,1,2,3,4,5,6";
 
 	$resolutions = get_incident_resolutions ();
 	

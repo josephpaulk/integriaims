@@ -1,5 +1,11 @@
 2015-07-01  Vanessa Gil <vanessa.gil@artica.es> 
 	
+	* include/functions_incidents.php
+	  operation/incidents/incident_detail.php: Fixed
+	bug in counting tickets.
+
+2015-07-01  Vanessa Gil <vanessa.gil@artica.es> 
+	
 	* integria_dbdata.sql
 	  integria_demo.sql: Updated data.
 

@@ -864,7 +864,7 @@ else {
 	$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
 }
 
-$table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true);
+$table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true, false, '', '', 0);
 
 //If IW creator enabled flag is enabled, the user can change the creator
 if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
