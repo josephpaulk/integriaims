@@ -617,7 +617,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tusuario` WRITE;
 /*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
-INSERT INTO `tusuario` VALUES ('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'moustache4','en_GB','',0,1,0,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1,"Paris");
+INSERT INTO `tusuario` VALUES ('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'moustache4','en_GB','',0,1,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1,"Paris");
 /*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
