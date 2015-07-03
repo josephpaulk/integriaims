@@ -1171,7 +1171,11 @@ add_datepicker("#text-creation_date");
 $(document).ready (function () {
 
 	id_group = $("#grupo_form").val();
-	set_ticket_owner(id_group);
+	id_incident = $('#text-id_incident_hidden').val();
+		
+	if (id_incident == 0) {
+		set_ticket_owner(id_group);
+	}
 
 	// Incident type combo change event
 	$("#id_incident_type").change( function() {

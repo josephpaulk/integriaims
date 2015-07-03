@@ -322,7 +322,7 @@ if ($id_task != -1){
 	}
 
 	$table->data[0][0] = print_label(__('People involved in project').' / '.__('Role'), '', 'text', true);
-	$table->data[1][0] = print_select ($people_project, "people[]", '', '', '', 0, true, true, false, false, false, 'width: 300px;');
+	$table->data[1][0] = print_select ($people_project, "people[]", '', '', '', 0, true, 10, false, false, false, 'width: 300px;');
 	$table->data[2][1] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub next"', true);
 
 	echo "<form id='form-project_people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert_all'>";
