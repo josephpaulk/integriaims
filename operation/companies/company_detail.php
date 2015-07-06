@@ -658,7 +658,7 @@ elseif ($op == "invoices") {
 	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
 		
 		$parent_company = get_db_value ('id_parent', 'tcompany', 'id', $id);
-		if ($parent_company) {
+		if ((!$parent_company) && ($parent_company != '')) {
 			$invoices = crm_get_all_invoices ("id_company = $id OR id_company = $parent_company");
 		} else {
 			$invoices = crm_get_all_invoices ("id_company = $id");

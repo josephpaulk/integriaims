@@ -1751,7 +1751,14 @@ function incidents_update_stats_item ($id_incident, $id_aditional, $metric, $tim
 }
 
 function incidents_update_incident_stats_data ($incident) {
+	
+	$start_time = strtotime($incident["inicio"]);
 
+	// Check valid date
+	if ($start_time < strtotime('1970-01-01 00:00:00')) {
+		return;
+	}
+	
 	$id_incident = $incident["id_incidencia"];
 	$last_incident_update = $incident["last_stat_check"];
 	$last_incident_update_time = strtotime($last_incident_update);

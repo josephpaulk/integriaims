@@ -1,5 +1,11 @@
 2015-07-06  Vanessa Gil <vanessa.gil@artica.es> 
 	
+	* include/functions_incidents.php
+	  operation/companies/company_detail.php: Improved 
+	ticket statistics.
+
+2015-07-06  Vanessa Gil <vanessa.gil@artica.es> 
+	
 	* include/integria_cron.php: Fixed bug
 	creating inventory from pandora agents.
 
