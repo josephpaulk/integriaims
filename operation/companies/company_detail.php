@@ -34,8 +34,7 @@ if (!$section_read_permission && !$section_write_permission && !$section_manage_
 	exit;
 }
 
-//~ if ($id) {
-if ($id && !isset($id_invoice)) {
+if ($id && !($id_invoice)) {
 	$read_permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
 	$write_permission = check_crm_acl ('company', 'cw', $config['id_user'], $id);
 	$manage_permission = check_crm_acl ('company', 'cm', $config['id_user'], $id);
@@ -659,7 +658,11 @@ elseif ($op == "invoices") {
 	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
 		
 		$parent_company = get_db_value ('id_parent', 'tcompany', 'id', $id);
-		$invoices = crm_get_all_invoices ("id_company = $id OR id_company = $parent_company");
+		if ($parent_company) {
+			$invoices = crm_get_all_invoices ("id_company = $id OR id_company = $parent_company");
+		} else {
+			$invoices = crm_get_all_invoices ("id_company = $id");
+		}
 		
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
 		
