@@ -1154,9 +1154,10 @@ function change_linked_type_fields_table(childs_id, id_parent) {
 	}
 
 	value_parent = $("#search_type_field_"+id_parent).val();
+	value_parent = btoa(value_parent);
 
 	if (value_parent == "") {
-		value_parent = "any";
+		value_parent = btoa("any");
 	}
 	jQuery.each (fields, function (id, val) {
 		$.ajax({
