@@ -158,12 +158,24 @@ if ($quick_delete) {
 		include ("general/noaccess.php");
 		exit;
 	}
+	
+	$delete_inventory = process_sql_delete ('tinventory', array('id_parent' => $id_inv));
 	$sql = "DELETE FROM tinventory WHERE id=$id_inv";
 	
 	$result = process_sql ($sql);
 	
 	if ($result) {
 		$delete_data = process_sql_delete ('tobject_field_data', array('id_inventory' => $id_inv));
+		$inventories_to_delete = get_db_all_rows_sql("SELECT id FROM tinventory WHERE id_parent=".$id_inv);
+		if ($inventories_to_delete == false) {
+			$inventories_to_delete = array();
+		}
+		foreach ($inventories_to_delete as $inventory) {
+			$delete_inv = process_sql_delete ('tinventory', array('id_inventory' => $inventory['id']));
+			if ($delete_inv) {
+				$delete_data = process_sql_delete ('tobject_field_data', array('id_inventory' => $inventory['id']));
+			}
+		}
 	}	
 
 	if ($result !== false) {
