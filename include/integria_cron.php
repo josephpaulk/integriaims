@@ -79,6 +79,8 @@ function call_api($url, $postparameters = false) {
 	$curlObj = curl_init();
 	curl_setopt($curlObj, CURLOPT_URL, $url);
 	curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curlObj, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
 	if($postparameters !== false) {
 		curl_setopt($curlObj, CURLOPT_POSTFIELDS, $postparameters);
 	}

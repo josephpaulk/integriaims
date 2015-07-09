@@ -499,7 +499,8 @@ div.submenu {
 	background: #FF9933;
 	left: 0px;
 	top: 0px;
-	min-width: 120px;
+	min-width: 80px;
+	min-height: 150px;
 	background: url('../../images/orange_bg.png');
 	z-index: 1000;
 }

@@ -1,5 +1,17 @@
 2015-07-09  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/integria_cron.php: Fixed bug
+	loading inventory from pandora.
+
+	* operation/manufacturers/manufacturer_detail.php:
+	Add column ID to list.
+
+	* include/styles/integria.css: Improve style.
+
+	* include/languages/index.pot: Updated translations.
+
+2015-07-09  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/languages/cs.mo
 	  include/languages/cs.po
 	  include/languages/de.mo

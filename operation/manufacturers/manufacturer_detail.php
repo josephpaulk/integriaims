@@ -175,21 +175,24 @@ if ($id || $new_manufacturer) {
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
+		$table->style[1] = 'font-weight: bold';
 		$table->head = array ();
-		$table->head[0] = __('Name');
-		$table->head[1] = __('Address');
-		$table->head[2] = __('Company role');
-		$table->head[3] = __('Delete');
+		$table->head[0] = __('ID');
+		$table->head[1] = __('Name');
+		$table->head[2] = __('Address');
+		$table->head[3] = __('Company role');
+		$table->head[4] = __('Delete');
 		
 		foreach ($manufacturers as $manufacturer) {
 			$data = array ();
 			
 			$data[0] = '<a href="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&id='.
+				$manufacturer['id'].'">'.$manufacturer['id'].'</a>';
+			$data[1] = '<a href="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&id='.
 				$manufacturer['id'].'">'.$manufacturer['name'].'</a>';
-			$data[1] = substr ($manufacturer['address'], 0, 50). "...";
-			$data[2] = get_db_value ('name', 'tcompany_role', 'id', $manufacturer['id_company_role']);
-			$data[3] = '<a href="index.php?sec=inventory&
+			$data[2] = substr ($manufacturer['address'], 0, 50). "...";
+			$data[3] = get_db_value ('name', 'tcompany_role', 'id', $manufacturer['id_company_role']);
+			$data[4] = '<a href="index.php?sec=inventory&
 						sec2=operation/manufacturers/manufacturer_detail&
 						delete_manufacturer=1&id='.$manufacturer['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
