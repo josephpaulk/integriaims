@@ -995,65 +995,68 @@ if ((!$id) AND ($new_company == 0)){
 		$table->data = array ();
 		$table->style = array ();
 		$table->colspan = array ();
-		$table->head[0] = __('Company') . $company_order_image;
-		$table->head[1] = __('Role');
-		$table->head[2] = __('Contracts');
-		$table->head[3] = __('Leads');
-		$table->head[4] = __('Manager');
-		$table->head[5] = __('Country');
-		$table->head[6] = __('Last activity') . $activity_order_image;
-		$table->head[7] = __('Billing') . $billing_order_image;
-		$table->head[8] = __('Delete');
+		$table->head[0] = __('ID');
+		$table->head[1] = __('Company') . $company_order_image;
+		$table->head[2] = __('Role');
+		$table->head[3] = __('Contracts');
+		$table->head[4] = __('Leads');
+		$table->head[5] = __('Manager');
+		$table->head[6] = __('Country');
+		$table->head[7] = __('Last activity') . $activity_order_image;
+		$table->head[8] = __('Billing') . $billing_order_image;
+		$table->head[9] = __('Delete');
 		
 		foreach ($companies as $company) {		
 
 			$data = array ();
 			
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".
+				$company["id"]."'>".$company["id"]."</a>";
+			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
-			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
-			if ($data[1]) {
-				$data[1] = "<small>".$data[1]."</small>";
+			$data[2] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
+			if ($data[2]) {
+				$data[2] = "<small>".$data[1]."</small>";
 			} else {
-				$data[1] = "";
+				$data[2] = "";
 			}
 			
 			
 			$sum_contratos = get_db_sql ("SELECT COUNT(id) FROM tcontract WHERE id_company = ".$company["id"]);
 			if ($sum_contratos > 0) {
-				$data[2] = "<a title='($sum_contratos)' href='index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id=".
+				$data[3] = "<a title='($sum_contratos)' href='index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id=".
 					$company['id']."'><img src='images/invoice.png'></a>";
 			} else {
-				$data[2] = "";
+				$data[3] = "";
 			}
 			
 			$sum_leads = get_db_sql ("SELECT COUNT(id) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
 			if ($sum_leads > 0) {
 				$leads_data = " ($sum_leads) ";
 				$leads_data .= get_db_sql ("SELECT SUM(estimated_sale) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
-				$data[3] = "<a title='$leads_data' href='index.php?sec=customers&sec2=operation/companies/company_detail&op=leads&id=".$company["id"]."'><img src='images/icon_lead.png'></a>";
+				$data[4] = "<a title='$leads_data' href='index.php?sec=customers&sec2=operation/companies/company_detail&op=leads&id=".$company["id"]."'><img src='images/icon_lead.png'></a>";
 			} else {
-				$data[3] = "";
+				$data[4] = "";
 			}
 
-			$data[4] = $company["manager"];
-			$data[5] = $company["country"];
+			$data[5] = $company["manager"];
+			$data[6] = $company["country"];
 			
 			// get last activity date for this company record
 			$last_activity = get_db_sql ("SELECT MAX(date) FROM tcompany_activity WHERE id_company = ". $company["id"]);
 
-			$data[6] = human_time_comparation ($last_activity);
+			$data[7] = human_time_comparation ($last_activity);
 
 			if (!$company["billing"]) {
 				$company["billing"] = '0.00';
 			}
-			$data[7] = $company["billing"];// . " " . $config["currency"];
+			$data[8] = $company["billing"];// . " " . $config["currency"];
 
 			$manage_permission = check_crm_acl ('company', 'cm', $config['id_user'], $company['id']);
 			if ($manage_permission) {
-				$data[8] ="<a href='#' onClick='javascript: show_validation_delete(\"delete_company\",".$company['id'].",0,".$offset.",\"".$search_params."\");'><img src='images/cross.png'></a>";
+				$data[9] ="<a href='#' onClick='javascript: show_validation_delete(\"delete_company\",".$company['id'].",0,".$offset.",\"".$search_params."\");'><img src='images/cross.png'></a>";
 			} else {
-				$data[8] = '';
+				$data[9] = '';
 			}
 			
 			array_push ($table->data, $data);

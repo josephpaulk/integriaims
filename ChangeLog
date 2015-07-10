@@ -1,3 +1,10 @@
+2015-07-10  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_inventories.php
+	  operation/companies/company_detail.php: Improved
+	import objects from CSV.
+
+
 2015-07-09  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/integria_cron.php: Fixed bug

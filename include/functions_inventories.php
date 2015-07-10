@@ -1426,6 +1426,13 @@ function inventories_load_file ($objects_file) {
 		$id_contract = $values[5];
 		$id_manufacturer = $values[6];
 		$id_parent = $values[7];
+		$id_companies = $values[8];
+		
+		if ($id_companies != '') {
+			$id_companies_arr = explode(';', $id_companies);
+		} else {
+			$id_companies_arr = array();
+		}
 		
 		$value = array(
 			'id_object_type' => $id_object_type,
@@ -1484,7 +1491,7 @@ function inventories_load_file ($objects_file) {
 					}
 					
 					$value_data = array();
-					$i = 8;
+					$i = 9;
 					$j = 0;
 					foreach ($all_fields as $key=>$field) {
 						$data = $values[$i];
@@ -1550,8 +1557,16 @@ function inventories_load_file ($objects_file) {
 						$val_data['id_inventory'] = $result_id;
 						process_sql_insert('tobject_field_data', $val_data);
 					}
+			
+					if (!empty($id_companies_arr)) {
+						foreach ($id_companies_arr as $id_company) {
+							$values_company['id_inventory'] = $result_id;
+							$values_company['id_reference'] = $id_company;
+							$values_company['type'] = 'company';
+							process_sql_insert('tinventory_acl', $values_company);
+						}
+					}
 				}
-				
 			}
 	} //end while
 
