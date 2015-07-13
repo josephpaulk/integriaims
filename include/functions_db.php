@@ -1416,7 +1416,8 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
-		$sql = sprintf('SELECT * FROM tusuario WHERE id_usuario LIKE "%s" ORDER BY id_usuario',"%$search%");
+		$sql = sprintf('SELECT * FROM tusuario WHERE id_usuario LIKE "%s" OR nombre_real LIKE "%s" ORDER BY id_usuario',"%$search%","%$search%");
+
 		$users = get_db_all_rows_sql ($sql);
 		if ($users === false)
 			$users = array ();
@@ -1443,8 +1444,8 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 			$sql = sprintf ('SELECT *
 					FROM tusuario_perfil p, tusuario u
 					WHERE p.id_usuario = u.id_usuario
-					AND u.id_usuario LIKE "%s" AND (id_grupo = %d %s)
-					ORDER BY u.id_usuario', "%$search%", $group['id_grupo'], $proj_users_condition);
+					AND (u.id_usuario LIKE "%s" OR u.nombre_real LIKE "%s") AND (id_grupo = %d %s)
+					ORDER BY u.id_usuario', "%$search%", "%$search%", $group['id_grupo'], $proj_users_condition);
 			$users = get_db_all_rows_sql ($sql);
 			if ($users === false)
 				continue;

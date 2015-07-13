@@ -57,9 +57,14 @@ if (defined ('AJAX')) {
 		$id_object_type_field = get_parameter('id_object_type_field');
 		$id_inventory = get_parameter('id_inventory');
 		$id_value = get_parameter('id_value'); //new value for id field
-		
-		$result = process_sql_update('tobject_field_data', array('data' => $id_value), array('id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory), 'AND');
-		
+
+		$exists = get_db_value_filter('data', 'tobject_field_data', array('id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory));
+		if ($exists) {
+			$result = process_sql_update('tobject_field_data', array('data' => $id_value), array('id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory), 'AND');
+		} else {
+			$result = process_sql_insert('tobject_field_data', array('data' => $id_value,'id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory));
+		}
+	
 		return $result;
 	}
 	

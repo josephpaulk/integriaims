@@ -83,9 +83,9 @@ if ($insert_row) {
 		}
 	}
 	
-	$result = process_sql_insert ($external_table, $values);
+	$result_insert = process_sql_insert ($external_table, $values);
 	
-	if ($result) {
+	if ($result_insert) {
 		echo "<h3 class='suc'>".__('Inserted row')."</h3>";
 	} else {
 		echo "<h3 class='error'>".__('There was a problem inserting row')."</h3>";

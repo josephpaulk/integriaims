@@ -1,3 +1,11 @@
+2015-07-13  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_db.php: Fixed user's search.
+
+	* operation/inventories/inventory_detail.php
+	  operation/companies/manage_external_tables.php: Fixed
+	bug loading data to external field.
+
 2015-07-10  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_inventories.php
