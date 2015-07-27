@@ -930,7 +930,7 @@ if (!$create_incident){
 	$table->data[2][2] .= "</div>";
 } else if ($create_incident && $config["change_incident_datetime"]) {
 	$date = date('Y-m-d');
-	$time = date('H:m');
+	$time = date('H:i');
 	$table->data[2][2] = print_input_text ('creation_date', $date, '', 10, 100, true, __('Creation date'));
 	$table->data[2][2] .= print_input_text ('creation_time', $time, '', 10, 100, true, __('Creation time'))
 		.print_help_tip (__("The format should be hh:mm"), true);

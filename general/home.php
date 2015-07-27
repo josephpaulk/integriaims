@@ -73,11 +73,11 @@ if ($info) {
 		
 		//Get agenda events
 		$sql_2 = "SELECT * FROM tagenda WHERE (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3' ORDER BY timestamp ASC";
-		$result_2 = mysql_query($sql_2);
+		$result_2 = get_db_all_rows_sql($sql_2);
 			
-		while ($r = mysql_fetch_array($result_2)) {
+		foreach ($result_2 as $r) {
 			$time_array[$count] = $r["timestamp"];
-			$text_array[$count] = $r["content"];
+			$text_array[$count] = $r["title"];
 			$type_array[$count] = "agenda";
 			$count++;
 		}
@@ -136,7 +136,7 @@ if ($info) {
 			}
 			
 			$agenda_home .= "<tr>";
-			$agenda_home .= "<td>".$type_name."</td><td>.".$text_array[$key]."</td><td>".$time."</td>";
+			$agenda_home .= "<td>".$type_name."</td><td>".$text_array[$key]."</td><td>".$time."</td>";
 			
 			$print_counter++;
 			if ($print_counter == 5) {

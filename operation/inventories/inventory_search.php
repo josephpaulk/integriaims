@@ -397,7 +397,10 @@ if (!$clean_output) {
 		$buttons .= print_input_hidden ('search', 1, true);
 		$buttons .= print_input_hidden ('mode', $mode, true);
 		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
-		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1&where_clause=' . str_replace('"', "\'", $sql_search).'\')', 'class="sub csv"', true);
+		
+		$filter["query"] = $sql_search;
+		serialize_in_temp($filter, $config["id_user"]);
+		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
 
 		$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
 		$buttons .= '</div>';

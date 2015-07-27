@@ -1416,7 +1416,28 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
-		$sql = sprintf('SELECT * FROM tusuario WHERE id_usuario LIKE "%s" OR nombre_real LIKE "%s" ORDER BY id_usuario',"%$search%","%$search%");
+		
+		if ($search != '') {
+			$sql_companies = "SELECT id FROM tcompany WHERE name LIKE '%".$search."%'";
+			$companies = get_db_all_rows_sql ($sql_companies);
+
+			if ($companies == false) {
+				$companies_sql = '';
+			} else {
+				$i = 0;
+				foreach ($companies as $company) {
+					if ($i == 0) {
+						$companies_result = $company['id'];
+					} else {
+						$companies_result .= ','.$company['id'];
+					}
+					$i++;
+				}
+
+				$companies_sql = " OR id_company IN ($companies_result)";
+			}
+		}
+		$sql = sprintf('SELECT * FROM tusuario WHERE id_usuario LIKE "%s" OR nombre_real LIKE "%s" %s ORDER BY id_usuario',"%$search%","%$search%", $companies_sql);
 
 		$users = get_db_all_rows_sql ($sql);
 		if ($users === false)

@@ -163,8 +163,10 @@ if ($export_csv_leads) {
 }
 
 if ($export_csv_inventory) {
-	$where_clause = get_parameter('where_clause');
 	
+	$filter = unserialize_in_temp($config["id_user"]);
+	$where_clause = $filter["query"];
+
 	$rows = get_db_all_rows_sql(clean_output($where_clause));
 
 	if ($rows === false)
@@ -185,7 +187,7 @@ if ($export_csv_inventory) {
 		$aux["object_type_name"] = "";
 		
 		if ($aux["id_object_type"]) {
-			$aux["object_type_name"] = get_db_value("name", "tobject_type", "id", $r["id_object_type"]);;
+			$aux["object_type_name"] = get_db_value("name", "tobject_type", "id", $r["id_object_type"]);
 		}
 
 		$aux["description"] = $r["description"];

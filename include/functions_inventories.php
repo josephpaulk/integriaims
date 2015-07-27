@@ -975,9 +975,10 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 		
 		$color_div = 'no_error_stock';
 		if ($total_stock < $min_stock) {
-			$color_div = 'error_stock'; 
+			$color_div = 'error_stock';
+			$min_stock = "<font color='#FF000'>".$min_stock."</font>";
 		}
-		
+	
 		$id_div = "object_types_".$element['id'];
 
 		echo "<li style='margin: 0px 0px 0px 0px;'>
@@ -1183,6 +1184,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		require_once ("enterprise/include/functions_inventory.php");
 		$is_enterprise = true;
 	}
+	
+	$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
 
 	$params .="&mode=list";	
 
@@ -1251,10 +1254,10 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 					$i++;
 				}
 			}
-			$table->head[$i] = __('More info');
+			$table->head[$i] = __('Actions');
 		} else {
 			if (!$clean_output) {
-				$table->head[7] = __('More info');
+				$table->head[7] = __('Actions');
 			}
 		}
 		
@@ -1329,6 +1332,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 					$data[$i] .= print_image ("images/information.png", true,
 						array ("title" => __('Show object type fields')));
 					$data[$i] .= '</a>&nbsp;';
+					if ($write_permission) {
+						$data[$i] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+					}
 				}
 
 			} else {
@@ -1337,6 +1343,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 					$data[7] .= print_image ("images/information.png", true,
 						array ("title" => __('Show object type fields')));
 					$data[7] .= '</a>&nbsp;';
+					if ($write_permission) {
+						$data[7] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+					}
 				}
 				
 			}
@@ -1399,6 +1408,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 	}
 }
 
+
 /*
  * IMPORT INVENTORIES FROM CSV. 
  */
@@ -1427,11 +1437,19 @@ function inventories_load_file ($objects_file) {
 		$id_manufacturer = $values[6];
 		$id_parent = $values[7];
 		$id_companies = $values[8];
+		$id_users = $values[9];
+		$status = $values[10];
 		
 		if ($id_companies != '') {
 			$id_companies_arr = explode(';', $id_companies);
 		} else {
 			$id_companies_arr = array();
+		}
+		
+		if ($id_users != '') {
+			$id_users_arr = explode(';', $id_users);
+		} else {
+			$id_users_arr = array();
 		}
 		
 		$value = array(
@@ -1443,8 +1461,9 @@ function inventories_load_file ($objects_file) {
 			'id_contract' => $id_contract,
 			'id_manufacturer' => $id_manufacturer,
 			'id_parent' => $id_parent,
+			'status' => $status,
 			'last_update' => date ("Y/m/d", get_system_time()));
-	
+
 			if ($name == '') {
 				echo "<h3 class='error'>" . __ ('Inventory name empty') ."</h3>";
 				$create = false;
@@ -1491,7 +1510,7 @@ function inventories_load_file ($objects_file) {
 					}
 					
 					$value_data = array();
-					$i = 9;
+					$i = 11;
 					$j = 0;
 					foreach ($all_fields as $key=>$field) {
 						$data = $values[$i];
@@ -1564,6 +1583,15 @@ function inventories_load_file ($objects_file) {
 							$values_company['id_reference'] = $id_company;
 							$values_company['type'] = 'company';
 							process_sql_insert('tinventory_acl', $values_company);
+						}
+					}
+					
+					if (!empty($id_users_arr)) {
+						foreach ($id_users_arr as $id_user) {
+							$values_user['id_inventory'] = $result_id;
+							$values_user['id_reference'] = $id_user;
+							$values_user['type'] = 'user';
+							process_sql_insert('tinventory_acl', $values_user);
 						}
 					}
 				}

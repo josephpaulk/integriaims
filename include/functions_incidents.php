@@ -2518,7 +2518,13 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 			}
 			echo "<br>";
 			echo '<span style="font-size:9px;">';
-			echo $last_wu["id_user"];
+			
+			if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
+					$updated_by = get_db_value('nombre_real', 'tusuario', 'id_usuario', $last_wu["id_user"]);
+				} else {
+					$updated_by = $last_wu["id_user"];
+				}
+			echo $updated_by;
 			echo "</span>";
 			echo '</td>';
 			
@@ -2529,7 +2535,9 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				} else {
 					$incident_creator = $incident["id_creator"];
 				}
-				echo substr($incident_creator,0,12);
+
+				//~ echo substr($incident_creator,0,12);
+				echo $incident_creator;
 				echo "</td>";
 			}
 			
@@ -2540,7 +2548,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				} else {
 					$incident_owner = $incident["id_usuario"];
 				}
-				echo substr($incident_owner,0,12);
+				echo $incident_owner;
 				echo "</td>";
 			}
 			
@@ -3281,7 +3289,13 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 			}
 			echo "<br>";
 			echo '<span style="font-size:9px;">';
-			echo $last_wu["id_user"];
+			if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
+					$updated_by = get_db_value('nombre_real', 'tusuario', 'id_usuario', $last_wu["id_user"]);
+				} else {
+					$updated_by = $last_wu["id_user"];
+				}
+			//~ echo $last_wu["id_user"];
+			echo $updated_by;
 			echo "</span>";
 			echo '</td>';
 			

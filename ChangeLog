@@ -1,3 +1,22 @@
+2015-07-21  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* general/footer.php
+	  general/home.php
+	  include/export_csv.php
+	  include/functions_db.php
+	  include/functions_incidents.php
+	  include/functions_inventories.php
+	  include/functions_update_manager.php
+	  operation/incidents/incident_detail.php
+	  operation/inventories/inventory_search.php: Fixed several
+	bugs: import inventories from csv, user search...
+
+2015-07-16  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_html.php
+	  operation/incidents/incident_search_logic.php: Fixed bug
+	loading incident type fields.
+
 2015-07-15  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/integria_cron.php: Fixed bug
