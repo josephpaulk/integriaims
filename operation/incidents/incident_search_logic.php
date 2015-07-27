@@ -39,8 +39,13 @@ if (defined ('AJAX')) {
 		if ($type_fields) {
 			foreach ($type_fields as $key => $type_field) {
 
-				if ($type_field['type'] == "text" || $type_field['type'] == "textarea") {
-					$input = print_input_text('search_type_field_'.$type_field['id'], '', '', 30, 30, true, $type_field['label']);
+				if ($type_field['type'] == "text" || $type_field['type'] == "textarea" || $type_field['type'] == "numeric") {
+					if ($type_field['type'] == "numeric") {
+						$type = 'number';
+					} else {
+						$type = false;
+					}
+					$input = print_input_text ('search_type_field_'.$type_field['id'], '', '', 30, 30, true, $type_field['label'], false, $type);
 				} else if ($type_field['type'] == "combo") {
 					$combo_values = explode(",", $type_field['combo_value']);
 					$values = array();
