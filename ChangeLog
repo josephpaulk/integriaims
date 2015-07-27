@@ -1,3 +1,8 @@
+2015-07-15  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/integria_cron.php: Fixed bug
+	loading inventory from pandora.
+
 2015-07-13  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_db.php: Fixed user's search.

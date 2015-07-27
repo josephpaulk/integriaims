@@ -153,8 +153,17 @@ function synchronize_pandora_inventory () {
 			
 			$id_type_field_os = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('OS')));
 			$id_type_field_ip = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('IP Address')));
+			if ($id_type_field_ip == false) {
+				$id_type_field_ip = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'IP Address'));
+			}
 			$id_type_field_url = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('URL Address')));
+			if ($id_type_field_url == false) {
+				$id_type_field_url = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'URL Address'));
+			}
 			$id_type_field_id = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('ID Agent')));
+			if ($id_type_field_id == false) {
+				$id_type_field_id = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'ID Agent'));
+			}
 
 			$value_os = array();
 			$value_os['id_inventory'] = $id_inventory;
