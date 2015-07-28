@@ -3995,4 +3995,17 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	
 }
 
+function incidents_get_sla_info ($id_group) {
+	global $config;
+	
+	$id_sla = get_db_value('id_sla', 'tgrupo', 'id_grupo', $id_group);
+	
+	$sla_info = false;
+	if ($id_sla != false) {
+		$sla_info = get_db_row('tsla', 'id', $id_sla);
+	}
+	
+	return $sla_info;
+}
+
 ?>

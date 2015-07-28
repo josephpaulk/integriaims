@@ -222,6 +222,18 @@ switch ($op){
 		echo api_delete_user($return_type, $params);
 		break;
 	}
+	case "mark_created_incident":
+	{
+		$params = explode($token, $params);
+		echo api_mark_created_incident ($return_type, $params);
+		break;
+	}
+	case "mark_updated_incident":
+	{
+		$params = explode($token, $params);
+		echo api_mark_updated_incident ($return_type, $params);
+		break;
+	}
 	default: 
 	{
 	}

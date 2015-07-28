@@ -359,7 +359,8 @@ function api_get_incident_details ($return_type, $user, $id_incident){
 				
 				break;
 		case 'csv':
-				$ret = array_to_csv($result);
+					$ret = array_to_csv($result[0]);
+				
 				break;
 	}
 	
@@ -400,6 +401,8 @@ function api_update_incident ($return_type, $user, $params){
 	
 	//Add traces and statistic information
 	incidents_set_tracking ($id_incident, 'update', $values['prioridad'], $values['estado'], $values['resolution'], $user, $values['id_grupo']);
+	//Add only update info
+	incident_tracking ($id_incident, INCIDENT_UPDATED);
 	
 	if (($id_incident_type != 0)) {	//in the massive operations no change id_incident_type
 
@@ -1472,5 +1475,28 @@ function api_delete_user($return_type, $params) {
 
 	return $return;	
 }
+
+function api_mark_created_incident ($return_type, $params) {
+	
+	$id_incident = $params[0];
+	$extra_info = $params[1];
+	$description = 'Created';
+	$state = INCIDENT_CREATED;
+	
+	$result = db_process_sql_update('tincident_track', array('extra_info'=>$extra_info), array('id_incident'=>$id_incident,'state'=>$state,'description'=>$description));
+	echo $result;
+	return;
+}
+
+function api_mark_updated_incident ($return_type, $params) {
+	$id_incident = $params[0];
+	$extra_info = $params[1];
+	$description = 'Updated';
+	
+	$result = db_process_sql_update('tincident_track', array('extra_info'=>$extra_info), array('id_incident'=>$id_incident,'description'=>$description));
+	echo $result;
+	return;
+}
+
 
 ?>

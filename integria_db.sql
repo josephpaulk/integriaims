@@ -180,6 +180,7 @@ CREATE TABLE `tsla` (
   `time_to` tinyint NULL default 0,
   `id_sla_base` mediumint(8) unsigned NULL default 0,
   `no_holidays` tinyint NULL default 0,
+  `id_sla_type` mediumint(8) unsigned NULL default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -267,6 +268,7 @@ CREATE TABLE `tincident_track` (
   `id_user` varchar(60) NOT NULL default '',
   `id_aditional` varchar(60) NOT NULL DEFAULT '0',
   `description` text NOT NULL,
+  `extra_info` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id_it`),
   KEY `tit_idx_1` (`id_incident`),
   FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
