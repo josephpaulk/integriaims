@@ -156,6 +156,8 @@ if ($update_field) { //update field to incident type
 	$value_update['linked_value'] = get_parameter ('linked_value', '');
 	$value_update['parent'] = get_parameter ('parent', '');
 	$value_update['global_id'] = get_parameter("global");
+	$add_linked_value = get_parameter('add_linked_value', '');
+	$add_combo_value = get_parameter('add_combo_value', '');
 	$error_combo_update = false;
 	$error_linked_update = false;
 
@@ -175,6 +177,16 @@ if ($update_field) { //update field to incident type
 		echo '<h3 class="error">'.__('Field could not be updated. Empty linked value').'</h3>';
 	
 	} else {
+		if ($add_linked_value != "") {
+			$old_linked_value = get_db_value('linked_value', 'tincident_type_field', 'id', $id_field);
+			$value_update = array();
+			$value_update['linked_value'] = $old_linked_value.','.$add_linked_value;
+		}
+		if ($add_combo_value != "") {
+			$old_combo_value = get_db_value('combo_value', 'tincident_type_field', 'id', $id_field);
+			$value_update = array();
+			$value_update['combo_value'] = $old_combo_value.','.$add_combo_value;
+		}
 		$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
 		
 		if ($result_update === false) {
@@ -377,7 +389,10 @@ if ($id || $new_type) {
 				
 				if ($field["type"] == "combo") {
 					$data[2] = $field["combo_value"];
-				} else {
+				} else if ($field["type"] == "linked") {
+					$data[2] = $field["linked_value"];
+				}
+				else {
 					$data[2] = "";
 				}
 				
@@ -395,7 +410,11 @@ if ($id || $new_type) {
 						href='" . $url_update . "'>
 						<img src='images/wrench.png' border=0 /></a>";
 					}
-				} 
+				} else {
+					$data[4] = "<a
+						href='" . $url_update . "'>
+						<img src='images/eye.png' border=0 /></a>";
+				}
 			
 				if (get_admin_user ($config['id_user'])) {
 					$data[4] .= "<a

@@ -982,8 +982,8 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
  * @param string Set the button to be marked (optional, unmarked by default).
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_checkbox ($name, $value, $checked = false, $return = false, $label = false) {
-	$output = print_checkbox_extended ($name, $value, (bool) $checked, false, '', '', true, $label);
+function print_checkbox ($name, $value, $checked = false, $return = false, $label = false, $disabled = false) {
+	$output = print_checkbox_extended ($name, $value, (bool) $checked, $disabled, '', '', true, $label);
 
 	if ($return)
 		return $output;

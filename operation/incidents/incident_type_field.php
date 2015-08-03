@@ -34,6 +34,8 @@ $combo_value = '';
 $linked_value = '';
 $parent = '';
 $show_in_list = false;
+$global_field = false;
+$add_linked_value = '';
 
 $id_field = get_parameter ('id_field');
 
@@ -47,6 +49,7 @@ if ($id_field) {
 	$show_in_list = (boolean) $field_data['show_in_list'];
 	$parent = $field_data['parent'];
 	$linked_value = $field_data['linked_value'];
+	$global_field = $field_data['global_id'];
 
 }
 
@@ -56,15 +59,19 @@ $table->width = "99%";
 $table->class = "search-table-button";
 $table->data = array ();
 
-$table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
+$table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'), $global_field);
 
 $types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' =>__('Linked'), 'numeric' =>__('Numeric'));
 $table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
-$table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
-$table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'));
-$table->data[0][3] = print_checkbox ('global', 1, '', true, __('Global field'));
+$table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true, 0,true, false, $global_field);
+$table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'), $global_field);
+$table->data[0][3] = print_checkbox ('global', 1, $global_field, true, __('Global field'), $global_field);
 
-$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
+$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value'), $global_field).print_help_tip (__("Set values separated by comma"), true);
+
+if ($global_field) {
+	$table->data['id_combo_value'][1] = print_input_text ('add_combo_value', $add_combo_value, '', 45, 0, true, __('Add values')).print_help_tip (__("Set values separated by comma"), true);
+}
 
 $sql = "SELECT id,label FROM tincident_type_field	
 	WHERE id_incident_type = ".$id_incident_type.
@@ -81,25 +88,36 @@ foreach ($parents_result as $result) {
 }
 
 $table->data['id_parent_value'][0] .= print_label (__("Parent"), "label-id", 'text', true);
-$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true);
+$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true, 0,true, false, $global_field);
 
-$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true));
+$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true), $global_field);
+
+if ($global_field) {
+	$table->data['id_linked_value'][1] = "";
+	$table->data['id_linked_value'][2] = print_textarea ('add_linked_value', 15, 1, $add_linked_value, '', true, __('Add values').integria_help ("linked_values", true));
+}
 
 
 if ($add_field) {
 	$button = print_input_hidden('add_field', 1, true);
 	$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
 } else if ($update_field) {
-	$button = print_input_hidden('update_field', 1, true);
-	$button .= print_input_hidden('add_field', 0, true);
-	$button .= print_input_hidden('id_field', $id_field, true);
-	$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+	if (((!$global_field) && (($type != 'linked') || ($type != 'combo'))) || (($global_field) && (($type == 'linked') || ($type == 'combo')))) {
+		$button = print_input_hidden('update_field', 1, true);
+		$button .= print_input_hidden('add_field', 0, true);
+		$button .= print_input_hidden('id_field', $id_field, true);
+		$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+	}
 }
 
 $table->data['button'][0] = $button;
 $table->colspan['button'][0] = 3;
 
+if ($add_field) {
 echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&add_field=1">';
+} else {
+	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&update_field=1">';
+}
 print_table ($table);
 echo '</form>';
 
@@ -117,16 +135,22 @@ $(document).ready (function () {
 			$("#table1-id_combo_value-0").css ('display', '');
 			$("#table1-id_linked_value-0").css ('display', 'none');
 			$("#table1-id_parent_value-0").css ('display', 'none');
+			$("#table1-id_linked_value-2").css ('display', 'none');
+			$("#table1-id_combo_value-1").css ('display', '');
 		break;
 		case "linked":
 			$("#table1-id_linked_value-0").css ('display', '');
 			$("#table1-id_parent_value-0").css ('display', '');
+			$("#table1-id_linked_value-2").css ('display', '');
 			$("#table1-id_combo_value-0").css ('display', 'none');
+			$("#table1-id_combo_value-1").css ('display', 'none');
 		break;
 		default:
 			$("#table1-id_combo_value-0").css ('display', 'none');
 			$("#table1-id_linked_value-0").css ('display', 'none');
 			$("#table1-id_parent_value-0").css ('display', 'none');
+			$("#table1-id_linked_value-2").css ('display', 'none');
+			$("#table1-id_combo_value-1").css ('display', 'none');
 		break;
 	}
 });
