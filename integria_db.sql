@@ -214,6 +214,7 @@ CREATE TABLE `tincidencia` (
   `id_group_creator` mediumint(9) NOT NULL default 0,
   `last_stat_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `closed_by` varchar(60) NOT NULL default '',
+  `extra_data` varchar(100) NOT NULL default '',
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),

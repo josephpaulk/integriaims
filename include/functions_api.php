@@ -130,13 +130,15 @@ function api_create_incident ($return_type, $user, $params){
 	$source = 1; // User report
 	$priority = $params[2];
 	$id_creator = $user;
-	$status = 1; // new
+	//~ $status = 1; // new
 	$resolution = 9; // In process / Pending
 	$id_inventory = $params[4];
 	$id_incident_type = (int) $params[5];
 	$email_copy = $params[6];
 	$owner = $params[7];
 	$id_parent = $params[8];
+	$status = $params[9];
+	$extra_data = $params[10];
 	$inicio = $timestamp;
 	$actualizacion = $timestamp;
 
@@ -153,21 +155,21 @@ function api_create_incident ($return_type, $user, $params){
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
-			resolution, email_copy, id_incident_type)
+			resolution, email_copy, id_incident_type, extra_data)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d, "%s", %d)', $timestamp, $timestamp, $title, $description, $owner,
+			"%s", %d, "%s", %d,  "%s")', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution, $email_copy, $id_incident_type);
+			$email_notify, $resolution, $email_copy, $id_incident_type, $extra_data);
 	} else {
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, estado, prioridad,
 				id_grupo, id_creator, notify_email, 
-				resolution, email_copy, id_incident_type, id_parent)
+				resolution, email_copy, id_incident_type, id_parent, extra_data)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-				"%s", %d, "%s", %d, %d)', $timestamp, $timestamp, $title, $description, $owner,
+				"%s", %d, "%s", %d, %d, "%s")', $timestamp, $timestamp, $title, $description, $owner,
 				$status, $priority, $group, $id_creator,
-				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent);
+				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent, $extra_data);
 	}
 	
 	$id = process_sql ($sql, 'insert_id');
@@ -201,7 +203,7 @@ function api_create_incident ($return_type, $user, $params){
 				$labels = array();
 			}
 			
-			$num_params = 9;
+			$num_params = 11;
 			foreach ($labels as $label) {
 				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 				
@@ -391,6 +393,7 @@ function api_update_incident ($return_type, $user, $params){
 	}
 
 	$values['id_incident_type'] = $params[10];
+	$values['extra_data'] = $params[11];
 	$values['actualizacion'] = $timestamp;
 	if ($values['estado'] == 7) {
 		$values['cierre'] = $timestamp;
@@ -413,7 +416,7 @@ function api_update_incident ($return_type, $user, $params){
 			$labels = array();
 		}
 	
-		$num_params = 11;
+		$num_params = 12;
 		foreach ($labels as $label) {
 			$values_type_field['data'] = $params[$num_params];
 			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
