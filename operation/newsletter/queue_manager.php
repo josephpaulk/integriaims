@@ -96,7 +96,7 @@ $delete = (bool) get_parameter ('delete');
 $start = (bool) get_parameter ('start');
 $stop = (bool) get_parameter ('stop');
 $retry = (bool) get_parameter ('retry');
-$disable_bad = (bool) get_parameter ('disable_bad');
+$disable_bad = (bool) get_parameter ('disabled_bad');
 
 // CREATE
 if ($create) {
@@ -185,14 +185,14 @@ if ($disable_bad) { // if delete
 	
 	$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = $id");
 	// Get all bad addresses and disable the original address in newsletter
-	$sql = "SELECT * FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter = ". $newsletter["id"];
+	$sql = "SELECT * FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter = ". $id;
 	$data = get_db_all_rows_sql ($sql);
 	if ($data) 
 	foreach ($data as $item) {
-		$sql = "UPDATE tnewsletter_address SET status = 1 WHERE id_newsletter = $id_newsletter AND email = '".$item["email"]."'";
+		$sql = "UPDATE tnewsletter_address SET status = 1 WHERE id_newsletter = $id AND email = '".$item["email"]."'";
 		$result = mysql_query ($sql);
-		
 	}
+	echo "<h3 class='suc'>".__('Disabled bad addresses')."</h3>";
 	$id = 0;
 }
 
@@ -255,7 +255,7 @@ if ($queue !== false) {
 		$table->head[8] .= print_help_tip (__("This will mark as ready all email address marked as error in a previous attempt and rerun the qeue"), true);
 		
 		$table->head[9] = __('Disable');
-		$table->head[9] .= print_help_tip (__("This will mark as disable all email address whioch cannot be sent. Warning, this will be done in the address associated to the newsletter."), true);												
+		$table->head[9] .= print_help_tip (__("This will mark as disable all email address which cannot be sent. Warning, this will be done in the address associated to the newsletter."), true);												
 
 	}
 	
@@ -286,13 +286,16 @@ if ($queue !== false) {
 		else
 			$data[3] = __("Done");	
 
-
-		$total = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
-		$ready = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 0 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
-		$done = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter ");
-		$error = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
+		if ($id_newsletter) {
+			$total = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
+			$ready = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 0 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
+			$done = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter ");
+			$error = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter_content = $id_issue and id_newsletter = $id_newsletter");
+			
+			$data[4] = "$total / $ready / $done / $error";
+		}
 		
-		$data[4] = "$total / $ready / $done / $error";
+		$data[4] = __("Empty");
 
 	
 		if(give_acl ($config["id_user"], $id_group, "CN")) {
