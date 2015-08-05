@@ -684,7 +684,7 @@ elseif ($op == "invoices") {
 			$table->head[3] = __('Type');
 			$table->head[4] = __('Status');
 			$table->head[5] = __('Creation');
-			$table->head[6] = __('Payment');
+			$table->head[6] = __('Expiration');
 			$table->head[7] = __('Options');
 			
 			$counter = 0;
@@ -717,7 +717,7 @@ elseif ($op == "invoices") {
 				$data[3] = __($invoice["invoice_type"]);
 				$data[4] = __($invoice["status"]);
 				$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
-				$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_payment_date"]. "</span>";
+				$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_expiration_date"]. "</span>";
 				$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 					&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1&language='.$invoice['id_language'].'">
 					<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';

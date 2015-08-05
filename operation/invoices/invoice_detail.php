@@ -264,7 +264,7 @@ if ($invoices != false) {
 	$table->head[3] = __('Currency');
 	$table->head[4] = __('Status');
 	$table->head[5] = __('Creation').$date_img;
-	$table->head[6] = __('Payment');
+	$table->head[6] = __('Expìration');
 	if ($clean_output == 0)
 		$table->head[7] = __('Options');
 	$counter = 0;
@@ -307,7 +307,7 @@ if ($invoices != false) {
 		$data[3] = strtoupper ($invoice["currency"]);
 		$data[4] = __($invoice["status"]);
 		$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
-		$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_payment_date"]. "</span>";
+		$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_expiration_date"]. "</span>";
 
 		if ($clean_output == 0){
 

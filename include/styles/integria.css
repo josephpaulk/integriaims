@@ -3174,6 +3174,13 @@ div.upload-params-info {
 	top: 18px;
 }
 
+div#cont {
+	position: fixed;
+	max-height: 420px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
 /*.fileupload_form ul li div#submit-controls {
 	display: inline-block;
 }*/

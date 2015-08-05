@@ -92,7 +92,7 @@ $query1 = "SELECT * FROM tusuario $search ORDER BY id_usuario";
 
 $count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
 
-pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=$search_text", $offset);
+pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=".$search_text."&disabled_user=".$disabled_user."&level=".$level."&group=".$group, $offset, true);
 
 $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 

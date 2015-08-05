@@ -983,7 +983,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 
 		echo "<li style='margin: 0px 0px 0px 0px;'>
 
-			<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\", \"" . $last_update . "\")'>" .
+			<a style='vertical-align: middle;' onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\", \"" . $last_update . "\")'>" .
 			$img . "&nbsp;" . $element["img"] ."&nbsp;" . safe_output($element['name'])."</a>"."&nbsp;&nbsp;"."($total_stock:$new_stock:$unused_stock:$min_stock)".print_help_tip(__("Total").':'.__("New").':'.__("Unused").':'.__("Min. stock"), true);
 
 		if ($end) {
@@ -1000,7 +1000,8 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	echo "</ul>\n";
 	echo '</td>';
 	echo '<td style="width:40%" valign="top">';
-	echo '<div id="cont" style="position:relative; top:10px;">&nbsp;</div>';
+	//~ echo '<div id="cont" style="position:relative; top:10px;">&nbsp;</div>';
+	echo '<div id="cont">&nbsp;</div>';
 	echo '</td></tr>';
 	echo '</table>';
 	
