@@ -1622,7 +1622,8 @@ function incidents_get_all_type_field ($id_incident_type, $id_incident) {
 	
 	global $config;
 	
-	$fields = get_db_all_rows_filter('tincident_type_field', array('id_incident_type' => $id_incident_type));
+	$sql = "SELECT * FROM tincident_type_field WHERE id_incident_type = $id_incident_type ORDER BY `order`";
+	$fields = get_db_all_rows_sql($sql);
 	
 	if ($fields === false) {
 		$fields = array();
@@ -2676,7 +2677,8 @@ function incidents_get_type_fields ($search_id_incident_type) {
 
 		$sql = sprintf("SELECT *
 				FROM tincident_type_field
-				WHERE id_incident_type = %d", $search_id_incident_type);
+				WHERE id_incident_type = %d
+				ORDER BY `order`", $search_id_incident_type);
 	
 		$config['mysql_result_type'] = MYSQL_ASSOC;
 		$type_fields = get_db_all_rows_sql($sql);

@@ -29,6 +29,7 @@ $new_type = (bool) get_parameter ('new_type');
 $create_type = (bool) get_parameter ('create_type', 0);
 $update_type = (bool) get_parameter ('update_type', 0);
 $delete_type = (bool) get_parameter ('delete_type', 0);
+$sort_items = (bool) get_parameter('sort_items', 0);
 
 $show_fields = false; //show fields of incident type
 $add_field = (int) get_parameter ('add_field', 0);
@@ -46,6 +47,9 @@ if ($add_field) { //add field to incident type
 	$value['show_in_list'] = (int) get_parameter ('show_in_list');
 	$value['linked_value'] = get_parameter ('linked_value', '');
 	$value['parent'] = get_parameter ('parent', '');
+	$last_order = get_db_value_sql("SELECT MAX(`order`) FROM tincident_type_field WHERE id_incident_type = ".$value['id_incident_type']);
+	$value['order'] = $last_order + 1;
+	
 	$error_combo = false;
 	$error_linked = false;
 	
@@ -286,6 +290,68 @@ if ($delete_type) {
 	$id = 0;
 }
 
+if ($sort_items) {
+	
+	$position_to_sort = (int)get_parameter('position_to_sort', 1);
+	$ids_serialize = (string)get_parameter('ids_items_to_sort', '');
+	$move_to = (string)get_parameter('move_to', 'after');
+		
+	$count_items = get_db_sql('SELECT COUNT(id) FROM tincident_type_field WHERE id_incident_type = ' . $id);
+	
+	if (($count_items < $position_to_sort) || ($position_to_sort < 1)) {
+		$result_operation = false;
+	}
+	else if (!empty($ids_serialize)) {
+		$ids = explode(',', $ids_serialize);
+
+		$items = get_db_all_rows_sql('SELECT id, `order`
+			FROM tincident_type_field WHERE id_incident_type = ' . $id . '
+			ORDER BY `order`');
+		
+		if ($items === false) $items = array();
+
+		$temp = array();
+		foreach ($items as $item) {
+			//Remove the contents from the block to sort
+			if (array_search($item['id'], $ids) === false) {
+				$temp[$item['order']] = $item['id'];
+			}
+		}
+		
+		$items = $temp;
+
+		$sorted_items = array();
+		foreach ($items as $pos => $id_unsort) {
+			if ($pos == $position_to_sort) {
+				if ($move_to == 'after') {
+					$sorted_items[] = $id_unsort;
+				}
+				
+				foreach ($ids as $id) {
+					$sorted_items[] = $id;
+				}
+				
+				if ($move_to != 'after') {
+					$sorted_items[] = $id_unsort;
+				}
+			}
+			else {
+				$sorted_items[] = $id_unsort;
+			}
+		}
+		
+		$items = $sorted_items;	
+
+		foreach ($items as $order => $id) {
+			process_sql_update('tincident_type_field', array('order' => ($order + 1)), array('id' => $id));
+		}
+		$result_operation = true;
+	}
+	else {
+		$resul_operation = false;
+	}
+}
+
 echo '<h1>'.__('Ticket types').'</h1>';
 
 // FORM (Update / Create)
@@ -339,9 +405,10 @@ if ($id || $new_type) {
 	if ($show_fields) {
 		//FIELD MANAGEMENT
 		echo "<h1>".__("Ticket fields")."</h1>";
-		
+		$id = get_parameter('id');		
 		//INCIDENT FIELDS
-		$incident_fields = get_db_all_rows_filter ("tincident_type_field", array("id_incident_type" => $id));
+		$sql = "SELECT * FROM tincident_type_field WHERE id_incident_type=$id ORDER BY `order`";
+		$incident_fields = process_sql ($sql);
 		if ($incident_fields === false) {
 			$incident_fields = array ();
 		}
@@ -367,6 +434,7 @@ if ($id || $new_type) {
 		$table->head[2] = __("Value");
 		$table->head[3] = __("List");
 		$table->head[4] = __("Action");
+		$table->head[5] = __("Sort");
 
 		$data = array();
 
@@ -421,6 +489,8 @@ if ($id || $new_type) {
 					onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
 					<img src='images/cross.png' border=0 /></a>";
 				}	
+			
+				$data[5] = print_checkbox_extended ('sorted_items[]', $field['id'], false, false, '', '', true);
 				
 				array_push ($table->data, $data);
 			}
@@ -435,6 +505,28 @@ if ($id || $new_type) {
 			echo '</div>';
 		echo "</form>";
 		
+		$table_sort->class = 'search-table';
+		$table_sort->width = '99%';
+		$table_sort->colspan[0][0] = 3;
+		$table_sort->size = array();
+		$table_sort->size[0] = '25%';
+		$table_sort->size[1] = '25%';
+		$table_sort->size[2] = '25%';
+		$table_sort->size[3] = '25%';
+
+		$table_sort->data[0][0] = "<b>". __("Sort items") . "</b>";
+
+		$table_sort->data[1][0] = __('Sort selected items from position: ');
+		$table_sort->data[1][1] =  print_select (array('before' => __('Move before to'), 'after' => __('Move after to')), 'move_to', '', '', '', '0', true);
+		$table_sort->data[1][2] = print_input_text_extended('position_to_sort', 1,'text-position_to_sort', '', 3, 10, false, "only_numbers('position_to_sort');", '', true);
+		$table_sort->data[1][2] .= print_input_hidden('ids_items_to_sort', '', true);
+		$table_sort->data[1][3] = print_submit_button(__('Sort'), 'sort_submit', false, 'class="sub upd"', true);
+
+		echo "<form action='index.php?sec=incidents&sec2=operation/incidents/type_detail&sort_items=1&id=" . $id . "'
+			method='post' onsubmit='return added_ids_sorted_items_to_hidden_input();'>";
+		print_table($table_sort);
+		echo "</form>";
+
 	}
 //LISTADO GENERAL	
 } else {
@@ -535,5 +627,45 @@ messages = {
 	remote: "<?php echo __('This name already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
+
+function added_ids_sorted_items_to_hidden_input() {
+	var ids = '';
+	var first = true;
+	var ids = "";
+	$('input[name="sorted_items[]"]:checked').each(function() {
+		if (ids == "")
+			ids += this.value;
+		else 
+			ids += ","+this.value;
+	});	
+
+	$("input[name='ids_items_to_sort']").val(ids);
+	
+	if (ids == '') {
+		alert("<?php echo __("Please select any item to order");?>");
+		
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+function only_numbers(name) {
+	var value = $("input[name='" + name + "']").val();
+	
+	if (value == "") {
+		// Do none it is a empty field.
+		return;
+	}
+	
+	value = parseInt(value);
+	
+	if (isNaN(value)) {
+		value = 1;
+	}
+	
+	$("input[name='" + name + "']").val(value);
+}
 
 </script>

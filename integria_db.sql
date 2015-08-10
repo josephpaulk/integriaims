@@ -944,6 +944,7 @@ CREATE TABLE `tincident_type_field` (
   `global_id` mediumint(8) unsigned,
   `parent` mediumint(8) unsigned default 0,
   `linked_value` text default NULL,
+  `order` mediumint(8) unsigned default 0,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
