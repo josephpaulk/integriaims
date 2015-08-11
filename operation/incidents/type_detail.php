@@ -456,9 +456,9 @@ if ($id || $new_type) {
 				}
 				
 				if ($field["type"] == "combo") {
-					$data[2] = $field["combo_value"];
+					$data[2] = ui_print_truncate_text($field["combo_value"], 40);
 				} else if ($field["type"] == "linked") {
-					$data[2] = $field["linked_value"];
+					$data[2] =  ui_print_truncate_text($field["linked_value"], 40);
 				}
 				else {
 					$data[2] = "";

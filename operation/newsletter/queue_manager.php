@@ -254,7 +254,7 @@ if ($queue !== false) {
 		$table->head[8] = __('Retry');
 		$table->head[8] .= print_help_tip (__("This will mark as ready all email address marked as error in a previous attempt and rerun the qeue"), true);
 		
-		$table->head[9] = __('Disable');
+		$table->head[9] = __('Disable Bad Address');
 		$table->head[9] .= print_help_tip (__("This will mark as disable all email address which cannot be sent. Warning, this will be done in the address associated to the newsletter."), true);												
 
 	}

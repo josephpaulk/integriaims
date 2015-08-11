@@ -26,7 +26,8 @@ else
 if (!$config["minor_release"])
 	$config["minor_release"] = 0;
 
-echo 'Integria IMS <b>'.$enterprise.' '.$config["version"].' Build '.$config["build_version"].' MR'.$config["minor_release"].' Package '.$config['current_package'].'</b><br>';
+//~ echo 'Integria IMS <b>'.$enterprise.' '.$config["version"].' Build '.$config["build_version"].' MR'.$config["minor_release"].' Package '.$config['current_package'].'</b><br>';
+echo 'Integria IMS <b>'.$enterprise.' '.$config["version"].' MR'.$config["minor_release"].' Package '.$config['current_package'].'</b><br>';
 
 if (isset($_SESSION['id_usuario'])) {
 	

@@ -186,7 +186,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincidencia` WRITE;
 /*!40000 ALTER TABLE `tincidencia` DISABLE KEYS */;
-INSERT INTO `tincidencia` VALUES (1,'2013-02-12 09:50:27','0000-00-00 00:00:00','Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe','THis&#x20;should&#x20;be&#x20;fixed&#x20;ASAP.&#x20;Seems&#x20;to&#x20;have&#x20;something&#x20;wrong&#x20;in&#x20;XXX&#x20;','demo',3,3,2,'2013-02-12 09:53:45','admin',1,0,0,'',NULL,0,0,1,0,'','admin',3,'2013-02-12 09:50:29','');
+INSERT INTO `tincidencia` VALUES (1,'2013-02-12 09:50:27','0000-00-00 00:00:00','Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe','THis&#x20;should&#x20;be&#x20;fixed&#x20;ASAP.&#x20;Seems&#x20;to&#x20;have&#x20;something&#x20;wrong&#x20;in&#x20;XXX&#x20;','demo',3,3,2,'2013-02-12 09:53:45','admin',1,0,0,'',NULL,0,0,1,0,'','admin',3,'2013-02-12 09:50:29','', '');
 /*!40000 ALTER TABLE `tincidencia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -235,7 +235,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_track` WRITE;
 /*!40000 ALTER TABLE `tincident_track` DISABLE KEYS */;
-INSERT INTO `tincident_track` VALUES (1,1,10,'2013-02-12 09:50:27','admin','2','Added inventory object: Cenutrio'),(2,1,7,'2013-02-12 09:50:27','admin','1','Status changed -> New'),(3,1,17,'2013-02-12 09:50:27','admin','admin','Assigned user changed -> Default Admin'),(4,1,28,'2013-02-12 09:50:27','admin','3','Group has changed -> Customer #B'),(5,1,0,'2013-02-12 09:50:27','admin','0','Created'),(6,1,2,'2013-02-12 09:53:45','demo','0','Workunit added');
+INSERT INTO `tincident_track` VALUES (1,1,10,'2013-02-12 09:50:27','admin','2','Added inventory object: Cenutrio',''),(2,1,7,'2013-02-12 09:50:27','admin','1','Status changed -> New',''),(3,1,17,'2013-02-12 09:50:27','admin','admin','Assigned user changed -> Default Admin',''),(4,1,28,'2013-02-12 09:50:27','admin','3','Group has changed -> Customer #B',''),(5,1,0,'2013-02-12 09:50:27','admin','0','Created',''),(6,1,2,'2013-02-12 09:53:45','demo','0','Workunit added','');
 /*!40000 ALTER TABLE `tincident_track` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,7 +255,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_type_field` WRITE;
 /*!40000 ALTER TABLE `tincident_type_field` DISABLE KEYS */;
-INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0, NULL, 0, ''),(2,1,'Base&#x20;OS','text','',0, NULL,0,''),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0, NULL,0,''),(4,1,'Expected&#x20;behaviour','textarea','',0, NULL,0,'');
+INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4',0, NULL, 0, '', 0),(2,1,'Base&#x20;OS','text','',0, NULL,0,'',0),(3,1,'Way&#x20;to&#x20;reproduce','textarea','',0, NULL,0,'',0),(4,1,'Expected&#x20;behaviour','textarea','',0, NULL,0,'',0);
 /*!40000 ALTER TABLE `tincident_type_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -545,7 +545,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tsla` WRITE;
 /*!40000 ALTER TABLE `tsla` DISABLE KEYS */;
-INSERT INTO `tsla` VALUES (1,'Regular&#x20;SLA','',48,480,10,96,1,1,8,18,0,1);
+INSERT INTO `tsla` VALUES (1,'Regular&#x20;SLA','',48,480,10,96,1,1,8,18,0,1,0);
 /*!40000 ALTER TABLE `tsla` ENABLE KEYS */;
 UNLOCK TABLES;
 

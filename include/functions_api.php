@@ -1501,5 +1501,33 @@ function api_mark_updated_incident ($return_type, $params) {
 	return;
 }
 
+function api_ovo_manager ($return_type, $params) {
+	
+	$values['titulo'] = $params[0];
+	$values['id_grupo'] = $params[1];
+	$values['prioridad'] = $params[2];
+	$values['descripcion'] = $params[3];
+	$values['id_inventory'] = $params[4];
+	$values['id_incident_type'] = $params[5];
+	$values['extra_data'] = $params[6];
+	
+	$incidents = get_db_all_rows_filter('tincidencia', array('extra_data'=>$values['extra_data']));
+	
+	if ($incidents == false) {
+		$incidents = array();
+	}
+	
+	foreach ($incidents as $incident) {
+		if (($incident['extra_data'] == $values['extra_data']) && ($values['prioridad'] == 2)) {
+			$workunit['id_incidencia'] = $incident['id_incidencia'];
+			$workunit['descripcion'] = $values['descripcion'];
+			$result = api_create_incident_workunit($return_type, 'ovo', $workunit);
+		} else {
+			$result = api_create_incident($return_type, $values);
+		}
+	}
+	echo $result;
+	return;
+}
 
 ?>

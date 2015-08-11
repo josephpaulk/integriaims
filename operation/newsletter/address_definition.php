@@ -289,7 +289,7 @@ if($manager) {
 	
 	echo '<br>';
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/issue_creation&create=1">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/address_creation&create=1">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	echo '</div>';

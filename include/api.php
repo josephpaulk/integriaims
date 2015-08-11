@@ -234,6 +234,12 @@ switch ($op){
 		echo api_mark_updated_incident ($return_type, $params);
 		break;
 	}
+	case "ovo_manager":
+	{
+		$params = explode($token, $params);
+		echo api_ovo_manager ($return_type, $params);
+		break;
+	}
 	default: 
 	{
 	}
