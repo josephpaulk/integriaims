@@ -151,7 +151,8 @@ if ($delete_field) {
 }
 
 if ($update_field) { //update field to incident type
-	$id_field = get_parameter ('id_field');
+	$id_field = (int)get_parameter ('id_field');
+	$is_global = get_db_value('global_id', 'tincident_type_field','id', $id_field);
 	
 	$value_update['label'] = get_parameter('label');
 	$value_update['type'] = get_parameter ('type');
@@ -181,18 +182,44 @@ if ($update_field) { //update field to incident type
 		echo '<h3 class="error">'.__('Field could not be updated. Empty linked value').'</h3>';
 	
 	} else {
-		if ($add_linked_value != "") {
-			$old_linked_value = get_db_value('linked_value', 'tincident_type_field', 'id', $id_field);
-			$value_update = array();
-			$value_update['linked_value'] = $old_linked_value.','.$add_linked_value;
-		}
-		if ($add_combo_value != "") {
-			$old_combo_value = get_db_value('combo_value', 'tincident_type_field', 'id', $id_field);
-			$value_update = array();
-			$value_update['combo_value'] = $old_combo_value.','.$add_combo_value;
-		}
-		$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
-		
+		if ($is_global) {
+			if ($add_linked_value != "") {
+				$old_linked_value = get_db_value('linked_value', 'tincident_type_field', 'id', $id_field);
+				$value_update = array();
+				$value_update['linked_value'] = $old_linked_value.','.$add_linked_value;
+				$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
+			}
+			if ($add_combo_value != "") {
+				$old_combo_value = get_db_value('combo_value', 'tincident_type_field', 'id', $id_field);
+				$value_update = array();
+				$value_update['combo_value'] = $old_combo_value.','.$add_combo_value;
+				$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
+			}
+
+			if ($result_update) {
+				//Global fields are inserted in all types
+				if ($is_global) {
+					//Insert global field in the rest of types
+					$sql_types = sprintf("SELECT id, name FROM tincident_type WHERE id != %d", $id);
+
+					$types = get_db_all_rows_sql($sql_types);
+
+					if (!$types) {
+						$types = array();
+					}
+
+					foreach ($types as $t) {
+						$res = process_sql_update('tincident_type_field', $value_update, array('id_incident_type' => $t['id'],'global_id'=>$is_global));
+						if (!$res) {
+							echo '<h3 class="error">'.__('There was a problem updating global field for type: ')." ".$t["name"].'</h3>';
+						}
+					}
+				}
+			}
+
+		} else {
+			$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
+		}		
 		if ($result_update === false) {
 			echo '<h3 class="error">'.__('Field could not be updated').'</h3>';
 		} else {
@@ -233,7 +260,7 @@ if ($create_type) {
 				WHERE global_id != 0";
 				
 	$global_ids = get_db_all_rows_sql($sql_global_ids);
-	
+
 	if ($global_ids) {
 		foreach ($global_ids as $global_id) {
 			$sql = "SELECT * FROM tincident_type_field WHERE id=".$global_id['global_id'];
@@ -243,6 +270,7 @@ if ($create_type) {
 			$value['label'] = $type_field["label"];
 			$value['type'] = $type_field["type"];
 			$value['combo_value'] = $type_field["combo_value"];
+			$value['linked_value'] = $type_field["linked_value"];
 			$value['show_in_list'] = $type_field["show_in_list"];
 			$value['global_id'] = $type_field["global_id"];
 			
@@ -401,11 +429,13 @@ if ($id || $new_type) {
 	print_table ($table);
 	echo '</form>';
 	unset($table);
-	
+
 	if ($show_fields) {
 		//FIELD MANAGEMENT
 		echo "<h1>".__("Ticket fields")."</h1>";
-		$id = get_parameter('id');		
+		if ($id == '') {
+			$id = get_parameter('id');
+		}
 		//INCIDENT FIELDS
 		$sql = "SELECT * FROM tincident_type_field WHERE id_incident_type=$id ORDER BY `order`";
 		$incident_fields = process_sql ($sql);

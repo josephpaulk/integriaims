@@ -1501,29 +1501,46 @@ function api_mark_updated_incident ($return_type, $params) {
 	return;
 }
 
+/*
+ * 
+ * Example: http://localhost/integria/include/api.php?user=admin&pass=integria&user_pass=integria&op=ovo_manager&params=Titulo,2,2,Descripcion2,10626,10,mmm
+ * 
+ */
 function api_ovo_manager ($return_type, $params) {
+
+	$values[0] = $params[0];
+	$values[1] = $params[1];
+	$values[2] = $params[2];
+	$values[3] = $params[3];
+	$values[4] = $params[4];
+	$values[5] = $params[5];
+	$values[6] = '';
+	$values[7] = '';
+	$values[8] = 0;
+	$values[9] = 1;
+	$values[10] = $params[6];
 	
-	$values['titulo'] = $params[0];
-	$values['id_grupo'] = $params[1];
-	$values['prioridad'] = $params[2];
-	$values['descripcion'] = $params[3];
-	$values['id_inventory'] = $params[4];
-	$values['id_incident_type'] = $params[5];
-	$values['extra_data'] = $params[6];
-	
-	$incidents = get_db_all_rows_filter('tincidencia', array('extra_data'=>$values['extra_data']));
-	
+	$prioridad =  $params[2];
+	$descripcion =  $params[3];
+	$extra_data =  $params[6];
+
+	$sql = "SELECT * FROM tincidencia WHERE extra_data = '".$extra_data."'";
+
+	$incidents = get_db_all_rows_sql($sql);
+
 	if ($incidents == false) {
-		$incidents = array();
-	}
-	
-	foreach ($incidents as $incident) {
-		if (($incident['extra_data'] == $values['extra_data']) && ($values['prioridad'] == 2)) {
-			$workunit['id_incidencia'] = $incident['id_incidencia'];
-			$workunit['descripcion'] = $values['descripcion'];
-			$result = api_create_incident_workunit($return_type, 'ovo', $workunit);
-		} else {
-			$result = api_create_incident($return_type, $values);
+		if ($prioridad != 0) {
+			api_create_incident($return_type,'ovo',$values);
+		}
+	} else {
+		foreach ($incidents as $incident) {
+			$workunit[0] = $incident['id_incidencia'];
+			$workunit[1] = $descripcion;
+			$workunit[2] = 0;
+			$workunit[3] = 0;
+			$workunit[4] = 1;
+			$workunit[5] = 2;
+			api_create_incident_workunit($return_type, 'ovo', $workunit);
 		}
 	}
 	echo $result;
