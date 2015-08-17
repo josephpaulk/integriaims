@@ -1,3 +1,77 @@
+2015-08-17  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_dbdata.sql
+	  include/config_process.php: Modified version.
+
+	* include/export_csv.php: Added fields to
+	export to CSV.
+
+2015-08-13  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* functions_api.php: Modified api_ovo_manager.
+
+	* operation/incidents/type_detail.php: Fixed
+	bugs creating ticket fields.
+
+2015-08-11  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_demo.sql: Fixed demo data.
+
+	* general/footer.php: Removed 'build' from
+	the version in footer.
+
+	* include/api.php
+	  include/functions_api.php: Added 'ovo_manager'
+	function to API.
+
+	* include/functions_incidents.php
+	  operation/incidents/type_detail.php
+	  operation/newsletter/address_definition.php
+	  operation/newsletter/queue_manager.php: Fixed minor
+	bugs.
+
+2015-08-10  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  include/functions_incidents.php
+	  operation/incidents/type_detail.php: Allow sort
+	fields.
+	
+	* extras/mr/26.sql: Added file.
+
+2015-08-05  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/newsletter/queue_manager.php: Fixed pagination.
+
+2015-08-05  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/usuario/lista_usuarios.php: Fixed pagination.
+
+	* include/functions_inventories.php: Improved visualization.
+	  include/styles/integria.css
+
+	* operation/companies/company_detail.php
+	  operation/invoices/invoice_detail.php: Changed 'Payment'
+	by 'Expiration'.
+	  
+	* operation/user_report/report_annual: Fixed bug
+	in report.
+
+2015-08-03  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_html.php
+	  operation/incidents/incident_type_field.php
+	  operation/incidents/type_detail.php: Improved
+	ticket fields.
+
+2015-08-03  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_api.php
+	  integria_db.sql: Added params to 
+	api_create_incident.
+
+	* extras/mr/25.sql: Added file.
+
 2015-07-21  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* general/footer.php

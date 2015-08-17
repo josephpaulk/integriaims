@@ -188,6 +188,19 @@ if ($export_csv_inventory) {
 		
 		if ($aux["id_object_type"]) {
 			$aux["object_type_name"] = get_db_value("name", "tobject_type", "id", $r["id_object_type"]);
+			$sql = "SELECT * FROM tobject_type_field WHERE id_object_type=".$aux["id_object_type"];
+
+			$all_fields = get_db_all_rows_sql($sql);
+
+			if ($all_fields == false) {
+				$all_fields = array();
+			}
+	
+			foreach ($all_fields as $key=>$field) {
+				$sql = "SELECT data FROM tobject_field_data WHERE id_object_type_field=".$field['id']. " AND id_inventory=".$aux["id"];
+				$data = get_db_value_sql($sql);
+				$aux[safe_output($field['label'])] = $data;
+			}
 		}
 
 		$aux["description"] = $r["description"];

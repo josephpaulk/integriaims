@@ -14,7 +14,7 @@
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
 ('language_code','en_GB'),
 ('block_size','25'),
-('db_scheme_version','4.1.16'),
+('db_scheme_version','4.2'),
 ('db_scheme_build','141015'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
@@ -48,7 +48,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 0),
+('current_package', 37),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
