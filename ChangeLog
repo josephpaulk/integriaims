@@ -1,5 +1,12 @@
 2015-08-17  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* install.php
+	  include/config.inc.php
+	  include/config_process.php: Modified build
+	 version and contact email.
+
+2015-08-17  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_dbdata.sql
 	  include/config_process.php: Modified version.
 

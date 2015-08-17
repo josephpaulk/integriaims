@@ -5,8 +5,8 @@
 // |__||__|__||____||_____||___  ||__|  |__||___._|   |__||__|__|__||_____|
 //                         |_____|                                         
 // ============================================================================
-// Copyright (c) 2007-2010 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2010 Artica Soluciones Tecnologicas
+//  http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
