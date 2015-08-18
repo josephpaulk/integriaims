@@ -53,7 +53,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 23);
+('minor_release', 26);
 
 -- Default password is 'integria'
 

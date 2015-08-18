@@ -1524,7 +1524,7 @@ function api_ovo_manager ($return_type, $params) {
 	$descripcion =  $params[3];
 	$extra_data =  $params[6];
 
-	$sql = "SELECT * FROM tincidencia WHERE extra_data = '".$extra_data."'";
+	$sql = "SELECT * FROM tincidencia WHERE extra_data = '".$extra_data."' AND estado <> 7";
 
 	$incidents = get_db_all_rows_sql($sql);
 
