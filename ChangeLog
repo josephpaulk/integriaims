@@ -1,5 +1,14 @@
 2015-08-18  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* integria.centos.spec
+	  integria.spec
+	  integria_demo.sql
+	  DEBIAN/control
+	  extras/build_vars.sh: Updated version.
+
+
+2015-08-18  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_dbdata.sql: Updated minor release.
 
 	* include/functions_api.php: Changes in function
