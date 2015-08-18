@@ -1,3 +1,12 @@
+2015-08-18  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_db.php
+	  include/integria_cron.php
+	  operation/slas/sla_detail.php: Added
+	third party SLA.
+	
+	* extras/mr/25.sql: Added file.
+
 2015-08-17  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* install.php

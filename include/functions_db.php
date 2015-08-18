@@ -1798,16 +1798,51 @@ function get_incident_users ($id_incident) {
 function check_incident_sla_min_response ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
-	/* If closed, disable any affected SLA */
-	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
-		if ($incident['affected_sla_id']) {
-			$sql = sprintf ('UPDATE tincidencia
-				SET affected_sla_id = 0
-				WHERE id_incidencia = %d',
-				$id_incident);
-			process_sql ($sql);
+	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	
+	if ($sla_info != false) {
+		$id_sla_type = $sla_info['id_sla_type'];
+		
+		switch ($id_sla_type) {
+			case 0: //NORMAL SLA
+				/* If closed, disable any affected SLA */
+				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
+			case 1: //THIRD PARTY SLA
+				/* If closed, disable any affected SLA */
+				if ($incident['estado'] <> 6) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
+			case 2: //NORMAL SLA AND THIRD PARTY SLA
+				if ($incident['estado'] == 7) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
 		}
-		return false;
 	}
 
 	$slas = incidents_get_incident_slas ($id_incident, false);
@@ -1826,8 +1861,8 @@ function check_incident_sla_min_response ($id_incident) {
         // Incident owner is the last workunit author ?, then SKIP
     	$last_wu = get_incident_lastworkunit ($id_incident);
 	
-	if ($last_wu && ($last_wu["id_user"] != $incident["id_creator"])){
-                return false;
+		if ($last_wu && ($last_wu["id_user"] != $incident["id_creator"])){
+			return false;
         }
 
         if ($last_wu["timestamp"] != ""){
@@ -1883,16 +1918,51 @@ function check_incident_sla_min_response ($id_incident) {
 function check_incident_sla_max_inactivity ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
-	/* If closed, disable any affected SLA */
-	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
-		if ($incident['affected_sla_id']) {
-			$sql = sprintf ('UPDATE tincidencia
-				SET affected_sla_id = 0
-				WHERE id_incidencia = %d',
-				$id_incident);
-			process_sql ($sql);
+	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	
+	if ($sla_info != false) {
+		$id_sla_type = $sla_info['id_sla_type'];
+		
+		switch ($id_sla_type) {
+			case 0: //NORMAL SLA
+				/* If closed, disable any affected SLA */
+				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
+			case 1: //THIRD PARTY SLA
+				/* If closed, disable any affected SLA */
+				if ($incident['estado'] <> 6) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
+			case 2: //NORMAL SLA AND THIRD PARTY SLA
+				if ($incident['estado'] == 7) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
 		}
-		return false;
 	}
 	
 	$slas = incidents_get_incident_slas ($id_incident, false);
@@ -1944,17 +2014,51 @@ function check_incident_sla_max_inactivity ($id_incident) {
 
 function check_incident_sla_max_response ($id_incident) {
 	$incident = get_incident ($id_incident);
+	$sla_info = incidents_get_sla_info ($incident['id_group']);
 	
-	/* If closed, disable any affected SLA */
-	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
-		if ($incident['affected_sla_id']) {
-			$sql = sprintf ('UPDATE tincidencia
-				SET affected_sla_id = 0
-				WHERE id_incidencia = %d',
-				$id_incident);
-			process_sql ($sql);
+	if ($sla_info != false) {
+		$id_sla_type = $sla_info['id_sla_type'];
+		
+		switch ($id_sla_type) {
+			case 0: //NORMAL SLA
+				/* If closed, disable any affected SLA */
+				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
+			case 1: //THIRD PARTY SLA
+				/* If closed, disable any affected SLA */
+				if ($incident['estado'] <> 6) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
+			case 2: //NORMAL SLA AND THIRD PARTY SLA
+				if ($incident['estado'] == 7) {
+					if ($incident['affected_sla_id']) {
+						$sql = sprintf ('UPDATE tincidencia
+							SET affected_sla_id = 0
+							WHERE id_incidencia = %d',
+							$id_incident);
+						process_sql ($sql);
+					}
+					return false;
+				}
+			break;
 		}
-		return false;
 	}
 	
 	$slas = incidents_get_incident_slas ($id_incident, false);

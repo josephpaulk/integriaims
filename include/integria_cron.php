@@ -1204,7 +1204,7 @@ if ($config["enable_newsletter"] == 1) {
 
 $incidents = get_db_all_rows_sql ('SELECT * FROM tincidencia
 	WHERE sla_disabled = 0
-	AND estado NOT IN (6,7)');
+	AND estado NOT IN (7)');
 
 if ($incidents === false)
 	$incidents = array ();
@@ -1279,4 +1279,3 @@ delete_all_files_in_dir ($temp_dir);
 incidents_update_stats_data();
 
 ?>
-
