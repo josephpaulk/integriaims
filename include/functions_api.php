@@ -580,6 +580,10 @@ function api_create_incident_workunit ($return_type, $user, $params){
 
 	$result = process_sql_insert('tworkunit_incident', array('id_incident' => $id_incident, 'id_workunit' => $id_workunit));
 	
+	if ($result) {
+		incident_tracking ($id_incident, INCIDENT_WORKUNIT_ADDED);
+	}
+	
 	switch($return_type) {
 		case "xml": 
 				echo xml_node($result);
