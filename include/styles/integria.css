@@ -7,6 +7,7 @@
 
 @import url(integria_tip.css);
 @import url(calendar.css);
+@import url(fixed-bottom-box.css);
 
 /* top elements */
 * {
@@ -118,6 +119,23 @@ table.blank {
 	margin: 0px;
 	padding-left: 15px;
     border: none;
+}
+
+table.clean {
+	width: inherit;
+	height: inherit;
+	text-align: left;
+}
+
+table.clean tr > td {
+	padding: 5px;
+}
+
+table.clean tr:nth-child(odd) > td{
+	background-color: #F7F7F7;
+}
+table.clean tr:nth-child(even) > td{
+	background-color: #FFFFFF;
 }
 
 table.databox, table.databox_color {
