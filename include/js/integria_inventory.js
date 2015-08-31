@@ -699,13 +699,39 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 
 function loadTable(type, div_id, less_branchs, id_father, sql_search, ref_tree, end, last_update) {
 	id_item = div_id;
-
+	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&id_item=" + id_item + "&printTable=1&type="+ type+"&id_father=" + id_father +"&sql_search="+sql_search+"&end="+end,
-		success: function(data){
-			$('#cont').html(data);
+		data: {
+			'page': 'include/ajax/inventories',
+			'get_item_info': 1,
+			'id_item': id_item,
+			'id_father': id_father
+		},
+		success: function (data) {
+			data = JSON.parse(data);
+			
+			var name = data.name || 'N/A';
+			var items = data.data;
+			
+			var editImg = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' + id_item + '">'
+							+ '<img class="inventory_table_edit" src="images/application_edit_white.png">'
+						+ '</a>';
+			
+			var rows = '';
+			items.forEach(function (item) {
+				rows += '<tr><td><strong>' + item.label + '</strong></td>' + '<td>' + item.data + '</td></tr>';
+			});
+			var table = '<table class="clean">' + rows + '</table>';
+			
+			// Assing the new variable to the window scope
+			if (typeof window.inventoryInfoBox === 'undefined')
+				window.inventoryInfoBox = $.fixedBottomBox({ width: 320 });
+			var width = $(table).width();
+			window.inventoryInfoBox
+				.render(name + ' ' + editImg, table)
+				.open();
 		}
 	});
 

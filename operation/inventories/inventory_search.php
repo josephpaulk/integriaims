@@ -470,11 +470,11 @@ echo "</form>";
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/integria_inventory.js"></script>
+<script type="text/javascript" src="include/js/fixed-bottom-box.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready (function () {
-
 	$("#listview_form_submit").click(function (event) {
 		event.preventDefault();
 		$("#list_view_inventory").submit();

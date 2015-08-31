@@ -860,14 +860,11 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	global $enteprise_load;
 	
 	echo '<table class="search-table" style="width:99%">';
-	echo "<tr>";
-	echo "<td style='text-align: left; padding-right: 40px;' colspan=2>";
-	echo "<em style='float: right;'>".__("Using tree view");
+	echo '<tr><td style="width:100%" valign="top">';
+	
+	echo "<em style='float: right; padding-right: 20px;'>".__("Using tree view");
 	echo print_help_tip (__("Filters only apply <br> to the first level"), true);
 	echo "</em>";
-	echo "</td>";
-	echo "</tr>";
-	echo '<tr><td style="width:60%" valign="top">';
 
 	if (!$sql_search_obj_type) {
 		$object_types = get_object_types (false, true);
@@ -982,8 +979,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 		$id_div = "object_types_".$element['id'];
 
 		echo "<li style='margin: 0px 0px 0px 0px;'>
-
-			<a style='vertical-align: middle;' onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\", \"" . $last_update . "\")'>" .
+			<a style='vertical-align: middle;' onfocus='JavaScript: this.blur()' href='javascript: loadSubTree(\"object_types\", \"" . $element['id'] . "\", " . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\", \"" . $last_update . "\")'>" .
 			$img . "&nbsp;" . $element["img"] ."&nbsp;" . safe_output($element['name'])."</a>"."&nbsp;&nbsp;"."($total_stock:$new_stock:$unused_stock:$min_stock)".print_help_tip(__("Total").':'.__("New").':'.__("Unused").':'.__("Min. stock"), true);
 
 		if ($end) {
@@ -999,10 +995,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	
 	echo "</ul>\n";
 	echo '</td>';
-	echo '<td style="width:40%" valign="top">';
-	//~ echo '<div id="cont" style="position:relative; top:10px;">&nbsp;</div>';
-	echo '<div id="cont">&nbsp;</div>';
-	echo '</td></tr>';
+	echo '</tr>';
 	echo '</table>';
 	
 	return;
@@ -1037,7 +1030,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 				} else {
 					$name_owner = '--';
 				}
-				echo '<tr><td class="datos"><b>'.__('Owner: ').'</b></td>';
+				echo '<tr><td class="datos"><b>'.__('Owner').': </b></td>';
 				echo '<td class="datos"><b>'.$name_owner.'</b></td>';
 				echo '</tr>';
 
@@ -1048,7 +1041,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 				} else {
 					$name_parent = '--';
 				}
-				echo '<tr><td class="datos"><b>'.__('Parent: ').'</b></td>';
+				echo '<tr><td class="datos"><b>'.__('Parent').': </b></td>';
 				echo '<td class="datos"><b>'.$name_parent.'</b></td>';
 				echo '</tr>';
 
@@ -1058,7 +1051,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 				} else {
 					$name_manufacturer = '--';
 				}
-				echo '<tr><td class="datos"><b>'.__('Manufacturer: ').'</b></td>';
+				echo '<tr><td class="datos"><b>'.__('Manufacturer').': </b></td>';
 				echo '<td class="datos"><b>'.$name_manufacturer.'</b></td>';
 				echo '</tr>';
 				
@@ -1068,7 +1061,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 				} else {
 					$name_contract = '--';
 				}
-				echo '<tr><td class="datos"><b>'.__('Contract: ').'</b></td>';
+				echo '<tr><td class="datos"><b>'.__('Contract').': </b></td>';
 				echo '<td class="datos"><b>'.$name_contract.'</b></td>';
 				echo '</tr>';
 				
@@ -1729,5 +1722,99 @@ function inventories_get_external_tables ($id_object_type) {
 	
 	$external_tables = array_unique($ext_tables);
 	return $external_tables;
+}
+
+function inventories_get_info($id_item, $id_father) {
+	global $config;
+	
+	$result = array();
+
+	$info_inventory = get_db_row('tinventory', 'id', $id_item);
+	$info_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type' => $id_father));
+	
+	if ($info_inventory !== false) {
+		$result['name'] = $info_inventory['name'];
+		
+		$result['edit_img'] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_item.'">';
+		$result['edit_img'] .= '<img class="inventory_table_edit" src="images/application_edit_white.png">';
+		$result['edit_img'] .= '</a>';
+		
+		$result['data'] = array();
+		
+		if ($info_inventory['owner'] != '') {
+			$owner = $info_inventory['owner'];
+			$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $owner);
+		} else {
+			$name_owner = '--';
+		}
+		$row = array();
+		$row['label'] = __('Owner');
+		$row['data'] = $name_owner;
+		$result['data'][] = $row;
+		
+		if ($info_inventory['id_parent'] != 0) {
+			$parent = $info_inventory['id_parent'];
+			$name_parent = get_db_value('name', 'tinventory', 'id', $parent);
+		} else {
+			$name_parent = '--';
+		}
+		$row = array();
+		$row['label'] = __('Parent');
+		$row['data'] = $name_parent;
+		$result['data'][] = $row;
+		
+		if ($info_inventory['id_manufacturer'] != 0) {
+			$manufacturer = $info_inventory['id_manufacturer'];
+			$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $info_inventory['id_manufacturer']);
+		} else {
+			$name_manufacturer = '--';
+		}
+		$row = array();
+		$row['label'] = __('Manufacturer');
+		$row['data'] = $name_manufacturer;
+		$result['data'][] = $row;
+		
+		if ($info_inventory['id_contract'] != 0) {
+			$contract = $info_inventory['id_contract'];
+			$name_contract = get_db_value('name', 'tcontract', 'id', $info_inventory['id_contract']);
+		} else {
+			$name_contract = '--';
+		}
+		$row = array();
+		$row['label'] = __('Contract');
+		$row['data'] = $name_contract;
+		$result['data'][] = $row;
+		
+		if ($info_fields !== false) {
+			foreach ($info_fields as $info) {
+				
+				$filter = array(
+						'id_inventory' => $id_item,
+						'id_object_type_field' => $info['id']
+					);
+				$value = get_db_value_filter ('`data`', 'tobject_field_data', $filter);
+				
+				$info_field = array();
+				$info_field['label'] = $info['label'];
+				$info_field['data'] = $value;
+				
+				$result['data'][] = $info_field;
+				
+				if (($info['type'] == 'external') && ($value != false)) {
+					
+					$all_fields_ext = inventories_get_all_external_field ($info['external_table_name'], $info['external_reference_field'], $info['id']);
+
+					foreach ($all_fields_ext as $field) {
+						$info_field_external = array();
+						$info_field['label'] = $field['label'];
+						$info_field['data'] = $field['data'];
+						$result['data'][] = $info_field_external;
+					}
+				}
+			}
+		}
+	}
+	
+	return $result;
 }
 ?>

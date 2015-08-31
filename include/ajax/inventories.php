@@ -25,6 +25,7 @@ $get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
 $select_fields = get_parameter('select_fields', 0);
 $printTable = get_parameter('printTable', 0);
 $printTableMoreInfo = get_parameter('printTableMoreInfo', 0);
+$get_item_info = (bool) get_parameter('get_item_info', 0);
 	
 if ($select_fields) {
 	$id_object_type = get_parameter('id_object_type');
@@ -48,9 +49,16 @@ if ($printTable) {
 	$id_item = get_parameter('id_item');
 	$type = get_parameter('type');
 	$id_father = get_parameter('id_father');
-	$sql_search = base64_decode(get_parameter('sql_search', ''));
 
 	inventories_printTable($id_item, $type, $id_father);
+	return;
+}
+
+if ($get_item_info) {
+	$id_item = get_parameter('id_item');
+	$id_father = get_parameter('id_father');
+
+	echo json_encode(inventories_get_info($id_item, $id_father));
 	return;
 }
 
