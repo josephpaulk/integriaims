@@ -1,5 +1,12 @@
 2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_db.php,
+	  include/functions_incidents.php,
+	  include/integria_cron.php: Now the '_access_url_' macro
+	is replaced properly when the 'access_public' property exists.
+
+2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/styles/integria.css: Style fix of the fileupload.
 	Ticket #2376.
 	

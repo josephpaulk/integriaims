@@ -1029,7 +1029,9 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 	$cc_task = $task["cc"];
 
 	$MACROS["_time_used_"] = $workunit["duration"];
-	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
+	
+	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
+	$MACROS["_access_url_"] = $access_dir."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
 
 	if ($workunit["have_cost"] == 1)
 		$MACROS["_havecost_"] = __('Yes');

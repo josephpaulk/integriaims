@@ -482,11 +482,7 @@ function check_sla_min ($incident) {
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['min_response']*60*60);
 	
-	if ($config['access_public'] == '') {
-		$access_dir = $config["base_url"];
-	} else {
-		$access_dir = $config['access_public'];
-	}
+	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
@@ -536,11 +532,7 @@ function check_sla_max ($incident) {
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['max_response']*3600);
 	
-	if ($config['access_public'] == '') {
-		$access_dir = $config["base_url"];
-	} else {
-		$access_dir = $config['access_public'];
-	}
+	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
@@ -587,11 +579,7 @@ function check_sla_inactivity ($incident) {
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['max_inactivity']*3600);
 	
-	if ($config['access_public'] == '') {
-		$access_dir = $config["base_url"];
-	} else {
-		$access_dir = $config['access_public'];
-	}
+	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time.tpl", $MACROS);
