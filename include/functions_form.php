@@ -695,19 +695,23 @@ function show_workunit_data ($workunit, $title) {
 
 	// Body
 	echo "<div class='notebody'>";
+	
+	$link_pattern = '/(https?:\/\/(?:(?!\s|&#x20;|\r|&#x0a;).)+)/i';
+	$link_replace = '<a href="$1">$0</a>';
+	
 	if (strlen ($nota) > 3024) {
 		echo "<div id='short_wu_$id_workunit'>";
-		echo clean_output_breaks (substr (preg_replace("/((http|https|www)[^\s]+)/", '<a href="$1">$0</a>', $nota), 0, 1024));
+		echo clean_output_breaks (substr (preg_replace($link_pattern, $link_replace, $nota), 0, 1024));
 		echo "<br /><br />";
 		echo "<a href='javascript:readMoreWU($id_workunit);'>";
 		echo __('Read more...');
 		echo "</a>";
 		echo "</div>";
 		echo "<div id='long_wu_$id_workunit' style='display:none;'>";
-		echo clean_output_breaks (preg_replace("/((http|https|www)[^\s]+)/", '<a href="$1">$0</a>', $nota));
+		echo clean_output_breaks (preg_replace($link_pattern, $link_replace, $nota));
 		echo "</div>";
 	} else {
-		echo clean_output_breaks (preg_replace("/((http|https|www)[^\s]+)/", '<a href="$1">$0</a>', $nota));
+		echo clean_output_breaks (preg_replace($link_pattern, $link_replace, $nota));
 	}
 	echo "</div>";
 }

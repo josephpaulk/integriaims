@@ -182,83 +182,84 @@ echo '</div>';
 ?>
 
 <script type="text/javascript">
+	// Enclose in its own scope
+	(function ($) {
+		// Comment form controller
+		var $commentForm = $("form#form-add-workunit");
+		var $commentList = $("div#comment-list");
 
-// Comment form controller
-var $commentForm = $("form#form-add-workunit");
-var $commentList = $("div#comment-list");
+		var $commentProfile = $commentForm.find('select#work_profile');
+		var $commentDuration = $commentForm.find('input#text-duration');
+		var $commentHaveCost = $commentForm.find('input#checkbox-have_cost');
+		var $commentPublic = $commentForm.find('input#checkbox-public');
+		var $commentText = $commentForm.find('textarea#textarea-nota');
 
-var $commentProfile = $commentForm.find('select#work_profile');
-var $commentDuration = $commentForm.find('input#text-duration');
-var $commentHaveCost = $commentForm.find('input#checkbox-have_cost');
-var $commentPublic = $commentForm.find('input#checkbox-public');
-var $commentText = $commentForm.find('textarea#textarea-nota');
+		var $spinner = $("span#sending_data");
 
-var $spinner = $("span#sending_data");
-
-$commentForm.submit(function(e) {
-	e.preventDefault();
-	
-	$spinner.show();
-	
-	var enableInputs = function() {
-		$commentForm.find('input, textarea, button, select').prop("disabled", false);
-	}
-	var disableInputs = function() {
-		$commentForm.find('input, textarea, button, select').prop("disabled", true);
-	}
-	var cleanInputs = function() {
-		$commentProfile.val(0);
-		$commentDuration.val(0);
-		$commentHaveCost.prop("checked", false);
-		$commentPublic.prop("checked", true);
-		$commentText.val("");
-	}
-	
-	var errorMessage = "<?php echo __('Error') . '. ' . __('The comment was not created'); ?>";
-	
-	$.ajax({
-		url: 'ajax.php',
-		type: 'POST',
-		dataType: 'html',
-		data: {
-			page: 'operation/incidents/incident_workunits',
-			id: <?php echo json_encode($id_incident); ?>,
-			insert_workunit: 1,
-			nota: function () {
-				return $commentText.val();
-			},
-			duration: function () {
-				return $commentDuration.val();
-			},
-			have_cost: function () {
-				return $commentHaveCost.prop("checked") ? 1 : 0;
-			},
-			work_profile: function () {
-				return $commentProfile.val();
-			},
-			public: function () {
-				return $commentPublic.prop("checked") ? 1 : 0;
-			}
-		},
-	})
-	.done(function(data) {
-		if (data.length > 0) {
-			cleanInputs();
+		$commentForm.submit(function(e) {
+			e.preventDefault();
 			
-			$commentList.html(data);
-		}
-		else {
-			alert(errorMessage);
-		}
-	})
-	.fail(function() {
-		alert(errorMessage);
-	})
-	.always(function() {
-		$spinner.hide();
-		enableInputs();
-	});
-	
-});
-
+			$spinner.show();
+			
+			var enableInputs = function() {
+				$commentForm.find('input, textarea, button, select').prop("disabled", false);
+			}
+			var disableInputs = function() {
+				$commentForm.find('input, textarea, button, select').prop("disabled", true);
+			}
+			var cleanInputs = function() {
+				$commentProfile.val(0);
+				$commentDuration.val(0);
+				$commentHaveCost.prop("checked", false);
+				$commentPublic.prop("checked", true);
+				$commentText.val("");
+			}
+			
+			var errorMessage = "<?php echo __('Error') . '. ' . __('The comment was not created'); ?>";
+			
+			$.ajax({
+				url: 'ajax.php',
+				type: 'POST',
+				dataType: 'html',
+				data: {
+					page: 'operation/incidents/incident_workunits',
+					id: <?php echo json_encode($id_incident); ?>,
+					insert_workunit: 1,
+					nota: function () {
+						return $commentText.val();
+					},
+					duration: function () {
+						return $commentDuration.val();
+					},
+					have_cost: function () {
+						return $commentHaveCost.prop("checked") ? 1 : 0;
+					},
+					work_profile: function () {
+						return $commentProfile.val();
+					},
+					public: function () {
+						return $commentPublic.prop("checked") ? 1 : 0;
+					}
+				},
+			})
+			.done(function(data) {
+				if (data.length > 0) {
+					cleanInputs();
+					
+					$commentList.html(data);
+				}
+				else {
+					alert(errorMessage);
+				}
+			})
+			.fail(function() {
+				alert(errorMessage);
+			})
+			.always(function() {
+				$spinner.hide();
+				enableInputs();
+			});
+			
+		});
+	})(jQuery);
 </script>

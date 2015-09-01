@@ -1,5 +1,14 @@
 2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_form.php: Fixed (or improved) the regex
+	to transform the plain text links into html links into the
+	function 'show_workunit_data'.
+	
+	* operation/incidents/incident_workunits.php: Improved the
+	javascript scope management.
+	
+2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_db.php,
 	  include/functions_incidents.php,
 	  include/integria_cron.php: Now the '_access_url_' macro
