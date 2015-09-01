@@ -1,3 +1,15 @@
+2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/js/integria_inventory.js: Fixed an anoying effect
+	when navigating through the inventory tree.
+	
+	* operation/inventories/inventory_search.php: Now some
+	inventory items are shown properly when their 'id_object_type'
+	is 'NULL'.
+	
+	* include/functions_inventories.php: Improved the result output
+	of the function 'inventories_get_info'.
+	
 2015-08-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/styles/integria.css: Added a new table style.

@@ -608,7 +608,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 		//Put an spinner to simulate loading process
 
 		$('#tree_div'+ref_tree+'_'+type+'_'+div_id).html("<img style='padding-top:10px;padding-bottom:10px;padding-left:20px;' src=images/spinner.gif>");
-		$('#tree_div'+ref_tree+'_'+type+'_'+div_id).show('normal');
+		$('#tree_div'+ref_tree+'_'+type+'_'+div_id).slideDown();
 		$('#tree_div'+ref_tree+'_'+type+'_'+div_id).attr('loadDiv', 2);
 
 		$.ajax({
@@ -621,7 +621,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 					
 					$('#tree_div'+ref_tree+'_'+type+'_'+div_id).hide();
 					$('#tree_div'+ref_tree+'_'+type+'_'+div_id).html(msg);
-					$('#tree_div'+ref_tree+'_'+type+'_'+div_id).show('normal');
+					$('#tree_div'+ref_tree+'_'+type+'_'+div_id).slideDown();
 					
 					//change image of tree [+] to [-]
 					
@@ -655,7 +655,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 		
 		if (hiddenDiv == 0) {
 
-			$('#tree_div'+ref_tree+'_'+type+'_'+div_id).hide('normal');
+			$('#tree_div'+ref_tree+'_'+type+'_'+div_id).slideUp();
 			$('#tree_div'+ref_tree+'_'+type+'_'+div_id).attr('hiddenDiv',1);
 			
 			//change image of tree [-] to [+]
@@ -691,7 +691,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 					break;
 			}
 
-			$('#tree_div'+ref_tree+'_'+type+'_'+div_id).show('normal');
+			$('#tree_div'+ref_tree+'_'+type+'_'+div_id).slideDown();
 			$('#tree_div'+ref_tree+'_'+type+'_'+div_id).attr('hiddenDiv',0);
 		}
 	}

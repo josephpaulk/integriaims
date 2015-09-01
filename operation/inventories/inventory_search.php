@@ -38,10 +38,17 @@ if (defined ('AJAX')) {
 	$ref_tree = (string)get_parameter("ref_tree");
 
 	if ($type == 'object_types') {
+		if (empty($id_item))
+			$id_item = 0;
 
 		$sql = base64_decode($sql_search);
-	
-		$sql .= " AND tinventory.id_object_type = $id_item";
+		
+		// The id_object_type can be NULL !!
+		if (empty($id_item))
+			$sql .= " AND (tinventory.id_object_type IS NULL OR tinventory.id_object_type = $id_item)";
+		else
+			$sql .= " AND tinventory.id_object_type = $id_item";
+		
 		if ($last_update == 1) {
 			$sql .= " ORDER BY tinventory.last_update DESC";
 		} else {
@@ -57,7 +64,7 @@ if (defined ('AJAX')) {
 				$sql .= " ORDER BY name ASC";
 			}			
 		}
-
+		
 		$cont_aux = get_db_all_rows_sql($sql);
 
 		$count_blanks = strlen($ref_tree);		

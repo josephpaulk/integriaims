@@ -1735,15 +1735,14 @@ function inventories_get_info($id_item, $id_father) {
 	if ($info_inventory !== false) {
 		$result['name'] = $info_inventory['name'];
 		
-		$result['edit_img'] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_item.'">';
-		$result['edit_img'] .= '<img class="inventory_table_edit" src="images/application_edit_white.png">';
-		$result['edit_img'] .= '</a>';
-		
 		$result['data'] = array();
 		
-		if ($info_inventory['owner'] != '') {
+		if (!empty($info_inventory['owner'])) {
 			$owner = $info_inventory['owner'];
 			$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $owner);
+			
+			if (empty($name_owner))
+				$name_owner = '--';
 		} else {
 			$name_owner = '--';
 		}
@@ -1752,9 +1751,12 @@ function inventories_get_info($id_item, $id_father) {
 		$row['data'] = $name_owner;
 		$result['data'][] = $row;
 		
-		if ($info_inventory['id_parent'] != 0) {
+		if (!empty($info_inventory['id_parent'])) {
 			$parent = $info_inventory['id_parent'];
 			$name_parent = get_db_value('name', 'tinventory', 'id', $parent);
+			
+			if (empty($name_parent))
+				$name_parent = '--';
 		} else {
 			$name_parent = '--';
 		}
@@ -1763,9 +1765,12 @@ function inventories_get_info($id_item, $id_father) {
 		$row['data'] = $name_parent;
 		$result['data'][] = $row;
 		
-		if ($info_inventory['id_manufacturer'] != 0) {
+		if (!empty($info_inventory['id_manufacturer'])) {
 			$manufacturer = $info_inventory['id_manufacturer'];
 			$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $info_inventory['id_manufacturer']);
+			
+			if (empty($name_manufacturer))
+				$name_manufacturer = '--';
 		} else {
 			$name_manufacturer = '--';
 		}
@@ -1774,9 +1779,12 @@ function inventories_get_info($id_item, $id_father) {
 		$row['data'] = $name_manufacturer;
 		$result['data'][] = $row;
 		
-		if ($info_inventory['id_contract'] != 0) {
+		if (!empty($info_inventory['id_contract'])) {
 			$contract = $info_inventory['id_contract'];
 			$name_contract = get_db_value('name', 'tcontract', 'id', $info_inventory['id_contract']);
+			
+			if (empty($name_contract))
+				$name_contract = '--';
 		} else {
 			$name_contract = '--';
 		}
@@ -1792,22 +1800,31 @@ function inventories_get_info($id_item, $id_father) {
 						'id_inventory' => $id_item,
 						'id_object_type_field' => $info['id']
 					);
-				$value = get_db_value_filter ('`data`', 'tobject_field_data', $filter);
+				$value = get_db_value_filter ('data', 'tobject_field_data', $filter);
+				
+				$data = '--';
+				if (!empty($value))
+					$data = $value;
 				
 				$info_field = array();
 				$info_field['label'] = $info['label'];
-				$info_field['data'] = $value;
+				$info_field['data'] = $data;
 				
 				$result['data'][] = $info_field;
 				
 				if (($info['type'] == 'external') && ($value != false)) {
 					
 					$all_fields_ext = inventories_get_all_external_field ($info['external_table_name'], $info['external_reference_field'], $info['id']);
-
+					
 					foreach ($all_fields_ext as $field) {
+						
+						$data = '--';
+						if (!empty($field['data']))
+							$data = $field['data'];
+						
 						$info_field_external = array();
 						$info_field['label'] = $field['label'];
-						$info_field['data'] = $field['data'];
+						$info_field['data'] = $data;
 						$result['data'][] = $info_field_external;
 					}
 				}
