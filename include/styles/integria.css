@@ -2665,11 +2665,11 @@ p.pagination {
     display:block;
 }
 
-.fileupload_form ul li canvas {
+/*.fileupload_form ul li canvas {
     top: 15px;
     left: 13px;
     position: absolute;
-}
+}*/
 
 .fileupload_form ul li span {
     width: 15px;

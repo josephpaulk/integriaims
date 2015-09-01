@@ -1,5 +1,10 @@
 2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/styles/integria.css: Style fix of the fileupload.
+	Ticket #2376.
+	
+2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/js/integria_inventory.js: Fixed an anoying effect
 	when navigating through the inventory tree.
 	
