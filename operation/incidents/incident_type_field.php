@@ -25,11 +25,12 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 }
 
 $id_incident_type = (int) get_parameter ('id');
-$add_field = (int) get_parameter('add_field', 0);
-$update_field = (int) get_parameter('update_field', 0);
+$add_field = (int) get_parameter('add_field');
+$update_field = (int) get_parameter('update_field');
+$id_field = (int) get_parameter('id_field');
 
 $label = '';
-$type = '';
+$type = 'text';
 $combo_value = '';
 $linked_value = '';
 $parent = '';
@@ -37,46 +38,60 @@ $show_in_list = false;
 $global_field = false;
 $add_linked_value = '';
 
-$id_field = get_parameter ('id_field');
-
 if ($id_field) {
-	$id_field = get_parameter ('id_field');	
-	$field_data = get_db_row_filter('tincident_type_field', array('id' => $id_field));
-
-	$label = $field_data['label'];
-	$type = $field_data['type'];
-	$combo_value = $field_data['combo_value'];
-	$show_in_list = (boolean) $field_data['show_in_list'];
-	$parent = $field_data['parent'];
-	$linked_value = $field_data['linked_value'];
-	$global_field = $field_data['global_id'];
-
+	$filter = array('id' => $id_field);
+	$field_data = get_db_row_filter('tincident_type_field', $filter);
+	
+	if (!empty($field_data)) {
+		$label = $field_data['label'];
+		$type = $field_data['type'];
+		$combo_value = $field_data['combo_value'];
+		$show_in_list = (bool) $field_data['show_in_list'];
+		$parent = $field_data['parent'];
+		$linked_value = $field_data['linked_value'];
+		$global_field = $field_data['global_id'];
+	}
 }
 
 echo '<h1>'.__('Ticket fields management').'</h1>';
 
 $table->width = "99%";
 $table->class = "search-table-button";
-$table->data = array ();
+$table->data = array();
 
+// Field name
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'), $global_field);
 
-$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' =>__('Linked'), 'numeric' =>__('Numeric'));
-$table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
-$table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true, 0,true, false, $global_field);
+// Type
+$types = array(
+		'text' =>__('Text'),
+		'textarea' => __('Textarea'),
+		'combo' => __('Combo'),
+		'linked' =>__('Linked'),
+		'numeric' =>__('Numeric')
+	);
+$table->data[0][1] = print_select ($types, 'type', $type, '', '', '', true, 0, false, __("Type"), $global_field);
+
+// Show in the ticket list
 $table->data[0][2] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'), $global_field);
+
+// Global field
 $table->data[0][3] = print_checkbox ('global', 1, $global_field, true, __('Global field'), $global_field);
 
-$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value'), $global_field).print_help_tip (__("Set values separated by comma"), true);
+// Combo value
+$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value'), $global_field);
+$table->data['id_combo_value'][0] .= print_help_tip (__("Set values separated by comma"), true);
 
+// Add values
 if ($global_field) {
 	$table->data['id_combo_value'][1] = print_input_text ('add_combo_value', $add_combo_value, '', 45, 0, true, __('Add values')).print_help_tip (__("Set values separated by comma"), true);
 }
 
-$sql = "SELECT id,label FROM tincident_type_field	
-	WHERE id_incident_type = ".$id_incident_type.
-	" AND type='linked'";
-
+// Linked values
+$sql = "SELECT id, label
+		FROM tincident_type_field	
+		WHERE id_incident_type = $id_incident_type
+			AND type = 'linked'";
 $parents_result = get_db_all_rows_sql($sql);
 
 if ($parents_result == false) {
@@ -87,9 +102,7 @@ foreach ($parents_result as $result) {
 	$parents[$result['id']] = $result['label']; 
 }
 
-$table->data['id_parent_value'][0] .= print_label (__("Parent"), "label-id", 'text', true);
-$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true, 0,true, false, $global_field);
-
+$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true, 0, true, __("Parent"), $global_field);
 $table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true), $global_field);
 
 if ($global_field) {
@@ -97,7 +110,7 @@ if ($global_field) {
 	$table->data['id_linked_value'][2] = print_textarea ('add_linked_value', 15, 1, $add_linked_value, '', true, __('Add values').integria_help ("linked_values", true));
 }
 
-
+// Buttons
 if ($add_field) {
 	$button = print_input_hidden('add_field', 1, true);
 	$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
@@ -127,59 +140,28 @@ echo '</form>';
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script  type="text/javascript">
-$(document).ready (function () {
-	
-	var type_val = $("#type").val();
-	switch (type_val) {
-		case "combo":
-			$("#table1-id_combo_value-0").css ('display', '');
-			$("#table1-id_linked_value-0").css ('display', 'none');
-			$("#table1-id_parent_value-0").css ('display', 'none');
-			$("#table1-id_linked_value-2").css ('display', 'none');
-			$("#table1-id_combo_value-1").css ('display', '');
-		break;
-		case "linked":
-			$("#table1-id_linked_value-0").css ('display', '');
-			$("#table1-id_parent_value-0").css ('display', '');
-			$("#table1-id_linked_value-2").css ('display', '');
-			$("#table1-id_combo_value-0").css ('display', 'none');
-			$("#table1-id_combo_value-1").css ('display', 'none');
-		break;
-		default:
-			$("#table1-id_combo_value-0").css ('display', 'none');
-			$("#table1-id_linked_value-0").css ('display', 'none');
-			$("#table1-id_parent_value-0").css ('display', 'none');
-			$("#table1-id_linked_value-2").css ('display', 'none');
-			$("#table1-id_combo_value-1").css ('display', 'none');
-		break;
-	}
-});
+	$("#type").change (function () {
+		var type_val = $("#type").val();
+		switch (type_val) {
+			case "combo":
+				$("#table1-id_combo_value-0").show();
+				$("#table1-id_linked_value-0").hide();
+				$("#table1-id_parent_value-0").hide();
+			break;
+			case "linked":
+				$("#table1-id_linked_value-0").show();
+				$("#table1-id_parent_value-0").show();
+				$("#table1-id_combo_value-0").hide();
+			break;
+			default:
+				$("#table1-id_combo_value-0").hide();
+				$("#table1-id_linked_value-0").hide();
+				$("#table1-id_parent_value-0").hide();
+			break;
+		}
+	}).change();
 
-$("#type").change (function () {
-	
-	var type_val = $("#type").val();
-	switch (type_val) {
-		case "combo":
-			$("#table1-id_combo_value-0").css ('display', '');
-			$("#table1-id_linked_value-0").css ('display', 'none');
-			$("#table1-id_parent_value-0").css ('display', 'none');
-		break;
-		case "linked":
-			$("#table1-id_linked_value-0").css ('display', '');
-			$("#table1-id_parent_value-0").css ('display', '');
-			$("#table1-id_combo_value-0").css ('display', 'none');
-		break;
-		default:
-			$("#table1-id_combo_value-0").css ('display', 'none');
-			$("#table1-id_linked_value-0").css ('display', 'none');
-			$("#table1-id_parent_value-0").css ('display', 'none');
-		break;
-	}
-});
-
-
-// Form validation
-trim_element_on_submit('#text-label');
-trim_element_on_submit('#text-combo_value');
-
+	// Form validation
+	trim_element_on_submit('#text-label');
+	trim_element_on_submit('#text-combo_value');
 </script>

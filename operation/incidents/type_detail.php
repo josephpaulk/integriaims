@@ -529,7 +529,7 @@ if ($id || $new_type) {
 			echo "<h4>".__("No fields")."</h4>";
 		}
 
-		echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id.">'";
+		echo "<form id='form-add_field' name='dataedit' method='post' action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id."'>";
 			echo '<div style="width: '.$table->width.'; text-align: right;">';
 				print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
 			echo '</div>';

@@ -1,3 +1,8 @@
+2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_type_field.php
+	  operation/incidents/type_detail.php: Minor improvements.
+	
 2015-09-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_form.php: Fixed (or improved) the regex
