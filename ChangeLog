@@ -1,5 +1,13 @@
 2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* godmode/usuarios/lista_usuarios.php: Added a checkbox in
+	the table head to change the state of all the checkboxes at
+	once.
+	
+	TICKET #2615.
+	
+2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/js/integria_incident_search.js,
 	  operation/incidents/incident_detail.php: Added checks for
 	the global type items when using the linked fields and fixed

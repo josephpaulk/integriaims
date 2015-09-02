@@ -97,7 +97,7 @@ pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&se
 $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
 echo '<table width="99%" class="listing">';
-echo '<th>';
+echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
 echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
 echo '<th>'.__('User ID');
 echo '<th>'.__('Name');
@@ -190,5 +190,10 @@ echo "</div>";
 <script type="text/javascript" src="include/js/integria_users.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">
-trim_element_on_submit('#text-search_text');
+	// Change the state of all the checkbox depending on the checkbox of the header
+	$('input[name="all_user_checkbox"]').change(function (event) {
+		$('input.user_checkbox').prop('checked', $(this).prop('checked'));
+	});
+	
+	trim_element_on_submit('#text-search_text');
 </script>
