@@ -1,5 +1,12 @@
 2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/js/integria_incident_search.js,
+	  operation/incidents/incident_detail.php: Added checks for
+	the global type items when using the linked fields and fixed
+	other errors.
+	
+2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/incidents/type_detail.php: Fixes on the ticket
 	type item update when selecting the 'global field' option.
 	

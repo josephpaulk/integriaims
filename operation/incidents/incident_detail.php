@@ -41,12 +41,28 @@ if (defined ('AJAX')) {
 		foreach ($fields as $f) {
 			$f["data"] = safe_output($f["data"]);
 			if ($f["type"] == "linked") {
-				$f['label_parent'] = get_db_value_filter ('label', 'tincident_type_field', array('id'=>$f['parent']));
+				// Label parent
+				$label_parent = get_db_value('label', 'tincident_type_field', 'id', $f['parent']);
+				$f['label_parent'] = !empty($label_parent) ? $label_parent : '';
 				$f['label_parent_enco'] = base64_encode($f['label_parent']);
-				$sql_labels = "SELECT label FROM tincident_type_field WHERE parent=".$f['id'];
-				$label_childs = get_db_all_rows_sql($sql_labels);
-
-				if ($label_childs != false) {
+				
+				// Label childs
+				if (empty($f['global_id'])) {
+					$filter = array('parent' => $f['id']);
+				}
+				// Global item
+				else {
+					// Search for the childrem items created under the incident type
+					$filter = array(
+							'parent' => $f['global_id'],
+							'id_incident_type' => $f['id_incident_type']
+						);
+				}
+				$label_childs = get_db_all_rows_filter('tincident_type_field', $filter, 'label');
+				
+				$f['label_childs'] = '';
+				$f['label_childs_enco'] = '';
+				if ($label_childs !== false) {
 					$i = 0;
 					foreach($label_childs as $label) {
 						if ($i == 0) {
@@ -59,10 +75,7 @@ if (defined ('AJAX')) {
 						}
 						$i++;
 					}
-				} else {
-					$f['label_childs'] = '';
 				}
-
 			}
 
 			array_push($fields_final, $f);
