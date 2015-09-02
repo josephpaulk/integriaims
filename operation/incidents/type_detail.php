@@ -152,6 +152,9 @@ if ($delete_field) {
 
 if ($update_field) { //update field to incident type
 	$id_field = (int)get_parameter ('id_field');
+	// The item should be updated to global
+	$new_global = (bool) get_parameter("global");
+	// The item is global yet
 	$is_global = get_db_value('global_id', 'tincident_type_field','id', $id_field);
 	
 	$value_update['label'] = get_parameter('label');
@@ -160,7 +163,6 @@ if ($update_field) { //update field to incident type
 	$value_update['show_in_list'] = (int) get_parameter ('show_in_list');
 	$value_update['linked_value'] = get_parameter ('linked_value', '');
 	$value_update['parent'] = get_parameter ('parent', '');
-	$value_update['global_id'] = get_parameter("global");
 	$add_linked_value = get_parameter('add_linked_value', '');
 	$add_combo_value = get_parameter('add_combo_value', '');
 	$error_combo_update = false;
@@ -218,7 +220,30 @@ if ($update_field) { //update field to incident type
 			}
 
 		} else {
+			//Add global field id
+			if ($new_global)
+				$value_update['global_id'] = $id_field;
+				
 			$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
+			
+			// Global fields are inserted in all types
+			if ($result_update !== false && $new_global) {
+				$sql = sprintf('SELECT id, name
+								FROM tincident_type
+								WHERE id <> %d', $id);
+				$types = get_db_all_rows_sql($sql);
+				if (empty($types)) $types = array();
+				
+				foreach ($types as $type) {
+
+					$value_update['id_incident_type'] = $type["id"];
+				
+					$res = process_sql_insert('tincident_type_field', $value_update);
+
+					if (empty($res))
+						echo '<h3 class="error">'.__('There was a problem creating global field for type could not be created for type: ')." ".$type["name"].'</h3>';
+				}
+			}
 		}		
 		if ($result_update === false) {
 			echo '<h3 class="error">'.__('Field could not be updated').'</h3>';

@@ -1,5 +1,10 @@
 2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/type_detail.php: Fixes on the ticket
+	type item update when selecting the 'global field' option.
+	
+2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/incidents/incident_type_field.php
 	  operation/incidents/type_detail.php: Minor improvements.
 	
