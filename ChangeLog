@@ -1,5 +1,10 @@
 2015-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/integria_cron.php: Fixed an error that not allowed
+	the failed mails to update their failed attempts.
+	
+2015-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/projects/project_report.php,
 	  include/styles/integria.css: Extended the project report
 	with new tables of task and workunit info.

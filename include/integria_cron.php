@@ -608,49 +608,54 @@ function run_mail_queue () {
 	foreach ($mails as $email){
 			
 		// Use local mailer if host not provided - Attach not supported !!
-			//Headers must be comma separated
-			if (isset($email["extra_headers"])) {
-				$extra_headers = explode(",", $email["extra_headers"]);
-			} else {
+		//Headers must be comma separated
+		if (isset($email["extra_headers"])) {
+			$extra_headers = explode(",", $email["extra_headers"]);
+		}
+		else {
 			$extra_headers = array();
 		}		
 
-		if ($config["smtp_host"] == ""){
+		if ($config["smtp_host"] == "") {
 			
 			// Use internal mail() function
-						$headers   = array();
-						$headers[] = "MIME-Version: 1.0";
-						$headers[] = "Content-type: text/plain; charset=utf-8";
+			$headers   = array();
+			$headers[] = "MIME-Version: 1.0";
+			$headers[] = "Content-type: text/plain; charset=utf-8";
 
-						$headers = array_merge($headers, $extra_headers);
+			$headers = array_merge($headers, $extra_headers);
 
 			if ($email["from"] == "")
-								$from = $config["mail_from"];
-						else
-								$from = $email["from"]; 
+				$from = $config["mail_from"];
+			else
+				$from = $email["from"]; 
 
-						$headers[] = "From: ". $from;
-						$headers[] = "Subject: ". safe_output($email["subject"]);
-						
-						if ($email["cc"]) {
-							$aux_cc = implode(",",$email["cc"]);
-							$headers[] = "Cc: ".$aux_cc;
-						}
+			$headers[] = "From: ". $from;
+			$headers[] = "Subject: ". safe_output($email["subject"]);
+			
+			if ($email["cc"]) {
+				$aux_cc = implode(",",$email["cc"]);
+				$headers[] = "Cc: ".$aux_cc;
+			}
 
-						$dest_email = trim(ascii_output($email['recipient']));
-						$body = safe_output($email['body']);
-						$error = mail($dest_email, safe_output($email["subject"]), $body, implode("\r\n", $headers));
-						if (!$error) {
+			$dest_email = trim(ascii_output($email['recipient']));
+			$body = safe_output($email['body']);
+			$error = mail($dest_email, safe_output($email["subject"]), $body, implode("\r\n", $headers));
+			
+			if (!$error) {
 				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-						} else {
+			} else {
 				// no errors found
 				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
-						}
-
-		} else {
+			}
+		}
+		else {
 			// Use swift mailer library to connect to external SMTP
-	
-			try {	
+			try {
+				// If SMTP port is not configured, abort mails directly!
+				if ($config["smtp_port"] == 0)
+					return;
+				
 				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
 				$transport->setUsername($config["smtp_user"]);
 				$transport->setPassword($config["smtp_pass"]);
@@ -659,7 +664,8 @@ function run_mail_queue () {
 				
 				if ($email["from"] == "") {
 					$message->setFrom($config["mail_from"]);
-				} else {
+				}
+				else {
 					$message->setFrom($email["from"]);
 				}
 				
@@ -676,16 +682,12 @@ function run_mail_queue () {
 				$message->setTo($to);
 				$message->setBody($email['body'], 'text/plain', 'utf-8');
 				
-				if ($email["attachment_list"] != ""){
-					$attachments = explode ( ",",$email["attachment_list"]);
+				if ($email["attachment_list"] != "") {
+					$attachments = explode ( ",", $email["attachment_list"]);
 					foreach ($attachments as $attachment)
-							if (is_file($attachment))
-									$message->attach(Swift_Attachment::fromPath($attachment));
+						if (is_file($attachment))
+							$message->attach(Swift_Attachment::fromPath($attachment));
 				}
-
-				// If SMTP port is not configured, abort mails directly!
-				if ($config["smtp_port"] == 0)
-					return;
 
 				$message->setContentType("text/plain");
 
@@ -699,8 +701,11 @@ function run_mail_queue () {
 				//Check if the email was sent at least once
 				if ($mailer->send($message) >= 1)
 					process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
+				else
+					throw new Exception(__('The mail send failed'));
+			}
 			// SMTP error management!
-			} catch (Exception $e) {
+			catch (Exception $e) {
 				$retries = $email["attempts"] + 1;
 				if ($retries > $config["smtp_queue_retries"]) {
 					$status = 1;
@@ -710,7 +715,7 @@ function run_mail_queue () {
 					$status = 0;
 				}
 				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-				integria_logwrite ("SMTP error sending to $to ($e)");
+				integria_logwrite (sprintf("SMTP error sending to %s (%s)"), implode(',', $toArray), $e);
 			}
 		}
 	}
