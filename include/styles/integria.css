@@ -2806,6 +2806,7 @@ div.project_task_distribution_report_container,
 div.project_budget_report_container,
 div.project_workload_distribution_report_container ,
 div.project_involved_people_report_container,
+div.project_tasks_report_container,
 div.companies_invoiced_container,
 div.currency_invoiced_container,
 div.history_invoiced_container {
@@ -2840,6 +2841,7 @@ div.newsletter_rate_container {
 div.project_activity_report_container,
 div.project_info_report_container,
 div.project_involved_people_report_container,
+div.project_tasks_report_container,
 div.history_invoiced_container {
 	width: 96%;
 }

@@ -328,15 +328,291 @@ if ($id_project) {
 	
 	// Workload distribution
 	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div>';
-
+	
+	
+	// Task detail
+	$tasks_report = '';
+	
+	$sql = sprintf('SELECT tt.id, tt.name, tt.hours AS estimated_time
+					FROM ttask tt
+					WHERE tt.id_project = %d',
+					$id_project);
+	$tasks = get_db_all_rows_sql($sql);
+	
+	if (!empty($tasks)) {
+		// $table_task = new StdClass();
+		// $table_task->width = '100%';
+		// $table_task->class = 'listing';
+		// $table_task->head = array();
+		// $table_task->head['task'] = __('Task');
+		// $table_task->head['total_time'] = __('Total time').' ('.__('Actual').' / '.__('Estimated').') ('.__('In hours').')';
+		// $table_task->head['people_involved'] = __('People involved');
+		// $table_task->head['first_wu'] = __('First workunit');
+		// $table_task->head['last_wu'] = __('Last workunit');
+		// $table_task->data = array();
+		// $table_task->colspan = array();
+		
+		// $num_columns = count($table_task->head);
+		
+		foreach ($tasks as $task) {
+			// Get the dates of the oldest and the newest wu
+			$sql = sprintf('SELECT DATE(MIN(first_wu)) AS first_wu, DATE(MAX(last_wu)) AS last_wu
+							FROM (
+								SELECT MIN(tw1.timestamp) AS first_wu,
+								   	   MAX(tw1.timestamp) AS last_wu
+								FROM tworkunit tw1
+								INNER JOIN tworkunit_task twt
+									ON tw1.id = twt.id_workunit
+										AND twt.id_task = %d
+								
+								UNION
+								
+								SELECT MIN(tw2.timestamp) AS first_wu,
+								   	   MAX(tw2.timestamp) AS last_wu
+								FROM tworkunit tw2
+								INNER JOIN (
+									SELECT twi.id_workunit
+									FROM tworkunit_incident twi
+									INNER JOIN tincidencia ti
+										ON twi.id_incident = ti.id_incidencia
+											AND ti.id_task = %d
+								) twin
+									ON tw2.id = twin.id_workunit
+							) final',
+							$task['id'], $task['id']);
+			$dates_wu = get_db_row_sql($sql);
+			
+			$task['first_wu'] = __('N/A');
+			$task['last_wu'] = __('N/A');
+			
+			if (!empty($dates_wu)) {
+				if (!empty($dates_wu['first_wu']))
+					$task['first_wu'] = $dates_wu['first_wu'];
+				if (!empty($dates_wu['last_wu']))
+					$task['last_wu'] = $dates_wu['last_wu'];
+			}
+			
+			// Get the people involved in the task through wu
+			$sql = sprintf('SELECT final.id_user AS id_user,
+								SUM(final.duration) AS total_time
+							FROM (
+								SELECT tw1.id_user, tw1.duration
+								FROM tworkunit tw1
+								INNER JOIN tworkunit_task twt
+									ON tw1.id = twt.id_workunit
+										AND twt.id_task = %d
+								
+								UNION
+								
+								SELECT tw2.id_user, tw2.duration
+								FROM tworkunit tw2
+								INNER JOIN (
+									SELECT twi.id_workunit
+									FROM tworkunit_incident twi
+									INNER JOIN tincidencia ti
+										ON twi.id_incident = ti.id_incidencia
+											AND ti.id_task = %d
+								) twin
+									ON tw2.id = twin.id_workunit
+							) final
+							GROUP BY final.id_user',
+							$task['id'], $task['id']);
+			$people_wu = get_db_all_rows_sql($sql);
+			if (empty($people_wu)) $people_wu = array();
+			
+			$total_time = array_reduce($people_wu, function ($hours, $item) {
+				$hours += (float)$item['total_time'];
+				return $hours;
+			}, 0);
+			
+			$task['total_time'] = sprintf(
+					'<div style="color: %s;">%s / %s</div>',
+					($total_time > (float)$task['estimated_time']) ? 'red': 'green',
+					$total_time,
+					(float)$task['estimated_time']
+				);
+			
+			$people_involved_title = array_map(function ($item) {
+				return sprintf('%s (%s h)', $item['id_user'], (float)$item['total_time']);
+			}, $people_wu);
+			
+			$task['people_involved'] = sprintf(
+					'<div class="tooltip_title" title="%s">%s</div>',
+					implode('<br>', $people_involved_title),
+					sprintf(__('%d persons'), count($people_wu))
+				);
+			
+			$table_task = new StdClass();
+			$table_task->width = '100%';
+			$table_task->class = 'advanced_details_table alternate';
+			$table_task->style = array();
+			$table_task->style['name'] = 'text-align: left; width: 50%; font-weight: bold;';
+			$table_task->style['data'] = 'text-align: left; width: 50%;';
+			$table_task->data = array();
+			$table_task->colspan = array();
+			
+			$row = array();
+			$row['name'] = __('Task');
+			$row['data'] = $task['name'];
+			$table_task->data['task'] = $row;
+			
+			$row = array();
+			$row['name'] = __('Total time').' ('.__('Actual').' / '.__('Estimated').') ('.__('In hours').')';
+			$row['data'] = $task['total_time'];
+			$table_task->data['total_time'] = $row;
+			
+			$row = array();
+			$row['name'] = __('People involved');
+			$row['data'] = $task['people_involved'];
+			$table_task->data['people_involved'] = $row;
+			
+			$row = array();
+			$row['name'] = __('First workunit');
+			$row['data'] = $task['first_wu'];
+			$table_task->data['first_wu'] = $row;
+			
+			$row = array();
+			$row['name'] = __('Last workunit');
+			$row['data'] = $task['last_wu'];
+			$table_task->data['last_wu'] = $row;
+			
+			// Add the values to the row
+			// $row = array();
+			// $row['task'] = $task['name'];
+			// $row['total_time'] = $task['total_time'];
+			// $row['people_involved'] = $task['people_involved'];
+			// $row['first_wu'] = $task['first_wu'];
+			// $row['last_wu'] = $task['last_wu'];
+			
+			// $row_identifier = 'task#'.$task['id'];
+			// $table_task->data[$row_identifier] = $row;
+			
+			// Get all the workunits
+			$sql = sprintf('SELECT final.id_user AS id_user,
+								DATE(final.timestamp) AS date,
+								final.duration AS duration,
+								final.description AS content,
+								final.id_incidencia AS ticket_id,
+								final.titulo AS ticket_title,
+								final.estado AS ticket_status
+							FROM (
+								SELECT tw1.id_user,
+									tw1.timestamp,
+									tw1.duration,
+									tw1.description,
+									NULL AS id_incidencia,
+									NULL AS titulo,
+									NULL AS estado
+								FROM tworkunit tw1
+								INNER JOIN tworkunit_task twt
+									ON tw1.id = twt.id_workunit
+										AND twt.id_task = %d
+								
+								UNION
+								
+								SELECT tw2.id_user,
+									tw2.timestamp,
+									tw2.duration,
+									tw2.description,
+									twin.id_incidencia,
+									twin.titulo,
+									twin.estado
+								FROM tworkunit tw2
+								INNER JOIN (
+									SELECT twi.id_workunit,
+										ti.id_incidencia,
+										ti.titulo,
+										tis.name AS estado
+									FROM tworkunit_incident twi
+									INNER JOIN tincidencia ti
+										ON twi.id_incident = ti.id_incidencia
+											AND ti.id_task = %d
+									INNER JOIN tincident_status tis
+										ON ti.estado = tis.id
+								) twin
+									ON tw2.id = twin.id_workunit
+							) final
+							ORDER BY final.id_user, final.timestamp',
+							$task['id'], $task['id']);
+			$all_wu = get_db_all_rows_sql($sql);
+			
+			if (!empty($all_wu)) {
+				$table_wu = new StdClass();
+				$table_wu->width = '100%';
+				$table_wu->class = 'listing';
+				$table_wu->head = array();
+				$table_wu->head['person'] = __('Person');
+				$table_wu->head['date'] = __('Date');
+				$table_wu->head['duration'] = __('Duration ('.__('In hours').')');
+				$table_wu->head['ticket_id'] = __('Ticket id');
+				$table_wu->head['ticket_title'] = __('Ticket title');
+				$table_wu->head['ticket_status'] = __('Ticket status');
+				if (!$pdf_output)
+					$table_wu->head['content'] = __('Content');
+				$table_wu->style = array();
+				$table_wu->style['content'] = 'text-align: center';
+				$table_wu->data = array();
+				
+				foreach ($all_wu as $wu) {
+					// Add the values to the row
+					$row = array();
+					$row['id_user'] = $wu['id_user'];
+					$row['date'] = $wu['date'];
+					$row['duration'] = (float)$wu['duration'];
+					
+					$row['ticket_id'] = $wu['ticket_id'] ? '#'.$wu['ticket_id'] : '';
+					$row['ticket_title'] = $wu['ticket_title'];
+					$row['ticket_status'] = $wu['ticket_status'];
+					
+					if (!$pdf_output) {
+						$row['content'] = sprintf(
+								'<div class="tooltip_title" title="%s">%s</div>',
+								$wu['content'],
+								print_image ("images/note.png", true)
+							);
+					}
+					
+					$table_wu->data[] = $row;
+				}
+				
+				// $row_identifier = 'task#'.$task['id'].'-workunits';
+				// $table_task->data[$row_identifier] = array();
+				// $table_task->data[$row_identifier][] = print_table($table_wu, true);
+				// $table_task->colspan[$row_identifier] = array();
+				// $table_task->colspan[$row_identifier][] = $num_columns;
+				
+				// $row = array();
+				// $row[] = print_table($table_wu, true);
+				// $table_task->data['workunits'] = $row;
+				// $table_task->colspan['workunits'][] = 2;
+				
+				$tasks_report .= print_table($table_task, true) . print_table($table_wu, true);
+			}
+			else {
+				$tasks_report .= print_table($table_task, true);
+			}
+		}
+	}
+		
+	
 	//Print containers
 	echo print_container('project_labour_report', __('Labour'), $labour, 'no', true, true, "container_simple_title", "container_simple_div");
 	echo print_container('project_budget_report', __('Budget'), $budget, 'no', true, true, "container_simple_title", "container_simple_div");
 	echo print_container('project_involved_people_report', __('People involved'), $people_involved, 'no', true, true, "container_simple_title", "container_simple_div");
-	echo "<br><br><br><br><br><br><br><br><br><br><br><br><br>";
 	echo print_container('project_task_distribution_report', __('Task distribution'), $task_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
 	echo print_container('project_workload_distribution_report', __('Workload distribution'), $workload_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
-	
+	echo print_container('project_tasks_report', __('Project tasks'), $tasks_report, 'no', true, true, "container_simple_title", "container_simple_div");
 }
 
 ?>
+
+<?php if (!$pdf_output): ?>
+<script type="text/javascript">
+	$(function() {
+		// Init the tooltip
+		$('div.tooltip_title').tooltip({
+			track: true
+		});
+	});
+</script>
+<?php endif; ?>

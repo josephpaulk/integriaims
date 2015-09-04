@@ -1,3 +1,9 @@
+2015-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/projects/project_report.php,
+	  include/styles/integria.css: Extended the project report
+	with new tables of task and workunit info.
+	
 2015-09-02  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* godmode/usuarios/lista_usuarios.php: Added a checkbox in
