@@ -1003,6 +1003,13 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	// Pandora FMS Custom Screens
 	enterprise_include("godmode/sidemenu_custom_screens_editor.php");
 
+	// Tags management
+	if ($sec2 == "godmode/setup/setup_tags")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_tags'>".__('Tags management')."</a></li>";
+	
 	echo "</ul>";
 	echo "</div>";
 }

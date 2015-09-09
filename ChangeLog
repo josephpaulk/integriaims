@@ -1,5 +1,10 @@
 2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/side_menu.php: Added a link to the setup side
+	menu for the new tags management section.
+	
+2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/mr/27.sql: Added tables for the new tags and the
 	relation between tags and leads.
 	
