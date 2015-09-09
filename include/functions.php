@@ -1468,4 +1468,11 @@ function check_browser() {
 	}
 }
 
+function is_ajax () {
+	if (defined('AJAX') && AJAX)
+		return true;
+	else
+		return false;
+}
+
 ?>

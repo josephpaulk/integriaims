@@ -58,6 +58,224 @@ function debugPrint ($var, $file = '') {
 }
 
 /**
+ * Convert a html color like #FF00FF into the rgb values like (255,0,255).
+ *
+ * @param string color in format #FFFFFF, FFFFFF, #FFF or FFF
+ */
+function html2rgb($htmlcolor)
+{
+	if ($htmlcolor[0] == '#') {
+		$htmlcolor = substr($htmlcolor, 1);
+	}
+
+	if (strlen($htmlcolor) == 6) {
+		$r = hexdec($htmlcolor[0].$htmlcolor[1]);
+		$g = hexdec($htmlcolor[2].$htmlcolor[3]);
+		$b = hexdec($htmlcolor[4].$htmlcolor[5]);
+		return array($r, $g, $b);
+	}
+	elseif (strlen($htmlcolor) == 3) {
+		$r = hexdec($htmlcolor[0].$htmlcolor[0]);
+		$g = hexdec($htmlcolor[1].$htmlcolor[1]);
+		$b = hexdec($htmlcolor[2].$htmlcolor[2]);
+		return array($r, $g, $b);
+	}
+	else {
+		return false;
+	}
+}
+
+/**
+ * Prints an array of fields in a popup menu of a form.
+ * 
+ * Based on choose_from_menu() from Moodle 
+ * 
+ * @param array Array with dropdown values. Example: $fields["value"] = "label"
+ * @param string Select form name
+ * @param variant Current selected value. Can be a single value or an
+ *        array of selected values (in combination with multiple)
+ * @param string Javascript onChange code.
+ * @param string Label when nothing is selected.
+ * @param variant Value when nothing is selected
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ * @param bool Set the input to allow multiple selections (optional, single selection by default).
+ * @param bool Whether to sort the options or not (optional, unsorted by default).
+ * @param string $style The string of style.
+ * @param mixed $size Max elements showed in the select or default (size=10).
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function html_print_select ($fields, $name, $selected = '', $script = '',
+	$nothing = '', $nothing_value = 0, $return = false, $multiple = false,
+	$sort = true, $class = '', $disabled = false, $style = false,
+	$option_style = false, $size = false) {
+	
+	$output = "\n";
+	
+	static $idcounter = array ();
+	
+	//If duplicate names exist, it will start numbering. Otherwise it won't
+	if (isset ($idcounter[$name])) {
+		$idcounter[$name]++;
+	}
+	else {
+		$idcounter[$name] = 0;
+	}
+	
+	$id = preg_replace('/[^a-z0-9\:\;\-\_]/i', '', $name.($idcounter[$name] ? $idcounter[$name] : ''));
+	
+	$attributes = "";
+	if (!empty ($script)) {
+		$attributes .= ' onchange="'.$script.'"';
+	}
+	if (!empty ($multiple)) {
+		if ($size !== false) {
+			$attributes .= ' multiple="multiple" size="' . $size . '"';
+		}
+		else {
+			$attributes .= ' multiple="multiple" size="10"';
+		}
+	}
+	if (!empty ($class)) {
+		$attributes .= ' class="'.$class.'"';
+	}
+	if (!empty ($disabled)) {
+		$attributes .= ' disabled="disabled"';
+	}
+	
+	if ($style === false) {
+		$styleText = 'style=""';
+	}
+	else {
+		$styleText = 'style="' .$style . '"';
+	}
+	
+	$output .= '<select id="'.$id.'" name="'.$name.'"'.$attributes.' ' . $styleText . '>';
+	
+	if ($nothing != '' || empty ($fields)) {
+		if ($nothing == '') {
+			$nothing = __('None');
+		}
+		$output .= '<option value="'.$nothing_value.'"';
+		
+		if ($nothing_value == $selected) {
+			$output .= ' selected="selected"';
+		}
+		else if (is_array ($selected)) {
+			if (in_array ($nothing_value, $selected)) {
+				$output .= ' selected="selected"';
+			}
+		}
+		$output .= '>'.$nothing.'</option>';
+	}
+	
+	if (is_array($fields) && !empty ($fields)) {
+		if ($sort !== false) {
+			// Sorting the fields in natural way and case insensitive preserving keys
+			$first_elem = reset($fields);
+			if (!is_array($first_elem))
+				uasort($fields, "strnatcasecmp");
+		}
+		$lastopttype = '';
+		foreach ($fields as $value => $label) {
+			$optlabel = $label;
+			if (is_array($label)) {
+				if (isset($label['optgroup'])) {
+					if ($label['optgroup'] != $lastopttype) {
+						if ($lastopttype != '') {
+							$output .=  '</optgroup>';
+						}
+						$output .=  '<optgroup label="'.$label['optgroup'].'">';
+						$lastopttype = $label['optgroup'];
+					}
+				}
+				$optlabel = $label['name'];
+			}
+			
+			$output .= '<option value="'.$value.'"';
+			if (is_array ($selected) && in_array ($value, $selected)) {
+				$output .= ' selected="selected"';
+			}
+			elseif (is_numeric ($value) && is_numeric ($selected) &&
+				$value == $selected) {
+				//This fixes string ($value) to int ($selected) comparisons 
+				$output .= ' selected="selected"';
+			}
+			elseif ($value === $selected) {
+				//Needs type comparison otherwise if $selected = 0 and $value = "string" this would evaluate to true
+				$output .= ' selected="selected"';
+			}
+			if (is_array ($option_style) &&
+				in_array ($value, array_keys($option_style))) {
+				$output .= ' style="'.$option_style[$value].'"';
+			}
+			if ($optlabel === '') {
+				$output .= '>'.$value."</option>";
+			}
+			else {
+				$output .= '>'.$optlabel."</option>";
+			}
+		}
+		if (is_array($label)) {
+			$output .= '</optgroup>';
+		}
+	}
+	
+	$output .= "</select>";
+	
+	if ($return)
+		return $output;
+	
+	echo $output;
+}
+
+/**
+ * Prints an array of fields in a popup menu of a form based on a SQL query.
+ * The first and second columns of the query will be used.
+ * 
+ * The element will have an id like: "password-$value". Based on choose_from_menu() from Moodle.
+ * 
+ * @param string $sql SQL sentence, the first field will be the identifier of the option. 
+ * The second field will be the shown value in the dropdown.
+ * @param string $name Select form name
+ * @param string $selected Current selected value.
+ * @param string $script Javascript onChange code.
+ * @param string $nothing Label when nothing is selected.
+ * @param string $nothing_value Value when nothing is selected
+ * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param bool $multiple Whether to allow multiple selections or not. Single by default
+ * @param bool $sort Whether to sort the options or not. Sorted by default.
+ * @param bool $disabled if it's true, disable the select.
+ * @param string $style The string of style.
+ * @param mixed $size Max elements showed in select or default (size=10) 
+ * @param int $truncante_size Truncate size of the element, by default is set to GENERIC_SIZE_TEXT constant
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function html_print_select_from_sql ($sql, $name, $selected = '',
+	$script = '', $nothing = '', $nothing_value = '0', $return = false,
+	$multiple = false, $sort = true, $disabled = false, $style = false, $size = false, $trucate_size = GENERIC_SIZE_TEXT) {
+	global $config;
+	
+	$fields = array ();
+	$result = get_db_all_rows_sql ($sql);
+	if ($result === false)
+		$result = array ();
+	
+	foreach ($result as $row) {
+		$id = array_shift($row);
+		$value = array_shift($row);
+		$fields[$id] = ui_print_truncate_text(
+			$value, $trucate_size, false, true, false);
+	}
+	
+	return html_print_select ($fields, $name, $selected, $script,
+		$nothing, $nothing_value, $return, $multiple, $sort, '',
+		$disabled, $style,'', $size);
+}
+
+/**
+ * OLD VERSION.
  * Prints an array of fields in a popup menu of a form.
  *
  * Based on choose_from_menu() from Moodle
@@ -139,34 +357,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 }
 
 /**
- * Convert a html color like #FF00FF into the rgb values like (255,0,255).
- *
- * @param string color in format #FFFFFF, FFFFFF, #FFF or FFF
- */
-function html2rgb($htmlcolor)
-{
-	if ($htmlcolor[0] == '#') {
-		$htmlcolor = substr($htmlcolor, 1);
-	}
-
-	if (strlen($htmlcolor) == 6) {
-		$r = hexdec($htmlcolor[0].$htmlcolor[1]);
-		$g = hexdec($htmlcolor[2].$htmlcolor[3]);
-		$b = hexdec($htmlcolor[4].$htmlcolor[5]);
-		return array($r, $g, $b);
-	}
-	elseif (strlen($htmlcolor) == 3) {
-		$r = hexdec($htmlcolor[0].$htmlcolor[0]);
-		$g = hexdec($htmlcolor[1].$htmlcolor[1]);
-		$b = hexdec($htmlcolor[2].$htmlcolor[2]);
-		return array($r, $g, $b);
-	}
-	else {
-		return false;
-	}
-}
-
-/**
+ * OLD VERSION.
  * Prints an array of fields in a popup menu of a form based on a SQL query.
  * The first and second columns of the query will be used.
  *

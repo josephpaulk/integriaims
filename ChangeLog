@@ -1,3 +1,13 @@
+2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions.php: Added the function 'is_ajax'.
+	
+	* include/functions_html.php: Added a better functions to
+	print the select inputs (from pandora).
+	
+	* include/styles/integria.css: Improved the style of the
+	multiselects.
+	
 2015-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/integria_cron.php: Fixed an error that not allowed

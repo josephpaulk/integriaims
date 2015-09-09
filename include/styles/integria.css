@@ -338,6 +338,10 @@ select {
 	border-radius: 3px;
 }
 
+select[multiple] {
+	height: 100px;
+}
+
 select:not([multiple]) {
 	height: 21px;
 }
@@ -3207,3 +3211,64 @@ div#cont {
 /* END FILE SHARING UPLOAD CONTROL */
 
 /* END FILE SHARING */
+
+
+div.tags-editor {
+	vertical-align: middle;
+	text-align: left;
+}
+
+div.tags-editor>div.tags-select>select {
+	float: none;
+}
+
+div.tags-select {
+	display: inline-block;
+}
+
+div.tags-view {
+	display: inline-block;
+	padding: 5px;
+}
+
+span.tag.label {
+	padding: 5px;
+	margin: 2px;
+	
+	-webkit-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border-radius: 3px;
+	
+	background: #FF9933;
+	color: #FFFFFF;
+	font-weight: bold;
+	
+	vertical-align: middle;
+}
+
+span.tag.label.blue {
+	background: #3399FF;
+}
+
+span.tag.label.grey {
+	background: #999999;
+}
+
+span.tag.label.green {
+	background: #66CC00;
+}
+
+span.tag.label.yellow {
+	background: #FFCC33;
+}
+
+span.tag.label.orange {
+	background: #FF9900;
+}
+
+span.tag.label.red {
+	background: #FF3333;
+}
