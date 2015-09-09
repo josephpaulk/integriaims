@@ -1,5 +1,11 @@
 2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* integria_db.sql,
+	  integria_dbdata.sql: Updated with the data of the new
+	MR27.
+	
+2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/side_menu.php: Added a link to the setup side
 	menu for the new tags management section.
 	
