@@ -1,5 +1,16 @@
 2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* extras/mr/27.sql: Added tables for the new tags and the
+	relation between tags and leads.
+	
+	* godmode/setup/setup_tags.php: Added a section to manage
+	the tags.
+	
+	* include/functions_tags.php: Added functions to work with
+	the tags.
+
+2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions.php: Added the function 'is_ajax'.
 	
 	* include/functions_html.php: Added a better functions to
