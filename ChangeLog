@@ -1,3 +1,7 @@
+2015-09-10  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* functions_api.php: Modified api_ovo_manager.
+
 2015-09-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* integria_db.sql,

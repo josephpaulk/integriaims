@@ -1512,39 +1512,141 @@ function api_mark_updated_incident ($return_type, $params) {
  */
 function api_ovo_manager ($return_type, $params) {
 
-	$values[0] = $params[0];
-	$values[1] = $params[1];
-	$values[2] = $params[2];
-	$values[3] = $params[3];
-	$values[4] = $params[4];
-	$values[5] = $params[5];
-	$values[6] = '';
-	$values[7] = '';
-	$values[8] = 0;
-	$values[9] = 1;
-	$values[10] = $params[6];
+	$values[0] = $params[0]; //title
+	$values[1] = $params[1]; //id group
+	$values[2] = $params[2]; //priority
+	$values[3] = $params[3]; //description
+	$values[4] = $params[4]; //id inventory
+	$values[5] = $params[5]; //id incident type
+	$values[6] = ''; //email
+	$values[7] = ''; //owner
+	$values[8] = 0; //id parent
+	$values[9] = 1; //status
+	$values[10] = $params[6]; //info extra
 	
 	$prioridad =  $params[2];
 	$descripcion =  $params[3];
 	$extra_data =  $params[6];
+	$msg_group = $params[7];
 
-	$sql = "SELECT * FROM tincidencia WHERE extra_data = '".$extra_data."' AND estado <> 7";
+	//~ $sql = "SELECT * FROM tincidencia WHERE extra_data = '".$extra_data."' AND estado <> 7";
+	$sql = "SELECT * FROM tincidencia WHERE extra_data = '".$extra_data."'";
 
 	$incidents = get_db_all_rows_sql($sql);
 
 	if ($incidents == false) {
-		if ($prioridad != 0) {
+		
+		if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical
 			api_create_incident($return_type,'ovo',$values);
 		}
+				
 	} else {
 		foreach ($incidents as $incident) {
-			$workunit[0] = $incident['id_incidencia'];
-			$workunit[1] = $descripcion;
-			$workunit[2] = 0;
-			$workunit[3] = 0;
-			$workunit[4] = 1;
-			$workunit[5] = 2;
-			api_create_incident_workunit($return_type, 'ovo', $workunit);
+
+			switch ($incident['estado']) {
+				case 7: //cerrada
+					if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical
+						api_create_incident($return_type,'ovo',$values);
+					}
+				break;
+				case 5: //pendiente de cierre
+					if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical
+						
+						//update ticket
+						$values_update[0] = $incident['id_incidencia'];
+						$values_update[1] = $incident['titulo']; //title
+						$values_update[2] = $incident['descripcion']; //description
+						$values_update[3] = $incident['epilog']; //epilog
+						$values_update[4] = $incident['id_grupo']; //id grupo
+						$values_update[5] = $incident['prioridad']; //priority
+						$values_update[6] = 9; //in process
+						$values_update[7] = 4; //re opened
+						$values_update[8] = $incident['id_usuario']; //owner
+						$values_update[9] = $incident['id_parent']; //id parent
+						$values_update[10] = $incident['id_incident_type']; //id incident type
+						$values_update[11] = $incident['extra_data']; //info extra
+						
+						api_update_incident ($return_type, 'ovo', $values_update);
+						
+						//add wu
+						$workunit[0] = $incident['id_incidencia']; // id ticket
+						$workunit[1] = $descripcion; // descripcion
+						$workunit[2] = 0; // duracion
+						$workunit[3] = 0; // coste
+						$workunit[4] = 1; // publico
+						$workunit[5] = 2; // perfil
+						
+						api_create_incident_workunit($return_type, 'ovo', $workunit);
+					}
+				break;
+				default:
+					if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical	
+						//update ticket
+						$values_update[0] = $incident['id_incidencia'];
+						$values_update[1] = $incident['titulo']; //title
+						$values_update[2] = $incident['descripcion']; //description
+						$values_update[3] = $incident['epilog']; //epilog
+						$values_update[4] = $incident['id_grupo']; //id grupo
+						if ($prioridad > $incident['prioridad']) {
+							$values_update[5] = $prioridad;
+						} else {
+							$values_update[5] = $incident['prioridad'];
+						}
+						$values_update[6] = $incident['resolution']; //resolution
+						$values_update[7] = $incident['estado']; //status
+						$values_update[8] = $incident['id_usuario']; //owner
+						$values_update[9] = $incident['id_parent']; //id parent
+						$values_update[10] = $incident['id_incident_type']; //id incident type
+						$values_update[11] = $incident['extra_data']; //info extra
+						
+						api_update_incident ($return_type, 'ovo', $values_update);
+						
+					}
+					
+					if ($prioridad == 2) { //normal
+						
+						if ($msg_group == "AutoResolved") {
+							//update ticket
+							$values_update[0] = $incident['id_incidencia'];
+							$values_update[1] = $incident['titulo']; //title
+							$values_update[2] = $incident['descripcion']; //description
+							$values_update[3] = $incident['epilog']; //epilog
+							$values_update[4] = $incident['id_grupo']; //id grupo
+							$values_update[5] = $incident['prioridad']; //priority
+							$values_update[6] = 1; //fixed
+							$values_update[7] = 5; //pending to be closed
+							$values_update[8] = $incident['id_usuario']; //owner
+							$values_update[9] = $incident['id_parent']; //id parent
+							$values_update[10] = $incident['id_incident_type']; //id incident type
+							$values_update[11] = $incident['extra_data']; //info extra
+							
+							api_update_incident ($return_type, 'ovo', $values_update);
+							
+							//add wu
+							$workunit[0] = $incident['id_incidencia']; // id ticket
+							$workunit[1] = $descripcion; // descripcion
+							$workunit[2] = 0; // duracion
+							$workunit[3] = 0; // coste
+							$workunit[4] = 1; // publico
+							$workunit[5] = 2; // perfil
+							
+							api_create_incident_workunit($return_type, 'ovo', $workunit);
+							
+						} else {
+							//add wu
+							$workunit[0] = $incident['id_incidencia']; // id ticket
+							$workunit[1] = $descripcion; // descripcion
+							$workunit[2] = 0; // duracion
+							$workunit[3] = 0; // coste
+							$workunit[4] = 1; // publico
+							$workunit[5] = 2; // perfil
+							
+							api_create_incident_workunit($return_type, 'ovo', $workunit);
+						}
+					}
+					
+				break;
+			}
 		}
 	}
 	echo $result;
