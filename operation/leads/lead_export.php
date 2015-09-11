@@ -38,8 +38,13 @@ $progress_minor_than = (int) get_parameter ('progress_minor_than');
 $owner = (string) get_parameter ("owner");
 $show_100 = (int) get_parameter ("show_100");
 
+$tags = get_parameter('tags', array());
+
 $params = "&search_text=$search_text&id_company=$id_company&last_date=$last_date&start_date=$start_date&end_date=$end_date&country=$country&id_category=$id_category&progress_minor_than=$progress_minor_than&progress_major_than=$progress_major_than&show_100=$show_100&owner=$owner";
 
+if (!empty($tags)) {
+	$params .= '&tags[]='.implode('&tags[]=', $tags);
+}
 
 if ($show_100){
 	$where_clause = "WHERE 1=1 $where_group ";
@@ -92,6 +97,17 @@ if ($id_category) {
 	$where_clause .= sprintf(' AND id_category = %d ', $id_category);
 }
 
+// Tags filter
+if (!empty($tags)) {
+	$lead_ids = get_leads_with_tags(array(TAGS_TABLE_ID_COL => $tags));
+	
+	// Some leads
+	if (!empty($lead_ids) && is_array($lead_ids))
+		$where_clause .= sprintf(' AND id IN (%s) ', implode(',', $lead_ids));
+	// None lead found
+	else
+		$where_clause .= ' AND id IN (-1) ';
+}
 
 $filename = clean_output ('lead_export').'-'.date ("YmdHi");
 
@@ -104,8 +120,13 @@ header ('Content-Type: text/css; charset=utf-8');
 
 $config['mysql_result_type'] = MYSQL_ASSOC;
 
-$sql = "SELECT tlead.id, owner, id_company as Managed_by, fullname, email, tlead.phone, tlead.mobile, position, company, tlead.country, tlead.description, tlead.creation, tlead.progress, estimated_sale, modification, id_category FROM tlead $where_clause  ORDER BY modification  DESC";
-
+$sql = "SELECT tlead.id, owner, id_company as Managed_by,
+			fullname, email, tlead.phone, tlead.mobile, position,
+			company, tlead.country, tlead.description, tlead.creation,
+			tlead.progress, estimated_sale, modification, id_category
+		FROM tlead
+		$where_clause
+		ORDER BY modification DESC";
 $rows = get_db_all_rows_sql (clean_output ($sql));
 if ($rows === false)
 	return;

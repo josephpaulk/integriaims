@@ -50,7 +50,13 @@ $id_language = (string) get_parameter ("id_language", "");
 $est_sale = (int) get_parameter ("est_sale_search", 0);
 $show_not_owned = (int) get_parameter ("show_not_owned_search");
 
+$tags = get_parameter('tags', array());
+
 $params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner&show_not_owned_search=$show_not_owned";
+
+if (!empty($tags)) {
+	$params .= '&tags[]='.implode('&tags[]=', $tags);
+}
 
 echo "<div id='incident-search-content'>";
 echo "<h1>". __('Lead pipeline');
@@ -122,6 +128,18 @@ if ($progress_major_than > 0) {
 
 if ($id_category) {
 	$where_clause .= sprintf(' AND id_category = %d ', $id_category);
+}
+
+// Tags filter
+if (!empty($tags)) {
+	$lead_ids = get_leads_with_tags(array(TAGS_TABLE_ID_COL => $tags));
+	
+	// Some leads
+	if (!empty($lead_ids) && is_array($lead_ids))
+		$where_clause .= sprintf(' AND id IN (%s) ', implode(',', $lead_ids));
+	// None lead found
+	else
+		$where_clause .= ' AND id IN (-1) ';
 }
 
 $table->width="100%";
@@ -365,7 +383,7 @@ $row[] = print_submit_button(__('Filter'), 'filter', false, 'class="sub save" st
 $table_filter->data[] = $row;
 
 echo '<div id="pipeline_filter" style="display: none;">';
-echo '<form id="form-pipeline_filter" method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=pipeline&$params">';
+echo '<form id="form-pipeline_filter" method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=pipeline&'.$params.'">';
 print_table($table_filter);
 echo '</form>';
 echo '</div>';

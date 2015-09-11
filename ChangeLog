@@ -1,3 +1,27 @@
+2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* godmode/setup/setup_tags.php: Improved the tag CRUD
+	operations.
+
+	* include/functions_api.php: Added tags adition to the
+	lead creation.
+
+	* include/functions_tags.php: Added a lot of new functions
+	and improved the old.
+	
+	* include/styles/integria.css: Major improvements to the
+	tag styles.
+
+	* operation/leads/lead.php: Required the tags functions.
+	
+	* operation/leads/lead_detail.php: Added support to the
+	tags (filtering, custom search, CRUD for leads, etc.).
+
+	* operation/leads/lead_export.php,
+	  operation/leads/lead_pipeline.php,
+	  operation/leads/lead_statistics.php: Added tags to the
+	filter.
+
 2015-09-10  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* functions_api.php: Modified api_ovo_manager.

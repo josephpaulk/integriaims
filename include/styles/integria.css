@@ -3216,23 +3216,54 @@ div#cont {
 div.tags-editor {
 	vertical-align: middle;
 	text-align: left;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 div.tags-editor>div.tags-select>select {
 	float: none;
 }
 
+div.tags-editor > div.tags-view > span.tag.label {
+	position: relative;
+	padding-right: 20px;
+}
+
+div.tags-editor > div.tags-view > span.tag.label > span {
+	word-wrap: break-word;
+}
+
+div.tags-editor > div.tags-view > span.tag.label > a {
+	cursor: pointer;
+	position: absolute;
+	top: 6px;
+	right: 3px;
+	display: block;
+	width: 12px;
+	height: 12px;
+	background-image: url('../../images/input_delete.white.png');
+	background-repeat: no-repeat;
+	font-size: 1px;
+}
+
+div.tags-editor > div.tags-view > span.tag.label > a:hover {
+	opacity:0.6;
+}
+
 div.tags-select {
 	display: inline-block;
+	float: left;
+	margin: 2px;
 }
 
 div.tags-view {
-	display: inline-block;
+	display: inline;
 	padding: 5px;
 }
 
 span.tag.label {
-	padding: 5px;
+	float: left;
+	padding: 0 5px 0 5px;
 	margin: 2px;
 	
 	-webkit-border-radius: 3px;

@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-include_once('include/functions_crm.php');
+include_once($config['homedir'].'/include/functions_crm.php');
 
 $section_read_permission = check_crm_acl ('lead', 'cr');
 $section_write_permission = check_crm_acl ('lead', 'cw');
@@ -57,7 +57,7 @@ if ($id || $id_company) {
 }
 
 // AJAX - START
-if (defined ('AJAX')) {
+if (is_ajax()) {
 	ob_clean();
 
 	$upload_file = (bool) get_parameter('upload_file');
@@ -168,6 +168,7 @@ if ($create) {
 	$date_alarm = get_parameter('alarm_date', '');
 	$time_alarm = get_parameter('alarm_time', '');
 	$estimated_close_date = (string) get_parameter ('estimated_close_date');
+	$tags = get_parameter('tags', array());
 	
 	$datetime_alarm = $date_alarm.' '.$time_alarm;
 
@@ -195,39 +196,45 @@ if ($create) {
 		);
 	$id = process_sql_insert('tlead', $values);
 
-	$datetime =  date ("Y-m-d H:i:s");
-	$values = array(
-			'id_lead' => $id,
-			'id_user' => $config["id_user"],
-			'timestamp' => $datetime,
-			'description' => "Created lead"
-		);
-	process_sql_insert('tlead_history', $values);
-	
-	//create agenda entry
-	if ($date_alarm != '') {
-		$public = 0;
-		$alarm = 60;
-		$date = $date_alarm;
-		if ($time != '') {
-			$time = $time_alarm;
-		} else {
-			$time = date ('H:i');
+	if ($id !== false) {
+		// Assign tags to the leads
+		if (!empty($tags)) {
+			create_lead_tag($id, $tags);
 		}
-		$datetime = $date.' '.$time;
-		$title = 'LEAD #'.$id;
-		$duration = 0;
-		$description = "ALARM: LEAD ".$fullname;
+		
 		$values = array(
-				'public' => $public,
-				'alarm' => $alarm,
-				'timestamp' => $date . " " . $time,
-				'id_user' => $config['id_user'],
-				'title' => $title,
-				'duration' => $duration,
-				'description' => $description
+				'id_lead' => $id,
+				'id_user' => $config["id_user"],
+				'timestamp' => date ("Y-m-d H:i:s"),
+				'description' => "Created lead"
 			);
-		$result = process_sql_insert('tagenda', $values);
+		process_sql_insert('tlead_history', $values);
+		
+		//create agenda entry
+		if ($date_alarm != '') {
+			$public = 0;
+			$alarm = 60;
+			$date = $date_alarm;
+			if ($time_alarm != '') {
+				$time = $time_alarm;
+			} else {
+				$time = date ('H:i');
+			}
+			
+			$title = 'LEAD #'.$id;
+			$duration = 0;
+			$description = "ALARM: LEAD ".$fullname;
+			$values = array(
+					'public' => $public,
+					'alarm' => $alarm,
+					'timestamp' => $date . " " . $time,
+					'id_user' => $config['id_user'],
+					'title' => $title,
+					'duration' => $duration,
+					'description' => $description
+				);
+			$result = process_sql_insert('tagenda', $values);
+		}
 	}
 	
 	if ($id === false) {
@@ -278,7 +285,7 @@ if ($make_owner){
 	process_sql ($sql);
 	$make_owner = 0;
 	
-	if ($result && $massive_leads_update && defined ('AJAX')) {
+	if ($result && $massive_leads_update && is_ajax()) {
 		$total_result['assigned'] = true;
 	}
 }
@@ -311,6 +318,7 @@ if ($update) { // if modified any parameter
 	$datetime_alarm = !empty($time_alarm) ? $date_alarm.' '.$time_alarm : $date_alarm;
 	$executive_overview = (string) get_parameter ('executive_overview');
 	$estimated_close_date = (string) get_parameter ('estimated_close_date');
+	$tags = get_parameter('tags', array());
 
 	// Detect if it's a progress change
 
@@ -359,6 +367,11 @@ if ($update) { // if modified any parameter
 	if ($result === false) {
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
+		// Assign tags to the leads
+		if (!empty($tags)) {
+			create_lead_tag($id, $tags);
+		}
+		
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		audit_db ($config['id_user'], '', "Lead updated", "Lead named '$fullname' has been updated");
 
@@ -475,7 +488,7 @@ if ($close) {
 		echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
 		$id = 0;
 
-		if ($massive_leads_update && defined ('AJAX')) {
+		if ($massive_leads_update && is_ajax()) {
 			$total_result['closed'] = true;
 		}
 	}
@@ -514,14 +527,14 @@ if ($delete) {
 			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 			$id = 0; // Force go listing page.
 
-			if ($massive_leads_update && defined ('AJAX')) {
+			if ($massive_leads_update && is_ajax()) {
 				$total_result['deleted'] = true;
 			}
 		}
 	}
 }
 
-if (defined ('AJAX') && $massive_leads_update) {
+if (is_ajax() && $massive_leads_update) {
 	ob_clean();
 	echo json_encode($total_result);
 	return;
@@ -544,6 +557,7 @@ $filter['show_100'] = (int) get_parameter ("show_100_search");
 $filter['id_language'] = (string) get_parameter ("id_language", "");
 $filter['est_sale'] = (int) get_parameter ("est_sale_search", 0);
 $filter['show_not_owned'] = (int) get_parameter ("show_not_owned_search");
+$filter['tags'] = get_parameter('tags', array());
 
 /* Create a custom saved search*/
 if ($create_custom_search && !$id_search) {
@@ -630,6 +644,7 @@ if ($id || $new) {
 		$estimated_close_date = (string) get_parameter ('estimated_close_date');
 		$alarm_date = get_parameter('alarm_date');
 		$alarm_time = get_parameter('alarm_time');
+		$tags = get_parameter('tags', array());
 
 	} else {
 		
@@ -658,6 +673,7 @@ if ($id || $new) {
 		$alarm_date = $alarm[0];
 		$alarm_time = $alarm[1];
 		$estimated_close_date = $lead['estimated_close_date'];
+		$tags = get_lead_tag_ids($lead['id']);
 	}
 	
 	// Show tabs
@@ -768,6 +784,7 @@ if ($id || $new) {
 	$table->width = "99%";
 	$table->data = array ();
 	$table->colspan = array ();
+	$table->colspan['tags'][0] = 4;
 	$table->colspan[10][0] = 4;
 	
 	if ($section_write_permission || $section_manage_permission) {
@@ -853,6 +870,10 @@ if ($id || $new) {
 		$table->data[9][0] .= "<div style=\"display: inline-block;\">" . print_input_text ("alarm_time", $alarm_time, "", 15, 20, true, __('Alarm - time')) . "</div>";
 		$table->data[9][0] .= '&nbsp;'.print_image("images/cross.png", true, array("onclick" => "cleanAlarm()"));
 		
+		// Tags
+		$tag_editor_props = array('name' => 'tags', 'selected_tags' => $tags);
+		$table->data['tags'][0] = print_label (__('Tags'), '', 'select', true);
+		$table->data['tags'][0] .= html_render_tags_editor($tag_editor_props, true);
 		
 		$table->data[10][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 		
@@ -914,6 +935,14 @@ if ($id || $new) {
 			$description = '<i>-'.__('Empty').'-</i>';
 		}		
 		$table->data[6][0] = "<b>".__('Description')."</b><br>$description<br>";
+		
+		// Tags view
+		if ($id) {
+			$full_tags = get_lead_tags($id, array(TAGS_TABLE_ID_COL => $tags));
+			
+			if (!empty($full_tags))
+				$table->data['tags'][0] = html_render_tags_view($full_tags, true);
+		}
 	}
 	
 	echo '<form method="post" id="lead_form">';
@@ -962,11 +991,19 @@ if ($id || $new) {
 	foreach ($filter as $key => $value) {
 		if ($key == "search_text") {
 			print_input_hidden ("search_text", $value, false, '', false, "filter-search_text");
-		} elseif ($key == "id_language") {
+		}
+		elseif ($key == "id_language") {
 			print_input_hidden ("id_language", $value, false, '', false, "filter-id_language");
-		} elseif ($key == "id_category") {
+		}
+		elseif ($key == "id_category") {
 			print_input_hidden ("product", $value, false, '', false, "filter-product");
-		} else {
+		}
+		else if ($key == "tags") {
+			foreach ($value as $val) {
+				print_input_hidden ("tags[]", $val, false, '', false, "filter-tags");
+			}
+		}
+		else {
 			print_input_hidden ($key."_search", $value, false, '', false, "filter-".$key."_search");
 		}
 	}
@@ -990,6 +1027,7 @@ if ($id || $new) {
 		$id_language = $filter['id_language'];
 		$est_sale = $filter['est_sale'];
 		$show_not_owned = $filter['show_not_owned'];
+		$tags = $filter['tags'];
 	} else {
 		$search_text = (string) get_parameter ('search_text');
 		$id_company = (int) get_parameter ('id_company_search');
@@ -1006,10 +1044,15 @@ if ($id || $new) {
 		$id_language = (string) get_parameter ("id_language", "");
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
 		$show_not_owned = (int) get_parameter ("show_not_owned_search");
+		$tags = get_parameter('tags', array());
 	}
 
 	$search_params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner&show_not_owned_search=$show_not_owned";
-
+	
+	if (!empty($tags)) {
+		$search_params .= '&tags[]='.implode('&tags[]=', $tags);
+	}
+	
 	$where_group = "";
 
 	if ($show_100){
@@ -1083,6 +1126,18 @@ if ($id || $new) {
 		$where_clause .= sprintf(' AND id_category = %d ', $id_category);
 	}
 	
+	// Tags filter
+	if (!empty($tags)) {
+		$lead_ids = get_leads_with_tags(array(TAGS_TABLE_ID_COL => $tags));
+		
+		// Some leads
+		if (!empty($lead_ids) && is_array($lead_ids))
+			$where_clause .= sprintf(' AND id IN (%s) ', implode(',', $lead_ids));
+		// None lead found
+		else
+			$where_clause .= ' AND id IN (-1) ';
+	}
+	
 	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
 
 	$table->class = 'search-table';
@@ -1090,6 +1145,8 @@ if ($id || $new) {
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->width = "99%";
+	$table->colspan = array();
+	$table->colspan['tags'][0] = 4;
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
@@ -1111,7 +1168,11 @@ if ($id || $new) {
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
 	$table->data[1][3] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-
+	
+	$tag_editor_props = array('name' => 'tags', 'selected_tags' => $tags);
+	$table->data['tags'][0] = print_label (__('Tags'), '', 'select', true);
+	$table->data['tags'][0] .= html_render_tags_editor($tag_editor_props, true); 
+	
 	$table_advanced->class = 'search-table';
 	$table_advanced->style = array ();
 	$table_advanced->style[0] = 'font-weight: bold;';

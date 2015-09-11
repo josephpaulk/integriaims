@@ -43,6 +43,37 @@ define('TAG_RED', 'red');
 //-- Data retrieving functions --//
 
 /** 
+ * Get all the available sections which use tags.
+ * 
+ * @return array The list of the sections.
+ */
+function get_available_tag_sections () {
+	$sections = array(
+			LEAD => __('Lead')
+		);
+	
+	return $sections;
+}
+
+/** 
+ * Get all the available tag colours.
+ * 
+ * @return array The list of the tag colours.
+ */
+function get_available_tag_colours () {
+	$tag_colours = array(
+			TAG_ORANGE => __('Orange'),
+			TAG_BLUE => __('Blue'),
+			TAG_GREY => __('Grey'),
+			TAG_GREEN => __('Green'),
+			TAG_YELLOW => __('Yellow'),
+			TAG_RED => __('Red')
+		);
+	
+	return $tag_colours;
+}
+
+/** 
  * Check if the name of the tag exists.
  * 
  * @param string Tag name.
@@ -51,7 +82,7 @@ define('TAG_RED', 'red');
  */
 function exists_tag_name ($name) {
 	if (empty($name))
-		throw new InvalidArgumentException('The name cannot be empty');
+		throw new InvalidArgumentException(__('The name cannot be empty'));
 	
 	$result = (bool) get_db_value(TAGS_TABLE_ID_COL, TAGS_TABLE, TAGS_TABLE_NAME_COL, $name);
 	
@@ -67,9 +98,11 @@ function exists_tag_name ($name) {
  */
 function create_tag ($values) {
 	if (empty($values))
-		throw new InvalidArgumentException('The values cannot be empty');
+		throw new InvalidArgumentException(__('The values cannot be empty'));
 	if (empty($values[TAGS_TABLE_NAME_COL]))
-		throw new InvalidArgumentException('The name cannot be empty');
+		throw new InvalidArgumentException(__('The name cannot be empty'));
+	if (strlen($values[TAGS_TABLE_NAME_COL]) > 255)
+		throw new InvalidArgumentException(__('The name is too big'));
 	
 	$result = process_sql_insert(TAGS_TABLE, $values);
 	
@@ -86,9 +119,13 @@ function create_tag ($values) {
  */
 function update_tag ($id, $values) {
 	if (empty($id) || !is_numeric($id))
-		throw new InvalidArgumentException('ID should be numeric');
+		throw new InvalidArgumentException(__('ID should be numeric'));
 	if ($id <= 0)
-		throw new RangeException('ID should be a number greater than 0');
+		throw new RangeException(__('ID should be a number greater than 0'));
+	if (isset($values[TAGS_TABLE_NAME_COL]) && empty($values[TAGS_TABLE_NAME_COL]))
+		throw new InvalidArgumentException(__('The name cannot be empty'));
+	if (isset($values[TAGS_TABLE_NAME_COL]) && strlen($values[TAGS_TABLE_NAME_COL]) > 255)
+		throw new InvalidArgumentException(__('The name is too big'));
 	
 	$where = array(TAGS_TABLE_ID_COL => $id);
 	$result = process_sql_update(TAGS_TABLE, $values, $where);
@@ -105,32 +142,14 @@ function update_tag ($id, $values) {
  */
 function delete_tag ($id) {
 	if (empty($id) || !is_numeric($id))
-		throw new InvalidArgumentException('ID should be numeric');
+		throw new InvalidArgumentException(__('ID should be numeric'));
 	if ($id <= 0)
-		throw new RangeException('ID should be a number greater than 0');
+		throw new RangeException(__('ID should be a number greater than 0'));
 	
 	$where = array(TAGS_TABLE_ID_COL => $id);
 	$result = process_sql_delete(TAGS_TABLE, $where);
 	
 	return $result;
-}
-
-/** 
- * Get the all the available tag colours.
- * 
- * @return array The list of the tag colours.
- */
-function get_available_tag_colours () {
-	$tag_colours = array(
-			TAG_ORANGE => __('Orange'),
-			TAG_BLUE => __('Blue'),
-			TAG_GREY => __('Grey'),
-			TAG_GREEN => __('Green'),
-			TAG_YELLOW => __('Yellow'),
-			TAG_RED => __('Red')
-		);
-	
-	return $tag_colours;
 }
 
 /** 
@@ -260,6 +279,102 @@ function get_available_tag_names ($filter = array()) {
 }
 
 /** 
+ * Get the item ids with ALL the tags of the filter assigned.
+ * If the tag filter is empty, it will return the item ids with any tag assigned.
+ *
+ * It's important to notice this:
+ * tag_filter -> [1,2,3]
+ * Item with tags 1 and 2 -> Not returned
+ * Item with tags 1, 2 and 3 -> Returned
+ * Item with tags 1, 2, 3 and 4 -> Returned
+ * 
+ * @param string Type of the item.
+ * @param array [Optional] Items to filter the tags.
+ * 
+ * @return array The list of the item ids.
+ */
+function get_items_with_tags ($item_type, $tag_filter = array()) {
+	global $config;
+	
+	$item_table_name = '';
+	$item_table_tag_id_column = '';
+	$item_table_item_id_column = '';
+	
+	switch ($item_type) {
+		case LEAD:
+			$item_table_name = LEADS_TABLE;
+			$item_table_tag_id_column = LEADS_TABLE_TAG_ID_COL;
+			$item_table_item_id_column = LEADS_TABLE_LEAD_ID_COL;
+			break;
+		default:
+			break;
+	}
+	
+	// Tag filter
+	$tag_id = isset($tag_filter[TAGS_TABLE_ID_COL]) ? $tag_filter[TAGS_TABLE_ID_COL] : 0;
+	$tag_name = isset($tag_filter[TAGS_TABLE_NAME_COL]) ? $tag_filter[TAGS_TABLE_NAME_COL] : '';
+	$tag_colour = isset($tag_filter[TAGS_TABLE_COLOUR_COL]) ? $tag_filter[TAGS_TABLE_COLOUR_COL] : '';
+	
+	$item_ids_id_filtered = array();
+	if (! empty($tag_id)) {
+		if (!is_array($tag_id))
+			$tag_id = array($tag_id);
+		
+		$num_tags = count($tag_id);
+		
+		$tag_id_filter = sprintf(
+				'ti.%s IN (%s)',
+				TAGS_TABLE_ID_COL,
+				implode(',', $tag_id)
+			);
+		
+		$sql = sprintf('SELECT ti.%s, COUNT(ti.%s) AS num_tags
+						FROM %s ti
+						WHERE ti.%s IN (%s)
+						GROUP BY ti.%s
+						HAVING num_tags >= %d',
+						$item_table_item_id_column,
+						$item_table_item_id_column,
+						$item_table_name,
+						$item_table_tag_id_column,
+						implode(',', $tag_id),
+						$item_table_item_id_column,
+						$num_tags);
+		$items_id_filtered = get_db_all_rows_sql($sql);
+		if (empty($items_id_filtered)) $items_id_filtered = array();
+		
+		$item_ids_id_filtered = array_map(function ($item) use ($item_table_item_id_column) {
+			return $item[$item_table_item_id_column];
+		}, $items_id_filtered);
+	}
+	
+	// Only supported filtering by id for now
+	
+	$sql = sprintf('SELECT ti.%s
+					FROM %s ti
+					INNER JOIN %s tt
+						ON ti.%s = tt.%s',
+					$item_table_item_id_column,
+					$item_table_name,
+					TAGS_TABLE,
+					$item_table_tag_id_column,
+					TAGS_TABLE_ID_COL);
+	$items = get_db_all_rows_sql($sql);
+	if (empty($items)) $items = array();
+	
+	$item_ids = array_map(function ($item) use ($item_table_item_id_column) {
+		return $item[$item_table_item_id_column];
+	}, $items);
+	
+	// Get the intersection with the filtered items
+	if (! empty($tag_id)) {
+		$item_ids = array_intersect($item_ids_id_filtered, $item_ids);
+	}
+	
+	return $item_ids;
+}
+
+/** 
  * Get the tags assigned to an item.
  * If the item id is empty, it will return the tags assigned to any item.
  * 
@@ -276,7 +391,7 @@ function get_tags ($item_type, $item_filter = array(), $tag_filter = array()) {
 	$item_table_tag_id_column = '';
 	$item_table_item_id_column = '';
 	
-	switch ($item) {
+	switch ($item_type) {
 		case LEAD:
 			$item_table_name = LEADS_TABLE;
 			$item_table_tag_id_column = LEADS_TABLE_TAG_ID_COL;
@@ -371,7 +486,7 @@ function get_tags ($item_type, $item_filter = array(), $tag_filter = array()) {
 	$sql = sprintf('SELECT tt.*
 					FROM %s tt
 					INNER JOIN %s ti
-						ON tt.%d = ti.%d
+						ON tt.%s = ti.%s
 							AND %s
 					WHERE %s
 						AND %s
@@ -415,6 +530,26 @@ function get_tags_indexed ($item_type, $item_filter = array(), $tag_filter = arr
 }
 
 /** 
+ * Get the tag ids assigned to an item.
+ * 
+ * @param string Type of the item.
+ * @param array [Optional] Items to filter the items.
+ * @param array [Optional] Items to filter the tags.
+ * 
+ * @return array The list of the tag ids.
+ */
+function get_tag_ids ($item_type, $item_filter = array(), $tag_filter = array()) {
+	global $config;
+	
+	$tags = get_tags($item_type, $item_filter, $tag_filter);
+	$tag_ids = array_map(function ($tag) {
+		return $tag[TAGS_TABLE_ID_COL];
+	}, $tags);
+	
+	return $tag_ids;
+}
+
+/** 
  * Get the tags names assigned to an item.
  * 
  * @param string Type of the item.
@@ -434,6 +569,136 @@ function get_tag_names ($item_type, $item_filter = array(), $tag_filter = array(
 	return $tag_names;
 }
 
+// Leads
+
+/** 
+ * Check if a tag is assigned to a lead.
+ * 
+ * @param int Id of the lead.
+ * @param int Id of the tag.
+ * 
+ * @return bool Wether the tag is assigned or not.
+ */
+function exists_lead_tag ($lead_id, $tag_id) {
+	if (empty($lead_id))
+		throw new InvalidArgumentException(__('The lead id cannot be empty'));
+	if (empty($tag_id))
+		throw new InvalidArgumentException(__('The tag id cannot be empty'));
+	
+	$filter = array(LEADS_TABLE_LEAD_ID_COL => $lead_id, LEADS_TABLE_TAG_ID_COL => $tag_id);
+	return (bool)get_db_value_filter(LEADS_TABLE_ID_COL, LEADS_TABLE, $filter);
+}
+
+/** 
+ * Assign a tag to a lead.
+ * This process will delete the lead tags and assign the new.
+ * 
+ * @param mixed Id (int) or ids (array) of the lead.
+ * @param mixed Id (int) or ids (array) of the tag.
+ * 
+ * @return mixed The number of assigned tags of false (bool) on error.
+ */
+function create_lead_tag ($lead_id, $tag_id) {
+	if (empty($lead_id))
+		throw new InvalidArgumentException(__('The lead id cannot be empty'));
+	if (empty($tag_id))
+		throw new InvalidArgumentException(__('The tag id cannot be empty'));
+	
+	if (!is_array($lead_id))
+		$lead_id = array($lead_id);
+	if (!is_array($tag_id))
+		$tag_id = array($tag_id);
+	
+	$expected_assingments = count($lead_id) * count($tag_id);
+	$successfull_assingments = 0;
+	
+	// Delete the old tags
+	$delete_res = process_sql_delete(LEADS_TABLE, array(LEADS_TABLE_LEAD_ID_COL => $lead_id));
+	
+	if ($delete_res !== false) {
+		foreach ($lead_id as $l_id) {
+			if (is_numeric($l_id) && $l_id > 0) {
+				foreach ($tag_id as $t_id) {
+					if (is_numeric($t_id) && $t_id > 0) {
+						$values = array(
+								LEADS_TABLE_LEAD_ID_COL => $l_id,
+								LEADS_TABLE_TAG_ID_COL => $t_id
+							);
+						$result = process_sql_insert(LEADS_TABLE, $values);
+						
+						if ($result !== false)
+							$successfull_assingments++;
+					}
+				}
+			}
+		}
+	}
+	
+	if ($delete_res === false || ($expected_assingments > 0 && $successfull_assingments === 0))
+		$successfull_assingments = false;
+	
+	return $successfull_assingments;
+}
+
+/** 
+ * Assign a tag to a lead.
+ * This process will delete the lead tags and assign the new.
+ * 
+ * @param mixed Id (int) or ids (array) of the lead.
+ * @param mixed Name (string) or names (array) of the tag.
+ * @param bool 	Wether html encode the names or not.
+ * 
+ * @return mixed The number of assigned tags of false (bool) on error.
+ */
+function create_lead_tag_with_names ($lead_id, $tag_name, $encode_names = false) {
+	if (empty($lead_id))
+		throw new InvalidArgumentException(__('The lead id cannot be empty'));
+	if (empty($tag_name))
+		throw new InvalidArgumentException(__('The tag name cannot be empty'));
+	
+	if (!is_array($lead_id))
+		$lead_id = array($lead_id);
+	if (!is_array($tag_name))
+		$tag_name = array($tag_name);
+	
+	if ($encode_names)
+		$tag_name = safe_input($tag_name);
+	
+	$expected_assingments = count($lead_id) * count($tag_name);
+	$successfull_assingments = 0;
+	
+	// Delete the old tags
+	$delete_res = process_sql_delete(LEADS_TABLE, array(LEADS_TABLE_LEAD_ID_COL => $lead_id));
+	
+	if ($delete_res !== false) {
+		foreach ($lead_id as $l_id) {
+			if (is_numeric($l_id) && $l_id > 0) {
+				foreach ($tag_name as $t_name) {
+					if (!empty($t_name)) {
+						$tag_id = get_db_value(TAGS_TABLE_ID_COL, TAGS_TABLE, TAGS_TABLE_NAME_COL, $t_name);
+						
+						if (is_numeric($tag_id) && $tag_id > 0) {
+							$values = array(
+									LEADS_TABLE_LEAD_ID_COL => $l_id,
+									LEADS_TABLE_TAG_ID_COL => $tag_id
+								);
+							$result = process_sql_insert(LEADS_TABLE, $values);
+							
+							if ($result !== false)
+								$successfull_assingments++;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	if ($delete_res === false || ($expected_assingments > 0 && $successfull_assingments === 0))
+		$successfull_assingments = false;
+	
+	return $successfull_assingments;
+}
+
 /** 
  * Get the tags assigned to a lead.
  * 
@@ -445,7 +710,7 @@ function get_tag_names ($item_type, $item_filter = array(), $tag_filter = array(
 function get_lead_tags ($lead_id = false, $tag_filter = array()) {
 	$lead_filter = array();
 	if (empty($lead_id))
-		$lead_filter = array(LEADS_TABLE_ID_COL => $lead_id);
+		$lead_filter = array(LEADS_TABLE_LEAD_ID_COL => $lead_id);
 	
 	return get_tags(LEAD, $lead_filter, $tag_filter);
 }
@@ -461,9 +726,25 @@ function get_lead_tags ($lead_id = false, $tag_filter = array()) {
 function get_lead_tags_indexed ($lead_id = false, $tag_filter = array()) {
 	$lead_filter = array();
 	if (empty($lead_id))
-		$lead_filter = array(LEADS_TABLE_ID_COL => $lead_id);
+		$lead_filter = array(LEADS_TABLE_LEAD_ID_COL => $lead_id);
 	
 	return get_tags_indexed(LEAD, $lead_filter, $tag_filter);
+}
+
+/** 
+ * Get the tag tds assigned to a lead.
+ * 
+ * @param mixed Id (int) or ids (array) of the lead/s.
+ * @param array [Optional] Items to filter the tags.
+ * 
+ * @return array The list of the tag ids.
+ */
+function get_lead_tag_ids ($lead_id = false, $tag_filter = array()) {
+	$lead_filter = array();
+	if (!empty($lead_id))
+		$lead_filter = array(LEADS_TABLE_LEAD_ID_COL => $lead_id);
+	
+	return get_tag_ids(LEAD, $lead_filter, $tag_filter);
 }
 
 /** 
@@ -477,19 +758,30 @@ function get_lead_tags_indexed ($lead_id = false, $tag_filter = array()) {
 function get_lead_tag_names ($lead_id = false, $tag_filter = array()) {
 	$lead_filter = array();
 	if (empty($lead_id))
-		$lead_filter = array(LEADS_TABLE_ID_COL => $lead_id);
+		$lead_filter = array(LEADS_TABLE_LEAD_ID_COL => $lead_id);
 	
 	return get_tag_names(LEAD, $lead_filter, $tag_filter);
 }
 
 
+/** 
+ * Get the leads with the selected tags assigned.
+ * 
+ * @param array Tag filter.
+ * 
+ * @return array The lead ids with the tags assigned.
+ */
+function get_leads_with_tags ($tag_filter = array()) {
+	return get_items_with_tags(LEAD, $tag_filter);
+}
+
 //-- HTML elements functions --//
 
-function html_render_tags_editor ($props) {
+function html_render_tags_editor ($props, $return = false) {
 	// Defaults
 	$tags;
 	$selected_tags = array();
-	$select_name = 'tags';
+	$select_name = 'tags[]';
 	$any = false;
 	$label = __('Selected tags');
 	$disabled = false;
@@ -498,10 +790,18 @@ function html_render_tags_editor ($props) {
 	if (!isset($props))
 		$props = array();
 	
-	if (isset($props['tags']))
+	if (isset($props['tags'])) {
 		$tags = $props['tags'];
-	else
+	}
+	else {
 		$tags = get_available_tags_indexed();
+		
+		$tags = get_available_tags();
+		$tag_ids = array_map(function ($tag) {
+			return $tag[TAGS_TABLE_ID_COL];
+		}, $tags);
+		$tags = array_combine($tag_ids, $tags);
+	}
 	
 	// Selected tags
 	if (isset($props['selected_tags']))
@@ -509,58 +809,72 @@ function html_render_tags_editor ($props) {
 	// Select name
 	if (isset($props['select_name']))
 		$select_name = $props['select_name'];
-	// Any enabled/disabled
-	if (isset($props['any']))
-		$any = $props['any'];
-	// Label
-	if (isset($props['label']))
-		$label = $props['label'];
-	// Disabled
-	if (isset($props['disabled']))
-		$disabled = $props['disabled'];
-	// Visible
-	if (isset($props['visible']))
-		$visible = $props['visible'];
 	
 	// Tags multi selector
-	$select_selected_tags = html_print_select($tags, $select_name, $selected_tags, '', $any ? __('Any') : '', 0,
-		true, true, true, '', $disabled, $visible ? '' : 'display:none;');
+	$tag_ids = array_map(function ($tag) {
+		return $tag[TAGS_TABLE_ID_COL];
+	}, $tags);
+	$tag_names = array_map(function ($tag) {
+		return $tag[TAGS_TABLE_NAME_COL];
+	}, $tags);
+	$tags_for_select = array_combine($tag_ids, $tag_names);
+	$select_selected_tags = html_print_select($tags_for_select, $select_name, $selected_tags, '', '', 0,
+		true, true, true, '', $disabled, 'display:none;');
 	
 	// Tags simple selector
-	$selected_tags_comb = array_combine($selected_tags, $selected_tags);
+	if (!empty($selected_tags))
+		$selected_tags_comb = array_combine($selected_tags, $selected_tags);
+	else
+		$selected_tags_comb = array();
 	$not_added_tags = array_diff_key($tags, $selected_tags_comb);
 	
-	$select_add_tags = '<div class="tags-select" style="'.(!$visible ? '' : 'display:none;').'">';
-	//$select_add_tags .= print_label(__('Select a tag'), 'add-tags-select', 'select', true);
-	$select_add_tags .= html_print_select($not_added_tags, 'add-tags-select', array(), '', __('Select'), 0,
-		true, false, true, '', $disabled);
+	$select_add_tags = '<div class="tags-select">';
+	$select_add_tags .= html_print_select($not_added_tags, 'add-tags-select',
+		array(), '', __('Select'), 0, true, false, true, '', $disabled);
 	$select_add_tags .= '</div>';
 	
 	// Tags view
 	$view_tags_selected = '<div class="tags-view"></div>';
+	
+	ob_start();
 	
 	echo '<div class="tags-editor">';
 	echo 	$select_selected_tags;
 	echo 	$select_add_tags;
 	echo 	$view_tags_selected;
 	echo '</div>';
-	
 ?>
 	<script type="text/javascript">
 	(function ($) {
+		
+		var TAGS_TABLE_ID_COL = '<?php echo TAGS_TABLE_ID_COL; ?>';
+		var TAGS_TABLE_NAME_COL = '<?php echo TAGS_TABLE_NAME_COL; ?>';
+		var TAGS_TABLE_COLOUR_COL = '<?php echo TAGS_TABLE_COLOUR_COL; ?>';
+		var availableTags = <?php echo json_encode($tags); ?>;
 		
 		var $selectSelectedTags = $('select[name="<?php echo $select_name; ?>"]');
 		var $selectAddTags = $('select[name="add-tags-select"]');
 		var $tagsView = $('div.tags-view');
 		
-		var addTag = function (id, name) {
+		var addTag = function (id) {
+			if (typeof availableTags[id] === 'undefined')
+				return;
+			
+			var name = availableTags[id][TAGS_TABLE_NAME_COL];
+			var colour = availableTags[id][TAGS_TABLE_COLOUR_COL];
+			
+			var $tagName = $('<span></span>');
+			$tagName.html(name);
+			var $tagBtn = $('<a></a>');
 			var $tag = $('<span></span>');
-			$tag.html(name)
+			$tag.append($tagName, $tagBtn)
 				.prop('id', 'tag-'+id)
 				.addClass('tag')
 				.addClass('label')
+				.addClass(colour)
 				.data('id', id)
-				.data('name', name);
+				.data('name', name)
+				.data('colour', colour);
 			$tagsView.append($tag);
 			
 			// Remove the label from the 'add select'
@@ -574,7 +888,13 @@ function html_render_tags_editor ($props) {
 					.prop('selected', true);
 		}
 		
-		var removeTag = function (id, name) {
+		var removeTag = function (id) {
+			if (typeof availableTags[id] === 'undefined')
+				return;
+			
+			var name = availableTags[id][TAGS_TABLE_NAME_COL];
+			var colour = availableTags[id][TAGS_TABLE_COLOUR_COL];
+			
 			// Add the deleted item to the 'add select'
 			$selectAddTags.append($('<option>', {
 				value: id,
@@ -595,26 +915,24 @@ function html_render_tags_editor ($props) {
 			event.preventDefault();
 			
 			// Retrieve the label info from the 'add select'
-			var id = $(this).val();
-			var name = $(this).children('option[value="' + id + '"]').html();
-			console.log(id, name);
+			var id = this.value;
+			
 			if (id != 0) {
 				// Add the tag
-				addTag(id, name);
+				addTag(id);
 			}
 		});
 		
 		// Handler to delete a label selection
-		$tagsView.on('click', 'span.tag', function (event) {
+		$tagsView.on('click', 'span.tag>a', function (event) {
 			event.preventDefault();
 			
 			if (typeof event.target !== 'undefined') {
 				// Get the label info from the target element
-				var id = $(event.target).data('id');
-				var name = $(event.target).data('name');
+				var id = $(event.target).parent().data('id');
 				
 				// Remove the tag
-				removeTag(id, name);
+				removeTag(id);
 			}
 		});
 		
@@ -622,12 +940,17 @@ function html_render_tags_editor ($props) {
 		$selectSelectedTags
 			.children('option:selected')
 				.each(function(index, el) {
-					addTag(el.value, el.text);
+					addTag(el.value);
 				});
 		
 	})(window.jQuery);
 	</script>
 <?php
+	$html = ob_get_clean();
+	
+	if ($return)
+		return $html;
+	echo $html;
 }
 
 function html_render_tag ($tag, $return = false) {

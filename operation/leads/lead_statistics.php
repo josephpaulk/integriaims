@@ -52,6 +52,8 @@ $pdf_output = (int) get_parameter ("pdf_output");
 $report_name = get_parameter("report_name");
 $show_not_owned = (int) get_parameter ("show_not_owned_search");
 
+$tags = get_parameter('tags', array());
+
 if (!$report_name) {
 	$report_name = __("Leads report");
 }
@@ -61,6 +63,10 @@ if ($pdf_output) {
 }
 
 $params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&last_date_search=$last_date&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_search=$progress&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner&show_not_owned_search=$show_not_owned";
+
+if (!empty($tags)) {
+	$params .= '&tags[]='.implode('&tags[]=', $tags);
+}
 
 echo "<h1>".__('Lead search statistics');
 
@@ -143,6 +149,18 @@ if ($progress_major_than > 0) {
 
 if ($id_category) {
 	$where_clause .= sprintf(' AND id_category = %d ', $id_category);
+}
+
+// Tags filter
+if (!empty($tags)) {
+	$lead_ids = get_leads_with_tags(array(TAGS_TABLE_ID_COL => $tags));
+	
+	// Some leads
+	if (!empty($lead_ids) && is_array($lead_ids))
+		$where_clause .= sprintf(' AND id IN (%s) ', implode(',', $lead_ids));
+	// None lead found
+	else
+		$where_clause .= ' AND id IN (-1) ';
 }
 
 $where_clause .= ")";

@@ -48,23 +48,27 @@ if ($create) {
 	// name and colour required
 	if (!empty($name) && !empty($colour)) {
 		if (! exists_tag_name($name)) {
-			$values = array(
-					TAGS_TABLE_NAME_COL => $name,
-					TAGS_TABLE_COLOUR_COL => $colour
-				);
-			$result = create_tag($values);
-			$crud_operation['result'] = $result;
-			
-			
-			if ($result !== false) {
-				$id = 0;
-				$name = '';
-				$colour = '';
+			try {
+				$values = array(
+						TAGS_TABLE_NAME_COL => $name,
+						TAGS_TABLE_COLOUR_COL => $colour
+					);
+				$result = create_tag($values);
+				$crud_operation['result'] = $result;
+				
+				if ($result !== false) {
+					$id = 0;
+					$name = '';
+					$colour = '';
+				}
+				
+				$crud_operation['message'] .= ui_print_result_message($result,
+					__('Tag created successsfully'),
+					__('There was an error creating the tag'), '', true);
 			}
-			
-			$crud_operation['message'] .= ui_print_result_message($result,
-				__('Tag created successsfully'),
-				__('There was an error creating the tag'), '', true);
+			catch (Exception $e) {
+				$crud_operation['message'] .= ui_print_error_message($e->getMessage(), '', true);
+			}
 		}
 		else {
 			$crud_operation['message'] .= ui_print_error_message(__('The name already exists'), '', true);
@@ -93,26 +97,31 @@ else if ($update) {
 		}
 		
 		if ($allow_name) {
-			$values = array(
-					TAGS_TABLE_NAME_COL => $name,
-					TAGS_TABLE_COLOUR_COL => $colour
-				);
-			$result = update_tag($id, $values);
-			$crud_operation['result'] = $result;
-			
-			// Result can be 0 if the target has the same values as the source
-			if ($result !== false) {
-				$result = true;
+			try {
+				$values = array(
+						TAGS_TABLE_NAME_COL => $name,
+						TAGS_TABLE_COLOUR_COL => $colour
+					);
+				$result = update_tag($id, $values);
+				$crud_operation['result'] = $result;
 				
-				// Prepare the values for another creation
-				$id = 0;
-				$name = '';
-				$colour = '';
+				// Result can be 0 if the target has the same values as the source
+				if ($result !== false) {
+					$result = true;
+					
+					// Prepare the values for another creation
+					$id = 0;
+					$name = '';
+					$colour = '';
+				}
+				
+				$crud_operation['message'] .= ui_print_result_message($result,
+					__('Tag updated successsfully'),
+					__('There was an error updating the tag'), '', true);
 			}
-			
-			$crud_operation['message'] .= ui_print_result_message($result,
-				__('Tag updated successsfully'),
-				__('There was an error updating the tag'), '', true);
+			catch (Exception $e) {
+				$crud_operation['message'] .= ui_print_error_message($e->getMessage(), '', true);
+			}
 		}
 		else {
 			$crud_operation['message'] .= ui_print_error_message(__('The name already exists'), '', true);
@@ -125,22 +134,27 @@ else if ($update) {
 else if ($delete) {
 	// id required
 	if (!empty($id)) {
-		$result = delete_tag($id);
-		$crud_operation['result'] = $result;
-		
-		// Result can be 0 if the target does not exist
-		if ($result !== false) {
-			$result = true;
+		try {
+			$result = delete_tag($id);
+			$crud_operation['result'] = $result;
 			
-			// Prepare the values for another creation
-			$id = 0;
-			$name = '';
-			$colour = '';
+			// Result can be 0 if the target does not exist
+			if ($result !== false) {
+				$result = true;
+				
+				// Prepare the values for another creation
+				$id = 0;
+				$name = '';
+				$colour = '';
+			}
+			
+			$crud_operation['message'] .= ui_print_result_message($result,
+				__('Tag deleted successsfully'),
+				__('There was an error deleting the tag'), '', true);
 		}
-		
-		$crud_operation['message'] .= ui_print_result_message($result,
-			__('Tag deleted successsfully'),
-			__('There was an error deleting the tag'), '', true);
+		catch (Exception $e) {
+			$crud_operation['message'] .= ui_print_error_message($e->getMessage(), '', true);
+		}
 	}
 	else {
 		$crud_operation['message'] .= ui_print_error_message(__('Some required values are missing'), '', true);

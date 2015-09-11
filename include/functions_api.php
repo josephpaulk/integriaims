@@ -1089,6 +1089,8 @@ function api_validate_user ($return_type, $user, $pass){
 function api_create_lead ($return_type, $user, $params){
 	global $config;
 	
+	include_once($config['homedir'].'/include/functions_tags.php');
+	
 	$config['id_user'] = $user;
 	
 	$fullname = trim($params[0]);
@@ -1106,7 +1108,14 @@ function api_create_lead ($return_type, $user, $params){
 	$id_category = trim($params[12]);
 	$id_company = trim($params[13]);
 	$id_campaign = trim($params[14]);
-
+	
+	$tags_token = trim($params[15]);
+	$tags_names_str = trim($params[16]);
+	
+	$tag_names = array();
+	if (!empty($tags_token) && !empty($tags_names_str))
+		$tag_names = explode($tags_token, $tags_names_str);
+	
 	// Search if any current lead with the same email already exists
 	$duped_id = get_db_value('id','tlead','email',$email);
 
@@ -1134,6 +1143,11 @@ function api_create_lead ($return_type, $user, $params){
 		$new_id = process_sql ($sql, 'insert_id');
 
 		if ($new_id !== false) {
+			// Assign tags to the leads
+			if (!empty($tag_names)) {
+				@create_lead_tag_with_names($new_id, $tag_names, true);
+			}
+			
 			$datetime =  date ("Y-m-d H:i:s");
 			$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $new_id, "API", $datetime, "Created lead via API");
 			process_sql ($sql);

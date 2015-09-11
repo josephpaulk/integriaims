@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 include_once('include/functions_crm.php');
+include_once('include/functions_tags.php');
 
 $section_read_permission = check_crm_acl ('lead', 'cr');
 if (!$section_read_permission) {
