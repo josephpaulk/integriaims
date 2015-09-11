@@ -1,4 +1,10 @@
 2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+		
+	* include/styles/integria.css,
+	  operation/projects/project_report.php: Improved the visual
+	style of the task item of the project reports.
+
+2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_db.php: Added the function
 	'exists_custom_search_name'.

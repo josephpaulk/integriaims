@@ -2281,6 +2281,14 @@ table#details_table, .pie_frame, .graph_frame {
 	width: auto;
 }
 
+.pie_frame table {
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100% !important;
+}
+
 table#details_table * {
 	color:#606060; 
 }

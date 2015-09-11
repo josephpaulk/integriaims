@@ -340,20 +340,6 @@ if ($id_project) {
 	$tasks = get_db_all_rows_sql($sql);
 	
 	if (!empty($tasks)) {
-		// $table_task = new StdClass();
-		// $table_task->width = '100%';
-		// $table_task->class = 'listing';
-		// $table_task->head = array();
-		// $table_task->head['task'] = __('Task');
-		// $table_task->head['total_time'] = __('Total time').' ('.__('Actual').' / '.__('Estimated').') ('.__('In hours').')';
-		// $table_task->head['people_involved'] = __('People involved');
-		// $table_task->head['first_wu'] = __('First workunit');
-		// $table_task->head['last_wu'] = __('Last workunit');
-		// $table_task->data = array();
-		// $table_task->colspan = array();
-		
-		// $num_columns = count($table_task->head);
-		
 		foreach ($tasks as $task) {
 			// Get the dates of the oldest and the newest wu
 			$sql = sprintf('SELECT DATE(MIN(first_wu)) AS first_wu, DATE(MAX(last_wu)) AS last_wu
@@ -476,17 +462,6 @@ if ($id_project) {
 			$row['data'] = $task['last_wu'];
 			$table_task->data['last_wu'] = $row;
 			
-			// Add the values to the row
-			// $row = array();
-			// $row['task'] = $task['name'];
-			// $row['total_time'] = $task['total_time'];
-			// $row['people_involved'] = $task['people_involved'];
-			// $row['first_wu'] = $task['first_wu'];
-			// $row['last_wu'] = $task['last_wu'];
-			
-			// $row_identifier = 'task#'.$task['id'];
-			// $table_task->data[$row_identifier] = $row;
-			
 			// Get all the workunits
 			$sql = sprintf('SELECT final.id_user AS id_user,
 								DATE(final.timestamp) AS date,
@@ -575,25 +550,21 @@ if ($id_project) {
 					$table_wu->data[] = $row;
 				}
 				
-				// $row_identifier = 'task#'.$task['id'].'-workunits';
-				// $table_task->data[$row_identifier] = array();
-				// $table_task->data[$row_identifier][] = print_table($table_wu, true);
-				// $table_task->colspan[$row_identifier] = array();
-				// $table_task->colspan[$row_identifier][] = $num_columns;
-				
-				// $row = array();
-				// $row[] = print_table($table_wu, true);
-				// $table_task->data['workunits'] = $row;
-				// $table_task->colspan['workunits'][] = 2;
-				
+				$tasks_report .= '<div class="pie_frame">';
 				$tasks_report .= print_table($table_task, true) . print_table($table_wu, true);
+				$tasks_report .= '</div>';
+				if ($pdf_output)
+					$tasks_report .= '<hr>';
 			}
 			else {
+				$tasks_report .= '<div class="pie_frame">';
 				$tasks_report .= print_table($table_task, true);
+				$tasks_report .= '</div>';
+				if ($pdf_output)
+					$tasks_report .= '<hr>';
 			}
 		}
 	}
-		
 	
 	//Print containers
 	echo print_container('project_labour_report', __('Labour'), $labour, 'no', true, true, "container_simple_title", "container_simple_div");
