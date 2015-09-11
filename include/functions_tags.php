@@ -896,10 +896,11 @@ function html_render_tags_editor ($props, $return = false) {
 			var colour = availableTags[id][TAGS_TABLE_COLOUR_COL];
 			
 			// Add the deleted item to the 'add select'
-			$selectAddTags.append($('<option>', {
-				value: id,
-				text: name
-			})).val(0).change();
+			var $option = $('<option></option>');
+			$option
+				.val(id)
+				.html(name);
+			$selectAddTags.append($option).val(0).change();
 			
 			// Unselect the item of the tags select
 			$selectSelectedTags

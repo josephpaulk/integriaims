@@ -1,5 +1,10 @@
 2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* include/functions_tags.php: Fixed a visual error on the
+	function 'html_render_tags_editor'.
+
+2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* godmode/setup/setup_tags.php: Improved the tag CRUD
 	operations.
 
