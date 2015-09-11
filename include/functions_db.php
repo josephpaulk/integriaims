@@ -1723,6 +1723,10 @@ function print_user_avatar ($id_user = "", $small = false, $return = false) {
 	echo $output;
 }
 
+function exists_custom_search_name ($name) {
+	return (bool) get_db_value('id', 'tcustom_search', 'name', $name);
+}
+
 function create_custom_search ($name, $section, $search_values) {
 	global $config;
 	

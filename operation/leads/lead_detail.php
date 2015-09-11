@@ -563,14 +563,20 @@ $filter['tags'] = get_parameter('tags', array());
 if ($create_custom_search && !$id_search) {
 	
 	$search_name = (string) get_parameter ('search_name');
+
+	$duped_name = exists_custom_search_name($search_name);
 	
-	$result = create_custom_search ($search_name, 'leads', $filter);
-	
-	if ($result === false) {
-		echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+	if (!$duped_name) {
+		$result = create_custom_search ($search_name, 'leads', $filter);
+			if ($result === false) {
+			echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+		}
+		else {
+			echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+		}
 	}
 	else {
-		echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+		echo '<h3 class="error">'.__('This name already exist').'</h3>';
 	}
 }
 

@@ -1,4 +1,12 @@
 2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_db.php: Added the function
+	'exists_custom_search_name'.
+
+	* operation/leads/lead_detail.php: Checked for duplicated
+	names before creating a new custom search.
+
+2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_tags.php: Fixed a visual error on the
 	function 'html_render_tags_editor'.
