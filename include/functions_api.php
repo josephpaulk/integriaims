@@ -1550,7 +1550,7 @@ function api_ovo_manager ($return_type, $params) {
 
 	if ($incidents == false) {
 		
-		if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical
+		if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
 			api_create_incident($return_type,'ovo',$values);
 		}
 				
@@ -1559,12 +1559,12 @@ function api_ovo_manager ($return_type, $params) {
 
 			switch ($incident['estado']) {
 				case 7: //cerrada
-					if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical
+					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
 						api_create_incident($return_type,'ovo',$values);
 					}
 				break;
 				case 5: //pendiente de cierre
-					if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical
+					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
 						
 						//update ticket
 						$values_update[0] = $incident['id_incidencia'];
@@ -1572,7 +1572,11 @@ function api_ovo_manager ($return_type, $params) {
 						$values_update[2] = $incident['descripcion']; //description
 						$values_update[3] = $incident['epilog']; //epilog
 						$values_update[4] = $incident['id_grupo']; //id grupo
-						$values_update[5] = $incident['prioridad']; //priority
+						if ($prioridad > $incident['prioridad']) {
+							$values_update[5] = $prioridad;
+						} else {
+							$values_update[5] = $incident['prioridad'];
+						}
 						$values_update[6] = 9; //in process
 						$values_update[7] = 4; //re opened
 						$values_update[8] = $incident['id_usuario']; //owner
@@ -1594,7 +1598,7 @@ function api_ovo_manager ($return_type, $params) {
 					}
 				break;
 				default:
-					if (($prioridad == 1) || ($prioridad == 3) || ($prioridad == 4)) { //minor, mayor o critical	
+					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical	
 						//update ticket
 						$values_update[0] = $incident['id_incidencia'];
 						$values_update[1] = $incident['titulo']; //title
@@ -1615,9 +1619,19 @@ function api_ovo_manager ($return_type, $params) {
 						
 						api_update_incident ($return_type, 'ovo', $values_update);
 						
+						//add wu
+						$workunit[0] = $incident['id_incidencia']; // id ticket
+						$workunit[1] = $descripcion; // descripcion
+						$workunit[2] = 0; // duracion
+						$workunit[3] = 0; // coste
+						$workunit[4] = 1; // publico
+						$workunit[5] = 2; // perfil
+						
+						api_create_incident_workunit($return_type, 'ovo', $workunit);
+						
 					}
 					
-					if ($prioridad == 2) { //normal
+					if ($prioridad == 0) { //normal
 						
 						if ($msg_group == "AutoResolved") {
 							//update ticket

@@ -297,6 +297,12 @@ function load_config() {
 	if (!isset ($config["enable_update_manager"])) {
 		$config["enable_update_manager"] = true;
 	}
+	if (!isset($config["invoice_auto_id"])) {
+		$config["invoice_auto_id"] = 0;
+	}
+	if (!isset($config["invoice_id_pattern"])) {
+		$config["invoice_id_pattern"] = "15/[1000]";
+	}
 }
 
 function config_prepare_session() {

@@ -123,7 +123,8 @@ if ($operation_invoices == "add_invoice"){
 	$create_calendar_event = get_parameter('calendar_event');
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter ("internal_note", "");
-	
+	$bill_id_variable = get_parameter('bill_id_variable', 0);
+	$bill_id_pattern = $config['invoice_id_pattern'];
 	
 	if ($filename != ""){
 		$file_temp = sys_get_temp_dir()."/$filename";
@@ -153,11 +154,11 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
+	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%d")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -303,6 +304,7 @@ if ($id_invoice > 0){
 	$invoice_type = $invoice['invoice_type'];
 	$language = $invoice['id_language'];
 	$internal_note = $invoice['internal_note'];
+	$bill_id_variable = $invoice['bill_id_variable'];
 
 } else {
 	
@@ -331,6 +333,7 @@ if ($id_invoice > 0){
 	$invoice_type = "Submitted";
 	$language = $config['language_code'];
 	$internal_note = "";
+	$bill_id_variable = 0;
 }
 
 echo "<h3>";
@@ -338,6 +341,8 @@ if ($id_invoice == "-1") {
 	echo __('Add new invoice');
 }
 else {
+	$is_update = true;
+	
 	echo __('Update invoice'). " #$id_invoice";
 	echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1&language='.$language.'">
@@ -374,10 +379,9 @@ if ($id_company > 0) {
 }
 
 $invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
-$table->data[0][1] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'));
+$table->data[0][1] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'))."&nbsp;&nbsp;&nbsp;&nbsp;".print_image("images/arrow_refresh.png", true, array("title" => __("Generate ID"), "id"=>"img_generate_id"));
 
 $table->data[1][0] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
-
 $table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
 if ($bill_id == ""){ // let's show the latest Invoice ID generated in the system
@@ -456,6 +460,10 @@ if ($id_invoice != -1) {
 } else {
 	print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
 	print_input_hidden ('operation_invoices', "add_invoice");
+	print_input_hidden ('bill_id_variable', $bill_id_variable);
+	if ($config['invoice_auto_id']) {
+		print_input_hidden ('bill_id');
+	}
 }
 
 if ($id_invoice != -1) { 
@@ -518,6 +526,11 @@ if ($id_invoice != -1) {
 		echo "<h3>". __('There is no files attached for this invoice')."</h3>";
 	}
 }
+
+//is_update hidden
+echo '<div id="div_is_update_hidden" style="display:none;">';
+	print_input_text('is_update_hidden', $is_update);
+echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
@@ -597,16 +610,77 @@ add_validate_form_element_rules('input[name="amount5"]', rules, messages);
 $(document).ready (function () {
 
 	var idUser = "<?php echo $config['id_user'] ?>";
+	autoGenerateID = "<?php echo $config['invoice_auto_id'] ?>";
+	$("#img_generate_id").css('display', 'none');
+	is_update = $("#text-is_update_hidden").val();
+
+	if (autoGenerateID) {
+		if (is_update) {
+			$("#img_generate_id").css('display', 'none');
+		} else {
+			$("#img_generate_id").css('display', '');
+		}
+
+		$("#text-bill_id").prop('disabled', true);
+		$("#last_id").css('display', 'none');
+	} 
+	
 	if (<?php echo json_encode((int)$id_company) ?> <= 0) {
 		bindCompanyAutocomplete ('id', idUser, 'invoice');
 	}
-
+	
 	$("#invoice_type").click (function () {
-		if ($("#invoice_type").val() == 'Received') {
-			$("#last_id").css('display', 'none');
+		if (autoGenerateID) {
+
+			if ($("#invoice_type").val() == 'Submitted') {
+				if (is_update) {
+					$("#img_generate_id").css('display', 'none');
+				} else {
+					$("#img_generate_id").css('display', '');
+				}
+				$("#text-bill_id").val("");
+	
+			} else {
+				$("#img_generate_id").css('display', 'none');
+				$("#text-bill_id").prop('disabled', false);
+			}
 		} else {
-			$("#last_id").css('display', '');
+			$("#img_generate_id").css('display', 'none');
+			
+			if ($("#invoice_type").val() == 'Received') {
+				$("#last_id").css('display', 'none');
+			} else {
+				$("#last_id").css('display', '');
+				$("#text-bill_id").prop('disabled', false);
+			}
 		}
 	});
+	
+	$("#img_generate_id").click (function () {
+		invoiceGenerateID();
+	});
 });
+
+function invoiceGenerateID () {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: {
+			'page': 'include/ajax/crm',
+			'get_invoice_id': 1
+		},
+		dataType: "json",
+		//~ async: false,
+		success: function (data) {
+			dataUnserialize = data.split(';;;;');
+			id_bill = dataUnserialize[0];
+			id_variable = dataUnserialize[1];
+
+			$("#text-bill_id").attr('value', id_bill);
+			$("#hidden-bill_id_variable").attr('value', id_variable);
+			$("#hidden-bill_id").attr('value', id_bill);
+		}
+	});
+}
 </script>

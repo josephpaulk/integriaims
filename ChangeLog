@@ -1,3 +1,37 @@
+2015-09-14  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* functions_api.php: Modified api_ovo_manager.
+
+	* integria_db.sql
+	  integria_dbdata.sql
+	  godmode/setup/setup_crm.php
+	  include/functions_config.php
+	  include/ajax/crm.php
+	  operation/invoices/invoices.php: Added ids generator
+	to create invoices.
+
+	* extras/mr/28.sql: Added file
+
+	* include/languages/cs.mo
+	  include/languages/cs.po
+	  include/languages/de.mo
+	  include/languages/de.po
+	  include/languages/en_GB.mo
+	  include/languages/en_GB.po
+	  include/languages/es.mo
+	  include/languages/es.po
+	  include/languages/fr.po
+	  include/languages/fr.mo
+	  include/languages/pl.po
+	  include/languages/pl.mo
+	  include/languages/ru.po
+	  include/languages/ru.mo
+	  include/languages/zh_CN.mo
+	  include/languages/zh_CN.po
+	  include/languages/zh_TN.mo
+	  include/languages/zh_TN.po
+	  include/languages/index.pot: Updated translations. 
+
 2015-09-14  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_tracking.php,

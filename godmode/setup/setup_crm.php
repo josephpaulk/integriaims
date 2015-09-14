@@ -42,12 +42,16 @@ if ($update) {
 	$config["invoice_footer"] = (string) get_parameter ("invoice_footer");
 	$config["invoice_tax_name"] = (string) get_parameter ("invoice_tax_name");
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");
+	$config["invoice_auto_id"] = get_parameter("invoice_auto_id");
+	$config["invoice_id_pattern"] = (string)get_parameter("invoice_id_pattern", "15/[1000]");
 	
 	update_config_token ("invoice_logo", $config["invoice_logo"]);
 	update_config_token ("invoice_header", $config["invoice_header"]);
 	update_config_token ("invoice_footer", $config["invoice_footer"]);
 	update_config_token ("invoice_tax_name", $config["invoice_tax_name"]);
 	update_config_token ("lead_warning_time", $config["lead_warning_time"]);
+	update_config_token ("invoice_auto_id", $config["invoice_auto_id"]);
+	update_config_token ("invoice_id_pattern", $config["invoice_id_pattern"]);
 
 
 	//Update lead progress names
@@ -104,27 +108,30 @@ $table->data[3][0] = print_textarea ('invoice_header', 5, 40, $config["invoice_h
 $table->colspan[4][0] = 2;
 $table->data[4][0] = print_textarea ('invoice_footer', 5, 40, $config["invoice_footer"], '', true, __('Invoice footer'));
 
-$table->colspan[5][0] = 2;
-$table->data[5][0] = "<h3>".__('Lead parameters')."</h3><br>";
+$table->data[5][0] = print_checkbox ("invoice_auto_id", 1, $config["invoice_auto_id"], true, __('Enable auto ID'));
+$table->data[5][1] = print_input_text ('invoice_id_pattern', $config["invoice_id_pattern"], '', 10, 20, true, __('Invoice ID pattern'));
 
-$table->data[6][0] = "<h3>".__('Lead progress defintion')."</h3><br>";
+$table->colspan[7][0] = 2;
+$table->data[7][0] = "<h3>".__('Lead parameters')."</h3><br>";
 
-$table->data[6][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
+$table->data[8][0] = "<h3>".__('Lead progress defintion')."</h3><br>";
+
+$table->data[8][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
 
 $progress_values = lead_progress_array ();
 
 $closed_lead_tip = print_help_tip (__('This status means that lead is closed'), true);
 
-$table->data[8][0] = print_input_text ('progress_0', $progress_values["0"], '', 50, 100, true);
-$table->data[9][0] = print_input_text ('progress_20', $progress_values["20"], '', 50, 100, true);
-$table->data[10][0] = print_input_text ('progress_40', $progress_values["40"], '', 50, 100, true);
-$table->data[11][0] = print_input_text ('progress_60', $progress_values["60"], '', 50, 100, true);
-$table->data[12][0] = print_input_text ('progress_80', $progress_values["80"], '', 50, 100, true);
-$table->data[13][0] = print_input_text ('progress_100', $progress_values["100"], '', 50, 100, true).$closed_lead_tip;
-$table->data[14][0] = print_input_text ('progress_101', $progress_values["101"], '', 50, 100, true).$closed_lead_tip;
-$table->data[15][0] = print_input_text ('progress_102', $progress_values["102"], '', 50, 100, true).$closed_lead_tip;
-$table->data[16][0] = print_input_text ('progress_200', $progress_values["200"], '', 50, 100, true).$closed_lead_tip;
+$table->data[10][0] = print_input_text ('progress_0', $progress_values["0"], '', 50, 100, true);
+$table->data[11][0] = print_input_text ('progress_20', $progress_values["20"], '', 50, 100, true);
+$table->data[12][0] = print_input_text ('progress_40', $progress_values["40"], '', 50, 100, true);
+$table->data[13][0] = print_input_text ('progress_60', $progress_values["60"], '', 50, 100, true);
+$table->data[14][0] = print_input_text ('progress_80', $progress_values["80"], '', 50, 100, true);
+$table->data[15][0] = print_input_text ('progress_100', $progress_values["100"], '', 50, 100, true).$closed_lead_tip;
+$table->data[16][0] = print_input_text ('progress_101', $progress_values["101"], '', 50, 100, true).$closed_lead_tip;
+$table->data[17][0] = print_input_text ('progress_102', $progress_values["102"], '', 50, 100, true).$closed_lead_tip;
+$table->data[18][0] = print_input_text ('progress_200', $progress_values["200"], '', 50, 100, true).$closed_lead_tip;
 
 
 $button = print_input_hidden ('update', 1, true);
