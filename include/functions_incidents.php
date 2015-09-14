@@ -2655,12 +2655,19 @@ function incidents_set_tracking ($id_ticket, $action, $priority, $status, $resol
 				$tracked = true;
 			}
 				
-			if($tracked == false) {
+			if ($tracked == false) {
 				incident_tracking ($id_ticket, INCIDENT_UPDATED);
 			}
 			break;
 		case 'create':
 			incident_tracking ($id_ticket, INCIDENT_CREATED);
+			
+			//Add traces and statistic information
+			incident_tracking ($id_ticket, INCIDENT_PRIORITY_CHANGED, $priority);
+			incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $status);
+			incident_tracking ($id_ticket, INCIDENT_RESOLUTION_CHANGED, $resolution);
+			incident_tracking ($id_ticket, INCIDENT_USER_CHANGED, $user);
+			incident_tracking ($id_ticket, INCIDENT_GROUP_CHANGED, $group);
 			break;
 	}
 	

@@ -49,15 +49,13 @@ if ($clean_output) {
 	echo '<h1 class="ticket_clean_report_title">'.__("Statistics")."</h1>";
 }
 
-$a_day = 24*3600;
+$fields = array(SECONDS_1DAY => "1 day",
+				SECONDS_2DAY => "2 days",
+				SECONDS_1WEEK => "1 week",
+				SECONDS_2WEEK => "2 weeks",
+				SECONDS_1MONTH => "1 month");
 
-$fields = array($a_day => "1 day",
-				2*$a_day => "2 days",
-				7*$a_day => "1 week",
-				14*$a_day => "2 weeks",
-				30*$a_day => "1 month");
-
-$period = get_parameter("period", $a_day);
+$period = get_parameter("period", SECONDS_1DAY);
 $ttl = 1;
 
 if ($clean_output) {
@@ -126,7 +124,7 @@ if (!$stats) {
 					$workunit_detail .= "</tr>";				
 					$workunit_detail .= "<tr>";
 					$workunit_detail .= "<td><strong>".__("Time used")."</strong>:</td>";
-					$workunit_detail .= "<td style='text-align:right;'>".give_human_time($work_hours*3600,true,true,true)."</td>";
+					$workunit_detail .= "<td style='text-align:right;'>".give_human_time($work_hours*SECONDS_1HOUR,true,true,true)."</td>";
 					$workunit_detail .= "</tr>";
 					$workunit_detail .= "<tr>";
 					$workunit_detail .= "<td><strong>".__("Reported by")."</strong>:</td>";
@@ -205,7 +203,7 @@ if (!$stats) {
 	echo "</table>";
 }
 
-$trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id, 'timestamp DESC');
+$trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id, 'timestamp DESC, id_it DESC');
 
 if ($trackings !== false) {
 	unset($table);

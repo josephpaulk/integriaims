@@ -171,7 +171,7 @@ if ($set_priority) {
 	
 	$old_incident = get_incident ($id_ticket);
 	
-	incidents_set_tracking ($id_ticket, 'update', $values['prioridad'], $old_incident['estado'], $old_incident['resolution'], $old_incident['id_usuario'], $old_incident['id_grupo']);
+	incident_tracking ($id_ticket, INCIDENT_PRIORITY_CHANGED, $values['prioridad']);
 	
 	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
 	
@@ -195,7 +195,7 @@ if ($set_resolution) {
 	
 	$old_incident = get_incident ($id_ticket);
 	
-	incidents_set_tracking ($id_ticket, 'update', $old_incident['prioridad'], $old_incident['estado'], $values['resolution'], $old_incident['id_usuario'], $old_incident['id_grupo']);
+	incident_tracking ($id_ticket, INCIDENT_RESOLUTION_CHANGED, $values['resolution']);
 	
 	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
 	
@@ -222,7 +222,7 @@ if ($set_status) {
 		$values['cierre'] = date('Y-m-d H:i:s');
 	}
 	
-	incidents_set_tracking ($id_ticket, 'update', $old_incident['prioridad'], $values['estado'], $old_incident['resolution'], $old_incident['id_usuario'], $old_incident['id_grupo']);
+	incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $values['estado'];
 	
 	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
 	
@@ -261,7 +261,8 @@ if ($set_owner) {
 	
 	$old_incident = get_incident ($id_ticket);
 	
-	incidents_set_tracking ($id_ticket, 'update', $old_incident['prioridad'], $old_incident['estado'], $old_incident['resolution'], $values['id_usuario'], $old_incident['id_grupo']);	
+	incident_tracking ($id_ticket, INCIDENT_USER_CHANGED, $values['id_usuario']);
+	
 	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
 	
 	$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);

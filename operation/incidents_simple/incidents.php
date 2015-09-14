@@ -103,10 +103,12 @@ if($create_incident) {
 			"User ".$config['id_user']." created ticket #".$id);
 		
 		incident_tracking ($id, INCIDENT_CREATED);
+		//Add traces and statistic information	
+		incidents_set_tracking ($id, 'create', $priority, $estado, $resolution, $id_user_responsible, $group_id);
 
 		// Email notify to all people involved in this incident
 		if ($email_notify) {
-			mail_incident ($id, $usuario, "", 0, 1);
+			mail_incident ($id, $id_user_responsible, "", 0, 1);
 		}
 		
 		//insert data to incident type fields

@@ -1,3 +1,14 @@
+2015-09-14  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_tracking.php,
+	  operation/incidents/incident_detail.php,
+	  include/ajax/incidents.php: Minor code improvements and fixes.
+	
+	* include/functions_incidents.php: Added items tracking to the
+	function 'incidents_set_tracking' in the creation action.
+	
+	* operation/incidents_simple/incidents.php: Fixed the tracking.
+	
 2015-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 		
 	* include/styles/integria.css,

@@ -387,9 +387,6 @@ if ($action == 'update') {
 		}
 	}
 	
-	//Add traces and statistic information
-	incidents_set_tracking ($id, 'update', $priority, $estado, $resolution, $user, $grupo);
-	
 	if ($id_parent == 0) {
 		$idParentValue = null;
 	}
@@ -424,6 +421,8 @@ if ($action == 'update') {
 	}
 	$result = process_sql_update('tincidencia', $values, array('id_incidencia' => $id));
 
+	//Add traces and statistic information
+	incidents_set_tracking ($id, 'update', $priority, $estado, $resolution, $user, $grupo);
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id);
 	
 	if ($estado == 7) {
@@ -570,13 +569,12 @@ if ($action == "insert" && !$id) {
 			$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
 			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
+			//Add traces and statistic information	
+			incidents_set_tracking ($id, 'create', $priority, $estado, $resolution, $usuario, $grupo);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 				"Ticket created",
 				"User ".$config['id_user']." created incident #".$id);
-				
-			//Add traces and statistic information	
-			incidents_set_tracking ($id, 'create', $priority, $estado, $resolution, $user, $grupo);
-
+			
 			// Create automatically a WU with the editor ?
 			if ($config["incident_creation_wu"] == 1){
 				$wu_text = __("WU automatically created by the editor on the incident creation.");
