@@ -39,6 +39,7 @@ a.info2 {
 }
 a.tip, a.tip2, a.tipp, a.help , a.info, a.info2, a.tip_people, a.tip_info, a.tip_view {
 	position: relative;
+	top: 8px;
 	text-decoration: none;
 }
 a.tip:hover  {

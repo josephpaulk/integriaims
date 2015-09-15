@@ -1,5 +1,10 @@
 2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/styles/integria_tip.css: Improved the position
+	of the tip image.
+
+2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/mr/29.sql,
 	  integria_db.sql,
 	  integria_dbdata.sql: Added the new table 'tagenda_groups'.
