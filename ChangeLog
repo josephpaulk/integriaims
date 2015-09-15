@@ -1,16 +1,18 @@
 2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
-	* include/functions_agenda.php: .
+	* operation/projects/project_report.php: Visual improvements
+	to the task report item.
+
+2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
-	* include/functions_calendar.php: .
-	
-	* include/functions_db.php: .
-	
-	* include/js/agenda.js: .
-	
-	* operation/agenda/entry.php: .
-	
-	* operation/side_menu.php: .
+	* include/functions_agenda.php,
+	  include/functions_calendar.php,
+	  include/functions_db.php,
+	  include/js/agenda.js,
+	  operation/agenda/entry.php,
+	  operation/side_menu.php: Improvements, fixes and other
+	changes to introduce a new feature which limits the agenda
+	events mail sending and improves privacy.
 	
 2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	

@@ -552,14 +552,14 @@ if ($id_project) {
 				
 				$tasks_report .= '<div class="pie_frame">';
 				$tasks_report .= print_table($table_task, true) . print_table($table_wu, true);
-				$tasks_report .= '</div>';
+				$tasks_report .= '</div><br>';
 				if ($pdf_output)
 					$tasks_report .= '<hr>';
 			}
 			else {
 				$tasks_report .= '<div class="pie_frame">';
 				$tasks_report .= print_table($table_task, true);
-				$tasks_report .= '</div>';
+				$tasks_report .= '</div><br>';
 				if ($pdf_output)
 					$tasks_report .= '<hr>';
 			}
@@ -582,7 +582,10 @@ if ($id_project) {
 	$(function() {
 		// Init the tooltip
 		$('div.tooltip_title').tooltip({
-			track: true
+			track: true,
+			open: function (event, ui) {
+				ui.tooltip.css('max-width', '800px');
+			}
 		});
 	});
 </script>
