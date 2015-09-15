@@ -1,5 +1,11 @@
 2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* extras/mr/29.sql,
+	  integria_db.sql,
+	  integria_dbdata.sql: Added the new table 'tagenda_groups'.
+	
+2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* images/input_delete.white.png: Added a missing image.
 
 2015-09-14  Vanessa Gil <vanessa.gil@artica.es>

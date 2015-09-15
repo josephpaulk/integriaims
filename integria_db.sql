@@ -1302,7 +1302,7 @@ CREATE TABLE `ttag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ---------------------------------------------------------------------
--- Table tattachment_track (09/09/2015)
+-- Table tlead_tag (09/09/2015)
 -- ---------------------------------------------------------------------
 CREATE TABLE `tlead_tag` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
@@ -1311,4 +1311,16 @@ CREATE TABLE `tlead_tag` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`tag_id`) REFERENCES ttag(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`lead_id`) REFERENCES tlead(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ---------------------------------------------------------------------
+-- Table tagenda_group (15/09/2015)
+-- ---------------------------------------------------------------------
+CREATE TABLE `tagenda_groups` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `agenda_id` int(10) unsigned NOT NULL,
+  `group_id` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`agenda_id`) REFERENCES tagenda(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`group_id`) REFERENCES tgrupo(`id_grupo`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
