@@ -1,5 +1,19 @@
 2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_agenda.php: .
+	
+	* include/functions_calendar.php: .
+	
+	* include/functions_db.php: .
+	
+	* include/js/agenda.js: .
+	
+	* operation/agenda/entry.php: .
+	
+	* operation/side_menu.php: .
+	
+2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/styles/integria_tip.css: Improved the position
 	of the tip image.
 

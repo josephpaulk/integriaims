@@ -12,12 +12,52 @@ function show_agenda_entry(id_entry, selected_date, min_date, refresh) {
 		},
 		dataType: "html",
 		success: function(data) {	
+			var $agendaEntry = $("#agenda_entry");
 			
-			$("#agenda_entry").html (data);
+			$agendaEntry.html(data);
+			
+			// -- Privacy controls -- //
+			if ($agendaEntry.find('select#groups').length > 0) {
+				var $publicCheckbox = $agendaEntry.find('input#checkbox-entry_public');
+				var $groupsSelect = $agendaEntry.find('select#groups');
+				var $groupsSelectLabel = $('label[for="groups"]');
+				
+				$groupsSelect.change(function (event) {
+					var values = $(this).val();
+					
+					// Select or unselect the value '0' when the user clicks on 'None'
+					if (values.indexOf('0') !== -1) {
+						$(this).children('option:selected').prop('selected', false);
+						$(this).children('option[value="0"]').prop('selected', true);
+					}
+					else {
+						$(this).children('option[value="0"]').prop('selected', false);
+					}
+				});
+				
+				// Bind and trigger change
+				$publicCheckbox.change(function (event) {
+					var isChecked = this.checked;
+					// Hide the groups select when public is checked
+					if (isChecked) {
+						$groupsSelect
+							.css('visibility', 'hidden')
+							.prop('disabled', true);
+						$groupsSelectLabel.css('visibility', 'hidden');
+					}
+					else {
+						$groupsSelect
+							.prop('disabled', false)
+							.css('visibility', 'visible');
+						$groupsSelectLabel.css('visibility', 'visible');
+					}
+				}).change();
+			}
+			// -- End privacy controls -- //
+			
 			add_datepicker ("#text-entry_date", min_date);
-			$("#agenda_entry").show ();
-
-			$("#agenda_entry").dialog ({
+			
+			$agendaEntry.dialog({
 				title: "Agenda",
 				resizable: true,
 				draggable: true,
@@ -26,14 +66,13 @@ function show_agenda_entry(id_entry, selected_date, min_date, refresh) {
 					opacity: 0.5,
 					background: "black"
 				},
-				width: 550,
-				height: 425
+				width: 600
 			});
 			
-			$("#agenda_entry").dialog ('open');
+			$agendaEntry.dialog('open');
 			
 			$("#button-cancel").click(function(e) {
-				$("#agenda_entry").dialog ('close');
+				$agendaEntry.dialog('close');
 			});
 			
 			$("#button-delete").click(function(e) {
@@ -47,15 +86,15 @@ function show_agenda_entry(id_entry, selected_date, min_date, refresh) {
 					},
 					dataType: "html",
 					success: function(data) {
-						$("#agenda_entry").html (data);
+						$agendaEntry.html(data);
 						
-						$("#agenda_entry").on("dialogclose", function(event, ui) {
+						$agendaEntry.on("dialogclose", function(event, ui) {
 							if (refresh == true) {
 								location.reload();
 							}
 						});
 						$("#button-OK").click(function(e) {
-							$("#agenda_entry").dialog ('close');
+							$agendaEntry.dialog('close');
 							if (refresh == true) {
 								location.reload();
 							}
@@ -66,14 +105,6 @@ function show_agenda_entry(id_entry, selected_date, min_date, refresh) {
 			});
 			
 			$("#calendar_entry").submit(function() {
-				
-				var public;
-				if ($("#checkbox-entry_public").is(":checked")) {
-					public = 1;
-				} else {
-					public = 0;
-				}
-				
 				$.ajax({
 					type: "POST",
 					url: "ajax.php",
@@ -84,22 +115,28 @@ function show_agenda_entry(id_entry, selected_date, min_date, refresh) {
 						title: $("#text-entry_title").val(),
 						duration: $("#text-entry_duration").val(),
 						alarm: $("#entry_alarm").val(),
-						public: public,
+						public: function () {
+							if ($("#checkbox-entry_public").is(":checked"))
+								return 1;
+							else
+								return 0;
+						},
 						date: $("#text-entry_date").val(),
 						time: $("#text-entry_time").val(),
-						description: $("#textarea-entry_description").val()
+						description: $("#textarea-entry_description").val(),
+						groups: $('select#groups').val()
 					},
 					dataType: "html",
 					success: function(data) {
-						$("#agenda_entry").html (data);
+						$agendaEntry.html(data);
 						
-						$("#agenda_entry").on("dialogclose", function(event, ui) {
+						$agendaEntry.on("dialogclose", function(event, ui) {
 							if (refresh == true) {
 								location.reload();
 							}
 						});
 						$("#button-OK").click(function(e) {
-							$("#agenda_entry").dialog ('close');
+							$agendaEntry.dialog('close');
 							if (refresh == true) {
 								location.reload();
 							}

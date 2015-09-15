@@ -1287,10 +1287,10 @@ echo "</li>";
 
 echo "<li>";
 if ($sec == 'agenda') {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, true)'>
+	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, true)'>
 		<img src='images/add.png'>&nbsp;".__('Add entry')."</a>";
 } else {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, false)'>
+	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, false)'>
 		<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
 }
 echo "</li>";

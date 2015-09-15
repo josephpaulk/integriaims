@@ -18,6 +18,10 @@
 // License: Artistic Licence
 
 
+global $config;
+
+require_once($config['homedir'].'/include/functions_agenda.php');
+
 // Replace internal PHP function, not present in all PHP engines.
 if (!function_exists("cal_days_in_month")){
 	function cal_days_in_month($month, $year) { 
@@ -67,16 +71,24 @@ function get_event_date ($now, $days_margin = 1, $id_user = ""){
 	$now3 = "$now3 00:00:00";
 	$result = array();
 
-	if ($id_user == "_ANY_")
-		$sql = "SELECT * FROM tagenda WHERE timestamp >= '$now' AND timestamp <= '$now3' ORDER BY timestamp ASC"; // Notify all events for today and return user
-	else
-		$sql = "SELECT * FROM tagenda WHERE (id_user ='$id_user' OR public = 1) AND timestamp >= '$now' AND timestamp <= '$now3' ORDER BY timestamp ASC";
+	if ($id_user == "_ANY_" || dame_admin($id_user)) {
+		$sql = sprintf("SELECT *
+						FROM tagenda
+						WHERE timestamp >= '%s'
+							AND timestamp <= '%s'
+						ORDER BY timestamp ASC",
+						$now, $now3);
+		// Notify all events for today and return user
+	}
+	else {
+		$sql = get_event_date_sql($now3, $now, $id_user);
+	}
 
 	$res = mysql_query ($sql);
 	while ($row=mysql_fetch_array ($res)){
 		$result[] = $row["timestamp"] ."|".$row["title"]."|".$row["id_user"];
 	}
-
+	
 	return $result;
 }
 
@@ -204,161 +216,6 @@ function calendar_get_wo_date_range($start, $end){
 	return $result;
 }
 
-function generate_calendar_agenda ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
-    global $config;
-
-	$first_of_month = gmmktime(0,0,0,$month,1,$year);
-	#remember that mktime will automatically correct if invalid dates are entered
-	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
-	# this provides a built in "rounding" feature to generate_calendar()
-
-	$day_names = array(); #generate all the day names according to the current locale
-	for($n=0,$t=(3+$first_day)*86400; $n<7; $n++,$t+=86400) #January 4, 1970 was a Sunday
-		$day_names[$n] = ucfirst(gmstrftime('%A',$t)); #%A means full textual day name
-
-	list($month, $year, $month_name, $weekday) = explode(',',gmstrftime('%m,%Y,%B,%w',$first_of_month));
-	$weekday = ($weekday + 7 - $first_day) % 7; #adjust for $first_day
-	$title   = htmlentities(ucfirst($month_name)).'&nbsp;'.$year;
-
-
-	#Begin calendar. Uses a real <caption>. See http://diveintomark.org/archives/2002/07/03
-	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
-	if($p) $p = ''.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'&nbsp;';
-	if($n) $n = '&nbsp;'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n);
-
-	$calendar = "";
-	//$calendar = '<center><h3>'."\n".
-	//$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
-	
-	$calendar .= '<table width="90%" class="month_calendar_outer">'."\n";
-	$calendar .= '<tr><td class="calendar_month_header" colspan=7>' . $p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n . '</td></tr>';
-	$calendar .= "<tr><td>\n";
-	$calendar .= '<table width="90%" class="month_calendar">'."\n";
-	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
-		#if day_name_length is >3, the full name of the day will be printed
-		foreach($day_names as $d) {
-			$d = strtoupper($d);
-			$calendar .= '<th width=110 abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
-		}
-		$calendar .= "</tr>\n<tr>";
-	}
-	$time = time();
-	$today = date('j',$time);
-	$today_m = date('n',$time);
-	
-	if($weekday > 0) $calendar .= '<td colspan="'.$weekday.'">&nbsp;</td>'; #initial 'empty' days
-	for($day=1,$days_in_month=gmdate('t',$first_of_month); $day<=$days_in_month; $day++,$weekday++){
-		if($weekday == 7){
-			$weekday   = 0; #start a new week
-			$calendar .= "</tr>\n<tr>";
-		}
-		if(isset($days[$day]) and is_array($days[$day])){
-			@list($link, $classes, $content) = $days[$day];
-			if(is_null($content))  $content  = $day;
-			$calendar .= '<td'.($classes ? ' class="'.htmlspecialchars($classes).'">' : '>').
-				($link ? '<b><a href="'.htmlspecialchars($link).'">'.$content.'</a>' : $content).'</b><br><br><br><br><br></td>';
-		}
-		
-		if (($day == $today) && ($today_m == $month))
-			$calendar .= "<td valign='top' style='background: #ffe4c7; width: 110px; height: 60px;' >";				
-		else 
-			$calendar .= "<td valign='top' style='background: #f9f9f5; height: 60px; width: 110px;' >";
-		$calendar .= "<div style='float:right;'><b>$day</b></div>";
-		
-		if ($day < 10)
-			$day = "0".$day;
-		$mysql_date = "$year-$month-$day";
-		
-		if (($month > $today_m) || (($month == $today_m) && ($day >= $today)) )
-			$calendar .= "<div style='float:left;'><img src='images/add.png' title='".__('New entry')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)' style='cursor: pointer;'></div>";
-		$calendar .= "<br>";
-		$mysql_time= "";
-		$event_string = "";
-		$event_privacy = 0;
-		$event_alarm = 0;
-		
-		// Search for agenda item for this date
-		$sqlquery = "SELECT * FROM tagenda WHERE timestamp LIKE '$mysql_date%' ORDER BY timestamp ASC";
- 		$res=mysql_query($sqlquery);
-		while ($row=mysql_fetch_array($res)){
-			$mysql_time = substr($row["timestamp"],11,5);
-			$event_string = substr($row["title"],0,150);
-			$event_public = $row["public"];
-			$event_alarm = $row["alarm"];
-			$event_user = $row["id_user"];
-            if (($event_user == $config["id_user"]) OR ($event_public == 1) OR dame_admin($config["id_user"])){
-			    $calendar .= '<table style="margin: 0px auto; width: 80%;"><tr><td>';
-			    $calendar .= $mysql_time;
-			    $cols = 3;
-			    if ($event_alarm > 0) {
-				    $calendar .= "</td><td><img src='images/bell.png' title='".__('Alert')."'>";
-				    $cols++;
-				}
-			    if ($event_public > 0) {
-				    $calendar .= "</td><td><img src='images/group.png' title='".__('Public')."'>";
-				    $cols++;
-				}
-			    $calendar .= "</td><td><img src='images/editor.png' title='".__('Edit')."'  onClick='show_agenda_entry(".$row["id"].", \"$mysql_date\", \"$mysql_date\", true)' style='cursor: pointer;'>";
-			    $calendar .= "</td><td><a href='index.php?sec=agenda&sec2=operation/agenda/agenda&delete_event=".$row[0]."' 
-					onClick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png' title='".__('Delete')."' border=0></a>";
-			    $calendar .= "</td></tr><tr><td colspan=" . $cols . " style='border-top: 1px #707070 dotted;'><font size='1pt'>[$event_user] ".$event_string."</font>";
-			    if ($row["description"]) {
-					// Common html title
-					$calendar .= "</td></tr><tr><td colspan=" . $cols . ">";
-					$calendar .= "<font size='1pt'>".__('Description').": <img src='images/zoom.png' title='".$row["description"]."'></font>";
-					// Integria tip
-					//$calendar .= "<br><font size='1pt'>".__('Description').": ".print_help_tip ($row["description"], true)."</font><br><br>";
-				}
-				$calendar .= '</td></tr></table>';
-            }
-		}
-
-		$agenda_project = get_project_end_date ($mysql_date);
-		foreach ($agenda_project as $agenda_pitem){
-			list ($pname, $idp, $pend) = explode ("|", $agenda_pitem);
-			$calendar .= __("Project end"). "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$idp'>";
-			$calendar .= "<img src='images/bricks.png' title='".__('Project')."'>";
-			$calendar .= "</A> ";
- 			$calendar .= "<br><hr width=110><font size='1pt'>";
- 			$calendar .= "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$idp'>$pname</a></font><br><br>";
-		}
-
-		$agenda_task = get_task_end_date ($mysql_date);
-		foreach ($agenda_task as $agenda_titem){
-			list ($tname, $idt, $tend, $pname, $idp) = explode ("|", $agenda_titem);
-			$calendar .= __("Task end"). "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
-			$calendar .= "<img src='images/task.png' title='".__('Task')."'>";
-			$calendar .= "</A> ";
- 			$calendar .= "<br><hr width=110><font size='1pt'>";
- 			$calendar .= "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$idp'>$pname</a>";
- 			$calendar .= " / ";
- 			$calendar .= "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>$tname</a>";
- 			$calendar .= "</font><br><br>";
-		}
-		
-		$agenda_wo = get_wo_end_date ($mysql_date);
-		foreach ($agenda_wo as $agenda_woitem){
-			list ($idwo, $woname, $woowner, $wocreator, $wopriority, $woend) = explode ("|", $agenda_woitem);
-			$woend = substr($woend,11,5);
-
-			$wopriority_img = print_priority_flag_image ($wopriority, true);
-
-			$calendar .= __("WO end"). ":&nbsp;$woend&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$idwo'>";
-			$calendar .= "<img src='images/paste_plain.png' title='".__('Work Order')."'>";
-			$calendar .= "</A>";
- 			$calendar .= "<br><hr width=110><font size='1pt'>";
- 			$calendar .= "$wopriority_img <a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$idwo'>$woname</a>";
- 			$calendar .= "<br>".__('Owner').": <a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=$woowner'>$woowner</a>";
- 			$calendar .= "<br>".__('Creator').": <a href='index.php?sec=projects&sec2=operation/workorders/wo&creator=$wocreator'>$wocreator</a>";
- 			$calendar .= "</font><br><br>";
-		}
-
-	}
-	if($weekday != 7) 
-		$calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
-	return $calendar."</tr>\n</table>\n</td></tr></table>";
-}
-
 function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "", $show_projects=1, $show_tasks=1, $show_events=1, $show_wo=1){
     global $config;
 
@@ -424,7 +281,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 				$event_public = $row["public"];
 				$event_user = $row["id_user"];
 				
-	            if (($event_user == $config["id_user"]) OR ($event_public == 1)){
+	            if (agenda_get_entry_permission($id_user, $row["id"])){
 	            	
 	            	$dur_sec = $row["duration"]*3600; //Duration in seconds
 
@@ -436,7 +293,7 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 
 	            	$url_date = date("Y-m-d", $start_timestamp);
 
-	            	$url = "javascript: show_agenda_entry(".$row["id"].", '".$url_date."', '".$url_date."', true)";
+	            	$url = "javascript: show_agenda_entry(".$row["id"].", '".$url_date."', '0', true)";
 
 					array_push($cal_events, array("name" =>$row["title"], "start" => strtotime($row["timestamp"]),  "end" => $end_date, "bgColor" => "#8EC8DF", "allDay" => false, "url" => $url));    
 	            }

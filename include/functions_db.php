@@ -2903,4 +2903,14 @@ function db_check_minor_relase_available () {
 	}
 	return false;
 }
+
+function get_users_in_group ($id_user = false, $id_group = false, $access = 'IR') {
+	global $config;
+	
+	$return = enterprise_hook ('get_users_in_group_extra', array($id_user, $id_group, $access));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return true;
+}
+
 ?>
