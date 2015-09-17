@@ -1,5 +1,10 @@
 2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/incident_workunits.php: Fixed a
+	visual error.
+	
+2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/incidents/incident_workunits.php: Now the images
 	uploaded to a ticket can be previewed in the ticket comments.
 

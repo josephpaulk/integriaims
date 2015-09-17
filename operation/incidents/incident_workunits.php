@@ -210,14 +210,14 @@ echo '</div>';
 			.prop('id', 'modal-backdrop')
 			.addClass('modal-backdrop')
 			.click(modalClickHandler)
-			.prependTo('body>div#wrap');
+			.prependTo('body');
 		
 		$modalImgContainer
 			.hide()
 			.prop('id', 'modal-img-container')
 			.addClass('modal-img-container')
 			.click(modalClickHandler)
-			.prependTo('body>div#wrap');
+			.prependTo('body');
 		
 			
 		var getCommentFiles = function (target) {
