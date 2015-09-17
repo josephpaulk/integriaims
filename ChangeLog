@@ -1,3 +1,14 @@
+2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/js/integria.js: Added some useful functions to
+	parse an URL and validate and load an image from an URL.
+
+2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/common/download_file.php: Now is possible to
+	choose the Content-Disposition of the file between inline
+	or attachment.
+
 2015-09-15  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/projects/project_report.php: Visual improvements

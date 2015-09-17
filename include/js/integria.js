@@ -484,8 +484,7 @@ $(document).ready(function() {
 });
 
 function openInventoryMoreInfo (id_inventory) {
-
-$.ajax({
+	$.ajax({
 		type: "POST",
 		url: "ajax.php",
 		data: "page=include/ajax/inventories&id_inventory=" + id_inventory + "&printTableMoreInfo=1",
@@ -508,4 +507,85 @@ $.ajax({
 			$("#info_inventory_window").dialog('open');
 		}
 	});
+}
+
+function isValidImg (url, callback) {
+	var img = new Image();
+	img.onerror = function() {
+		callback(url, false);
+	}
+	img.onload = function() {
+		callback(url, img);
+	}
+	img.src = url;
+}
+
+function parseURLSearch (searchStr) {
+	var search = {};
+	
+	if (searchStr.length > 0) {
+		// Remove the ? character
+		searchStr = searchStr.substring(1);
+		
+		var searches = searchStr.split('&');
+		
+		for (var i = 0; i < searches.length; i++) {
+			var aux = searches[i].split('=');
+			var key = aux.shift();
+			var value = aux.shift();
+			
+			if (typeof key !== 'undefined') {
+				if (typeof value !== 'undefined') {
+					if (typeof search[key] !== 'undefined') {
+						if (search[key] instanceof Array) {
+							if (value.length > 0)
+								search[key].push(value);
+						}
+						else {
+							var lastVal = search[key];
+							search[key] = [];
+							if (lastVal.length > 0)
+								search[key].push(lastVal);
+							if (value.length > 0)
+								search[key].push(value);
+							if (search[key].length <= 0)
+								search[key] = '';
+						}
+					}
+					else {
+						search[key] = value;
+					}
+				}
+				else if (!(search[key] instanceof Array)) {
+					search[key] = '';
+				}
+			}
+		}
+	}
+	
+	return search;
+}
+
+function parseURL (URL) {
+	// parser.href		=> "http://foo.bar:8080/pathname/?search=test#hash"
+	// parser.protocol	=> "http:"
+	// parser.hostname	=> "foo.bar"
+	// parser.port		=> "8080"
+	// parser.pathname	=> "/pathname/"
+	// parser.search	=> "?search=test"
+	// parser.hash		=> "#hash"
+	// parser.host		=> "foo.bar:8080"
+	var parser = document.createElement('a');
+	parser.href = URL;
+	
+	return {
+		href: parser.href,
+		protocol: parser.protocol,
+		hostname: parser.hostname,
+		port: parser.port,
+		pathname: parser.pathname,
+		search: parseURLSearch(parser.search),
+		hash: parser.hash,
+		host: parser.host
+	}
 }
