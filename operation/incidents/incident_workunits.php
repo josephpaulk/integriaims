@@ -80,7 +80,7 @@ if ($insert_workunit) {
 	process_sql ($sql);
 
 	$workunit_id = create_workunit ($id_incident, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
-	if (defined('AJAX')) {
+	if (is_ajax()) {
 		// Clean the output
 		// A non empty ouptput will treated as a successful response
 		ob_clean();
@@ -193,9 +193,116 @@ echo '</div>';
 		var $commentHaveCost = $commentForm.find('input#checkbox-have_cost');
 		var $commentPublic = $commentForm.find('input#checkbox-public');
 		var $commentText = $commentForm.find('textarea#textarea-nota');
-
-		var $spinner = $("span#sending_data");
-
+		
+		var $modalImgContainer = $('<div></div>');
+		var $modalBackdrop = $('<div></div>');
+		var modalClickHandler = function (event) {
+			event.preventDefault();
+			$modalBackdrop.hide();
+			$modalImgContainer
+				.hide()
+				.empty();
+			event.stopPropagation();
+		}
+		
+		$modalBackdrop
+			.hide()
+			.prop('id', 'modal-backdrop')
+			.addClass('modal-backdrop')
+			.click(modalClickHandler)
+			.prependTo('body>div#wrap');
+		
+		$modalImgContainer
+			.hide()
+			.prop('id', 'modal-img-container')
+			.addClass('modal-img-container')
+			.click(modalClickHandler)
+			.prependTo('body>div#wrap');
+		
+			
+		var getCommentFiles = function (target) {
+			var files = [];
+			
+			target
+				.find('div.comment>div.notebody>a')
+					.each(function(index, el) {
+						var uri = parseURL(el.href);
+						//el.search = el.search + '&content_disposition=inline';
+						
+						var auxPathname = uri.pathname;
+						var pathnameArr = auxPathname.split('/');
+						var pathnameChecks = true;
+						// Script
+						if (pathnameArr.pop() !== 'download_file.php')
+							pathnameChecks = false;
+						// Subsection
+						if (pathnameArr.pop() !== 'common')
+							pathnameChecks = false;
+						// Section
+						if (pathnameArr.pop() !== 'operation')
+							pathnameChecks = false;
+						
+						if (pathnameChecks
+								&& typeof uri.search.type !== 'undefined'
+								&& uri.search.type === 'incident'
+								&& typeof uri.search.id_attachment !== 'undefined'
+								&& uri.search.id_attachment.length > 0) {
+							files.push({
+								target: $(el).parent(),
+								URI: uri
+							});
+						}
+					});
+			
+			return files;
+		}
+		
+		var imageClickHandler = function (event) {
+			event.preventDefault();
+			
+			if (typeof event.target !== 'undefined') {
+				var $element = $(event.target);
+				
+				$modalBackdrop.show();
+				$modalImgContainer.html($element.clone()).show();
+			}
+		}
+		
+		var loadImage = function (target, URI) {
+			var $imageContainer = $('<div>', {
+				id: 'comment-image-container-' + URI.search.id_attachment,
+				class: 'comment-image-container'
+			});
+			
+			target.append($imageContainer);
+			
+			isValidImg(URI.href, function (url, img) {
+				if (img !== false) {
+					var $loadedImg = $(img);
+					$loadedImg
+						.prop('id', 'comment-image-' + URI.search.id_attachment)
+						.addClass('comment-image')
+						.addClass('loaded')
+						.click(imageClickHandler);
+					
+					$imageContainer.append('<br>', $loadedImg)
+				}
+				else {
+					$imageContainer.remove();
+				}
+			});
+		}
+		
+		var loadImages = function (target) {
+			var files = getCommentFiles(target);
+			
+			$.each(files, function(index, val) {
+				loadImage(val.target, val.URI);
+			});
+			
+			target.on('click', 'img.comment-image.loaded', imageClickHandler);
+		}
+		
 		$commentForm.submit(function(e) {
 			e.preventDefault();
 			
@@ -210,9 +317,9 @@ echo '</div>';
 			var cleanInputs = function() {
 				$commentProfile.val(0);
 				$commentDuration.val(0);
-				$commentHaveCost.prop("checked", false);
-				$commentPublic.prop("checked", true);
-				$commentText.val("");
+				$commentHaveCost.prop('checked', false);
+				$commentPublic.prop('checked', true);
+				$commentText.val('');
 			}
 			
 			var errorMessage = "<?php echo __('Error') . '. ' . __('The comment was not created'); ?>";
@@ -247,6 +354,8 @@ echo '</div>';
 					cleanInputs();
 					
 					$commentList.html(data);
+					
+					loadImages($commentList);
 				}
 				else {
 					alert(errorMessage);
@@ -261,5 +370,8 @@ echo '</div>';
 			});
 			
 		});
+		
+		loadImages($commentList);
+		
 	})(jQuery);
 </script>

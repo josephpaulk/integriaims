@@ -1,5 +1,13 @@
 2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/incidents/incident_workunits.php: Now the images
+	uploaded to a ticket can be previewed in the ticket comments.
+
+	* include/styles/integria.css: Added styles to the image
+	previews of the ticket comments.
+	
+2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/js/integria.js: Added some useful functions to
 	parse an URL and validate and load an image from an URL.
 
