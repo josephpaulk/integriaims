@@ -44,6 +44,11 @@ $id_user = $config["id_user"];
 $id_attachment = get_parameter ("id_attachment", 0);
 $type = get_parameter("type");
 
+// Custom Content-Disposition
+$content_disposition = (string) get_parameter('content_disposition', 'attachment');
+$safe_content_disposition = array('attachment', 'inline');
+if (!in_array($content_disposition, $safe_content_disposition))
+	$content_disposition = 'attachment';
 
 if ($type !== "external_release" && $type !== "file_sharing") {
 	check_login();
@@ -268,7 +273,7 @@ if (file_exists($fileLocation)){
  
 	header("Content-Type: $mime;");
 	header("Content-Length: " . filesize($fileLocation));
-	header('Content-Disposition: attachment; filename="' . $last_name . '"');
+	header('Content-Disposition: ' . $content_disposition . '; filename="' . $last_name . '"');
 
 	// If it's a large file we don't want the script to timeout, so:
 	set_time_limit(0);
