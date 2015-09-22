@@ -22,6 +22,7 @@ $get_company_name = get_parameter ('get_company_name', 0);
 $get_delete_validation = get_parameter ('get_delete_validation', 0);
 $delete_item = get_parameter('delete_item', 0);
 $get_invoice_id = get_parameter('get_invoice_id', 0);
+$get_old_invoice_id = get_parameter('get_old_invoice_id', 0);
 
 if ($get_company_name) {
 	$id_company = get_parameter('id_company');
@@ -268,7 +269,7 @@ if ($delete_item) {
 if ($get_invoice_id) {
 	$pattern = $config['invoice_id_pattern'];
 	
-	$sql = "SELECT bill_id_variable FROM tinvoice WHERE bill_id_pattern = '".$pattern."' ORDER BY invoice_create_date, id DESC LIMIT 1";
+	$sql = "SELECT bill_id_variable FROM tinvoice WHERE bill_id_pattern = '".$pattern."' AND invoice_type = 'Submitted' ORDER BY bill_id_variable DESC LIMIT 1";
 	$last_id_variable = get_db_sql($sql);
 	
 	$results = preg_match('/.*\[(.*)\]/', $last_id_pattern, $matches);
@@ -287,6 +288,13 @@ if ($get_invoice_id) {
 	$result_id .= $final;
 
 	echo json_encode(safe_output($result_id.";;;;".$last_id));
+	return;
+}
+
+if ($get_old_invoice_id) {
+	$id = get_parameter('id');
+	$id_invoice = get_db_value('bill_id', 'tinvoice', 'id', $id);
+	echo json_encode(safe_output($id_invoice));
 	return;
 }
 ?>

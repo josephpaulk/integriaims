@@ -624,7 +624,7 @@ function topi_richtext ($string) {
 }
 
 
-function show_workunit_data ($workunit, $title) {
+function show_workunit_data ($workunit, $title, $enable_link = true) {
 	global $config;
 	
 	$timestamp = $workunit["timestamp"];
@@ -659,9 +659,13 @@ function show_workunit_data ($workunit, $title) {
 	echo '<div class="notetitle">';
 	echo "<span>";
 	print_user_avatar ($id_user, true);
-	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
-	echo $id_user;
-	echo "</a>";
+	if ($enable_link) {
+		echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
+		echo $id_user;
+		echo "</a>";
+	} else {
+		echo $id_user;
+	}
 	echo " ".__('said').' <span title="'.$timestamp.'">'.human_time_comparation ($timestamp).'</span>';
 	echo "</span>";
 

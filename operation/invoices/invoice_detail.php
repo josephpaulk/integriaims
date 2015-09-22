@@ -264,7 +264,7 @@ if ($invoices != false) {
 	$table->head[3] = __('Currency');
 	$table->head[4] = __('Status');
 	$table->head[5] = __('Creation').$date_img;
-	$table->head[6] = __('Expìration');
+	$table->head[6] = __('Expiration');
 	if ($clean_output == 0)
 		$table->head[7] = __('Options');
 	$counter = 0;

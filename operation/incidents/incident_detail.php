@@ -30,6 +30,8 @@ if (defined ('AJAX')) {
 	$upload_file = (bool) get_parameter('upload_file');
 	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
 	$get_owner = (bool) get_parameter('get_owner', 0);
+	$get_owner = (bool) get_parameter('get_owner', 0);
+	$reopen_ticket = (bool) get_parameter('reopen_ticket', 0);
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -224,6 +226,20 @@ if (defined ('AJAX')) {
 		echo json_encode($assigned_user_for_this_incident);
 		return;
 
+	}
+	
+	if ($reopen_ticket) {
+		$id = (int) get_parameter('id_incident');
+		$incident = get_incident ($id);
+		$result = process_sql_update ('tincidencia', array('estado' => 4), array('id_incidencia'=>$id));
+
+		if ($result) {
+			incidents_set_tracking ($id, 'update', $incident['prioridad'], 4, $incident['resolution'], $config['id_user'], $incident['id_grupo']);
+			audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id);
+		}
+		
+		echo json_encode($result);
+		return;
 	}
 }
 

@@ -123,7 +123,11 @@ if ($operation_invoices == "add_invoice"){
 	$create_calendar_event = get_parameter('calendar_event');
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter ("internal_note", "");
-	$bill_id_variable = get_parameter('bill_id_variable', 0);
+	if ($invoice_type == "Received") {
+		$bill_id_variable = 0;
+	} else {
+		$bill_id_variable = get_parameter('bill_id_variable', 0);
+	}
 	$bill_id_pattern = $config['invoice_id_pattern'];
 	
 	if ($filename != ""){
@@ -223,6 +227,13 @@ if ($operation_invoices == "update_invoice"){
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter('internal_note', "");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
+
+	if ($invoice_type == "Received") {
+		$bill_id_variable = 0;
+	} else {
+		$bill_id_variable = get_parameter('bill_id_variable', 0);
+	}
+	$bill_id_pattern = $config['invoice_id_pattern'];
 	
 	// Updating the invoice
 	$values = array();
@@ -253,6 +264,9 @@ if ($operation_invoices == "update_invoice"){
 	$values['id_language'] = $language;
 	$values['internal_note'] = $internal_note;
 	
+	$values['bill_id_variable'] = $bill_id_variable;
+	$values['bill_id_pattern'] = $bill_id_pattern;
+
 	$where = array('id' => $id_invoice);
 	
 	$ret = process_sql_update ('tinvoice', $values, $where);
@@ -343,7 +357,8 @@ if ($id_invoice == "-1") {
 else {
 	$is_update = true;
 	
-	echo __('Update invoice'). " #$id_invoice";
+	echo __('Update invoice'). " ".$invoice["bill_id"];;
+	
 	echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1&language='.$language.'">
 				<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
@@ -379,14 +394,13 @@ if ($id_company > 0) {
 }
 
 $invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
-$table->data[0][1] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'))."&nbsp;&nbsp;&nbsp;&nbsp;".print_image("images/arrow_refresh.png", true, array("title" => __("Generate ID"), "id"=>"img_generate_id"));
+$table->data[0][1] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'));
 
 $table->data[1][0] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
 $table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
 if ($bill_id == ""){ // let's show the latest Invoice ID generated in the system
 	$last_invoice_generated = get_db_sql ("SELECT bill_id FROM tinvoice ORDER by invoice_create_date DESC LIMIT 1");
-	//$table->data[1][1] .= "<span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span>";
 	$table->data[1][1] .= "<div id='last_id'><span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span></div>";
 }
 
@@ -457,13 +471,11 @@ if ($id_invoice != -1) {
 	print_submit_button (__('Update'), 'button-upd', false, 'class="sub upd"');
 	print_input_hidden ('id', $id);
 	print_input_hidden ('operation_invoices', "update_invoice");
+	print_input_hidden ('bill_id_variable', $bill_id_variable);
 } else {
 	print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
 	print_input_hidden ('operation_invoices', "add_invoice");
 	print_input_hidden ('bill_id_variable', $bill_id_variable);
-	if ($config['invoice_auto_id']) {
-		print_input_hidden ('bill_id');
-	}
 }
 
 if ($id_invoice != -1) { 
@@ -530,6 +542,16 @@ if ($id_invoice != -1) {
 //is_update hidden
 echo '<div id="div_is_update_hidden" style="display:none;">';
 	print_input_text('is_update_hidden', $is_update);
+echo '</div>';
+
+//invoice_id hidden
+echo '<div id="invoice_hidden" style="display:none;">';
+	print_input_text('invoice_id_hidden', $id_invoice);
+echo '</div>';
+
+//invoice_type hidden
+echo '<div id="invoice_type_hidden" style="display:none;">';
+	print_input_text('invoice_type_hidden', $invoice_type);
 echo '</div>';
 ?>
 
@@ -608,20 +630,23 @@ add_validate_form_element_rules('input[name="amount5"]', rules, messages);
 
 
 $(document).ready (function () {
-
+	
 	var idUser = "<?php echo $config['id_user'] ?>";
 	autoGenerateID = "<?php echo $config['invoice_auto_id'] ?>";
-	$("#img_generate_id").css('display', 'none');
 	is_update = $("#text-is_update_hidden").val();
+	invoice_id = $("#text-invoice_id_hidden").val();
+	invoice_type = $("#text-invoice_type_hidden").val();
 
 	if (autoGenerateID) {
-		if (is_update) {
-			$("#img_generate_id").css('display', 'none');
-		} else {
-			$("#img_generate_id").css('display', '');
+		if ($("#invoice_type").val() == 'Submitted') {
+			if (!is_update) {
+				invoiceGenerateID();
+			} else {
+				$("#text-bill_id").prop('disabled', true);
+			}
+			$("#text-bill_id").prop('readonly', true);
 		}
-
-		$("#text-bill_id").prop('disabled', true);
+		
 		$("#last_id").css('display', 'none');
 	} 
 	
@@ -631,33 +656,34 @@ $(document).ready (function () {
 	
 	$("#invoice_type").click (function () {
 		if (autoGenerateID) {
-
 			if ($("#invoice_type").val() == 'Submitted') {
-				if (is_update) {
-					$("#img_generate_id").css('display', 'none');
+				$("#text-bill_id").prop('readonly', true);
+				if (!is_update) {
+					invoiceGenerateID();
 				} else {
-					$("#img_generate_id").css('display', '');
+					invoice_id = $("#text-invoice_id_hidden").val();
+					if (invoice_type == "Submitted") {
+						invoiceGetID(invoice_id);
+						$("#text-bill_id").prop('readonly', true);
+					} else {
+						invoiceGenerateID();
+					}
+					
 				}
-				$("#text-bill_id").val("");
-	
 			} else {
-				$("#img_generate_id").css('display', 'none');
 				$("#text-bill_id").prop('disabled', false);
+				$("#text-bill_id").prop('readonly', '');
+				$("#text-bill_id").prop('value', "");
 			}
-		} else {
-			$("#img_generate_id").css('display', 'none');
-			
+		} else {	
 			if ($("#invoice_type").val() == 'Received') {
 				$("#last_id").css('display', 'none');
 			} else {
 				$("#last_id").css('display', '');
-				$("#text-bill_id").prop('disabled', false);
+				$("#text-bill_id").prop('readonly', '');
 			}
+			$("#text-bill_id").prop('value', "");
 		}
-	});
-	
-	$("#img_generate_id").click (function () {
-		invoiceGenerateID();
 	});
 });
 
@@ -671,15 +697,33 @@ function invoiceGenerateID () {
 			'get_invoice_id': 1
 		},
 		dataType: "json",
-		//~ async: false,
+		async: false,
 		success: function (data) {
 			dataUnserialize = data.split(';;;;');
 			id_bill = dataUnserialize[0];
 			id_variable = dataUnserialize[1];
-
+			
 			$("#text-bill_id").attr('value', id_bill);
 			$("#hidden-bill_id_variable").attr('value', id_variable);
 			$("#hidden-bill_id").attr('value', id_bill);
+		}
+	});
+}
+
+function invoiceGetID (id) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: {
+			'page': 'include/ajax/crm',
+			'get_old_invoice_id': 1,
+			'id': id
+		},
+		dataType: "json",
+		async: true,
+		success: function (bill_id) {
+			$("#text-bill_id").attr('value', bill_id);
 		}
 	});
 }

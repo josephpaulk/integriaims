@@ -1,3 +1,13 @@
+2015-09-21  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/setup/setup_crm.php
+	  include/functions_form.php
+	  include/ajax/crm.php
+	  operation/incidents/incident_detail.php
+	  operation/invoices/invoice_detail.php
+	  operation/invoices/invoices.php: Improved ids generator
+	to create invoices.
+
 2015-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_workunits.php: Fixed a

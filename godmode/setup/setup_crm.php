@@ -109,7 +109,7 @@ $table->colspan[4][0] = 2;
 $table->data[4][0] = print_textarea ('invoice_footer', 5, 40, $config["invoice_footer"], '', true, __('Invoice footer'));
 
 $table->data[5][0] = print_checkbox ("invoice_auto_id", 1, $config["invoice_auto_id"], true, __('Enable auto ID'));
-$table->data[5][1] = print_input_text ('invoice_id_pattern', $config["invoice_id_pattern"], '', 10, 20, true, __('Invoice ID pattern'));
+$table->data[5][1] = print_input_text ('invoice_id_pattern', $config["invoice_id_pattern"], '', 10, 20, true, __('Invoice ID pattern')).print_help_tip (__('Data not in square brackets will be fixed, while data in square brackets will be the number from which a sequence will be calculated. Example: FAC[100]'), true);
 
 $table->colspan[7][0] = 2;
 $table->data[7][0] = "<h3>".__('Lead parameters')."</h3><br>";
