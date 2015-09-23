@@ -53,7 +53,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 29);
+('minor_release', 30);
 
 -- Default password is 'integria'
 
@@ -170,7 +170,8 @@ INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','
 (46,2,'Group','text',NULL,NULL,NULL,'','',0,0,1,0),
 (47,2,'Domain','text',NULL,NULL,NULL,'','',0,0,1,0),
 (48,2,'Hostname','text',NULL,NULL,NULL,'','',0,0,1,0),
-(49,2,'Architecture','text',NULL,NULL,NULL,'','',0,0,1,0);
+(49,2,'Architecture','text',NULL,NULL,NULL,'','',0,0,1,0),
+(50,2,'SimID','text',NULL,NULL,NULL,'','',0,0,1,0);
 
 
 INSERT INTO `tupdate_settings` VALUES ('customer_key', 'INTEGRIA-FREE'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('dbport', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
