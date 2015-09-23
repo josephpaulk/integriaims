@@ -1277,39 +1277,40 @@ function db_process_sql_rollback() {
 // --------------------------------------------------------------- 
 
 function db_run_sql_file ($location) {
-    global $config;
-    
-    // Load file
-    $commands = file_get_contents($location);
+	global $config;
 	
-    // Delete comments
-    $lines = explode("\n",$commands);
-    $commands = '';
-    foreach($lines as $line){
-        $line = trim($line);
-        if($line && !preg_match('/^--/', $line) && !preg_match('/^\/\*/', $line)){
-            $commands .= $line . "\n";
-        }
-    }
+	// Load file
+	$commands = file_get_contents($location);
 	
-    // Convert to array
-    $commands = explode(";", $commands);
+	// Delete comments
+	$lines = explode("\n", $commands);
+	$commands = '';
+	foreach ($lines as $line) {
+		$line = trim($line);
+		if ($line && !preg_match('/^--/', $line) && !preg_match('/^\/\*/', $line)) {
+			$commands .= $line;
+		}
+	}
 	
-    // Run commands
+	// Convert to array
+	$commands = explode(";", $commands);
+	
+	// Run commands
 	db_process_sql_begin(); // Begin transaction
-    foreach($commands as $command){
-        if(trim($command)){
+	foreach ($commands as $command) {
+		if (trim($command)) {
 			
 			$result = mysql_query($command);
 			if (!$result) {
 				break; // Error
 			}
-        }
-    }
-    if ($result) {
+		}
+	}
+	if ($result) {
 		db_process_sql_commit(); // Save results
 		return true;
-	} else {
+	}
+	else {
 		db_process_sql_rollback(); // Undo results
 		return false;
 	}
@@ -1321,23 +1322,23 @@ function db_run_sql_file ($location) {
 // --------------------------------------------------------------- 
 
 function db_run_sql_file_pdo ($location) {
-    global $config;
-    
-    // Load file
-    $commands = file_get_contents($location);
+	global $config;
 	
-    // Delete comments
-    $lines = explode("\n",$commands);
-    $commands = '';
-    foreach($lines as $line){
-        $line = trim($line);
-        if($line && !preg_match('/^--/', $line) && !preg_match('/^\/\*/', $line)){
-            $commands .= $line . "\n";
-        }
-    }
+	// Load file
+	$commands = file_get_contents($location);
 	
-    // Convert to array
-    $commands = explode(";", $commands);
+	// Delete comments
+	$lines = explode("\n",$commands);
+	$commands = '';
+	foreach($lines as $line){
+		$line = trim($line);
+		if($line && !preg_match('/^--/', $line) && !preg_match('/^\/\*/', $line)){
+			$commands .= $line . "\n";
+		}
+	}
+	
+	// Convert to array
+	$commands = explode(";", $commands);
 	
 	$dbcon = new mysqli($config["dbhost"], $config["dbuser"], $config["dbpass"], $config["dbname"]);
 	if ($dbcon->connect_error) {
@@ -1379,6 +1380,7 @@ function db_update_schema () {
 	global $config;
 	
 	$dir = $config["homedir"]."extras/mr";
+	$message = '';
 	
 	if (file_exists($dir) && is_dir($dir)) {
 		if (is_readable($dir)) {
@@ -1423,9 +1425,9 @@ function db_update_schema () {
 									}
 								}
 								
-								return "<h3 class='suc'>".__('The database schema has been updated to the minor release')." $sqlfile_num</h3>";
+								$message = "<h3 class='suc'>".__('The database schema has been updated to the minor release')." $sqlfile_num</h3>";
 							} else {
-								return "<h3 class='error'>".__('An error occurred while updating the database schema to the minor release ')." $sqlfile_num</h3>";
+								$message = "<h3 class='error'>".__('An error occurred while updating the database schema to the minor release ')." $sqlfile_num</h3>";
 								break;
 							}
 						}
@@ -1434,11 +1436,13 @@ function db_update_schema () {
 			}
 			
 		} else {
-			return "<h3 class='error'>".__('The directory '.$dir.' should have read permissions in order to update the database schema')."</h3>";
+			$message = "<h3 class='error'>".__('The directory '.$dir.' should have read permissions in order to update the database schema')."</h3>";
 		}
 	} else {
-		return "<h3 class='error'>".__('The directory '.$dir.' does not exist')."</h3>";
+		$message = "<h3 class='error'>".__('The directory '.$dir.' does not exist')."</h3>";
 	}
+	
+	return $message;
 }
 
 ?>

@@ -1,3 +1,8 @@
+2015-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_db.mysql.php: Fixed the function
+	'update_db_schema' to update al the MR files at once.
+
 2015-09-21  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/setup_crm.php
