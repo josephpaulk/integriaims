@@ -49,6 +49,7 @@ if(defined ('AJAX')) {
 include_once ($config["homedir"]."/include/graphs/fgraph.php");
 enterprise_include("include/functions_users.php");
 enterprise_include("include/functions_incidents.php");
+enterprise_include($config["homedir"]."/include/functions_groups.php");
 
 function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false, $csv_mode = false) {
 	global $config;
@@ -76,6 +77,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$filters["id_task"] = isset ($filters['id_task']) ? $filters['id_task'] : 0;
 	$filters["left_sla"] = isset ($filters['left_sla']) ? $filters['left_sla'] : 0;
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
+	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -90,8 +92,19 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	
 	if ($filters['priority'] != -1)
 		$sql_clause .= sprintf (' AND prioridad = %d', $filters['priority']);
-	if ($filters['id_group'] != 1)
-		$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
+	if ($filters['id_group'] != 1) {
+		if ($filters["show_hierarchy"]) {
+			$children = groups_get_childrens($filters['id_group']);
+			$ids = $filters['id_group'];
+			foreach ($children as $child) {
+				$ids .= ",".$child['id_grupo'];
+			}	
+			$sql_clause .= " AND id_grupo IN (".$ids.")";
+		} else {
+			$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
+		}
+
+	}
 	if (! empty ($filters['id_user']))
 		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
 	if (! empty ($filters['id_user_or_creator']))
@@ -2832,6 +2845,7 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 	$filters["sla_state"] = isset ($filters['sla_state']) ? $filters['sla_state'] : 0;
 	$filters["left_sla"] = isset ($filters['left_sla']) ? $filters['left_sla'] : 0;
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
+	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -2845,8 +2859,19 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 	$sql_clause = '';
 	if ($filters['priority'] != -1)
 		$sql_clause .= sprintf (' AND prioridad = %d', $filters['priority']);
-	if ($filters['id_group'] != 1)
-		$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
+	if ($filters['id_group'] != 1) {
+		if ($filters["show_hierarchy"]) {
+			$children = groups_get_childrens($filters['id_group']);
+			$ids = $filters['id_group'];
+			foreach ($children as $child) {
+				$ids .= ",".$child['id_grupo'];
+			}	
+			$sql_clause .= " AND id_grupo IN (".$ids.")";
+		} else {
+			$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
+		}
+
+	}
 	if (! empty ($filters['id_user']))
 		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
 	if (! empty ($filters['id_user_or_creator']))

@@ -222,7 +222,7 @@ if ($set_status) {
 		$values['cierre'] = date('Y-m-d H:i:s');
 	}
 	
-	incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $values['estado'];
+	incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $values['estado']);
 	
 	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
 	

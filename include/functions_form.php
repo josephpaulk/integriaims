@@ -937,6 +937,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_task = (int) get_parameter('search_id_task', 0);
 		$left_sla = (int)get_parameter('search_left_sla', 0);
 		$right_sla = (int)get_parameter('search_right_sla', 0);
+		$show_hierarchy = (bool) get_parameter('show_hierarchy');
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -966,6 +967,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_task = (int) $filter['id_task'];
 		$left_sla = (int) $filter['left_sla'];
 		$right_sla = (int) $filter['right_sla'];
+		$show_hierarchy = (bool) $filter['show_hierarchy'];
 
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
@@ -1019,6 +1021,8 @@ function form_search_incident ($return = false, $filter=false) {
 	$groups = users_get_groups_for_select ($config['id_user'], "IW", true, true);
 	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
+	$table->data[0][3] = print_checkbox_extended ('search_show_hierarchy', 1, $show_hierarchy, false, '', '', true, __('Show hierarchy'));
+ 
 	$params_owner = array();
 	$params_owner['input_id'] = 'text-search_id_user';
 	$params_owner['input_name'] = 'search_id_user';

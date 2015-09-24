@@ -884,11 +884,19 @@ if ($disabled) {
 
 $table->data[1][0] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
-if ($has_im)
-	$table->data[1][1] = combo_incident_resolution ($resolution, $disabled, true);
-else {
-	$table->data[1][1] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
-	$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
+if (!$create_incident){
+	if ($incident["estado"] != STATUS_CLOSED) {
+		$table->data[1][1] = "<div id='div_incident_resolution' style='display: none;'>";
+	} else {
+		$table->data[1][1] = "<div id='div_incident_resolution'>";
+	}
+	if ($has_im)
+		$table->data[1][1] .= combo_incident_resolution ($resolution, $disabled, true);
+	else {
+		$table->data[1][1] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
+		$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
+	}
+	$table->data[1][1] .= "</div>";
 }
 
 $table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true, false, '', '', 0);
@@ -1365,9 +1373,11 @@ $(document).ready (function () {
 		if (status == 7) {
 			$("#epilog_wrapper").show();
 			$("#closed_by_wrapper").show();
+			$("#div_incident_resolution").show();
 			$("#text-closed_by").val("<?php echo $config['id_user'] ?>");
 			pulsate("#epilog_wrapper");
 			pulsate("#closed_by_wrapper");
+			pulsate("#div_incident_resolution");
 			
 			id_incident = $('#text-id_incident_hidden').val();
 			
@@ -1402,6 +1412,7 @@ $(document).ready (function () {
 		} else {
 			$("#epilog_wrapper").hide();
 			$("#closed_by_wrapper").hide();
+			$("#div_incident_resolution").hide();
 		}
 	});
 	

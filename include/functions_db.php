@@ -2303,6 +2303,7 @@ function get_indicent_status () {
 	__('Verified'); 
 	__('Pending on a third person');
 	__('Closed');
+	__('Pending to be closed');
 	
 	foreach ($status as $stat) {
 		/* FIXME: This is a workaround since you don't change or add any status

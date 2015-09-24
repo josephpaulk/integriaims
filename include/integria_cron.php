@@ -601,8 +601,13 @@ function run_mail_queue () {
 	$utimestamp = date("U");
 	// $current_date = date ("Y/m/d H:i:s");
 
+	if (isset($config["batch_newsletter"])) {
+		$limit = " LIMIT ".$config['batch_newsletter'];
+	} else {
+		$limit = "";
+	}
 	// get pending mails 
-	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail WHERE status = 0");
+	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail WHERE status = 0".$limit);
 	
 	if ($mails)
 	foreach ($mails as $email){

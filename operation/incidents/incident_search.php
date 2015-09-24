@@ -44,6 +44,7 @@ if (defined ('AJAX')) {
 	$filter['id_task'] = $form_values['search_id_task'];
 	$filter['left_sla'] = $form_values['search_left_sla'];
 	$filter['right_sla'] = $form_values['search_right_sla'];
+	$filter['show_hierarchy'] = $form_values['show_hierarchy'];
 
 	$result = create_custom_search ($search_name, 'incidents', $filter);
 }
@@ -77,6 +78,7 @@ $filter['sla_state'] = (int) get_parameter ('search_sla_state');
 $filter['id_task'] = (int) get_parameter('search_id_task');
 $filter['left_sla'] = (int) get_parameter ('search_left_sla');
 $filter['right_sla'] = (int) get_parameter ('search_right_sla');
+$filter['show_hierarchy'] = (bool) get_parameter('search_show_hierarchy');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 

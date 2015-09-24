@@ -1,3 +1,24 @@
+2015-09-24  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_db.php
+	  operation/projects/task.php: Added string to translate.
+
+	* include/functions_form.php
+	  include/functions_groups.php
+	  include/functions_incidents.php
+	  operation/incidents/incident_search.php
+	  : Show hierarchy of groups in search.
+
+	* include/integria_cron.php: Added feature 'Max. e-mails sent 
+	per execution'.
+
+	* include/ajax/incidents.php: Added missing ')'.
+
+	* include/languages/index.pot: Update translations.
+
+	* operation/incidents/incident_detail.php: Display resolution
+	only when the state is closed.
+
 2015-09-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* extras/mr/30.sql,

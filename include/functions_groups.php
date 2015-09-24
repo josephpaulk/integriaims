@@ -283,9 +283,9 @@ function groups_get_groups_tree_recursive($groups) {
  */
 function groups_get_childrens($parent, $groups = null) {
 	if (empty($groups)) {
-		$groups = db_get_all_rows_in_table('tgrupo');
+		$groups = get_db_all_rows_in_table('tgrupo');
 	}
-	
+
 	$return = array();
 	
 	foreach ($groups as $key => $group) {

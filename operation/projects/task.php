@@ -224,7 +224,7 @@ if (defined ('AJAX')) {
 				// Time used on all child tasks + this task
 				$recursive_timeused = task_duration_recursive ($task["id"]);
 				
-				$time_used = _('Time used') . ": ";
+				$time_used = __('Time used') . ": ";
 				
 				if ($taskhours == 0)
 					$time_used .= "--";
