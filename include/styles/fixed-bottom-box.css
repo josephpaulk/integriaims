@@ -22,6 +22,13 @@ div.fixed-bottom-box-head {
 	-o-border-radius: 10px 10px 0 0;
 	-ms-border-radius: 10px 10px 0 0;
 	-khtml-border-radius: 10px 10px 0 0;
+	
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #3F3F3F;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #3F3F3F;
 }
 
 div.fixed-bottom-box >
@@ -92,6 +99,13 @@ div.fixed-bottom-box-head-body {
 
 div.fixed-bottom-box >
 div.fixed-bottom-box-content {
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #3F3F3F;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #3F3F3F;
+	
 	vertical-align: top;
 	text-align: center;
 	overflow: auto;
