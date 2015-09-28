@@ -1,3 +1,7 @@
+2015-09-28  Isaac Castellano <isaac.castellano@artica.es>
+
+	* include/functions_form.php: search table modified.
+
 2015-09-24  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_db.php
