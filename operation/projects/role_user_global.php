@@ -166,7 +166,7 @@ $table->data = array ();
 $table->data[0][0] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 15, 30, false, '',
 		'', true, '')
 		. print_help_tip (__("Type at least two characters to search"), true);
-$table->data[0][1] = print_submit_button (__('Go'), 'sub_btn', false, 'class="next sub"', true);
+$table->data[0][0] .= print_submit_button (__('Go'), 'sub_btn', false, 'class="next sub"', true);
 
 print_table ($table);
 unset($table);
@@ -184,7 +184,7 @@ if (dame_admin($config['id_user']))
 else
 	$table->data[0][1] = combo_roles (false, "roles", __('Role'), true, false);
 $table->data[0][1] .= integria_help ("project_roles", true);
-$table->data[0][2] = print_submit_button (__('Add'), 'sub_btn', false, 'class="create sub"', true);
+$table->data[0][2] = print_submit_button (__('Add'), 'sub_btn', false, 'class="create sub"; style="margin-top:25px"', true);
 
 print_table ($table);
 echo "</form>";

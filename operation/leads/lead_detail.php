@@ -1170,10 +1170,6 @@ if ($id || $new) {
 	
 	$table->data[1][2] =  print_checkbox ("show_not_owned_search", 1, $show_not_owned, true, __("Show not owned leads"));
 
-	$table->data[1][3] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	// Delete new lines from the string
-	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$table->data[1][3] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
 	
 	$tag_editor_props = array('name' => 'tags', 'selected_tags' => $tags);
 	$table->data['tags'][0] = print_label (__('Tags'), '', 'select', true);
@@ -1207,10 +1203,21 @@ if ($id || $new) {
 
 	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), print_table($table_advanced, true), 'closed', true, false);
 	$table->colspan['advanced'][2] = 4;
+	// Delete new lines from the string
+	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+	$table->data[3][0] = print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
+	$table->data[3][0] .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
 	
+	$table->align[3]="right";
+	$table->align[3][0]="right";
+	$table->colspan[3][0]="3";
+	$table->size[3][0]="100%";
+
 	print_table ($table);
 	$table->data = array ();
 	
+	
+
 	echo '</form>';
 
 	$leads = crm_get_all_leads ($where_clause);

@@ -43,8 +43,8 @@ $table->size = array ();
 $table->data = array ();
 
 $table->data[1][0] = "<b>".__('Load file')."</b>";
-$table->data[1][0] = '<input class="sub" name="file" type="file" /><br />';
-$table->data[1][1] = '<input type="submit" class="sub upload" value="' . __('Upload File') . '" />';
+$table->data[1][0] = '<input class="sub" name="file" type="file" />&nbsp;';
+$table->data[1][0] .= '<input type="submit" class="sub upload" value="' . __('Upload File') . '" />';
 
 echo '<form enctype="multipart/form-data" action="index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects" method="POST">';
 print_input_hidden ('upload_file', 1);

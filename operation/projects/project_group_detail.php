@@ -113,9 +113,10 @@ if ($id || $new_group) {
 		$button .= print_submit_button (__('Create'), "enviar", false, 'class="sub create"', true);
 		$button .= print_input_hidden ('insert_group', 1, true);
 	}
-	
-	$table->data['button'][0] = $button;
-	$table->colspan['button'][0] = 2;
+
+	$table->data[0][2] = $button;
+	// $table->data['button'][0] = $button;
+	// $table->colspan['button'][0] = 2;
 	
 	echo '<form id="form-project_group_detail" method="post">';
 	print_table ($table);

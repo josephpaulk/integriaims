@@ -73,12 +73,14 @@ print_help_tip(__('Empty date is all range time.'));
 echo '<br>';
 print_input_text ('end_date', $end_date, '', 10, 20);
 echo '</td>';
-
+echo '<td>';
+print_input_hidden ('action', 'update');
+print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"; style="margin-top: 21px;"');
+echo '</td>';
 
 echo '</tr>';
-echo '<tr><td colspan=3>';
-print_input_hidden ('action', 'update');
-print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
+echo '<tr><td colspan=4>';
+
 echo '</td></tr>';
 echo "</table>";
 

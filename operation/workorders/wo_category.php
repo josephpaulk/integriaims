@@ -94,12 +94,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	if ($id == -1){
 		echo "<h1>".__('Create a new category')."</a></h1>";
-		echo "<form name=catman method='post'>";
+		echo "<form id='categoryform' name=catman method='post'>";
 		echo "<input type=hidden name='create2' value=1>";
 	}
 	else {
 		echo "<h1>".__('Update existing category')."</a></h1>";
-		echo "<form name=catman method='post'>";
+		echo "<form id='categoryform' name=catman method='post'>";
 		echo "<input type=hidden name=id value='$id'>";
 		echo "<input type=hidden name='update2' value=1>";
 	}
@@ -114,11 +114,11 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<label>" . __('Icon') . "</label>";
 	$files = list_files ('images/wo_category/', "png", 1, 0);
 	print_select ($files, 'icon', $icon, '', __('None'), "");
-	echo "<tr><td colspan=2>";
+	echo "<td class=datos>";
 	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
+		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create" style="margin-top: 20px;"');
 	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
+		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd" style="margin-top: 20px;"');
 	echo "</table>";
 	echo "</form>";
 

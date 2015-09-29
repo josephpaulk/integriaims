@@ -97,8 +97,8 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 $available_directory[$current_directory] = $current_directory;
 
 echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
-print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, __("Base directory"));
-echo "&nbsp;&nbsp;<input type=submit class='sub next' value='".__("Go")."'>";
+print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, __("Base directory"),"","margin-top:3px;");
+echo "&nbsp;&nbsp;<input type=submit class='sub next' style='margin-top:2px;' value='".__("Go")."'>";
 echo "</form>";
 
 if (is_writable($current_directory)) {

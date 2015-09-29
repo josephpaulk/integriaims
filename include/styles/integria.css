@@ -813,7 +813,7 @@ input.sub {
 
 input.next {
 	padding-right: 25px;
-	background: url(../../images/input_next.png) no-repeat 90% 7px #FFFFFF;
+	background: url(../../images/input_next.png) no-repeat 90% 5px #FFFFFF;
 }
 
 input.delete {
@@ -833,12 +833,12 @@ input.report {
 
 input.upd {
 	padding-right: 25px;
-	background: url(../../images/input_update.png) no-repeat 90% 7px #FFFFFF;
+	background: url(../../images/input_update.png) no-repeat 90% 5px #FFFFFF;
 }
 
 input.create {
 	padding-right: 25px;
-	background: url(../../images/input_create.png) no-repeat 90% 7px #FFFFFF;
+	background: url(../../images/input_create.png) no-repeat 90% 5px #FFFFFF;
 }
 
 input.search {
@@ -3370,5 +3370,48 @@ img {
 
 	cursor: pointer;
 }
+/**********NEW STYLES********/
 
+/*TICKET FIELDS*/
+#table3-1 td{
+	text-align: right;
+}
+#table3-1-0{
+	text-align: left !important;
+}
+#table3-1-1 select{
+	float: right;
+}
+/*PROJECT GROUP MANAGEMENT*/
+
+#form-project_group_detail td{
+	text-align: left;
+}
+#form-project_group_detail #submit-enviar{
+	margin-top: 20px;
+}
+/*CREATE A NEW CATEGORY*/
+#categoryform td{
+	text-align: left;
+}
+/*TICKET SEARCH*/
+#incident-search-content h5{
+	margin-left: 20px;
+}
+/*CONTACT MANAGEMENT*/
+#contact_search_form #submit-search_btn, #contact_search_form #button-{
+	margin-top:20px;
+}
+/*LEAD DETAIL*/
+#lead-search-content h5{
+	margin-left: 20px;
+}
+/*USER MANAGEMENT*/
+#table-user_search #submit-search{
+	margin-top:20px;
+}
+/*FILE MANAGER*/
+.search-table .datos .upfile {
+	margin-top: 18px;
+}
 /* End comments */

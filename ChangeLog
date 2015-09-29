@@ -1,3 +1,14 @@
+2015-09-29  Isaac Castellano <isaac.castellano@artica.es>
+
+	* godmode/setup/setup_mailtemplates.php
+	  include/styles/integria.css
+	  operation/inventories/inventory_import_objects.php
+	  operation/leads/lead_detail.php
+	  operation/projects/project_group_detail.php
+	  operation/projects/role_user_global.php
+	  operation/projects/user_project_timegraph.php
+	  operation/workorders/wo_category.php: Fix forms and styles.
+	  
 2015-09-29  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/incidents_setup.php
