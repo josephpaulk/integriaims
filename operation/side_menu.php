@@ -1349,7 +1349,7 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
 
 	// Link to User detailed graph view
-	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
+	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full&user_id='.$config['id_user'].'">';
 	echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
 
 	// Week Workunit meter
