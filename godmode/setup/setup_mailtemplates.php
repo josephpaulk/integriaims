@@ -79,7 +79,7 @@ $table->data = array ();
 
 $templatelist = get_template_files ();
 
-$table->data[1][0] = print_select ($templatelist, 'template', $template, '', '', '',  true, 0, true, __('Template')) ;
+$table->data[1][0] = print_select ($templatelist, 'template', $template, '', '', '',  true, 0, true, __('Template'),false, "width:250px;margin-top:5px;" );
 
 $table->data[1][0] .= "&nbsp;&nbsp";
 $table->data[1][0] .=  print_submit_button (__('Edit'), 'edit_button', false, 'class="sub upd"', true); 
