@@ -1,5 +1,11 @@
 2015-09-29  Vanessa Gil <vanessa.gil@artica.es>
 
+	* godmode/setup/incidents_setup.php
+	  operation/incidents/incident_detail.php: Added
+	option 'Ignore user creator by default'.
+
+2015-09-29  Vanessa Gil <vanessa.gil@artica.es>
+
 	* integria_db.php
 	  operation/side_menu.php: Fixed minor bugs.
 

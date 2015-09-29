@@ -81,6 +81,7 @@ if ($update) {
 	$config["ticket_owner_is_creator"] = (int) get_parameter ("ticket_owner_is_creator", 0);
 	$config["show_user_name"] = (int) get_parameter ("show_user_name", 0);
 	$config["required_ticket_type"] = (int) get_parameter ("required_ticket_type", 0);
+	$config["show_creator_blank"] = (int) get_parameter ("show_creator_blank", 0);
 	
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
@@ -100,6 +101,7 @@ if ($update) {
 	update_config_token ("ticket_owner_is_creator", $config["ticket_owner_is_creator"]);
 	update_config_token ("show_user_name", $config["show_user_name"]);
 	update_config_token ("required_ticket_type", $config["required_ticket_type"]);
+	update_config_token ("show_creator_blank", $config["show_creator_blank"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -258,6 +260,10 @@ echo "<td style='vertical-align: top;'>".print_checkbox ("ticket_owner_is_creato
 echo "<td style='vertical-align: top;'>".print_checkbox ("show_user_name", 1, $config["show_user_name"], true, __('Show user name instead of id in the ticket search'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_checkbox ("required_ticket_type", 1, $config["required_ticket_type"], true, __('Required ticket type'))."</td>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td style='vertical-align: top;'>".print_checkbox ("show_creator_blank", 1, $config["show_creator_blank"], true, __('Ignore user creator by default'))."</td>";
 echo "</tr>";
 
 echo "<tr>";

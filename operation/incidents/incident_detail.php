@@ -707,7 +707,11 @@ if ($id) {
 	$resolution = 0;
     $score = 0;
 	$epilog = "";
-	$id_creator = $config['id_user'];
+	if ($config['show_creator_blank']) {
+		$id_creator = "";
+	} else {
+		$id_creator = $config['id_user'];
+	}
 	
 	//Email notify default value is the same that forced_email group field
 	$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $id_group);
