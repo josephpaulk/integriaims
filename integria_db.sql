@@ -497,6 +497,7 @@ CREATE TABLE `tinvoice` (
   `invoice_expiration_date` date NOT NULL DEFAULT '0000-00-00',
   `bill_id_pattern` tinytext NOT NULL DEFAULT '',
   `bill_id_variable` int(6) unsigned NOT NULL default 0,
+  `contract_number` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)

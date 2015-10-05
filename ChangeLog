@@ -1,3 +1,14 @@
+2015-10-04  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  integria_dbdata.sql
+	  integria_demo.sql
+	  operation/contracts/contract_detail.php
+	  operation/invoices/invoice_detail.php
+	  operation/invoices/invoices.php
+	  extras/mr/31.sql: Allow generate 
+	invoices from contracts.
+
 2015-09-29  Isaac Castellano <isaac.castellano@artica.es>
 
 	* godmode/setup/setup_mailtemplates.php

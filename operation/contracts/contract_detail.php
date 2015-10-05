@@ -77,11 +77,16 @@ if (defined ('AJAX')) {
 }
 
 $id = (int) get_parameter ('id');
+$id_contract = (int) get_parameter ('id_contract');
 $id_company = (int) get_parameter ('id_company');
 
 $section_read_permission = check_crm_acl ('contract', 'cr');
 $section_write_permission = check_crm_acl ('contract', 'cw');
 $section_manage_permission = check_crm_acl ('contract', 'cm');
+
+$read_invoice = check_crm_acl ('company', 'cr');
+$write_invoice = check_crm_acl ('company', 'cw');
+$manage_invoice = check_crm_acl ('company', 'cm');
 
 if (!$section_read_permission && !$section_write_permission && !$section_manage_permission) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to the contracts section");
@@ -95,621 +100,759 @@ if ($message != '') {
 	echo "<h3 class='suc'>".__($message)."</h3>";
 }
  
-echo "<h1>".__('Contract management')."</h1>";
 
-if ($id || $id_company) {
+// Show tabs for a given contract
+if ($id_contract) {
+	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id_contract);
+	$contract_number = get_db_value('contract_number', 'tinvoice', 'id', $id_contract);
+
+	$contract_data = get_db_row('tcontract', 'id', $id_contract);	
+	$op = get_parameter ("op", "");
+
+	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	
-	if ($id && !$id_company) {
-		$id_company = get_db_value('id_company', 'tcontract', 'id', $id);
-	}
+	if ($op == "invoices")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+
+	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id_contract.'&id_contract='.$id_contract.'&id_company='.$id_company.'&contract_number='.$contract_number.'&op=invoices"><span>'.__("Invoices").'</span></a></li>';
 	
-	if ($id) {
-		$read_permission = check_crm_acl ('contract', 'cr', $config['id_user'], $id);
-		$write_permission = check_crm_acl ('contract', 'cw', $config['id_user'], $id);
-		$manage_permission = check_crm_acl ('contract', 'cm', $config['id_user'], $id);
-		if (!$read_permission && !$write_permission && !$manage_permission) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a contract");
-			include ("general/noaccess.php");
-			exit;
-		}
-	} elseif ($id_company) {
-		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
-		$write_permission = check_crm_acl ('other', 'cw', $config['id_user'], $id_company);
-		$manage_permission = check_crm_acl ('other', 'cm', $config['id_user'], $id_company);
-		if (!$read_permission && !$write_permission && !$manage_permission) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a contract");
-			include ("general/noaccess.php");
-			exit;
-		}
+	if ($op == "")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+
+	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$id_contract.'"><span>'.__("Contract management").'</span></a></li>';
+	
+	echo '<li class="ui-tabs-title">';
+	switch ($op) {
+		case "invoices":
+			echo strtoupper(__('Invoices'));
+			break;
+		default:
+			echo strtoupper(__('Contract Management'));
 	}
-}
-
-$get_sla = (bool) get_parameter ('get_sla');
-$get_company_name = (bool) get_parameter ('get_company_name');
-$new_contract = (bool) get_parameter ('new_contract');
-$create_contract = (bool) get_parameter ('create_contract');
-$update_contract = (bool) get_parameter ('update_contract');
-$delete_contract = (bool) get_parameter ('delete_contract');
-
-// Delete file
-$delete_file = (bool) get_parameter ('delete_file');
-if ($delete_file) {
-	if ($manage_permission) {
-		$id_attachment = get_parameter ('id_attachment');
-		$filename = get_db_value ('filename', 'tattachment',
-			'id_attachment', $id_attachment);
-		$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
-			$id_attachment);
-		process_sql ($sql);
-		$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-		if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
-			$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
+	echo '</li>';
 		
-	} else {
-		$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
-	}
+	echo '</ul>';
 	
-	echo $result_msg;
-}
-
-if ($get_sla) {
-	$sla = get_contract_sla ($id, false);
-	
-	if (defined ('AJAX')) {
-		echo json_encode ($sla);
-		return;
+	$message = get_parameter('message', '');
+	if ($message != '') {
+		echo "<h3 class='suc'>".__($message)."</h3>";
 	}
 }
 
-if ($get_company_name) {
-	$company = get_contract_company ($id, true);
 
-	if (defined ('AJAX')) {
-		echo json_encode (reset($company));
-		return;
-	}
-}
+$op = get_parameter ("op", "");
 
-// CREATE
-if ($create_contract) {
+if ($op == "invoices") {
 
-	if (!$write_permission && !$manage_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-		require ("general/noaccess.php");
+	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id);
+	$view_invoice = get_parameter("view_invoice", 0);
+	$id_company = get_parameter('id_company');
+	$id = get_parameter('id');
+	$contract_data = get_db_row('tcontract', 'id', $id);
+
+	if ((!$permission)) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to an invoice");
+		include ("general/noaccess.php");
 		exit;
 	}
 
-	$name = (string) get_parameter ('name');
-	$contract_number = (string) get_parameter ('contract_number');
-	$description = (string) get_parameter ('description');
-	$date_begin = (string) get_parameter ('date_begin');
-	$date_end = (string) get_parameter ('date_end');
-	$private = (int) get_parameter ('private');
-	$status = (int) get_parameter ('status', 1);
-	$upfiles = (string) get_parameter('upfiles');
-	
-	$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
-		date_end, id_company, private, status)
-		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
-		$name, $contract_number, $description, $date_begin, $date_end,
-		$id_company, $private, $status);
-
-	$id = process_sql ($sql, 'insert_id');
-	if ($id === false)
-		echo '<h3 class="error">'.__('Could not be created').'</h3>';
-	else {
-		//update last activity
-		$datetime =  date ("Y-m-d H:i:s");
-		$comments = __("Created contract by ".$config['id_user']);
-		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
-		process_sql ($sql_add);
-		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
-		$result_activity = process_sql ($sql_activity);
-		
-		// ATTACH A FILE IF IS PROVIDED
-		$upfiles = json_decode(safe_output($upfiles), true);
-
-		if (!empty($upfiles)) {
-			foreach ($upfiles as $file) {
-				if (is_array($file)) {
-					if ($file['description']) {
-						$file_description = $file['description'];
-					} else {
-						$file_description = __('No description available');
-					}
-					$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
-					
-					$file_tmp = sys_get_temp_dir().'/'.$file["name"];
-					$size = filesize ($file_tmp);
-					$filename_encoded = $file_result . "_" . $file["name"];
-				
-					// Copy file to directory and change name
-					$file_target = $config["homedir"]."/attachment/".$filename_encoded;
-			
-					if (!(copy($file_tmp, $file_target))){
-						echo "<h3 class=error>".__("Could not be attached")."</h3>";
-					} else {
-						// Delete temporal file
-						echo "<h3 class=suc>".__("Successfully attached")."</h3>";
-						$location = $file_target;
-						unlink ($file_tmp);
-					}
-				}
-			}
-		}
-
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
-	}
-	$id = 0;
-}
-
-// UPDATE
-if ($update_contract) { // if modified any parameter
-	
-	if (!$write_permission && !$manage_permission) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
-		require ("general/noaccess.php");
-		exit;
-	}
-
-	$name = (string) get_parameter ('name');
-	$contract_number = (string) get_parameter ('contract_number');
-	$description = (string) get_parameter ('description');
-	$date_begin = (string) get_parameter ('date_begin');
-	$date_end = (string) get_parameter ('date_end');
-	$private = (int) get_parameter ('private');
-	$status = (int) get_parameter ('status');
-	$upfiles = (string) get_parameter('upfiles');
-
-
-	$sql = sprintf ('UPDATE tcontract SET contract_number = "%s",
-		description = "%s", name = "%s", date_begin = "%s",
-		date_end = "%s", id_company = %d, private = %d, status = %d
-		WHERE id = %d',
-		$contract_number, $description, $name, $date_begin,
-		$date_end, $id_company, $private, $status, $id);
-	
-	$result = process_sql ($sql);
-	if ($result === false) {
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+	if ($view_invoice) {
+		$id_invoice = get_parameter('id_invoice', -1);
+		$id = get_parameter('id_company');
+		include ("operation/invoices/invoice_view.php");
 	} else {
-		//update last activity
-		$datetime =  date ("Y-m-d H:i:s");
-		$comments = __("Update contract ".$id. " by ".$config['id_user']);
-		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
-		process_sql ($sql_add);
-		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
-		$result_activity = process_sql ($sql_activity);
+		$invoices = crm_get_all_invoices ("contract_number = ".$contract_data['contract_number']);	
+		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/contracts/contract_detail&id=$id&op=invoices&invoice_contract_number=".$contract_data['contract_number']);
 		
-	
-		// ATTACH A FILE IF IS PROVIDED
-		$upfiles = json_decode(safe_output($upfiles), true);
-		if (!empty($upfiles)) {
-			foreach ($upfiles as $file) {
-
-				if (is_array($file)) {
-					if ($file['description']) {
-						$file_description = $file['description'];
-					} else {
-						$file_description = __('No description available');
-					}
-					$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
-					
-					$file_tmp = sys_get_temp_dir().'/'.$file["name"];
-					$size = filesize ($file_tmp);
-					$filename_encoded = $file_result . "_" . $file["name"];
-				
-					// Copy file to directory and change name
-					$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+		if ($invoices !== false) {
+		
+			$table->width = "98%";
+			$table->class = "listing";
+			$table->cellspacing = 0;
+			$table->cellpadding = 0;
+			$table->tablealign="left";
+			$table->data = array ();
+			$table->size = array ();
+			$table->style = array ();
+			$table->style[0] = 'font-weight: bold';
+			$table->colspan = array ();
+			$table->head[0] = __('ID');
+			$table->head[2] = __('Amount');
+			$table->head[3] = __('Type');
+			$table->head[4] = __('Status');
+			$table->head[5] = __('Creation');
+			$table->head[6] = __('Expiration');
 			
-					if (!(copy($file_tmp, $file_target))){
-						echo "<h3 class=error>".__("Could not be attached")."</h3>";
-					} else {
-						// Delete temporal file
-						echo "<h3 class=suc>".__("Successfully attached")."</h3>";
-						$location = $file_target;
-						unlink ($file_tmp);
-					}
+			$counter = 0;
+		
+			$company = get_db_row ('tcompany', 'id', $id);
+		
+			foreach ($invoices as $invoice) {
+				
+				$lock_permission = crm_check_lock_permission ($config["id_user"], $invoice["id"]);
+				$is_locked = crm_is_invoice_locked ($invoice["id"]);
+				$locked_id_user = false;
+				if ($is_locked) {
+					$locked_id_user = crm_get_invoice_locked_id_user ($invoice["id"]);
 				}
+				
+				$data = array ();
+			
+				$url = "index.php?sec=customers&sec2=operation/contracts/contract_detail&view_invoice=1&id_contract=".$id."&id=".$invoice['id_company']."&op=invoices&id_invoice=". $invoice["id"];
+
+				$data[0] = "<a href='$url'>".$invoice["bill_id"]."</a>";
+
+				$data[2] = format_numeric(get_invoice_amount ($invoice["id"])) ." ". strtoupper ($invoice["currency"]);
+
+				$tax = get_invoice_tax ($invoice["id"]);
+				$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
+
+				if ($tax != 0)
+					$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount), true);
+				
+				$data[3] = __($invoice["invoice_type"]);
+				$data[4] = __($invoice["status"]);
+				$data[5] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
+				$data[6] = "<span style='font-size: 10px'>".$invoice["invoice_expiration_date"]. "</span>";
+				
+				array_push ($table->data, $data);
+			}	
+			print_table ($table);
+			
+		}
+	}
+	 
+} elseif ($op == "") {
+
+	$id = get_parameter('id_contract');
+	
+	if ($id || $id_company) {
+	
+		if ($id && !$id_company) {
+			$id_company = get_db_value('id_company', 'tcontract', 'id', $id);
+		}
+		
+		if ($id) {
+			$read_permission = check_crm_acl ('contract', 'cr', $config['id_user'], $id);
+			$write_permission = check_crm_acl ('contract', 'cw', $config['id_user'], $id);
+			$manage_permission = check_crm_acl ('contract', 'cm', $config['id_user'], $id);
+			if (!$read_permission && !$write_permission && !$manage_permission) {
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a contract");
+				include ("general/noaccess.php");
+				exit;
+			}
+		} elseif ($id_company) {
+			$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
+			$write_permission = check_crm_acl ('other', 'cw', $config['id_user'], $id_company);
+			$manage_permission = check_crm_acl ('other', 'cm', $config['id_user'], $id_company);
+			if (!$read_permission && !$write_permission && !$manage_permission) {
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to a contract");
+				include ("general/noaccess.php");
+				exit;
 			}
 		}
-
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
 	}
 
-	$id = 0;
-}
+	$get_sla = (bool) get_parameter ('get_sla');
+	$get_company_name = (bool) get_parameter ('get_company_name');
+	$new_contract = (bool) get_parameter ('new_contract');
+	$create_contract = (bool) get_parameter ('create_contract');
+	$update_contract = (bool) get_parameter ('update_contract');
+	$delete_contract = (bool) get_parameter ('delete_contract');
 
-
-// FORM (Update / Create)
-if ($id || $new_contract) {
-	if ($new_contract) {
+	// Delete file
+	$delete_file = (bool) get_parameter ('delete_file');
+	if ($delete_file) {
+		if ($manage_permission) {
+			$id_attachment = get_parameter ('id_attachment');
+			$filename = get_db_value ('filename', 'tattachment',
+				'id_attachment', $id_attachment);
+			$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
+				$id_attachment);
+			process_sql ($sql);
+			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+			if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
+				$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
+			
+		} else {
+			$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
+		}
 		
-		if (!$section_write_permission && !$section_manage_permission) {
+		echo $result_msg;
+	}
+
+	if ($get_sla) {
+		$sla = get_contract_sla ($id, false);
+		
+		if (defined ('AJAX')) {
+			echo json_encode ($sla);
+			return;
+		}
+	}
+
+	if ($get_company_name) {
+		$company = get_contract_company ($id, true);
+
+		if (defined ('AJAX')) {
+			echo json_encode (reset($company));
+			return;
+		}
+	}
+
+	// CREATE
+	if ($create_contract) {
+
+		if (!$write_permission && !$manage_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
 			require ("general/noaccess.php");
 			exit;
 		}
+
+		$name = (string) get_parameter ('name');
+		$contract_number = (string) get_parameter ('contract_number');
+		$description = (string) get_parameter ('description');
+		$date_begin = (string) get_parameter ('date_begin');
+		$date_end = (string) get_parameter ('date_end');
+		$private = (int) get_parameter ('private');
+		$status = (int) get_parameter ('status', 1);
+		$upfiles = (string) get_parameter('upfiles');
 		
-		$name = "";
-		$contract_number = "";
-		$date_begin = date('Y-m-d');
-		$date_end = $date_begin;
-		$id_sla = "";
-		$description = "";
-		$private = 0;
-		$status = 1;
-	} else {
-		
-		if (!$read_permission && !$write_permission && !$manage_permission) {
+		$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
+			date_end, id_company, private, status)
+			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
+			$name, $contract_number, $description, $date_begin, $date_end,
+			$id_company, $private, $status);
+
+		$id = process_sql ($sql, 'insert_id');
+		if ($id === false)
+			echo '<h3 class="error">'.__('Could not be created').'</h3>';
+		else {
+			//update last activity
+			$datetime =  date ("Y-m-d H:i:s");
+			$comments = __("Created contract by ".$config['id_user']);
+			$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+			process_sql ($sql_add);
+			$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+			$result_activity = process_sql ($sql_activity);
+			
+			// ATTACH A FILE IF IS PROVIDED
+			$upfiles = json_decode(safe_output($upfiles), true);
+
+			if (!empty($upfiles)) {
+				foreach ($upfiles as $file) {
+					if (is_array($file)) {
+						if ($file['description']) {
+							$file_description = $file['description'];
+						} else {
+							$file_description = __('No description available');
+						}
+						$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
+						
+						$file_tmp = sys_get_temp_dir().'/'.$file["name"];
+						$size = filesize ($file_tmp);
+						$filename_encoded = $file_result . "_" . $file["name"];
+					
+						// Copy file to directory and change name
+						$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+				
+						if (!(copy($file_tmp, $file_target))){
+							echo "<h3 class=error>".__("Could not be attached")."</h3>";
+						} else {
+							// Delete temporal file
+							echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+							$location = $file_target;
+							unlink ($file_tmp);
+						}
+					}
+				}
+			}
+
+			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
+		}
+		$id = 0;
+	}
+
+	// UPDATE
+	if ($update_contract) { // if modified any parameter
+	$id = get_parameter('id_contract');	
+		if (!$write_permission && !$manage_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
 			require ("general/noaccess.php");
 			exit;
 		}
-		
-		$contract = get_db_row ("tcontract", "id", $id);
-		$name = $contract["name"];
-		$contract_number = $contract["contract_number"];
-		$id_company = $contract["id_company"];
-		$date_begin = $contract["date_begin"];
-		$date_end   = $contract["date_end"];
-		$description = $contract["description"];
-		$id_sla = $contract["id_sla"];
-		$private = $contract["private"];
-		$status = $contract["status"];
-	}
-	
-	$table->width = '99%';
-	$table->colspan = array ();
-	$table->colspan[4][0] = 2;
-	$table->data = array ();
-	
-	if ($new_contract || ($id && ($write_permission || $manage_permission))) {
-		
-		$table->class = 'search-table-button';
-		
-		$params = array();
-		$params['input_id'] = 'id_company';
-		$params['input_name'] = 'id_company';
-		$params['input_value'] = $id_company;
-		$params['title'] = __('Company');
-		$params['return'] = true;
-		$table->data[0][0] = print_company_autocomplete_input($params);
 
-		$table->data[0][1] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
-		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
-		$table->data[1][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);		
-			
-		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
-		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
+		$name = (string) get_parameter ('name');
+		$contract_number = (string) get_parameter ('contract_number');
+		$description = (string) get_parameter ('description');
+		$date_begin = (string) get_parameter ('date_begin');
+		$date_end = (string) get_parameter ('date_end');
+		$private = (int) get_parameter ('private');
+		$status = (int) get_parameter ('status');
+		$upfiles = (string) get_parameter('upfiles');
+
+
+		$sql = sprintf ('UPDATE tcontract SET contract_number = "%s",
+			description = "%s", name = "%s", date_begin = "%s",
+			date_end = "%s", id_company = %d, private = %d, status = %d
+			WHERE id = %d',
+			$contract_number, $description, $name, $date_begin,
+			$date_end, $id_company, $private, $status, $id);
 		
-		if ($id_company) {
+		$result = process_sql ($sql);
+		if ($result === false) {
+			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		} else {
+			//update last activity
+			$datetime =  date ("Y-m-d H:i:s");
+			$comments = __("Update contract ".$id. " by ".$config['id_user']);
+			$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+			process_sql ($sql_add);
+			$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+			$result_activity = process_sql ($sql_activity);
+			
+		
+			// ATTACH A FILE IF IS PROVIDED
+			$upfiles = json_decode(safe_output($upfiles), true);
+			if (!empty($upfiles)) {
+				foreach ($upfiles as $file) {
+
+					if (is_array($file)) {
+						if ($file['description']) {
+							$file_description = $file['description'];
+						} else {
+							$file_description = __('No description available');
+						}
+						$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
+						
+						$file_tmp = sys_get_temp_dir().'/'.$file["name"];
+						$size = filesize ($file_tmp);
+						$filename_encoded = $file_result . "_" . $file["name"];
+					
+						// Copy file to directory and change name
+						$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+				
+						if (!(copy($file_tmp, $file_target))){
+							echo "<h3 class=error>".__("Could not be attached")."</h3>";
+						} else {
+							// Delete temporal file
+							echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+							$location = $file_target;
+							unlink ($file_tmp);
+						}
+					}
+				}
+			}
+
+			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
+		}
+
+		$id = 0;
+	}
+
+
+	// FORM (Update / Create)
+	if ($id || $new_contract) {
+		if ($new_contract) {
+			
+			if (!$section_write_permission && !$section_manage_permission) {
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+				require ("general/noaccess.php");
+				exit;
+			}
+			
+			$name = "";
+			$contract_number = "";
+			$date_begin = date('Y-m-d');
+			$date_end = $date_begin;
+			$id_sla = "";
+			$description = "";
+			$private = 0;
+			$status = 1;
+		} else {
+			
+			if (!$read_permission && !$write_permission && !$manage_permission) {
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
+				require ("general/noaccess.php");
+				exit;
+			}
+			
+			$contract = get_db_row ("tcontract", "id", $id);
+			$name = $contract["name"];
+			$contract_number = $contract["contract_number"];
+			$id_company = $contract["id_company"];
+			$date_begin = $contract["date_begin"];
+			$date_end   = $contract["date_end"];
+			$description = $contract["description"];
+			$id_sla = $contract["id_sla"];
+			$private = $contract["private"];
+			$status = $contract["status"];
+		}
+		
+		$table->width = '99%';
+		$table->colspan = array ();
+		$table->colspan[4][0] = 2;
+		$table->data = array ();
+		
+		if ($new_contract || ($id && ($write_permission || $manage_permission))) {
+			
+			$table->class = 'search-table-button';
+			
+			$params = array();
+			$params['input_id'] = 'id_company';
+			$params['input_name'] = 'id_company';
+			$params['input_value'] = $id_company;
+			$params['title'] = __('Company');
+			$params['return'] = true;
+			$table->data[0][0] = print_company_autocomplete_input($params);
+
+			$table->data[0][1] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
+			$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
+			$table->data[1][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);		
+				
+			$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
+			$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
+			
+			if ($id_company) {
+				$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+				$table->data[3][0] .= "<img src='images/company.png'></a>";
+			}
+			
+			$table->data[3][1] = print_select (get_contract_status(), 'status', $status, '', '', '', true, 0, false,  __('Status'));
+
+			$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+			
+			// Optional file update
+			$html = "";
+			$html .= "<div id=\"contract_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+			$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
+			$html .= 		"<table width=\"99%\">";
+			$html .= 			"<td width=\"45%\">";
+			$html .= 				__('Drop the file here');
+			$html .= 			"<td>";
+			$html .= 				__('or');
+			$html .= 			"<td width=\"45%\">";
+			$html .= 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
+			$html .= 			"<tr>";
+			$html .= 		"</table>";
+			$html .= 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
+			$html .= 		"<input type=\"hidden\" name=\"upfiles\" id=\"upfiles\" />"; // JSON STRING
+			$html .= 	"</div>";
+			$html .= 	"<ul></ul>";
+			$html .= "</div>";
+
+			$table_description = new stdClass;
+			$table_description->width = '99%';
+			$table_description->id = 'contract_file_description';
+			$table_description->class = 'search-table-button';
+			$table_description->data = array();
+			$table_description->data[0][0] = print_textarea ("file_description", 3, 40, '', '', true, __('Description'));
+			$table_description->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+			$html .= "<div id='contract_file_description_table_hook' style='display:none;'>";
+			$html .= print_table($table_description, true);
+			$html .= "</div>";
+
+			$table->colspan[5][0] = 4;
+			$table->data[5][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
+
+			if ($id) {
+				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('id_contract', $id, true);
+				$button .= print_input_hidden ('update_contract', 1, true);
+				
+				$table->data['button'][1] = $button;
+				$table->colspan['button'][1] = 2;
+			} else {
+				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+				$button .= print_input_hidden ('create_contract', 1, true);
+				
+				$table->data['button'][1] = $button;
+				$table->colspan['button'][1] = 2;
+			}
+		}
+		else {
+			
+			$table->class = 'search-table';
+
+			$table->data[0][0] = "<b>".__('Contract name')."</b><br>$name<br>";
+			if($contract_number == '') {
+				$contract_number = '<i>-'.__('Empty').'-</i>';
+			}		
+			$table->data[1][0] = "<b>".__('Contract number')."</b><br>$contract_number<br>";
+			
+			$table->data[1][1] = "<b>".__('Status')."</b><br>".get_contract_status_name($status)."<br>";
+			
+			$table->data[2][0] = "<b>".__('Begin date')."</b><br>$date_begin<br>";
+			$table->data[2][1] = "<b>".__('End date')."</b><br>$date_end<br>";
+			
+			$company_name = get_db_value('name','tcompany','id',$id_company);
+			
+			$table->data[3][0] = "<b>".__('Company')."</b><br>$company_name";
+			
 			$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 			$table->data[3][0] .= "<img src='images/company.png'></a>";
+			
+			$sla_name = get_db_value('name','tsla','id',$id_sla);
+			
+			$table->data[3][1] = "<b>".__('SLA')."</b><br>$sla_name<br>";
+			if($description == '') {
+				$description = '<i>-'.__('Empty').'-</i>';
+			}		
+			$table->data[3][1] = "<b>".__('Description')."</b><br>$description<br>";
 		}
 		
-		$table->data[3][1] = print_select (get_contract_status(), 'status', $status, '', '', '', true, 0, false,  __('Status'));
-
-		$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
-		
-		// Optional file update
-		$html = "";
-		$html .= "<div id=\"contract_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
-		$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
-		$html .= 		"<table width=\"99%\">";
-		$html .= 			"<td width=\"45%\">";
-		$html .= 				__('Drop the file here');
-		$html .= 			"<td>";
-		$html .= 				__('or');
-		$html .= 			"<td width=\"45%\">";
-		$html .= 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
-		$html .= 			"<tr>";
-		$html .= 		"</table>";
-		$html .= 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
-		$html .= 		"<input type=\"hidden\" name=\"upfiles\" id=\"upfiles\" />"; // JSON STRING
-		$html .= 	"</div>";
-		$html .= 	"<ul></ul>";
-		$html .= "</div>";
-
-		$table_description = new stdClass;
-		$table_description->width = '99%';
-		$table_description->id = 'contract_file_description';
-		$table_description->class = 'search-table-button';
-		$table_description->data = array();
-		$table_description->data[0][0] = print_textarea ("file_description", 3, 40, '', '', true, __('Description'));
-		$table_description->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
-		$html .= "<div id='contract_file_description_table_hook' style='display:none;'>";
-		$html .= print_table($table_description, true);
-		$html .= "</div>";
-
-		$table->colspan[5][0] = 4;
-		$table->data[5][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
-
-		if ($id) {
-			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-			$button .= print_input_hidden ('id', $id, true);
-			$button .= print_input_hidden ('update_contract', 1, true);
-			
-			$table->data['button'][1] = $button;
-			$table->colspan['button'][1] = 2;
-		} else {
-			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-			$button .= print_input_hidden ('create_contract', 1, true);
-			
-			$table->data['button'][1] = $button;
-			$table->colspan['button'][1] = 2;
-		}
-	}
-	else {
-		
-		$table->class = 'search-table';
-
-		$table->data[0][0] = "<b>".__('Contract name')."</b><br>$name<br>";
-		if($contract_number == '') {
-			$contract_number = '<i>-'.__('Empty').'-</i>';
-		}		
-		$table->data[1][0] = "<b>".__('Contract number')."</b><br>$contract_number<br>";
-		
-		$table->data[1][1] = "<b>".__('Status')."</b><br>".get_contract_status_name($status)."<br>";
-		
-		$table->data[2][0] = "<b>".__('Begin date')."</b><br>$date_begin<br>";
-		$table->data[2][1] = "<b>".__('End date')."</b><br>$date_end<br>";
-		
-		$company_name = get_db_value('name','tcompany','id',$id_company);
-		
-		$table->data[3][0] = "<b>".__('Company')."</b><br>$company_name";
-		
-		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
-		$table->data[3][0] .= "<img src='images/company.png'></a>";
-		
-		$sla_name = get_db_value('name','tsla','id',$id_sla);
-		
-		$table->data[3][1] = "<b>".__('SLA')."</b><br>$sla_name<br>";
-		if($description == '') {
-			$description = '<i>-'.__('Empty').'-</i>';
-		}		
-		$table->data[3][1] = "<b>".__('Description')."</b><br>$description<br>";
-	}
-	
-	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
-	print_table ($table);
-	echo "</form>";
-	
-	if ($id && ($write_permission || $manage_permission)) {
-		//File list		
-		echo "<h2>".__('Files')."</h2>";
-
-		// Files attached to this contract
-		$files = crm_get_contract_files ($id);
-		if ($files === false) {
-			$files = array();
-			echo '<h4 id="no_files_message">'.__('No files were added to the contract').'</h4>';
-			$hidden = "style=\"display:none;\"";
-		}
-
-		echo "<div style='width: 98%; margin: 0 auto;'>";
-		echo "<table id='table-incident_files' $hidden class=listing cellpadding=0 cellspacing=0 width='100%'>";
-		echo "<tr>";
-		echo "<th>".__('Filename');
-		echo "<th>".__('Timestamp');
-		echo "<th>".__('Description');
-		echo "<th>".__('ID user');
-		echo "<th>".__('Size');
-
-		if ($manage_permission) {
-			echo "<th>".__('Delete');
-		}
-
-		foreach ($files as $file) {
-
-			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=contract";
-
-			$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
-
-			echo "<tr>";
-			echo "<td valign=top>";
-			echo '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
-			echo "<td valign=top class=f9>".$file['timestamp'];
-			echo "<td valign=top class=f9>". $file["description"];
-			echo "<td valign=top>". $file["id_usuario"];
-			echo "<td valign=top>". byte_convert ($file['size']);
-
-			// Delete attachment
-			if ($manage_permission) {
-				echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id.'&id_attachment='.$file["id_attachment"].'&delete_file=1">
-				<img src="images/cross.png"></a>';
-			}
-
-		}
-
-		echo "</table>";
-		echo "</div>";
-	}
-} else {
-	
-	// Contract listing
-	$search_text = (string) get_parameter ('search_text');
-	$search_company_role = (int) get_parameter ('search_company_role');
-	$search_date_end = get_parameter ('search_date_end');
-	$search_date_begin = get_parameter ('search_date_begin');
-	$search_date_begin_beginning = get_parameter ('search_date_begin_beginning');
-	$search_date_end_beginning = get_parameter ('search_date_end_beginning');
-	$search_status = (int) get_parameter ('search_status', 1);
-	$search_expire_days = (int) get_parameter ('search_expire_days');
-
-	$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning&search_status=$search_status&search_expire_days=$search_expire_days";
-	
-	$where_clause = "WHERE 1=1";
-	
-	if ($search_text != "") {
-		$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
-			name LIKE "%%%s%%" OR 
-			contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
-	}
-	
-	if ($search_company_role) {
-		$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
-	}
-	
-	if ($search_date_end != "") {
-		$where_clause .= sprintf (' AND date_end <= "%s"', $search_date_end);
-	}
-	
-	if ($search_date_begin != "") {
-		$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
-	}
-		
-	if ($search_date_end_beginning != "") {
-		$where_clause .= sprintf (' AND date_begin <= "%s"', $search_date_end_beginning);
-	}
-	
-	if ($search_date_begin_beginning != "") {
-		$where_clause .= sprintf (' AND date_begin >= "%s"', $search_date_begin_beginning);
-	}
-	
-	if ($search_status >= 0) {
-		$where_clause .= sprintf (' AND status = %d', $search_status);
-	}
-	
-	if ($search_expire_days > 0) {
-		// Comment $today_date to show contracts that expired yet
-		$today_date = date ("Y/m/d");
-		$expire_date = date ("Y/m/d", strtotime ("now") + $search_expire_days * 86400);
-		$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
-	}
-	
-	echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
-	
-	echo "<table width=99% class='search-table'>";
-	echo "<tr>";
-	
-	echo "<td colspan=2>";
-	echo print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
-	echo "</td>";
-	
-	echo "<td>";
-	echo print_select (get_company_roles(), 'search_company_role',
-		$search_company_role, '', __('All'), 0, true, false, false, __('Company roles'));	
-	echo "</td>";
-	
-	echo "<td>";
-	echo print_select (get_contract_status(), 'search_status',
-		$search_status, '', __('Any'), -1, true, false, false, __('Status'));	
-	echo "</td>";
-	
-	echo "<td>";
-	echo print_select (get_contract_expire_days(), 'search_expire_days',
-		$search_expire_days, '', __('None'), 0, true, false, false, __('Out of date'));	
-	echo "</td>";
-	
-	echo "</tr>";
-	
-	echo "<tr>";
-	
-	echo "<td>";
-	echo print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Begining From'));
-	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-	echo "</td>";
-	
-	echo "<td>";
-	echo print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Begining To'));
-	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-	echo "</td>";
-	
-	echo "<td>";
-	echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending From'));
-	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-	echo "</td>";
-	
-	echo "<td>";
-	echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To'));
-	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
-	echo "</td>";
-	
-	echo "<td valign=bottom align='right'>";
-	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	// Delete new lines from the string
-	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-	echo "</td>";
-	echo "</tr>";
-	
-	echo "</table>";
-	
-	echo '</form>';
-		
-	$contracts = crm_get_all_contracts ($where_clause);
-
-	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
-
-	if ($contracts !== false) {
-		
-		$table->width = "99%";
-		$table->class = "listing";
-		$table->cellspacing = 0;
-		$table->cellpadding = 0;
-		$table->tablealign="left";
-		$table->data = array ();
-		$table->size = array ();
-		$table->style = array ();
-		$table->colspan = array ();
-		$table->style[3]= "font-size: 8px";
-		$table->style[4]= "font-size: 8px";
-		$table->style[1]= "font-size: 9px";
-		$table->head[0] = __('Name');
-		$table->head[1] = __('Contract number');
-		$table->head[2] = __('Company');
-		$table->head[3] = __('Begin');
-		$table->head[4] = __('End');
-		if ($section_write_permission || $section_manage_permission) {
-			$table->head[5] = __('Privacy');
-			$table->head[6] = __('Delete');
-		}
-		$counter = 0;
-		
-		foreach ($contracts as $contract) {
-			
-			$data = array ();
-			
-			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id="
-				.$contract["id"]."'>".$contract["name"]."</a>";
-			$data[1] = $contract["contract_number"];
-			$data[2] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contract["id_company"]."'>";
-			$data[2] .= get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
-			$data[2] .= "</a>";
-			
-			$data[3] = $contract["date_begin"];
-			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
-			
-			if ($section_write_permission || $section_manage_permission) {
-				// Delete
-				if($contract["private"]) {
-					$data[5] = __('Private');
-				}
-				else {
-					$data[5] = __('Public');
-				}
-
-				$data[6] = "<a href='#' onClick='javascript: show_validation_delete(\"delete_contract\",".$contract["id"].",0,0,\"".$search_params."\");'><img src='images/cross.png'></a>";
-			}
-			array_push ($table->data, $data);
-		}	
+		echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 		print_table ($table);
-	}
-	
-	if ($section_write_permission || $section_manage_permission) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
-		echo '<div style="width: '.$table->width.'; text-align: right;">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
-		print_input_hidden ('new_contract', 1);
-		echo '</div>';
+		echo "</form>";
+		
+		if ($id && ($write_permission || $manage_permission)) {
+			//File list		
+			echo "<h2>".__('Files')."</h2>";
+
+			// Files attached to this contract
+			$files = crm_get_contract_files ($id);
+			if ($files === false) {
+				$files = array();
+				echo '<h4 id="no_files_message">'.__('No files were added to the contract').'</h4>';
+				$hidden = "style=\"display:none;\"";
+			}
+
+			echo "<div style='width: 98%; margin: 0 auto;'>";
+			echo "<table id='table-incident_files' $hidden class=listing cellpadding=0 cellspacing=0 width='100%'>";
+			echo "<tr>";
+			echo "<th>".__('Filename');
+			echo "<th>".__('Timestamp');
+			echo "<th>".__('Description');
+			echo "<th>".__('ID user');
+			echo "<th>".__('Size');
+
+			if ($manage_permission) {
+				echo "<th>".__('Delete');
+			}
+
+			foreach ($files as $file) {
+
+				$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=contract";
+
+				$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
+
+				echo "<tr>";
+				echo "<td valign=top>";
+				echo '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
+				echo "<td valign=top class=f9>".$file['timestamp'];
+				echo "<td valign=top class=f9>". $file["description"];
+				echo "<td valign=top>". $file["id_usuario"];
+				echo "<td valign=top>". byte_convert ($file['size']);
+
+				// Delete attachment
+				if ($manage_permission) {
+					echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id.'&id_attachment='.$file["id_attachment"].'&delete_file=1">
+					<img src="images/cross.png"></a>';
+				}
+			}
+
+			echo "</table>";
+			echo "</div>";
+		}
+	} else {
+		
+		// Contract listing
+		$search_text = (string) get_parameter ('search_text');
+		$search_company_role = (int) get_parameter ('search_company_role');
+		$search_date_end = get_parameter ('search_date_end');
+		$search_date_begin = get_parameter ('search_date_begin');
+		$search_date_begin_beginning = get_parameter ('search_date_begin_beginning');
+		$search_date_end_beginning = get_parameter ('search_date_end_beginning');
+		$search_status = (int) get_parameter ('search_status', 1);
+		$search_expire_days = (int) get_parameter ('search_expire_days');
+
+		$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning&search_status=$search_status&search_expire_days=$search_expire_days";
+		
+		$where_clause = "WHERE 1=1";
+		
+		if ($search_text != "") {
+			$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
+				name LIKE "%%%s%%" OR 
+				contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
+		}
+		
+		if ($search_company_role) {
+			$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
+		}
+		
+		if ($search_date_end != "") {
+			$where_clause .= sprintf (' AND date_end <= "%s"', $search_date_end);
+		}
+		
+		if ($search_date_begin != "") {
+			$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
+		}
+			
+		if ($search_date_end_beginning != "") {
+			$where_clause .= sprintf (' AND date_begin <= "%s"', $search_date_end_beginning);
+		}
+		
+		if ($search_date_begin_beginning != "") {
+			$where_clause .= sprintf (' AND date_begin >= "%s"', $search_date_begin_beginning);
+		}
+		
+		if ($search_status >= 0) {
+			$where_clause .= sprintf (' AND status = %d', $search_status);
+		}
+		
+		if ($search_expire_days > 0) {
+			// Comment $today_date to show contracts that expired yet
+			$today_date = date ("Y/m/d");
+			$expire_date = date ("Y/m/d", strtotime ("now") + $search_expire_days * 86400);
+			$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
+		}
+		
+		echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
+		
+		echo "<table width=99% class='search-table'>";
+		echo "<tr>";
+		
+		echo "<td colspan=2>";
+		echo print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
+		echo "</td>";
+		
+		echo "<td>";
+		echo print_select (get_company_roles(), 'search_company_role',
+			$search_company_role, '', __('All'), 0, true, false, false, __('Company roles'));	
+		echo "</td>";
+		
+		echo "<td>";
+		echo print_select (get_contract_status(), 'search_status',
+			$search_status, '', __('Any'), -1, true, false, false, __('Status'));	
+		echo "</td>";
+		
+		echo "<td>";
+		echo print_select (get_contract_expire_days(), 'search_expire_days',
+			$search_expire_days, '', __('None'), 0, true, false, false, __('Out of date'));	
+		echo "</td>";
+		
+		echo "</tr>";
+		
+		echo "<tr>";
+		
+		echo "<td>";
+		echo print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Begining From'));
+		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+		echo "</td>";
+		
+		echo "<td>";
+		echo print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Begining To'));
+		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+		echo "</td>";
+		
+		echo "<td>";
+		echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending From'));
+		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+		echo "</td>";
+		
+		echo "<td>";
+		echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To'));
+		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
+		echo "</td>";
+		
+		echo "<td valign=bottom align='right'>";
+		echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		// Delete new lines from the string
+		$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+		echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+		echo "</td>";
+		echo "</tr>";
+		
+		echo "</table>";
+		
 		echo '</form>';
+			
+		$contracts = crm_get_all_contracts ($where_clause);
+
+		$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
+
+		if ($contracts !== false) {
+			
+			$table->width = "99%";
+			$table->class = "listing";
+			$table->cellspacing = 0;
+			$table->cellpadding = 0;
+			$table->tablealign="left";
+			$table->data = array ();
+			$table->size = array ();
+			$table->style = array ();
+			$table->colspan = array ();
+			$table->style[3]= "font-size: 8px";
+			$table->style[4]= "font-size: 8px";
+			$table->style[1]= "font-size: 9px";
+			$table->head[0] = __('Name');
+			$table->head[1] = __('Contract number');
+			$table->head[2] = __('Company');
+			$table->head[3] = __('Begin');
+			$table->head[4] = __('End');
+			if ($section_write_permission || $section_manage_permission) {
+				$table->head[5] = __('Privacy');
+				$table->head[6] = __('Delete');
+			}
+			if ($write_invoice || $manage_invoice) {
+				$table->head[7] = __('Generate invoice');
+			}
+			$counter = 0;
+			
+			foreach ($contracts as $contract) {
+				
+				$data = array ();
+				
+				$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract="
+					.$contract["id"]."'>".$contract["name"]."</a>";
+				$data[1] = $contract["contract_number"];
+				$data[2] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contract["id_company"]."'>";
+				$data[2] .= get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
+				$data[2] .= "</a>";
+				
+				$data[3] = $contract["date_begin"];
+				$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
+				
+				if ($section_write_permission || $section_manage_permission) {
+					// Delete
+					if($contract["private"]) {
+						$data[5] = __('Private');
+					}
+					else {
+						$data[5] = __('Public');
+					}
+
+					$data[6] = "<a href='#' onClick='javascript: show_validation_delete(\"delete_contract\",".$contract["id"].",0,0,\"".$search_params."\");'><img src='images/cross.png'></a>";
+				}
+				if ($write_invoice || $manage_invoice) {
+					//~ $data[7] = "<a href='#');'><img src='images/invoice.png'></a>";
+					$data[7] = ' <a method="POST" href="index.php?sec=customers&sec2=operation/invoices/invoices
+					&invoice_contract_number='.$contract["contract_number"].'&company_id='.$contract["id_company"].'" 
+					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+					<img src="images/invoice.png" title="'.__('Generate invoice').'"></a>';
+				}
+				array_push ($table->data, $data);
+			}	
+			print_table ($table);
+		}
+		
+		if ($section_write_permission || $section_manage_permission) {
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
+			echo '<div style="width: '.$table->width.'; text-align: right;">';
+			print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
+			print_input_hidden ('new_contract', 1);
+			echo '</div>';
+			echo '</form>';
+		}
 	}
+		echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 }
 
-echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>

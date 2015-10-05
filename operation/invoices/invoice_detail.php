@@ -33,6 +33,7 @@ $search_date_end = get_parameter ('search_date_end');
 $search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
 $search_company_role = (int) get_parameter ('search_company_role');
 $search_company_manager = (string) get_parameter ('search_company_manager');
+$search_contract_number = (string) get_parameter ('search_contract_number');
 
 $order_by = get_parameter ('order_by', '');
 
@@ -177,6 +178,9 @@ if ($search_company_role > 0) {
 if ($search_company_manager != "") {
 	$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE manager = "%s")', $search_company_manager);
 }
+if ($search_contract_number != "") {
+	$where_clause .= sprintf (' AND contract_number = "%s"', $search_contract_number);
+}
 
 if ($clean_output == 0){
 
@@ -204,6 +208,8 @@ if ($clean_output == 0){
 	$table->data[0][2] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
 	$table->data[1][2] = print_input_text_extended ('search_company_manager', $search_company_manager, 'text-search_company_manager', '', 20, 50, false, '', array(), true, '', __("Manager") )
 		. print_help_tip (__("Type at least two characters to search"), true);
+
+	$table->data[1][3] = print_input_text ("search_contract_number", $search_contract_number, "", 20, 100, true, __('Contract number'));
 
 	$invoice_status_ar = array();
 	$invoice_status_ar['active'] = __("Active");

@@ -123,6 +123,8 @@ if ($operation_invoices == "add_invoice"){
 	$create_calendar_event = get_parameter('calendar_event');
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter ("internal_note", "");
+	$invoice_contract_number = get_parameter('invoice_contract_number');
+	
 	if ($invoice_type == "Received") {
 		$bill_id_variable = 0;
 	} else {
@@ -158,11 +160,11 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%d")', $description, $user_id, $id_company,
+	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%d", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -227,6 +229,7 @@ if ($operation_invoices == "update_invoice"){
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter('internal_note', "");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
+	$invoice_contract_number = get_parameter("invoice_contract_number");
 
 	if ($invoice_type == "Received") {
 		$bill_id_variable = 0;
@@ -266,6 +269,7 @@ if ($operation_invoices == "update_invoice"){
 	
 	$values['bill_id_variable'] = $bill_id_variable;
 	$values['bill_id_pattern'] = $bill_id_pattern;
+	$values['contract_number'] = $invoice_contract_number;
 
 	$where = array('id' => $id_invoice);
 	
@@ -372,6 +376,8 @@ else {
 }
 echo "</h3>";
 
+$invoice_contract_number = get_parameter('invoice_contract_number');
+
 $table->id = 'cost_form';
 $table->width = '98%';
 $table->class = 'search-table';
@@ -380,16 +386,24 @@ $table->size = array ();
 $table->data = array ();
 
 if ($id_company > 0) {
+	$id_company_from_contract = get_parameter('id_company', '');
+
+	if (isset($id_company_from_contract) && (!empty($id_company_from_contract))) {
+		$id_company = $id_company_from_contract;
+	} else {
+		$id_company = get_parameter('id');
+	}
+
 	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
 	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 50, 100, true, __('Company'), true);
 	$table->data[0][0] .= "<input type=hidden name='id' value='$id_company'>";
 } else {
-	// $table->data[0][0] = print_select ($companies, 'id', 0, '', '', 0, true, 0, true, __('Company'));
 	$params = array();
 	$params['input_id'] = 'id';
 	$params['input_name'] = 'id';
 	$params['title'] = __('Company');
 	$params['return'] = true;
+	$params['input_value'] = get_parameter('company_id');
 	$table->data[0][0] = print_company_autocomplete_input($params);
 }
 
@@ -428,6 +442,8 @@ $table->data[3][1] = print_input_text ('invoice_expiration_date', $invoice_expir
 
 $table->data[4][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
 	$language, '', '', '', true, false, false, __('Language'));
+	
+$table->data[4][1] = print_input_text ('invoice_contract_number', $invoice_contract_number, '', 15, 50, true,__('Contract number'));
 
 $table->data[5][0] = "<h4>".__('Concept')."</h4>";
 $table->data[5][1] = "<h4>".__('Amount')."</h4>";
