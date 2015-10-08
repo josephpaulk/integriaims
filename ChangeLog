@@ -1,3 +1,29 @@
+2015-09-08  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/wiki/lionwiki_lib.php
+	  operation/side_menu.php: Fixed errors in
+	wiki section ACLs.
+
+	* include/languages/cs.mo
+	  include/languages/cs.po
+	  include/languages/de.mo
+	  include/languages/de.po
+	  include/languages/en_GB.mo
+	  include/languages/en_GB.po
+	  include/languages/es.mo
+	  include/languages/es.po
+	  include/languages/fr.po
+	  include/languages/fr.mo
+	  include/languages/pl.po
+	  include/languages/pl.mo
+	  include/languages/ru.po
+	  include/languages/ru.mo
+	  include/languages/zh_CN.mo
+	  include/languages/zh_CN.po
+	  include/languages/zh_TN.mo
+	  include/languages/zh_TN.po
+	  include/languages/index.pot: Updated translations.
+
 2015-10-04  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

@@ -687,7 +687,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 			}
 		}	
 		
-		$acl .= "<h3>$page_acl</h3>";
+		$acl .= "<h3>$page_acl".print_help_tip (__("If a content has any users in its reading list, it will be accessible to all people. When we add an user to the access lists, only those users will have reading or writing permissions."), true)."</h3>";
 		include_once('include/functions_db.php');
 		include_once('include/functions_html.php');
 		include_once('include/functions_user.php');
@@ -803,7 +803,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 			}
 		}	
 		
-		$acl .= "<h3>$page_acl</h3>";
+		$acl .= "<h3>$page_acl".print_help_tip (__("If a content has any users in its writing list, it will be accessible to all people. When we add an user to the access lists, only those users will have reading or writing permissions."), true)."</h3>";
 		include_once('include/functions_db.php');
 		include_once('include/functions_html.php');
 		include_once('include/functions_user.php');
@@ -995,14 +995,22 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 			$stack[] = $excl;
 			
 			$ret .= "<div class=\"par-div\" id=\"par-$h_id\"><h$excl id=\"$hash\">$m[2]";
-			
-			if (is_writable($PG_DIR . $page . '.txt'))
-				$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
-			
+
+			if ($is_enterprise) {
+				if (wiki_get_write_acl ($config['id_user'], $page)) { 
+					$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
+				}
+			} else {
+				if (is_writable($PG_DIR . $page . '.txt')) {
+					$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
+				}
+			}
+	
 			$CON = preg_replace('/' . preg_quote($m[0], '/') . '/', "$ret</h$excl>", $CON, 1);
 			$TOC .= str_repeat("<ul>", $excl - 2).'<li><a href="'.$self.'page='.u($page).'#'.u($hash).'">'.$m[2].'</a></li>'.str_repeat("</ul>", $excl - 2);
 		}
-		
+
+	
 		$CON .= str_repeat('</div>', count($stack));
 		
 		$TOC = '<ul id="toc">' . preg_replace(array_fill(0, 5, "#</ul>\n*<ul>#"), array_fill(0, 5, ''), $TOC) . '</ul>';

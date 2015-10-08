@@ -1208,8 +1208,12 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		
 		if (!give_acl ($config['id_user'], $id_grupo, "WW")) {
 
+			//~ $conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+				//~ <li>{plugin:UPLOAD}</li>
+				//~ <li>{RECENT_CHANGES}</li>
+				//~ <li>{SYNTAX}</li>
+				//~ {plugin:SIDEMENU}';
 			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
-				<li>{plugin:UPLOAD}</li>
 				<li>{RECENT_CHANGES}</li>
 				<li>{SYNTAX}</li>
 				{plugin:SIDEMENU}';
