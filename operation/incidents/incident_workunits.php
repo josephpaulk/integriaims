@@ -306,7 +306,7 @@ echo '</div>';
 		$commentForm.submit(function(e) {
 			e.preventDefault();
 			
-			$spinner.show();
+			$("#sending_data").show();
 			
 			var enableInputs = function() {
 				$commentForm.find('input, textarea, button, select').prop("disabled", false);
@@ -365,7 +365,7 @@ echo '</div>';
 				alert(errorMessage);
 			})
 			.always(function() {
-				$spinner.hide();
+				$("#sending_data").hide();
 				enableInputs();
 			});
 			

@@ -1,3 +1,8 @@
+2015-09-08  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/leads/lead_detail.php
+	  operation/incidents/incident_workunits.php: Fixed errors.
+
 2015-10-08  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/styles/integria.css: Changed the size and the

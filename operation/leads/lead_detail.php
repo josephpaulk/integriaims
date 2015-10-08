@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 include_once($config['homedir'].'/include/functions_crm.php');
+include_once($config['homedir'].'/include/functions_tags.php');
 
 $section_read_permission = check_crm_acl ('lead', 'cr');
 $section_write_permission = check_crm_acl ('lead', 'cw');
@@ -779,7 +780,7 @@ if ($id || $new) {
 			return;
 		case "files":
 			// Load tab files
-			include "lead_files.php";
+			include ("lead_files.php");
 			return;
 		case "forward":
 			// Load tab forward
