@@ -339,7 +339,9 @@ select {
 }
 
 select[multiple] {
-	height: 100px;
+	height: 150px;
+	width: 200px;
+	overflow-x: auto;
 }
 
 select:not([multiple]) {
