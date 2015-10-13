@@ -658,7 +658,7 @@ $(document).ready (function () {
 			if (!is_update) {
 				invoiceGenerateID();
 			} else {
-				$("#text-bill_id").prop('disabled', true);
+				$("#text-bill_id").prop('readonly', true);
 			}
 			$("#text-bill_id").prop('readonly', true);
 		}

@@ -44,6 +44,7 @@ $location = "";
 $modo = "creacion";
 $num_employee = "";
 $enable_login = 1;
+$avatar = "0";
 
 $user_fields = get_db_all_rows_sql ("SELECT * FROM tuser_field");
 
@@ -383,6 +384,7 @@ echo "<tr><td>".__('Avatar');
 echo "<td>";
 
 $ficheros = list_files('images/avatars/', "png", 1, 0, "small");
+array_unshift($ficheros, __('None'));
 $avatar_forlist = $avatar . ".png";
 echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, false);	
 
@@ -573,10 +575,17 @@ echo "</form>";
 <script type="text/javascript">
 
 $(document).ready (function () {
+	avatar = $("#avatar").val();
+	if (avatar == 0) {
+		$("#avatar_preview").fadeOut ();
+	}
+
 	$("#avatar").change (function () {
 		icon = this.value;
 		$("#avatar_preview").fadeOut ('normal', function () {
-			$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
+			if (icon != 0) {
+				$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
+			}
 		});
 	});
 
@@ -624,11 +633,11 @@ rules = {
         }
 	}
 };
-messages = {
-	required: "<?php echo __('Name required')?>",
-	remote: "<?php echo __('This name already exists')?>"
-};
-add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
+//~ messages = {
+	//~ required: "<?php echo __('Name required')?>",
+	//~ remote: "<?php echo __('This name already exists')?>"
+//~ };
+//~ add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
 // Rules: input[name="pass1"]
 rules = {
 	required: true
