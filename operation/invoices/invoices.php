@@ -323,6 +323,7 @@ if ($id_invoice > 0){
 	$language = $invoice['id_language'];
 	$internal_note = $invoice['internal_note'];
 	$bill_id_variable = $invoice['bill_id_variable'];
+	$invoice_contract_number = $invoice['contract_number'];
 
 } else {
 	
@@ -376,7 +377,12 @@ else {
 }
 echo "</h3>";
 
-$invoice_contract_number = get_parameter('invoice_contract_number');
+$generate = get_parameter('generate', 0);
+if ($generate) {
+	$invoice_contract_number = get_parameter('invoice_contract_number');
+} else {
+	$invoice_contract_number = get_db_value('contract_number', 'tinvoice', 'id', $id_invoice);
+}
 
 $table->id = 'cost_form';
 $table->width = '98%';

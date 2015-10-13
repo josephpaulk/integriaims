@@ -1,5 +1,11 @@
 2015-09-13  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/invoices/invoices.php
+	  operation/contracts/contract_detail.php: Fixed error updating
+	invoice.
+
+2015-09-13  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* godmode/usuarios/configurar_usuarios.php: Fixed error
 	that not allowed insert user names repeated. 
 	

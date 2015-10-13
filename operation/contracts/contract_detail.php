@@ -832,7 +832,7 @@ if ($op == "invoices") {
 				if ($write_invoice || $manage_invoice) {
 					//~ $data[7] = "<a href='#');'><img src='images/invoice.png'></a>";
 					$data[7] = ' <a method="POST" href="index.php?sec=customers&sec2=operation/invoices/invoices
-					&invoice_contract_number='.$contract["contract_number"].'&company_id='.$contract["id_company"].'" 
+					&generate=1&invoice_contract_number='.$contract["contract_number"].'&company_id='.$contract["id_company"].'" 
 					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 					<img src="images/invoice.png" title="'.__('Generate invoice').'"></a>';
 				}
