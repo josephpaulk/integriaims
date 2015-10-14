@@ -1,11 +1,11 @@
 
 // Show the modal window of inventory search
-function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset) {
-	
+function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset, inventory_status_search, id_company_search,associated_user_search) {
+
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1&offset="+offset+"&last_update_search="+last_update_search,
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1&offset="+offset+"&last_update_search="+last_update_search+"&inventory_status_search="+inventory_status_search+"&id_company="+id_company_search+"&associated_user_search="+associated_user_search,
 		dataType: "html",
 		success: function(data){
 			
@@ -33,12 +33,14 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 								
 				offset = id.substr(5,id.length);
 
-				show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset)
+				show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset, inventory_status_search, id_company_search, associated_user_search);
 			});
 			
 			var idUser = "<?php echo $config['id_user'] ?>";
-			
+
 			bindAutocomplete ("#text-owner_search", idUser);
+			bindAutocomplete ("#text-associated_user_search", idUser);
+
 		}
 	});
 }
@@ -381,6 +383,9 @@ function loadParams() {
 	owner_search = $('#text-owner_search').val();
 	id_manufacturer_search = $('#id_manufacturer_search').val();
 	id_contract_search = $('#id_contract_search').val();
+	inventory_status_search = $('#inventory_status_search').val();
+	id_company_search = $('#id_company').val();
+	associated_user_search = $('#text-associated_user_search').val();
 	
 	if ($("#checkbox-last_update_search").is(":checked")) {
 		last_update_search = 1;
@@ -393,7 +398,8 @@ function loadParams() {
 	
 	object_fields_search = $("select[name='object_fields_search[]']").val();
 	
-	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset);
+	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset, inventory_status_search, id_company_search, associated_user_search);
+
 }
 
 //Show custom fields

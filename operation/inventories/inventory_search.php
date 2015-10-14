@@ -265,6 +265,9 @@ $fields_selected = (array)get_parameter('object_fields_search');
 $mode = get_parameter('mode', 'list');
 $last_update = (bool) get_parameter ('last_update');
 $clean_output = get_parameter("clean_output");
+$inventory_status = get_parameter('inventory_status');
+$id_company = get_parameter('id_company');
+$associated_user = get_parameter('associated_user');
 
 if (isset($_POST['listview']))
 	$mode = 'list';
@@ -360,6 +363,21 @@ if ($search) {
 		$sql_search_count .= " AND tinventory.id_contract = $id_contract";
 		$params .= "&id_contract=$id_contract";
 	}
+	if ($inventory_status != "0") {
+		$sql_search .= " AND tinventory.status = '$inventory_status'";
+		$sql_search_count .= " AND tinventory.status = '$inventory_status'";
+		$params .= "&inventory_status=$inventory_status";
+	}
+	if ($id_company != 0) {
+		$sql_search .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='company' AND id_reference='$id_company')";
+		$sql_search_count .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='company' AND id_reference='$id_company')";
+		$params .= "&id_company=$id_company";
+	}
+	if ($associated_user != '') {
+		$sql_search .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='user' AND id_reference='$associated_user')";
+		$sql_search_count .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='user' AND id_reference='$associated_user')";
+		$params .= "&associated_user=$associated_user";
+	}
 } 
 
 
@@ -412,11 +430,27 @@ if (!$clean_output) {
 		$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
 		$buttons .= '</div>';
 
-		$table_search->data[2][0] = "&nbsp;";
-		$table_search->colspan[2][0] = 4;
-
-		$table_search->data[3][0] = $buttons;
+		$all_inventory_status = inventories_get_inventory_status ();
+		array_unshift($all_inventory_status, __("All"));
+		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, '', '', '', true, false, false, __('Status'));
+		
+		$params_associated['input_id'] = 'text-associated_user';
+		$params_associated['input_name'] = 'associated_user';
+		$params_associated['input_value'] = $associated_user;
+		$params_associated['title'] = __('Associated user');
+		$params_associated['return'] = true;
+	
+		$table_search->data[2][1] = user_print_autocomplete_input($params_associated);
+		
+		$companies = get_companies();
+		array_unshift($companies, __("All"));
+		$table_search->data[2][2] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 200px;');
+		
+		$table_search->data[3][0] = "&nbsp;";
 		$table_search->colspan[3][0] = 4;
+		
+		$table_search->data[4][0] = $buttons;
+		$table_search->colspan[4][0] = 4;
 
 		print_table($table_search);
 	echo '</form>';
@@ -495,6 +529,7 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ("#text-owner", idUser);
+	bindAutocomplete ("#text-associated_user", idUser);
 
 	// Form validation
 	trim_element_on_submit('#text-search_free');

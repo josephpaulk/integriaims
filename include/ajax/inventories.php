@@ -156,7 +156,9 @@ if ($get_inventory_search) {
 	$id_contract_search = get_parameter ('id_contract_search', 0);
 	$last_update_search = get_parameter ('last_update_search');
 	$offset = get_parameter('offset', 0);
-
+	$inventory_status_search = (string)get_parameter('inventory_status_search', "0");
+	$id_company = (int)get_parameter('id_company', 0);
+	$associated_user_search = (string)get_parameter('associated_user_search', "");
 	$fields_selected = get_parameter('object_fields_search');
 
 	$table_search->class = 'search-table';
@@ -203,15 +205,31 @@ if ($get_inventory_search) {
 	$table_search->data[1][3] = print_checkbox_extended ('last_update_search', 1, $last_update_search,
 		false, '', '', true, __('Last updated'));
 	
-	$table_search->data[2][0] = "&nbsp;";
-	$table_search->colspan[2][0] = 4;
+	$all_inventory_status = inventories_get_inventory_status ();
+	array_unshift($all_inventory_status, __("All"));
+	$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status_search', $inventory_status_search, '', '', '', true, false, false, __('Status'));
+	
+	$params_associated['input_id'] = 'text-associated_user_search';
+	$params_associated['input_name'] = 'associated_user_search';
+	$params_associated['input_value'] = $associated_user_search;
+	$params_associated['title'] = __('Associated user');
+	$params_associated['return'] = true;
+
+	$table_search->data[2][1] = user_print_autocomplete_input($params_associated);
+	
+	$companies = get_companies();
+	array_unshift($companies, __("All"));
+	$table_search->data[2][2] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 200px;');
+	
+	$table_search->data[3][0] = "&nbsp;";
+	$table_search->colspan[3][0] = 4;
 
 	$buttons = '<div style="width:'.$table_search->width.'" class="action-buttons button">';
 	$buttons .= "<input type='button' class='sub next' onClick='javascript: loadParams(\"$search_free\");' value='".__("Search")."''>";
 	$buttons .= '</div>';
 
-	$table_search->data[3][0] = $buttons;
-	$table_search->colspan[3][0] = 4;
+	$table_search->data[4][0] = $buttons;
+	$table_search->colspan[4][0] = 4;
 
 	print_table($table_search);	
 
@@ -291,6 +309,21 @@ if ($get_inventory_search) {
 			$sql_search .= " AND tinventory.id_contract = $id_contract";
 			$sql_search_count .= " AND tinventory.id_contract = $id_contract";
 			$params .= "&id_contract=$id_contract";
+		}
+		if ($inventory_status_search != "0") {
+			$sql_search .= " AND tinventory.status = '$inventory_status_search'";
+			$sql_search_count .= " AND tinventory.status = '$inventory_status_search'";
+			$params .= "&inventory_status_search=$inventory_status_search";
+		}
+		if ($id_company != 0) {
+			$sql_search .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='company' AND id_reference='$id_company')";
+			$sql_search_count .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='company' AND id_reference='$id_company')";
+			$params .= "&id_company=$id_company";
+		}
+		if ($associated_user_search != '') {
+			$sql_search .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='user' AND id_reference='$associated_user_search')";
+			$sql_search_count .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='user' AND id_reference='$associated_user_search')";
+			$params .= "&associated_user_search=$associated_user_search";
 		}
 	} 
 
