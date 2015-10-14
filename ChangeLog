@@ -1,5 +1,10 @@
 2015-09-14  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/companies/company_detail.php: Fixed
+	error.
+
+2015-09-14  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/ajax/inventories.php
 	  include/js/integria_inventory.js
 	  operation/inventories/inventory_detail.php

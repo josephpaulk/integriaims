@@ -524,7 +524,7 @@ elseif ($op == "contracts") {
 			
 			$data = array ();
 		
-			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id="
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract="
 				.$contract["id"]."'>".$contract["name"]."</a>";
 			$data[1] = $contract["contract_number"];
 			$data[2] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
