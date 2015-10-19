@@ -126,13 +126,15 @@ if ($get_external_data) {
 	
 		foreach ($external_data as $key => $ext_data) {
 			$j = 0;
+			$data_name = $ext_data['name'];
 			foreach ($ext_data as $k => $dat) {
 
 				if ($k == $id_table) {
 					$val_id = $dat;
 				}
 				if (array_key_exists($k, $fields)) {
-					$data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ")'>".$dat."</a>";	
+					//~ $data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ")'>".$dat."</a>";	
+					$data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ", \"" . $data_name . "\")'>".$dat."</a>";	
 				}
 				$j++;
 			}

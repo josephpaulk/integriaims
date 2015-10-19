@@ -1,3 +1,18 @@
+2015-09-19  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/ajax/inventories.php
+	  include/js/integria_inventory.js
+	  operation/inventories/inventory_detail.php: Display name
+	instead of id in the fields of external type.
+
+2015-09-19  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* godmode/setup/incidents_setup.php
+	  include/functions_config.php
+	  include/functions_user.php
+	  operation/incidents/incident_detail.php: Added to
+	setup 'Allow to change user creator and user owner'.
+
 2015-09-14  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/companies/company_detail.php: Fixed

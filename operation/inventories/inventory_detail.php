@@ -461,8 +461,11 @@ if ($create) {
 				$id_object_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
 				
 				$values_insert['id_inventory'] = $id;
-				$values_insert['data'] = get_parameter (base64_encode($label['label']));
-				
+				//~ $values_insert['data'] = get_parameter (base64_encode($label['label']));
+				$data_name = get_parameter (base64_encode($label['label']));
+				$data_name_arr = explode("#", $data_name);
+				$values_insert['data']  = $data_name_arr[0];
+			
 				if ($label['unique']) {
 					$is_unique = inventories_check_unique_field($values_insert['data'], $label['type']);
 					

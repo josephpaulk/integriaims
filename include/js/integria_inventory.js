@@ -80,7 +80,7 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 	});
 }
 
-function refresh_external_id(id_object_type_field, id_inventory, id_value) {
+function refresh_external_id(id_object_type_field, id_inventory, id_value, data_name) {
 
 	if (id_inventory != 0) {
 		$.ajax({
@@ -93,17 +93,17 @@ function refresh_external_id(id_object_type_field, id_inventory, id_value) {
 			}
 		});
 	} else {
-		$("#"+id_object_type_field).val(id_value);
+		$("#"+id_object_type_field).val(id_value+"#"+data_name);
 	}
 
 }
 
-function enviar(data, element_name, id_object_type_field) {
+function enviar(data, element_name, id_object_type_field, data_name) {
 	$('#'+element_name).val(data);
 	
 	id_inventory = $('#text-id_object_hidden').val();
 	
-	refresh_external_id(id_object_type_field, id_inventory, data);
+	refresh_external_id(id_object_type_field, id_inventory, data, data_name);
 	
 	$("#external_table_window").dialog('close');
 } 
