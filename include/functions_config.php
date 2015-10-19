@@ -303,6 +303,9 @@ function load_config() {
 	if (!isset($config["invoice_id_pattern"])) {
 		$config["invoice_id_pattern"] = "15/[1000]";
 	}
+	if (!isset($config["change_creator_owner"])){
+		$config["change_creator_owner"] = 1;
+	}
 }
 
 function config_prepare_session() {

@@ -914,6 +914,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['title'] = 'Creator';
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
+	$params_creator['disabled'] = !$config['change_creator_owner'];
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	
 } else {
@@ -942,6 +943,7 @@ if ($has_im) {
 	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
+	$params_assigned['disabled'] = !$config['change_creator_owner'];
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 } else {
 	$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));

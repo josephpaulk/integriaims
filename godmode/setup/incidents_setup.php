@@ -82,6 +82,7 @@ if ($update) {
 	$config["show_user_name"] = (int) get_parameter ("show_user_name", 0);
 	$config["required_ticket_type"] = (int) get_parameter ("required_ticket_type", 0);
 	$config["show_creator_blank"] = (int) get_parameter ("show_creator_blank", 0);
+	$config["change_creator_owner"] = (int) get_parameter ("change_creator_owner", 0);
 	
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
@@ -102,6 +103,7 @@ if ($update) {
 	update_config_token ("show_user_name", $config["show_user_name"]);
 	update_config_token ("required_ticket_type", $config["required_ticket_type"]);
 	update_config_token ("show_creator_blank", $config["show_creator_blank"]);
+	update_config_token ("change_creator_owner", $config["change_creator_owner"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -264,6 +266,8 @@ echo "</tr>";
 
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("show_creator_blank", 1, $config["show_creator_blank"], true, __('Ignore user creator by default'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_checkbox ("change_creator_owner", 1, $config["change_creator_owner"], true, __('Allow to change user creator and user owner'))."</td>";
 echo "</tr>";
 
 echo "<tr>";
