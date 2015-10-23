@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-06 09:42+0200\n"
-"PO-Revision-Date: 2015-10-05 11:56+0000\n"
+"PO-Revision-Date: 2015-10-19 08:46+0000\n"
 "Last-Translator: Carlos Moreno <carlos.moreno@artica.es>\n"
 "Language-Team: Español <artica@artica.es>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-10-07 13:41+0000\n"
-"X-Generator: Launchpad (build 17802)\n"
+"X-Launchpad-Export-Date: 2015-10-22 09:41+0000\n"
+"X-Generator: Launchpad (build 17812)\n"
 "Language: \n"
 
 #: ../../general/links_menu.php:23 ../../operation/tool_menu.php:18
@@ -3098,7 +3098,7 @@ msgstr "Tipo de incidencia requerida"
 
 #: ../../godmode/setup/incidents_setup.php:266
 msgid "Ignore user creator by default"
-msgstr ""
+msgstr "Ignorar el usuario creador por defecto"
 
 #: ../../godmode/setup/incidents_setup.php:271
 msgid "Resolutions"
@@ -12545,11 +12545,11 @@ msgstr "No válido"
 
 #: ../../include/functions_db.php:2324
 msgid "Wont fix"
-msgstr "No será válido"
+msgstr "Sin arreglo"
 
 #: ../../include/functions_db.php:2325
 msgid "Duplicate"
-msgstr "Duplicar"
+msgstr "Duplicado"
 
 #: ../../include/functions_db.php:2326
 msgid "Works for me"
@@ -13732,30 +13732,3 @@ msgstr "Epílogo"
 #: ../../extensions/disabled/incident_summary.php:149
 msgid "Ticket summary"
 msgstr "Resumen del ticket"
-
-#~ msgid "DescripciÃ³n"
-#~ msgstr "Descripción"
-
-#~ msgid "Cerrado por"
-#~ msgstr "Cerrado por"
-
-#~ msgid "Creador"
-#~ msgstr "Creador"
-
-#~ msgid "Reabrir incidencia"
-#~ msgstr "Reabrir incidencia"
-
-#~ msgid "Propietario"
-#~ msgstr "Propietario"
-
-#~ msgid "Titulo"
-#~ msgstr "Título"
-
-#~ msgid "Prioridad"
-#~ msgstr "Prioridad"
-
-#~ msgid "La incidencia ha sido reabierta"
-#~ msgstr "La incidencia ha sido reabierta"
-
-#~ msgid "Enviar"
-#~ msgstr "Enviar"
