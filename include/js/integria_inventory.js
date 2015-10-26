@@ -46,7 +46,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 }
 
 // Show the modal window of external table
-function show_external_query(table_name, id_table, element_name, id_object_type_field, label_parent_enco, id_parent_table) {
+function show_external_query(table_name, id_table, element_name, id_object_type_field, label_parent_enco, id_parent_table, external_label) {
 
 	if (label_parent_enco != "") {
 		id_parent_value = $("input[name='"+label_parent_enco+"']").val();
@@ -57,7 +57,8 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field+"&id_parent_value="+id_parent_value+"&id_parent_table="+id_parent_table,
+		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field+"&id_parent_value="+id_parent_value+"&id_parent_table="+id_parent_table+"&external_label="+external_label,
+		//~ data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field+"&id_parent_value="+id_parent_value+"&id_parent_table="+id_parent_table,
 		dataType: "html",
 		success: function(data){	
 			$("#external_table_window").html (data);
@@ -260,14 +261,15 @@ function show_fields() {
 						table_name = value['external_table_name'];
 						id_table = value['external_reference_field'];
 						parent_name_enco = value['label_parent_enco'];
+						external_label = value['external_label'];
 						if (value['id_parent_table'] == false) {
 							id_parent_table = "";
 						} else {
 							id_parent_table = value['id_parent_table'];
 						}
 					
-						//~ a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'")';
-						a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'")';
+						//~ a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'")';
+						a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'","'+external_label+'")';
 						
 						img=document.createElement('img');
 						img.id='img_show_external_table';

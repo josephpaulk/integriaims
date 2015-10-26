@@ -77,6 +77,7 @@ if ($get_external_data) {
 	$id_object_type_field = get_parameter('id_object_type_field');
 	$id_parent_value = get_parameter('id_parent_value', 0);
 	$id_parent_table = get_parameter('id_parent_table', "");
+	$external_label = get_parameter('external_label', "");
 
 	//We use MYSQL_QUERY becase we need this to fail silently to not show
 	//SQL errors on screen
@@ -126,7 +127,8 @@ if ($get_external_data) {
 	
 		foreach ($external_data as $key => $ext_data) {
 			$j = 0;
-			$data_name = $ext_data['name'];
+			$data_name = $ext_data[$external_label];
+
 			foreach ($ext_data as $k => $dat) {
 
 				if ($k == $id_table) {

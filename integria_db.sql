@@ -983,6 +983,7 @@ CREATE TABLE `tobject_type_field` (
   `inherit` int(1) default 0,
   `show_list` TINYINT(1) unsigned DEFAULT 1,
   `not_allow_updates` TINYINT(1) unsigned DEFAULT 0,
+  `external_label` text default null,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1324,4 +1325,13 @@ CREATE TABLE `tagenda_groups` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`agenda_id`) REFERENCES tagenda(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`group_id`) REFERENCES tgrupo(`id_grupo`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tworkflow_status_mapping` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `origin_id` int(10) unsigned NOT NULL,
+  `destination_id` int(10) unsigned NOT NULL,
+  `resolution_id` int(10) unsigned NOT NULL,
+  `initial` int default 0,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
