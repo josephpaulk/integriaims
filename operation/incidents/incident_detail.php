@@ -530,8 +530,21 @@ if ($action == "insert" && !$id) {
 		$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $grupo);
 	}
 	
-	// If user is not provided, is the currently logged user
-	$usuario = get_parameter ("id_user", $config['id_user']);
+	// If user is not provided, is the currently logged user or user group by default
+	//~ $usuario = get_parameter ("id_user", $config['id_user']);
+	$usuario = get_parameter('id_user', '');
+	
+	if ($usuario == '') {
+		$sql = 'SELECT id_user_default FROM tgrupo WHERE id_grupo = '.$grupo;
+
+		$default_user = get_db_value_sql($sql);
+
+		if (($default_user == '') || (!$default_user)) {
+			$usuario = $config['id_user'];
+		} else {
+			$usuario = $default_user;
+		}
+	}
 	
 	$closed_by = get_parameter ("closed_by", '');
 

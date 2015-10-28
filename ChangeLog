@@ -1,5 +1,11 @@
 2015-09-28  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* operation/incidents/incident_detail.php: Fixed
+	bug creating incidents with option 'Allow to change
+	user creator and user owner' selected. 
+
+2015-09-28  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_db.sql
 	  extras/mr/32.sql
 	  include/config_process.php
