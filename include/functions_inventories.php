@@ -1369,11 +1369,29 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				} else {
 					$j = 0;
 					foreach ($res_obj_fields as $k => $ob_field) {
-						if (isset($ob_field['label'])) {
-							$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
-							$table_info->data[$j][$j] .= ' : '.'</b>';
-							$table_info->data[$j][$j] .= $ob_field['data'];
-							$j++;
+						if (isset($ob_field['label']) && ($ob_field['label'] != "")) {
+							if ($ob_field['type'] == 'external') {
+								$table_info->align[$j] = 'left;';
+								$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
+								$table_info->data[$j][$j] .= ' : '.'</b>';
+								$table_info->data[$j][$j] .= $ob_field['data'];
+								$j++;
+								if (isset($ob_field['external_label']) && ($ob_field['external_label'] != '')) {
+									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_reference_field']." = ".$ob_field['data']);
+
+									$table_info->align[$j] = 'left;';
+									$table_info->data[$j][$j] = '<b>'.$ob_field['external_label'];
+									$table_info->data[$j][$j] .= ' : '.'</b>';
+									$table_info->data[$j][$j] .= $label_value;
+									$j++;
+								}
+							} else {
+								$table_info->align[$j] = 'left;';
+								$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
+								$table_info->data[$j][$j] .= ' : '.'</b>';
+								$table_info->data[$j][$j] .= $ob_field['data'];
+								$j++;
+							}
 						}
 					}
 				}

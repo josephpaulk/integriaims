@@ -215,6 +215,7 @@ CREATE TABLE `tincidencia` (
   `last_stat_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `closed_by` varchar(60) NOT NULL default '',
   `extra_data` varchar(100) NOT NULL default '',
+  `blocked` tinyint unsigned NOT NULL DEFAULT 0,
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),

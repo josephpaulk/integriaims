@@ -28,3 +28,8 @@ CREATE TABLE `tworkflow_status_mapping` (
 -- Table tobject_type_field
 -- ---------------------------------------------------------------------
 ALTER TABLE `tobject_type_field` ADD `external_label` text default null;
+
+-- ---------------------------------------------------------------------
+-- Table tincidencia
+-- ---------------------------------------------------------------------
+ALTER TABLE `tincidencia` ADD `blocked` tinyint unsigned NOT NULL DEFAULT 0;

@@ -171,6 +171,7 @@ if (isset($_SERVER["SERVER_NAME"])) {
 }
 
 $config["base_url"] = $protocol."://".$server_addr.$port.$config["baseurl"].'/';
+$config["base_url_images"] = "//".$server_addr.$port.$config["baseurl"].'/';
 
 //Compound public url
 $config["public_url"] = $protocol."://".$config["access_public"].$port.$config["baseurl"];

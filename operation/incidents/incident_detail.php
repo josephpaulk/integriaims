@@ -347,10 +347,23 @@ if ($action == 'update') {
 	
 	$old_incident = get_incident ($id);
 	
-	$user = get_parameter('id_user', $old_incident['id_usuario']);
+	//~ $user = get_parameter('id_user', $old_incident['id_usuario']);
+	$user = get_parameter('id_user', '');
 	
 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 	
+	if ($user == '') {
+
+		$sql = 'SELECT id_user_default FROM tgrupo WHERE id_grupo = '.$grupo;
+		$default_user = get_db_value_sql($sql);
+
+		if (($default_user == '') || (!$default_user)) {
+			$user = $old_incident['id_usuario'];
+		} else {
+			$user = $default_user;
+		}
+	}
+
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
 	$sla_disabled = (int) get_parameter ('sla_disabled', $old_incident['sla_disabled']); //Get SLA given on submit

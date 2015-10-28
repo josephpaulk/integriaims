@@ -468,7 +468,8 @@ function print_image ($src, $return = false, $options = false, $return_src = fal
 	global $config;
 	
 	// path to image 
-	$src = $config["base_url"] . '/' . $src;
+	//~ $src = $config["base_url"] . '/' . $src;
+	$src = $config["base_url_images"] . '/' . $src;
 	
 	// Only return src field of image
 	if ($return_src){

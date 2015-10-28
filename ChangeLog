@@ -1,3 +1,17 @@
+2015-09-28  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  extras/mr/32.sql
+	  include/config_process.php
+	  include/functions.php
+	  include/functions_html.php: Fixed error
+	displaying images when option 'Enable https access'
+	is selected.
+	  
+	* include/functions_inventories.php
+	  operation/incidents/incident_detail.php: Added inventory
+	info to show.
+
 2015-09-26  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/ajax/inventories.php
