@@ -1,5 +1,11 @@
 2015-09-02  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/api.php
+	  include/functions_api.php: Added 'add_address_to_newsletter'
+	to API.
+
+2015-09-02  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_db.sql
 	  integria_dbdata.sql
 	  integria_demo.sql

@@ -1681,4 +1681,25 @@ function api_ovo_manager ($return_type, $params) {
 	return;
 }
 
+function api_add_address_to_newsletter ($return_type, $user, $params) {
+	global $config;
+	
+	if (! give_acl ($user, 0, "CN")) {
+		audit_db ($user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access newsletter management");
+		exit;
+	}
+	
+	$values['id_newsletter'] = $params[0];
+	$values['name'] = $params[1];
+	$values['email'] = $params[2];
+	$values['status'] = 0;
+	$values['datetime'] = print_mysql_timestamp();
+	$values['validated'] = 0;
+
+	$result = process_sql_insert('tnewsletter_address', $values);
+	
+	echo $result;
+	return;
+}
+
 ?>
