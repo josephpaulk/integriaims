@@ -33,3 +33,9 @@ ALTER TABLE `tobject_type_field` ADD `external_label` text default null;
 -- Table tincidencia
 -- ---------------------------------------------------------------------
 ALTER TABLE `tincidencia` ADD `blocked` tinyint unsigned NOT NULL DEFAULT 0;
+
+-- ---------------------------------------------------------------------
+-- Table tnewsletter_content
+-- ---------------------------------------------------------------------
+ALTER TABLE `tnewsletter_content` MODIFY `plain`  LONGTEXT;
+ALTER TABLE `tnewsletter_content` MODIFY `html`  LONGTEXT;

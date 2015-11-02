@@ -1,3 +1,13 @@
+2015-09-02  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  integria_dbdata.sql
+	  integria_demo.sql
+	  extras/mr/32.sql: Modify 'tnewsletter_content'.
+
+	* include/functions_update_manager.php: Fixed
+	bug updating packages.
+
 2015-09-29  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/languages/es.mo

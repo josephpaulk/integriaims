@@ -322,8 +322,13 @@ function update_manager_check_online_free_packages ($is_ajax = true) {
 	
 	$users = get_valid_users_num();
 	$license = $config['license'];
-	$current_package = $config['current_package'];
-	
+	//~ $current_package = $config['current_package'];
+	if ($license == 'INTEGRIA-FREE') {
+		$current_package = $config['db_scheme_build'];
+	} else {
+		$current_package = $config['current_package'];
+	}
+
 	$params = array('action' => 'newest_package',
 			'license' => "INTEGRIA-FREE",
 			'limit_count' => $users,
