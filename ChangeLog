@@ -1,3 +1,12 @@
+2015-09-05  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_dbdata.sql
+	  integria_demo.sql: Updated current package.
+
+	* include/functions_update_manager.php
+	  godmode/setup/update_manager.php Fixed error updating 
+	to the last version.
+
 2015-09-02  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/api.php

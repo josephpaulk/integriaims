@@ -365,7 +365,8 @@ function update_manager_check_online_free_packages ($is_ajax = true) {
 		if ($is_ajax) {
 			$result = json_decode($result, true);
 			
-			if (!empty($result)) {
+			//~ if (!empty($result)) {
+			if (!empty($result) && ($result != "[]")) {
 				echo "<p><b>There is a new version:</b> " . $result[0]['version'] . "</p>";
 				echo "<a href='javascript: update_last_package(\"" . base64_encode($result[0]["file_name"]) .
 					"\", \"" . $result[0]['version'] ."\");'>" .
@@ -376,7 +377,8 @@ function update_manager_check_online_free_packages ($is_ajax = true) {
 			}
 			return;
 		} else {
-			if (!empty($result)) {
+			//~ if (!empty($result)) {
+			if (!empty($result) && ($result != "[]")) {
 				$result = json_decode($result, true);
 				$update_message = "There is a new version: " . $result[0]['version'];
 			}

@@ -394,6 +394,7 @@ if ($op == "invoices") {
 		$private = (int) get_parameter ('private');
 		$status = (int) get_parameter ('status');
 		$upfiles = (string) get_parameter('upfiles');
+		$id_company = (int) get_parameter('id_company');
 
 
 		$sql = sprintf ('UPDATE tcontract SET contract_number = "%s",

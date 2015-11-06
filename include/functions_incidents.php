@@ -4039,4 +4039,26 @@ function incidents_get_sla_info ($id_group) {
 	return $sla_info;
 }
 
+function incidents_get_all_status() {
+	global $config;
+	
+	$sql = 'SELECT id, name FROM tincident_status';
+	
+	$rows = get_db_all_rows_sql ($sql);
+	if ($rows == false) {
+		$rows = array();
+	}
+	$all_status = array ();
+	foreach ($rows as $row)
+		$all_status[$row['id']] = __($row['name']);
+		
+	return $all_status;
+	
+}
+
+function incidents_get_resolution_name($id_resolution) {
+	
+	$name = get_db_value ('name', 'tincident_resolution', 'id', $id_resolution);
+	return $name;
+}
 ?>

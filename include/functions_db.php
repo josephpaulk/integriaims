@@ -2914,4 +2914,12 @@ function get_users_in_group ($id_user = false, $id_group = false, $access = 'IR'
 	return true;
 }
 
+function get_resolution_name ($id_resolution) {
+	return get_db_value('name','tincident_resolution', 'id', $id_resolution);
+}
+
+function get_status_name ($id_status) {
+	return get_db_value('name', 'tincident_status', 'id', $id_status);
+}
+
 ?>

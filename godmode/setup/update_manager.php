@@ -133,6 +133,11 @@ if (defined ('AJAX')) {
 		process_sql($sql_update);
 		$config['current_package'] = $version;
 		
+		$sql_update = "UPDATE tconfig SET `value`='$version'
+			WHERE `token`='db_scheme_build'";
+		process_sql($sql_update);
+		$config['db_scheme_build'] = $version;
+		
 		sleep(3);
 		
 		
