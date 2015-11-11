@@ -2844,6 +2844,20 @@ function get_invoice_amount ($id_invoice, $with_taxes = false) {
 	return $sum;
 }
 
+// Returns the discount before of an invoice
+function get_invoice_discount_before ($id_invoice) {
+	$discount_before = get_db_value ('discount_before', 'tinvoice', 'id', $id_invoice);
+	
+	return $discount_before;
+}
+
+// Returns the discount after of an invoice
+function get_invoice_discount_after ($id_invoice) {
+	$discount_after = get_db_value ('discount_after', 'tinvoice', 'id', $id_invoice);
+	
+	return $discount_after;
+}
+
 function get_user_work_home ($id_user, $year){
 	global $config;
 	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59' AND tworkunit.work_home=1");

@@ -499,6 +499,9 @@ CREATE TABLE `tinvoice` (
   `bill_id_pattern` tinytext NOT NULL DEFAULT '',
   `bill_id_variable` int(6) unsigned NOT NULL default 0,
   `contract_number` varchar(100) NOT NULL default '',
+  `discount_before` float(11,2) NOT NULL DEFAULT '0.0',
+  `discount_after` float(11,2) NOT NULL DEFAULT '0.0',
+  `tax_name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)

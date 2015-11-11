@@ -1014,13 +1014,19 @@ if ((!$id) AND ($new_company == 0)){
 				$company["id"]."'>".$company["id"]."</a>";
 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
-			$data[2] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
-			if ($data[2]) {
-				$data[2] = "<small>".$data[1]."</small>";
+			//~ $data[2] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
+			//~ if ($data[2]) {
+				//~ $data[2] = "<small>".$data[1]."</small>";
+			//~ } else {
+				//~ $data[2] = "";
+			//~ }
+			
+			$role_name = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
+			if ($role_name) {
+				$data[2] = "<small>".$role_name."</small>";
 			} else {
 				$data[2] = "";
 			}
-			
 			
 			$sum_contratos = get_db_sql ("SELECT COUNT(id) FROM tcontract WHERE id_company = ".$company["id"]);
 			if ($sum_contratos > 0) {

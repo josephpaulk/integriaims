@@ -117,6 +117,7 @@ if ($operation_invoices == "add_invoice"){
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	$tax = get_parameter ("tax", 0.00);
+	$tax_name = get_parameter ("tax_name", "");
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
@@ -124,6 +125,8 @@ if ($operation_invoices == "add_invoice"){
 	$language = get_parameter('id_language', $config['language_code']);
 	$internal_note = get_parameter ("internal_note", "");
 	$invoice_contract_number = get_parameter('invoice_contract_number');
+	$discount_before = get_parameter ("discount_before", 0.00);
+	$discount_after = get_parameter ("discount_after", 0.00);
 	
 	if ($invoice_type == "Received") {
 		$bill_id_variable = 0;
@@ -160,11 +163,11 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%d", "%s")', $description, $user_id, $id_company,
+	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_after, tax_name) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%d", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
 	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_after, $tax_name);
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -230,6 +233,9 @@ if ($operation_invoices == "update_invoice"){
 	$internal_note = get_parameter('internal_note', "");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	$invoice_contract_number = get_parameter("invoice_contract_number");
+	$tax_name = get_parameter ("tax_name", "");
+	$discount_before = (float) get_parameter ("discount_before", 0.00);
+	$discount_after = (float) get_parameter ("discount_after", 0.00);
 
 	if ($invoice_type == "Received") {
 		$bill_id_variable = 0;
@@ -270,6 +276,9 @@ if ($operation_invoices == "update_invoice"){
 	$values['bill_id_variable'] = $bill_id_variable;
 	$values['bill_id_pattern'] = $bill_id_pattern;
 	$values['contract_number'] = $invoice_contract_number;
+	$values['tax_name'] = $tax_name;
+	$values['discount_before'] = $discount_before;
+	$values['discount_after'] = $discount_after;
 
 	$where = array('id' => $id_invoice);
 	
@@ -324,6 +333,9 @@ if ($id_invoice > 0){
 	$internal_note = $invoice['internal_note'];
 	$bill_id_variable = $invoice['bill_id_variable'];
 	$invoice_contract_number = $invoice['contract_number'];
+	$tax_name = $invoice["tax_name"];
+	$discount_before = $invoice["discount_before"];
+	$discount_after = $invoice["discount_after"];
 
 } else {
 	
@@ -353,6 +365,9 @@ if ($id_invoice > 0){
 	$language = $config['language_code'];
 	$internal_note = "";
 	$bill_id_variable = 0;
+	$tax_name = "";
+	$discount_before = 0;
+	$discount_after = 0;
 }
 
 echo "<h3>";
@@ -463,25 +478,35 @@ $table->data[9][0] = print_input_text ('concept4', $concept[3], '', 60, 250, tru
 $table->data[9][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
 $table->data[10][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
 $table->data[10][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
-
 $table->data[11][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
-$table->data[11][1] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+$table->data[11][1] = print_input_text ('tax_name', $tax_name, '', 20, 50, true, __('Concept tax'));
+$table->data[12][0] = print_input_text ('discount_before', $discount_before, '', 5, 20, true, __('Discount before taxes (%)'));
+$table->data[12][1] = print_input_text ('discount_after', $discount_after, '', 5, 20, true, __('Discount after taxes (%)'));
+$table->data[13][0] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
 
 if ($id_invoice != -1) {
 	$amount = get_invoice_amount ($id_invoice);
 	$tax = get_invoice_tax ($id_invoice);
-	$tax_amount = $amount * ($tax/100);
-	$total = round($amount + $tax_amount, 2);
+	$discount_before = get_invoice_discount_before ($id_invoice);
+	$discount_after = get_invoice_discount_after ($id_invoice);
 	
-	$table->data[12][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
-	$table->data[12][1] = print_label(__('Total amount without taxes: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	$before_amount = $amount * ($discount_before/100);
+	$total_before = round($amount - $before_amount, 2);
+	$tax_amount = $total_before * ($tax/100);
+	$total_before_tax = round($total_before + $tax_amount, 2);
+	$after_amount = ($total_before_tax) * ($discount_after/100);
+	$total = round(($total_before_tax) - $after_amount, 2);
+	
+	$table->data[14][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	$table->data[14][1] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
 }
 
-$table->colspan[14][0] = 2;
-$table->data[14][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
 
 $table->colspan[15][0] = 2;
-$table->data[15][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
+$table->data[15][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+
+$table->colspan[16][0] = 2;
+$table->data[16][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail

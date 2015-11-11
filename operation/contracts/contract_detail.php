@@ -103,6 +103,7 @@ if ($message != '') {
 
 // Show tabs for a given contract
 if ($id_contract) {
+	
 	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id_contract);
 	$contract_number = get_db_value('contract_number', 'tinvoice', 'id', $id_contract);
 

@@ -140,7 +140,7 @@
 			<table style="border-top:2px solid black; border-bottom:1px solid black; width:620px; text-align:right; padding: 15px 15px 0px 15px;">
 				<tr>
 					<td style="padding-bottom:15px; font-size:14px; color:black;">
-						<?php echo __('Total amount without taxes').'</b>' ?>
+						<?php echo __('Total amount without taxes or discounts').'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; font-size:14px; color:black;">
 						<?php echo __($config["invoice_tax_name"]). ' ('.$tax.'%)'.'</b>' ?>
