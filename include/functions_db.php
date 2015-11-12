@@ -2828,6 +2828,12 @@ function get_invoice_tax ($id_invoice) {
 	return $tax;
 }
 
+function get_invoice_tax_name ($id_invoice) {
+	$tax_name = get_db_value ('tax_name', 'tinvoice', 'id', $id_invoice);
+	
+	return $tax_name;
+}
+
 // Returns the sum of the amounts of an invoice, with or without taxes
 function get_invoice_amount ($id_invoice, $with_taxes = false) {
 

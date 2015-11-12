@@ -17,5 +17,5 @@
 -- Table tinvoice
 -- ---------------------------------------------------------------------
 ALTER TABLE `tinvoice` ADD `discount_before` float(11,2) NOT NULL DEFAULT '0.0';
-ALTER TABLE `tinvoice` ADD `discount_after` float(11,2) NOT NULL DEFAULT '0.0';
+ALTER TABLE `tinvoice` ADD `discount_concept` varchar(100) NOT NULL default '';
 ALTER TABLE `tinvoice` ADD `tax_name` varchar(100) NOT NULL default '';

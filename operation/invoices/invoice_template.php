@@ -143,7 +143,8 @@
 						<?php echo __('Total amount without taxes or discounts').'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; font-size:14px; color:black;">
-						<?php echo __($config["invoice_tax_name"]). ' ('.$tax.'%)'.'</b>' ?>
+						<?php //echo __($config["invoice_tax_name"]). ' ('.$tax.'%)'.'</b>' ?>
+						<?php echo $tax_name. ' ('.$tax.'%)'.'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; font-size:14px; color:black;">
 						<?php echo __('Total amount').'</b>' ?>

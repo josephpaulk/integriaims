@@ -26,20 +26,18 @@ if (!$permission) {
 	no_permission();
 } // ACL
 
-
 $company_to = get_db_row ("tcompany", "id", $invoice["id_company"]);
 
 $amount = get_invoice_amount ($id_invoice);
 $tax = get_invoice_tax ($id_invoice);
+$tax_name = get_invoice_tax_name ($id_invoice);
 $discount_before = get_invoice_discount_before ($id_invoice);
-$discount_after = get_invoice_discount_after ($id_invoice);
 
 $before_amount = $amount * ($discount_before/100);
 $total_before = round($amount - $before_amount, 2);
 $tax_amount = $total_before * ($tax/100);
 $total_before_tax = round($total_before + $tax_amount, 2);
-$after_amount = ($total_before_tax) * ($discount_after/100);
-$total = round(($total_before_tax) - $after_amount, 2);
+$total = round($total_before + $tax_amount, 2);
 
 $custom_pdf = true;
 $pdf_filename = "invoice_".$invoice["bill_id"].".pdf";
