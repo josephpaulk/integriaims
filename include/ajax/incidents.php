@@ -45,8 +45,9 @@ if ($get_incidents_search) {
 	$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
 	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
+	$filter['id_creator'] = (string) get_parameter ('search_id_creator', '');
+	$filter['editor'] = (string) get_parameter ('search_editor', '');
+	$filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
 	$filter['first_date'] = (string) get_parameter ('search_first_date');
 	$filter['last_date'] = (string) get_parameter ('search_last_date');	
 	$filter['sla_state'] = (string) get_parameter ('search_sla_state');

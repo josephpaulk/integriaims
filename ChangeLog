@@ -1,3 +1,25 @@
+2015-11-19  Daniel Barbero <daniel.barbero@artica.es>
+	
+	* include/help/en/help_wu.php
+	  include/help/en/help_wo.php
+	  include/help/en/help_incidents.php
+	  include/help/es/help_wu.php
+	  include/help/es/help_wo.php
+	  include/help/es/help_incidents.php: 'Update help'
+
+	* operation/newsletter/address.definition.php: 'Update address newsletter'
+	
+	* operation/agenda/entry.php: 'Update hours'
+
+	* operation/projects/tasck_detail.php: 'Change tittle'
+
+	* operation/incidents/incident_search.php
+	  operation/incidents/incident_search_logic.php
+	  operation/sidemennu.php: 'add My_tickets'
+
+	* include/function_form.php
+	  include/ajax/incidents.php: 'Update form creator'
+
 2015-09-12  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql

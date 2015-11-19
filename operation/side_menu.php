@@ -418,6 +418,12 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
 		
+		//~ Add myTickets
+		if ($sec2 == "operation/incidents/incident")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
 		
 		if ($sec2 == "operation/incidents/incident")
 			echo "<li id='sidesel'>";

@@ -162,7 +162,7 @@ if ($operation == "insert") {
 		$links_2 = get_parameter("links_2");
 		projects_update_task_links ($id_task, $links_0, 0);
 		projects_update_task_links ($id_task, $links_1, 1);
-		projects_update_task_links ($id_task, $links_2, 2);
+		projects_update_task_links ($id_task, $links_2, 2);		
 	} else {
 		$update_mode = 0;
 		$create_mode = 1;
@@ -203,7 +203,7 @@ if ($operation == "update") {
 			$cc, $id_task);
 	
 	if ($id_task != $parent) {
-		$result = process_sql ($sql);
+		$result = process_sql ($sql);		
 	} else {
 		$result = false;
 	}
@@ -265,8 +265,11 @@ echo $result_output;
 // ********************************************************************************************************
 
 if (!$gantt_editor) {
-
-	echo '<h1>'.__('Task management')."  &raquo ".$task_name;;
+	if ($operation == "create") {
+		echo '<h1>'.__('Task management');
+	} else {
+		echo '<h1>'.__('Task management')."  &raquo ".$task_name;
+	}
 	if ($id_task != -1) {
 		echo "<div id='button-bar-title'>";
 		echo "<ul>";

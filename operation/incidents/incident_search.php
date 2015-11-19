@@ -32,7 +32,7 @@ if (defined ('AJAX')) {
 	$filter['id_inventory'] = $form_values['id_inventory'];
 	$filter['id_incident_type'] = $form_values['search_id_incident_type'];
 	$filter['id_user'] = $form_values['search_id_user'];
-	$filter['id_creator'] = $form_values['search_creator'];
+	$filter['id_creator'] = $form_values['search_id_creator'];
 	$filter['editor'] = $form_values['search_editor'];
 	$filter['closed_by'] = $form_values['search_closed_by'];
 	$filter['order_by'] = $form_values['search_order_by'];
@@ -66,7 +66,7 @@ $filter['serial_number'] = (string) get_parameter ('search_serial_number');
 $filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
 $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
-$filter['id_creator'] = (string) get_parameter ('search_creator', '');
+$filter['id_creator'] = (string) get_parameter ('search_id_creator', '');
 $filter['editor'] = (string) get_parameter ('search_editor', '');
 $filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
 $filter['order_by'] = (string) get_parameter ('search_order_by', '');

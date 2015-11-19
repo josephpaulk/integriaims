@@ -929,9 +929,9 @@ function form_search_incident ($return = false, $filter=false) {
 		$date_from = (int) get_parameter("search_from_date");
 		$date_start = (string) get_parameter("search_first_date");
 		$date_end = (string) get_parameter("search_last_date");
-		$search_creator = (string) get_parameter ('search_creator');
+		$search_id_creator = (string) get_parameter ('search_id_creator');
 		$search_editor = (string) get_parameter ('search_editor');
-		$search_closed_by = (string) get_parameter ('search_creator');
+		$search_closed_by = (string) get_parameter ('search_id_creator');
 		$group_by_project = (bool) get_parameter('search_group_by_project');
 		$sla_state = (int)get_parameter('search_sla_state', 0);
 		$id_task = (int) get_parameter('search_id_task', 0);
@@ -959,7 +959,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$date_from = (int) $filter['from_date'];
 		$date_start = (string) $filter['first_date'];
 		$date_end = (string) $filter['last_date'];
-		$search_creator = (string) $filter['id_creator'];
+		$search_id_creator = (string) $filter['id_creator'];
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
 		$group_by_project = (bool) $filter['group_by_project'];
@@ -1051,9 +1051,9 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[1][2] = user_print_autocomplete_input($params_closed_by);
 	
 	$params_creator = array();
-	$params_creator['input_id'] = 'text-search_creator';
-	$params_creator['input_name'] = 'search_creator';
-	$params_creator['input_value'] = $search_creator;
+	$params_creator['input_id'] = 'text-search_id_creator';
+	$params_creator['input_name'] = 'search_id_creator';
+	$params_creator['input_value'] = $search_id_creator;
 	$params_creator['title'] = __('Creator');
 	$params_creator['return'] = true;
 

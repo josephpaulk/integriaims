@@ -6,5 +6,5 @@ d&iacute;as indicados. Tambi&eacute;n se borrar&aacute;n los datos relacionados.
 Si el valor indicado es 0, los datos no se borrar&aacute;n nunca.
 </p>
 <p>
-Valor por defecto: 365.
+Valor por defecto: 0.
 </p>

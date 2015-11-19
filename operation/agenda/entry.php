@@ -102,9 +102,9 @@ if ($show_agenda_entry) {
 		if (!$date) {
 			$date = date ('Y-m-d', $entry['timestamp']);
 		}
-		$time = date ('H:i', $entry['timestamp']);
+		$result	= explode( " ", $entry['timestamp']);
+		$time = $result[1];
 	}
-	
 	$table->data[2][0] = print_input_text ('entry_date', $date, '', 10, 20, true, __('Date'));
 	$table->data[2][1] = print_input_text ('entry_time', $time, '', 10, 20, true, __('Time'));
 	

@@ -151,7 +151,7 @@ if ($search_status != 2) {
 }
 
 if ($search_text != "") {
-	$where_clause .= sprintf ('AND email LIKE "%%%s%%" OR name LIKE "%%%s%%"', $search_text, $search_text);
+	$where_clause .= sprintf (' AND email LIKE "%%%s%%" OR name LIKE "%%%s%%"', $search_text, $search_text);
 }
 
 if ($search_newsletter > 0 ){

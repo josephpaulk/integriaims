@@ -100,7 +100,12 @@ if (defined ('AJAX')) {
 }
 
 echo "<div id='incident-search-content'>";
-echo "<h1>" .__('Ticket search');
+
+if (get_parameter ('id_myticket') == 1){
+	echo "<h1>" .__('My Tickets');
+} else {
+	echo "<h1>" .__('Ticket search');
+}
 echo "<div id='button-bar-title'>";
 
 echo "</div>";
@@ -344,13 +349,13 @@ $(document).ready(function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ("#text-search_id_user", idUser);
-	bindAutocomplete ("#text-search_creator", idUser);
+	bindAutocomplete ("#text-search_id_creator", idUser);
 	bindAutocomplete ("#text-search_editor", idUser);
 	bindAutocomplete ("#text-search_closed_by", idUser);
 	
 	if ($("#search_incident_form").length > 0) {
-		validate_user ("#search_incident_form", "#text-search_id_user", "<?php echo __('Invalid user')?>");
-		validate_user ("#search_incident_form", "#text-search_creator", "<?php echo __('Invalid user')?>");
+		validate_user ("#search_incident_form", "#text-search_id_user", "<?php echo __('Invalid user')?>");	
+		validate_user ("#search_incident_form", "#text-search_id_creator", "<?php echo __('Invalid user')?>");
 		validate_user ("#search_incident_form", "#text-search_editor", "<?php echo __('Invalid user')?>");
 		validate_user ("#search_incident_form", "#text-search_closed_by", "<?php echo __('Invalid user')?>");
 	}
