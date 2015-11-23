@@ -1,3 +1,8 @@
+integria.log
+enterprise
+include/config.php
+*.bak
+
 /blib/
 /.build/
 _build/
