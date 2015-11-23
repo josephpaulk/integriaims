@@ -265,7 +265,7 @@ $fields_selected = (array)get_parameter('object_fields_search');
 $mode = get_parameter('mode', 'list');
 $last_update = (bool) get_parameter ('last_update');
 $clean_output = get_parameter("clean_output");
-$inventory_status = get_parameter('inventory_status');
+$inventory_status = get_parameter('inventory_status', 0);
 $id_company = get_parameter('id_company');
 $associated_user = get_parameter('associated_user');
 
