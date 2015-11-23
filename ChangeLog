@@ -1,3 +1,7 @@
+2015-11-23  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* extras/build_src.sh: Updated to exclude Git files.
+
 2015-11-23  Daniel Barbero <daniel.barbero@artica.es>
 	
 	* operation/inventories/inventory_search: 'Arrengued search tree and list'
