@@ -1,5 +1,5 @@
 #!/bin/bash
-CODEHOME=/root/code/integria/trunk
+CODEHOME=/root/code/integriaims
 CODEHOME_ENT=/root/code/artica/code
 PANDHOME_ENT=$CODEHOME_ENT/integria/trunk
 INTHOME_ENT=$PANDHOME_ENT
