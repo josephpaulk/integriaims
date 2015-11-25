@@ -1,5 +1,5 @@
 #
-# Integria IMS	
+# Integria IMS
 #
 %define name        IntegriaIMS
 %define version     4.2
@@ -18,7 +18,7 @@ Vendor:             Artica ST <info@artica.es>
 Source0:            %{name}-%{version}.tar.gz
 URL:                http://www.integriaims.com
 Group:              Productivity/Web/Utilities
-Packager:           Sancho Lerena <slerena@artica.es> 
+Packager:           Sancho Lerena <slerena@artica.es>
 Prefix:             /var/www/html
 BuildRoot:          %{_tmppath}/%{name}
 BuildArchitectures: noarch
@@ -30,12 +30,12 @@ Requires:           php-mysql, php-mbstring, php
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a management software for SME. It includes a complete approach to project management, CRM, incident management/ticketing, CMDB/Inventory, file distribution, time tracking management, knowledgue base, integrated WIKI and Agenda. Integria is a multiuser WEB Application, with an integrated email reporting and notification system. There is a companion Android/iPhone front end app.
+Integria IMS is a management software for SME. It includes a complete approach to project management, CRM, incident management/ticketing, CMDB/Inventory, file distribution, time tracking management, knowledge base, integrated WIKI and Agenda. Integria is a multiuser WEB Application, with an integrated email reporting and notification system. There is a companion Android/iPhone front end app.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n trunk
+%setup -q -n integriaims
 
 %build
 
@@ -56,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = "1" ]; then
         exit 0
 fi
- 
+
 
 %post
 

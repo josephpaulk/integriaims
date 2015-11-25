@@ -1,5 +1,5 @@
 #
-# Integria IMS	
+# Integria IMS
 #
 %define name        IntegriaIMS
 %define version     4.2
@@ -13,7 +13,7 @@
 # Evaluate PHP version
 %define phpver_lt_430 %(out=`rpm -q --queryformat='%{VERSION}' php` 2>&1 >/dev/null || out=0 ; out=`echo $out | tr . : | sed s/://g` ; if [ $out -lt 430 ] ; then out=1 ; else out=0; fi ; echo $out)
 
-Summary:            Integria IMS	
+Summary:            Integria IMS
 Name:               %{name}
 Version:            %{version}
 Release:            %{release}
@@ -22,7 +22,7 @@ Vendor:             Artica ST <info@artica.es>
 Source0:            %{name}-%{version}.tar.gz
 URL:                http://www.integriaims.com
 Group:              Productivity/Other
-Packager:           Sancho Lerena <slerena@artica.es> 
+Packager:           Sancho Lerena <slerena@artica.es>
 Prefix:             /srv/www/htdocs
 BuildRoot:          %{_tmppath}/%{name}
 BuildArchitectures: noarch
@@ -35,12 +35,12 @@ Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a management software for SME. It includes a complete approach to project management, CRM, incident management/ticketing, CMDB/Inventory, file distribution, time tracking management, knowledgue base, integrated WIKI and Agenda. Integria is a multiuser WEB Application, with an integrated email reporting and notification system. There is a companion Android/iPhone front end app.
+Integria IMS is a management software for SME. It includes a complete approach to project management, CRM, incident management/ticketing, CMDB/Inventory, file distribution, time tracking management, knowledge base, integrated WIKI and Agenda. Integria is a multiuser WEB Application, with an integrated email reporting and notification system. There is a companion Android/iPhone front end app.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n trunk
+%setup -q -n integriaims
 
 %build
 
@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = "1" ]; then
         exit 0
 fi
- 
+
 
 %post
 
@@ -85,5 +85,3 @@ fi
 %files
 %defattr(0644,%{httpd_user},%{httpd_group},0755)
 %{prefix}/integria
-
-
