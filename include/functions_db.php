@@ -2824,13 +2824,13 @@ function get_filter_by_company_accessibility ($id_user) {
 // Returns the task of an invoice
 function get_invoice_tax ($id_invoice) {
 	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
-	
+	$tax = json_decode($tax,true);
 	return $tax;
 }
 
 function get_invoice_tax_name ($id_invoice) {
 	$tax_name = get_db_value ('tax_name', 'tinvoice', 'id', $id_invoice);
-	
+	$tax_name = json_decode($tax_name,true);
 	return $tax_name;
 }
 
@@ -2857,11 +2857,22 @@ function get_invoice_discount_before ($id_invoice) {
 	return $discount_before;
 }
 
+function get_concept_invoice_discount_before ($id_invoice) {
+	$concept_discount_before = get_db_value ('discount_concept', 'tinvoice', 'id', $id_invoice);
+	
+	return $concept_discount_before;	
+}
 // Returns the discount after of an invoice
 function get_invoice_discount_after ($id_invoice) {
 	$discount_after = get_db_value ('discount_after', 'tinvoice', 'id', $id_invoice);
 	
 	return $discount_after;
+}
+// Returns the irpf of an invoice
+function get_invoice_irpf ($id_invoice) {
+	$discount_irpf = get_db_value ('irpf', 'tinvoice', 'id', $id_invoice);
+	
+	return $discount_irpf;
 }
 
 function get_user_work_home ($id_user, $year){

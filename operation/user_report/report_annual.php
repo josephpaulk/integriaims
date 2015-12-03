@@ -60,13 +60,13 @@
     
 	if ($clean_output == 0) {
 		// link full screen
-		$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year", __("Full screen"));
+		$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year", __("Full screen"));
 		if ($html_report_image) {
 			echo "&nbsp;&nbsp;" . $html_report_image;
 		}
 
 		// link PDF report
-		$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year", __("PDF report"));
+		$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year", __("PDF report"));
 		if ($report_image) {
 			echo "&nbsp;&nbsp;" . $report_image;
 		}

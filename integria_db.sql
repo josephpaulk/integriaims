@@ -486,7 +486,8 @@ CREATE TABLE `tinvoice` (
   `amount3` float(11,2) NOT NULL DEFAULT 0.0,
   `amount4` float(11,2) NOT NULL DEFAULT 0.0,
   `amount5` float(11,2) NOT NULL DEFAULT 0.0,
-  `tax` float(11,2) NOT NULL DEFAULT '0.0',
+  `tax` mediumtext NOT NULL DEFAULT '0.0',
+  `irpf` float(11,2) NOT NULL DEFAULT '0.0',
   `currency` VARCHAR(3) NOT NULL DEFAULT 'EUR',
   `description` mediumtext NOT NULL,
   `id_attachment` bigint(20) unsigned NULL default NULL,
@@ -505,7 +506,7 @@ CREATE TABLE `tinvoice` (
   `contract_number` varchar(100) NOT NULL default '',
   `discount_before` float(11,2) NOT NULL DEFAULT '0.0',
   `discount_concept` varchar(100) NOT NULL default '',
-  `tax_name` varchar(100) NOT NULL default '',
+  `tax_name` mediumtext NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)

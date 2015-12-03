@@ -37,6 +37,7 @@ $show_projects = get_parameter("show_projects", 0);
 $show_tasks = get_parameter("show_tasks", 0);
 $show_events = get_parameter("show_events",0);
 $show_wo = get_parameter("show_wo",0);
+$show_clients= get_parameter("show_clients",0);
 $filter_btn = get_parameter("filter_btn",0);
 
 //By default search for events and workorders
@@ -54,10 +55,11 @@ $table->data[0][0] = print_checkbox ('show_events', 1, $show_events, true, __('S
 $table->data[0][1] = print_checkbox ('show_wo', 1, $show_wo, true, __('Show workorders'));
 $table->data[0][2] = print_checkbox ('show_projects', 1, $show_projects, true, __('Show projects'));
 $table->data[0][3] = print_checkbox ('show_tasks', 1, $show_tasks, true, __('Show tasks'));
+$table->data[0][4] = print_checkbox ('show_clients', 1, $show_clients, true, __('Show clients'));
 
 $button = print_submit_button (__('Filter'), "filter_btn", false, 'class="sub search"', true);
          
-$table->data[0][4] = $button;
+$table->data[0][5] = $button;
     
 print_table ($table);
 echo '</form>'; 
@@ -111,6 +113,8 @@ echo "</table>";
         var show_tasks = <?php echo $show_tasks;?>;
         var show_wo = <?php echo $show_wo;?>;
         var show_events = <?php echo $show_events;?>;
+        var show_clients = <?php echo $show_clients;?>;
+        
         
         var non_working_days = null;
         var today = new Date();
@@ -152,7 +156,7 @@ echo "</table>";
         		end_time = end_time/1000; //Convert from miliseconds to seconds
 
                 var url_source = 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time;
-                url_source += '&show_projects='+show_projects+'&show_events='+show_events+'&show_wo='+show_wo+'&show_tasks='+show_tasks;
+                url_source += '&show_projects='+show_projects+'&show_events='+show_events+'&show_wo='+show_wo+'&show_tasks='+show_tasks+'&show_clients='+show_clients;
 				
         		$.ajax({
             		url: url_source,

@@ -216,7 +216,7 @@ function calendar_get_wo_date_range($start, $end){
 	return $result;
 }
 
-function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "", $show_projects=1, $show_tasks=1, $show_events=1, $show_wo=1){
+function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "", $show_projects=1, $show_tasks=1, $show_events=1, $show_wo=1, $show_clients=1){
     global $config;
 
 	$cal_events = array();
@@ -300,6 +300,42 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 			}
 		}
 	}
+	
+	if ($show_clients and !$show_events) {
+		for($i=$start;$i<=$end; $i = $i + $day_in_seconds){
+			
+			$mysql_date = date('Y-m-d', $i);
+			
+			// Search for agenda item for this date
+			$sqlquery = "SELECT tagenda.* FROM tagenda, tinvoice WHERE tagenda.title like CONCAT('%',(tinvoice.bill_id),'%') and tagenda.timestamp LIKE '$mysql_date%' ORDER BY tagenda.timestamp ASC";
+	 		$res=mysql_query($sqlquery);
+
+			while ($row=mysql_fetch_array($res)){
+				
+				$event_public = $row["public"];
+				$event_user = $row["id_user"];
+				
+	            if (agenda_get_entry_permission($id_user, $row["id"])){
+	            	
+	            	$dur_sec = $row["duration"]*3600; //Duration in seconds
+
+	            	$start_timestamp = strtotime($row["timestamp"]);
+
+	            	$start_timestamp = $start_timestamp + $dur_sec;
+
+	            	$end_date = $start_timestamp;
+
+	            	$url_date = date("Y-m-d", $start_timestamp);
+
+	            	$url = "javascript: show_agenda_entry(".$row["id"].", '".$url_date."', '0', true)";
+
+					array_push($cal_events, array("name" =>$row["title"], "start" => strtotime($row["timestamp"]),  "end" => $end_date, "bgColor" => "#8EC8DF", "allDay" => false, "url" => $url));    
+	            }
+			}
+		}
+	}
+	
+	
 
 	return $cal_events;
 }

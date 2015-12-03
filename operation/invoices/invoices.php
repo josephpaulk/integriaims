@@ -116,8 +116,32 @@ if ($operation_invoices == "add_invoice"){
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
-	$tax = get_parameter ("tax", 0.00);
-	$tax_name = get_parameter ("tax_name", $config['invoice_tax_name']);
+	//~ tax
+	$taxarray = array();
+	$cont = 1;
+	foreach ( $_POST as $key => $campo) {
+		if ($key === 'tax'.$cont){
+			$taxarray[$key] = get_parameter ($key, 0.00);
+			$cont++;
+		 }
+	}
+	$taxencode = json_encode($taxarray);
+	$tax = json_decode($taxencode,true);
+		
+	$irpf = get_parameter ("irpf", 0.00);
+	
+	//~ tax_name 
+	$tax_name_array = array();
+	$cont = 1;
+	foreach ( $_POST as $key => $campo) {
+		if ($key === 'tax_name'.$cont){
+			$tax_name_array[$key] = get_parameter ($key, 0.00);
+			$cont++;
+		 }
+	}
+	$tax_name_encode = json_encode($tax_name_array);
+	$tax_name = json_decode($tax_name_encode,true);
+	
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
@@ -160,14 +184,14 @@ if ($operation_invoices == "add_invoice"){
 	}
 	
 	// Creating the cost record
-	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
-	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, currency, status,
+	$sql = sprintf ("INSERT INTO tinvoice (description, id_user, id_company,
+	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, irpf, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ("%s", "%s", "%d", "%s", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
-	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%d", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
-	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
+	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s',
+	'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
+	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, json_encode($taxarray), $irpf, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, $tax_name);
+	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, json_encode($tax_name_array));
 	
 	$id_invoice = process_sql ($sql, 'insert_id');
 	if ($id_invoice !== false) {
@@ -225,7 +249,20 @@ if ($operation_invoices == "update_invoice"){
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
-	$tax = get_parameter ("tax", 0.00);
+	
+	//~ tax 
+	$taxarray = array();
+	$cont = 1;
+	foreach ( $_POST as $key => $campo) {
+		if ($key === 'tax'.$cont){
+			$taxarray[$key] = get_parameter ($key, 0.00);
+			$cont++;
+		}
+	}
+	$taxencode = json_encode($taxarray);
+	$tax = json_decode($taxencode,true);	
+	
+	$irpf = get_parameter ("irpf", 0.00);
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
@@ -233,9 +270,22 @@ if ($operation_invoices == "update_invoice"){
 	$internal_note = get_parameter('internal_note', "");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	$invoice_contract_number = get_parameter("invoice_contract_number");
-	$tax_name = get_parameter ("tax_name", $config['invoice_tax_name']);
+	
+	//~ tax_name 
+	$tax_name_array = array();
+	$cont = 1;
+	foreach ( $_POST as $key => $campo) {
+		if ($key === 'tax_name'.$cont){
+			$tax_name_array[$key] = get_parameter ($key, 0.00);
+			$cont++;
+		}
+	}
+	$tax_name_encode = json_encode($tax_name_array);
+	$tax_name = json_decode($tax_name_encode,true);
+	
 	$discount_before = (float) get_parameter ("discount_before", 0.00);
 	$discount_concept = get_parameter ("discount_concept", "");
+	$create_calendar_event = get_parameter('calendar_event');
 
 	if ($invoice_type == "Received") {
 		$bill_id_variable = 0;
@@ -262,7 +312,8 @@ if ($operation_invoices == "update_invoice"){
 	$values['amount4'] = $amount[3];
 	$values['amount5'] = $amount[4];
 	$values['status'] = $invoice_status;
-	$values['tax'] = $tax;
+	$values['tax'] = json_encode($taxarray);
+	$values['irpf'] = $irpf;
 	$values['currency'] = $currency;
 
 	$values['invoice_create_date'] = $invoice_create_date;
@@ -276,14 +327,31 @@ if ($operation_invoices == "update_invoice"){
 	$values['bill_id_variable'] = $bill_id_variable;
 	$values['bill_id_pattern'] = $bill_id_pattern;
 	$values['contract_number'] = $invoice_contract_number;
-	$values['tax_name'] = $tax_name;
+	$values['tax_name'] = json_encode($tax_name_array);
 	$values['discount_before'] = $discount_before;
 	$values['discount_concept'] = $discount_concept;
 
 	$where = array('id' => $id_invoice);
 	
 	$ret = process_sql_update ('tinvoice', $values, $where);
-	
+
+	if ($create_calendar_event) { 
+			$now = date('Y-m-d H:i:s');
+			$time = substr($now, 11, 18);
+			$title = __('Reminder: Invoice ').$bill_id.__(' payment date'); 
+			
+			$sql_event2 ="DELETE FROM tagenda WHERE title='".$title."';";
+			
+			process_sql ($sql_event2);
+			
+			$sql_event ="INSERT INTO tagenda (public, alarm, timestamp, id_user,
+				title, duration, description)
+				VALUES (0, '1440', '$invoice_payment_date $time', '".$config['id_user']."', '$title',
+				0, '')";
+			
+			$result = process_sql ($sql_event);
+		}
+
 	if ($ret !== false) {
 		$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice updated", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
@@ -325,7 +393,8 @@ if ($id_invoice > 0){
 	$invoice_payment_date = $invoice["invoice_payment_date"];
 	$invoice_expiration_date = $invoice["invoice_expiration_date"];
 	$id_company = $invoice["id_company"];
-	$tax = $invoice["tax"];
+	$tax= json_decode($invoice["tax"]);
+	$irpf = $invoice["irpf"];
 	$currency = $invoice["currency"];
 	$invoice_status = $invoice["status"];
 	$invoice_type = $invoice['invoice_type'];
@@ -333,7 +402,7 @@ if ($id_invoice > 0){
 	$internal_note = $invoice['internal_note'];
 	$bill_id_variable = $invoice['bill_id_variable'];
 	$invoice_contract_number = $invoice['contract_number'];
-	$tax_name = $invoice["tax_name"];
+	$tax_name = json_decode($invoice["tax_name"]);
 	$discount_before = $invoice["discount_before"];
 	$discount_concept = $invoice["discount_concept"];
 
@@ -359,13 +428,14 @@ if ($id_invoice > 0){
 	$invoice_payment_date = "";
 	$invoice_expiration_date = "";
 	$tax = 0;
+	$irpf = 0;
 	$currency = "EUR";
 	$invoice_status = "pending";
 	$invoice_type = "Submitted";
 	$language = $config['language_code'];
 	$internal_note = "";
 	$bill_id_variable = 0;
-	$tax_name = $config['invoice_tax_name'];
+	$tax_name = "";
 	$discount_before = 0;
 	$discount_concept = "";
 }
@@ -378,7 +448,7 @@ else {
 	$is_update = true;
 	
 	echo __('Update invoice'). " ".$invoice["bill_id"];;
-	
+
 	echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1&language='.$language.'">
 				<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
@@ -455,9 +525,7 @@ if ($id_invoice != -1) {
 	$disabled = false;
 }
 
-if ($id_invoice == -1) {
-	$table->data[3][0] .= print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
-}
+$table->data[3][0] .= print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
 
 $table->data[3][1] = print_input_text ('invoice_expiration_date', $invoice_expiration_date, '', 15, 50, true,__('Invoice expiration date'));
 
@@ -480,44 +548,104 @@ $table->data[10][0] = print_input_text ('concept5', $concept[4], '', 60, 250, tr
 $table->data[10][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
 $table->data[11][0] = print_input_text ('discount_before', $discount_before, '', 5, 20, true, __('Discount before taxes (%)'));
 $table->data[11][1] = print_input_text ('discount_concept', $discount_concept, '', 20, 50, true, __('Concept discount'));
-$table->data[12][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
-$table->data[12][1] = print_input_text ('tax_name', $tax_name, '', 20, 50, true, __('Concept tax'));
-$table->data[13][0] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+
+$contcampo = 1;
+if ($tax === 0){
+	$table->data[12][0] = print_input_text ('tax1', $tax, '', 5, 20, true, __('Taxes (%)'));
+	$table->data[12][0] .= '</br>';
+	$contcampo++;
+}else{
+	foreach ( $tax as $key => $campo) { 
+		if ($key === 'tax1'){
+			$table->data[12][0] = print_input_text ('tax'.$contcampo, $campo, '', 5, 20, true, __('Taxes (%)'));
+			$table->data[12][0] .= '</br>';
+		}else{
+			if ($campo != 0){
+				$table->data[12][0] .= print_input_text ('tax'.$contcampo, $campo, '', 5, 20, true,'');
+				$table->data[12][0] .= '</br>';
+			}else{
+				$contcampo--;
+			}
+		}
+		$contcampo++;
+	}
+}
+
+$contcampo2 = 1;
+if ($tax_name === ""){
+	$table->data[12][1] = print_input_text ('tax_name1', $tax_name, '', 20, 50, true, __('Concept tax'));
+	$table->data[12][1] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
+	$table->data[12][1] .= '</br>';
+	$contcampo2++;
+}else{
+	foreach ( $tax_name as $key => $campo) { 
+		if ($key === 'tax_name1'){
+			$table->data[12][1] = print_input_text ('tax_name'.$contcampo2, $campo, '', 20, 50, true, __('Concept tax'));
+			$table->data[12][1] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
+			$table->data[12][1] .= '</br>';
+		}else{
+			if ($campo != ""){
+				$table->data[12][1] .= print_input_text ('tax_name'.$contcampo2, $campo, '', 20, 50, true,'');
+				$table->data[12][1] .= '</br>';
+			}else{
+				$contcampo2--;
+			}
+		}
+		$contcampo2++;
+	}
+}
+
+$table->data[13][0] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('IRPF (%)'));
+$table->data[14][0] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+
+echo '<div id="msg_ok_hidden" style="display:none;">';
+	echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+echo '</div>';
 
 if ($id_invoice != -1) {
 	$amount = get_invoice_amount ($id_invoice);
-	$tax = get_invoice_tax ($id_invoice);
 	$discount_before = get_invoice_discount_before ($id_invoice);
-	
+	$tax = get_invoice_tax ($id_invoice);
+	$taxlength = count($tax);
+	$contador = 1;
+	$result = 0;
+	foreach ( $tax as $key => $campo) { 
+		$result = $result + $campo;
+		$contador++;
+	}
+	$tax = $result;
+	$irpf = get_invoice_irpf($id_invoice);
+	//~ Descuento sobre el total
 	$before_amount = $amount * ($discount_before/100);
 	$total_before = round($amount - $before_amount, 2);
+	//~ Se aplica sobre el descuento los task 
 	$tax_amount = $total_before * ($tax/100);
-	$total_before_tax = round($total_before + $tax_amount, 2);
-	
-	$total = round($total_before + $tax_amount, 2);
-	
-	$table->data[14][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
-	$table->data[14][1] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	//~ Se aplica sobre el descuento el irpf
+	$irpf_amount = $total_before * ($irpf/100);
+	$total = round($total_before + $tax_amount - $irpf_amount, 2);
+	$table->data[15][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	$table->data[15][1] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
 }
 
 
-$table->colspan[15][0] = 2;
-$table->data[15][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
-
 $table->colspan[16][0] = 2;
-$table->data[16][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
+$table->data[16][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+
+$table->colspan[17][0] = 2;
+$table->data[17][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail
 &view_invoice=1&op=invoices&id_invoice='.$id_invoice.'">';
 
 print_table ($table);
+
 echo '<div class="button" style="width:'.$table->width.';">';
 if ($id_invoice != -1) {
 	print_submit_button (__('Update'), 'button-upd', false, 'class="sub upd"');
 	print_input_hidden ('id', $id);
 	print_input_hidden ('operation_invoices', "update_invoice");
-	print_input_hidden ('bill_id_variable', $bill_id_variable);
+	print_input_hidden ('bill_id_variable', $bill_id_variable);	
 } else {
 	print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
 	print_input_hidden ('operation_invoices', "add_invoice");
@@ -652,7 +780,16 @@ add_validate_form_element_rules('#text-bill_id', rules, messages);
 // Rules: #text-tax
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
-add_validate_form_element_rules('#text-tax', rules, messages);
+var cont = 1;
+var taxlength = "<?php echo $taxlength; ?>";
+while (cont <= taxlength){
+	add_validate_form_element_rules('#text-tax'+ cont, rules, messages);
+	cont++;
+}
+// Rules: #text-irpf
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('#text-irpf', rules, messages);
 // Rules: input[name="amount1"]
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
@@ -682,7 +819,7 @@ $(document).ready (function () {
 	is_update = $("#text-is_update_hidden").val();
 	invoice_id = $("#text-invoice_id_hidden").val();
 	invoice_type = $("#text-invoice_type_hidden").val();
-
+	
 	if (autoGenerateID) {
 		if ($("#invoice_type").val() == 'Submitted') {
 			if (!is_update) {
@@ -731,6 +868,23 @@ $(document).ready (function () {
 			$("#text-bill_id").prop('value', "");
 		}
 	});
+
+		var contenedor = $("#cost_form-12-0"); //ID del contenedor
+		var contenedor1 = $("#cost_form-12-1"); //ID del contenedor
+		var linkagregar = $("#agregarCampo"); //ID del Botón Agregar
+		var FieldCount = "<?php echo $contcampo; ?>";
+		var FieldCount2 = "<?php echo $contcampo2; ?>";
+		//~ var FieldCount = 2; //para el seguimiento de los campos
+		$(linkagregar).click(function (e) {
+			e.preventDefault();
+			$(contenedor).append('<input type="text" id="text-tax'+ FieldCount +'" maxlength="20" size="5" value="0" name="tax'+ FieldCount +'" /></br>');
+			rules = { number: true };
+			messages = { number: "<?php echo __('Invalid number')?>" };
+			add_validate_form_element_rules('#text-tax'+ FieldCount, rules, messages);
+			$(contenedor1).append('<input type="text" id="text-tax_name'+ FieldCount2 +'" maxlength="50" size="20" name="tax_name'+ FieldCount2 +'" /></br>');
+			FieldCount++;
+			FieldCount2++;
+		});	
 });
 
 function invoiceGenerateID () {

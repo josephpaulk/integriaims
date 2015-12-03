@@ -306,6 +306,13 @@ if ($invoices != false) {
 		$data[2] = format_numeric($partial,2);
 
 		$tax = get_invoice_tax ($invoice["id"]);
+		$contador = 1;
+		$result = 0;
+		foreach ( $tax as $key => $campo) { 
+			$result = $result + $campo;
+			$contador++;
+		}
+		$tax = $result;
 		$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
 		if (($tax != 0) && ($clean_output == 0))
 			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($tax_amount,2), true);

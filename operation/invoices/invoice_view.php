@@ -30,14 +30,26 @@ $company_to = get_db_row ("tcompany", "id", $invoice["id_company"]);
 
 $amount = get_invoice_amount ($id_invoice);
 $tax = get_invoice_tax ($id_invoice);
+$contador = 1;
+$result = 0;
+foreach ( $tax as $key => $campo) { 
+	$result = $result + $campo;
+	$contador++;
+}
+$tax = $result;
+$irpf = get_invoice_irpf($id_invoice);
 $tax_name = get_invoice_tax_name ($id_invoice);
 $discount_before = get_invoice_discount_before ($id_invoice);
+$concept_discount_before = get_concept_invoice_discount_before ($id_invoice);
 
+//~ Descuento sobre el total
 $before_amount = $amount * ($discount_before/100);
 $total_before = round($amount - $before_amount, 2);
+//~ Se aplica sobre el descuento los task 
 $tax_amount = $total_before * ($tax/100);
-$total_before_tax = round($total_before + $tax_amount, 2);
-$total = round($total_before + $tax_amount, 2);
+//~ Se aplica sobre el descuento el irpf
+$irpf_amount = $total_before * ($irpf/100);
+$total = round($total_before + $tax_amount - $irpf_amount, 2);
 
 $custom_pdf = true;
 $pdf_filename = "invoice_".$invoice["bill_id"].".pdf";
