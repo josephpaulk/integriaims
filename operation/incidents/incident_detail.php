@@ -32,16 +32,22 @@ if (defined ('AJAX')) {
 	$get_owner = (bool) get_parameter('get_owner', 0);
 	$get_owner = (bool) get_parameter('get_owner', 0);
 	$reopen_ticket = (bool) get_parameter('reopen_ticket', 0);
+	$get_initial_status = (bool) get_parameter('get_initial_status', 0);
+	$get_allowed_status = (bool) get_parameter('get_allowed_status', 0);
+	$get_allowed_resolution = (bool) get_parameter('get_allowed_resolution', 0);
+	
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
 		$id_incident = get_parameter('id_incident');		
 		$fields = incidents_get_all_type_field ($id_incident_type, $id_incident);
 	
-
+		$blocked = get_db_value_filter('blocked', 'tincidencia', array('id_incidencia'=>$id_incident));
+		
 		$fields_final = array();
 		foreach ($fields as $f) {
 			$f["data"] = safe_output($f["data"]);
+			$f["blocked"] = $blocked;
 			if ($f["type"] == "linked") {
 				// Label parent
 				$label_parent = get_db_value('label', 'tincident_type_field', 'id', $f['parent']);
@@ -56,9 +62,9 @@ if (defined ('AJAX')) {
 				else {
 					// Search for the childrem items created under the incident type
 					$filter = array(
-							'parent' => $f['global_id'],
-							'id_incident_type' => $f['id_incident_type']
-						);
+						'parent' => $f['global_id'],
+						'id_incident_type' => $f['id_incident_type']
+					);
 				}
 				$label_childs = get_db_all_rows_filter('tincident_type_field', $filter, 'label');
 				
@@ -241,6 +247,57 @@ if (defined ('AJAX')) {
 		echo json_encode($result);
 		return;
 	}
+
+	if ($get_initial_status) {
+		
+		$initial_status = enterprise_hook("incidents_get_initial_status");
+
+		if ($initial_status == ENTERPRISE_NOT_HOOK) {
+			$initial_status = incidents_get_all_status();
+		}
+		
+		ksort($initial_status);
+		echo json_encode($initial_status);
+		return;
+	}
+
+	if ($get_allowed_status) {
+		$status = get_parameter('status');
+		$resolution = get_parameter('resolution', 0);
+		
+		$allowed_status = enterprise_hook("incidents_get_allowed_status", array($status, true, $resolution));
+		
+		if ($allowed_status == ENTERPRISE_NOT_HOOK) {
+			$allowed_status = incidents_get_all_status();
+		}
+		
+		ksort($allowed_status);
+		echo json_encode($allowed_status);
+		return;
+		
+	}
+	
+	if ($get_allowed_resolution) {
+		$status = (int)get_parameter('status');
+		$resolution = (int)get_parameter('resolution', 0);
+		$id_incident = (int)get_parameter('id_incident');
+
+		$allowed_resolution = enterprise_hook("incidents_get_allowed_resolution", array($status, $resolution, $id_incident));
+		
+		if ($allowed_resolution == ENTERPRISE_NOT_HOOK) {
+			$allowed_resolution = get_incident_resolutions();
+		} else {
+			if (($status != 7) || (empty($allowed_resolution))) {
+				$allowed_resolution = array();
+				$allowed_resolution[0] = __("None");
+			} 
+		}
+
+		ksort($allowed_resolution);
+		echo json_encode($allowed_resolution);
+
+		return;
+	}
 }
 
 $id_grupo = (int) get_parameter ('id_grupo');
@@ -252,6 +309,8 @@ if ($id) {
 	if ($incident !== false) {
 		$id_grupo = $incident['id_grupo'];
 	}
+	
+	$blocked_incident = get_db_value_filter('blocked', 'tincidencia', array('id_incidencia'=>$id));
 }
 
 $check_incident = (bool) get_parameter ('check_incident');
@@ -346,8 +405,7 @@ if ($action == 'update') {
 	$massive_number_loop = get_parameter ('massive_number_loop', -1);
 	
 	$old_incident = get_incident ($id);
-	
-	//~ $user = get_parameter('id_user', $old_incident['id_usuario']);
+
 	$user = get_parameter('id_user', '');
 	
 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
@@ -385,12 +443,36 @@ if ($action == 'update') {
 
 	$epilog = get_parameter ('epilog', $old_incident['epilog']);
 	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
+	if ($estado != STATUS_CLOSED) {
+		$resolution = 0;
+	}
 	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
+	$blocked = get_parameter('blocked', $old_incident['blocked']);
+	
+	if (!$old_incident['old_status2']) {
+		$old_status = $old_incident["old_status"];
+		$old_resolution = $old_incident["old_resolution"];
+		$old_status2 = $estado;
+		$old_resolution2 = $resolution;
+	} else {
+		if (($old_incident['old_status2'] == $estado) && ($old_incident['old_resolution2'] == $resolution)) {
+			$old_status = $old_incident["old_status"];
+			$old_resolution = $old_incident["old_resolution"];
+			$old_status2 = $old_incident["old_status2"];
+			$old_resolution2 = $old_incident["old_resolution2"];
+		} else {
+			$old_status = $old_incident["old_status2"];
+			$old_resolution = $old_incident["old_resolution2"];
+			$old_status2 = $estado;
+			$old_resolution2 = $resolution;
+		}
+		
+	}
 
 	if (($id_incident_type != 0) && ($massive_number_loop == -1)) {	//in the massive operations no change id_incident_type
 
@@ -403,7 +485,6 @@ if ($action == 'update') {
 	
 		foreach ($labels as $label) {
 			$values['data'] = get_parameter (base64_encode($label['label']));
-			//~ $values['data'] = str_replace('&#x0d;&#x0a;', "",get_parameter (base64_encode($label['label'])));
 			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 			$values['id_incident_field'] = $id_incident_field;
 			$values['id_incident'] = $id;
@@ -442,12 +523,19 @@ if ($action == 'update') {
 			'id_incident_type' => $id_incident_type,
 			'id_parent' => $idParentValue,
 			'affected_sla_id' => 0,
-			'sla_disabled' => $sla_disabled
+			'sla_disabled' => $sla_disabled,
+			'blocked' => $blocked,
+			'old_status' => $old_status,
+			'old_resolution' => $old_resolution,
+			'old_status2' => $old_status2,
+			'old_resolution2' => $old_resolution2
 		);
+		
 	// When close incident set close date to current date
 	if ($estado == 7) {
 		$values['cierre'] = $timestamp;
 	}
+
 	$result = process_sql_update('tincidencia', $values, array('id_incidencia' => $id));
 
 	//Add traces and statistic information
@@ -515,6 +603,9 @@ if ($action == "insert" && !$id) {
 	$id_creator = get_parameter ('id_creator', $config["id_user"]);
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
+	if ($estado != STATUS_CLOSED) {
+		$resolution = 0;
+	}
 	$id_task = (int) get_parameter ("id_task");
 	$email_notify = (bool) get_parameter ('email_notify_form');
 	$id_incident_type = get_parameter ('id_incident_type');
@@ -524,6 +615,9 @@ if ($action == "insert" && !$id) {
 	$creation_date = get_parameter ("creation_date", "");
 	$creation_time = get_parameter ("creation_time", "");
 	$upfiles = (string) get_parameter('upfiles');
+	
+	$old_status = $estado;
+	$old_resolution = $resolution;
 	
 	//Get notify flag from group if the user doesn't has IM flag
 	if (give_acl ($config['id_user'], $id_grupo, "IW")) {
@@ -547,6 +641,7 @@ if ($action == "insert" && !$id) {
 	}
 	
 	$closed_by = get_parameter ("closed_by", '');
+	$blocked = get_parameter ("blocked", 0);
 
 	// Redactor user is ALWAYS the currently logged user entering the incident. Cannot change. Never.
 	$editor = $config["id_user"];
@@ -600,7 +695,10 @@ if ($action == "insert" && !$id) {
 				'sla_disabled' => $sla_disabled,
 				'email_copy' => $email_copy,
 				'editor' => $editor,
-				'id_group_creator' => $id_group_creator
+				'id_group_creator' => $id_group_creator,
+				'blocked' => $blocked,
+				'old_status' => $old_status,
+				'old_resolution' => $old_resolution
 			);
 		$id = process_sql_insert ('tincidencia', $values);
 
@@ -716,6 +814,7 @@ if ($id) {
 	$editor = $incident["editor"];
     $id_group_creator = $incident["id_group_creator"];
     $closed_by = $incident["closed_by"];
+    $blocked = $incident["blocked"];
 
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
@@ -754,6 +853,7 @@ if ($id) {
 	$editor = $config["id_user"];
     $id_group_creator = 0;
     $closed_by= "";
+    $blocked = 0;
 
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -861,7 +961,7 @@ $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-if ($has_permission) {
+if ($has_permission && (!$blocked_incident)) {
 	$table->data[0][0] = print_input_text ('titulo', $titulo, '', 55, 100, true, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
@@ -881,7 +981,8 @@ if($id_grupo==0) {
 }
 
 $groups = users_get_groups_for_select ($config['id_user'], "IW", false,  true);
-$table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group')) . "<div id='group_spinner'></div>";
+
+$table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group'), $blocked_incident) . "<div id='group_spinner'></div>";
 
 $types = get_incident_types (true, $config['required_ticket_type']);
 $table->data[0][2] = print_label (__('Ticket type'), '','',true);
@@ -890,6 +991,10 @@ $table->data[0][2] = print_label (__('Ticket type'), '','',true);
 if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_user'])) {
 	$disabled_itype = false;
 } else {
+	$disabled_itype = true;
+}
+
+if ($disabled_itype || $blocked_incident) {
 	$disabled_itype = true;
 }
 
@@ -909,7 +1014,7 @@ if ($disabled) {
 } else {
 	$table->data[1][0] = print_select (get_priorities (),
 		'priority_form', $priority, '', '',
-		'', true, false, false, __('Priority'));
+		'', true, false, false, __('Priority'), $blocked_incident);
 }
 
 $table->data[1][0] .= '&nbsp;'. print_priority_flag_image ($priority, true);
@@ -921,7 +1026,7 @@ if (!$create_incident){
 		$table->data[1][1] = "<div id='div_incident_resolution'>";
 	}
 	if ($has_im)
-		$table->data[1][1] .= combo_incident_resolution ($resolution, $disabled, true);
+		$table->data[1][1] .= combo_incident_resolution ($resolution, $blocked_incident, true);
 	else {
 		$table->data[1][1] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
 		$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
@@ -929,18 +1034,33 @@ if (!$create_incident){
 	$table->data[1][1] .= "</div>";
 }
 
-$table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true, false, '', '', 0);
+$table->data[1][2] = combo_incident_status ($estado, $blocked_incident, 0, true, false, '', '', 0);
+
+if ($incident["estado"] != STATUS_CLOSED) {
+		$table->data[1][3] = "<div id='div_incident_block' style='display: none;'>";
+	} else {
+		$table->data[1][3] = "<div id='div_incident_block'>";
+	}
+
+$table->data[1][3] .= print_checkbox ("blocked", 1, $blocked, true, __('Blocked'), $blocked_incident);
+$table->data[1][3] .= "</div>";
 
 //If IW creator enabled flag is enabled, the user can change the creator
 if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 
+	$disabled_creator = false;
+	
+	if (!$config["change_creator_owner"] || $blocked_incident) {
+		$disabled_creator = true;
+	}
+	
 	$params_creator['input_id'] = 'text-id_creator';
 	$params_creator['input_name'] = 'id_creator';
 	$params_creator['input_value'] = $id_creator;
 	$params_creator['title'] = 'Creator';
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
-	$params_creator['disabled'] = !$config['change_creator_owner'];
+	$params_creator['disabled'] = $disabled_creator;
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	
 } else {
@@ -961,6 +1081,11 @@ if ($create_incident) {
 
 if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
+	$disabled_creator = false;
+	
+	if (!$config["change_creator_owner"] || $blocked_incident) {
+		$disabled_creator = true;
+	}
 	
 	$params_assigned['input_id'] = 'text-id_user';
 	$params_assigned['input_name'] = 'id_user';
@@ -969,7 +1094,7 @@ if ($has_im) {
 	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
-	$params_assigned['disabled'] = !$config['change_creator_owner'];
+	$params_assigned['disabled'] = $disabled_creator;
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 } else {
 	$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
@@ -986,6 +1111,7 @@ if (!$create_incident){
 	$params_closed['help_message'] = __("User assigned here is user that will be responsible to close the ticket.");
 	$params_closed['return'] = true;
 	$params_closed['return_help'] = true;
+	$params_closed['disabled'] = $blocked_incident;
 
 	//Only print closed by option when incident status is closed
 	if ($incident["estado"] == STATUS_CLOSED) {
@@ -998,8 +1124,9 @@ if (!$create_incident){
 } else if ($create_incident && $config["change_incident_datetime"]) {
 	$date = date('Y-m-d');
 	$time = date('H:i');
-	$table->data[2][2] = print_input_text ('creation_date', $date, '', 10, 100, true, __('Creation date'));
-	$table->data[2][2] .= print_input_text ('creation_time', $time, '', 10, 100, true, __('Creation time'))
+		
+	$table->data[2][2] = print_input_text ('creation_date', $date, '', 10, 100, true, __('Creation date'), $blocked_incident);
+	$table->data[2][2] .= print_input_text ('creation_time', $time, '', 10, 100, true, __('Creation time'), $blocked_incident)
 		.print_help_tip (__("The format should be hh:mm"), true);
 }
 
@@ -1018,7 +1145,6 @@ $table_advanced->style = array();
 $table_advanced->data = array ();
 $table_advanced->colspan[1][1] = 2;
 
-
 // Table for advanced controls
 if ($editor) {
 	$table_advanced->data[0][0] = print_label (__('Editor'), '', '', true, $editor);
@@ -1028,7 +1154,7 @@ if ($editor) {
 
 if ($has_im && $create_incident){
     $groups = get_user_groups ($config['id_user'], "IW");
-	$table_advanced->data[0][1] = print_select ($groups, "id_group_creator", $id_grupo_incident, '', '', 0, true, false, false, __('Creator group'));
+	$table_advanced->data[0][1] = print_select ($groups, "id_group_creator", $id_grupo_incident, '', '', 0, true, false, false, __('Creator group'), $blocked_incident);
 } elseif ($create_incident) {
 	$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
 } elseif ($id_group_creator) {
@@ -1037,9 +1163,9 @@ if ($has_im && $create_incident){
 
 if ($has_im){
 	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
-	        false, '', '', true, __('SLA disabled'));
+			$blocked_incident, '', '', true, __('SLA disabled'));
 
-    $table_advanced->data[1][0] = print_checkbox ("email_notify_form", 1, $email_notify, true, __('Notify changes by email '));
+    $table_advanced->data[1][0] = print_checkbox ("email_notify_form", 1, $email_notify, true, __('Notify changes by email '), $blocked_incident);
 
 } else {
 	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);
@@ -1049,9 +1175,13 @@ if ($has_im){
 $parent_name = $id_parent ? (__('Ticket').' #'.$id_parent) : __('None');
 
 if ($has_im) {
-	$table_advanced->data[3][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'));
+	
+	$table_advanced->data[3][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'), $blocked_incident);
 	$table_advanced->data[3][0] .= print_input_hidden ('id_parent', $id_parent, true);
-	$table_advanced->data[3][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
+
+	if (!$blocked_incident) {
+		$table_advanced->data[3][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
+	}
 }
 
 // Show link to go parent incident
@@ -1059,7 +1189,7 @@ if ($id_parent)
 	$table_advanced->data[3][0] .= '&nbsp;<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 // Task
-$table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
+$table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), false, true, false, '', false, $blocked_incident);
 
 if ($id_task > 0){
 	$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank'
@@ -1069,8 +1199,11 @@ if ($id_task > 0){
 	$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank' href='javascript:;'></a>";
 }
 
-$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses"));
-$table_advanced->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_contact_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+
+$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses"), $blocked_incident);
+if (!$blocked_incident) {
+	$table_advanced->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_contact_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+}
 
 if ($create_incident) {
 
@@ -1099,11 +1232,13 @@ if ($create_incident) {
 	
 	$table_advanced->data[3][2] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
-						true, false, false, __('Objects affected'));
+						true, false, false, __('Objects affected'), $blocked_incident);
 
+	if (!$blocked_incident) {
 		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-
 		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	}
+
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
@@ -1120,8 +1255,9 @@ $table->data['row_advanced'][0] = print_container('advanced_parameters_incidents
 $table->colspan[9][0] = 4;
 $table->colspan[10][0] = 4;
 $disabled_str = $disabled ? 'readonly="1"' : '';
+
 $table->data[9][0] = print_textarea ('description', 9, 80, $description, $disabled_str,
-		true, __('Description'));
+true, __('Description'), $blocked_incident);
 
 // This is never shown in create form
 if (!$create_incident){
@@ -1133,7 +1269,7 @@ if (!$create_incident){
 		$table->data[10][0] = "<div id='epilog_wrapper'>";
 	}
 		
-	$table->data[10][0] .= print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
+	$table->data[10][0] .= print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'), $blocked_incident);
 	
 	$table->data[10][0] .= "</div>";
 } else {
@@ -1239,9 +1375,16 @@ $(document).ready (function () {
 
 	id_group = $("#grupo_form").val();
 	id_incident = $('#text-id_incident_hidden').val();
+	status = $('#incident_status').val();
 		
 	if (id_incident == 0) {
 		set_ticket_owner(id_group);
+		set_initial_status();
+	} else {
+		set_allowed_status();
+		if (status == 7) {
+			set_allowed_resolution();
+		}
 	}
 
 	// Incident type combo change event
@@ -1407,9 +1550,14 @@ $(document).ready (function () {
 			$("#closed_by_wrapper").show();
 			$("#div_incident_resolution").show();
 			$("#text-closed_by").val("<?php echo $config['id_user'] ?>");
+			$("#blocked").show();
+			
 			pulsate("#epilog_wrapper");
 			pulsate("#closed_by_wrapper");
 			pulsate("#div_incident_resolution");
+			pulsate("#div_incident_block");
+			
+			set_allowed_resolution();
 			
 			id_incident = $('#text-id_incident_hidden').val();
 			
@@ -1445,6 +1593,7 @@ $(document).ready (function () {
 			$("#epilog_wrapper").hide();
 			$("#closed_by_wrapper").hide();
 			$("#div_incident_resolution").hide();
+			$("#div_incident_block").hide();
 		}
 	});
 	

@@ -216,6 +216,10 @@ CREATE TABLE `tincidencia` (
   `closed_by` varchar(60) NOT NULL default '',
   `extra_data` varchar(100) NOT NULL default '',
   `blocked` tinyint unsigned NOT NULL DEFAULT 0,
+  `old_status` tinyint unsigned NOT NULL DEFAULT 0,
+  `old_resolution` tinyint unsigned NOT NULL DEFAULT 0,
+  `old_status2` tinyint unsigned NOT NULL DEFAULT 0,
+  `old_resolution2` tinyint unsigned NOT NULL DEFAULT 0,
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),

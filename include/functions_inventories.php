@@ -1467,9 +1467,9 @@ function inventories_load_file ($objects_file) {
 		$value = array(
 			'id_object_type' => $id_object_type,
 			'owner' => $owner,
-			'name' => $name,
+			'name' => safe_input($name),
 			'public' => $public,
-			'description' => $description,
+			'description' => safe_input($description),
 			'id_contract' => $id_contract,
 			'id_manufacturer' => $id_manufacturer,
 			'id_parent' => $id_parent,
@@ -1573,7 +1573,7 @@ function inventories_load_file ($objects_file) {
 						}
 						
 						$value_data[$j]['id_object_type_field'] = $field['id'];
-						$value_data[$j]['data'] = $data;
+						$value_data[$j]['data'] = safe_input($data);
 						$i++;
 						$j++;
 					}

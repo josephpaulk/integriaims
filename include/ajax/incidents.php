@@ -30,6 +30,7 @@ $get_user_info = get_parameter('get_user_info', 0);
 $hours_to_dms = get_parameter('hours_to_dms', 0);
 $check_incident_childs = get_parameter('check_incident_childs', 0);
 $check_custom_search = get_parameter('check_custom_search', 0);
+$set_params = get_parameter('set_params', 0);
 
 if ($get_incidents_search) {
 	
@@ -45,9 +46,8 @@ if ($get_incidents_search) {
 	$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
 	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-	$filter['id_creator'] = (string) get_parameter ('search_id_creator', '');
-	$filter['editor'] = (string) get_parameter ('search_editor', '');
-	$filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
+	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
 	$filter['first_date'] = (string) get_parameter ('search_first_date');
 	$filter['last_date'] = (string) get_parameter ('search_last_date');	
 	$filter['sla_state'] = (string) get_parameter ('search_sla_state');
@@ -163,118 +163,6 @@ if ($get_contact_search) {
 		}
 		print_table ($table);
 	}		
-}
-
-if ($set_priority) {
-	$id_ticket = get_parameter('id_ticket');
-	$values['prioridad'] = get_parameter ('id_priority');
-	$values['actualizacion'] = date('Y:m:d H:i:s');
-	
-	$old_incident = get_incident ($id_ticket);
-	
-	incident_tracking ($id_ticket, INCIDENT_PRIORITY_CHANGED, $values['prioridad']);
-	
-	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
-	
-	$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);
-	$owner = get_db_value('id_usuario', 'tincidencia', 'id_incidencia', $id_ticket);
-	
-	// Email notify to all people involved in this incident
-	if ($email_notify == 1) {
-		mail_incident ($id_ticket, $owner, "", 0, 0);
-	}
-	
-	audit_db ($old_incident['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
-	
-} 
-
-
-if ($set_resolution) {
-	$id_ticket = get_parameter('id_ticket');
-	$values['resolution'] = get_parameter ('id_resolution');
-	$values['actualizacion'] = date('Y:m:d H:i:s');
-	
-	$old_incident = get_incident ($id_ticket);
-	
-	incident_tracking ($id_ticket, INCIDENT_RESOLUTION_CHANGED, $values['resolution']);
-	
-	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
-	
-	$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);
-	$owner = get_db_value('id_usuario', 'tincidencia', 'id_incidencia', $id_ticket);
-	
-	// Email notify to all people involved in this incident
-	if ($email_notify == 1) {
-		mail_incident ($id_ticket, $owner, "", 0, 0);
-	}
-	
-	audit_db ($old_incident['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
-}
-
-if ($set_status) {
-	$id_ticket = get_parameter('id_ticket');
-	$values['estado'] = get_parameter ('id_status');
-	$values['actualizacion'] = date('Y:m:d H:i:s');
-	
-	$old_incident = get_incident ($id_ticket);
-	
-	if ($values['estado'] == 7) {
-		$values['closed_by'] = $config['id_user'];
-		$values['cierre'] = date('Y-m-d H:i:s');
-	}
-	
-	incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $values['estado']);
-	
-	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
-	
-	$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);
-	$owner = get_db_value('id_usuario', 'tincidencia', 'id_incidencia', $id_ticket);
-	
-	// Email notify to all people involved in this incident
-	if ($email_notify == 1) {
-		if (($values['estado'] == 7))
-			mail_incident ($id_ticket, $owner, "", 0, 5);
-		else
-			mail_incident ($id_ticket, $owner, "", 0, 0);
-	}
-	
-	audit_db ($old_incident['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
-	
-	if ($values['estado'] == 7) {
-		$values_childs['estado'] = $values['estado'];
-		$values_childs['closed_by'] = $values['closed_by'];
-		
-		$childs = incidents_get_incident_childs($id_ticket);
-
-		if (!empty($childs)) {
-			foreach ($childs as $id_child=>$name) {
-				$result_child = process_sql_update('tincidencia', $values_childs, array('id_incidencia' => $id_child));
-				audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_child);
-			}
-		}
-	}
-}
-
-if ($set_owner) {
-	$id_ticket = get_parameter('id_ticket');
-	$values['id_usuario'] = get_parameter ('id_user');
-	$values['actualizacion'] = date('Y:m:d H:i:s');
-	
-	$old_incident = get_incident ($id_ticket);
-	
-	incident_tracking ($id_ticket, INCIDENT_USER_CHANGED, $values['id_usuario']);
-	
-	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
-	
-	$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);
-	$owner = get_db_value('id_usuario', 'tincidencia', 'id_incidencia', $id_ticket);
-	
-	// Email notify to all people involved in this incident
-	if ($email_notify == 1) {
-		mail_incident ($id_ticket, $values['id_usuario'], "", 0, 0);
-	}
-	
-	audit_db ($values['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
 }
 
 if ($set_ticket_score) {
@@ -425,5 +313,68 @@ if ($check_custom_search) {
 	
 	echo json_encode($result);
 	return;
+}
+
+if ($set_params) {
+
+	$id_ticket = get_parameter('id_ticket');
+	$values['prioridad'] = get_parameter ('id_priority');
+	$values['resolution'] = get_parameter ('id_resolution');
+	$values['estado'] = get_parameter ('id_status');
+	$values['id_usuario'] = get_parameter ('id_user');
+	$values['actualizacion'] = date('Y:m:d H:i:s');
+
+	$old_incident = get_incident ($id_ticket);
+	
+	if (!$old_incident['old_status2']) {
+		$values['old_status'] = $old_incident["old_status"];
+		$values['old_resolution'] = $old_incident["old_resolution"];
+		$values['old_status2'] = $estado;
+		$values['old_resolution2'] = $resolution;
+	} else {
+		if (($old_incident['old_status2'] == $values['estado']) && ($old_incident['old_resolution2'] == $values['resolution'])) {
+			$values['old_status'] = $old_incident["old_status"];
+			$values['old_resolution'] = $old_incident["old_resolution"];
+			$values['old_status2'] = $old_incident["old_status2"];
+			$values['old_resolution2'] = $old_incident["old_resolution2"];
+		} else {
+			$values['old_status'] = $old_incident["old_status2"];
+			$values['old_resolution'] = $old_incident["old_resolution2"];
+			$values['old_status2'] = $estado;
+			$values['old_resolution2'] = $resolution;
+		}
+	}
+
+	$result = db_process_sql_update('tincidencia', $values, array('id_incidencia'=>$id_ticket));
+		
+	if ($result) {
+		
+		$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);
+		$owner = get_db_value('id_usuario', 'tincidencia', 'id_incidencia', $id_ticket);
+		
+		// Email notify to all people involved in this incident
+		if ($email_notify == 1) {
+			mail_incident ($id_ticket, $owner, "", 0, 0);
+		}
+		
+		if ($old_incident['prioridad'] != $values['prioridad']) {
+			incident_tracking ($id_ticket, INCIDENT_PRIORITY_CHANGED, $values['prioridad']);
+		}
+		if ($old_incident['resolution'] != $values['resolution']) {
+			incident_tracking ($id_ticket, INCIDENT_RESOLUTION_CHANGED, $values['resolution']);
+		}
+		if ($old_incident['estado'] != $values['estado']) {
+			if ($values['estado'] == 7) {
+				$values_close['closed_by'] = $config['id_user'];
+				$values_close['cierre'] = date('Y:m:d H:i:s');
+				db_process_sql_update('tincidencia', $values_close, array('id_incidencia'=>$id_ticket));
+			}
+			incident_tracking ($id_ticket, INCIDENT_STATUS_CHANGED, $values['estado']);
+		}
+		if ($old_incident['id_usuario'] != $values['id_usuario']) {
+			incident_tracking ($id_ticket, INCIDENT_USER_CHANGED, $values['id_usuario']);
+		}
+		audit_db ($old_incident['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
+	}
 }
 ?>

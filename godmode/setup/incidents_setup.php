@@ -83,6 +83,8 @@ if ($update) {
 	$config["required_ticket_type"] = (int) get_parameter ("required_ticket_type", 0);
 	$config["show_creator_blank"] = (int) get_parameter ("show_creator_blank", 0);
 	$config["change_creator_owner"] = (int) get_parameter ("change_creator_owner", 0);
+	$config["check_closed_incidents"] = (int) get_parameter ("check_closed_incidents", 0);
+	$config["days_check_closed_incidents"] = (int) get_parameter ("days_check_closed_incidents", 15);
 	
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
@@ -103,7 +105,8 @@ if ($update) {
 	update_config_token ("show_user_name", $config["show_user_name"]);
 	update_config_token ("required_ticket_type", $config["required_ticket_type"]);
 	update_config_token ("show_creator_blank", $config["show_creator_blank"]);
-	update_config_token ("change_creator_owner", $config["change_creator_owner"]);
+	update_config_token ("check_closed_incidents", $config["check_closed_incidents"]);
+	update_config_token ("days_check_closed_incidents", $config["days_check_closed_incidents"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -268,6 +271,16 @@ echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_checkbox ("show_creator_blank", 1, $config["show_creator_blank"], true, __('Ignore user creator by default'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_checkbox ("change_creator_owner", 1, $config["change_creator_owner"], true, __('Allow to change user creator and user owner'))."</td>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td><br><h3>".__('Workflow')."</h3></td>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td style='vertical-align: top;'>".print_checkbox ("check_closed_incidents", 1, $config["check_closed_incidents"], true, __('Check closed tickets when running workflow rules'))."</td>";
+echo "<td style='vertical-align: top;'>".print_input_text ("days_check_closed_incidents", $config["days_check_closed_incidents"], '', 5, 255, true, __('Days to check closed tickets'));
+
 echo "</tr>";
 
 echo "<tr>";

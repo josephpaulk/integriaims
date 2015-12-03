@@ -640,6 +640,9 @@ function show_incident_type_fields(numRow) {
 					element.value=value['label'];
 					element.style.width="170px";
 					element.class="type";
+					if (value['blocked']) {
+						element.disabled=true;
+					}
 					
 					var new_text = value['combo_value'].split(',');
 					jQuery.each (new_text, function (id, val) {
@@ -659,6 +662,9 @@ function show_incident_type_fields(numRow) {
 					element.value=value['label'];
 					element.style.width="170px";
 					element.class="type";
+					if (value['blocked']) {
+						element.disabled=true;
+					}
 					
 					var id_parent = value['parent'];
 					var id_field = value['id'];
@@ -716,6 +722,9 @@ function show_incident_type_fields(numRow) {
 					element.value=value['data'];
 					element.type='text';
 					element.size=40;
+					if (value['blocked']) {
+						element.disabled=true;
+					}
 					
 				}
 				
@@ -727,6 +736,9 @@ function show_incident_type_fields(numRow) {
 					element.value=value['data'];
 					element.type='number';
 					element.size=40;
+					if (value['blocked']) {
+						element.disabled=true;
+					}
 					
 				}
 				
@@ -752,6 +764,9 @@ function show_incident_type_fields(numRow) {
 				element.type='text';
 				element.rows='7';
 				element.cols='80';
+				if (value['blocked']) {
+					element.disabled=true;
+				}
 				
 				lbl.appendChild(element);
 
@@ -978,73 +993,6 @@ function loadContactEmail(email) {
 	$("#contact_search_window").dialog("close");
 }
 
-function setPriority(id_ticket) {
-	
-	var id_priority = $('#priority_editor').val();
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/incidents&set_priority=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority,
-		dataType: "text",
-		success: function (data) {
-			//location.reload();
-			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
-			window.location = url;
-		}
-	});	
-}
-
-function setResolution(id_ticket) {
-	
-	var id_resolution = $('#incident_resolution').val();
-	
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/incidents&set_resolution=1&id_ticket="+ id_ticket +"&id_resolution=" + id_resolution,
-		dataType: "text",
-		success: function (data) {
-			//location.reload();
-			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
-			window.location = url;
-		}
-	});	
-}
-
-function setStatus(id_ticket) {
-	
-	var id_status = $('#incident_status').val();
-	
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/incidents&set_status=1&id_ticket="+ id_ticket +"&id_status=" + id_status,
-		dataType: "text",
-		success: function (data) {
-			//location.reload();
-			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
-			window.location = url;
-		}
-	});	
-}
-
-function setOwner(id_ticket) {
-	var id_user = $('#text-owner_editor').val();
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/incidents&set_owner=1&id_ticket="+ id_ticket +"&id_user=" + id_user,
-		dataType: "text",
-		success: function (data) {
-			//location.reload();
-			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
-			window.location = url;
-		}
-	});	
-}
-
 function setTicketScore(id_ticket, score) {
 	var id_user = $('#text-owner_editor').val();
 
@@ -1244,4 +1192,94 @@ function show_search_inventory(search_free, id_object_type_search, owner_search,
 			$("#search_inventory_window").dialog('open');
 		}
 	});
+}
+
+function set_initial_status () {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&get_initial_status=1",
+		dataType: "json",
+		async: false,
+		success: function (data) {
+			$("#incident_status").empty();
+			jQuery.each (data, function (id, value) {
+				$("select[name='incident_status']").append($("<option>").val(id).html(value));
+			});
+		}
+	});
+}
+
+
+function set_allowed_status () {
+	
+	status = $("#incident_status").val();
+	resolution = $("#incident_resolution").val();
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&get_allowed_status=1&status="+status+"&resolution="+resolution,
+		dataType: "json",
+		async: false,
+		success: function (data) {
+			$("#incident_status").empty();
+			jQuery.each (data, function (id, value) {
+				if (id == status) {
+					$("select[name='incident_status']").append($("<option selected>").val(id).html(value));
+				} else {
+					$("select[name='incident_status']").append($("<option>").val(id).html(value));
+				}
+			});
+		}
+	});
+}
+
+function set_allowed_resolution () {
+
+	status = $("#incident_status").val();
+	resolution = $("#incident_resolution").val();
+	id_incident = $('#text-id_incident_hidden').val();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		//~ data: "page=operation/incidents/incident_detail&get_allowed_resolution=1&status="+status,
+		//~ data: "page=operation/incidents/incident_detail&get_allowed_resolution=1&status="+status+"&id_incident="+id_incident,
+		data: "page=operation/incidents/incident_detail&get_allowed_resolution=1&status="+status+"&id_incident="+id_incident+"&resolution="+resolution,
+		dataType: "json",
+		async: false,
+		success: function (data) {
+			$("#incident_resolution").empty();
+			jQuery.each (data, function (id, value) {
+
+				if (id == resolution) {
+					$("select[name='incident_resolution']").append($("<option selected>").val(id).html(value));
+				} else {
+					$("select[name='incident_resolution']").append($("<option>").val(id).html(value));
+				}
+			});
+		}
+	});
+}
+
+function setParams (id_ticket) {
+
+	var id_priority = $('#priority_editor').val();
+	var id_resolution = $('#incident_resolution').val();
+	var id_status = $('#incident_status').val();
+	var id_user = $('#text-owner_editor').val();
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&set_params=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority +"&id_resolution="+id_resolution+"&id_status="+id_status+"&id_user="+id_user,
+		dataType: "text",
+		async: false,
+		success: function (data) {
+			var url = $("#hidden-base_url_homedir").val()+"/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id="+id_ticket;
+			window.location = url;
+		}
+	});	
 }

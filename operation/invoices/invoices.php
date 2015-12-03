@@ -117,7 +117,7 @@ if ($operation_invoices == "add_invoice"){
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	$tax = get_parameter ("tax", 0.00);
-	$tax_name = get_parameter ("tax_name", "");
+	$tax_name = get_parameter ("tax_name", $config['invoice_tax_name']);
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
@@ -233,7 +233,7 @@ if ($operation_invoices == "update_invoice"){
 	$internal_note = get_parameter('internal_note', "");
 	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
 	$invoice_contract_number = get_parameter("invoice_contract_number");
-	$tax_name = get_parameter ("tax_name", "");
+	$tax_name = get_parameter ("tax_name", $config['invoice_tax_name']);
 	$discount_before = (float) get_parameter ("discount_before", 0.00);
 	$discount_concept = get_parameter ("discount_concept", "");
 
@@ -365,7 +365,7 @@ if ($id_invoice > 0){
 	$language = $config['language_code'];
 	$internal_note = "";
 	$bill_id_variable = 0;
-	$tax_name = "";
+	$tax_name = $config['invoice_tax_name'];
 	$discount_before = 0;
 	$discount_concept = "";
 }

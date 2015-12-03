@@ -130,8 +130,6 @@ function api_create_incident ($return_type, $user, $params){
 	$source = 1; // User report
 	$priority = $params[2];
 	$id_creator = $user;
-	//~ $status = 1; // new
-	$resolution = 9; // In process / Pending
 	$id_inventory = $params[4];
 	$id_incident_type = (int) $params[5];
 	$email_copy = $params[6];
@@ -139,6 +137,7 @@ function api_create_incident ($return_type, $user, $params){
 	$id_parent = $params[8];
 	$status = $params[9];
 	$extra_data = $params[10];
+	$resolution = $params[11];
 	$inicio = $timestamp;
 	$actualizacion = $timestamp;
 
@@ -150,6 +149,28 @@ function api_create_incident ($return_type, $user, $params){
 		$id_inventory = get_db_sql ("select id_inventory_default from tgrupo WHERE id_grupo = $group");
 	}
 	$timestamp = print_mysql_timestamp();
+	
+	$check_status = enterprise_hook("incidents_check_allowed_status", array($status, $status, true, true, false));
+	//incidents_check_allowed_status ($old_status, $new_status, $initial = false, $echo_message = false, $included_status = true)
+		
+	if ($check_status == ENTERPRISE_NOT_HOOK) {
+		$check_status = true;
+	}
+	
+	if ($status == STATUS_CLOSED) {
+		$check_resolution = enterprise_hook("incidents_check_allowed_resolution", array($resolution, $status, 0, true));
+			
+		if ($check_resolution == ENTERPRISE_NOT_HOOK) {
+			$check_resolution = true;
+		}
+	} else {
+		$check_resolution = true;
+		$enterprise = enterprise_hook("incidents_check_allowed_resolution", array($resolution, $status, 0, true));
+		if ($enterprise != ENTERPRISE_NOT_HOOK) {
+			$resolution = 0;
+		}
+	}
+	
 	if($id_parent == 0) {
 		$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
@@ -171,8 +192,14 @@ function api_create_incident ($return_type, $user, $params){
 				$status, $priority, $group, $id_creator,
 				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent, $extra_data);
 	}
+
+	if ($check_status && $check_resolution) {
+		$id = process_sql ($sql, 'insert_id');
+
+	} else {
+		$id = false;
+	}
 	
-	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 
 		$inventories = array();
@@ -203,7 +230,7 @@ function api_create_incident ($return_type, $user, $params){
 				$labels = array();
 			}
 			
-			$num_params = 11;
+			$num_params = 12;
 			foreach ($labels as $label) {
 				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 				
@@ -227,6 +254,9 @@ function api_create_incident ($return_type, $user, $params){
 				break;
 		case "csv": 
 				echo $result;
+				break;
+		case "int":
+				return $result;
 				break;
 	}
 }
@@ -399,47 +429,99 @@ function api_update_incident ($return_type, $user, $params){
 		$values['cierre'] = $timestamp;
 	}
 	$id_incident_type = $values['id_incident_type'];
-		
-	$result = process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
 	
-	//Add traces and statistic information
-	incidents_set_tracking ($id_incident, 'update', $values['prioridad'], $values['estado'], $values['resolution'], $user, $values['id_grupo']);
-	//Add only update info
-	incident_tracking ($id_incident, INCIDENT_UPDATED);
-	
-	if (($id_incident_type != 0)) {	//in the massive operations no change id_incident_type
-
-		$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
-		$labels = get_db_all_rows_sql($sql_label);
-		
-		if ($labels === false) {
-			$labels = array();
+	$old_incident = get_incident ($id_incident);
+	if (!$old_incident['old_status2']) {
+		$values['old_status'] = $old_incident["old_status"];
+		$values['old_resolution'] = $old_incident["old_resolution"];
+		$values['old_status2'] = $values['estado'];
+		$values['old_resolution2'] = $values['resolution'];
+	} else {
+		if (($old_incident['old_status2'] == $values['estado']) && ($old_incident['old_resolution2'] == $values['resolution'])) {
+			$values['old_status'] = $old_incident["old_status"];
+			$values['old_resolution'] = $old_incident["old_resolution"];
+			$values['old_status2'] = $old_incident["old_status2"];
+			$values['old_resolution2'] = $old_incident["old_resolution2"];
+		} else {
+			$values['old_status'] = $old_incident["old_status2"];
+			$values['old_resolution'] = $old_incident["old_resolution2"];
+			$values['old_status2'] = $values['estado'];
+			$values['old_resolution2'] = $values['resolution'];
 		}
+		
+	}
 	
-		$num_params = 12;
-		foreach ($labels as $label) {
-			$values_type_field['data'] = $params[$num_params];
-			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
-			$values_type_field['id_incident_field'] = $id_incident_field;
-			$values_type_field['id_incident'] = $id_incident;
+	$old_status =  api_get_status_incident($id_incident);
+	$values['old_status'] = $old_status;
+	$old_resolution =  api_get_resolution_incident($id_incident);
+	$values['old_resolution'] = $old_resolution;
+	$new_status = $values['estado'];
+
+	$check_status = enterprise_hook("incidents_check_allowed_status", array($old_status, $new_status, false, true, true, $old_resolution));
+		
+	if ($check_status == ENTERPRISE_NOT_HOOK) {
+		$check_status = true;
+	}
+	
+	if ($values['estado'] == STATUS_CLOSED) {
+		//~ $check_resolution = enterprise_hook("incidents_check_allowed_resolution", array($resolution, $values['estado'], $id_incident, true));
+		$check_resolution = enterprise_hook("incidents_check_allowed_resolution", array($values['resolution'], $values['estado'], $id_incident, true));
 			
-			$exists_id = get_db_value_filter('id', 'tincident_field_data', array('id_incident' => $id_incident, 'id_incident_field'=> $id_incident_field), 'AND');
-			if ($exists_id) 
-				process_sql_update('tincident_field_data', $values_type_field, array('id_incident_field' => $id_incident_field, 'id_incident' => $id_incident), 'AND');
-			else
-				process_sql_insert('tincident_field_data', $values_type_field);
-				
-			$num_params++;
+		if ($check_resolution == ENTERPRISE_NOT_HOOK) {
+			$check_resolution = true;
+		}
+	} else {
+		$check_resolution = true;
+		//~ $enterprise = enterprise_hook("incidents_check_allowed_resolution", array($resolution, $values['estado'], $id_incident, true));
+		$enterprise = enterprise_hook("incidents_check_allowed_resolution", array($values['resolution'], $values['estado'], $id_incident, true));
+		if ($enterprise != ENTERPRISE_NOT_HOOK) {
+			$values['resolution'] = 0;
 		}
 	}
+	
+	if ($check_status && $check_resolution) {
+
+		$result = process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
 		
-	switch($return_type) {
-		case "xml": 
-				echo xml_node($result);
-				break;
-		case "csv": 
-				echo $result;
-				break;
+		//Add traces and statistic information
+		incidents_set_tracking ($id_incident, 'update', $values['prioridad'], $values['estado'], $values['resolution'], $user, $values['id_grupo']);
+		//Add only update info
+		incident_tracking ($id_incident, INCIDENT_UPDATED);
+		
+		if (($id_incident_type != 0)) {	//in the massive operations no change id_incident_type
+
+			$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+			$labels = get_db_all_rows_sql($sql_label);
+			
+			if ($labels === false) {
+				$labels = array();
+			}
+		
+			$num_params = 12;
+			foreach ($labels as $label) {
+				$values_type_field['data'] = $params[$num_params];
+				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+				$values_type_field['id_incident_field'] = $id_incident_field;
+				$values_type_field['id_incident'] = $id_incident;
+				
+				$exists_id = get_db_value_filter('id', 'tincident_field_data', array('id_incident' => $id_incident, 'id_incident_field'=> $id_incident_field), 'AND');
+				if ($exists_id) 
+					process_sql_update('tincident_field_data', $values_type_field, array('id_incident_field' => $id_incident_field, 'id_incident' => $id_incident), 'AND');
+				else
+					process_sql_insert('tincident_field_data', $values_type_field);
+					
+				$num_params++;
+			}
+		}
+			
+		switch($return_type) {
+			case "xml": 
+					echo xml_node($result);
+					break;
+			case "csv": 
+					echo $result;
+					break;
+		}
 	}
 }
 
@@ -1522,7 +1604,7 @@ function api_mark_updated_incident ($return_type, $params) {
 /*
  * 
  * Example: http://localhost/integria/include/api.php?user=admin&pass=integria&user_pass=integria&op=ovo_manager&params=Titulo,2,2,Descripcion2,10626,10,mmm
- * 
+ * ORDER: title,id_group,priority,description,id_inventory,id_incident_type,info_extra
  */
 function api_ovo_manager ($return_type, $params) {
 
@@ -1551,54 +1633,87 @@ function api_ovo_manager ($return_type, $params) {
 	if ($incidents == false) {
 		
 		if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
-			api_create_incident($return_type,'ovo',$values);
+
+			$values[1] = 11; //grupo M112 GM24. Hay que ponerlo a mano
+			$new_id = api_create_incident('int','ovo',$values);
+
+			$values_update[0] = $new_id;
+			$values_update[1] = $params[0]; //title
+			$values_update[2] = $params[3]; //description
+			$values_update[3] = ""; //epilog
+			$values_update[4] = 11; //group
+			$values_update[5] = $params[2]; //prority
+			$values_update[7] = 3; //estado asignado
+			$values_update[8] = ""; //owner
+			$values_update[9] = 0; //id parent
+			$values_update[10] = $params[5]; //id incident type
+			$values_update[11] = $params[6]; //info extra
+							
+			api_update_incident ($return_type, 'ovo', $values_update);
 		}
 				
 	} else {
 		foreach ($incidents as $incident) {
-
 			switch ($incident['estado']) {
 				case 7: //cerrada
-					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
-						api_create_incident($return_type,'ovo',$values);
-					}
-				break;
-				case 5: //pendiente de cierre
-					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
-						
-						//update ticket
-						$values_update[0] = $incident['id_incidencia'];
-						$values_update[1] = $incident['titulo']; //title
-						$values_update[2] = $incident['descripcion']; //description
-						$values_update[3] = $incident['epilog']; //epilog
-						$values_update[4] = $incident['id_grupo']; //id grupo
-						if ($prioridad > $incident['prioridad']) {
-							$values_update[5] = $prioridad;
-						} else {
-							$values_update[5] = $incident['prioridad'];
+					if (($incident['resolution'] == 1) || ($incident['resolution'] == 2)) { //resolución arreglado o no válido
+						if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
+
+							$values[1] = 11; //grupo M112 GM24. Hay que ponerlo a mano
+							$new_id = api_create_incident('int','ovo',$values);
+							
+							$values_update[0] = $new_id;
+							$values_update[1] = $params[0]; //title
+							$values_update[2] = $params[3]; //description
+							$values_update[3] = ""; //epilog
+							$values_update[4] = 11; //group
+							$values_update[5] = $params[2];
+							$values_update[7] = 3; //estado asignado
+							$values_update[8] = ""; //owner
+							$values_update[9] = 0; //id parent
+							$values_update[10] = $params[5]; //id incident type
+							$values_update[11] = $params[6]; //info extra
+							api_update_incident ($return_type, 'ovo', $values_update);
+							
 						}
-						$values_update[6] = 9; //in process
-						$values_update[7] = 4; //re opened
-						$values_update[8] = $incident['id_usuario']; //owner
-						$values_update[9] = $incident['id_parent']; //id parent
-						$values_update[10] = $incident['id_incident_type']; //id incident type
-						$values_update[11] = $incident['extra_data']; //info extra
+					} else if ($incident['resolution'] == 9) {
+						if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical
+							
+							//update ticket
+							$values_update[0] = $incident['id_incidencia'];
+							$values_update[1] = $incident['titulo']; //title
+							$values_update[2] = $incident['descripcion']; //description
+							$values_update[3] = $incident['epilog']; //epilog
+							$values_update[4] = $incident['id_grupo']; //id grupo
+							if ($prioridad > $incident['prioridad']) {
+								$values_update[5] = $prioridad;
+							} else {
+								$values_update[5] = $incident['prioridad'];
+							}
+							$values_update[6] = 9; //in process
+							$values_update[7] = 4; //re opened
+							$values_update[8] = $incident['id_usuario']; //owner
+							$values_update[9] = $incident['id_parent']; //id parent
+							$values_update[10] = $incident['id_incident_type']; //id incident type
+							$values_update[11] = $incident['extra_data']; //info extra
 						
-						api_update_incident ($return_type, 'ovo', $values_update);
+							api_update_incident ($return_type, 'ovo', $values_update);
+											
+							//add wu
+							$workunit[0] = $incident['id_incidencia']; // id ticket
+							$workunit[1] = $descripcion; // descripcion
+							$workunit[2] = 0; // duracion
+							$workunit[3] = 0; // coste
+							$workunit[4] = 1; // publico
+							$workunit[5] = 2; // perfil
 						
-						//add wu
-						$workunit[0] = $incident['id_incidencia']; // id ticket
-						$workunit[1] = $descripcion; // descripcion
-						$workunit[2] = 0; // duracion
-						$workunit[3] = 0; // coste
-						$workunit[4] = 1; // publico
-						$workunit[5] = 2; // perfil
-						
-						api_create_incident_workunit($return_type, 'ovo', $workunit);
+							api_create_incident_workunit($return_type, 'ovo', $workunit);
+						}
 					}
 				break;
 				default:
-					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical	
+					if (($prioridad == 2) || ($prioridad == 3) || ($prioridad == 4)) { //minor, major o critical							
+
 						//update ticket
 						$values_update[0] = $incident['id_incidencia'];
 						$values_update[1] = $incident['titulo']; //title
@@ -1616,7 +1731,7 @@ function api_ovo_manager ($return_type, $params) {
 						$values_update[9] = $incident['id_parent']; //id parent
 						$values_update[10] = $incident['id_incident_type']; //id incident type
 						$values_update[11] = $incident['extra_data']; //info extra
-						
+							
 						api_update_incident ($return_type, 'ovo', $values_update);
 						
 						//add wu
@@ -1626,14 +1741,14 @@ function api_ovo_manager ($return_type, $params) {
 						$workunit[3] = 0; // coste
 						$workunit[4] = 1; // publico
 						$workunit[5] = 2; // perfil
-						
-						api_create_incident_workunit($return_type, 'ovo', $workunit);
-						
+					
+						api_create_incident_workunit($return_type, 'ovo', $workunit);					
 					}
 					
-					if ($prioridad == 0) { //normal
-						
+					//~ if ($prioridad == 0) { //normal
+					if (($prioridad != 2) && ($prioridad != 3) && ($prioridad != 4)) { //normal					
 						if ($msg_group == "AutoResolved") {
+
 							//update ticket
 							$values_update[0] = $incident['id_incidencia'];
 							$values_update[1] = $incident['titulo']; //title
@@ -1641,8 +1756,8 @@ function api_ovo_manager ($return_type, $params) {
 							$values_update[3] = $incident['epilog']; //epilog
 							$values_update[4] = $incident['id_grupo']; //id grupo
 							$values_update[5] = $incident['prioridad']; //priority
-							$values_update[6] = 1; //fixed
-							$values_update[7] = 5; //pending to be closed
+							$values_update[6] = 9; //in process
+							$values_update[7] = 7; //closed
 							$values_update[8] = $incident['id_usuario']; //owner
 							$values_update[9] = $incident['id_parent']; //id parent
 							$values_update[10] = $incident['id_incident_type']; //id incident type
@@ -1702,4 +1817,21 @@ function api_add_address_to_newsletter ($return_type, $user, $params) {
 	return;
 }
 
+function api_get_status_incident($id_incident) {
+	global $config;
+	
+	$status = get_db_value_filter('estado', 'tincidencia', array('id_incidencia'=>$id_incident));
+	
+	return $status;
+	
+}
+
+function api_get_resolution_incident($id_incident) {
+	global $config;
+	
+	$resolution = get_db_value_filter('resolution', 'tincidencia', array('id_incidencia'=>$id_incident));
+	
+	return $resolution;
+	
+}
 ?>

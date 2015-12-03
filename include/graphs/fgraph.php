@@ -18,6 +18,8 @@ if (isset($_GET['homeurl'])) {
 }
 else $homeurl = '';
 
+$homeurl = ((bool)filter_var($homeurl, FILTER_VALIDATE_URL) == 1) ? '' : $homeurl;
+
 if (isset($_GET['ttl'])) {
 	$ttl = $_GET['ttl']; 	
 }
@@ -32,6 +34,8 @@ else $graph_type = '';
 //$ttl_param = get_parameter('ttl', 1);
 //$homeurl_param = get_parameter('homeurl', '');
 
+ob_start ();
+
 if (!empty($graph_type)) {
 	include_once($homeurl . 'include/functions.php');
 	include_once($homeurl . 'include/functions_html.php');
@@ -40,6 +44,9 @@ if (!empty($graph_type)) {
 	include_once($homeurl . 'include/graphs/functions_gd.php');
 	include_once($homeurl . 'include/graphs/functions_utils.php');
 }
+
+// Clean the output buffer and turn off output buffering
+ob_end_clean ();
 
 switch($graph_type) {
 	case 'histogram': 

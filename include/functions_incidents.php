@@ -1973,6 +1973,12 @@ function incidents_get_incident_status_text ($id) {
 	return $name;
 }
 
+function incidents_get_incident_status_id ($id) {
+	$status = get_db_value ('estado', 'tincidencia', 'id_incidencia', $id);
+	
+	return $status;
+}
+
 function incidents_get_incident_priority_text ($id) {
 	$priority = get_db_value ('prioridad', 'tincidencia', 'id_incidencia', $id);
 	

@@ -342,7 +342,7 @@ if ($config['enabled_ticket_editor']) {
 		$ticket_editor .= "<table style='width: 100%;'>";
 		$ticket_editor .= "<tr>";
 		$ticket_editor .= "<td>";
-		$ticket_editor .= print_select (get_priorities (true), 'priority_editor', $priority, "javascript: setPriority($id);", '','', true, false, false, __('Priority'), false, '');
+		$ticket_editor .= print_select (get_priorities (true), 'priority_editor', $priority, "", '','', true, false, false, __('Priority'), false, '');
 		$ticket_editor .= "</td>";
 		$ticket_editor .= "<td>";
 			
@@ -360,10 +360,7 @@ if ($config['enabled_ticket_editor']) {
 			$params_assigned['return_help'] = true;
 	 
 			$ticket_editor .= user_print_autocomplete_input($params_assigned);
-		
-			$img = print_image("images/accept.png", true, array("title" => __("Update")));
-			$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setOwner($id);'>" . $img ."</a>";
-			
+					
 		} else {
 			$ticket_editor .= print_label (__('Owner'), 'id_user', '', true, '<div id="plain-id_user">'.dame_nombre_real ($owner).'</div>');
 		}
@@ -375,14 +372,20 @@ if ($config['enabled_ticket_editor']) {
 		$ticket_editor .= "<td>";
 
 		if ($has_im)
-			$ticket_editor .= combo_incident_resolution ($resolution, false, true, false, "javascript: setResolution($id);");
+			$ticket_editor .= combo_incident_resolution ($resolution, false, true, false, "");
 		else {
 			$ticket_editor .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
 		}
 		$ticket_editor .= "</td>";
 		$ticket_editor .= "<td>";
-		$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "javascript: setStatus($id);");
+		$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "");
 		$ticket_editor .= "</td>";
+		
+		$ticket_editor .= "<td>";
+		$img = print_image("images/accept.png", true, array("title" => __("Update")));
+		$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setParams($id);'>" . $img ."</a>";
+		$ticket_editor .= "</td>";
+		
 		$ticket_editor .= "</tr>";
 
 		$ticket_editor .= "</table>";
@@ -725,11 +728,31 @@ print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
 echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='ticket_childs'></div>";
+//id_incident hidden
+echo '<div id="id_incident_hidden" style="display:none;">';
+	print_input_text('id_incident_hidden', $id);
+echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 
 <script type="text/javascript">
+	
+$(document).ready (function () {
+
+	status = $('#incident_status').val();
+		
+
+	set_allowed_status();
+	set_allowed_resolution();
+
+	$("#incident_status").change(function () {
+		var status = $(this).val();
+		set_allowed_resolution();
+	});
+
+});
+
 $('.incident_container h2').click(function() {
 	var arrow = $('#' + $(this).attr('id') + ' img').attr('src');
 	var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');

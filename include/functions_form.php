@@ -259,12 +259,22 @@ function combo_groups ($actual = -1, $mode = "IR") {
 
 // Returns a combo with the incident status available
 // ----------------------------------------------------------------------
-function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false, $for_massives = false, $script='', $nothing = 'select', $nothing_value = '0') {
+function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false, $for_massives = false, $script='', $nothing = 'select', $nothing_value = '0', $label = true, $name = false) {
 	$output = '';
 
+	if ($label) {
+		$label = __('Status');
+	} else {
+		$label = "";
+	}
+	
+	if (!$name) {
+		$name = 'incident_status';
+	}
+	
 	if ($disabled) {
 		$value = __(get_db_value ('name', 'tincident_status', 'id', $actual));
-		$output .= print_label (__('Status'), '', '', true, $value);
+		$output .= print_label ($label, '', '', true, $value);
 		if ($return)
 			return $output;
 		echo $output;
@@ -281,12 +291,12 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 		$values[$row['id']] = __($row['name']);
 
 	if($for_massives) {
-	$output .= print_select ($values, 'mass_status', $actual, $script, __('Select'), -1,
-		true, false, false, __('Status'));
+		$output .= print_select ($values, 'mass_status', $actual, $script, __('Select'), -1,
+			true, false, false, $label);
 	}
 	else {
-	$output .= print_select ($values, 'incident_status', $actual, $script, $nothing, $nothing_value,
-		true, false, false, __('Status'));
+		$output .= print_select ($values, $name, $actual, $script, $nothing, $nothing_value,
+			true, false, false, $label);
 	}
 
 	if ($return)
@@ -296,14 +306,24 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 
 // Returns a combo with the incident resolution
 // ----------------------------------------------------------------------
-function combo_incident_resolution ($actual = -1, $disabled = false, $return = false, $for_massives = false, $script = '') {
+function combo_incident_resolution ($actual = -1, $disabled = false, $return = false, $for_massives = false, $script = '', $label = true, $name = false) {
 	$output = '';
+	
+	if ($label) {
+		$label = __('Resolution');
+	} else {
+		$label = "";
+	}
+	
+	if (!$name) {
+		$name = 'incident_resolution';
+	}
 	
 	if ($disabled) {
 		$resolutions = get_incident_resolutions ();
 		$resolution = isset ($resolutions[$actual]) ? $resolutions[$actual] : __('None');
 		
-		$output .= print_label (__('Resolution'), '', '', true, $resolution);
+		$output .= print_label ($label, '', '', true, $resolution);
 		if ($return)
 			return $output;
 		echo $output;
@@ -313,12 +333,12 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 	if($for_massives) {
 		$output .= print_select (get_incident_resolutions (),
 						'mass_resolution', $actual, '', __('Select'),
-						-1, true, false, false, __('Resolution'));
+						-1, true, false, false, $label);
 	}
 	else {
 		$output .= print_select (get_incident_resolutions (),
-						'incident_resolution', $actual, $script, __('None'),
-						0, true, false, false, __('Resolution'));
+						$name, $actual, $script, __('None'),
+						0, true, false, false, $label);
 	}
 	
 	if ($return)
@@ -434,7 +454,7 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false, $script = '', $no_change=false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false, $script = '', $no_change=false, $disabled) {
 	$output = '';
 	$values = array ();
 	
@@ -485,7 +505,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	}
 	
 	$output .= print_select ($values, $name, $actual, $script, $nothing, '0', true,
-		$multiple, false, $label);
+		$multiple, false, $label, $disabled);
 
 	if ($return)
 		return $output;
@@ -929,7 +949,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$date_from = (int) get_parameter("search_from_date");
 		$date_start = (string) get_parameter("search_first_date");
 		$date_end = (string) get_parameter("search_last_date");
-		$search_id_creator = (string) get_parameter ('search_id_creator');
+		$search_creator = (string) get_parameter ('search_id_creator');
 		$search_editor = (string) get_parameter ('search_editor');
 		$search_closed_by = (string) get_parameter ('search_id_creator');
 		$group_by_project = (bool) get_parameter('search_group_by_project');
@@ -959,7 +979,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$date_from = (int) $filter['from_date'];
 		$date_start = (string) $filter['first_date'];
 		$date_end = (string) $filter['last_date'];
-		$search_id_creator = (string) $filter['id_creator'];
+		$search_creator = (string) $filter['id_creator'];
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
 		$group_by_project = (bool) $filter['group_by_project'];
@@ -1053,7 +1073,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_creator = array();
 	$params_creator['input_id'] = 'text-search_id_creator';
 	$params_creator['input_name'] = 'search_id_creator';
-	$params_creator['input_value'] = $search_id_creator;
+	$params_creator['input_value'] = $search_creator;
 	$params_creator['title'] = __('Creator');
 	$params_creator['return'] = true;
 
