@@ -23,7 +23,16 @@ El asunto y el cuerpo del email pueden formarse mediante macros. A continuación
 <li>_resolution_ = Resolución del ticket
 <li>_incident_epilog_ = Epílogo del ticket
 <li>_incident_closed_by_ = Usuario que cierra el ticket
+<li>_incident_owner_email_: Email del usuario propietario.</li>
+<li>_incident_group_email_: Email del grupo asignado.</li>
+<li>_incident_author_email_: Email del usuario creador del ticket.</li>
 
+</p>
+
+<p>
+<b>Ejemplo de Para:</b>
+<br>
+_incident_owner_email_
 </p>
 
 <p>
