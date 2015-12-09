@@ -185,14 +185,17 @@ if ($operation == 'insert') {
 	$id_task = (int) get_parameter ("id_task", -1);
 	$id_profile = (int) get_parameter ("id_profile");
 	$public = (bool) get_parameter ("public");
+	$forward = (bool) get_parameter ("forward");
 	$split = (bool) get_parameter ("split");
 	$id_user = (string) get_parameter ("id_username", $config['id_user']);
 	$wu_user = $id_user;
 	$work_home = get_parameter ("work_home");
-	
 	// Multi-day assigment
-	if ($split && $duration > $config["hours_perday"]) {
-		$forward = (bool) get_parameter ("forward");
+	if ($split){
+		$nuevafecha = strtotime ( '+1 day' , strtotime ( $timestamp ) );
+		$timestamp = date ( 'Y-m-j' , $nuevafecha );
+	}
+	if ($forward && $duration > $config["hours_perday"]) {
 		$total_days = ceil ($duration / $config["hours_perday"]);
 		$total_days_sum = 0;
 		$hours_day = 0;

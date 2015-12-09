@@ -147,6 +147,13 @@ function print_file_types_table ($return = false) {
 	$condition = get_filter_by_fr_category_accessibility();
 
 	$types = process_sql("SELECT tdownload_type.id AS id,
+							 tdownload_type.name AS name,
+							 tdownload_type.description AS description,
+							 tdownload_type.icon AS icon
+						FROM tdownload_type
+							$condition");
+	
+	$types2 = process_sql("SELECT tdownload_type.id AS id,
 								tdownload_type.name AS name,
 								tdownload_type.description AS description,
 								tdownload_type.icon AS icon,
@@ -162,6 +169,15 @@ function print_file_types_table ($return = false) {
 	if (!$types) {
 		$types = array();
 	}
+	
+	for ($i = 0; $i < count($types); $i++){
+		for ($w = 0; $w < count($types2); $w++){
+			if ($types[$i]["id"] == $types2[$w]["id"]){
+				$types[$i]["num_files"]= $types2[$w]["num_files"];
+				$types[$i]["last_update"]= $types2[$w]["last_update"];
+			}
+		}
+	}
 
 	$without_type = process_sql("SELECT -1 AS id,
 										'' AS name,
@@ -173,6 +189,7 @@ function print_file_types_table ($return = false) {
 								WHERE id NOT IN (SELECT id_download FROM tdownload_type_file)
 									$condition
 								ORDER BY last_update DESC");
+
 	if ($without_type) {
 		$without_type = $without_type[0];
 		$without_type["name"] = __('Without type');

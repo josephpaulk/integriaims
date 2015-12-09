@@ -133,7 +133,7 @@ else {
 
 	echo "<h1>".__('File release type management')." &raquo; ".__('Defined types')."</h1>";
 
-	$types = get_file_types();
+	$types = get_file_types(false, true);
 	if (!$types) {
 		$types = array();
 		echo "<h3 class='error'>".__('No types found')."</h3>";
