@@ -640,7 +640,7 @@ function show_incident_type_fields(numRow) {
 					element.value=value['label'];
 					element.style.width="170px";
 					element.class="type";
-					if (value['blocked']) {
+					if (value['blocked'] != 0) {
 						element.disabled=true;
 					}
 					
@@ -662,7 +662,7 @@ function show_incident_type_fields(numRow) {
 					element.value=value['label'];
 					element.style.width="170px";
 					element.class="type";
-					if (value['blocked']) {
+					if (value['blocked'] != 0) {
 						element.disabled=true;
 					}
 					
@@ -722,7 +722,7 @@ function show_incident_type_fields(numRow) {
 					element.value=value['data'];
 					element.type='text';
 					element.size=40;
-					if (value['blocked']) {
+					if (value['blocked'] != 0) {
 						element.disabled=true;
 					}
 					
@@ -736,7 +736,7 @@ function show_incident_type_fields(numRow) {
 					element.value=value['data'];
 					element.type='number';
 					element.size=40;
-					if (value['blocked']) {
+					if (value['blocked'] != 0) {
 						element.disabled=true;
 					}
 					
@@ -764,7 +764,7 @@ function show_incident_type_fields(numRow) {
 				element.type='text';
 				element.rows='7';
 				element.cols='80';
-				if (value['blocked']) {
+				if (value['blocked'] != 0) {
 					element.disabled=true;
 				}
 				
