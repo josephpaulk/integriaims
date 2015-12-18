@@ -138,6 +138,7 @@ function api_create_incident ($return_type, $user, $params){
 	$status = $params[9];
 	$extra_data = $params[10];
 	$resolution = $params[11];
+	$extra_data2 = $params[12];
 	$inicio = $timestamp;
 	$actualizacion = $timestamp;
 
@@ -176,21 +177,21 @@ function api_create_incident ($return_type, $user, $params){
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
-			resolution, email_copy, id_incident_type, extra_data)
+			resolution, email_copy, id_incident_type, extra_data, extra_data2)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d, "%s", %d,  "%s")', $timestamp, $timestamp, $title, $description, $owner,
+			"%s", %d, "%s", %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution, $email_copy, $id_incident_type, $extra_data);
+			$email_notify, $resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2);
 	} else {
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, estado, prioridad,
 				id_grupo, id_creator, notify_email, 
-				resolution, email_copy, id_incident_type, id_parent, extra_data)
+				resolution, email_copy, id_incident_type, id_parent, extra_data, extra_data2)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-				"%s", %d, "%s", %d, %d, "%s")', $timestamp, $timestamp, $title, $description, $owner,
+				"%s", %d, "%s", %d, %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 				$status, $priority, $group, $id_creator,
-				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent, $extra_data);
+				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2);
 	}
 
 	if ($check_status && $check_resolution) {
@@ -230,7 +231,7 @@ function api_create_incident ($return_type, $user, $params){
 				$labels = array();
 			}
 			
-			$num_params = 12;
+			$num_params = 13;
 			foreach ($labels as $label) {
 				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 				
