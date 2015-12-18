@@ -425,6 +425,7 @@ function api_update_incident ($return_type, $user, $params){
 
 	$values['id_incident_type'] = $params[10];
 	$values['extra_data'] = $params[11];
+	$values['extra_data2'] = $params[12];
 	$values['actualizacion'] = $timestamp;
 	if ($values['estado'] == 7) {
 		$values['cierre'] = $timestamp;
@@ -498,7 +499,7 @@ function api_update_incident ($return_type, $user, $params){
 				$labels = array();
 			}
 		
-			$num_params = 12;
+			$num_params = 13;
 			foreach ($labels as $label) {
 				$values_type_field['data'] = $params[$num_params];
 				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
