@@ -2827,6 +2827,13 @@ function get_invoice_tax ($id_invoice) {
 	$tax = json_decode($tax,true);
 	return $tax;
 }
+// Returns the sum task of an invoice
+function get_invoice_tax_sum ($id_invoice) {
+	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
+	$tax = json_decode($tax,true);
+	$tax_sum = array_sum($tax);
+	return $tax_sum;
+}
 
 function get_invoice_tax_name ($id_invoice) {
 	$tax_name = get_db_value ('tax_name', 'tinvoice', 'id', $id_invoice);

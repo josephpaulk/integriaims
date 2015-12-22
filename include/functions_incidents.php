@@ -1487,6 +1487,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		
 	if (((!$config['email_ticket_on_creation_and_closing']) || ($mode == 5) || ($mode == 1)) && (!$owner_disabled)) {
 		integria_sendmail ($email_owner, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
+		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
 	}
 
     // Send a copy to each address in "email_copy"
@@ -2261,7 +2262,7 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 }
 
 /*Filters or display result for incident search*/
-function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false, $report_mode = false, $csv_mode = false) {
+function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false, $report_mode = false, $csv_mode = false, $id_ticket = 0) {
 	global $config;
 	
 	$params = "";
@@ -2428,148 +2429,150 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				$tr_status = 'class="yellow_row"';
 			else
 				$tr_status = 'class="green_row"';
+				
+			if ($incident["id_incidencia"] != $id_ticket) {
+			
+				echo '<tr '.$tr_status.' id="incident-'.$incident['id_incidencia'].'"';
 
-			echo '<tr '.$tr_status.' id="incident-'.$incident['id_incidencia'].'"';
+				echo " style='border-bottom: 1px solid #ccc;' >";
 
-			echo " style='border-bottom: 1px solid #ccc;' >";
+				echo '<td>';
+				print_checkbox_extended ('incidentcb-'.$incident['id_incidencia'], $incident['id_incidencia'], false, '', '', 'class="cb_incident"');
+				echo '</td>';
 
-			echo '<td>';
-			print_checkbox_extended ('incidentcb-'.$incident['id_incidencia'], $incident['id_incidencia'], false, '', '', 'class="cb_incident"');
-			echo '</td>';
+				
+				//Print incident link if not ajax, if ajax link to js funtion to replace parent
+				$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
 
-			
-			//Print incident link if not ajax, if ajax link to js funtion to replace parent
-			$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
+				
+				if ($ajax) {
+					$link = "javascript:update_parent('".$incident["id_incidencia"]."')";
+				}
+				
+				
+				echo '<td>';
+				if (!$report_mode) {
+							echo '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
+				} else {
+					echo '<strong>'.'#'.$incident['id_incidencia'].'</strong></td>';
+				}
+				
+				// SLA Fired ?? 
+				if ($incident["affected_sla_id"] != 0)
+					echo '<td width="25"><img src="images/exclamation.png" /></td>';
+				else
+					echo '<td></td>';
+				
+				// % SLA	
+				if ($report_mode) {
+					echo "<td>";
+					 if ($incident["affected_sla_id"] != 0)
+						echo format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+					 else 
+						echo "";
+					echo "</td>";
+				}
+				
+				echo '<td>';
 
-			
-			if ($ajax) {
-				$link = "javascript:update_parent('".$incident["id_incidencia"]."')";
-			}
-			
-			
-			echo '<td>';
-			if (!$report_mode) {
-						echo '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
-			} else {
-				echo '<strong>'.'#'.$incident['id_incidencia'].'</strong></td>';
-			}
-			
-			// SLA Fired ?? 
-			if ($incident["affected_sla_id"] != 0)
-				echo '<td width="25"><img src="images/exclamation.png" /></td>';
-			else
-				echo '<td></td>';
-			
-			// % SLA	
-			if ($report_mode) {
-				echo "<td>";
-				 if ($incident["affected_sla_id"] != 0)
-					echo format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
-				 else 
-					echo "";
-				echo "</td>";
-			}
-			
-			echo '<td>';
-
-			if (!$report_mode) {							
-				echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
-			} else {
-				echo '<strong>'.$incident['titulo'].'</strong><br>';
-			}
-			echo "<span style='font-size:11px;font-style:italic'>";
-			echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
-			
-			$sql = sprintf("SELECT *
-							FROM tincident_type_field
-							WHERE id_incident_type = %d", $incident["id_incident_type"]);
-			$config['mysql_result_type'] = MYSQL_ASSOC;
-			$type_fields = get_db_all_rows_sql($sql);
-			
-			$type_fields_values_text = "";
-			if ($type_fields) {
-				foreach ($type_fields as $type_field) {
-					if ($type_field["show_in_list"]) {
-						$field_data = get_db_value_filter("data", "tincident_field_data", array ("id_incident" => $incident["id_incidencia"], "id_incident_field" => $type_field["id"]));
-						if ($field_data) {
-							if ($type_field["type"] == "textarea") {
-								$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
+				if (!$report_mode) {							
+					echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
+				} else {
+					echo '<strong>'.$incident['titulo'].'</strong><br>';
+				}
+				echo "<span style='font-size:11px;font-style:italic'>";
+				echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
+				$sql = sprintf("SELECT *
+								FROM tincident_type_field
+								WHERE id_incident_type = %d", $incident["id_incident_type"]);
+				$config['mysql_result_type'] = MYSQL_ASSOC;
+				$type_fields = get_db_all_rows_sql($sql);
+				
+				$type_fields_values_text = "";
+				if ($type_fields) {
+					foreach ($type_fields as $type_field) {
+						if ($type_field["show_in_list"]) {
+							$field_data = get_db_value_filter("data", "tincident_field_data", array ("id_incident" => $incident["id_incidencia"], "id_incident_field" => $type_field["id"]));
+							if ($field_data) {
+								if ($type_field["type"] == "textarea") {
+									$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
+								}
+								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[$field_data]</div>";
 							}
-							$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[$field_data]</div>";
 						}
 					}
 				}
-			}
-			echo "&nbsp;$type_fields_values_text";
-			
-			echo '</span></td>';
-			echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
-			if ($config["show_creator_incident"] == 1){	
-				$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
-				if($id_creator_company != 0) {
-					$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
-					echo "<br><span style='font-size:11px;font-style:italic'>$company_name</span>";
+				echo "&nbsp;$type_fields_values_text";
+				
+				echo '</span></td>';
+				echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
+				if ($config["show_creator_incident"] == 1){	
+					$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
+					if($id_creator_company != 0) {
+						$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
+						echo "<br><span style='font-size:11px;font-style:italic'>$company_name</span>";
+					}
 				}
-			}
-			echo '</td>';
-			$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
+				echo '</td>';
+				$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 
-			echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';
+				echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';
 
-			// priority
-			echo '<td>';
-			print_priority_flag_image ($incident['prioridad']);
-			$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
-			if ($last_wu["id_user"] == $incident["id_creator"]){
-				echo "<br><img src='images/comment.gif' title='".$last_wu["id_user"]."'>";
-			}
-
-			echo '</td>';
-			
-			echo '<td style="font-size:11px;">'.human_time_comparation ($incident["actualizacion"]);
-		
-			// Show only if it's different
-			if ($incident["inicio"] != $incident["actualizacion"]){
-				echo "<br><em>[". human_time_comparation ($incident["inicio"]);
-				echo "]</em>";
-			}
-			echo "<br>";
-			echo '<span style="font-size:9px;">';
-			
-			if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
-					$updated_by = get_db_value('nombre_real', 'tusuario', 'id_usuario', $last_wu["id_user"]);
-				} else {
-					$updated_by = $last_wu["id_user"];
+				// priority
+				echo '<td>';
+				print_priority_flag_image ($incident['prioridad']);
+				$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
+				if ($last_wu["id_user"] == $incident["id_creator"]){
+					echo "<br><img src='images/comment.gif' title='".$last_wu["id_user"]."'>";
 				}
-			echo $updated_by;
-			echo "</span>";
-			echo '</td>';
+
+				echo '</td>';
+				
+				echo '<td style="font-size:11px;">'.human_time_comparation ($incident["actualizacion"]);
 			
-			if ($config["show_creator_incident"] == 1){	
-				echo "<td class='f9'>";
+				// Show only if it's different
+				if ($incident["inicio"] != $incident["actualizacion"]){
+					echo "<br><em>[". human_time_comparation ($incident["inicio"]);
+					echo "]</em>";
+				}
+				echo "<br>";
+				echo '<span style="font-size:9px;">';
+				
 				if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
-					$incident_creator = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_creator"]);
-				} else {
-					$incident_creator = $incident["id_creator"];
-				}
+						$updated_by = get_db_value('nombre_real', 'tusuario', 'id_usuario', $last_wu["id_user"]);
+					} else {
+						$updated_by = $last_wu["id_user"];
+					}
+				echo $updated_by;
+				echo "</span>";
+				echo '</td>';
+				
+				if ($config["show_creator_incident"] == 1){	
+					echo "<td class='f9'>";
+					if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
+						$incident_creator = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_creator"]);
+					} else {
+						$incident_creator = $incident["id_creator"];
+					}
 
-				//~ echo substr($incident_creator,0,12);
-				echo $incident_creator;
-				echo "</td>";
-			}
-			
-			if ($config["show_owner_incident"] == 1){	
-				echo "<td class='f9'>";
-				if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
-					$incident_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_usuario"]);
-				} else {
-					$incident_owner = $incident["id_usuario"];
+					//~ echo substr($incident_creator,0,12);
+					echo $incident_creator;
+					echo "</td>";
 				}
-				echo $incident_owner;
-				echo "</td>";
+				
+				if ($config["show_owner_incident"] == 1){	
+					echo "<td class='f9'>";
+					if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
+						$incident_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_usuario"]);
+					} else {
+						$incident_owner = $incident["id_usuario"];
+					}
+					echo $incident_owner;
+					echo "</td>";
+				}
+				
+				echo '</tr>';
 			}
-			
-			echo '</tr>';
 		}
 	}
 	echo "</tbody>";

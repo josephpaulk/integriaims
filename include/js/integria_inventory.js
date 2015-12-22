@@ -757,3 +757,44 @@ function show_issue_date() {
 		
 	}
 }
+
+//add
+function delete_massive_inventory () {
+	var checked_ids = new Array();
+	$(".cb_inventory").each(function() {
+		id = this.id.split ("-").pop ();
+		checked = $(this).attr('checked');
+		if(checked) {
+			$(this).attr('checked', false);
+			checked_ids.push(id);
+		}
+	});
+
+	if(checked_ids.length == 0) {
+		alert(__("No items selected"));
+	}
+	else {
+		for(var i=0;i<checked_ids.length;i++){
+				values = Array ();
+				values.push ({name: "page",
+							value: "operation/inventories/inventory"});
+				values.push ({name: "quick_delete",
+							value: checked_ids[i]});
+				values.push ({name: "massive_number_loop",
+						value: i});
+				jQuery.get ("ajax.php",
+					values,
+					function (data, status) {
+						// We refresh the interface in the last loop
+						if(data >= (checked_ids.length - 1)) {
+							// This takes the user to the top of the page
+							//window.location.href="index.php?sec=inventory&sec2=operation/inventories/inventory";
+							// This takes the user to the same place before reload
+							location.reload();
+						}
+					},
+					"json"
+				);
+			}
+	}
+}

@@ -708,7 +708,7 @@ elseif ($op == "invoices") {
 				//$data[1] = "<a href='$url'>".$invoice["description"]."</a>";
 				$data[2] = format_numeric(get_invoice_amount ($invoice["id"])) ." ". strtoupper ($invoice["currency"]);
 
-				$tax = get_invoice_tax ($invoice["id"]);
+				$tax = get_invoice_tax_sum ($invoice["id"]);
 				$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
 
 				if ($tax != 0)

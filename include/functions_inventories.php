@@ -1254,6 +1254,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				$table->head[7] = __('Actions');
 			}
 		}
+		$table->head[8] = print_checkbox ('inventorycb-all', "", false, true);
 		
 		$count = $count_inv;
 
@@ -1343,6 +1344,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				}
 				
 			}
+			$data[8] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
 			$table->rowclass[$idx] = 'inventory_info_' . $inventory["id"];
 			
 			

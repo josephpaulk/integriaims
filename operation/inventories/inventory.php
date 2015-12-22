@@ -58,7 +58,16 @@ if (get_parameter("quick_delete")) {
 		echo "<h3 class='error'>".__('There was a problem deleting object')."</h3>";
 		no_permission();
 	}
+	
+	$massive_number_loop = get_parameter ('massive_number_loop', -1);	
+	// AJAX (Massive operations)
+	if ($massive_number_loop > -1) {
+		ob_clean();
+		echo json_encode($massive_number_loop);
+		return;
+	}
 }
+
 /* Extras update, temporal patch (slerena, 26Ago2010) */
 $update_extras = get_parameter("update_extras", 0);
 if ($update_extras == 1){

@@ -1197,6 +1197,60 @@ function form_search_incident ($return = false, $filter=false) {
 	echo $output;
 }
 
+function form_search_users ($return = false, $filter=false) {
+	
+	include_once ("functions_user.php");
+	global $config;
+	$output = '';
+	
+	if (!$filter) {
+		$offset = get_parameter ("offset", 0);
+		$search_text = get_parameter ("search_text", "");
+		$disabled_user = get_parameter ("disabled_user", -1);
+		$level = get_parameter ("level", -10);
+		$group = get_parameter ("group", 0);
+	} else {
+		$offset = (int) $filter['offset'];
+		$search_text = (string) $filter['search_text'];
+		$disabled_user = (int) $filter['disabled_user'];
+		$level = (int) $filter['level'];
+		$group = (int) $filter['group'];
+	}
+
+	$table->id = "table-user_search";
+	$table->width = "99%";
+	$table->class = "search-table";
+	$table->size = array ();
+	$table->style = array ();
+	$table->data = array ();
+
+	$table->data[0][0] = print_input_text ("search_text", $search_text, '', 15, 0, true, __('Search text'));
+
+	$user_status = array();
+	$user_status[0] = __('Enabled');
+	$user_status[1] = __('Disabled');
+	$table->data[0][1] = print_select ($user_status, 'disabled_user', $disabled_user, '', __('Any'), -1, true, 0, false, __('User status'));
+
+	$global_profile = array();
+	$global_profile[-1] = __('External');
+	$global_profile[0] = __('Standard');
+	$global_profile[1] = __('Administrator');
+	$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+
+	$table->data[0][3] = print_select (get_user_groups(), 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
+
+	$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	
+	$output .= '<form name="bskd" method=post id="saved-user-form" action="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios">';
+	$output .= print_table ($table, true);
+	$output .= '</form>';
+		
+	if ($return)
+		return $output;
+	echo $output;
+	
+}
+
 function incident_users_list ($id_incident, $return = false) {
 
 

@@ -1062,7 +1062,8 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
-	
+	//add button to display info user for creator
+	$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 } else {
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
@@ -1096,6 +1097,8 @@ if ($has_im) {
 	$params_assigned['return_help'] = true;
 	$params_assigned['disabled'] = $disabled_creator;
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
+	//add button to display info user for owner
+	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 1);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 } else {
 	$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
 	$table->data[2][1] .= print_label (__('Owner'), 'id_user', '', true,
@@ -1352,6 +1355,8 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='paren
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='contact_search_window'></div>";
 
+echo "<div class= 'dialog ui-dialog-content' title='".__("Users")."' id='users_search_window'></div>";
+
 echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='ticket_childs'></div>";
 
 ?>
@@ -1467,7 +1472,7 @@ $(document).ready (function () {
 	
 	/*Open parent search popup*/
 	$("#text-search_parent").focus(function () {
-		parent_search_form('');
+		parent_search_form('', '<?php echo $id?>');
 	});
 	
 	//Validate form

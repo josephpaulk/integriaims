@@ -21,6 +21,10 @@ include_once("include/functions_incidents.php");
 $get_incidents_search = get_parameter('get_incidents_search', 0);
 $get_incident_name = get_parameter('get_incident_name', 0);
 $get_contact_search = get_parameter('get_contact_search',0);
+$get_user_search = get_parameter('get_user_search',0);
+$clickin = get_parameter('clickin', 2);
+$id_ticket = get_parameter('id_ticket', 0);
+
 $set_priority = get_parameter('set_priority', 0);
 $set_resolution = get_parameter('set_resolution', 0);
 $set_status = get_parameter('set_status', 0);
@@ -62,7 +66,24 @@ if ($get_incidents_search) {
 	form_search_incident (false, $filter_form);
 	
 	$no_parents = true;
-	incidents_search_result($filter,$ajax, false, false, $no_parents);
+	incidents_search_result($filter, $ajax, false, false, $no_parents, false, false, false, $id_ticket);
+}
+
+if ($get_user_search) {
+	
+	$filter = array ();
+	$filter['offset'] = get_parameter ("offset", 0);
+	$filter['search_text'] = get_parameter ("search_text", "");
+	$filter['disabled_user'] = get_parameter ("disabled_user", -1);
+	$filter['level'] = get_parameter ("level", -10);
+	$filter['group'] = get_parameter ("group", 0);
+		
+	$ajax = get_parameter("ajax");
+	
+	$filter_form = false;
+	
+	form_search_users (false, $filter_form);
+	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin);
 }
 
 if ($get_incident_name) {

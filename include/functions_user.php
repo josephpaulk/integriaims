@@ -255,4 +255,131 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 	
 	return $fields;
 }
+							
+function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $search_text, $disabled_user, $level, $group) {
+
+	if ($filter != 0){
+		$offset = $filter['offset'];
+		$search_text = $filter['search_text'];
+		$disabled_user = $filter['disabled_user'];
+		$level = $filter['level'];
+		$group = $filter['group'];
+	} 	
+	
+	$search = "WHERE 1=1 ";
+	if ($search_text != "") {
+		$search .= " AND (id_usuario LIKE '%$search_text%' OR comentarios LIKE '%$search_text%' OR nombre_real LIKE '%$search_text%' OR direccion LIKE '%$search_text%')";
+	}
+
+	if ($disabled_user > -1) {
+		$search .= " AND disabled = $disabled_user";
+	}
+
+	if ($level > -10) {
+		$search .= " AND nivel = $level";
+	}
+
+	if ($group > 0) {
+		$search .= " AND id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+	}
+
+	$query1 = "SELECT * FROM tusuario $search ORDER BY id_usuario";
+
+	$count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
+	
+	pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=".$search_text."&disabled_user=".$disabled_user."&level=".$level."&group=".$group, $offset, true);
+
+	$sql1 = "$query1 LIMIT $offset, ". $size_page;
+	
+	echo '<table width="99%" class="listing">';
+	if ($filter == 0){
+		echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
+		echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
+	}
+	echo '<th>'.__('User ID');
+	echo '<th>'.__('Name');
+	echo '<th>'.__('Company');
+	echo '<th>'.__('Last contact');
+	echo '<th>'.__('Profile');
+	if ($filter == 0){
+		echo '<th>'.__('Delete');
+	}
+
+	$resq1 = process_sql($sql1);
+
+	// Init vars
+	$nombre = "";
+	$nivel = "";
+	$comentarios = "";
+	$fecha_registro = "";
+
+	foreach($resq1 as $rowdup){
+		$nombre=$rowdup["id_usuario"];
+		$nivel =$rowdup["nivel"];
+		$realname =$rowdup["nombre_real"];
+		$fecha_registro =$rowdup["fecha_registro"];
+		$avatar = $rowdup["avatar"];
+
+		if ($rowdup["nivel"] == 0)
+			$nivel = "<img src='images/group.png' title='".__("Standard user")."'>";
+		elseif ($rowdup["nivel"] == 1)
+			$nivel = "<img src='images/integria_mini_logo.png' title='".__("Administrator")."'>";
+		else
+			$nivel = "<img src='images/user_gray.png' title='".__("External user")."'>";
+
+		$disabled = $rowdup["disabled"];	
+		$id_company = $rowdup["id_company"];	
+		
+		echo "<tr>";
+		if ($filter == 0){
+			echo "<td>";
+			echo print_checkbox_extended ("user-".$rowdup["id_usuario"], $rowdup["id_usuario"], false, false, "", "class='user_checkbox'", true);
+		
+			echo "<td>";
+			if ($disabled == 1){
+				echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'> ";
+			}
+		}
+		echo "<td>";
+		if ($filter == 0){
+			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
+		} else {
+			$url = "javascript:loadContactUser(\"".$nombre."\",\"".$clickin."\");";
+			echo "<a href='".$url."'>".ucfirst($nombre)."</a>";
+		}
+		echo "<td style='font-size:9px'>" . $realname;	
+		$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
+		echo "<td>".$company_name."</td>";
+
+
+		echo "<td style='font-size:9px'>".human_time_comparation($fecha_registro);
+		echo "<td>";
+		print_user_avatar ($nombre, true);
+		echo "&nbsp;";
+
+		if ($config["enteprise"] == 1){
+			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+			$result=mysql_query($sql1);
+			echo "<a href='#' class='tip'>&nbsp;<span>";
+			if (mysql_num_rows($result)){
+				while ($row=mysql_fetch_array($result)){
+					echo dame_perfil($row["id_perfil"])."/ ";
+					echo dame_grupo($row["id_grupo"])."<br>";
+				}
+			}
+			else { 
+				echo __('This user doesn\'t have any assigned profile/group'); 
+			}
+			echo "</span></a>";
+		}
+
+		echo $nivel;
+		if ($filter == 0){
+			echo '<td align="center">';
+			echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+			echo '</td>';
+		}
+	}
+	echo "</table>";
+}
 ?>

@@ -263,7 +263,7 @@
 						<?php echo '<b>'.format_numeric($amount,2).' '.$invoice['currency'].'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; width:124px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($irpf_amount,2).' '.$invoice['currency'].'</b>' ?>
+						<?php echo '<b>'.format_numeric($before_amount,2).' '.$invoice['currency'].'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; width:124px; font-size:15px;">
 						<?php echo '<b>'.format_numeric($tax_amount,2).' '.$invoice['currency'].'</b>' ?>

@@ -457,6 +457,7 @@ if (!$clean_output) {
 
 }
 
+$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));	
 $page = (int)get_parameter('page', 1);
 switch ($mode) {
 	case 'tree':
@@ -464,12 +465,22 @@ switch ($mode) {
 		break;
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
+		if ($write_permission) {
+			echo '<div style=" text-align: right;">';
+			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+			echo '</div>';
+		}
 		break;
 	default:
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
+		if ($write_permission) {	
+			echo '<div style=" text-align: right;">';
+			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+			echo '</div>';
+		}
 		break;
 }
-	
+
 
 echo '<div id="sql_search_hidden" style="display:none;">';
 	print_input_text('sql_search_hidden', $sql_search);
@@ -537,6 +548,15 @@ $(document).ready (function () {
 	if ($("#tree_search").length > 0) {
 		validate_user ("#tree_search", "#text-owner", "<?php echo __('Invalid user')?>");
 	}
+
+	//JS for massive operations
+	$("#checkbox-inventorycb-all").change(function() {
+		$(".cb_inventory").prop('checked', $("#checkbox-inventorycb-all").prop('checked'));
+	});
+
+	$(".cb_inventory").click(function(event) {
+		event.stopPropagation();
+	});
 });
 
 </script>

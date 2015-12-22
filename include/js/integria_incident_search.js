@@ -787,12 +787,12 @@ function show_incident_type_fields(numRow) {
 	});
 }
 
-function parent_search_form(filter) {
-	
+function parent_search_form(filter, id_ticket) {
+
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/incidents&get_incidents_search=1&ajax=1&"+filter,
+		data: 'page=include/ajax/incidents&get_incidents_search=1&id_ticket='+id_ticket+'&ajax=1&'+filter,
 		dataType: "html",
 		success: function(data){	
 			$("#parent_search_window").html (data);
@@ -977,6 +977,65 @@ $.ajax({
 			});
 		}
 	});	
+}
+
+function incident_show_user_search (filter, clickin) {
+	
+$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: 'page=include/ajax/incidents&get_user_search=1&clickin='+clickin+'&ajax=1&'+filter,
+		dataType: "html",
+		success: function(data){	
+			$("#users_search_window").html (data);
+			$("#users_search_window").show ();
+			
+			$("#users_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#users_search_window").dialog('open');
+			
+			//JS to catch incident search submit request
+			$("#saved-user-form").submit(function (){
+				var filter = $("#saved-user-form").formSerialize();
+				incident_show_user_search(filter);
+				return false;
+			});
+						
+			$("a[id^='page']").click(function(e) {
+				e.preventDefault();
+				var id = $(this).attr("id");
+								
+				offset = id.substr(5,id.length);
+				
+				var filter = $("#saved-user-form").formSerialize();
+				filter = filter+"&offset="+offset;
+				incident_show_user_search(filter);
+			});			
+		}
+	});	
+}
+
+function loadContactUser(name, clickin) {
+		console.log(clickin);
+		if (clickin == 0){
+			var content = $("#text-id_creator").val();
+			content = name;
+			$("#text-id_creator").val(content);
+		} else {
+			var content = $("#text-id_user").val();
+			content = name;
+			$("#text-id_user").val(content);
+		}
+		$("#users_search_window").dialog("close");
 }
 
 function loadContactEmail(email) {
