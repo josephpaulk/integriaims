@@ -103,7 +103,8 @@ if ($get_external_data) {
 
 	if ($id_parent_value) {
 		$table_name_parent = get_db_value_sql("SELECT parent_table_name FROM tobject_type_field WHERE id=".$id_object_type_field);
-		$external_data = get_db_all_rows_sql("SELECT * FROM $table_name WHERE $id_parent_table=".$id_parent_value);
+		$id_reference_parent = get_db_value_sql("SELECT parent_reference_field FROM tobject_type_field WHERE id=".$id_object_type_field);
+		$external_data = get_db_all_rows_sql("SELECT * FROM $table_name WHERE $id_reference_parent=".$id_parent_value);
 	} else {
 		$external_data = get_db_all_rows_in_table($table_name);
 	}

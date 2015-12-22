@@ -1538,7 +1538,15 @@ function get_inventory_workunits ($id_inventory) {
 }
 
 function get_workunit_data ($id_workunit) {
-	return get_db_row ('tworkunit', 'id', $id_workunit);
+	//~ return get_db_row ('tworkunit', 'id', $id_workunit);
+	$result = get_db_row ('tworkunit', 'id', $id_workunit);
+
+	foreach ($result as $key=>$data) {
+		if (!is_numeric($key)) {
+			$wu_data[$key] = $data;
+		}
+	}
+	return $wu_data;
 }
 
 function get_building ($id_building) {

@@ -1284,31 +1284,41 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $inventory['owner']);
 			else 
 				$name_owner = '--';
-			$data[2] = "<a href=".$url.">".$name_owner.'</a>';
 
-			if ($inventory["id_parent"] != 0)
+			$data[2] = "<a href=".'index.php?sec=inventory&sec2=users&sec2=operation/users/user_edit&id='.$inventory['owner'].">".$name_owner.'</a>';
+
+			if ($inventory["id_parent"] != 0) {
 				$name_parent = get_db_value('name', 'tinventory', 'id', $inventory['id_parent']);
-			else 
+				$data[3] = "<a href=".'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$inventory['id_parent'].">".$name_parent.'</a>';
+			} else {
 				$name_parent = '--';
-			$data[3] = "<a href=".$url.">".$name_parent.'</a>';
+				$data[3] = $name_parent;
+			}
 			
-			if ($inventory['id_object_type'] != 0)
+			if ($inventory['id_object_type'] != 0) {
 				$name_object = get_db_value('name', 'tobject_type', 'id', $inventory['id_object_type']);
-			else 
+				$data[4] = "<a href=".'index.php?sec=inventory&sec2=operation/inventories/manage_objects&id='.$inventory['id_object_type'].">".$name_object.'</a>';
+			} else { 
 				$name_object = '--';
-			$data[4] = "<a href=".$url.">".$name_object.'</a>';
+				$data[4] = $name_object;
+			}
 			
-			if ($inventory['id_manufacturer'] != '')
+			if ($inventory['id_manufacturer'] != 0) {
 				$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $inventory['id_manufacturer']);
-			else 
+				$data[5] = "<a href=".'index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&id='.$inventory['id_manufacturer'].">".$name_manufacturer.'</a>';
+			} else { 
 				$name_manufacturer = '--';
-			$data[5] = "<a href=".$url.">".$name_manufacturer.'</a>';
+				$data[5] = $name_manufacturer;
+				
+			}
 			
-			if ($inventory['id_contract'] != '')
+			if ($inventory['id_contract'] != 0) {
 				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
-			else 
+				$data[6] = "<a href=".$url.">".$name_contract.'</a>';
+			} else { 
 				$name_contract = '--';
-			$data[6] = "<a href=".$url.">".$name_contract.'</a>';
+				$data[6] = $name_contract;
+			}
 			
 			if ($result_check) {
 
