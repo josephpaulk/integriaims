@@ -686,6 +686,7 @@ function api_get_incident_files ($return_type, $user, $id_incident){
 	$filter = array();
 	
 	$result = get_incident_files ($id_incident);
+	$result = clean_numerics($result);
 	
 	if($result === false) {
 		return '';

@@ -318,7 +318,7 @@ if ($update) {
 				$values['id_inventory'] = $id;
 				
 				$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
-				if ($exists_id && $is_unique) 
+				if ($exists_id && $is_unique != 0) 
 					process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
 				else
 					process_sql_insert('tobject_field_data', $values);
