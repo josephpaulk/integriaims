@@ -465,7 +465,7 @@ $(document).ready (function () {
 
 $(document).ready(function() {
 	// Containers open/close logic
-	$('.container h2.clickable').click(function() {
+	$('th.clickable').click(function() {
 		var arrow = $('#' + $(this).attr('id') + ' img').attr('src');
 		var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');
 		var new_arrow = '';

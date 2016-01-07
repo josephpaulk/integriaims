@@ -43,53 +43,51 @@ if (! $project_access["read"]) {
 	no_permission ();
 }
 
-echo "<h1>" . __('Time graph') . "</h1>";
+echo '<h2>'.__('Project management').'</h2>';
+echo "<h4>".__('Time graph')."</h4>";
 
 if ($id_project) {
-	
+echo "<div class='divform'>";	
 	echo "<form id='form-time_graph' action='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=" . $id_project . "' method='post'>";
-	
-	echo '<table class="search-table-button" style="width: 99%;" border=0>';
-	echo '<tr>';
+		echo '<table class="search-table">';
+			echo '<tr><td><b>'.__('User ').' </b></td></tr>';
+			echo '<tr><td>';
+				$params = array();
 
+				$params['input_value'] = $id_user_filter;
+				$params['input_id'] = 'text-user';
+				$params['input_name'] = 'user';
+				$params['return'] = false;
+				$params['return_help'] = false;
 
-	echo '<td width="25%"><b>'.__('User ').' </b>';
-	$params = array();
-
-	$params['input_value'] = $id_user_filter;
-	$params['input_id'] = 'text-user';
-	$params['input_name'] = 'user';
-	$params['return'] = false;
-	$params['return_help'] = false;
-
-	user_print_autocomplete_input($params);
-	echo '</td>';
-
-	echo '<td width="25%"><b>'.__('Start').' </b>';
-	print_help_tip(__('Empty date is all range time of project'));
-	print_input_text ('start_date', $start_date, '', 10, 20);
-	
-	echo '<td width="25%"><b>'.__('End').' </b>';
-	print_help_tip(__('Empty date is all range time of project'));
-	print_input_text ('end_date', $end_date, '', 10, 20);
-	echo '</tr>';
-	echo '<tr><td colspan=3>';
-	print_input_hidden ('id_project', $id_project);
-	print_input_hidden ('action', 'update');
-	print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo '</td></tr>';
-	echo "</table>";
-
-	
+				user_print_autocomplete_input($params);
+			echo '</td></tr>';
+			echo '<tr><td><b>'.__('Start').' </b></td></tr>';
+			echo '<tr><td>';
+				print_help_tip(__('Empty date is all range time of project'));
+				print_input_text ('start_date', $start_date, '', 10, 20);
+			echo '</td></tr>';
+			echo '<tr><td><b>'.__('End').' </b></td></tr>';
+			echo '<tr><td>';
+				print_help_tip(__('Empty date is all range time of project'));
+				print_input_text ('end_date', $end_date, '', 10, 20);
+			echo '</td></tr>';
+			echo '<tr><td>';
+				print_input_hidden ('id_project', $id_project);
+				print_input_hidden ('action', 'update');
+				print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
+			echo '</td></tr>';
+		echo "</table>";
 	echo "</form>";
-	?>
+echo "</div>";
+?>
+
 	<script type="text/javascript">
 		add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
 	</script>
-	<?php
-	
+
+<?php
 	echo "<div id='time_graph' style='margin: 0px auto; width: 800px;'></div>";
-	
 	if (empty($start_date)) {
 		$start_date = false;
 	}
@@ -97,7 +95,6 @@ if ($id_project) {
 	if (empty($end_date)) {
 		$end_date = false;
 	}
-
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript">

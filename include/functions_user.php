@@ -23,7 +23,7 @@ function user_print_autocomplete_input($parameters) {
 	if (isset($parameters['return'])) {
 		$return = $parameters['return'];
 	}
-	$input_size = 15;
+	$input_size = 20;
 	if (isset($parameters['size'])) {
 		$input_size = $parameters['size'];
 	}
