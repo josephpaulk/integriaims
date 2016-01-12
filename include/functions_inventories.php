@@ -1314,7 +1314,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			
 			if ($inventory['id_contract'] != 0) {
 				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
-				$data[6] = "<a href=".$url.">".$name_contract.'</a>';
+				$data[6] = "<a href=".'index.php?sec=inventory&sec2=customers&sec2=operation/contracts/contract_detail&id_contract='.$inventory['id_contract'].">".$name_contract.'</a>';
 			} else { 
 				$name_contract = '--';
 				$data[6] = $name_contract;
