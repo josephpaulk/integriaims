@@ -185,6 +185,11 @@ switch ($op){
 		echo api_get_last_cron_execution ($return_type, $user, $params);
 		break;
 	}
+	case "get_previous_cron_execution":
+	{
+		echo api_get_previous_cron_execution ($return_type, $user, $params);
+		break;
+	}
 	case "get_num_queued_emails":
 	{
 		echo get_num_queued_emails ($return_type, $user, $params);

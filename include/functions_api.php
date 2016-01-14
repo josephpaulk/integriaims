@@ -1283,6 +1283,37 @@ function api_get_last_cron_execution ($return_type, $user, $params) {
 	
 }
 
+function api_get_previous_cron_execution ($return_type, $user, $params) {
+
+	$now = strtotime(date('Y/m/d H:i:s'));
+	
+	$last_exec = get_db_value('value', 'tconfig', 'token', 'previous_crontask');
+	
+	if (($last_exec === false) || ($last_exec == '')){
+		$minutes = -1;
+	} else {
+		$unix = strtotime($last_exec);
+		
+		$minutes = ($now - $unix) / 60;
+		$minutes = round($minutes, 0);
+	}
+
+	$return = '';
+	
+	if($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<cronjob>\n";
+		$return .= "<previous_exec>".$minutes."</previous_exec>\n";
+		$return .= "</cronjob>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $minutes;
+	}
+	
+	return $return;
+	
+}
+
 function get_num_queued_emails ($return_type, $user, $params) {
 
 	$sql = "SELECT COUNT(*) FROM tpending_mail";

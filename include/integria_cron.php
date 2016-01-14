@@ -1164,7 +1164,15 @@ function delete_old_workflow_event_data () {
 // Crontab control on tconfig, install first run to let user know where is
 
 $installed = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'crontask'");
+$previous = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'previous_crontask'");
 $current_date = date ("Y/m/d H:i:s");
+
+if ($previous == 0) {
+	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('previous_crontask', '$current_date')");
+} else {
+	$previous_cron_date = get_db_sql ("SELECT `value` FROM tconfig WHERE `token` = 'crontask'");
+	process_sql ("UPDATE tconfig SET `value` = '$previous_cron_date' WHERE `token` = 'previous_crontask'");
+}
 
 if ($installed == 0){
 	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('crontask', '$current_date')");
