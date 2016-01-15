@@ -275,7 +275,7 @@
 						<?php echo '<b>'.__('Discount before taxes').'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
-						<?php echo '<b>'.'Total Tax'. ' ('.$tax.'%)'.'</b>' ?>
+						<?php echo '<b>'.__('Total Tax'). ' ('.$tax.'%)'.'</b>' ?>
 					</td>
 					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
 						<?php echo '<b>'.__('Retention').'</b>' ?>
