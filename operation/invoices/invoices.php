@@ -129,7 +129,7 @@ if ($operation_invoices == "add_invoice"){
 	$tax = json_decode($taxencode,true);
 		
 	$irpf = get_parameter ("irpf", 0.00);
-	$concept_irpf = get_parameter ("concept_irpf");
+	
 	//~ tax_name 
 	$tax_name_array = array();
 	$cont = 1;
@@ -185,11 +185,11 @@ if ($operation_invoices == "add_invoice"){
 	
 	// Creating the cost record
 	$sql = sprintf ("INSERT INTO tinvoice (description, id_user, id_company,
-	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, irpf, concept_irpf, currency, status,
+	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, irpf, currency, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s','%s', '%s',
-	'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
-	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, json_encode($taxarray), $irpf, $concept_irpf,$currency,
+	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s',
+	'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
+	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, json_encode($taxarray), $irpf, $currency,
 	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
 	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, json_encode($tax_name_array));
 	
@@ -263,7 +263,6 @@ if ($operation_invoices == "update_invoice"){
 	$tax = json_decode($taxencode,true);	
 	
 	$irpf = get_parameter ("irpf", 0.00);
-	$concept_irpf = get_parameter ("concept_irpf");
 	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
@@ -315,7 +314,6 @@ if ($operation_invoices == "update_invoice"){
 	$values['status'] = $invoice_status;
 	$values['tax'] = json_encode($taxarray);
 	$values['irpf'] = $irpf;
-	$values['concept_irpf'] = $concept_irpf;
 	$values['currency'] = $currency;
 
 	$values['invoice_create_date'] = $invoice_create_date;
@@ -395,14 +393,8 @@ if ($id_invoice > 0){
 	$invoice_payment_date = $invoice["invoice_payment_date"];
 	$invoice_expiration_date = $invoice["invoice_expiration_date"];
 	$id_company = $invoice["id_company"];
-	$long_tax = strlen($invoice["tax"]);
-	if (substr($invoice["tax"], -$long_tax, 1) == '{'){
-		$tax = json_decode($invoice["tax"]);
-	} else {
-		$tax = $invoice["tax"];
-	}
+	$tax= json_decode($invoice["tax"]);
 	$irpf = $invoice["irpf"];
-	$concept_irpf = $invoice["concept_irpf"];
 	$currency = $invoice["currency"];
 	$invoice_status = $invoice["status"];
 	$invoice_type = $invoice['invoice_type'];
@@ -410,12 +402,7 @@ if ($id_invoice > 0){
 	$internal_note = $invoice['internal_note'];
 	$bill_id_variable = $invoice['bill_id_variable'];
 	$invoice_contract_number = $invoice['contract_number'];
-	$long_tax_name = strlen($invoice["tax_name"]);
-	if (substr($invoice["tax_name"], -$long_tax_name, 1) == '{'){
-		$tax_name = json_decode($invoice["tax_name"]);
-	} else {
-		$tax_name = $invoice["tax_name"];	
-	}
+	$tax_name = json_decode($invoice["tax_name"]);
 	$discount_before = $invoice["discount_before"];
 	$discount_concept = $invoice["discount_concept"];
 
@@ -442,7 +429,6 @@ if ($id_invoice > 0){
 	$invoice_expiration_date = "";
 	$tax = 0;
 	$irpf = 0;
-	$concept_irpf = "";
 	$currency = "EUR";
 	$invoice_status = "pending";
 	$invoice_type = "Submitted";
@@ -563,8 +549,8 @@ $table->data[10][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true)
 $table->data[11][0] = print_input_text ('discount_before', $discount_before, '', 5, 20, true, __('Discount before taxes (%)'));
 $table->data[11][1] = print_input_text ('discount_concept', $discount_concept, '', 20, 50, true, __('Concept discount'));
 
-$contcampo = 1;	
-if (is_numeric($tax)){
+$contcampo = 1;
+if ($tax === 0){
 	$table->data[12][0] = print_input_text ('tax1', $tax, '', 5, 20, true, __('Taxes (%)'));
 	$table->data[12][0] .= '</br>';
 	$contcampo++;
@@ -586,7 +572,7 @@ if (is_numeric($tax)){
 }
 
 $contcampo2 = 1;
-if (is_string($tax_name)){
+if ($tax_name === ""){
 	$table->data[12][1] = print_input_text ('tax_name1', $tax_name, '', 20, 50, true, __('Concept tax'));
 	$table->data[12][1] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
 	$table->data[12][1] .= '</br>';
@@ -609,8 +595,7 @@ if (is_string($tax_name)){
 	}
 }
 
-$table->data[13][0] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('Retention (%)'));
-$table->data[13][1] = print_input_text ('concept_irpf', $concept_irpf, '', 20, 50, true, __('Concept Retention'));
+$table->data[13][0] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('IRPF (%)'));
 $table->data[14][0] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
 
 echo '<div id="msg_ok_hidden" style="display:none;">';

@@ -27,15 +27,20 @@ if (!$permission) {
 } // ACL
 
 $company_to = get_db_row ("tcompany", "id", $invoice["id_company"]);
-$tax2 = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
-$amount = get_invoice_amount ($id_invoice);
-$tax = get_invoice_tax_sum ($id_invoice);
 
+$amount = get_invoice_amount ($id_invoice);
+$tax = get_invoice_tax ($id_invoice);
+$contador = 1;
+$result = 0;
+foreach ( $tax as $key => $campo) { 
+	$result = $result + $campo;
+	$contador++;
+}
+$tax = $result;
 $irpf = get_invoice_irpf($id_invoice);
 $tax_name = get_invoice_tax_name ($id_invoice);
 $discount_before = get_invoice_discount_before ($id_invoice);
 $concept_discount_before = get_concept_invoice_discount_before ($id_invoice);
-$concept_retention = get_invoice_concept_retention($id_invoice);
 
 //~ Descuento sobre el total
 $before_amount = $amount * ($discount_before/100);

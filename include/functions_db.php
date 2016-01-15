@@ -2832,31 +2832,20 @@ function get_filter_by_company_accessibility ($id_user) {
 // Returns the task of an invoice
 function get_invoice_tax ($id_invoice) {
 	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
-	$long_tax = strlen($tax);
-	if (substr($tax, -$long_tax, 1) == '{'){
-		$tax = json_decode($tax,true);
-	}
+	$tax = json_decode($tax,true);
 	return $tax;
 }
 // Returns the sum task of an invoice
 function get_invoice_tax_sum ($id_invoice) {
 	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
-	$long_tax = strlen($tax);
-	if (substr($tax, -$long_tax, 1) == '{'){
-		$tax = json_decode($tax,true);
-		$tax_sum = array_sum($tax);
-	} else {
-		$tax_sum = $tax; 
-	}
+	$tax = json_decode($tax,true);
+	$tax_sum = array_sum($tax);
 	return $tax_sum;
 }
-// Returns the task_name of an invoice
+
 function get_invoice_tax_name ($id_invoice) {
 	$tax_name = get_db_value ('tax_name', 'tinvoice', 'id', $id_invoice);
-	$long_tax_name = strlen($tax_name);
-	if (substr($tax_name, -$long_tax_name, 1) == '{'){
-		$tax_name = json_decode($tax_name,true);
-	}
+	$tax_name = json_decode($tax_name,true);
 	return $tax_name;
 }
 
@@ -2899,12 +2888,6 @@ function get_invoice_irpf ($id_invoice) {
 	$discount_irpf = get_db_value ('irpf', 'tinvoice', 'id', $id_invoice);
 	
 	return $discount_irpf;
-}
-
-function get_invoice_concept_retention($id_invoice){
-	$discount_irpf_name = get_db_value ('concept_irpf', 'tinvoice', 'id', $id_invoice);
-	
-	return $discount_irpf_name;
 }
 
 function get_user_work_home ($id_user, $year){
