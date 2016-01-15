@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: integria-ims\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-21 12:48+0100\n"
+"POT-Creation-Date: 2016-01-15 13:18+0100\n"
 "PO-Revision-Date: 2014-05-16 06:22+0000\n"
 "Last-Translator: Yingxue Zhang <firefly1102@hotmail.com>\n"
 "Language-Team: Chinese (China PRC) <sun@smartsuit.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-12-21 12:12+0000\n"
-"X-Generator: Launchpad (build 17865)\n"
+"X-Launchpad-Export-Date: 2016-01-15 12:32+0000\n"
+"X-Generator: Launchpad (build 17886)\n"
 "X-Poedit-Country: CHINA\n"
 "Language: \n"
 "X-Poedit-Language: Chinese\n"
@@ -33,7 +33,7 @@ msgid "Home"
 msgstr "主页"
 
 #: ../../general/header.php:87
-#: ../../operation/incidents/incident_detail.php:1355
+#: ../../operation/incidents/incident_detail.php:1360
 #: ../../operation/incidents/incident_reports.php:174
 #: ../../operation/incidents/incident_dashboard_detail.php:730
 #: ../../operation/file_sharing/upload.php:243
@@ -180,7 +180,7 @@ msgstr "页面生成"
 #: ../../operation/incidents/type_detail.php:488
 #: ../../operation/incidents/incident_type_field.php:73
 #: ../../operation/incidents/incident_dashboard_detail.php:113
-#: ../../operation/invoices/invoices.php:502
+#: ../../operation/invoices/invoices.php:516
 #: ../../operation/inventories/manage_objects_types_list.php:161
 #: ../../operation/contracts/contract_detail.php:186
 #: ../../operation/download/browse.php:444
@@ -296,9 +296,9 @@ msgstr "项目"
 #: ../../enterprise/operation/incidents/workflow_conditions.php:325
 #: ../../include/functions_form.php:1083
 #: ../../include/functions_incidents.php:1028
-#: ../../include/functions_incidents.php:2398
-#: ../../include/functions_incidents.php:3152
-#: ../../include/functions_incidents.php:3816
+#: ../../include/functions_incidents.php:2399
+#: ../../include/functions_incidents.php:3155
+#: ../../include/functions_incidents.php:3819
 msgid "Priority"
 msgstr "级别"
 
@@ -365,9 +365,9 @@ msgstr "工作指令"
 #: ../../include/functions_form.php:266 ../../include/functions_form.php:1039
 #: ../../include/ajax/inventories.php:215
 #: ../../include/functions_incidents.php:1005
-#: ../../include/functions_incidents.php:2395
-#: ../../include/functions_incidents.php:3149
-#: ../../include/functions_incidents.php:3793
+#: ../../include/functions_incidents.php:2396
+#: ../../include/functions_incidents.php:3152
+#: ../../include/functions_incidents.php:3796
 #: ../../extensions/disabled/incident_summary.php:111
 msgid "Status"
 msgstr "状态"
@@ -380,8 +380,8 @@ msgstr "状态"
 #: ../../operation/leads/lead_detail.php:1254
 #: ../../operation/projects/project.php:201
 #: ../../include/functions_db.php:2428
-#: ../../include/functions_incidents.php:2401
-#: ../../include/functions_incidents.php:3155
+#: ../../include/functions_incidents.php:2402
+#: ../../include/functions_incidents.php:3158
 msgid "Updated"
 msgstr "已更新"
 
@@ -389,7 +389,7 @@ msgstr "已更新"
 #: ../../godmode/setup/event.php:65
 #: ../../operation/reporting/incidents_html.php:122
 #: ../../operation/incidents/incident_detail.php:889
-#: ../../operation/incidents/incident_detail.php:1175
+#: ../../operation/incidents/incident_detail.php:1178
 #: ../../operation/incidents/incident_reports.php:112
 #: ../../operation/incidents/incident_chat.php:42
 #: ../../operation/incidents/incident_work.php:51
@@ -404,8 +404,8 @@ msgstr "已更新"
 #: ../../operation/projects/task.php:251 ../../operation/projects/task.php:438
 #: ../../include/functions_tasks.php:273 ../../include/functions_form.php:798
 #: ../../include/functions_graph.php:69
-#: ../../include/functions_incidents.php:2389
-#: ../../include/functions_incidents.php:3143
+#: ../../include/functions_incidents.php:2390
+#: ../../include/functions_incidents.php:3146
 #: ../../extensions/disabled/incident_summary.php:26
 msgid "Ticket"
 msgstr ""
@@ -450,9 +450,9 @@ msgstr "信息"
 #: ../../mobile/operation/workorders.php:274
 #: ../../mobile/operation/workorders.php:276
 #: ../../godmode/setup/filemgr.php:184
-#: ../../operation/incidents/incident_detail.php:1093
-#: ../../operation/incidents/incident_detail.php:1100
-#: ../../operation/incidents/incident_detail.php:1101
+#: ../../operation/incidents/incident_detail.php:1094
+#: ../../operation/incidents/incident_detail.php:1103
+#: ../../operation/incidents/incident_detail.php:1104
 #: ../../operation/incidents/incident_dashboard_detail.php:357
 #: ../../operation/incidents/incident_dashboard_detail.php:365
 #: ../../operation/incidents/incident.php:141
@@ -475,9 +475,9 @@ msgstr "信息"
 #: ../../include/functions_form.php:1050
 #: ../../include/functions_inventories.php:1033
 #: ../../include/functions_inventories.php:1233
-#: ../../include/functions_inventories.php:1778
-#: ../../include/functions_incidents.php:2410
-#: ../../include/functions_incidents.php:3164
+#: ../../include/functions_inventories.php:1780
+#: ../../include/functions_incidents.php:2411
+#: ../../include/functions_incidents.php:3167
 #: ../../extensions/disabled/incident_summary.php:104
 msgid "Owner"
 msgstr "所有者"
@@ -493,7 +493,7 @@ msgstr "自上一次更新起"
 #: ../../operation/incidents_simple/incident.details.php:66
 #: ../../operation/companies/company_detail.php:345
 #: ../../include/functions_file_releases.php:261
-#: ../../include/functions_form.php:1275
+#: ../../include/functions_form.php:1329
 msgid "Last update"
 msgstr "最后更新"
 
@@ -502,7 +502,7 @@ msgid "There is no tickets"
 msgstr ""
 
 #: ../../mobile/operation/incidents.php:245
-#: ../../operation/incidents/incident_detail.php:1351
+#: ../../operation/incidents/incident_detail.php:1354
 #: ../../operation/incidents/incident_search_logic.php:300
 #: ../../operation/incidents/incident_dashboard_detail.php:547
 #: ../../operation/incidents/incident_dashboard_detail.php:687
@@ -512,8 +512,8 @@ msgstr ""
 #: ../../operation/inventories/inventory_incident_tracking.php:49
 #: ../../operation/side_menu.php:331
 #: ../../enterprise/godmode/usuarios/profile_list.php:231
-#: ../../include/functions_inventories.php:1715
-#: ../../include/functions_inventories.php:1726
+#: ../../include/functions_inventories.php:1717
+#: ../../include/functions_inventories.php:1728
 msgid "Tickets"
 msgstr ""
 
@@ -540,9 +540,7 @@ msgstr "过滤"
 
 #: ../../mobile/operation/incidents.php:277
 #: ../../mobile/operation/workorders.php:266 ../../godmode/setup/audit.php:71
-#: ../../godmode/setup/audit.php:82
-#: ../../godmode/usuarios/lista_usuarios.php:67
-#: ../../godmode/grupos/lista_grupos.php:171
+#: ../../godmode/setup/audit.php:82 ../../godmode/grupos/lista_grupos.php:171
 #: ../../operation/users/user_search.php:84
 #: ../../operation/slas/sla_detail.php:241
 #: ../../operation/slas/sla_detail.php:243
@@ -590,9 +588,10 @@ msgstr "过滤"
 #: ../../enterprise/godmode/setup/translate_string.php:81
 #: ../../enterprise/operation/incidents/workflow_management.php:159
 #: ../../enterprise/operation/incidents/workflow_management.php:161
-#: ../../include/functions_form.php:1185 ../../include/ajax/crm.php:56
-#: ../../include/ajax/crm.php:70 ../../include/ajax/incidents.php:112
-#: ../../include/ajax/incidents.php:117 ../../include/ajax/inventories.php:173
+#: ../../include/functions_form.php:1185 ../../include/functions_form.php:1242
+#: ../../include/ajax/crm.php:56 ../../include/ajax/crm.php:70
+#: ../../include/ajax/incidents.php:133 ../../include/ajax/incidents.php:138
+#: ../../include/ajax/inventories.php:173
 #: ../../include/ajax/inventories.php:233
 msgid "Search"
 msgstr "搜索"
@@ -600,9 +599,6 @@ msgstr "搜索"
 #: ../../mobile/operation/incidents.php:283
 #: ../../mobile/operation/workorder.php:236
 #: ../../mobile/operation/workorders.php:302 ../../godmode/setup/audit.php:74
-#: ../../godmode/usuarios/lista_usuarios.php:57
-#: ../../godmode/usuarios/lista_usuarios.php:63
-#: ../../godmode/usuarios/lista_usuarios.php:65
 #: ../../operation/users/user_search.php:76
 #: ../../operation/users/user_search.php:79
 #: ../../operation/incidents/incident_search_logic.php:55
@@ -635,7 +631,9 @@ msgstr "搜索"
 #: ../../include/functions_form.php:174 ../../include/functions_form.php:1038
 #: ../../include/functions_form.php:1083 ../../include/functions_form.php:1086
 #: ../../include/functions_form.php:1136 ../../include/functions_form.php:1161
-#: ../../include/functions_form.php:1354 ../../include/functions_form.php:1403
+#: ../../include/functions_form.php:1232 ../../include/functions_form.php:1238
+#: ../../include/functions_form.php:1240 ../../include/functions_form.php:1408
+#: ../../include/functions_form.php:1457
 msgid "Any"
 msgstr "Any"
 
@@ -668,7 +666,7 @@ msgstr "正在加载…"
 #: ../../operation/projects/task.php:269 ../../include/functions_db.php:2307
 #: ../../include/functions_tasks.php:293
 #: ../../include/functions_inventories.php:983
-#: ../../include/functions_inventories.php:1654
+#: ../../include/functions_inventories.php:1656
 msgid "New"
 msgstr "新建"
 
@@ -774,7 +772,7 @@ msgstr "无工作指令"
 #: ../../operation/incidents/incident.php:68
 #: ../../operation/incidents_simple/incident.php:90
 #: ../../operation/side_menu.php:208 ../../operation/side_menu.php:318
-#: ../../include/functions_form.php:1285 ../../include/functions_graph.php:70
+#: ../../include/functions_form.php:1339 ../../include/functions_graph.php:70
 msgid "Workunits"
 msgstr "工作单元"
 
@@ -809,7 +807,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:210
 #: ../../operation/slas/sla_detail.php:167
 #: ../../operation/incidents/incident_detail.php:292
-#: ../../operation/incidents/incident_detail.php:1175
+#: ../../operation/incidents/incident_detail.php:1178
 #: ../../operation/incidents/incident_reports.php:156
 #: ../../operation/incidents/incident_dashboard_detail.php:162
 #: ../../operation/workorders/wo_category.php:116
@@ -860,15 +858,15 @@ msgstr ""
 #: ../../include/functions_db.php:2636 ../../include/functions.php:789
 #: ../../include/functions_form.php:208 ../../include/functions_form.php:324
 #: ../../include/functions_form.php:340 ../../include/functions_form.php:355
-#: ../../include/functions_form.php:365 ../../include/functions_form.php:1439
-#: ../../include/functions_form.php:1467 ../../include/functions_form.php:1478
+#: ../../include/functions_form.php:365 ../../include/functions_form.php:1493
+#: ../../include/functions_form.php:1521 ../../include/functions_form.php:1532
 #: ../../include/ajax/inventories.php:205
 #: ../../include/ajax/inventories.php:208
-#: ../../include/functions_incidents.php:2020
-#: ../../include/functions_incidents.php:2047
-#: ../../include/functions_incidents.php:2088
-#: ../../include/functions_incidents.php:2515
-#: ../../include/functions_incidents.php:3306
+#: ../../include/functions_incidents.php:2021
+#: ../../include/functions_incidents.php:2048
+#: ../../include/functions_incidents.php:2089
+#: ../../include/functions_incidents.php:2517
+#: ../../include/functions_incidents.php:3309
 msgid "None"
 msgstr "无"
 
@@ -884,8 +882,8 @@ msgstr "无"
 #: ../../operation/incidents/incident_files.php:243
 #: ../../operation/incidents/incident_files.php:270
 #: ../../operation/incidents/type_detail.php:440
-#: ../../operation/incidents/incident_detail.php:1260
-#: ../../operation/incidents/incident_detail.php:1300
+#: ../../operation/incidents/incident_detail.php:1263
+#: ../../operation/incidents/incident_detail.php:1303
 #: ../../operation/incidents/incident_workunits.php:132
 #: ../../operation/incidents/incident_tracking.php:214
 #: ../../operation/incidents/incident_work.php:96
@@ -896,8 +894,8 @@ msgstr "无"
 #: ../../operation/contacts/contact_manage.php:295
 #: ../../operation/contacts/contact_files.php:123
 #: ../../operation/contacts/contact_files.php:151
-#: ../../operation/invoices/invoices.php:632
-#: ../../operation/invoices/invoices.php:688
+#: ../../operation/invoices/invoices.php:647
+#: ../../operation/invoices/invoices.php:703
 #: ../../operation/buildings/building_detail.php:100
 #: ../../operation/buildings/building_detail.php:149
 #: ../../operation/workorders/wo_workunits.php:124
@@ -986,13 +984,15 @@ msgstr "文件描述"
 #: ../../operation/users/user_spare_workunit.php:506
 #: ../../operation/users/user_spare_workunit.php:545
 #: ../../operation/incidents/incident_files.php:244
-#: ../../operation/incidents/incident_detail.php:1205
-#: ../../operation/incidents/incident_detail.php:1227
-#: ../../operation/incidents/incident_detail.php:1238
-#: ../../operation/incidents/incident_detail.php:1301
+#: ../../operation/incidents/incident_detail.php:1066
+#: ../../operation/incidents/incident_detail.php:1101
+#: ../../operation/incidents/incident_detail.php:1208
+#: ../../operation/incidents/incident_detail.php:1230
+#: ../../operation/incidents/incident_detail.php:1241
+#: ../../operation/incidents/incident_detail.php:1304
 #: ../../operation/incidents/incident_workunits.php:136
 #: ../../operation/incidents/incident_create_work.php:65
-#: ../../operation/invoices/invoices.php:650
+#: ../../operation/invoices/invoices.php:665
 #: ../../operation/workorders/wo_workunits.php:128
 #: ../../operation/workorders/wo_notes.php:74
 #: ../../operation/incidents_simple/incident.php:118
@@ -1043,13 +1043,13 @@ msgstr "添加"
 #: ../../operation/users/user_spare_workunit.php:502
 #: ../../operation/slas/sla_detail.php:212
 #: ../../operation/incidents/type_detail.php:443
-#: ../../operation/incidents/incident_detail.php:1318
-#: ../../operation/incidents/incident_detail.php:1867
+#: ../../operation/incidents/incident_detail.php:1321
+#: ../../operation/incidents/incident_detail.php:1872
 #: ../../operation/incidents/incident_type_field.php:122
 #: ../../operation/incidents/incident_search_logic.php:293
 #: ../../operation/incidents/incident_dashboard_detail.php:385
 #: ../../operation/contacts/contact_manage.php:250
-#: ../../operation/invoices/invoices.php:645
+#: ../../operation/invoices/invoices.php:660
 #: ../../operation/user_report/report_weekly.php:53
 #: ../../operation/buildings/building_detail.php:107
 #: ../../operation/workorders/wo_category.php:121
@@ -1121,7 +1121,6 @@ msgstr "新建工单"
 #: ../../godmode/setup/links.php:116 ../../godmode/setup/setup_tags.php:206
 #: ../../godmode/setup/newsboard.php:137
 #: ../../godmode/usuarios/role_manager.php:126
-#: ../../godmode/usuarios/lista_usuarios.php:107
 #: ../../operation/users/user_workunit_report.php:278
 #: ../../operation/slas/sla_detail.php:268
 #: ../../operation/incidents/incident_files.php:275
@@ -1130,7 +1129,7 @@ msgstr "新建工单"
 #: ../../operation/incidents/incident_search_logic.php:211
 #: ../../operation/contacts/contact_detail.php:197
 #: ../../operation/contacts/contact_files.php:155
-#: ../../operation/wiki/wiki.php:40 ../../operation/invoices/invoices.php:461
+#: ../../operation/wiki/wiki.php:40 ../../operation/invoices/invoices.php:475
 #: ../../operation/invoices/invoice_detail.php:349
 #: ../../operation/invoices/invoice_detail.php:382
 #: ../../operation/buildings/building_detail.php:150
@@ -1181,8 +1180,9 @@ msgstr "新建工单"
 #: ../../enterprise/operation/user/schedule_reports.php:301
 #: ../../enterprise/include/functions_groups.php:74
 #: ../../include/functions_groups.php:91
-#: ../../include/functions_workunits.php:503 ../../include/ajax/crm.php:128
-#: ../../include/ajax/crm.php:177 ../../include/ajax/incidents.php:144
+#: ../../include/functions_workunits.php:503
+#: ../../include/functions_user.php:305 ../../include/ajax/crm.php:128
+#: ../../include/ajax/crm.php:177 ../../include/ajax/incidents.php:165
 msgid "Delete"
 msgstr "删除"
 
@@ -1204,8 +1204,8 @@ msgstr "删除"
 #: ../../enterprise/operation/incidents/workflow_status_mapping.php:166
 #: ../../enterprise/operation/incidents/workflow_conditions.php:246
 #: ../../include/functions_form.php:313 ../../include/functions_form.php:1086
-#: ../../include/functions_incidents.php:2395
-#: ../../include/functions_incidents.php:3149
+#: ../../include/functions_incidents.php:2396
+#: ../../include/functions_incidents.php:3152
 msgid "Resolution"
 msgstr "解决"
 
@@ -1216,7 +1216,6 @@ msgstr ""
 
 #: ../../mobile/operation/incident.php:816 ../../godmode/setup/event.php:68
 #: ../../godmode/setup/newsboard.php:105
-#: ../../godmode/usuarios/lista_usuarios.php:65
 #: ../../operation/reporting/incidents_html.php:72
 #: ../../operation/reporting/incidents_html.php:123
 #: ../../operation/reporting/inventories_html.php:53
@@ -1239,11 +1238,11 @@ msgstr ""
 #: ../../enterprise/operation/incidents/workflow_conditions.php:201
 #: ../../enterprise/operation/incidents/workflow_conditions.php:322
 #: ../../include/functions_form.php:55 ../../include/functions_form.php:823
-#: ../../include/functions_form.php:1042
+#: ../../include/functions_form.php:1042 ../../include/functions_form.php:1240
 #: ../../include/functions_incidents.php:1145
-#: ../../include/functions_incidents.php:2392
-#: ../../include/functions_incidents.php:3146
-#: ../../include/functions_incidents.php:3933
+#: ../../include/functions_incidents.php:2393
+#: ../../include/functions_incidents.php:3149
+#: ../../include/functions_incidents.php:3936
 msgid "Group"
 msgstr "组："
 
@@ -1258,7 +1257,7 @@ msgstr "组："
 #: ../../operation/inventories/inventory_incident_tracking.php:46
 #: ../../operation/companies/company_detail.php:564
 #: ../../enterprise/include/functions_incidents.php:69
-#: ../../include/functions_inventories.php:1728
+#: ../../include/functions_inventories.php:1730
 msgid "Details"
 msgstr "详细信息"
 
@@ -1282,7 +1281,7 @@ msgid "Unknown"
 msgstr "未知"
 
 #: ../../mobile/operation/incident.php:902
-#: ../../operation/incidents/incident_detail.php:1110
+#: ../../operation/incidents/incident_detail.php:1113
 #: ../../operation/incidents/incident_dashboard_detail.php:315
 #: ../../operation/incidents/incident_inventory_contacts.php:53
 #: ../../include/functions_form.php:1068
@@ -1399,8 +1398,8 @@ msgstr "列表"
 #: ../../operation/contacts/contact_detail.php:65
 #: ../../operation/contacts/contact_detail.php:94
 #: ../../operation/contacts/contact_files.php:141
-#: ../../operation/invoices/invoices.php:661
-#: ../../operation/invoices/invoices.php:662
+#: ../../operation/invoices/invoices.php:676
+#: ../../operation/invoices/invoices.php:677
 #: ../../operation/workorders/wo.php:267
 #: ../../operation/incidents_simple/incident.php:87
 #: ../../operation/leads/lead_detail.php:696
@@ -1492,7 +1491,7 @@ msgstr "上传文件发生错误"
 #: ../../operation/slas/sla_detail.php:103
 #: ../../operation/incidents/type_detail.php:325
 #: ../../operation/contacts/contact_manage.php:156
-#: ../../operation/invoices/invoices.php:367
+#: ../../operation/invoices/invoices.php:369
 #: ../../operation/buildings/building_detail.php:63
 #: ../../operation/workorders/wo_category.php:64
 #: ../../operation/workorders/wo.php:148
@@ -1502,7 +1501,7 @@ msgstr "上传文件发生错误"
 #: ../../operation/inventories/manage_objects_types_list.php:121
 #: ../../operation/inventories/inventory_reports_detail.php:77
 #: ../../operation/inventories/inventory_detail.php:396
-#: ../../operation/inventories/inventory.php:93
+#: ../../operation/inventories/inventory.php:102
 #: ../../operation/newsletter/issue_definition.php:108
 #: ../../operation/newsletter/newsletter_definition.php:123
 #: ../../operation/kb/manage_data.php:111 ../../operation/kb/manage_cat.php:66
@@ -1545,7 +1544,7 @@ msgstr "更新工作单元发生错误"
 #: ../../operation/users/user_spare_workunit.php:434
 #: ../../operation/incidents/incident_tracking.php:216
 #: ../../operation/incidents/incident_work.php:96
-#: ../../operation/invoices/invoices.php:690
+#: ../../operation/invoices/invoices.php:705
 #: ../../operation/invoices/invoice_detail.php:205
 #: ../../operation/user_report/report_full.php:527
 #: ../../operation/workorders/wo_files.php:116
@@ -1584,9 +1583,9 @@ msgstr "日期"
 #: ../../include/functions_incidents.php:962
 #: ../../include/functions_incidents.php:973
 #: ../../include/functions_incidents.php:1079
-#: ../../include/functions_incidents.php:3749
-#: ../../include/functions_incidents.php:3760
-#: ../../include/functions_incidents.php:3867
+#: ../../include/functions_incidents.php:3752
+#: ../../include/functions_incidents.php:3763
+#: ../../include/functions_incidents.php:3870
 msgid "Hours"
 msgstr "小时"
 
@@ -1616,7 +1615,7 @@ msgstr "假期"
 #: ../../operation/users/user_workunit_report.php:259
 #: ../../operation/users/user_spare_workunit.php:451
 #: ../../operation/users/user_spare_workunit.php:455
-#: ../../operation/incidents/incident_detail.php:1192
+#: ../../operation/incidents/incident_detail.php:1195
 #: ../../operation/incidents/incident_dashboard_detail.php:202
 #: ../../operation/user_report/report_full.php:213
 #: ../../operation/user_report/report_full.php:523
@@ -1723,7 +1722,7 @@ msgstr ""
 #: ../../enterprise/operation/incidents/workflow_actions.php:266
 #: ../../include/ajax/inventories.php:372
 #: ../../include/functions_incidents.php:1174
-#: ../../include/functions_incidents.php:3964
+#: ../../include/functions_incidents.php:3967
 msgid "User"
 msgstr "用户"
 
@@ -1779,7 +1778,7 @@ msgstr "分配的用户"
 #: ../../operation/download/manage_data.php:290
 #: ../../operation/download/browse.php:494
 #: ../../enterprise/include/functions_form.php:135
-#: ../../include/functions_form.php:1408
+#: ../../include/functions_form.php:1462
 msgid "Category"
 msgstr "类别"
 
@@ -1832,13 +1831,13 @@ msgstr "类别"
 #: ../../include/functions_incidents.php:894
 #: ../../include/functions_incidents.php:994
 #: ../../include/functions_incidents.php:1094
-#: ../../include/functions_incidents.php:3599
-#: ../../include/functions_incidents.php:3624
-#: ../../include/functions_incidents.php:3643
-#: ../../include/functions_incidents.php:3662
-#: ../../include/functions_incidents.php:3681
-#: ../../include/functions_incidents.php:3782
-#: ../../include/functions_incidents.php:3882
+#: ../../include/functions_incidents.php:3602
+#: ../../include/functions_incidents.php:3627
+#: ../../include/functions_incidents.php:3646
+#: ../../include/functions_incidents.php:3665
+#: ../../include/functions_incidents.php:3684
+#: ../../include/functions_incidents.php:3785
+#: ../../include/functions_incidents.php:3885
 msgid "N/A"
 msgstr "N/A"
 
@@ -1864,8 +1863,8 @@ msgstr "删除工作指令发生错误"
 #: ../../operation/user_report/report_full.php:525
 #: ../../operation/projects/task.php:395 ../../operation/projects/task.php:483
 #: ../../include/functions_form.php:1077 ../../include/functions_graph.php:68
-#: ../../include/functions_incidents.php:2406
-#: ../../include/functions_incidents.php:3160
+#: ../../include/functions_incidents.php:2407
+#: ../../include/functions_incidents.php:3163
 #: ../../extensions/disabled/incident_summary.php:97
 msgid "Creator"
 msgstr "创建者"
@@ -1876,7 +1875,7 @@ msgstr "无工作指令"
 
 #: ../../mobile/operation/workorders.php:303
 #: ../../godmode/setup/setup_mail.php:233
-#: ../../operation/invoices/invoices.php:513
+#: ../../operation/invoices/invoices.php:527
 #: ../../operation/invoices/invoice_detail.php:216
 #: ../../operation/newsletter/issue_creation.php:119
 #: ../../operation/newsletter/queue_manager.php:283
@@ -1886,12 +1885,12 @@ msgstr "无工作指令"
 #: ../../operation/projects/task_planning.php:288
 #: ../../operation/projects/task_planning.php:497
 #: ../../include/functions_crm.php:881 ../../include/functions_crm.php:895
-#: ../../include/functions_form.php:1516 ../../include/functions_graph.php:762
+#: ../../include/functions_form.php:1570 ../../include/functions_graph.php:762
 msgid "Pending"
 msgstr "等待中"
 
 #: ../../mobile/operation/workorders.php:304
-#: ../../include/functions_form.php:1517
+#: ../../include/functions_form.php:1571
 msgid "Finished"
 msgstr "已完成"
 
@@ -1899,7 +1898,7 @@ msgstr "已完成"
 #: ../../operation/newsletter/address_definition.php:198
 #: ../../operation/newsletter/address_definition.php:231
 #: ../../operation/newsletter/address_definition.php:258
-#: ../../include/functions_form.php:1520
+#: ../../include/functions_form.php:1574
 msgid "Validated"
 msgstr "已验证"
 
@@ -1923,7 +1922,7 @@ msgstr "移动电话"
 #: ../../mobile/include/ui.class.php:655 ../../mobile/include/ui.class.php:694
 #: ../../operation/leads/lead_detail.php:1357 ../../include/ajax/header.php:96
 #: ../../include/functions_incidents.php:1106
-#: ../../include/functions_incidents.php:3894
+#: ../../include/functions_incidents.php:3897
 msgid "Close"
 msgstr "关闭"
 
@@ -2109,13 +2108,13 @@ msgstr "配置文件管理"
 #: ../../godmode/setup/newsboard.php:165
 #: ../../godmode/usuarios/configurar_usuarios.php:562
 #: ../../godmode/usuarios/user_field_editor.php:120
-#: ../../godmode/usuarios/lista_usuarios.php:184
+#: ../../godmode/usuarios/lista_usuarios.php:57
 #: ../../godmode/grupos/lista_grupos.php:183
 #: ../../godmode/grupos/configurar_grupo.php:175
 #: ../../operation/slas/sla_detail.php:217
 #: ../../operation/slas/sla_detail.php:297
 #: ../../operation/incidents/type_detail.php:447
-#: ../../operation/incidents/incident_detail.php:1313
+#: ../../operation/incidents/incident_detail.php:1316
 #: ../../operation/incidents/incident_type_field.php:116
 #: ../../operation/contacts/contact_manage.php:254
 #: ../../operation/contacts/contact_detail.php:224
@@ -2296,17 +2295,16 @@ msgstr "配置文件"
 #: ../../godmode/setup/links.php:128 ../../godmode/setup/newsboard.php:155
 #: ../../godmode/usuarios/role_manager.php:144
 #: ../../godmode/usuarios/user_field_list.php:102
-#: ../../godmode/usuarios/lista_usuarios.php:173
-#: ../../godmode/usuarios/lista_usuarios.php:183
+#: ../../godmode/usuarios/lista_usuarios.php:56
 #: ../../operation/users/user_workunit_report.php:290
 #: ../../operation/users/user_workunit_report.php:318
 #: ../../operation/slas/sla_detail.php:287
 #: ../../operation/incidents/type_detail.php:544
 #: ../../operation/incidents/type_detail.php:638
-#: ../../operation/incidents/incident_detail.php:1536
+#: ../../operation/incidents/incident_detail.php:1541
 #: ../../operation/incidents/incident.php:223
 #: ../../operation/contacts/contact_detail.php:211
-#: ../../operation/invoices/invoices.php:458
+#: ../../operation/invoices/invoices.php:472
 #: ../../operation/invoices/invoice_detail.php:345
 #: ../../operation/user_report/annual_workunits.php:142
 #: ../../operation/user_report/annual_workunits.php:167
@@ -2370,10 +2368,10 @@ msgstr "配置文件"
 #: ../../include/functions_groups.php:157
 #: ../../include/wiki/lionwiki_lib.php:723
 #: ../../include/wiki/lionwiki_lib.php:839
-#: ../../include/functions_form.php:905
-#: ../../include/functions_inventories.php:1340
-#: ../../include/functions_inventories.php:1351 ../../include/ajax/crm.php:156
-#: ../../include/ajax/crm.php:175 ../../include/ajax/incidents.php:158
+#: ../../include/functions_user.php:379 ../../include/functions_form.php:905
+#: ../../include/functions_inventories.php:1341
+#: ../../include/functions_inventories.php:1352 ../../include/ajax/crm.php:156
+#: ../../include/ajax/crm.php:175 ../../include/ajax/incidents.php:179
 msgid "Are you sure?"
 msgstr "确定吗？"
 
@@ -2618,7 +2616,7 @@ msgstr "返回上一层目录"
 
 #: ../../godmode/setup/filemgr.php:178
 #: ../../operation/incidents/incident_files.php:268
-#: ../../operation/invoices/invoices.php:687
+#: ../../operation/invoices/invoices.php:702
 #: ../../operation/workorders/wo_files.php:113
 #: ../../operation/kb/browse_data.php:132
 #: ../../operation/leads/lead_files.php:106
@@ -2735,9 +2733,8 @@ msgstr "无定义假日"
 #: ../../godmode/setup/setup.php:178 ../../godmode/setup/setup.php:185
 #: ../../godmode/usuarios/configurar_usuarios.php:343
 #: ../../godmode/usuarios/configurar_usuarios.php:359
-#: ../../godmode/usuarios/lista_usuarios.php:56
-#: ../../godmode/usuarios/lista_usuarios.php:138
 #: ../../operation/newsletter/address_definition.php:251
+#: ../../include/functions_user.php:340 ../../include/functions_form.php:1231
 #: ../../include/update_manager/lib/libupdate_manager.php:771
 msgid "Disabled"
 msgstr "已禁用"
@@ -2749,8 +2746,8 @@ msgstr "已禁用"
 #: ../../godmode/setup/setup.php:179 ../../godmode/setup/setup.php:186
 #: ../../godmode/usuarios/configurar_usuarios.php:341
 #: ../../godmode/usuarios/configurar_usuarios.php:357
-#: ../../godmode/usuarios/lista_usuarios.php:55
 #: ../../operation/newsletter/address_definition.php:249
+#: ../../include/functions_form.php:1230
 msgid "Enabled"
 msgstr "启用"
 
@@ -2913,7 +2910,7 @@ msgstr "拖拽软件包到此或 "
 
 #: ../../godmode/setup/offline_update.php:306
 #: ../../operation/incidents/incident_files.php:230
-#: ../../operation/incidents/incident_detail.php:1286
+#: ../../operation/incidents/incident_detail.php:1289
 #: ../../operation/file_sharing/upload.php:177
 #: ../../operation/leads/lead_mail.php:210
 #: ../../operation/contracts/contract_detail.php:542
@@ -3063,9 +3060,9 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:134
 #: ../../operation/users/user_spare_workunit.php:580
 #: ../../operation/users/user_spare_workunit.php:582
-#: ../../operation/incidents/incident_detail.php:1611
-#: ../../operation/incidents/incident_detail.php:1612
-#: ../../operation/incidents/incident_detail.php:1613
+#: ../../operation/incidents/incident_detail.php:1616
+#: ../../operation/incidents/incident_detail.php:1617
+#: ../../operation/incidents/incident_detail.php:1618
 #: ../../operation/incidents/incident_search_logic.php:357
 #: ../../operation/incidents/incident_search_logic.php:358
 #: ../../operation/incidents/incident_search_logic.php:359
@@ -3078,7 +3075,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:672
 #: ../../operation/workorders/wo.php:761 ../../operation/workorders/wo.php:762
 #: ../../operation/workorders/wo.php:781 ../../operation/workorders/wo.php:783
-#: ../../operation/inventories/inventory_search.php:538
+#: ../../operation/inventories/inventory_search.php:549
 #: ../../operation/inventories/inventory_detail.php:814
 #: ../../operation/leads/lead_detail.php:1516
 #: ../../operation/leads/lead_detail.php:1518
@@ -3133,7 +3130,6 @@ msgstr ""
 
 #: ../../godmode/setup/setup_tags.php:184
 #: ../../godmode/usuarios/role_manager.php:123
-#: ../../godmode/usuarios/lista_usuarios.php:103
 #: ../../godmode/grupos/configurar_grupo.php:97
 #: ../../operation/reporting/inventories_html.php:120
 #: ../../operation/search.php:236 ../../operation/search.php:273
@@ -3188,7 +3184,7 @@ msgstr ""
 #: ../../enterprise/operation/user/schedule_reports.php:187
 #: ../../enterprise/operation/user/schedule_reports.php:232
 #: ../../enterprise/include/functions_groups.php:72
-#: ../../include/functions_groups.php:89
+#: ../../include/functions_groups.php:89 ../../include/functions_user.php:300
 #: ../../include/functions_inventories.php:1232
 msgid "Name"
 msgstr "名字"
@@ -3390,7 +3386,7 @@ msgstr "删除队列邮件"
 #: ../../godmode/setup/setup.php:152
 #: ../../godmode/usuarios/configurar_usuarios.php:440
 #: ../../operation/users/user_edit.php:226
-#: ../../operation/invoices/invoices.php:533
+#: ../../operation/invoices/invoices.php:547
 #: ../../operation/kb/browse_data.php:92
 #: ../../operation/kb/manage_data.php:234 ../../operation/kb/browse.php:235
 #: ../../operation/kb/browse.php:340 ../../operation/kb/browse.php:382
@@ -3507,8 +3503,8 @@ msgstr ""
 #: ../../godmode/setup/setup.php:217
 #: ../../operation/user_report/report_annual.php:100
 #: ../../operation/newsletter/address_definition.php:253
-#: ../../include/functions.php:782 ../../include/functions_form.php:1457
-#: ../../include/functions_form.php:1507
+#: ../../include/functions.php:782 ../../include/functions_form.php:1511
+#: ../../include/functions_form.php:1561
 msgid "Other"
 msgstr "其他"
 
@@ -3561,8 +3557,8 @@ msgstr ""
 #: ../../operation/newsletter/issue_creation.php:113
 #: ../../include/functions_incidents.php:1146
 #: ../../include/functions_incidents.php:1175
-#: ../../include/functions_incidents.php:3934
-#: ../../include/functions_incidents.php:3965
+#: ../../include/functions_incidents.php:3937
+#: ../../include/functions_incidents.php:3968
 msgid "Time"
 msgstr "时间"
 
@@ -3658,7 +3654,7 @@ msgid "Project WU Default time"
 msgstr "项目工作单元默认时间"
 
 #: ../../godmode/setup/setup_project.php:81
-#: ../../operation/invoices/invoices.php:599
+#: ../../operation/invoices/invoices.php:614
 #: ../../operation/invoices/invoice_detail.php:270
 #: ../../operation/invoices/invoice_stats.php:160
 msgid "Currency"
@@ -3810,11 +3806,11 @@ msgid "Update user"
 msgstr "更新用户信息"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:313
-#: ../../godmode/usuarios/lista_usuarios.php:102
 #: ../../operation/users/user_edit.php:172
 #: ../../operation/user_report/report_monthly.php:113
 #: ../../operation/user_report/report_weekly.php:59
 #: ../../operation/leads/lead_history.php:52
+#: ../../include/functions_user.php:299
 msgid "User ID"
 msgstr "用户 ID"
 
@@ -3859,7 +3855,7 @@ msgstr "确认密码"
 #: ../../operation/leads/lead_detail.php:913
 #: ../../operation/leads/lead_forward.php:85
 #: ../../operation/companies/company_detail.php:562
-#: ../../include/ajax/incidents.php:142 ../../include/newsletter.php:68
+#: ../../include/ajax/incidents.php:163 ../../include/newsletter.php:68
 #: ../../include/newsletter.php:148
 msgid "Email"
 msgstr "邮件地址"
@@ -3877,7 +3873,6 @@ msgid "Telephone"
 msgstr "电话"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:396
-#: ../../godmode/usuarios/lista_usuarios.php:104
 #: ../../operation/reporting/incidents_html.php:78
 #: ../../operation/reporting/incidents_html.php:123
 #: ../../operation/reporting/inventories_html.php:59
@@ -3896,8 +3891,8 @@ msgstr "电话"
 #: ../../operation/contacts/contact_manage.php:287
 #: ../../operation/contacts/contact_detail.php:167
 #: ../../operation/contacts/contact_detail.php:194
-#: ../../operation/invoices/invoices.php:489
-#: ../../operation/invoices/invoices.php:495
+#: ../../operation/invoices/invoices.php:503
+#: ../../operation/invoices/invoices.php:509
 #: ../../operation/invoices/invoice_detail.php:267
 #: ../../operation/user_report/report_monthly.php:115
 #: ../../operation/inventories/inventory_tree.php:60
@@ -3917,13 +3912,14 @@ msgstr "电话"
 #: ../../operation/companies/company_detail.php:517
 #: ../../operation/companies/company_detail.php:786
 #: ../../operation/companies/company_detail.php:999
-#: ../../include/functions_crm.php:298 ../../include/functions_crm.php:420
-#: ../../include/functions_crm.php:680 ../../include/functions_form.php:1097
+#: ../../include/functions_user.php:301 ../../include/functions_crm.php:298
+#: ../../include/functions_crm.php:420 ../../include/functions_crm.php:680
+#: ../../include/functions_form.php:1097
 #: ../../include/functions_inventories.php:709 ../../include/ajax/crm.php:122
-#: ../../include/ajax/incidents.php:116 ../../include/ajax/incidents.php:141
+#: ../../include/ajax/incidents.php:137 ../../include/ajax/incidents.php:162
 #: ../../include/ajax/inventories.php:347
-#: ../../include/functions_incidents.php:2392
-#: ../../include/functions_incidents.php:3146
+#: ../../include/functions_incidents.php:2393
+#: ../../include/functions_incidents.php:3149
 msgid "Company"
 msgstr "公司"
 
@@ -3933,34 +3929,33 @@ msgid "Location"
 msgstr "地点"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:412
-#: ../../godmode/usuarios/lista_usuarios.php:63
 #: ../../godmode/usuarios/import_from_csv.php:63
+#: ../../include/functions_form.php:1238
 msgid "Global profile"
 msgstr "全局配置文件"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:416
 #: ../../godmode/usuarios/configurar_usuarios.php:423
 #: ../../godmode/usuarios/configurar_usuarios.php:429
-#: ../../godmode/usuarios/lista_usuarios.php:62
-#: ../../godmode/usuarios/lista_usuarios.php:126
+#: ../../include/functions_user.php:326 ../../include/functions_form.php:1237
 msgid "Administrator"
 msgstr "管理员"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:418
 #: ../../godmode/usuarios/configurar_usuarios.php:425
 #: ../../godmode/usuarios/configurar_usuarios.php:431
-#: ../../godmode/usuarios/lista_usuarios.php:124
 #: ../../godmode/usuarios/import_from_csv.php:64
 #: ../../enterprise/include/functions_groups.php:33
+#: ../../include/functions_user.php:324
 msgid "Standard user"
 msgstr "标准用户"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:420
 #: ../../godmode/usuarios/configurar_usuarios.php:427
 #: ../../godmode/usuarios/configurar_usuarios.php:433
-#: ../../godmode/usuarios/lista_usuarios.php:128
 #: ../../godmode/usuarios/import_from_csv.php:66
 #: ../../enterprise/include/functions_groups.php:32
+#: ../../include/functions_user.php:328
 msgid "External user"
 msgstr "外部用户"
 
@@ -3988,7 +3983,7 @@ msgstr "评论"
 #: ../../godmode/usuarios/configurar_usuarios.php:510
 #: ../../enterprise/custom_screens/widgets/TicketStats.php:141
 #: ../../include/functions_incidents.php:947
-#: ../../include/functions_incidents.php:3734
+#: ../../include/functions_incidents.php:3737
 msgid "Total tickets"
 msgstr ""
 
@@ -4161,8 +4156,8 @@ msgstr "名称域"
 #: ../../operation/incidents/type_detail.php:489
 #: ../../include/functions_incidents.php:944
 #: ../../include/functions_incidents.php:1055
-#: ../../include/functions_incidents.php:3731
-#: ../../include/functions_incidents.php:3843
+#: ../../include/functions_incidents.php:3734
+#: ../../include/functions_incidents.php:3846
 msgid "Value"
 msgstr "值"
 
@@ -4255,62 +4250,15 @@ msgstr "组合值"
 msgid "Set values separated by comma"
 msgstr "通过逗号隔开设置值"
 
-#: ../../godmode/usuarios/lista_usuarios.php:52
-#: ../../godmode/grupos/lista_grupos.php:167
-msgid "Search text"
-msgstr "搜索文本"
-
-#: ../../godmode/usuarios/lista_usuarios.php:57
-msgid "User status"
-msgstr "用户状态"
-
-#: ../../godmode/usuarios/lista_usuarios.php:60
-#: ../../include/functions_objects.php:68
-msgid "External"
-msgstr "外部"
-
-#: ../../godmode/usuarios/lista_usuarios.php:61
-msgid "Standard"
-msgstr "标准"
-
-#: ../../godmode/usuarios/lista_usuarios.php:101
-msgid "Enabled/Disabled"
-msgstr "启用/禁用"
-
-#: ../../godmode/usuarios/lista_usuarios.php:101
-msgid "E/D"
-msgstr "启用/禁用"
-
-#: ../../godmode/usuarios/lista_usuarios.php:105
-msgid "Last contact"
-msgstr "最后联系人"
-
-#: ../../godmode/usuarios/lista_usuarios.php:106
-#: ../../operation/incidents/incident_workunits.php:127
-#: ../../operation/incidents/incident_create_work.php:51
-#: ../../operation/user_report/report_monthly.php:112
-#: ../../operation/workorders/wo_workunits.php:119
-#: ../../include/functions_form.php:859
-msgid "Profile"
-msgstr "简介"
-
-#: ../../godmode/usuarios/lista_usuarios.php:165
-#: ../../operation/user_report/report_monthly.php:163
-#: ../../operation/user_report/report_weekly.php:89
-#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:23
-#: ../../enterprise/operation/user/user.php:21
-msgid "This user doesn't have any assigned profile/group"
-msgstr "该用户没有指定配置文件/组"
-
-#: ../../godmode/usuarios/lista_usuarios.php:181
+#: ../../godmode/usuarios/lista_usuarios.php:54
 msgid "Enable selected"
 msgstr "启用已选"
 
-#: ../../godmode/usuarios/lista_usuarios.php:182
+#: ../../godmode/usuarios/lista_usuarios.php:55
 msgid "Disable selected"
 msgstr "禁用已选"
 
-#: ../../godmode/usuarios/lista_usuarios.php:183
+#: ../../godmode/usuarios/lista_usuarios.php:56
 msgid "Delete selected"
 msgstr "删除所选"
 
@@ -4354,6 +4302,11 @@ msgstr "修改组失败"
 msgid "There was a problem deleting group"
 msgstr "删除组失败"
 
+#: ../../godmode/grupos/lista_grupos.php:167
+#: ../../include/functions_form.php:1227
+msgid "Search text"
+msgstr "搜索文本"
+
 #: ../../godmode/grupos/configurar_grupo.php:81
 msgid "There was a problem loading group"
 msgstr "加载组失败"
@@ -4372,7 +4325,7 @@ msgstr "强制的电子邮件"
 #: ../../enterprise/include/functions_groups.php:73
 #: ../../include/functions_groups.php:90
 #: ../../include/functions_inventories.php:1044
-#: ../../include/functions_inventories.php:1792 ../../include/ajax/crm.php:63
+#: ../../include/functions_inventories.php:1794 ../../include/ajax/crm.php:63
 msgid "Parent"
 msgstr "父"
 
@@ -4556,8 +4509,8 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:681
 #: ../../operation/companies/company_detail.php:998
 #: ../../operation/companies/company_role.php:149
-#: ../../include/functions_incidents.php:2378
-#: ../../include/functions_incidents.php:3137
+#: ../../include/functions_incidents.php:2379
+#: ../../include/functions_incidents.php:3140
 msgid "ID"
 msgstr "ID"
 
@@ -4569,8 +4522,8 @@ msgstr "ID"
 #: ../../operation/side_menu.php:485
 #: ../../enterprise/operation/incidents/workflow_conditions.php:242
 #: ../../include/functions_form.php:1107
-#: ../../include/functions_incidents.php:2381
-#: ../../include/functions_incidents.php:3140
+#: ../../include/functions_incidents.php:2382
+#: ../../include/functions_incidents.php:3143
 msgid "SLA"
 msgstr "SLA"
 
@@ -4583,8 +4536,8 @@ msgstr ""
 #: ../../operation/incidents/incident_reports.php:116
 #: ../../operation/incidents/incident.php:136
 #: ../../operation/incidents_simple/incidents.php:210
-#: ../../include/functions_incidents.php:2401
-#: ../../include/functions_incidents.php:3155
+#: ../../include/functions_incidents.php:2402
+#: ../../include/functions_incidents.php:3158
 msgid "Started"
 msgstr "已开始"
 
@@ -4599,7 +4552,7 @@ msgstr "责任人"
 #: ../../operation/incidents/incident_reports.php:126
 #: ../../operation/incidents/incident_statistics.php:53
 #: ../../operation/incidents_simple/incidents.php:241
-#: ../../include/functions_incidents.php:2418
+#: ../../include/functions_incidents.php:2419
 msgid "Nothing was found"
 msgstr "什么也没有"
 
@@ -4631,7 +4584,7 @@ msgstr "IP 地址"
 #: ../../include/functions_inventories.php:710
 #: ../../include/functions_inventories.php:1064
 #: ../../include/functions_inventories.php:1237
-#: ../../include/functions_inventories.php:1820
+#: ../../include/functions_inventories.php:1822
 #: ../../include/ajax/inventories.php:205
 msgid "Contract"
 msgstr "合同"
@@ -4700,7 +4653,7 @@ msgstr "项目"
 #: ../../operation/leads/lead_detail.php:811
 #: ../../operation/leads/lead_detail.php:906
 #: ../../operation/leads/lead_detail.php:1248
-#: ../../include/ajax/incidents.php:140
+#: ../../include/ajax/incidents.php:161
 msgid "Full name"
 msgstr "全名"
 
@@ -4728,14 +4681,14 @@ msgid "KB"
 msgstr "知识库"
 
 #: ../../operation/search.php:228
-#: ../../operation/incidents/incident_detail.php:1353
+#: ../../operation/incidents/incident_detail.php:1356
 #: ../../operation/incidents/incident_dashboard_detail.php:623
 #: ../../operation/incidents/incident_dashboard_detail.php:681
 #: ../../operation/incidents/incident.php:67 ../../operation/side_menu.php:642
 #: ../../operation/companies/company_detail.php:210
 #: ../../operation/companies/company_detail.php:245
-#: ../../include/functions_inventories.php:1711
-#: ../../include/functions_inventories.php:1725
+#: ../../include/functions_inventories.php:1713
+#: ../../include/functions_inventories.php:1727
 msgid "Contacts"
 msgstr "联系人"
 
@@ -4779,7 +4732,7 @@ msgstr "公司"
 msgid "Invoices"
 msgstr "发票"
 
-#: ../../operation/search.php:349 ../../operation/invoices/invoices.php:538
+#: ../../operation/search.php:349 ../../operation/invoices/invoices.php:552
 #: ../../operation/invoices/invoice_detail.php:269
 #: ../../operation/invoices/invoice_template.php:98
 #: ../../operation/contracts/contract_detail.php:185
@@ -5116,7 +5069,7 @@ msgstr "单一工作单元"
 #: ../../operation/projects/task.php:227 ../../operation/projects/task.php:603
 #: ../../include/functions_workunits.php:171
 #: ../../include/functions_workunits.php:352
-#: ../../include/functions_tasks.php:249 ../../include/functions_form.php:1286
+#: ../../include/functions_tasks.php:249 ../../include/functions_form.php:1340
 msgid "Time used"
 msgstr "已用时间"
 
@@ -5295,7 +5248,7 @@ msgid ""
 msgstr "请注意：您不能上传后缀名为.PHP或者.PL文件，或其他格式的源代码文件。请压缩成.ZIP或者.GZ之后再上传。"
 
 #: ../../operation/incidents/incident_files.php:226
-#: ../../operation/incidents/incident_detail.php:1282
+#: ../../operation/incidents/incident_detail.php:1285
 #: ../../operation/leads/lead_mail.php:206
 #: ../../operation/contracts/contract_detail.php:538
 #: ../../operation/download/browse.php:353
@@ -5303,7 +5256,7 @@ msgid "Drop the file here"
 msgstr ""
 
 #: ../../operation/incidents/incident_files.php:228
-#: ../../operation/incidents/incident_detail.php:1284
+#: ../../operation/incidents/incident_detail.php:1287
 #: ../../operation/leads/lead_mail.php:208
 #: ../../operation/contracts/contract_detail.php:540
 #: ../../operation/download/browse.php:355
@@ -5322,7 +5275,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_files.php:272
 #: ../../operation/contacts/contact_files.php:152
-#: ../../operation/invoices/invoices.php:689
+#: ../../operation/invoices/invoices.php:704
 #: ../../operation/workorders/wo_files.php:115
 #: ../../operation/file_sharing/list.php:75
 #: ../../operation/leads/lead_files.php:108
@@ -5435,7 +5388,7 @@ msgid "Ticket successfully updated"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:582
-#: ../../operation/incidents/incident_detail.php:1272
+#: ../../operation/incidents/incident_detail.php:1275
 msgid "Resolution epilog"
 msgstr "收尾工作"
 
@@ -5498,7 +5451,7 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1094
+#: ../../operation/incidents/incident_detail.php:1095
 #: ../../operation/incidents/incident_dashboard_detail.php:358
 #: ../../enterprise/operation/incidents/workflow_actions.php:249
 #: ../../enterprise/operation/incidents/workflow_actions.php:267
@@ -5509,75 +5462,75 @@ msgid ""
 "yourself, please assign to other user"
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1111
+#: ../../operation/incidents/incident_detail.php:1114
 msgid ""
 "User assigned here is user that will be responsible to close the ticket."
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1128
+#: ../../operation/incidents/incident_detail.php:1131
 msgid "Creation date"
 msgstr "创建日期"
 
-#: ../../operation/incidents/incident_detail.php:1129
+#: ../../operation/incidents/incident_detail.php:1132
 msgid "Creation time"
 msgstr "创建时间"
 
-#: ../../operation/incidents/incident_detail.php:1130
+#: ../../operation/incidents/incident_detail.php:1133
 msgid "The format should be hh:mm"
 msgstr "格式应为小时：分钟"
 
-#: ../../operation/incidents/incident_detail.php:1150
+#: ../../operation/incidents/incident_detail.php:1153
 #: ../../operation/incidents/incident_dashboard_detail.php:190
 #: ../../operation/incidents/incident_inventory_contacts.php:52
 #: ../../include/functions_form.php:1059
 msgid "Editor"
 msgstr "编辑器"
 
-#: ../../operation/incidents/incident_detail.php:1157
-#: ../../operation/incidents/incident_detail.php:1159
-#: ../../operation/incidents/incident_detail.php:1161
+#: ../../operation/incidents/incident_detail.php:1160
+#: ../../operation/incidents/incident_detail.php:1162
+#: ../../operation/incidents/incident_detail.php:1164
 #: ../../operation/incidents/incident_dashboard_detail.php:194
 #: ../../operation/user_report/report_full.php:200
 #: ../../operation/user_report/report_full.php:524
 msgid "Creator group"
 msgstr "创建者组"
 
-#: ../../operation/incidents/incident_detail.php:1166
+#: ../../operation/incidents/incident_detail.php:1169
 #: ../../operation/incidents/incident_dashboard_detail.php:206
 #: ../../operation/incidents/incident_dashboard_detail.php:488
 msgid "SLA disabled"
 msgstr "SLA 禁用了"
 
-#: ../../operation/incidents/incident_detail.php:1168
+#: ../../operation/incidents/incident_detail.php:1171
 msgid "Notify changes by email "
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1179
+#: ../../operation/incidents/incident_detail.php:1182
 #: ../../operation/incidents/incident_search_logic.php:284
 #: ../../operation/incidents/incident_dashboard_detail.php:198
 msgid "Parent ticket"
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1195
-#: ../../operation/incidents/incident_detail.php:1199
-#: ../../operation/incidents/incident_detail.php:1414
+#: ../../operation/incidents/incident_detail.php:1198
+#: ../../operation/incidents/incident_detail.php:1202
+#: ../../operation/incidents/incident_detail.php:1419
 #: ../../operation/workorders/wo.php:378 ../../operation/workorders/wo.php:382
 #: ../../operation/workorders/wo.php:748
 msgid "Open this task"
 msgstr "打开任务"
 
-#: ../../operation/incidents/incident_detail.php:1203
+#: ../../operation/incidents/incident_detail.php:1206
 msgid "Additional email addresses"
 msgstr "额外邮件地址"
 
-#: ../../operation/incidents/incident_detail.php:1225
-#: ../../operation/incidents/incident_detail.php:1235
+#: ../../operation/incidents/incident_detail.php:1228
+#: ../../operation/incidents/incident_detail.php:1238
 #: ../../operation/incidents/incident_dashboard_detail.php:156
 msgid "Objects affected"
 msgstr "受影响的对象"
 
-#: ../../operation/incidents/incident_detail.php:1229
-#: ../../operation/incidents/incident_detail.php:1239
+#: ../../operation/incidents/incident_detail.php:1232
+#: ../../operation/incidents/incident_detail.php:1242
 #: ../../operation/inventories/inventory_detail.php:661
 #: ../../operation/inventories/inventory_detail.php:666
 #: ../../operation/projects/task_detail.php:364
@@ -5588,49 +5541,56 @@ msgstr "受影响的对象"
 msgid "Remove"
 msgstr "移除"
 
-#: ../../operation/incidents/incident_detail.php:1252
+#: ../../operation/incidents/incident_detail.php:1255
 msgid "Advanced parameters"
 msgstr "高级参数"
 
-#: ../../operation/incidents/incident_detail.php:1307
+#: ../../operation/incidents/incident_detail.php:1310
 #: ../../operation/contracts/contract_detail.php:563
 msgid "File upload"
 msgstr "上传文件"
 
-#: ../../operation/incidents/incident_detail.php:1349
+#: ../../operation/incidents/incident_detail.php:1352
 #: ../../operation/incidents/incident_dashboard_detail.php:678
 #: ../../operation/side_menu.php:790
 msgid "Inventory objects"
 msgstr "库存对象"
 
-#: ../../operation/incidents/incident_detail.php:1401
+#: ../../operation/incidents/incident_detail.php:1358
+#: ../../enterprise/godmode/usuarios/profile_list.php:260
+#: ../../enterprise/include/functions_groups.php:70
+#: ../../include/functions_groups.php:87 ../../include/functions_form.php:128
+msgid "Users"
+msgstr "用户"
+
+#: ../../operation/incidents/incident_detail.php:1406
 msgid ""
 "If you change the type, you will lost the information of the customized type "
 "fields. \\n\\nDo you want to continue?"
 msgstr "若更改类型，则会丢失自定义类型域的信息。\\n\\n 仍继续？"
 
-#: ../../operation/incidents/incident_detail.php:1489
+#: ../../operation/incidents/incident_detail.php:1494
 msgid "Title field is empty"
 msgstr "标题为空"
 
-#: ../../operation/incidents/incident_detail.php:1496
+#: ../../operation/incidents/incident_detail.php:1501
 msgid "Creator field is empty"
 msgstr "创建者为空"
 
-#: ../../operation/incidents/incident_detail.php:1503
+#: ../../operation/incidents/incident_detail.php:1508
 msgid "Owner field is empty"
 msgstr "所有者为空"
 
-#: ../../operation/incidents/incident_detail.php:1515
+#: ../../operation/incidents/incident_detail.php:1520
 msgid "Closed by field is empty"
 msgstr "结束域为空"
 
-#: ../../operation/incidents/incident_detail.php:1933
+#: ../../operation/incidents/incident_detail.php:1938
 #: ../../operation/kb/manage_data.php:391 ../../operation/kb/browse.php:455
 msgid "Title required"
 msgstr "需要输入标题"
 
-#: ../../operation/incidents/incident_detail.php:1934
+#: ../../operation/incidents/incident_detail.php:1939
 msgid "This ticket already exists"
 msgstr ""
 
@@ -5651,8 +5611,8 @@ msgstr "事件"
 #: ../../operation/inventories/inventory_incident_tracking.php:48
 #: ../../operation/leads/lead_detail.php:722
 #: ../../operation/leads/lead_detail.php:745
-#: ../../include/functions_inventories.php:1707
-#: ../../include/functions_inventories.php:1724
+#: ../../include/functions_inventories.php:1709
+#: ../../include/functions_inventories.php:1726
 msgid "Tracking"
 msgstr "跟踪"
 
@@ -5702,7 +5662,7 @@ msgid "Report results"
 msgstr ""
 
 #: ../../operation/incidents/incident_reports.php:71
-#: ../../operation/invoices/invoices.php:454
+#: ../../operation/invoices/invoices.php:468
 #: ../../operation/invoices/invoice_detail.php:224
 #: ../../operation/invoices/invoice_detail.php:331
 #: ../../operation/inventories/inventory_search.php:430
@@ -5769,6 +5729,14 @@ msgstr ""
 msgid "Comment added successfully"
 msgstr ""
 
+#: ../../operation/incidents/incident_workunits.php:127
+#: ../../operation/incidents/incident_create_work.php:51
+#: ../../operation/user_report/report_monthly.php:112
+#: ../../operation/workorders/wo_workunits.php:119
+#: ../../include/functions_user.php:303 ../../include/functions_form.php:859
+msgid "Profile"
+msgstr "简介"
+
 #: ../../operation/incidents/incident_workunits.php:135
 #: ../../operation/incidents/incident_create_work.php:64
 #: ../../operation/workorders/wo_workunits.php:127
@@ -5810,8 +5778,8 @@ msgstr ""
 #: ../../enterprise/custom_screens/widgets/TicketStats.php:146
 #: ../../include/functions_incidents.php:1105
 #: ../../include/functions_incidents.php:1106
-#: ../../include/functions_incidents.php:3893
-#: ../../include/functions_incidents.php:3894
+#: ../../include/functions_incidents.php:3896
+#: ../../include/functions_incidents.php:3897
 msgid "Open"
 msgstr "打开"
 
@@ -5826,7 +5794,7 @@ msgstr "%s 之前"
 #: ../../enterprise/custom_screens/widgets/TicketStats.php:151
 #: ../../include/functions_db.php:2313
 #: ../../include/functions_incidents.php:1105
-#: ../../include/functions_incidents.php:3893
+#: ../../include/functions_incidents.php:3896
 msgid "Closed"
 msgstr "已关闭"
 
@@ -5849,7 +5817,7 @@ msgid "General statistics"
 msgstr "普通统计数据"
 
 #: ../../operation/incidents/incident_tracking.php:118
-#: ../../include/functions_form.php:1284
+#: ../../include/functions_form.php:1338
 msgid "Last work at"
 msgstr "最后工作"
 
@@ -5908,7 +5876,7 @@ msgid "Custom search"
 msgstr "自定义搜索"
 
 #: ../../operation/incidents/incident_search_logic.php:146
-#: ../../operation/invoices/invoices.php:602
+#: ../../operation/invoices/invoices.php:617
 #: ../../operation/leads/lead_detail.php:576
 msgid "Custom search saved"
 msgstr "自定义搜索已保存"
@@ -6387,7 +6355,7 @@ msgstr "对象类型"
 #: ../../operation/inventories/inventory_detail.php:639
 #: ../../include/functions_inventories.php:1054
 #: ../../include/functions_inventories.php:1236
-#: ../../include/functions_inventories.php:1806
+#: ../../include/functions_inventories.php:1808
 #: ../../include/ajax/inventories.php:208
 msgid "Manufacturer"
 msgstr "生产厂家"
@@ -6451,12 +6419,12 @@ msgid ""
 msgstr ""
 
 #: ../../operation/invoices/invoices.php:201
-#: ../../operation/invoices/invoices.php:341
+#: ../../operation/invoices/invoices.php:343
 msgid "Reminder: Invoice "
 msgstr ""
 
 #: ../../operation/invoices/invoices.php:201
-#: ../../operation/invoices/invoices.php:341
+#: ../../operation/invoices/invoices.php:343
 msgid " payment date"
 msgstr ""
 
@@ -6468,76 +6436,76 @@ msgstr ""
 msgid "There was a problem creating the invoice"
 msgstr "创建发票失败"
 
-#: ../../operation/invoices/invoices.php:361
+#: ../../operation/invoices/invoices.php:363
 msgid "Invoice "
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:369
+#: ../../operation/invoices/invoices.php:371
 msgid "There was a problem updating the invoice"
 msgstr "更新发票失败"
 
-#: ../../operation/invoices/invoices.php:445
+#: ../../operation/invoices/invoices.php:459
 msgid "Add new invoice"
 msgstr "添加新发票"
 
-#: ../../operation/invoices/invoices.php:450
+#: ../../operation/invoices/invoices.php:464
 msgid "Update invoice"
 msgstr "更新发票"
 
-#: ../../operation/invoices/invoices.php:459
+#: ../../operation/invoices/invoices.php:473
 #: ../../operation/invoices/invoice_detail.php:341
 #: ../../operation/companies/company_detail.php:640
 #: ../../operation/companies/company_detail.php:731
 msgid "Lock"
 msgstr "锁定"
 
-#: ../../operation/invoices/invoices.php:504
+#: ../../operation/invoices/invoices.php:518
 #: ../../operation/invoices/invoice_template.php:69
 msgid "Reference"
 msgstr "参考"
 
-#: ../../operation/invoices/invoices.php:505
+#: ../../operation/invoices/invoices.php:519
 #: ../../operation/projects/task_cost.php:177
 msgid "Bill ID"
 msgstr "计费 ID"
 
-#: ../../operation/invoices/invoices.php:509
+#: ../../operation/invoices/invoices.php:523
 msgid "Last generated ID: "
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:514
+#: ../../operation/invoices/invoices.php:528
 #: ../../operation/invoices/invoice_detail.php:217
 #: ../../operation/invoices/invoice_template.php:19
 msgid "Paid"
 msgstr "已付"
 
-#: ../../operation/invoices/invoices.php:515
+#: ../../operation/invoices/invoices.php:529
 #: ../../operation/invoices/invoice_detail.php:218
 msgid "Canceled"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:517
+#: ../../operation/invoices/invoices.php:531
 #: ../../operation/invoices/invoice_detail.php:219
 msgid "Invoice status"
 msgstr "发票状态"
 
-#: ../../operation/invoices/invoices.php:519
+#: ../../operation/invoices/invoices.php:533
 msgid "Invoice creation date"
 msgstr "发票创建日期"
 
-#: ../../operation/invoices/invoices.php:520
+#: ../../operation/invoices/invoices.php:534
 msgid "Invoice effective payment date"
 msgstr "发票实际付款日期"
 
-#: ../../operation/invoices/invoices.php:528
+#: ../../operation/invoices/invoices.php:542
 msgid "Create calendar event"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:530
+#: ../../operation/invoices/invoices.php:544
 msgid "Invoice expiration date"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:535
+#: ../../operation/invoices/invoices.php:549
 #: ../../operation/invoices/invoice_detail.php:212
 #: ../../operation/contracts/contract_detail.php:517
 #: ../../operation/contracts/contract_detail.php:588
@@ -6546,77 +6514,81 @@ msgstr ""
 msgid "Contract number"
 msgstr "联系电话"
 
-#: ../../operation/invoices/invoices.php:537
+#: ../../operation/invoices/invoices.php:551
 #: ../../operation/invoices/invoice_template.php:95
 msgid "Concept"
 msgstr "概念"
 
-#: ../../operation/invoices/invoices.php:549
+#: ../../operation/invoices/invoices.php:563
 msgid "Discount before taxes (%)"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:550
+#: ../../operation/invoices/invoices.php:564
 msgid "Concept discount"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:554
-#: ../../operation/invoices/invoices.php:560
-#: ../../operation/invoices/invoice_template.php:169
+#: ../../operation/invoices/invoices.php:568
+#: ../../operation/invoices/invoices.php:574
+#: ../../operation/invoices/invoice_template.php:173
 msgid "Taxes (%)"
 msgstr "税（%）"
 
-#: ../../operation/invoices/invoices.php:576
-#: ../../operation/invoices/invoices.php:583
+#: ../../operation/invoices/invoices.php:590
+#: ../../operation/invoices/invoices.php:597
 msgid "Concept tax"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:598
-msgid "IRPF (%)"
+#: ../../operation/invoices/invoices.php:612
+msgid "Retention (%)"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:626
+#: ../../operation/invoices/invoices.php:613
+msgid "Concept Retention"
+msgstr ""
+
+#: ../../operation/invoices/invoices.php:641
 msgid "Total amount: "
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:627
+#: ../../operation/invoices/invoices.php:642
 msgid "Total amount without taxes or discounts: "
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:635
+#: ../../operation/invoices/invoices.php:650
 msgid "Internal note"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:691
+#: ../../operation/invoices/invoices.php:706
 #: ../../operation/workorders/wo_files.php:117
 #: ../../operation/leads/lead_files.php:110
 #: ../../operation/companies/company_files.php:109
 msgid "Ops."
 msgstr "选项"
 
-#: ../../operation/invoices/invoices.php:712
+#: ../../operation/invoices/invoices.php:727
 msgid "There is no files attached for this invoice"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:755
+#: ../../operation/invoices/invoices.php:770
 msgid "Company required"
 msgstr ""
 
-#: ../../operation/invoices/invoices.php:775
+#: ../../operation/invoices/invoices.php:790
 msgid "Bill ID required"
 msgstr "需要账单号"
 
-#: ../../operation/invoices/invoices.php:776
+#: ../../operation/invoices/invoices.php:791
 msgid "This bill ID already exists"
 msgstr "该账单号已存在"
 
-#: ../../operation/invoices/invoices.php:782
-#: ../../operation/invoices/invoices.php:791
-#: ../../operation/invoices/invoices.php:795
-#: ../../operation/invoices/invoices.php:799
-#: ../../operation/invoices/invoices.php:803
-#: ../../operation/invoices/invoices.php:807
-#: ../../operation/invoices/invoices.php:811
-#: ../../operation/invoices/invoices.php:882
+#: ../../operation/invoices/invoices.php:797
+#: ../../operation/invoices/invoices.php:806
+#: ../../operation/invoices/invoices.php:810
+#: ../../operation/invoices/invoices.php:814
+#: ../../operation/invoices/invoices.php:818
+#: ../../operation/invoices/invoices.php:822
+#: ../../operation/invoices/invoices.php:826
+#: ../../operation/invoices/invoices.php:897
 #: ../../operation/leads/lead_detail.php:1446
 msgid "Invalid number"
 msgstr "无效数字"
@@ -6751,29 +6723,32 @@ msgid "Expiration date"
 msgstr ""
 
 #: ../../operation/invoices/invoice_template.php:143
-#: ../../operation/invoices/invoice_template.php:246
+#: ../../operation/invoices/invoice_template.php:272
 msgid "Total amount without taxes or discounts"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:166
+#: ../../operation/invoices/invoice_template.php:170
 msgid "Concept Taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:172
-#: ../../operation/invoices/invoice_template.php:220
+#: ../../operation/invoices/invoice_template.php:176
+#: ../../operation/invoices/invoice_template.php:242
 msgid "Total Taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:233
-#: ../../operation/invoices/invoice_template.php:255
-msgid "IRPF"
-msgstr ""
-
-#: ../../operation/invoices/invoice_template.php:249
+#: ../../operation/invoices/invoice_template.php:275
 msgid "Discount before taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:258
+#: ../../operation/invoices/invoice_template.php:278
+msgid "Total Tax"
+msgstr ""
+
+#: ../../operation/invoices/invoice_template.php:281
+msgid "Retention"
+msgstr ""
+
+#: ../../operation/invoices/invoice_template.php:284
 #: ../../operation/leads/lead_statistics.php:259
 #: ../../operation/leads/lead_statistics.php:275
 msgid "Total amount"
@@ -6854,14 +6829,14 @@ msgstr ""
 #: ../../include/functions_incidents.php:1108
 #: ../../include/functions_incidents.php:1129
 #: ../../include/functions_incidents.php:1134
-#: ../../include/functions_incidents.php:3604
-#: ../../include/functions_incidents.php:3629
-#: ../../include/functions_incidents.php:3648
-#: ../../include/functions_incidents.php:3667
-#: ../../include/functions_incidents.php:3686
-#: ../../include/functions_incidents.php:3896
-#: ../../include/functions_incidents.php:3917
-#: ../../include/functions_incidents.php:3922
+#: ../../include/functions_incidents.php:3607
+#: ../../include/functions_incidents.php:3632
+#: ../../include/functions_incidents.php:3651
+#: ../../include/functions_incidents.php:3670
+#: ../../include/functions_incidents.php:3689
+#: ../../include/functions_incidents.php:3899
+#: ../../include/functions_incidents.php:3920
+#: ../../include/functions_incidents.php:3925
 msgid "others"
 msgstr "其他"
 
@@ -6895,9 +6870,17 @@ msgstr "本月总小时"
 
 #: ../../operation/user_report/report_monthly.php:118
 #: ../../include/functions_incidents.php:966
-#: ../../include/functions_incidents.php:3753
+#: ../../include/functions_incidents.php:3756
 msgid "Avg. Scoring"
 msgstr "平均分"
+
+#: ../../operation/user_report/report_monthly.php:163
+#: ../../operation/user_report/report_weekly.php:89
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:23
+#: ../../enterprise/operation/user/user.php:21
+#: ../../include/functions_user.php:371
+msgid "This user doesn't have any assigned profile/group"
+msgstr "该用户没有指定配置文件/组"
 
 #: ../../operation/user_report/monthly.php:98
 #: ../../operation/user_report/monthly_graph.php:74
@@ -7088,7 +7071,7 @@ msgid "Total hours"
 msgstr "总时数"
 
 #: ../../operation/user_report/report_full.php:529
-#: ../../include/functions_incidents.php:2641
+#: ../../include/functions_incidents.php:2644
 msgid "Score"
 msgstr "评分"
 
@@ -7177,7 +7160,7 @@ msgstr ""
 #: ../../operation/companies/company_statistics.php:241
 #: ../../operation/companies/company_statistics.php:256
 #: ../../enterprise/operation/incidents/workflow_status_mapping.php:141
-#: ../../include/functions_inventories.php:1378
+#: ../../include/functions_inventories.php:1380
 #: ../../include/ajax/inventories.php:149
 #: ../../include/ajax/inventories.php:415
 msgid "No data to show"
@@ -8224,7 +8207,7 @@ msgstr "无链接"
 
 #: ../../operation/inventories/inventory_relationship.php:107
 #: ../../operation/newsletter/manage_address.php:56
-#: ../../include/functions_form.php:1439
+#: ../../include/functions_form.php:1493
 msgid "Source"
 msgstr "来源"
 
@@ -8284,6 +8267,11 @@ msgstr "联合用户"
 #: ../../include/ajax/inventories.php:227
 msgid "Associated company"
 msgstr "联合公司"
+
+#: ../../operation/inventories/inventory_search.php:470
+#: ../../operation/inventories/inventory_search.php:478
+msgid "Delete All"
+msgstr ""
 
 #: ../../operation/inventories/inventory_detail.php:107
 #: ../../operation/side_menu.php:526
@@ -8371,8 +8359,8 @@ msgid "Tickets affecting inventory object"
 msgstr ""
 
 #: ../../operation/inventories/inventory_incident_tracking.php:47
-#: ../../include/functions_inventories.php:1719
-#: ../../include/functions_inventories.php:1727
+#: ../../include/functions_inventories.php:1721
+#: ../../include/functions_inventories.php:1729
 msgid "Relationships"
 msgstr "关系"
 
@@ -8397,13 +8385,13 @@ msgstr "树视图"
 msgid "There was a problem deleting object"
 msgstr "删除对象错误"
 
-#: ../../operation/inventories/inventory.php:95
+#: ../../operation/inventories/inventory.php:104
 msgid ""
 "There was an error updating inventory \n"
 "object"
 msgstr "更新库存对象错误"
 
-#: ../../operation/inventories/inventory.php:161
+#: ../../operation/inventories/inventory.php:170
 msgid "Unable to load inventory"
 msgstr "无法加载库存"
 
@@ -9834,8 +9822,8 @@ msgstr ""
 #: ../../include/functions_graph.php:1610 ../../include/ajax/projects.php:523
 #: ../../include/functions_incidents.php:955
 #: ../../include/functions_incidents.php:1087
-#: ../../include/functions_incidents.php:3742
-#: ../../include/functions_incidents.php:3875
+#: ../../include/functions_incidents.php:3745
+#: ../../include/functions_incidents.php:3878
 msgid "Days"
 msgstr "天"
 
@@ -9877,7 +9865,7 @@ msgstr ""
 
 #: ../../operation/projects/project_report.php:446
 #: ../../include/functions_incidents.php:1007
-#: ../../include/functions_incidents.php:3795
+#: ../../include/functions_incidents.php:3798
 msgid "Total time"
 msgstr "总时间"
 
@@ -9924,7 +9912,7 @@ msgstr ""
 
 #: ../../operation/projects/project_report.php:523
 #: ../../include/functions_incidents.php:1068
-#: ../../include/functions_incidents.php:3856
+#: ../../include/functions_incidents.php:3859
 msgid "Ticket title"
 msgstr ""
 
@@ -10828,12 +10816,6 @@ msgstr "创建资料错误"
 msgid "Manage"
 msgstr "管理"
 
-#: ../../enterprise/godmode/usuarios/profile_list.php:260
-#: ../../enterprise/include/functions_groups.php:70
-#: ../../include/functions_groups.php:87 ../../include/functions_form.php:128
-msgid "Users"
-msgstr "用户"
-
 #: ../../enterprise/godmode/usuarios/profile_list.php:263
 #: ../../include/update_manager/lib/libupdate_manager.php:779
 msgid "Database"
@@ -11704,40 +11686,40 @@ msgstr ""
 msgid "Unblock ticket"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:169
+#: ../../enterprise/include/functions_incidents.php:170
 msgid "4 days"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:170
+#: ../../enterprise/include/functions_incidents.php:171
 msgid "1 week"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:171
+#: ../../enterprise/include/functions_incidents.php:172
 #: ../../include/functions.php:791
 msgid "15 days"
 msgstr "15天"
 
-#: ../../enterprise/include/functions_incidents.php:172
+#: ../../enterprise/include/functions_incidents.php:173
 msgid "21 days"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:173
+#: ../../enterprise/include/functions_incidents.php:174
 msgid "30 days"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:174
+#: ../../enterprise/include/functions_incidents.php:175
 msgid "3 months"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:175
+#: ../../enterprise/include/functions_incidents.php:176
 msgid "6 months"
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:712
+#: ../../enterprise/include/functions_incidents.php:713
 msgid "Allowed status: "
 msgstr ""
 
-#: ../../enterprise/include/functions_incidents.php:729
+#: ../../enterprise/include/functions_incidents.php:730
 msgid "Allowed resolution: "
 msgstr ""
 
@@ -11978,35 +11960,35 @@ msgstr "已更新用户"
 msgid "Unknown update"
 msgstr "未知更新"
 
-#: ../../include/functions_db.php:2853 ../../include/functions_db.php:2857
+#: ../../include/functions_db.php:2871 ../../include/functions_db.php:2875
 msgid "ERROR"
 msgstr "错误"
 
-#: ../../include/functions_db.php:2894
+#: ../../include/functions_db.php:2918
 msgid "Custom"
 msgstr ""
 
-#: ../../include/functions_db.php:2895
+#: ../../include/functions_db.php:2919
 msgid "Last 24 hours"
 msgstr ""
 
-#: ../../include/functions_db.php:2896
+#: ../../include/functions_db.php:2920
 msgid "Last 2 days"
 msgstr ""
 
-#: ../../include/functions_db.php:2897
+#: ../../include/functions_db.php:2921
 msgid "Last week"
 msgstr ""
 
-#: ../../include/functions_db.php:2898
+#: ../../include/functions_db.php:2922
 msgid "Last 15 days"
 msgstr ""
 
-#: ../../include/functions_db.php:2899
+#: ../../include/functions_db.php:2923
 msgid "Last month"
 msgstr ""
 
-#: ../../include/functions_db.php:2900
+#: ../../include/functions_db.php:2924
 msgid "Last trimester"
 msgstr ""
 
@@ -12198,15 +12180,32 @@ msgstr "写入"
 msgid "You can't access this page"
 msgstr "无权访问该页面"
 
+#: ../../include/functions_objects.php:68
+#: ../../include/functions_form.php:1235
+msgid "External"
+msgstr "外部"
+
 #: ../../include/functions_user.php:115
-#: ../../include/functions_inventories.php:1495
+#: ../../include/functions_inventories.php:1497
 msgid " already exists"
 msgstr " 已存在"
 
 #: ../../include/functions_user.php:141
-#: ../../include/functions_inventories.php:1624
+#: ../../include/functions_inventories.php:1626
 msgid "File loaded"
 msgstr "已加载文件"
+
+#: ../../include/functions_user.php:297
+msgid "Enabled/Disabled"
+msgstr "启用/禁用"
+
+#: ../../include/functions_user.php:297
+msgid "E/D"
+msgstr "启用/禁用"
+
+#: ../../include/functions_user.php:302
+msgid "Last contact"
+msgstr "最后联系人"
 
 #: ../../include/functions_file_releases.php:248
 msgid "Last updated file releases"
@@ -12221,8 +12220,8 @@ msgstr "请不要直接回复本邮件，这封邮件是由系统生成并自动
 #: ../../include/functions_crm.php:421
 #: ../../include/functions_incidents.php:1006
 #: ../../include/functions_incidents.php:1029
-#: ../../include/functions_incidents.php:3794
-#: ../../include/functions_incidents.php:3817
+#: ../../include/functions_incidents.php:3797
+#: ../../include/functions_incidents.php:3820
 msgid "Number"
 msgstr "数值"
 
@@ -12311,19 +12310,27 @@ msgstr ""
 msgid "SLA < (%)"
 msgstr ""
 
-#: ../../include/functions_form.php:1269
+#: ../../include/functions_form.php:1232
+msgid "User status"
+msgstr "用户状态"
+
+#: ../../include/functions_form.php:1236
+msgid "Standard"
+msgstr "标准"
+
+#: ../../include/functions_form.php:1323
 msgid "Open at"
 msgstr "打开"
 
-#: ../../include/functions_form.php:1272
+#: ../../include/functions_form.php:1326
 msgid "Closed at"
 msgstr "已关闭"
 
-#: ../../include/functions_form.php:1287
+#: ../../include/functions_form.php:1341
 msgid "Done by"
 msgstr "完成"
 
-#: ../../include/functions_form.php:1310
+#: ../../include/functions_form.php:1364
 msgid "Items per page"
 msgstr "每页显示数量"
 
@@ -12459,8 +12466,8 @@ msgid "More info"
 msgstr "更多信息"
 
 #: ../../include/functions_inventories.php:727
-#: ../../include/functions_inventories.php:1337
-#: ../../include/functions_inventories.php:1348
+#: ../../include/functions_inventories.php:1338
+#: ../../include/functions_inventories.php:1349
 msgid "Show object type fields"
 msgstr "显示对象类型域"
 
@@ -12473,7 +12480,7 @@ msgid "Filters only apply <br> to the first level"
 msgstr "仅应用过滤规则<br>于第一级"
 
 #: ../../include/functions_inventories.php:983
-#: ../../include/functions_inventories.php:1656
+#: ../../include/functions_inventories.php:1658
 msgid "Unused"
 msgstr "未使用"
 
@@ -12481,73 +12488,73 @@ msgstr "未使用"
 msgid "Empty inventory"
 msgstr "清空库存"
 
-#: ../../include/functions_inventories.php:1490
+#: ../../include/functions_inventories.php:1492
 msgid "Inventory name empty"
 msgstr "存储名称为空"
 
-#: ../../include/functions_inventories.php:1495
+#: ../../include/functions_inventories.php:1497
 msgid "Inventory "
 msgstr "库存 "
 
-#: ../../include/functions_inventories.php:1504
+#: ../../include/functions_inventories.php:1506
 msgid "Contract "
 msgstr "合同 "
 
-#: ../../include/functions_inventories.php:1504
-#: ../../include/functions_inventories.php:1513
-#: ../../include/functions_inventories.php:1522
-#: ../../include/functions_inventories.php:1563
-#: ../../include/functions_inventories.php:1571
+#: ../../include/functions_inventories.php:1506
+#: ../../include/functions_inventories.php:1515
+#: ../../include/functions_inventories.php:1524
+#: ../../include/functions_inventories.php:1565
+#: ../../include/functions_inventories.php:1573
 msgid " doesn't exist"
 msgstr " 不存在"
 
-#: ../../include/functions_inventories.php:1513
+#: ../../include/functions_inventories.php:1515
 msgid "Manufacturer "
 msgstr "制造商 "
 
-#: ../../include/functions_inventories.php:1522
+#: ../../include/functions_inventories.php:1524
 msgid "Object type "
 msgstr "对象类型 "
 
-#: ../../include/functions_inventories.php:1546
-#: ../../include/functions_inventories.php:1554
-#: ../../include/functions_inventories.php:1580
+#: ../../include/functions_inventories.php:1548
+#: ../../include/functions_inventories.php:1556
+#: ../../include/functions_inventories.php:1582
 msgid "Field "
 msgstr "域 "
 
-#: ../../include/functions_inventories.php:1546
+#: ../../include/functions_inventories.php:1548
 msgid " doesn't match. Valid values: "
 msgstr " 不匹配，值无效： "
 
-#: ../../include/functions_inventories.php:1554
+#: ../../include/functions_inventories.php:1556
 msgid " must be numeric"
 msgstr " 必须为数字"
 
-#: ../../include/functions_inventories.php:1563
+#: ../../include/functions_inventories.php:1565
 msgid "External table "
 msgstr "外部表格 "
 
-#: ../../include/functions_inventories.php:1571
+#: ../../include/functions_inventories.php:1573
 msgid "Id "
 msgstr "用户名 "
 
-#: ../../include/functions_inventories.php:1580
+#: ../../include/functions_inventories.php:1582
 msgid " must be unique"
 msgstr " 必须唯一"
 
-#: ../../include/functions_inventories.php:1655
+#: ../../include/functions_inventories.php:1657
 msgid "In use"
 msgstr "正在使用"
 
-#: ../../include/functions_inventories.php:1657
+#: ../../include/functions_inventories.php:1659
 msgid "Removed"
 msgstr "已移除"
 
-#: ../../include/functions_inventories.php:1703
+#: ../../include/functions_inventories.php:1705
 msgid "Inventory object details"
 msgstr "存储对象详情"
 
-#: ../../include/functions_inventories.php:1732
+#: ../../include/functions_inventories.php:1734
 #, php-format
 msgid "Inventory object #%s: %s"
 msgstr "存储对象 #%s：%s"
@@ -12622,38 +12629,38 @@ msgstr ""
 msgid "Error deleting. Company has invoices."
 msgstr ""
 
-#: ../../include/ajax/incidents.php:200
+#: ../../include/ajax/incidents.php:221
 msgid "Telephone: "
 msgstr ""
 
-#: ../../include/ajax/incidents.php:206
+#: ../../include/ajax/incidents.php:227
 msgid "Email: "
 msgstr ""
 
-#: ../../include/ajax/incidents.php:212
+#: ../../include/ajax/incidents.php:233
 msgid "Company: "
 msgstr ""
 
-#: ../../include/ajax/incidents.php:218
+#: ../../include/ajax/incidents.php:239
 msgid "Total tickets opened: "
 msgstr ""
 
-#: ../../include/ajax/incidents.php:224
+#: ../../include/ajax/incidents.php:245
 msgid "Comments "
 msgstr ""
 
-#: ../../include/ajax/incidents.php:281
+#: ../../include/ajax/incidents.php:302
 msgid "Following tickets will be closed: "
 msgstr ""
 
-#: ../../include/ajax/incidents.php:306
+#: ../../include/ajax/incidents.php:327
 msgid ""
 "Ticket reports are based on custom searches. In order to elaborate a report, "
 "first it is required to define a customized search that will be used as a "
 "base for the report."
 msgstr ""
 
-#: ../../include/ajax/incidents.php:308
+#: ../../include/ajax/incidents.php:329
 msgid "Go to Custom search"
 msgstr ""
 
@@ -12762,180 +12769,180 @@ msgid "months"
 msgstr "月"
 
 #: ../../include/functions_incidents.php:932
-#: ../../include/functions_incidents.php:3719
+#: ../../include/functions_incidents.php:3722
 msgid "Ticket Open/Close histogram"
 msgstr ""
 
 #: ../../include/functions_incidents.php:937
-#: ../../include/functions_incidents.php:3724
+#: ../../include/functions_incidents.php:3727
 msgid "Ticket activity"
 msgstr ""
 
 #: ../../include/functions_incidents.php:943
 #: ../../include/functions_incidents.php:1052
-#: ../../include/functions_incidents.php:3730
-#: ../../include/functions_incidents.php:3840
+#: ../../include/functions_incidents.php:3733
+#: ../../include/functions_incidents.php:3843
 msgid "Metric"
 msgstr "公制"
 
 #: ../../include/functions_incidents.php:953
-#: ../../include/functions_incidents.php:3740
+#: ../../include/functions_incidents.php:3743
 msgid "Avg. life time"
 msgstr "平均生存周期"
 
 #: ../../include/functions_incidents.php:960
-#: ../../include/functions_incidents.php:3747
+#: ../../include/functions_incidents.php:3750
 msgid "Avg. work time"
 msgstr "平均工时"
 
 #: ../../include/functions_incidents.php:971
-#: ../../include/functions_incidents.php:3758
+#: ../../include/functions_incidents.php:3761
 msgid "Total work time"
 msgstr "总工时"
 
 #: ../../include/functions_incidents.php:977
-#: ../../include/functions_incidents.php:3764
+#: ../../include/functions_incidents.php:3767
 msgid "Total work units"
 msgstr "总工作单元"
 
 #: ../../include/functions_incidents.php:982
-#: ../../include/functions_incidents.php:3769
+#: ../../include/functions_incidents.php:3772
 msgid "Tickets statistics"
 msgstr ""
 
 #: ../../include/functions_incidents.php:986
-#: ../../include/functions_incidents.php:3774
+#: ../../include/functions_incidents.php:3777
 msgid "Top 5 active tickets"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1000
-#: ../../include/functions_incidents.php:3788
+#: ../../include/functions_incidents.php:3791
 msgid "SLA compliance"
 msgstr "SLA 符合"
 
 #: ../../include/functions_incidents.php:1022
-#: ../../include/functions_incidents.php:3810
+#: ../../include/functions_incidents.php:3813
 msgid "Ticket by status"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1044
-#: ../../include/functions_incidents.php:3832
+#: ../../include/functions_incidents.php:3835
 msgid "Tickets by priority"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1060
-#: ../../include/functions_incidents.php:3848
+#: ../../include/functions_incidents.php:3851
 msgid "Ticket Id"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1076
-#: ../../include/functions_incidents.php:3864
+#: ../../include/functions_incidents.php:3867
 msgid "Worktime hours"
 msgstr "工作时间（小时）"
 
 #: ../../include/functions_incidents.php:1084
-#: ../../include/functions_incidents.php:3872
+#: ../../include/functions_incidents.php:3875
 msgid "Lifetime"
 msgstr "生存周期"
 
 #: ../../include/functions_incidents.php:1102
-#: ../../include/functions_incidents.php:3890
+#: ../../include/functions_incidents.php:3893
 msgid "Longest closed ticket"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1111
-#: ../../include/functions_incidents.php:3899
+#: ../../include/functions_incidents.php:3902
 msgid "Open / Close ticket"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1116
-#: ../../include/functions_incidents.php:3904
+#: ../../include/functions_incidents.php:3907
 msgid "Top active users"
 msgstr "最活跃的用户"
 
 #: ../../include/functions_incidents.php:1120
-#: ../../include/functions_incidents.php:3908
+#: ../../include/functions_incidents.php:3911
 msgid "Top ticket submitters"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1124
-#: ../../include/functions_incidents.php:3912
+#: ../../include/functions_incidents.php:3915
 msgid "Top assigned users"
 msgstr "被指派最多的用户"
 
 #: ../../include/functions_incidents.php:1128
-#: ../../include/functions_incidents.php:3916
+#: ../../include/functions_incidents.php:3919
 msgid "Tickets by group"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1133
-#: ../../include/functions_incidents.php:3921
+#: ../../include/functions_incidents.php:3924
 msgid "Tickets by creator group"
 msgstr ""
 
 #: ../../include/functions_incidents.php:1138
-#: ../../include/functions_incidents.php:3926
+#: ../../include/functions_incidents.php:3929
 msgid "Top 5 average scoring by user"
 msgstr "平均得分前5名"
 
 #: ../../include/functions_incidents.php:1168
-#: ../../include/functions_incidents.php:3958
+#: ../../include/functions_incidents.php:3961
 msgid "Top 5 group by time"
 msgstr "按时间最佳 5 个群组"
 
 #: ../../include/functions_incidents.php:1199
-#: ../../include/functions_incidents.php:3989
+#: ../../include/functions_incidents.php:3992
 msgid "Top 5 users by time"
 msgstr "按时间最佳 5 个用户"
 
-#: ../../include/functions_incidents.php:2289
+#: ../../include/functions_incidents.php:2290
 msgid "Tickets created last year"
 msgstr ""
 
-#: ../../include/functions_incidents.php:2385
+#: ../../include/functions_incidents.php:2386
 msgid " % SLA"
 msgstr ""
 
-#: ../../include/functions_incidents.php:2582
+#: ../../include/functions_incidents.php:2585
 msgid " ticket(s) found"
 msgstr ""
 
-#: ../../include/functions_incidents.php:2629
+#: ../../include/functions_incidents.php:2632
 msgid ""
 "Please, help to improve the service and give us a score for the resolution "
 "of this ticket. People assigned to this ticket will not view directly your "
 "scoring."
 msgstr ""
 
-#: ../../include/functions_incidents.php:2632
+#: ../../include/functions_incidents.php:2635
 msgid "Very good, excellent !"
 msgstr "非常好，棒极了！"
 
-#: ../../include/functions_incidents.php:2633
+#: ../../include/functions_incidents.php:2636
 msgid "Good, very satisfied."
 msgstr "好，很好。"
 
-#: ../../include/functions_incidents.php:2634
+#: ../../include/functions_incidents.php:2637
 msgid "It's ok, but could be better."
 msgstr "还好，但可以更好。"
 
-#: ../../include/functions_incidents.php:2635
+#: ../../include/functions_incidents.php:2638
 msgid "Average. Not bad, not good."
 msgstr "一般，不好也不坏。"
 
-#: ../../include/functions_incidents.php:2636
+#: ../../include/functions_incidents.php:2639
 msgid "Bad, you must to better"
 msgstr "不太好，你要努力了。"
 
-#: ../../include/functions_incidents.php:2637
+#: ../../include/functions_incidents.php:2640
 msgid "Very bad"
 msgstr "非常不好。"
 
-#: ../../include/functions_incidents.php:2638
+#: ../../include/functions_incidents.php:2641
 msgid "Horrible, you need to change it."
 msgstr "太差了，还是换一个吧。"
 
-#: ../../include/functions_incidents.php:3205
+#: ../../include/functions_incidents.php:3208
 msgid "No associated project"
 msgstr ""
 
@@ -13010,6 +13017,3 @@ msgstr "尾声"
 #: ../../extensions/disabled/incident_summary.php:149
 msgid "Ticket summary"
 msgstr ""
-
-#~ msgid "Total amount without taxes"
-#~ msgstr "税后总金额"
