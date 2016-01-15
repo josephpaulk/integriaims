@@ -192,6 +192,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria_mini_logo.png" type="image/png" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/sidemenu.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.accordion.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.css" type="text/css" />
@@ -484,7 +485,7 @@ if ($clean_output == 0) {
 
         // Avoid render left menu for some special places (like home).
         if ($not_show_menu == 0){
-			echo '<td valign=top style="width: 150px;">';
+			echo '<td valign=top style="width: 60px;">';
 			echo '<div id="sidebar">';
 			require ("operation/side_menu.php"); 
 			if (give_acl ($config["id_user"], 0, "AR"))

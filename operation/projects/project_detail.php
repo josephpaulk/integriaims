@@ -134,30 +134,27 @@ if ($create_project) {
 if ($id_project)
 	echo '<form method="post" id="form-new_project">';
 else
-	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project&action=insert">';
-// Main project table
+	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project_overview&action=insert">';
 
+// Main project table
 if ($create_mode == 0){
-	echo "<h1>".__('Project management')." &raquo; " . get_db_value ("name", "tproject", "id", $id_project);
+	echo "<h2>".__('Project management')."</h2>";
+	echo "<h4>"	.get_db_value ("name", "tproject", "id", $id_project); 
 
 	if (!$clean_output) {
 		echo "<div id='button-bar-title'>";
-		echo "<ul>";
-		echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project'>" .
-			print_image ("images/chart_bar_dark.png", true, array("title" => __("Project report"))) .
-			"</a>";
-		echo "</li>";
-		echo "</ul>";
+			echo "<ul>";
+				echo "<li>";
+					echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project'>" .
+						print_image ("images/chart_bar_dark.png", true, array("title" => __("Project report"))) . "</a>";
+				echo "</li>";
+			echo "</ul>";
 		echo "</div>";
 	}
-	echo "</h1>";
-}
-else {
-	echo "<h1>".__('Create project')."</h1>";
-}
-
-
+	echo "</h4>";
+} else {
+	echo '<h2>'.__('Projects').'</h2>';
+	echo '<h4>'.__('Create project').'</h4>';
 
 // Right/Left Tables
 $table->width = '100%';
@@ -176,17 +173,6 @@ $project_info = '<table class="search-table-button" style="margin-top: 0px;">';
 // Name
 $project_info .= '<tr><td class="datos" colspan=3><b>'.__('Name').' </b><br>';
 $project_info .= '<input type="text" name="name" size=70 value="'.$name.'">';
-
-$project_info .= '<td colspan=1>';
-//Only show project progress if there is a project created
-if ($id_project) {
-	$project_info .= '<b>'.__('Current progress').' </b><br>';
-	$project_info .= '<span style="vertical-align:bottom">';
-	$completion =  format_numeric(calculate_project_progress ($id_project));
-	$project_info .= progress_bar($completion, 90, 20, $graph_ttl);
-	$project_info .= "</span>";
-}
-$project_info .= "</td>";
 $project_info .= "</tr>";
 
 // start and end date
@@ -244,65 +230,83 @@ $project_info .= "</table>";
 
 echo print_container('project_info', __('Project info'), $project_info, 'no');
 
+}
+
+
 if ($id_project) {
-	// Project activity graph
-	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
-	if ($project_activity) {
-		$project_activity = '<div class="graph_frame">' . $project_activity . '</div>';
-		echo print_container('project_activity', __('Project activity'), $project_activity, 'closed');
-	}
-	// Calculation
-	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
-	$total_hr = get_project_workunit_hours ($id_project);
-	$total_planned = get_planned_project_workunit_hours($id_project);
-	$total_planned = get_planned_project_workunit_hours($id_project);
 
-	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
-	$pr_hour = get_project_workunit_hours ($id_project, 1);
-    $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
-	$total = project_workunit_cost ($id_project, 1);
-    $real = project_workunit_cost ($id_project, 0);
+// Project info
+echo '<div class="divform">';
+echo '<table class="search-table">';
+	//progress bar
+	echo "<tr>";
+		echo '<td colspan=2><b>'.__('Current progress').' </b></td>';
+	echo "</tr><tr>";
+		echo '<td colspan=2><span>';
+		$completion =  format_numeric(calculate_project_progress ($id_project));
+		echo progress_bar($completion, 218, 20, $graph_ttl);
+		echo "</span></td>";
+	echo "</tr>";
+	
+	// Name
+	echo '<tr>';
+		echo '<td colspan=2><b>'.__('Name').' </b></td>';
+	echo "</tr><tr>";
+		echo '<td colspan=2><input type="text" name="name" size=25 value="'.$name.'"></td>';
+	echo '</tr>';
+	
+	// Owner
+	$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
+	echo '<tr>';
+		echo "<td colspan=2><b>".__('Manager')." </b></td>";
+	echo "</tr><tr>";
+		echo "<td colspan=2>" . print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 25, 20, false, '', '', true, '',''). "</td>" ;
+	echo "</tr>";
+	
+	// Project group
+	echo "<tr>";	
+		echo "<td colspan=2><b>". __('Project group')."</b><br>";
+	echo "</tr><tr>";
+		if (!$clean_output) {
+			echo "<td colspan=2>". print_select_from_sql ("SELECT * from tproject_group ORDER BY name", "id_project_group", $id_project_group, "", __('None'), '0', true, false, true, false) ."</td>";
+		} else {
+			echo "<td colspan=2>". get_db_value ("name", "tproject_group", "id", $id_project_group) ."</td>";
+		}
+	echo "</tr>";
+	
+	// CC
+	echo '<tr>';
+		echo '<td colspan=2><b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b></td>';
+	echo '</tr><tr>';
+		echo '<td colspan=2><input type="text" name="cc" size=25 value="'.$cc.'"></td>';
+	echo '</tr>';
+	
+	// start and end date
+	echo '<tr>';
+		echo '<td><b>'.__('Start').' </b></td>';
+		echo '<td><b>'.__('End').' </b></td>';
+	echo '</tr><tr>';	
+		echo "<td>". print_input_text ('start_date', $start_date, '', 11, 20, true) ."</td>";
+		echo "<td>". print_input_text ('end_date', $end_date, '', 11, 20, true) ."</td>";
+	echo '</tr>';
 
-	$real = $real + get_incident_project_workunit_cost ($id_project);
+	// Description
+	echo '<tr>';
+		echo "<td colspan=2><b>".__("Description")."</b></td>";
+	echo '</tr><tr>';
+		echo '<td colspan=2><textarea name="description">'. $description ."</textarea></td>";
+	echo "</tr>";
+	
+	// Buttom
+	echo "<tr><td colspan=2>";
+		if ($project_access['manage']) {
+			echo print_input_hidden ('id_project', $id_project, true);
+			echo print_input_hidden ('action', 'update', true);
+			echo print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+		} 
+	echo "</td></tr>";
+echo "</table>";
 
-	// Labour
-	$labour = "<table class='advanced_details_table alternate'>";
-	$labour .= "<tr>";
-	$labour .= '<td><b>'.__('Total people involved').' </b>';
-	$labour .= "</td><td>";
-	$labour .= $people_inv;
-	$labour .= "</td></tr>";
-
-	$labour .= "<tr>";
-	$labour .= '<td><b>'.__('Total workunit (hr)').' </b>';
-	$labour .= "</td><td>";
-	$labour .= $total_hr . " (".format_numeric ($total_hr/$config["hours_perday"]). " ".__("days"). ")";
-	$labour .= "</td></tr>";
-
-	$labour .= "<tr>";
-	$labour .= '<td><b>'.__('Planned workunit (hr)').' </b>';
-	$labour .= "</td><td>";
-	$labour .= $total_planned . " (".format_numeric ($total_planned/$config["hours_perday"]). " ". __("days"). ")";
-	$labour .= "</td></tr>";
-	
-	$labour .= "<tr>";
-	$labour .= '<td><b>'.__('Total payable workunit (hr)').' </b>';
-	$labour .= "</td><td>";
-	if ($pr_hour > 0)
-		$labour .= $pr_hour;
-	else
-		$labour .= __("N/A");
-	$labour .= "</td></tr>";
-	
-	$labour .= "<tr>";
-	$labour .= '<td><b>'.__('Proyect length deviation (days)').' </b>';
-	$labour .= "</td><td>";
-	$labour .= abs($deviation/8). " ".__('Days');
-	$labour .= "</td></tr>";
-	$labour .= "</table>";
-	
-	
-	
 	// People involved
 	//Get users with tasks
 	$sql = sprintf("SELECT DISTINCT id_user FROM trole_people_task, ttask WHERE ttask.id_project= %d AND ttask.id = trole_people_task.id_task", $id_project);
@@ -325,25 +329,66 @@ if ($id_project) {
 		$users_involved = array_unique($users_involved);
 	}
 	
-	$people_involved = "<div style='padding-bottom: 20px;'>";
+	$people_involved = "<tr><td colspan='2'>";
 	foreach ($users_involved as $u) {
 		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
 		if ($avatar != "") {
-			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
+			$people_involved .= "<img src='images/avatars/".$avatar.".png' onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 		}
 	}
-	$people_involved .= "</div>";
-	
-	
-	
-	// Task distribution
-	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
+	$people_involved .= "</td></tr>";
+	echo "<div class='listing-border'>";
+		echo print_container('project_involved_people', __('People involved'), $people_involved);
+	echo "</div>";
+echo "</div>";
 
+echo "<div class='divresult'>";	
+	// Calculation
+	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
+	$total_hr = get_project_workunit_hours ($id_project);
+	$total_planned = get_planned_project_workunit_hours($id_project);
+	$total_planned = get_planned_project_workunit_hours($id_project);
+
+	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+	$pr_hour = get_project_workunit_hours ($id_project, 1);
+    $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+	$total = project_workunit_cost ($id_project, 1);
+    $real = project_workunit_cost ($id_project, 0);
+
+	$real = $real + get_incident_project_workunit_cost ($id_project);
+
+	// Labour
+	$labour .= "<tr>";
+	$labour .= '<td>'.__('Total people involved'). '</td><td>';
+	$labour .= $people_inv;
+	$labour .= "</td></tr>";
+
+	$labour .= "<tr>";
+	$labour .= '<td>'.__('Total workunit (hr)').'</td><td>';
+	$labour .= $total_hr . " (".format_numeric ($total_hr/$config["hours_perday"]). " ".__("days"). ")";
+	$labour .= "</td></tr>";
+
+	$labour .= "<tr>";
+	$labour .= '<td>'.__('Planned workunit (hr)').'</td><td>';
+	$labour .= $total_planned . " (".format_numeric ($total_planned/$config["hours_perday"]). " ". __("days"). ")";
+	$labour .= "</td></tr>";
+	
+	$labour .= "<tr>";
+	$labour .= '<td>'.__('Total payable workunit (hr)').'</td><td>';
+	if ($pr_hour > 0)
+		$labour .= $pr_hour;
+	else
+		$labour .= __("N/A");
+	$labour .= "</td></tr>";
+	
+	$labour .= "<tr>";
+	$labour .= '<td>'.__('Proyect length deviation (days)').'</td><td>';
+	$labour .= abs($deviation/8). " ".__('Days');
+	$labour .= "</td></tr>";
+	
 	// Budget
-	$budget = "<table class='advanced_details_table alternate'>";
 	$budget .= "<tr>";
-	$budget .= '<td><b>'.__('Project profitability').' </b>';
-	$budget .= "</td><td>";
+	$budget .= '<td>'.__('Project profitability').'</td><td>';
 	if ($real > 0) {
 		$budget .=  format_numeric(($total/$real)*100) . " %" ;
 	} else 
@@ -351,15 +396,27 @@ if ($id_project) {
 	$budget .= "</td></tr>";
 
 	$budget .= "<tr>";
-	$budget .= '<td><b>'.__('Deviation').' </b>';
-	$budget .= "</td><td>";
+	$budget .= '<td>'.__('Deviation').'</td><td>';
+	
 	$deviation_percent = calculate_project_deviation ($id_project);
 	$budget .= $deviation_percent ."%";
 	$budget .= "</td></tr>";
 
 	$budget .= "<tr>";
-	$budget .= '<td><b>'.__('Project costs').' </b>';
-	$budget .= "</td><td>";
+	$budget .= '<td>'.__('Project costs').'</td><td>';
+	
+	// Task distribution
+	$task_distribution = '<tr><td colspan="2"><div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div></td></tr>';
+	
+	// Workload distribution
+	$workload_distribution = '<tr><td colspan="2"><div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div></td></tr>';
+	
+	// Project activity graph
+	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
+	if ($project_activity) {
+		$project_activity = '<tr><td colspan="2"><div class="graph_frame">' . $project_activity . '</div></td></tr>';
+	}
+	
 	// Costs (client / total)
 	$real = project_workunit_cost ($id_project, 0);
 	$external = project_cost_invoices ($id_project);
@@ -384,8 +441,7 @@ if ($id_project) {
 	}
 	
 	$budget .= "<tr>";
-	$budget .= '<td><b>'.__('Charged to customer').' </b>';
-	$budget .= "</td><td>";
+	$budget .= '<td>'.__('Charged to customer').'</td><td>';
 	$budget .= format_numeric($total) . " ". $config["currency"];
 	$budget .= "</td></tr>";
 	
@@ -403,29 +459,28 @@ if ($id_project) {
 	}
 	
 	$budget .= "<tr>";
-	$budget .= '<td><b>'.__('Average Cost per Hour').' </b>';
-	$budget .= "</td><td>";
+	$budget .= '<td>'.__('Average Cost per Hour').'</td><td>';
 	if ($total_hr > 0)
 		$budget .= format_numeric ($total_project_costs / $total_hr) . " " . $config["currency"];
 	else
 		$budget .= __("N/A");
 	$budget .= "</td></tr>";
-	$budget .= "</table>";
 	
-	
-	
-	// Workload distribution
-	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div>';
-
-
 	//Print containers
 	echo print_container('project_labour', __('Labour'), $labour);
+	echo "<div class='divhalf divhalf-left'>";
+		echo print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
+	echo "</div>";
+	echo "<div class='divhalf divhalf-right'>";
+		echo print_container('project_task_distribution', __('Task distribution'), $task_distribution);
+	echo "</div>";
+	if ($project_activity) {
+		echo print_container('project_activity', __('Project activity'), $project_activity);
+	}
 	echo print_container('project_budget', __('Budget'), $budget);
-	echo print_container('project_involved_people', __('People involved'), $people_involved);
-	echo print_container('project_task_distribution', __('Task distribution'), $task_distribution);
-	echo print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
-}
 
+}
+echo "</div>";
 echo "</form>";
 
 //div to show user info

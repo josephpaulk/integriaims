@@ -40,51 +40,59 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	include ("general/noaccess.php");
 	exit;
 }
+echo '<h2>'.__('Projects').'</h2>';
+echo '<h4>'.__('Time per project graph').'</h4>';
+echo '<div class="divform">';
+	echo "<form id='form-user_project_time_graph' method='post'>";
+		echo '<table class="search-table">';
+			echo '<tr>';
+				echo '<td><b>'.__('User ').' </b></td>';
+			echo '</tr><tr>';
+				echo '<td>';
+					$params['input_value'] = $id_user_filter;
+					$params['input_id'] = 'text-user';
+					$params['input_name'] = 'user';
+					$params['return'] = false;
+					$params['return_help'] = false;
+					user_print_autocomplete_input($params);
+				echo '</td>';
+			echo '</tr><tr>';
+				echo '<td><b>'.__('Start').' </b>';
+					print_help_tip(__('Empty date is all range time.'));
+				echo '</td>';
+			echo '</tr><tr>';
+				echo '<td>';
+					print_input_text ('start_date', $start_date, '', 23, 20);
+				echo '</td>';
+			echo '</tr><tr>';
+				echo '<td><b>'.__('End').' </b>';
+					print_help_tip(__('Empty date is all range time.'));
+				echo '</td>';
+			echo '</tr><tr>';
+				echo '<td>';
+					print_input_text ('end_date', $end_date, '', 23, 20);
+				echo '</td>';
+			echo '</tr><tr>';
+				echo '<td>';
+					print_input_hidden ('action', 'update');
+					print_submit_button (__('Update'), 'upd_btn', false);
+				echo '</td>';
+			echo '</tr>';
+		echo "</table>";
+	echo "</form>";
+echo '</div>';
 
-echo "<h1>" . __('Time per project graph') . "</h1>";
+echo "<div id='time_graph' class='divresult'>";
+	if (empty($start_date)) {
+		$start_date = false;
+	}
 
-echo "<form id='form-user_project_time_graph' method='post'>";
+	if (empty($end_date)) {
+		$end_date = false;
+	}
 
-echo '<table class="search-table-button" style="width: 99%;">';
-echo '<tr>';
-
-echo '<td width="25%"><b>'.__('User ').' </b>';
-echo '<br>';
-
-$params['input_value'] = $id_user_filter;
-$params['input_id'] = 'text-user';
-$params['input_name'] = 'user';
-$params['return'] = false;
-$params['return_help'] = false;
-
-user_print_autocomplete_input($params);
-echo '</td>';
-
-
-echo '<td width="25%"><b>'.__('Start').' </b>';
-print_help_tip(__('Empty date is all range time.'));
-echo '<br>';
-print_input_text ('start_date', $start_date, '', 10, 20);
-echo '</td>';
-
-
-echo '<td width="25%"><b>'.__('End').' </b>';
-print_help_tip(__('Empty date is all range time.'));
-echo '<br>';
-print_input_text ('end_date', $end_date, '', 10, 20);
-echo '</td>';
-echo '<td>';
-print_input_hidden ('action', 'update');
-print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"; style="margin-top: 21px;"');
-echo '</td>';
-
-echo '</tr>';
-echo '<tr><td colspan=4>';
-
-echo '</td></tr>';
-echo "</table>";
-
-echo "</form>";
+	print_project_user_timegraph($id_user_filter, $start_date, $end_date);
+echo "</div>";
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript">
@@ -99,16 +107,3 @@ echo "</form>";
 	// #text-user
 	validate_user ("#form-user_project_time_graph", "#text-user", "<?php echo __('Invalid user')?>");
 </script>
-<?php
-
-echo "<div id='time_graph'></div>";
-
-if (empty($start_date)) {
-	$start_date = false;
-}
-
-if (empty($end_date)) {
-	$end_date = false;
-}
-
-print_project_user_timegraph($id_user_filter, $start_date, $end_date);

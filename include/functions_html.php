@@ -309,7 +309,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 	}
 
 	if ($style == "")
-		$output .= '<select style="width: 170px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+		$output .= '<select style="width: 218px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 	else
 		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 
@@ -1218,41 +1218,43 @@ function integria_help ($help_id, $return = false) {
 function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '') {
 	$container_div_style = '';
 	$container_style = '';
-	$h2_style = '';
 	$h2_class_extra = ' clickable';
 	$arrow = '';
 	$onclick = 'toggleDiv (\'' . $id . '_div\')';
 
 	switch($open) {
 		case 'open':
-			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
+			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</th>';
 			break;
 		case 'closed':
-			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</h2>';
+			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</th>';
 			$container_div_style = 'display: none;';
 			break;
 		case 'no':
 		default:
 			$onclick = '';
-			$h2_style = 'cursor: auto;';
 			$h2_class_extra = '';
 			break;
 	}
-	
-	if ($margin !== true) {
-		$margin = (int) $margin;
-		$h2_style .= 'padding-left: ' . $margin . 'px; height: 22px;';
-		$container_style = 'padding-left: 0px; padding-bottom: 3px; font-size: 0.90em; min-height: 0px;';
-	}
-	
+	/*
 	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
-	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' '.$h2_clases.'" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';
 	$container .= '<div id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
 	$container .= $content;
 	$container .= '</div>';
 	$container .= '</div>'; // container
+	*/
+	
+	$container = '<table class="listing"><thead><tr>';
+	$container .= '<th>' . $title . '</th>';
+	$container .= '<th id="' . $id . '" class="' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">'. $arrow;
+	$container .= '</tr></thead>';
+	$container .= '<tbody id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
+	$container .= $content;
+	$container .= '</tbody>';
+	$container .= '</table>'; // container
 	
 	if ($return) {
 		return $container;

@@ -52,21 +52,25 @@ a {
 	text-decoration: none;
 }
 a:hover {
-	color: #FF9933;
+	color: #505050;
 	text-decoration: underline;
 }
 
 /* headers */
 h1, h2, h3 {
 	font: bold 1em Verdana, Arial, 'Trebuchet MS', Tahoma, Sans-serif;
-	text-transform: uppercase;
 	color: #555;
+}
+h4{
+	color: #D8D8D8;
+	border-bottom: 1px solid black;
+	margin-right: 20px;
 }
 
 h1 { font-size: 1.2em; }
-h2 { font-size: 1.05em; }
+h2 { font-size: 1.10em; }
 h3 { font-size: 0.95em; }
-h4 { font-size: 0.8em; }
+h4 { font-size: 0.9em; }
 h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
 
@@ -74,7 +78,7 @@ h6 { font-size: 0.5em; }
 	padding: 15px 0 3px 0px;
 	margin: 0 0 0 6px;
 	text-transform: uppercase;
-	border-bottom: 2px solid #505050;
+	border-bottom: 1px solid #505050;
 	width: 99%;
 }
 
@@ -86,10 +90,13 @@ h6 { font-size: 0.5em; }
 	text-transform: none;
 }
 
-p, h1, h2, h3, h4, h5 {
-	margin: 10px 15px 0px 0px;
+p, h1, h2, h3 {
+	margin: 30px 15px 0px 6px;
 }
-
+h4, h5{
+	margin: 0px 38px 18px 6px;
+    padding-bottom: 5px;
+}
 p {
 	clear: left;
 }
@@ -148,57 +155,136 @@ table.databox td {
 	padding: 7px;
 }
 
+div.divform {
+	float: left;
+	width: 20%;
+}
+
+div.divresult {
+	float: left;
+	width: 74%;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+div.divform2 {
+	float: left;
+	width: 22%;
+}
+
+div.divresult2 {
+	float: left;
+	width: 72%;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+div.divhalf {
+	float: left;
+	width: 50%;
+}
+
+div.listing-border {
+	margin-left: 5px;
+	width: 100%;
+	border-radius: 4px;
+}
+
+div.listing-border table.listing {
+	margin: 0px;
+	border-radius: 4px;
+	border: 1px solid #505050;
+}
+
 table.listing {
-	padding-top: 5px;
-	padding-left: 5px;
+	border-spacing: 0px;
 	text-align: left;
-}
-
-table.listing th:first-child {
-	border-top-left-radius: 10px;
-	-moz-border-top-left-radius: 10px;
-    -webkit-border-top-left-radius: 10px;
-    -khtml-border-top-left-radius: 10px;
-}
-
-table.listing th:last-child {
-	border-top-right-radius: 10px;
-	-moz-border-top-right-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -khtml-border-top-right-radius: 10px;
-}
-
-table.listing tr:hover {
-	background: #E8E8E8;
-}
-
-table.listing tr:nth-child(odd) td{
-	background-color: #F7F7F7;
-}
-table.listing tr:nth-child(even) td{
-	background-color: #FFFFFF;
+	width: 100%;
 }
 
 table.listing th {
-	padding-left: 15px;
-	padding-right: 5px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	background-color: #505050;
-	color: #FFFFFF;
-	font-weight: bold;
+	background-color: #F7F7F7;
+	font: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 13px;
+    padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	margin-left: 5px;
+}
+table.listing th span {
+	padding-left: 20px;
+}
+
+table.listing th.clickable img{
+	float: right;
 }
 
 table.listing td {
-	padding-left: 15px;
-	padding-right: 3px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	margin-left: 5px;
+	border-top: 1px solid #505050;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
-table.listing tr {
-	border-bottom: 1px solid #ececec;
+table.listing tbody.container_div td{
+	border-top: 0px;
+	border-bottom: 1px solid #505050;
+}
+
+div.divhalf-left table.listing {
+	padding-right: 30px;
+}
+
+div.divhalf-right table.listing {
+	padding-left: 30px;
+}
+
+div.divhalf table.listing td {
+	border-left: 1px solid #505050;
+	border-right: 1px solid #505050;
+}
+
+table.listing tbody#project_involved_people_div td {
+	border-bottom: 0px;
+	background-color: #F7F7F7;	
+}
+
+table.listing tbody#project_activity_div td	{
+	border-left: 1px solid #505050;
+	border-right: 1px solid #505050;
+}
+
+table.listing tbody#project_involved_people_div td img {
+	width: 35px;
+    height: 35px;
+    padding: 10px;
+    margin: 4px;
+	border: 1px solid #FFF;
+	background-color: #FFF;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+table.listing td.no_border{
+	border-top: 0px;
+}
+
+table.listing td.size_min{
+	padding: 6px;
+}
+
+table.listing td.size_max{
+	padding: 15px;
+}
+
+table.listing th img{
+	vertical-align:middle;
+}
+
+table.listing tr td a img {
+	padding-left: 13px;
 }
 
 tr.yellow {
@@ -281,7 +367,7 @@ div.report_info label {
 
 input {
 	padding: 3px;
-	border:1px solid #CCCCCC;
+	border:1px solid #505050;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	color:#707070;
@@ -300,10 +386,11 @@ textarea {
 	padding:5px;
 	color: #606060;
 	font: normal 1em Courier, Arial, sans-serif;
-	border:1px solid #CCCCCC;
+	border: 1px solid #D8D8D8;
+    background-color: #F7F7F7;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	width: 98%;
+	width: 93%;
 }
 
 input.button {
@@ -331,9 +418,9 @@ input.dialogbtn {
 select {
 	padding: 0px;
 	color:#707070;
-	border:1px solid #CCCCCC;
+	border: 1px solid #D8D8D8;
+    background-color: #F7F7F7;
 	float: left;
-	background-color: #FFF;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
@@ -430,7 +517,7 @@ form.searchform input.button {
 	padding:0px;
    	width:100%;
    	min-width: 1000px;
-   	max-width: 1200px;
+   	max-width: 1300px;
 	text-align: left;
 	background: #FFF;
 	padding-bottom: 110px;
@@ -647,11 +734,11 @@ input#global_search {
 #sidebar {
 /*	clear: none; */
 	float: left;
-	width: 140px;
+	width: 60px;
 	margin: 0;
 	padding: 0;
 	display: inline;
-	padding: 10px 0 0 0;
+	padding: 30px 30px 0 0;
 }
 #sidebar form {
 	display: inline;
@@ -1333,10 +1420,6 @@ div.pager input {
 	cursor: pointer;
 }
 
-.container_div {
-	margin-top: -17px;
-}
-
 #incident_inventories {
 	width: 230px;
 }
@@ -1361,10 +1444,6 @@ div.pager input {
 #incident_users_div span {
 	font-weight: bold;
 	color: #FF9933; /* orange */
-}
-
-textarea {
-	width: 98%;
 }
 
 label {
@@ -1816,114 +1895,6 @@ td.login_button {
 	width: 500px;
 }
 
-h2.dashboard_h2 {
-	cursor: pointer;
-	text-transform: none;
-	background-repeat:no-repeat;
-	padding-left: 52px;
-	background-position: 3px 1px;
-	height: 36px;
-}
-
-h2.dashboard_h2+table {
-	margin-top: 2px;
-}
-
-h2#incident_custom_search {
-	background-image: url('../../images/custom_search.png');
-}
-
-h2#incident_search_by_group {
-	background-image: url('../../images/search_by_group.png');
-}
-
-h2#incident_search_by_owner {
-	background-image: url('../../images/search_by_owner.png');
-}
-
-h2#incident_search_by_type {
-	background-image: url('../../images/search_by_type.png');
-}
-
-h2#incident_search_by_priority {
-	background-image: url('../../images/search_by_priority.png');
-}
-
-h2#incident_search_by_status {
-	background-image: url('../../images/search_by_status.png');
-}
-
-h2#incident_details {
-	background-image: url('../../images/incident_details.png');
-}
-
-h2#incident_description {
-	background-image: url('../../images/incident_description.png');
-}
-
-h2#incident_adv_details {
-	background-image: url('../../images/incident_adv_details.png');
-}
-
-h2#incident_users {
-	background-image: url('../../images/incident_users.png');
-}
-
-h2#incident_dates, h2#agenda_home {
-	background-image: url('../../images/incident_dates.png');
-}
-
-h2#incident_sla {
-	background-image: url('../../images/incident_sla.png');
-}
-
-h2#project_info, h2#projects_home {
-	background-image: url('../../images/project_information.png');
-}
-
-h2#project_task_distribution {
-	background-image: url('../../images/task_distribution.png');
-}
-
-h2#project_workload_distribution {
-	background-image: url('../../images/workload_distribution.png');
-}
-
-h2#project_involved_people {
-	background-image: url('../../images/involved_people.png');
-}
-
-h2#project_activity, h2#task_activity {
-	background-image: url('../../images/statistics.png');
-}
-
-h2#project_budget {
-	background-image: url('../../images/budget.png');
-}
-
-h2#project_labour {
-	background-image: url('../../images/labour.png');
-}
-
-h2#system_dashboard_home {
-	background-image: url('../../images/system_dashboard_home.png');
-}
-
-h2#workorders_home {
-	background-image: url('../../images/workorders_home.png');
-}
-
-h2#incidents_home {
-	background-image: url('../../images/incidents_home.png');
-}
-
-h2#ticket_editor {
-	background-image: url('../../images/incident_details.png');
-}
-h2#ticket_score {
-	background-image: url('../../images/statistics.png');
-}
-
 div.system_dashboard_home_container {
 	height: 100%;
 }
@@ -1948,20 +1919,80 @@ table.search_by_priority td {
 	width: 15%;
 }
 
-div.incident_container, .integria_form, .container, table.search-table, table.search-table-button, table.search-table-white {
-	background: #e6e6e6;
-	padding: 2px 0px 1px 12px;
-	margin-bottom: 9px;
-	margin-right: 10px;
-	
-	padding-right: 12px;
-	
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;
+/* Css for table-search*/
+table.search-table{
+	border: 1px solid #505050;
+    border-radius: 4px;
+    padding: 12px 6px 16px 9px;
+    margin-left: 5px;
+    text-align: left;
+    font-size: 13px; 
+    width: 99%;
 }
 
-table.search-table, table.search-table-button, table.search-table-white, table.pipeline-table {
+table.search-table td, th{
+	line-height: 30px;
+}
+
+table.search-table tr:last-child td {
+	padding-top: 1px;
+	text-align: left;
+}
+
+td#table1-2-0{
+	padding-top: 10px;
+}
+
+table.search-table input{
+	padding: 4px;
+	border: 1px solid #D8D8D8;
+    background-color: #F7F7F7;
+}
+
+div.divform table.search-table input#submit-search_btn,
+div.divform table.search-table input#submit-upd_btn,
+div.divform table.search-table input#submit-sub_btn,
+div.divform table.search-table input#submit-create{
+	border-radius: 3px;
+    font-size: 1.20em;
+    font-weight: bold;
+    color: white;
+    background-color: #FF9000;
+    border-color: #FF9000;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 99%;
+}
+
+div.divform2 table.search-table input#submit-search_btn,
+div.divform2 table.search-table input#submit-upd_btn,
+div.divform2 table.search-table input#submit-sub_btn {
+	border-radius: 3px;
+    font-size: 1.20em;
+    font-weight: bold;
+    color: white;
+    background-color: #FF9000;
+    border-color: #FF9000;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 99%;
+}
+ 
+select#search_id_project_group:not([multiple]){
+	height: 24px;
+    border: 1px solid #D8D8D8;
+    background-color: #F7F7F7;
+}
+
+div.incident_container, .integria_form, table.search-table-white {
+    background-color: #FFF;
+}
+
+table.search-table-white, table.pipeline-table {
 	padding: 12px 10px 16px 12px;
 	margin-left: 5px;
 	text-align: left;
@@ -1971,15 +2002,12 @@ table.search-table, table.search-table-button, table.search-table-white, table.p
 table.search-table-white {
 	background: none;
 }
-
+table.search-table-button {
+	width: 20%;
+}
 table.search-table-button tr:last-child td {
 	padding-top: 15px;
 	text-align: right;
-}
-
-table.search-table tr:last-child td {
-	padding-top: 1px;
-	text-align: left;
 }
 
 table.databox_color_without_line tr:last-child td {
@@ -1992,23 +2020,9 @@ table.databox_color_without_line tr:last-child td {
 	padding-right: 40px;
 }
 
-div.incident_container *, .container {
-	font-size: 11px;
-	min-height: 55px;
-}
-
-div.incident_container table, .container table {
-	width: 100%;
-	margin-left: -5px;
-}
-
 .incident_description_container {
 	max-width: 500px;
 	word-wrap:break-word;
-}
-
-div.incident_container>div, .container>div {
-	padding-left: 55px;
 }
 
 #button-bar-title {
@@ -2022,15 +2036,11 @@ div.incident_container>div, .container>div {
 
 #button-bar-title li {
 	display: inline;
-	font-size: 12px;
-	text-decoration: none;
-	text-transform: none;
-	padding: 8px 7px 2px 7px;
-	border-right: 1px solid #ccc;
-	border-top: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-
-	background-color: #e6e6e6;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: none;
+    padding: 10px 7px 12px 7px;
+    background-color: #F7F7F7;
 }
 
 #button-bar-title li.button-bar-selected {
@@ -2040,7 +2050,6 @@ div.incident_container>div, .container>div {
 #button-bar-title li:first-child {
 	border-bottom-left-radius: 2px;
 	border-top-left-radius: 2px;
-	border-left: 1px solid #ccc;
 }
 
 #button-bar-title li:last-child {
@@ -2108,7 +2117,7 @@ input.ui-autocomplete-input {
 	background-image: url("../../images/group.png");
 	background-repeat: no-repeat;
 	background-position: 97% 50%;
-	background-color: #FFFFFF !important;
+    background-color: #F7F7F7 !important;
 }
 
 input.company_autocomplete {
@@ -2272,11 +2281,6 @@ table#details_table, .pie_frame, .graph_frame {
 	margin: 10px auto;
 	padding: 5px;
 	background: #FFFFFF;
-	border: #c0c0c0 dashed 1px;
-	
-	-moz-border-radius:6px;
-	-webkit-border-radius:6px;
-	border-radius:6px;
 }
 
 .pie_frame, .graph_frame {
@@ -2298,39 +2302,6 @@ table#details_table * {
 tr.incident_details_bottom td {
 	line-height: 13px;
 	vertical-align: top;
-}
-
-/* Advanced details */
-.advanced_details_table {
-	width: 95% !important;
-}
-
-.advanced_details_table table, .details_table table{
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-
-.advanced_details_table td, .details_table td{
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    padding: 0px 15px 0px 15px;1
-    line-height: 20px;
-    margin: 15px;
-}
-
-td.advanced_details_icons {
-	width: 15px;
-	background: #e6e6e6 !important;
-	padding-right: 3px;
-}
-
-table.alternate tr:nth-child(odd) td{
-	background-color: #eaeaea;
-}
-table.alternate tr:nth-child(even) td{
-	background-color: #d8d8d8;
 }
 
 .under_tabs_info {
@@ -2835,7 +2806,7 @@ div.container_ticket_activity_container {
 }
 
 #container_top5_group_time {
-	font-size: 11px; !important;
+	font-size: 11px !important;
 }
 
 .container_top5_group_time_container {
@@ -2926,10 +2897,6 @@ div.container_simple_div {
 	padding-left: 0px;
 }
 
-div.container table.listing {
-	padding-top: 0px;
-}
-
 table.table_priority_report {
 	margin: 10px auto;
 	margin-bottom: 40px;
@@ -2988,10 +2955,6 @@ div#file_sharing_list_cell {
 div#file_sharing_upload_cell {
 	width: 35%;
 	vertical-align: top;
-}
-
-form#form-file_releases.file_sharing {
-	/*position: fixed;*/
 }
 
 div.user_files_table {
@@ -3412,8 +3375,5 @@ img {
 #table-user_search #submit-search{
 	margin-top:20px;
 }
-/*FILE MANAGER*/
-.search-table .datos .upfile {
-	margin-top: 18px;
-}
+
 /* End comments */

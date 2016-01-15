@@ -26,7 +26,7 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
     else
 	    echo "<li class='project'>";
 	echo "<div>|</div>";
-    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Projects')."</a></li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('Projects')."</a></li>";
 }
 
 // Support submenus ACLs
