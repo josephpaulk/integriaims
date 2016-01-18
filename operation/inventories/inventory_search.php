@@ -285,7 +285,8 @@ if ($fields_selected[0] != '') {
 
 $sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
 $sql_search_count = 'SELECT COUNT(tinventory.id) FROM tinventory WHERE 1=1';
-$sql_search_obj_type = "";
+$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE 
+						tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id` order by name';
 
 if ($search) {
 	
@@ -328,7 +329,7 @@ if ($search) {
 
 
 		$sql_search_obj_type = "SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE 
-								tobject_type.show_in_list = 1 AND tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+								tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
 
 		$sql_search_obj_type .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
 		$sql_search_obj_type .= "AND tobject_field_data.`data` LIKE '%$search_free%'";						
@@ -432,7 +433,7 @@ if (!$clean_output) {
 
 		$all_inventory_status = inventories_get_inventory_status ();
 		array_unshift($all_inventory_status, __("All"));
-		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, '', '', '', true, false, false, __('Status'));
+		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status[0], '', '', '', true, false, false, __('Status'));
 		
 		$params_associated['input_id'] = 'text-associated_user';
 		$params_associated['input_name'] = 'associated_user';

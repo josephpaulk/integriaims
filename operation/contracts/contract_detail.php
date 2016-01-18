@@ -166,7 +166,7 @@ if ($op == "invoices") {
 		$id = get_parameter('id_company');
 		include ("operation/invoices/invoice_view.php");
 	} else {
-		$invoices = crm_get_all_invoices ("contract_number = ".$contract_data['contract_number']);	
+		$invoices = crm_get_all_invoices ("contract_number = "."'".$contract_data['contract_number']."'");
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/contracts/contract_detail&id=$id&op=invoices&invoice_contract_number=".$contract_data['contract_number']);
 		
 		if ($invoices !== false) {
@@ -209,7 +209,7 @@ if ($op == "invoices") {
 
 				$data[2] = format_numeric(get_invoice_amount ($invoice["id"])) ." ". strtoupper ($invoice["currency"]);
 
-				$tax = get_invoice_tax ($invoice["id"]);
+				$tax = get_invoice_tax_sum ($invoice["id"]);
 				$tax_amount = get_invoice_amount ($invoice["id"]) * (1 + $tax/100);
 
 				if ($tax != 0)
