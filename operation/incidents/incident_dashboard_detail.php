@@ -347,22 +347,24 @@ if ($config['enabled_ticket_editor']) {
 		$ticket_editor .= "<td>";
 			
 		//If IW creator enabled flag is enabled, the user can change the creator
+		$src_code = print_image('images/group.png', true, false, true);
+	
+		$params_assigned['input_id'] = 'text-owner_editor';
+		$params_assigned['input_name'] = 'owner_editor';
+		$params_assigned['input_value'] = $owner;
+		$params_assigned['title'] = __('Owner');
+		$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
+		$params_assigned['return'] = true;
+		$params_assigned['return_help'] = true;
+		
 		if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 
-			$src_code = print_image('images/group.png', true, false, true);
-	
-			$params_assigned['input_id'] = 'text-owner_editor';
-			$params_assigned['input_name'] = 'owner_editor';
-			$params_assigned['input_value'] = $owner;
-			$params_assigned['title'] = __('Owner');
-			$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
-			$params_assigned['return'] = true;
-			$params_assigned['return_help'] = true;
-	 
 			$ticket_editor .= user_print_autocomplete_input($params_assigned);
 					
 		} else {
-			$ticket_editor .= print_label (__('Owner'), 'id_user', '', true, '<div id="plain-id_user">'.dame_nombre_real ($owner).'</div>');
+			
+			$params_assigned['disabled'] = true;
+			$ticket_editor .= user_print_autocomplete_input($params_assigned);
 		}
 			
 		$ticket_editor .= "</td>";
