@@ -157,7 +157,7 @@ if ($id_user != "")
 echo "</h4>";
 
 // Controls
-echo "<div class='divform2'>";
+echo "<div class='divform'>";
 	echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/projects/role_user_global'>";
 		// Select user
 		$table->id = "cost_form";
@@ -191,8 +191,8 @@ echo "<div class='divform2'>";
 	echo "</form>";
 echo "</div>";
 // Table
-echo "<div class='divresult2'>";
-	echo "<table class='listing' width='99%'>";
+echo "<div class='divresult'>";
+	echo "<table class='listing'>";
 		echo "<th>".__("Project");
 		echo "<th>".__("Task");
 		echo "<th>".__("Role");
@@ -245,7 +245,7 @@ echo "<div class='divresult2'>";
 					echo "<td>";
 				}
 				if ($task_access['manage'] && $belong_task) {
-					echo "<td align='center'><a href='index.php?sec=projects&sec2=operation/projects/role_user_global&id_user=".$id_user."&delete=".$task['id']."' onClick='if (!confirm('".__('Are you sure?')."')) return false;'><img border=0 src='images/icons/icono_papelera.png'></a>";
+					echo '<td align="center"><a href="index.php?sec=projects&sec2=operation/projects/role_user_global&id_user='.$id_user.'&delete='.$task['id'].'" onClick="if (!confirm(\''.__('Are you sure to delete the project?').'\')) return false;"><img border=0 src="images/icons/icono_papelera.png"></a>';
 				} else {
 					echo "<td align='center'>";
 				}

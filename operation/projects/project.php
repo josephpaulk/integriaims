@@ -203,7 +203,7 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 	if ($project['id'] != -1 && $project_permission['manage']) {
 		$table->head[4] = __('Delete/Unarchive');
 		$data[4] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+			onClick="if (!confirm(\''.__('Are you sure to delete the project?').'\')) return false;">
 			<img src="images/icons/icono_papelera.png" /></a> ';
 		$data[4] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
 			<img src="images/unarchive.png" /></a>';

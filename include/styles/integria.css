@@ -62,9 +62,9 @@ h1, h2, h3 {
 	color: #555;
 }
 h4{
-	color: #D8D8D8;
-	border-bottom: 1px solid black;
-	margin-right: 20px;
+	color: #383838;
+	border-bottom: 1px solid #9d9d9c;
+	font-weight: normal;
 }
 
 h1 { font-size: 1.2em; }
@@ -167,18 +167,6 @@ div.divresult {
     padding-right: 35px;
 }
 
-div.divform2 {
-	float: left;
-	width: 22%;
-}
-
-div.divresult2 {
-	float: left;
-	width: 72%;
-    padding-left: 35px;
-    padding-right: 35px;
-}
-
 div.divhalf {
 	float: left;
 	width: 50%;
@@ -221,7 +209,7 @@ table.listing th.clickable img{
 }
 
 table.listing td {
-	border-top: 1px solid #505050;
+	border-top: 1px solid #dadada;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 8px;
@@ -242,8 +230,8 @@ div.divhalf-right table.listing {
 }
 
 div.divhalf table.listing td {
-	border-left: 1px solid #505050;
-	border-right: 1px solid #505050;
+	border-left: 1px solid #dadada;
+	border-right: 1px solid #dadada;
 }
 
 table.listing tbody#project_involved_people_div td {
@@ -252,8 +240,8 @@ table.listing tbody#project_involved_people_div td {
 }
 
 table.listing tbody#project_activity_div td	{
-	border-left: 1px solid #505050;
-	border-right: 1px solid #505050;
+	border-left: 1px solid #dadada;
+	border-right: 1px solid #dadada;
 }
 
 table.listing tbody#project_involved_people_div td img {
@@ -366,16 +354,17 @@ div.report_info label {
 }
 
 input {
-	padding: 3px;
-	border:1px solid #505050;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	color:#707070;
-	-webkit-font-smoothing: subpixel-antialiased; /* It is the default and looks bolder */
+	padding-left: 5px;
+    border: 1px solid #dadada;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 input[type="text"] {
-	height: 13px;
+	height: 20px;
+	width: 96% !important;
+    background-color: #F7F7F7;
 }
 
 input[type="file"] {
@@ -416,23 +405,21 @@ input.dialogbtn {
 }
 
 select {
-	padding: 0px;
 	color:#707070;
 	border: 1px solid #D8D8D8;
     background-color: #F7F7F7;
-	float: left;
-	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 
 select[multiple] {
 	height: 150px;
-	width: 200px;
+	width: 99% !important;
 	overflow-x: auto;
 }
 
 select:not([multiple]) {
-	height: 21px;
+	height: 24px;
+	width: 99% !important;
 }
 
 .ui-multiselect, .ui-state-default {
@@ -445,8 +432,8 @@ select:not([multiple]) {
 
 .ui-multiselect-optgroup-label a {
 	text-align: left !important;
-	color: #505050 !important;
-	border-bottom: 2px solid #505050 !important;
+	color: #dadada !important;
+	border-bottom: 2px solid #dadada !important;
 }
 
 .ui-multiselect-all span, .ui-multiselect-none span {
@@ -1921,7 +1908,7 @@ table.search_by_priority td {
 
 /* Css for table-search*/
 table.search-table{
-	border: 1px solid #505050;
+	border: 1px solid #dadada;
     border-radius: 4px;
     padding: 12px 6px 16px 9px;
     margin-left: 5px;
@@ -1943,49 +1930,18 @@ td#table1-2-0{
 	padding-top: 10px;
 }
 
-table.search-table input{
-	padding: 4px;
-	border: 1px solid #D8D8D8;
-    background-color: #F7F7F7;
-}
-
-div.divform table.search-table input#submit-search_btn,
-div.divform table.search-table input#submit-upd_btn,
-div.divform table.search-table input#submit-sub_btn,
-div.divform table.search-table input#submit-create{
+div.divform table.search-table input[type="submit"]{
 	border-radius: 3px;
     font-size: 1.20em;
     font-weight: bold;
     color: white;
     background-color: #FF9000;
     border-color: #FF9000;
-    padding-top: 17px;
-    padding-bottom: 17px;
     margin-top: 20px;
     margin-bottom: 10px;
     width: 99%;
-}
-
-div.divform2 table.search-table input#submit-search_btn,
-div.divform2 table.search-table input#submit-upd_btn,
-div.divform2 table.search-table input#submit-sub_btn {
-	border-radius: 3px;
-    font-size: 1.20em;
-    font-weight: bold;
-    color: white;
-    background-color: #FF9000;
-    border-color: #FF9000;
-    padding-top: 17px;
-    padding-bottom: 17px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    width: 99%;
-}
- 
-select#search_id_project_group:not([multiple]){
-	height: 24px;
-    border: 1px solid #D8D8D8;
-    background-color: #F7F7F7;
+    font-weight: 300;
+    height: 50px;
 }
 
 div.incident_container, .integria_form, table.search-table-white {

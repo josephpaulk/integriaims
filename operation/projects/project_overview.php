@@ -207,10 +207,9 @@ foreach($project_groups as $group) {
 	echo "<tr class='prj_".$group["id"]."' style='display:none'>";
 		echo "<td class='no_border size_min'></td>";
 		echo "<td class='no_border'><b>".__('Name')."</b></td>";
-		//~ echo "<td><b>".__('PG')."</b></td>";
 		echo "<td class='no_border'><b>".__('Manager')."</b></td>";
 		echo "<td class='no_border'><b>".__('Completion')."</b></td>";
-		echo "<td class='no_border'><b>".__('Updated')."</b></td>";
+		echo "<td class='no_border'><b>".__('Last update')."</b></td>";
 		if ($view_disabled == 0) {
 			echo "<td class='no_border'><b>".__('Archive')."</b></td>";
 		} elseif ($project['disabled'] && $project_permission['manage']) {
@@ -224,20 +223,8 @@ foreach($project_groups as $group) {
 	echo "<tr class='prj_".$group["id"]."' style='display:none;'>";
 		echo "<td class='no_border size_min'></td>";
 		// Project name
-		echo "<td><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$project["id"]."'>".$project["name"]."</a></td>";
-		/*
-		// Project PG
-		if ($project['id_project_group']) {
-			$icon = get_db_value ('icon', 'tproject_group', 'id', $project['id_project_group']);
-			$name = get_db_value ('name', 'tproject_group', 'id', $project['id_project_group']);
-			
-			echo '<td><a href=index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group='.$project["id_project_group"].'">';
-			echo '<img src="images/project_groups_small/'.$icon.'" title="'.$name.'">';
-			echo '</a></td>';
-		} else {
-			echo '<td> </td>';	
-		}
-		*/
+		echo "<td><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$project["id"]."'>".$project["name"]."</a></td>";
+	
 		// Manager
 		echo "<td>".$project['id_owner']."</a></td>";
 		
@@ -257,8 +244,9 @@ foreach($project_groups as $group) {
 						 AND tworkunit_task.id_workunit = tworkunit.id
 						 ORDER BY tworkunit.timestamp DESC LIMIT 1', $project['id']);
 		$timestamp = get_db_sql ($sql);
-		if ($timestamp != "")
-			echo "<td><span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span></td>";
+		$timestamp = explode(" ", $timestamp);
+		if ($timestamp[0] != "")
+			echo "<td><span style='font-size: 10px'>".$timestamp[0]."</span></td>";
 		else
 			echo "<td>".__('Never')."</td>";
 		
@@ -268,10 +256,10 @@ foreach($project_groups as $group) {
 		if ($project['id'] != -1 && $project_permission['manage']) {
 			if ($view_disabled == 0) {
 				echo '<td><a href="index.php?sec=projects&sec2=operation/projects/project_overview&disable_project=1&id='.$project['id'].'" 
-					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/icons/icono_archivar.png" /></a></td>';
+					onClick="if (!confirm(\''.__('Are you sure project archive?').'\')) return false;"><img src="images/icons/icono_archivar.png" /></a></td>';
 			} elseif ($project['disabled'] && $project_permission['manage']) {
 				echo '<td><a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+					onClick="if (!confirm(\''.__('Are you sure delete project?').'\')) return false;">
 					<img src="images/cross.png" /></a></td>';
 				echo '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
 					<img src="images/unarchive.png" /></a></td>';
@@ -282,9 +270,11 @@ foreach($project_groups as $group) {
 	if($nprojects == 0) {
 		echo "<tr class='prj_".$group["id"]."' style='display:none'>";
 		// Project name
-		echo "<td colspan='7'>";
-		echo "&nbsp;".__('empty')."</td>";
-		echo "</td>";	
+		echo "<td class='no_border size_min'></td>";
+		echo "<td colspan='5'>";
+			echo "&nbsp;".__('empty')."</td>";
+		echo "</td>";
+		echo "<td class='no_border size_max'></td>";	
 		echo "</tr>";
 	}
 	echo "</table>";
@@ -320,37 +310,6 @@ $('.btn_tree').click(function() {
 	}
 });
 
-$('.btn_tree').mouseover(function() {
-	id = $(this).attr('id');
-	id = id.split('_');
-	id = id[1];
-
-	if($('.prj_'+id).css('display') == 'none') {
-		show_branches_hover(id);
-		if($('#nproj_'+id).html() == 0) {
-			hidden_branches_hover(id);
-		}
-	}
-	else {
-		hidden_branches_hover(id);
-	}
-	
-	function show_branches_hover(id) {
-		$('#btn_'+id).hover(function(){
-			$(this).attr('src', 'images/icons/mas_nar.png');
-			}, function(){
-			$(this).attr('src', 'images/arrow_right.png');
-		});
-	}
-	
-	function hidden_branches_hover(id) {
-		$('#btn_'+id).hover(function(){
-			$(this).attr('src', 'images/icons/menos_nar.png');
-			}, function(){
-			$(this).attr('src', 'images/arrow_down.png');
-		});
-	}
-});
 </script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">
