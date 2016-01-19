@@ -1019,22 +1019,22 @@ if ($disabled) {
 
 $table->data[1][0] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
+$table->data[1][1] = combo_incident_status ($estado, $blocked_incident, 0, true, false, '', '', 0);
+
 if (!$create_incident){
 	if ($incident["estado"] != STATUS_CLOSED) {
-		$table->data[1][1] = "<div id='div_incident_resolution' style='display: none;'>";
+		$table->data[1][2] = "<div id='div_incident_resolution' style='display: none;'>";
 	} else {
-		$table->data[1][1] = "<div id='div_incident_resolution'>";
+		$table->data[1][2] = "<div id='div_incident_resolution'>";
 	}
 	if ($has_im)
-		$table->data[1][1] .= combo_incident_resolution ($resolution, $blocked_incident, true);
+		$table->data[1][2] .= combo_incident_resolution ($resolution, $blocked_incident, true);
 	else {
-		$table->data[1][1] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
-		$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
+		$table->data[1][2] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
+		$table->data[1][2] .= print_input_hidden ('incident_resolution', $resolution, true);
 	}
-	$table->data[1][1] .= "</div>";
+	$table->data[1][2] .= "</div>";
 }
-
-$table->data[1][2] = combo_incident_status ($estado, $blocked_incident, 0, true, false, '', '', 0);
 
 if ($incident["estado"] != STATUS_CLOSED) {
 		$table->data[1][3] = "<div id='div_incident_block' style='display: none;'>";

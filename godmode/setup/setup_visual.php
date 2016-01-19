@@ -102,7 +102,7 @@ function get_font_files () {
 	
 	$retval = array ();
 	foreach ($files as $file) {
-		$retval[$config['homedir'].'/include/fonts/'.$file] = $file;
+		$retval[$config['homedir'].'include/fonts/'.$file] = $file;
 	}
 	
 	return $retval;

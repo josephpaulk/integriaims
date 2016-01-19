@@ -165,7 +165,7 @@ function load_config() {
 		$config["sql_query_limit"] = 1500;
 	
 	if (!isset ($config["pdffont"]))
-		$config["pdffont"] = $config["homedir"]."/include/fonts/FreeSans.ttf";
+		$config["pdffont"] = $config["homedir"]."include/fonts/FreeSans.ttf";
 	
 	if (!isset ($config["font"])){
 		$config["font"] = $config["homedir"]."/include/fonts/smallfont.ttf";
