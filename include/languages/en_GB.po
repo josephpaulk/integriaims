@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: integria-ims\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-01-15 13:18+0100\n"
+"POT-Creation-Date: 2016-01-19 12:11+0100\n"
 "PO-Revision-Date: 2014-10-04 13:11+0000\n"
 "Last-Translator: Anthony Harrington <untaintableangel@ubuntu.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-18 15:32+0000\n"
+"X-Launchpad-Export-Date: 2016-01-19 11:48+0000\n"
 "X-Generator: Launchpad (build 17886)\n"
 
 #: ../../general/links_menu.php:23 ../../operation/tool_menu.php:18
@@ -30,9 +30,9 @@ msgid "Home"
 msgstr "Home"
 
 #: ../../general/header.php:87
-#: ../../operation/incidents/incident_detail.php:1360
+#: ../../operation/incidents/incident_detail.php:1382
 #: ../../operation/incidents/incident_reports.php:174
-#: ../../operation/incidents/incident_dashboard_detail.php:730
+#: ../../operation/incidents/incident_dashboard_detail.php:732
 #: ../../operation/file_sharing/upload.php:243
 msgid "Warning"
 msgstr "Warning"
@@ -396,7 +396,7 @@ msgstr "Updated"
 #: ../../godmode/setup/event.php:65
 #: ../../operation/reporting/incidents_html.php:122
 #: ../../operation/incidents/incident_detail.php:889
-#: ../../operation/incidents/incident_detail.php:1178
+#: ../../operation/incidents/incident_detail.php:1200
 #: ../../operation/incidents/incident_reports.php:112
 #: ../../operation/incidents/incident_chat.php:42
 #: ../../operation/incidents/incident_work.php:51
@@ -457,11 +457,10 @@ msgstr "Info"
 #: ../../mobile/operation/workorders.php:274
 #: ../../mobile/operation/workorders.php:276
 #: ../../godmode/setup/filemgr.php:184
-#: ../../operation/incidents/incident_detail.php:1094
-#: ../../operation/incidents/incident_detail.php:1103
-#: ../../operation/incidents/incident_detail.php:1104
-#: ../../operation/incidents/incident_dashboard_detail.php:357
-#: ../../operation/incidents/incident_dashboard_detail.php:365
+#: ../../operation/incidents/incident_detail.php:1116
+#: ../../operation/incidents/incident_detail.php:1125
+#: ../../operation/incidents/incident_detail.php:1126
+#: ../../operation/incidents/incident_dashboard_detail.php:355
 #: ../../operation/incidents/incident.php:141
 #: ../../operation/incidents/incident_inventory_contacts.php:50
 #: ../../operation/incidents/incident_tickets.php:38
@@ -480,9 +479,9 @@ msgstr "Info"
 #: ../../enterprise/operation/incidents/workflow_conditions.php:208
 #: ../../enterprise/operation/incidents/workflow_conditions.php:323
 #: ../../include/functions_form.php:1050
-#: ../../include/functions_inventories.php:1033
-#: ../../include/functions_inventories.php:1233
-#: ../../include/functions_inventories.php:1780
+#: ../../include/functions_inventories.php:1035
+#: ../../include/functions_inventories.php:1235
+#: ../../include/functions_inventories.php:1782
 #: ../../include/functions_incidents.php:2411
 #: ../../include/functions_incidents.php:3167
 #: ../../extensions/disabled/incident_summary.php:104
@@ -509,18 +508,18 @@ msgid "There is no tickets"
 msgstr "There is no tickets"
 
 #: ../../mobile/operation/incidents.php:245
-#: ../../operation/incidents/incident_detail.php:1354
+#: ../../operation/incidents/incident_detail.php:1376
 #: ../../operation/incidents/incident_search_logic.php:300
-#: ../../operation/incidents/incident_dashboard_detail.php:547
-#: ../../operation/incidents/incident_dashboard_detail.php:687
+#: ../../operation/incidents/incident_dashboard_detail.php:549
+#: ../../operation/incidents/incident_dashboard_detail.php:689
 #: ../../operation/contacts/contact_detail.php:77
 #: ../../operation/contacts/contact_detail.php:103
 #: ../../operation/main_menu.php:154
 #: ../../operation/inventories/inventory_incident_tracking.php:49
 #: ../../operation/side_menu.php:331
 #: ../../enterprise/godmode/usuarios/profile_list.php:231
-#: ../../include/functions_inventories.php:1717
-#: ../../include/functions_inventories.php:1728
+#: ../../include/functions_inventories.php:1719
+#: ../../include/functions_inventories.php:1730
 msgid "Tickets"
 msgstr "Tickets"
 
@@ -672,8 +671,8 @@ msgstr "Loading ..."
 #: ../../mobile/operation/workorders.php:338
 #: ../../operation/projects/task.php:269 ../../include/functions_db.php:2307
 #: ../../include/functions_tasks.php:293
-#: ../../include/functions_inventories.php:983
-#: ../../include/functions_inventories.php:1656
+#: ../../include/functions_inventories.php:985
+#: ../../include/functions_inventories.php:1658
 msgid "New"
 msgstr "New"
 
@@ -815,7 +814,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:210
 #: ../../operation/slas/sla_detail.php:167
 #: ../../operation/incidents/incident_detail.php:292
-#: ../../operation/incidents/incident_detail.php:1178
+#: ../../operation/incidents/incident_detail.php:1200
 #: ../../operation/incidents/incident_reports.php:156
 #: ../../operation/incidents/incident_dashboard_detail.php:162
 #: ../../operation/workorders/wo_category.php:116
@@ -890,8 +889,8 @@ msgstr "None"
 #: ../../operation/incidents/incident_files.php:243
 #: ../../operation/incidents/incident_files.php:270
 #: ../../operation/incidents/type_detail.php:440
-#: ../../operation/incidents/incident_detail.php:1263
-#: ../../operation/incidents/incident_detail.php:1303
+#: ../../operation/incidents/incident_detail.php:1285
+#: ../../operation/incidents/incident_detail.php:1325
 #: ../../operation/incidents/incident_workunits.php:132
 #: ../../operation/incidents/incident_tracking.php:214
 #: ../../operation/incidents/incident_work.php:96
@@ -992,12 +991,12 @@ msgstr "File description"
 #: ../../operation/users/user_spare_workunit.php:506
 #: ../../operation/users/user_spare_workunit.php:545
 #: ../../operation/incidents/incident_files.php:244
-#: ../../operation/incidents/incident_detail.php:1066
-#: ../../operation/incidents/incident_detail.php:1101
-#: ../../operation/incidents/incident_detail.php:1208
+#: ../../operation/incidents/incident_detail.php:1088
+#: ../../operation/incidents/incident_detail.php:1123
 #: ../../operation/incidents/incident_detail.php:1230
-#: ../../operation/incidents/incident_detail.php:1241
-#: ../../operation/incidents/incident_detail.php:1304
+#: ../../operation/incidents/incident_detail.php:1252
+#: ../../operation/incidents/incident_detail.php:1263
+#: ../../operation/incidents/incident_detail.php:1326
 #: ../../operation/incidents/incident_workunits.php:136
 #: ../../operation/incidents/incident_create_work.php:65
 #: ../../operation/invoices/invoices.php:665
@@ -1051,11 +1050,11 @@ msgstr "Add"
 #: ../../operation/users/user_spare_workunit.php:502
 #: ../../operation/slas/sla_detail.php:212
 #: ../../operation/incidents/type_detail.php:443
-#: ../../operation/incidents/incident_detail.php:1321
-#: ../../operation/incidents/incident_detail.php:1872
+#: ../../operation/incidents/incident_detail.php:1343
+#: ../../operation/incidents/incident_detail.php:1894
 #: ../../operation/incidents/incident_type_field.php:122
 #: ../../operation/incidents/incident_search_logic.php:293
-#: ../../operation/incidents/incident_dashboard_detail.php:385
+#: ../../operation/incidents/incident_dashboard_detail.php:387
 #: ../../operation/contacts/contact_manage.php:250
 #: ../../operation/invoices/invoices.php:660
 #: ../../operation/user_report/report_weekly.php:53
@@ -1198,10 +1197,10 @@ msgstr "Delete"
 #: ../../mobile/operation/incident.php:665
 #: ../../mobile/operation/incident.php:828
 #: ../../operation/reporting/incidents_html.php:124
-#: ../../operation/incidents/incident_detail.php:1031
+#: ../../operation/incidents/incident_detail.php:1053
 #: ../../operation/incidents/incident_reports.php:114
 #: ../../operation/incidents/incident_dashboard_detail.php:112
-#: ../../operation/incidents/incident_dashboard_detail.php:377
+#: ../../operation/incidents/incident_dashboard_detail.php:379
 #: ../../operation/incidents/incident.php:134
 #: ../../operation/incidents/incident.php:160
 #: ../../operation/user_report/report_full.php:526
@@ -1265,7 +1264,7 @@ msgstr "Group"
 #: ../../operation/inventories/inventory_incident_tracking.php:46
 #: ../../operation/companies/company_detail.php:564
 #: ../../enterprise/include/functions_incidents.php:69
-#: ../../include/functions_inventories.php:1730
+#: ../../include/functions_inventories.php:1732
 msgid "Details"
 msgstr "Details"
 
@@ -1289,7 +1288,7 @@ msgid "Unknown"
 msgstr "Unknown"
 
 #: ../../mobile/operation/incident.php:902
-#: ../../operation/incidents/incident_detail.php:1113
+#: ../../operation/incidents/incident_detail.php:1135
 #: ../../operation/incidents/incident_dashboard_detail.php:315
 #: ../../operation/incidents/incident_inventory_contacts.php:53
 #: ../../include/functions_form.php:1068
@@ -1305,29 +1304,29 @@ msgid "People"
 msgstr "People"
 
 #: ../../mobile/operation/incident.php:917
-#: ../../operation/incidents/incident_dashboard_detail.php:406
+#: ../../operation/incidents/incident_dashboard_detail.php:408
 #: ../../extensions/disabled/incident_summary.php:118
 msgid "Created on"
 msgstr "Created on"
 
 #: ../../mobile/operation/incident.php:939
-#: ../../operation/incidents/incident_dashboard_detail.php:407
+#: ../../operation/incidents/incident_dashboard_detail.php:409
 msgid "Updated on"
 msgstr "Updated on"
 
 #: ../../mobile/operation/incident.php:962
-#: ../../operation/incidents/incident_dashboard_detail.php:408
+#: ../../operation/incidents/incident_dashboard_detail.php:410
 #: ../../extensions/disabled/incident_summary.php:125
 msgid "Closed on"
 msgstr "Closed on"
 
 #: ../../mobile/operation/incident.php:983
-#: ../../operation/incidents/incident_dashboard_detail.php:447
+#: ../../operation/incidents/incident_dashboard_detail.php:449
 msgid "Dates"
 msgstr "Dates"
 
 #: ../../mobile/operation/incident.php:988
-#: ../../operation/incidents/incident_dashboard_detail.php:393
+#: ../../operation/incidents/incident_dashboard_detail.php:395
 msgid "Quick edit"
 msgstr "Quick edit"
 
@@ -1400,8 +1399,8 @@ msgstr "List"
 #: ../../operation/incidents/incident_files.php:254
 #: ../../operation/incidents/incident_notes.php:100
 #: ../../operation/incidents/incident_work.php:73
-#: ../../operation/incidents/incident_dashboard_detail.php:566
-#: ../../operation/incidents/incident_dashboard_detail.php:649
+#: ../../operation/incidents/incident_dashboard_detail.php:568
+#: ../../operation/incidents/incident_dashboard_detail.php:651
 #: ../../operation/incidents/incident.php:69
 #: ../../operation/contacts/contact_detail.php:65
 #: ../../operation/contacts/contact_detail.php:94
@@ -1623,7 +1622,7 @@ msgstr "Vacations"
 #: ../../operation/users/user_workunit_report.php:259
 #: ../../operation/users/user_spare_workunit.php:451
 #: ../../operation/users/user_spare_workunit.php:455
-#: ../../operation/incidents/incident_detail.php:1195
+#: ../../operation/incidents/incident_detail.php:1217
 #: ../../operation/incidents/incident_dashboard_detail.php:202
 #: ../../operation/user_report/report_full.php:213
 #: ../../operation/user_report/report_full.php:523
@@ -2127,7 +2126,7 @@ msgstr "Profile management"
 #: ../../operation/slas/sla_detail.php:217
 #: ../../operation/slas/sla_detail.php:297
 #: ../../operation/incidents/type_detail.php:447
-#: ../../operation/incidents/incident_detail.php:1316
+#: ../../operation/incidents/incident_detail.php:1338
 #: ../../operation/incidents/incident_type_field.php:116
 #: ../../operation/contacts/contact_manage.php:254
 #: ../../operation/contacts/contact_detail.php:224
@@ -2314,7 +2313,7 @@ msgstr "Profiles"
 #: ../../operation/slas/sla_detail.php:287
 #: ../../operation/incidents/type_detail.php:544
 #: ../../operation/incidents/type_detail.php:638
-#: ../../operation/incidents/incident_detail.php:1541
+#: ../../operation/incidents/incident_detail.php:1563
 #: ../../operation/incidents/incident.php:223
 #: ../../operation/contacts/contact_detail.php:211
 #: ../../operation/invoices/invoices.php:472
@@ -2382,8 +2381,8 @@ msgstr "Profiles"
 #: ../../include/wiki/lionwiki_lib.php:723
 #: ../../include/wiki/lionwiki_lib.php:839
 #: ../../include/functions_user.php:379 ../../include/functions_form.php:905
-#: ../../include/functions_inventories.php:1341
-#: ../../include/functions_inventories.php:1352 ../../include/ajax/crm.php:156
+#: ../../include/functions_inventories.php:1343
+#: ../../include/functions_inventories.php:1354 ../../include/ajax/crm.php:156
 #: ../../include/ajax/crm.php:175 ../../include/ajax/incidents.php:179
 msgid "Are you sure?"
 msgstr "Are you sure?"
@@ -2418,7 +2417,7 @@ msgid "Template"
 msgstr "Template"
 
 #: ../../godmode/setup/setup_mailtemplates.php:85
-#: ../../operation/incidents/incident_dashboard_detail.php:559
+#: ../../operation/incidents/incident_dashboard_detail.php:561
 #: ../../operation/incidents/incident_inventory_contacts.php:35
 #: ../../operation/incidents/incident_inventory_contacts.php:257
 #: ../../operation/campaign/campaign.php:59
@@ -2925,7 +2924,7 @@ msgstr "Drop the package here or "
 
 #: ../../godmode/setup/offline_update.php:306
 #: ../../operation/incidents/incident_files.php:230
-#: ../../operation/incidents/incident_detail.php:1289
+#: ../../operation/incidents/incident_detail.php:1311
 #: ../../operation/file_sharing/upload.php:177
 #: ../../operation/leads/lead_mail.php:210
 #: ../../operation/contracts/contract_detail.php:542
@@ -3080,9 +3079,9 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:134
 #: ../../operation/users/user_spare_workunit.php:580
 #: ../../operation/users/user_spare_workunit.php:582
-#: ../../operation/incidents/incident_detail.php:1616
-#: ../../operation/incidents/incident_detail.php:1617
-#: ../../operation/incidents/incident_detail.php:1618
+#: ../../operation/incidents/incident_detail.php:1638
+#: ../../operation/incidents/incident_detail.php:1639
+#: ../../operation/incidents/incident_detail.php:1640
 #: ../../operation/incidents/incident_search_logic.php:357
 #: ../../operation/incidents/incident_search_logic.php:358
 #: ../../operation/incidents/incident_search_logic.php:359
@@ -3205,7 +3204,7 @@ msgstr ""
 #: ../../enterprise/operation/user/schedule_reports.php:232
 #: ../../enterprise/include/functions_groups.php:72
 #: ../../include/functions_groups.php:89 ../../include/functions_user.php:300
-#: ../../include/functions_inventories.php:1232
+#: ../../include/functions_inventories.php:1234
 msgid "Name"
 msgstr "Name"
 
@@ -4018,8 +4017,8 @@ msgstr ""
 #: ../../operation/users/user_search.php:98
 #: ../../operation/incidents/incident_workunits.php:155
 #: ../../operation/incidents/incident_workunits.php:159
-#: ../../operation/incidents/incident_dashboard_detail.php:563
-#: ../../operation/incidents/incident_dashboard_detail.php:657
+#: ../../operation/incidents/incident_dashboard_detail.php:565
+#: ../../operation/incidents/incident_dashboard_detail.php:659
 #: ../../operation/manufacturers/manufacturer_detail.php:128
 #: ../../operation/leads/lead_forward.php:87
 #: ../../operation/companies/company_detail.php:355
@@ -4370,8 +4369,8 @@ msgstr "Forced e-mail"
 #: ../../operation/companies/company_detail.php:964
 #: ../../enterprise/include/functions_groups.php:73
 #: ../../include/functions_groups.php:90
-#: ../../include/functions_inventories.php:1044
-#: ../../include/functions_inventories.php:1794 ../../include/ajax/crm.php:63
+#: ../../include/functions_inventories.php:1046
+#: ../../include/functions_inventories.php:1796 ../../include/ajax/crm.php:63
 msgid "Parent"
 msgstr "Parent"
 
@@ -4477,7 +4476,7 @@ msgid "Product"
 msgstr "Product"
 
 #: ../../operation/reporting/incidents_html.php:83
-#: ../../operation/incidents/incident_dashboard_detail.php:632
+#: ../../operation/incidents/incident_dashboard_detail.php:634
 #: ../../operation/incidents/incident.php:66
 #: ../../operation/contacts/contact_detail.php:71
 #: ../../operation/contacts/contact_detail.php:106
@@ -4628,9 +4627,9 @@ msgstr "IP address"
 #: ../../operation/inventories/inventory_detail.php:630
 #: ../../operation/inventories/inventory_detail.php:638
 #: ../../include/functions_inventories.php:710
-#: ../../include/functions_inventories.php:1064
-#: ../../include/functions_inventories.php:1237
-#: ../../include/functions_inventories.php:1822
+#: ../../include/functions_inventories.php:1066
+#: ../../include/functions_inventories.php:1239
+#: ../../include/functions_inventories.php:1824
 #: ../../include/ajax/inventories.php:205
 msgid "Contract"
 msgstr "Contract"
@@ -4727,14 +4726,14 @@ msgid "KB"
 msgstr "KB"
 
 #: ../../operation/search.php:228
-#: ../../operation/incidents/incident_detail.php:1356
-#: ../../operation/incidents/incident_dashboard_detail.php:623
-#: ../../operation/incidents/incident_dashboard_detail.php:681
+#: ../../operation/incidents/incident_detail.php:1378
+#: ../../operation/incidents/incident_dashboard_detail.php:625
+#: ../../operation/incidents/incident_dashboard_detail.php:683
 #: ../../operation/incidents/incident.php:67 ../../operation/side_menu.php:642
 #: ../../operation/companies/company_detail.php:210
 #: ../../operation/companies/company_detail.php:245
-#: ../../include/functions_inventories.php:1713
-#: ../../include/functions_inventories.php:1727
+#: ../../include/functions_inventories.php:1715
+#: ../../include/functions_inventories.php:1729
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -4780,7 +4779,7 @@ msgstr "Invoices"
 
 #: ../../operation/search.php:349 ../../operation/invoices/invoices.php:552
 #: ../../operation/invoices/invoice_detail.php:269
-#: ../../operation/invoices/invoice_template.php:98
+#: ../../operation/invoices/invoice_template.php:102
 #: ../../operation/contracts/contract_detail.php:185
 #: ../../operation/projects/task_cost.php:138
 #: ../../operation/projects/task_cost.php:180
@@ -5301,7 +5300,7 @@ msgstr ""
 "formats. Please compress said files prior to upload (using zip or gz)"
 
 #: ../../operation/incidents/incident_files.php:226
-#: ../../operation/incidents/incident_detail.php:1285
+#: ../../operation/incidents/incident_detail.php:1307
 #: ../../operation/leads/lead_mail.php:206
 #: ../../operation/contracts/contract_detail.php:538
 #: ../../operation/download/browse.php:353
@@ -5309,7 +5308,7 @@ msgid "Drop the file here"
 msgstr "Drop the file here."
 
 #: ../../operation/incidents/incident_files.php:228
-#: ../../operation/incidents/incident_detail.php:1287
+#: ../../operation/incidents/incident_detail.php:1309
 #: ../../operation/leads/lead_mail.php:208
 #: ../../operation/contracts/contract_detail.php:540
 #: ../../operation/download/browse.php:355
@@ -5443,7 +5442,7 @@ msgid "Ticket successfully updated"
 msgstr "Ticket successfully updated"
 
 #: ../../operation/incidents/incident_detail.php:582
-#: ../../operation/incidents/incident_detail.php:1275
+#: ../../operation/incidents/incident_detail.php:1297
 msgid "Resolution epilog"
 msgstr "Resolution epilogue"
 
@@ -5472,7 +5471,7 @@ msgid "Link to ticket"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:893
-#: ../../operation/incidents/incident_dashboard_detail.php:461
+#: ../../operation/incidents/incident_dashboard_detail.php:463
 msgid "Scoring"
 msgstr "Scoring"
 
@@ -5487,7 +5486,7 @@ msgstr "Add to KB"
 
 #: ../../operation/incidents/incident_detail.php:927
 #: ../../operation/incidents/incident_graph.php:27
-#: ../../operation/incidents/incident_dashboard_detail.php:580
+#: ../../operation/incidents/incident_dashboard_detail.php:582
 #: ../../operation/leads/lead_pipeline.php:66
 #: ../../operation/leads/lead_statistics.php:78
 #: ../../operation/companies/company_statistics.php:58
@@ -5502,12 +5501,12 @@ msgstr "Back to search"
 msgid "Create ticket"
 msgstr "Create ticket"
 
-#: ../../operation/incidents/incident_detail.php:1045
+#: ../../operation/incidents/incident_detail.php:1067
 msgid "Blocked"
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1095
-#: ../../operation/incidents/incident_dashboard_detail.php:358
+#: ../../operation/incidents/incident_detail.php:1117
+#: ../../operation/incidents/incident_dashboard_detail.php:356
 #: ../../enterprise/operation/incidents/workflow_actions.php:249
 #: ../../enterprise/operation/incidents/workflow_actions.php:267
 #: ../../enterprise/operation/incidents/workflow_conditions.php:209
@@ -5520,76 +5519,76 @@ msgstr ""
 "you are opening a ticket and want to be resolved by someone different than "
 "yourself, please assign to other user"
 
-#: ../../operation/incidents/incident_detail.php:1114
+#: ../../operation/incidents/incident_detail.php:1136
 msgid ""
 "User assigned here is user that will be responsible to close the ticket."
 msgstr ""
 "User assigned here is user that will be responsible to close the ticket."
 
-#: ../../operation/incidents/incident_detail.php:1131
+#: ../../operation/incidents/incident_detail.php:1153
 msgid "Creation date"
 msgstr "Creation date"
 
-#: ../../operation/incidents/incident_detail.php:1132
+#: ../../operation/incidents/incident_detail.php:1154
 msgid "Creation time"
 msgstr "Creation time"
 
-#: ../../operation/incidents/incident_detail.php:1133
+#: ../../operation/incidents/incident_detail.php:1155
 msgid "The format should be hh:mm"
 msgstr "The format should be hh:mm"
 
-#: ../../operation/incidents/incident_detail.php:1153
+#: ../../operation/incidents/incident_detail.php:1175
 #: ../../operation/incidents/incident_dashboard_detail.php:190
 #: ../../operation/incidents/incident_inventory_contacts.php:52
 #: ../../include/functions_form.php:1059
 msgid "Editor"
 msgstr "Editor"
 
-#: ../../operation/incidents/incident_detail.php:1160
-#: ../../operation/incidents/incident_detail.php:1162
-#: ../../operation/incidents/incident_detail.php:1164
+#: ../../operation/incidents/incident_detail.php:1182
+#: ../../operation/incidents/incident_detail.php:1184
+#: ../../operation/incidents/incident_detail.php:1186
 #: ../../operation/incidents/incident_dashboard_detail.php:194
 #: ../../operation/user_report/report_full.php:200
 #: ../../operation/user_report/report_full.php:524
 msgid "Creator group"
 msgstr "Creator group"
 
-#: ../../operation/incidents/incident_detail.php:1169
+#: ../../operation/incidents/incident_detail.php:1191
 #: ../../operation/incidents/incident_dashboard_detail.php:206
-#: ../../operation/incidents/incident_dashboard_detail.php:488
+#: ../../operation/incidents/incident_dashboard_detail.php:490
 msgid "SLA disabled"
 msgstr "SLA disabled"
 
-#: ../../operation/incidents/incident_detail.php:1171
+#: ../../operation/incidents/incident_detail.php:1193
 msgid "Notify changes by email "
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:1182
+#: ../../operation/incidents/incident_detail.php:1204
 #: ../../operation/incidents/incident_search_logic.php:284
 #: ../../operation/incidents/incident_dashboard_detail.php:198
 msgid "Parent ticket"
 msgstr "Parent ticket"
 
-#: ../../operation/incidents/incident_detail.php:1198
-#: ../../operation/incidents/incident_detail.php:1202
-#: ../../operation/incidents/incident_detail.php:1419
+#: ../../operation/incidents/incident_detail.php:1220
+#: ../../operation/incidents/incident_detail.php:1224
+#: ../../operation/incidents/incident_detail.php:1441
 #: ../../operation/workorders/wo.php:378 ../../operation/workorders/wo.php:382
 #: ../../operation/workorders/wo.php:748
 msgid "Open this task"
 msgstr "Open this task"
 
-#: ../../operation/incidents/incident_detail.php:1206
+#: ../../operation/incidents/incident_detail.php:1228
 msgid "Additional email addresses"
 msgstr "Additional e-mail addresses"
 
-#: ../../operation/incidents/incident_detail.php:1228
-#: ../../operation/incidents/incident_detail.php:1238
+#: ../../operation/incidents/incident_detail.php:1250
+#: ../../operation/incidents/incident_detail.php:1260
 #: ../../operation/incidents/incident_dashboard_detail.php:156
 msgid "Objects affected"
 msgstr "Objects affected"
 
-#: ../../operation/incidents/incident_detail.php:1232
-#: ../../operation/incidents/incident_detail.php:1242
+#: ../../operation/incidents/incident_detail.php:1254
+#: ../../operation/incidents/incident_detail.php:1264
 #: ../../operation/inventories/inventory_detail.php:661
 #: ../../operation/inventories/inventory_detail.php:666
 #: ../../operation/projects/task_detail.php:364
@@ -5600,29 +5599,29 @@ msgstr "Objects affected"
 msgid "Remove"
 msgstr "Remove"
 
-#: ../../operation/incidents/incident_detail.php:1255
+#: ../../operation/incidents/incident_detail.php:1277
 msgid "Advanced parameters"
 msgstr "Advanced parameters"
 
-#: ../../operation/incidents/incident_detail.php:1310
+#: ../../operation/incidents/incident_detail.php:1332
 #: ../../operation/contracts/contract_detail.php:563
 msgid "File upload"
 msgstr "File upload"
 
-#: ../../operation/incidents/incident_detail.php:1352
-#: ../../operation/incidents/incident_dashboard_detail.php:678
+#: ../../operation/incidents/incident_detail.php:1374
+#: ../../operation/incidents/incident_dashboard_detail.php:680
 #: ../../operation/side_menu.php:790
 msgid "Inventory objects"
 msgstr "Inventory objects"
 
-#: ../../operation/incidents/incident_detail.php:1358
+#: ../../operation/incidents/incident_detail.php:1380
 #: ../../enterprise/godmode/usuarios/profile_list.php:260
 #: ../../enterprise/include/functions_groups.php:70
 #: ../../include/functions_groups.php:87 ../../include/functions_form.php:128
 msgid "Users"
 msgstr "Users"
 
-#: ../../operation/incidents/incident_detail.php:1406
+#: ../../operation/incidents/incident_detail.php:1428
 msgid ""
 "If you change the type, you will lost the information of the customized type "
 "fields. \\n\\nDo you want to continue?"
@@ -5630,28 +5629,28 @@ msgstr ""
 "If you change the type, you will lose the information of the customized type "
 "fields. \\n\\n Do you want to continue ?"
 
-#: ../../operation/incidents/incident_detail.php:1494
+#: ../../operation/incidents/incident_detail.php:1516
 msgid "Title field is empty"
 msgstr "Title field is empty"
 
-#: ../../operation/incidents/incident_detail.php:1501
+#: ../../operation/incidents/incident_detail.php:1523
 msgid "Creator field is empty"
 msgstr "Creator field is empty"
 
-#: ../../operation/incidents/incident_detail.php:1508
+#: ../../operation/incidents/incident_detail.php:1530
 msgid "Owner field is empty"
 msgstr "Owner field is empty"
 
-#: ../../operation/incidents/incident_detail.php:1520
+#: ../../operation/incidents/incident_detail.php:1542
 msgid "Closed by field is empty"
 msgstr "Closed by field is empty"
 
-#: ../../operation/incidents/incident_detail.php:1938
+#: ../../operation/incidents/incident_detail.php:1960
 #: ../../operation/kb/manage_data.php:391 ../../operation/kb/browse.php:455
 msgid "Title required"
 msgstr "Title required"
 
-#: ../../operation/incidents/incident_detail.php:1939
+#: ../../operation/incidents/incident_detail.php:1961
 msgid "This ticket already exists"
 msgstr "This ticket already exists"
 
@@ -5666,14 +5665,14 @@ msgstr "Incident"
 
 #: ../../operation/incidents/incident_notes.php:84
 #: ../../operation/incidents/incident_work.php:56
-#: ../../operation/incidents/incident_dashboard_detail.php:641
-#: ../../operation/incidents/incident_dashboard_detail.php:684
+#: ../../operation/incidents/incident_dashboard_detail.php:643
+#: ../../operation/incidents/incident_dashboard_detail.php:686
 #: ../../operation/incidents/incident.php:64
 #: ../../operation/inventories/inventory_incident_tracking.php:48
 #: ../../operation/leads/lead_detail.php:722
 #: ../../operation/leads/lead_detail.php:745
-#: ../../include/functions_inventories.php:1709
-#: ../../include/functions_inventories.php:1726
+#: ../../include/functions_inventories.php:1711
+#: ../../include/functions_inventories.php:1728
 msgid "Tracking"
 msgstr "Tracking"
 
@@ -5821,7 +5820,7 @@ msgid "The comment was not created"
 msgstr ""
 
 #: ../../operation/incidents/incident_tracking.php:49
-#: ../../operation/incidents/incident_dashboard_detail.php:569
+#: ../../operation/incidents/incident_dashboard_detail.php:571
 #: ../../operation/incidents/incident.php:62
 #: ../../operation/campaign/campaign.php:62
 #: ../../operation/projects/task_detail.php:278
@@ -5860,8 +5859,8 @@ msgid "Closed"
 msgstr "Closed"
 
 #: ../../operation/incidents/incident_tracking.php:91
-#: ../../operation/incidents/incident_dashboard_detail.php:399
-#: ../../operation/incidents/incident_dashboard_detail.php:438
+#: ../../operation/incidents/incident_dashboard_detail.php:401
+#: ../../operation/incidents/incident_dashboard_detail.php:440
 msgid "Not yet"
 msgstr "Not yet"
 
@@ -6088,37 +6087,37 @@ msgstr "Not closed yet."
 msgid "Click on icons for more details"
 msgstr "Click on icons for more details."
 
-#: ../../operation/incidents/incident_dashboard_detail.php:480
+#: ../../operation/incidents/incident_dashboard_detail.php:482
 msgid "Review score"
 msgstr "Review score"
 
-#: ../../operation/incidents/incident_dashboard_detail.php:496
+#: ../../operation/incidents/incident_dashboard_detail.php:498
 msgid "SLA history compliance for: "
 msgstr "SLA history compliance for: "
 
-#: ../../operation/incidents/incident_dashboard_detail.php:523
+#: ../../operation/incidents/incident_dashboard_detail.php:525
 msgid "SLA total compliance (%)"
 msgstr "SLA total compliance (%)"
 
-#: ../../operation/incidents/incident_dashboard_detail.php:540
+#: ../../operation/incidents/incident_dashboard_detail.php:542
 msgid "SLA information"
 msgstr "SLA information"
 
-#: ../../operation/incidents/incident_dashboard_detail.php:666
+#: ../../operation/incidents/incident_dashboard_detail.php:668
 msgid "Associated tickets"
 msgstr ""
 
-#: ../../operation/incidents/incident_dashboard_detail.php:672
+#: ../../operation/incidents/incident_dashboard_detail.php:674
 msgid "Add comment"
 msgstr ""
 
-#: ../../operation/incidents/incident_dashboard_detail.php:675
+#: ../../operation/incidents/incident_dashboard_detail.php:677
 #: ../../operation/incidents_simple/incident.php:108
 #: ../../operation/side_menu.php:267
 msgid "Add file"
 msgstr "Add file"
 
-#: ../../operation/incidents/incident_dashboard_detail.php:728
+#: ../../operation/incidents/incident_dashboard_detail.php:730
 #: ../../operation/side_menu.php:1330
 #: ../../operation/projects/project_detail.php:432
 #: ../../operation/companies/company_detail.php:833
@@ -6398,7 +6397,7 @@ msgid "This contact doesn't have any inventory objects"
 msgstr "This contact doesn't have any inventory objects."
 
 #: ../../operation/contacts/contact_inventory.php:45
-#: ../../include/functions_inventories.php:1231
+#: ../../include/functions_inventories.php:1233
 msgid "Id"
 msgstr "Id"
 
@@ -6406,7 +6405,7 @@ msgstr "Id"
 #: ../../operation/inventories/inventory_search.php:394
 #: ../../operation/inventories/inventory_detail.php:694
 #: ../../operation/inventories/inventory_detail.php:698
-#: ../../include/functions_inventories.php:1235
+#: ../../include/functions_inventories.php:1237
 #: ../../include/ajax/inventories.php:176
 msgid "Object type"
 msgstr "Object type"
@@ -6415,9 +6414,9 @@ msgstr "Object type"
 #: ../../operation/inventories/inventory_search.php:416
 #: ../../operation/inventories/inventory_detail.php:633
 #: ../../operation/inventories/inventory_detail.php:639
-#: ../../include/functions_inventories.php:1054
-#: ../../include/functions_inventories.php:1236
-#: ../../include/functions_inventories.php:1808
+#: ../../include/functions_inventories.php:1056
+#: ../../include/functions_inventories.php:1238
+#: ../../include/functions_inventories.php:1810
 #: ../../include/ajax/inventories.php:208
 msgid "Manufacturer"
 msgstr "Manufacturer"
@@ -6524,7 +6523,7 @@ msgid "Lock"
 msgstr "Lock"
 
 #: ../../operation/invoices/invoices.php:518
-#: ../../operation/invoices/invoice_template.php:69
+#: ../../operation/invoices/invoice_template.php:73
 msgid "Reference"
 msgstr "Reference"
 
@@ -6539,7 +6538,7 @@ msgstr "Last generated ID: "
 
 #: ../../operation/invoices/invoices.php:528
 #: ../../operation/invoices/invoice_detail.php:217
-#: ../../operation/invoices/invoice_template.php:19
+#: ../../operation/invoices/invoice_template.php:23
 msgid "Paid"
 msgstr "Paid"
 
@@ -6579,7 +6578,7 @@ msgid "Contract number"
 msgstr "Contract number"
 
 #: ../../operation/invoices/invoices.php:551
-#: ../../operation/invoices/invoice_template.php:95
+#: ../../operation/invoices/invoice_template.php:99
 msgid "Concept"
 msgstr "Concept"
 
@@ -6593,7 +6592,7 @@ msgstr ""
 
 #: ../../operation/invoices/invoices.php:568
 #: ../../operation/invoices/invoices.php:574
-#: ../../operation/invoices/invoice_template.php:173
+#: ../../operation/invoices/invoice_template.php:177
 msgid "Taxes (%)"
 msgstr "Taxes (%)"
 
@@ -6758,61 +6757,61 @@ msgstr "The invoice number is required"
 msgid "This invoice does not exists"
 msgstr "This invoice does not exist"
 
-#: ../../operation/invoices/invoice_template.php:25
+#: ../../operation/invoices/invoice_template.php:29
 msgid "Invoice"
 msgstr "Invoice"
 
-#: ../../operation/invoices/invoice_template.php:30
+#: ../../operation/invoices/invoice_template.php:34
 msgid "Customer address"
 msgstr "Customer address"
 
-#: ../../operation/invoices/invoice_template.php:32
+#: ../../operation/invoices/invoice_template.php:36
 msgid "Fiscal ID: "
 msgstr "Fiscal ID : "
 
-#: ../../operation/invoices/invoice_template.php:41
+#: ../../operation/invoices/invoice_template.php:45
 msgid "Invoice ID"
 msgstr "Invoice ID"
 
-#: ../../operation/invoices/invoice_template.php:49
+#: ../../operation/invoices/invoice_template.php:53
 msgid "Issue date"
 msgstr "Issue date"
 
-#: ../../operation/invoices/invoice_template.php:59
+#: ../../operation/invoices/invoice_template.php:63
 msgid "Payment date"
 msgstr "Payment date"
 
-#: ../../operation/invoices/invoice_template.php:79
+#: ../../operation/invoices/invoice_template.php:83
 msgid "Expiration date"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:143
-#: ../../operation/invoices/invoice_template.php:272
-msgid "Total amount without taxes or discounts"
+#: ../../operation/invoices/invoice_template.php:147
+#: ../../operation/invoices/invoice_template.php:280
+msgid "Tax Base"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:170
+#: ../../operation/invoices/invoice_template.php:174
 msgid "Concept Taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:176
-#: ../../operation/invoices/invoice_template.php:242
+#: ../../operation/invoices/invoice_template.php:180
+#: ../../operation/invoices/invoice_template.php:246
 msgid "Total Taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:275
+#: ../../operation/invoices/invoice_template.php:283
 msgid "Discount before taxes"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:278
+#: ../../operation/invoices/invoice_template.php:286
 msgid "Total Tax"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:281
+#: ../../operation/invoices/invoice_template.php:290
 msgid "Retention"
 msgstr ""
 
-#: ../../operation/invoices/invoice_template.php:284
+#: ../../operation/invoices/invoice_template.php:294
 #: ../../operation/leads/lead_statistics.php:259
 #: ../../operation/leads/lead_statistics.php:275
 msgid "Total amount"
@@ -6993,7 +6992,7 @@ msgstr "Next year"
 #: ../../operation/user_report/report_annual.php:172
 #: ../../operation/projects/task_report.php:194
 #: ../../include/functions_crm.php:682
-#: ../../include/functions_inventories.php:983
+#: ../../include/functions_inventories.php:985
 msgid "Total"
 msgstr "Total"
 
@@ -7228,7 +7227,7 @@ msgstr "Workunit resume for user"
 #: ../../operation/companies/company_statistics.php:241
 #: ../../operation/companies/company_statistics.php:256
 #: ../../enterprise/operation/incidents/workflow_status_mapping.php:141
-#: ../../include/functions_inventories.php:1380
+#: ../../include/functions_inventories.php:1382
 #: ../../include/ajax/inventories.php:149
 #: ../../include/ajax/inventories.php:415
 msgid "No data to show"
@@ -7988,8 +7987,8 @@ msgstr ""
 #: ../../enterprise/operation/incidents/workflow_status_mapping.php:101
 #: ../../enterprise/operation/incidents/workflow_status_mapping.php:167
 #: ../../enterprise/include/functions_incidents.php:67
-#: ../../include/functions_inventories.php:1251
-#: ../../include/functions_inventories.php:1254
+#: ../../include/functions_inventories.php:1253
+#: ../../include/functions_inventories.php:1256
 msgid "Actions"
 msgstr "Actions"
 
@@ -8203,7 +8202,7 @@ msgstr ""
 "inventory's tree view."
 
 #: ../../operation/inventories/manage_objects.php:176
-#: ../../include/functions_inventories.php:983
+#: ../../include/functions_inventories.php:985
 msgid "Min. stock"
 msgstr "Min. stock"
 
@@ -8325,7 +8324,7 @@ msgid "CSV"
 msgstr "CSV"
 
 #: ../../operation/inventories/inventory_search.php:203
-#: ../../include/functions_inventories.php:890
+#: ../../include/functions_inventories.php:892
 msgid "No object type"
 msgstr "No object type"
 
@@ -8401,7 +8400,7 @@ msgstr "The inventory object doesn't exist."
 
 #: ../../operation/inventories/inventory_detail.php:612
 #: ../../operation/inventories/inventory_detail.php:619
-#: ../../include/functions_inventories.php:1234
+#: ../../include/functions_inventories.php:1236
 msgid "Parent object"
 msgstr "Parent object"
 
@@ -8442,8 +8441,8 @@ msgid "Tickets affecting inventory object"
 msgstr "Tickets affecting inventory object"
 
 #: ../../operation/inventories/inventory_incident_tracking.php:47
-#: ../../include/functions_inventories.php:1721
-#: ../../include/functions_inventories.php:1729
+#: ../../include/functions_inventories.php:1723
+#: ../../include/functions_inventories.php:1731
 msgid "Relationships"
 msgstr "Relationships"
 
@@ -12317,12 +12316,12 @@ msgid "External"
 msgstr "External"
 
 #: ../../include/functions_user.php:115
-#: ../../include/functions_inventories.php:1497
+#: ../../include/functions_inventories.php:1499
 msgid " already exists"
 msgstr " already exists"
 
 #: ../../include/functions_user.php:141
-#: ../../include/functions_inventories.php:1626
+#: ../../include/functions_inventories.php:1628
 msgid "File loaded"
 msgstr "File loaded"
 
@@ -12599,8 +12598,8 @@ msgid "More info"
 msgstr "More info"
 
 #: ../../include/functions_inventories.php:727
-#: ../../include/functions_inventories.php:1338
-#: ../../include/functions_inventories.php:1349
+#: ../../include/functions_inventories.php:1340
+#: ../../include/functions_inventories.php:1351
 msgid "Show object type fields"
 msgstr "Show object type fields"
 
@@ -12612,82 +12611,82 @@ msgstr "Use tree view"
 msgid "Filters only apply <br> to the first level"
 msgstr "Filters only apply <br> to the first level"
 
-#: ../../include/functions_inventories.php:983
-#: ../../include/functions_inventories.php:1658
+#: ../../include/functions_inventories.php:985
+#: ../../include/functions_inventories.php:1660
 msgid "Unused"
 msgstr "Unused"
 
-#: ../../include/functions_inventories.php:1221
+#: ../../include/functions_inventories.php:1223
 msgid "Empty inventory"
 msgstr "Empty inventory"
 
-#: ../../include/functions_inventories.php:1492
+#: ../../include/functions_inventories.php:1494
 msgid "Inventory name empty"
 msgstr "Inventory name empty"
 
-#: ../../include/functions_inventories.php:1497
+#: ../../include/functions_inventories.php:1499
 msgid "Inventory "
 msgstr "Inventory "
 
-#: ../../include/functions_inventories.php:1506
+#: ../../include/functions_inventories.php:1508
 msgid "Contract "
 msgstr "Contract "
 
-#: ../../include/functions_inventories.php:1506
-#: ../../include/functions_inventories.php:1515
-#: ../../include/functions_inventories.php:1524
-#: ../../include/functions_inventories.php:1565
-#: ../../include/functions_inventories.php:1573
+#: ../../include/functions_inventories.php:1508
+#: ../../include/functions_inventories.php:1517
+#: ../../include/functions_inventories.php:1526
+#: ../../include/functions_inventories.php:1567
+#: ../../include/functions_inventories.php:1575
 msgid " doesn't exist"
 msgstr " doesn't exist"
 
-#: ../../include/functions_inventories.php:1515
+#: ../../include/functions_inventories.php:1517
 msgid "Manufacturer "
 msgstr "Manufacturer "
 
-#: ../../include/functions_inventories.php:1524
+#: ../../include/functions_inventories.php:1526
 msgid "Object type "
 msgstr "Object type "
 
-#: ../../include/functions_inventories.php:1548
-#: ../../include/functions_inventories.php:1556
-#: ../../include/functions_inventories.php:1582
+#: ../../include/functions_inventories.php:1550
+#: ../../include/functions_inventories.php:1558
+#: ../../include/functions_inventories.php:1584
 msgid "Field "
 msgstr "Field "
 
-#: ../../include/functions_inventories.php:1548
+#: ../../include/functions_inventories.php:1550
 msgid " doesn't match. Valid values: "
 msgstr " doesn't match. Valid values: "
 
-#: ../../include/functions_inventories.php:1556
+#: ../../include/functions_inventories.php:1558
 msgid " must be numeric"
 msgstr " must be numeric"
 
-#: ../../include/functions_inventories.php:1565
+#: ../../include/functions_inventories.php:1567
 msgid "External table "
 msgstr "External table "
 
-#: ../../include/functions_inventories.php:1573
+#: ../../include/functions_inventories.php:1575
 msgid "Id "
 msgstr "Id "
 
-#: ../../include/functions_inventories.php:1582
+#: ../../include/functions_inventories.php:1584
 msgid " must be unique"
 msgstr " must be unique"
 
-#: ../../include/functions_inventories.php:1657
+#: ../../include/functions_inventories.php:1659
 msgid "In use"
 msgstr "In use"
 
-#: ../../include/functions_inventories.php:1659
+#: ../../include/functions_inventories.php:1661
 msgid "Removed"
 msgstr "Removed"
 
-#: ../../include/functions_inventories.php:1705
+#: ../../include/functions_inventories.php:1707
 msgid "Inventory object details"
 msgstr "Inventory object details"
 
-#: ../../include/functions_inventories.php:1734
+#: ../../include/functions_inventories.php:1736
 #, php-format
 msgid "Inventory object #%s: %s"
 msgstr "Inventory object #%s: %s"
