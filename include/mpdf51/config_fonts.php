@@ -8,7 +8,7 @@ global $config;
 // e.g. on Windows: define("_MPDF_SYSTEM_TTFONTS", 'C:/Windows/Fonts/');
 // Leave undefined if not required
 
-define("_MPDF_SYSTEM_TTFONTS", $config["homedir"]."/include/fonts/");
+define("_MPDF_SYSTEM_TTFONTS", $config["homedir"]."include/fonts/");
 
 
 // Optionally set font(s) (names as defined below in $this->fontdata) to use for missing characters
@@ -153,7 +153,7 @@ $this->fontdata = array(
 
 //ADDED FOR PANDORA DEVELOPER
 	"code" => array(
-		'R' => $config["pdffont"],
+		'R' => safe_output($config["pdffont"]),
 		),
 //ADDED FOR PANDORA DEVELOPER
 
