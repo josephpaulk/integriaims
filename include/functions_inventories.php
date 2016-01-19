@@ -882,7 +882,9 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 
 	foreach ($object_types as $key=>$type) {
 		$elements_type[$key]['name'] = $type['name'];
-		$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
+			if($type['icon']){
+				$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
+			}
 		$elements_type[$key]['id'] = $type['id'];
 
 	}

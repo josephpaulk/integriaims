@@ -144,7 +144,7 @@
 			<table style="border-top: 1px solid grey; padding: 5px 15px 0px 15px; width:620px;">
 				<tr>
 					<td style=" text-align:left; font-size:12px;  width: 400px;">
-						<?php echo __('Total amount without taxes or discounts') ?>
+						<?php echo __('Tax Base') ?>
 					</td>
 					<td style=" text-align:right; font-size:12px; color:black;">
 						<?php echo '<b>'.format_numeric($amount,2).' '.$invoice['currency'].'</b>' ?>
@@ -277,7 +277,7 @@
 			echo '<table style="border-top:2px solid black; border-bottom:1px solid black; width:620px; padding: 5px 15px 0px 15px;">';
 				echo '<tr>';
 					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
-						echo '<b>'.__('Total amount without taxes or discounts').'</b>';
+						echo '<b>'.__('Tax Base').'</b>';
 					echo '</td>';
 					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
 						echo '<b>'.__('Discount before taxes').'</b>';

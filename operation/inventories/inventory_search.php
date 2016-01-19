@@ -285,8 +285,7 @@ if ($fields_selected[0] != '') {
 
 $sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
 $sql_search_count = 'SELECT COUNT(tinventory.id) FROM tinventory WHERE 1=1';
-$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE 
-						tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id` order by name';
+$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id';
 
 if ($search) {
 	
