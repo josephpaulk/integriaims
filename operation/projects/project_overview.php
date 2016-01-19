@@ -141,9 +141,9 @@ $table->width = '20%';
 $table->class = 'search-table';
 $table->style = array ();
 $table->data = array ();
-$table->data[0][0] = __('Search');
+$table->data[0][0] = '<b>'.__('Search').'</b>';
 $table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[2][0] = __('Group');
+$table->data[2][0] = '<b>'.__('Group').'</b>';
 $table->data[3][0] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
 $table->data[4][0] = print_submit_button (__('Search'), "search_btn", false, '', true);
 

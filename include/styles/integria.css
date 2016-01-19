@@ -74,6 +74,50 @@ h4 { font-size: 0.9em; }
 h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
 
+/*
+	Button in title
+*/
+
+#button-bar-title {
+	float: right;
+	margin-top: -3px;
+}
+
+#button-bar-title ul {
+	padding: 0px;
+}
+
+#button-bar-title li {
+	display: inline;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: none;
+    padding: 10px 7px 12px 7px;
+    background-color: #F7F7F7;
+}
+
+#button-bar-title li:first-child {
+	border-bottom-left-radius: 2px;
+	border-top-left-radius: 2px;
+}
+
+#button-bar-title li:last-child {
+	border-bottom-right-radius: 2px;
+	border-top-right-radius: 2px;
+}
+
+#button-bar-title li a {
+	text-decoration: none;
+}
+
+#button-bar-title li a img {
+	vertical-align: bottom;
+}
+
+/*
+	Finish Button in title
+*/
+
 #main h1, #rightbar h1 {
 	padding: 15px 0 3px 0px;
 	margin: 0 0 0 6px;
@@ -174,14 +218,14 @@ div.divhalf {
 
 div.listing-border {
 	margin-left: 5px;
-	width: 100%;
+	width: 102%;
 	border-radius: 4px;
 }
 
 div.listing-border table.listing {
 	margin: 0px;
 	border-radius: 4px;
-	border: 1px solid #505050;
+	border: 1px solid #dadada;
 }
 
 table.listing {
@@ -218,7 +262,7 @@ table.listing td {
 
 table.listing tbody.container_div td{
 	border-top: 0px;
-	border-bottom: 1px solid #505050;
+	border-bottom: 1px solid #dadada;
 }
 
 div.divhalf-left table.listing {
@@ -229,7 +273,7 @@ div.divhalf-right table.listing {
 	padding-left: 30px;
 }
 
-div.divhalf table.listing td {
+div.divhalf-border table.listing td {
 	border-left: 1px solid #dadada;
 	border-right: 1px solid #dadada;
 }
@@ -273,6 +317,10 @@ table.listing th img{
 
 table.listing tr td a img {
 	padding-left: 13px;
+}
+
+table.listing .center-graph {
+	text-align: center;
 }
 
 tr.yellow {
@@ -365,6 +413,7 @@ input[type="text"] {
 	height: 20px;
 	width: 96% !important;
     background-color: #F7F7F7;
+    color: #707070;
 }
 
 input[type="file"] {
@@ -980,7 +1029,6 @@ input.close {
 td {
 	padding-top: 1px;
 	padding-bottom: 1px;
-	#padding-right: 2px;
 }
 
 td.datos3 {
@@ -1932,6 +1980,10 @@ table.search-table tr:last-child td {
 	text-align: left;
 }
 
+table.search-table tr td.date_div input {
+	width: 89% !important;
+}
+
 td#table1-2-0{
 	padding-top: 10px;
 }
@@ -1985,46 +2037,6 @@ table.databox_color_without_line tr:last-child td {
 .incident_description_container {
 	max-width: 500px;
 	word-wrap:break-word;
-}
-
-#button-bar-title {
-	float: right;
-	margin-top: -3px;
-}
-
-#button-bar-title ul {
-	padding: 0px;
-}
-
-#button-bar-title li {
-	display: inline;
-    font-size: 12px;
-    text-decoration: none;
-    text-transform: none;
-    padding: 10px 7px 12px 7px;
-    background-color: #F7F7F7;
-}
-
-#button-bar-title li.button-bar-selected {
-	background-color: #ccc;
-}
-
-#button-bar-title li:first-child {
-	border-bottom-left-radius: 2px;
-	border-top-left-radius: 2px;
-}
-
-#button-bar-title li:last-child {
-	border-bottom-right-radius: 2px;
-	border-top-right-radius: 2px;
-}
-
-#button-bar-title li a {
-	text-decoration: none;
-}
-
-#button-bar-title li a img {
-	vertical-align: bottom;
 }
 
 #autorefresh {
@@ -2237,24 +2249,12 @@ td.mini_calendar table td.time {
 
 /* Details */
 
-table#details_table, .pie_frame, .graph_frame {
+table#details_table {
 	text-align: center; 
 	width: 99%;
 	margin: 10px auto;
 	padding: 5px;
 	background: #FFFFFF;
-}
-
-.pie_frame, .graph_frame {
-	width: auto;
-}
-
-.pie_frame table {
-	margin-left: 0;
-	margin-right: 0;
-	padding-left: 0;
-	padding-right: 0;
-	width: 100% !important;
 }
 
 table#details_table * {

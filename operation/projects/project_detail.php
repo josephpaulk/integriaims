@@ -146,7 +146,7 @@ if ($create_mode == 0){
 			echo "<ul>";
 				echo "<li>";
 					echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project'>" .
-						print_image ("images/chart_bar_dark.png", true, array("title" => __("Project report"))) . "</a>";
+						print_image ("images/chart_bar.png", true, array("title" => __("Project report"))) . "</a>";
 				echo "</li>";
 			echo "</ul>";
 		echo "</div>";
@@ -232,7 +232,6 @@ echo print_container('project_info', __('Project info'), $project_info, 'no');
 
 }
 
-
 if ($id_project) {
 
 // Project info
@@ -252,7 +251,7 @@ echo '<table class="search-table">';
 	echo '<tr>';
 		echo '<td colspan=2><b>'.__('Name').' </b></td>';
 	echo "</tr><tr>";
-		echo '<td colspan=2><input type="text" name="name" size=25 value="'.$name.'"></td>';
+		echo '<td colspan=2><input type="text" name="name" value="'.$name.'"></td>';
 	echo '</tr>';
 	
 	// Owner
@@ -286,8 +285,8 @@ echo '<table class="search-table">';
 		echo '<td><b>'.__('Start').' </b></td>';
 		echo '<td><b>'.__('End').' </b></td>';
 	echo '</tr><tr>';	
-		echo "<td>". print_input_text ('start_date', $start_date, '', 11, 20, true) ."</td>";
-		echo "<td>". print_input_text ('end_date', $end_date, '', 11, 20, true) ."</td>";
+		echo "<td class='date_div'>". print_input_text ('start_date', $start_date, '', 11, 20, true) ."</td>";
+		echo "<td class='date_div'>". print_input_text ('end_date', $end_date, '', 11, 20, true) ."</td>";
 	echo '</tr>';
 
 	// Description
@@ -406,15 +405,15 @@ echo "<div class='divresult'>";
 	$budget .= '<td>'.__('Project costs').'</td><td>';
 	
 	// Task distribution
-	$task_distribution = '<tr><td colspan="2"><div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div></td></tr>';
+	$task_distribution = '<tr><td colspan="2">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</td></tr>';
 	
 	// Workload distribution
-	$workload_distribution = '<tr><td colspan="2"><div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div></td></tr>';
+	$workload_distribution = '<tr><td colspan="2">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</td></tr>';
 	
 	// Project activity graph
 	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
 	if ($project_activity) {
-		$project_activity = '<tr><td colspan="2"><div class="graph_frame">' . $project_activity . '</div></td></tr>';
+		$project_activity = '<tr><td colspan="2" class = "center-graph">' . $project_activity . '</td></tr>';
 	}
 	
 	// Costs (client / total)
@@ -468,17 +467,16 @@ echo "<div class='divresult'>";
 	
 	//Print containers
 	echo print_container('project_labour', __('Labour'), $labour);
-	echo "<div class='divhalf divhalf-left'>";
+	echo "<div class='divhalf divhalf-left divhalf-border'>";
 		echo print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
 	echo "</div>";
-	echo "<div class='divhalf divhalf-right'>";
+	echo "<div class='divhalf divhalf-right divhalf-border'>";
 		echo print_container('project_task_distribution', __('Task distribution'), $task_distribution);
 	echo "</div>";
 	if ($project_activity) {
-		echo print_container('project_activity', __('Project activity'), $project_activity);
+		echo print_container('project_activity', __('Project activity'), $project_activity, 'closed');
 	}
 	echo print_container('project_budget', __('Budget'), $budget);
-
 }
 echo "</div>";
 echo "</form>";

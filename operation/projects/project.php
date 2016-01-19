@@ -110,13 +110,12 @@ else {
 }
 
 $table = new stdClass;
-$table->width = '20%';
 $table->class = 'search-table';
 $table->style = array ();
 $table->data = array ();
-$table->data[0][0] = __('Search');
+$table->data[0][0] = '<b>'.__('Search').'</b>';
 $table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[2][0] = __('Group');
+$table->data[2][0] = '<b>'.__('Group').'</b>';
 $table->data[3][0] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
 $table->data[4][0] = print_submit_button (__('Search'), "search_btn", false, '', true);
 
@@ -132,8 +131,6 @@ $table->width = '99%';
 $table->class = 'listing';
 $table->head = array ();
 $table->head[0] = __('Name');
-// PG: Abbreviation for "Project group"
-//$table->head[1] = __ ('PG');
 $table->head[1] = __('Manager');
 $table->head[2] = __('Completion');
 $table->head[3] = __('Updated');
@@ -163,18 +160,6 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 	
 	// Project name
 	$data[0] = '<a href="index.php?sec=projects&sec2=operation/projects/project_detail&id_project='.$project['id'].'">'.$project['name'].'</a>';
-	/*
-	$data[1] = '';
-	// Project group
-	if ($project['id_project_group']) {
-		$icon = get_db_value ('icon', 'tproject_group', 'id', $project['id_project_group']);
-		$name = get_db_value ('name', 'tproject_group', 'id', $project['id_project_group']);
-		
-		$data[1] = '<a href=index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group='.$project["id_project_group"].'">';
-		$data[1] .= '<img src="images/project_groups_small/'.$icon.'" title="'.$name.'">';
-		$data[1] .= '</a>';
-	}
-	*/
 	$data[1] = $project["id_owner"];
 
 	if ($project["start"] == $project["end"]) {
