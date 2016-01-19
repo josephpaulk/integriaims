@@ -28,7 +28,9 @@ if (!$section_permission["write"]) {
 	no_permission();
 }
 
-echo "<h1>".__('Project group management')."</h1>";
+
+echo '<h2>'.__('Projects').'</h2>';
+echo '<h4>'.__('Project group management').'</h4>';
 
 $id = (int) get_parameter ('id');
 $new_group = (bool) get_parameter ('new_group');
@@ -82,7 +84,7 @@ if ($delete_group) {
 }
 
 // FORM (Update / Create)
-if ($id || $new_group) {
+
 	if ($new_group) {
 		$name = '';
 		$icon = '';
@@ -94,34 +96,36 @@ if ($id || $new_group) {
 	}
 	
 	$table->width = '99%';
-	$table->class = 'search-table-button';
+	$table->class = 'search-table';
 	$table->data = array ();
 	
-	$table->data[0][0] = print_input_text ('name', $name, '', 60, 100, true,
-		__('Project group name'));
-
+	$table->data[0][0] = '<b>'.__('Project group name').'</b>';
+	$table->data[1][0] = print_input_text ('name', $name, '', 60, 100, true);
+	
+	$table->data[2][0] = '<b>'.__('Icon').'</b>';
 	$icons = list_files ('images/project_groups_small/', "png", 1, 0, 'svn');
-	$table->data[0][1] = print_select ($icons, "icon", $icon, '', '', 0, true,
-		false, false, __('Icon'));
-		
-		
+	$table->data[3][0] = print_select ($icons, "icon", $icon, '', '', 0, true, false, false);
+	$table->data[2][0] .= project_get_icon ($id, true);
+
 	if ($id) {
-		$button = print_submit_button (__('Update'), "enviar", false, 'class="sub upd"', true);
+		$button = print_submit_button (__('Update'), "enviar", false, '', true);
 		$button .= print_input_hidden ('update_group', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
+		$return_a = '<a href="index.php?sec=projects&sec2=operation/projects/project_group_detail" alt="'.__('Return').'">'.__('Return').'</a>';
+		$table->data[4][0] = $button;
+		$table->data[5][0] = $return_a;
 	} else {
-		$button .= print_submit_button (__('Create'), "enviar", false, 'class="sub create"', true);
+		$button .= print_submit_button (__('Create'), "enviar", false, '', true);
 		$button .= print_input_hidden ('insert_group', 1, true);
+		$table->data[4][0] = $button;
 	}
 
-	$table->data[0][2] = $button;
-	// $table->data['button'][0] = $button;
-	// $table->colspan['button'][0] = 2;
 	
-	echo '<form id="form-project_group_detail" method="post">';
-	print_table ($table);
-	echo "</form>";
-} else {
+	echo '<div class = "divform">';
+		echo '<form id="form-project_group_detail" method="post">';
+			print_table ($table);
+		echo "</form>";
+	echo '</div>';
 	$groups = get_db_all_rows_in_table ('tproject_group', 'name');
 	
 	$table->width = "99%";
@@ -149,26 +153,32 @@ if ($id || $new_group) {
 			$data[1] = '<a href="index.php?sec=projects&
 						sec2=operation/projects/project_group_detail&
 						delete_group=1&id='.$group["id"].'"
-						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						onClick="if (!confirm(\''.__('Are you sure delete group project?').'\'))
 						return false;">
-						<img src="images/cross.png" /></a>';
+						<img src="images/icons/icono_papelera.png" /></a>';
 			array_push ($table->data, $data);
 		}
-		print_table ($table);
+		echo '<div class="divresult">';
+			print_table ($table);
+		echo '</div>';
 	}
-	
-	echo '<div style="width:'.$table->width.'; text-align: right;">';
-	echo '<form method="post">';
-	print_submit_button (__('Create group'), "crt", false, 'class="sub next"');
-	print_input_hidden ('new_group', 1);
-	echo "</form></div>";
-} // end of list
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
+
+// Change icon
+$(document).ready (function () {
+	$("#icon").change (function () {
+		data = this.value;
+		$("#product-icon").fadeOut ('normal', function () {
+			$("#product-icon").attr ("src", "images/project_groups_small/"+data).fadeIn ();
+		}).change();
+	})
+});
 
 // Form validation
 trim_element_on_submit('#text-name');

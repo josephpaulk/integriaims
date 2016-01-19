@@ -270,7 +270,7 @@ $(document).ready (function () {
 		data = this.value;
 		$("#product-icon").fadeOut ('normal', function () {
 			$("#product-icon").attr ("src", "images/products/"+data).fadeIn ();
-		});
+		}).change();
 	})
 });
 

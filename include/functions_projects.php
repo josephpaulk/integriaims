@@ -336,4 +336,22 @@ function projects_get_cost_by_profile ($id_project, $have_cost=false) {
 	return $total_per_profile;
 }
 
+ function project_get_icon ($id_project, $return = false) {
+	$output = '';
+	
+	$icon = (string) get_db_value ('icon', 'tproject_group', 'id', $id_project);
+
+	$output .= '<img id="product-icon"';
+	if ($icon != '') {
+		$output .= 'src="images/project_groups_small/'.$icon.'"';
+	} else {
+		$output .= 'src="images/project_groups_small/applications-accessories.png"';
+	}
+	$output .= ' />';
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
+
 ?>

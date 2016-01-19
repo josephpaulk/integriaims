@@ -1921,6 +1921,12 @@ table.search-table td, th{
 	line-height: 30px;
 }
 
+table.search-table td img {
+	padding-left: 5px;
+    margin-bottom: 5px;
+    vertical-align: middle;
+}
+
 table.search-table tr:last-child td {
 	padding-top: 1px;
 	text-align: left;
@@ -1933,7 +1939,7 @@ td#table1-2-0{
 div.divform table.search-table input[type="submit"]{
 	border-radius: 3px;
     font-size: 1.20em;
-    font-weight: bold;
+	padding-left: 0px;
     color: white;
     background-color: #FF9000;
     border-color: #FF9000;
@@ -2424,10 +2430,6 @@ div.pipeline-list-title {
 
 div.pipeline-list-subtitle {
 	text-align: right;
-}
-
-img.pipeline-product-icon {
-	margin-left: 10px;
 }
 
 div.pipeline-list-details {
@@ -3291,45 +3293,3 @@ img {
 
 	cursor: pointer;
 }
-/**********NEW STYLES********/
-
-/*TICKET FIELDS*/
-#table3-1 td{
-	text-align: right;
-}
-#table3-1-0{
-	text-align: left !important;
-}
-#table3-1-1 select{
-	float: right;
-}
-/*PROJECT GROUP MANAGEMENT*/
-
-#form-project_group_detail td{
-	text-align: left;
-}
-#form-project_group_detail #submit-enviar{
-	margin-top: 20px;
-}
-/*CREATE A NEW CATEGORY*/
-#categoryform td{
-	text-align: left;
-}
-/*TICKET SEARCH*/
-#incident-search-content h5{
-	margin-left: 20px;
-}
-/*CONTACT MANAGEMENT*/
-#contact_search_form #submit-search_btn, #contact_search_form #button-{
-	margin-top:20px;
-}
-/*LEAD DETAIL*/
-#lead-search-content h5{
-	margin-left: 20px;
-}
-/*USER MANAGEMENT*/
-#table-user_search #submit-search{
-	margin-top:20px;
-}
-
-/* End comments */
