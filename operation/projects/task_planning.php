@@ -298,9 +298,33 @@ echo "<table class='search-table'>";
 	echo "</td></tr>";
 echo "</table>";
 echo "</form>";
+echo "<table class='search-table'>";
+	echo "<tr><td>";
+		print_button (__('Update'), 'update', false, 'document.forms[\'form-tasks\'].submit()','class="submit_update"');
+	echo "</td></tr>";
+echo "</table>";
 echo "</div>";
 
 echo "<div class='divresult'>";
+echo "<table class = 'listing'><tr>";
+	echo "<th>".__("Verified").":<span style='background-color:#fdb6b4;'>&nbsp;".$verified."&nbsp;</span></th>";
+	echo "<th>".__("Completed").":<span style='background-color:#d2e7a4;'>&nbsp;".$completed."&nbsp;</span></th>";
+	echo "<th>".__("In process").":<span style='background-color:#fceaa2;'>&nbsp;".$in_process."&nbsp;</span></th>";
+	echo "<th>".__("Pending").":<span style='background-color:#b8e0fd;'>&nbsp;".$pending."&nbsp;</span></th>";
+echo "</tr></table>";
+
+$content_general .= "<tr><td>";
+		$content = '<tr><td colspan="2">'.graph_workunit_project_user_single(180, 150, $id_project).'</td></tr>';
+	$content_general .=	print_container('planning_hours_worked', __("Hours worked"), $content, 'no', true, '10px');
+$content_general .= "</td><td>";
+		$content = '<tr><td colspan="2">'. graph_workunit_project_task_status(180, 150, $id_project).'</td></tr>';
+	$content_general .= print_container('planning_hours_summary_task', __("Summary task status"), $content, 'no', true, '10px');
+$content_general .= "</td><td>";
+		$content = '<tr><td colspan="2">'. graph_project_task_per_user(180, 150, $id_project).'</td></tr>';
+	$content_general .= print_container('planning_hours_task_user', __("Task per user"), $content, 'no', true, '10px');
+$content_general .= "</td></tr>";
+print_container('task_information', __("Task Information"), $content_general, 'closed', false, '10px', '', '', 2);
+
 //Starting main form for this view
 echo "<form id='form-tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 print_input_hidden('update', 'update');
@@ -308,81 +332,23 @@ print_input_hidden('update', 'update');
 echo "<table class='listing'>";
 	echo "<thead>";
 		echo "<tr>";
-			echo "<th class=header style='text-align:center;'>".__('Task')."</th>";
-			echo "<th class=header style='text-align:center;'>".__('Owner')."</th>";
-			echo "<th class=header style='text-align:center;'>".__('Start date')."</th>";
-			echo "<th class=header style='text-align:center;'>".__('End date')."</th>";
-			echo "<th class=header style='text-align:center;'>".__('Hours worked')."</th>";
-			echo "<th class=header style='text-align:center;'>".__('Delay (days)')."</th>";
-			echo "<th class=header style='text-align:center;'>".__('Status')."</th>";
+			echo "<th>".__('Task')."</th>";
+			echo "<th>".__('Owner')."</th>";
+			echo "<th>".__('Start date')."</th>";
+			echo "<th>".__('End date')."</th>";
+			echo "<th>".__('Hours worked')."</th>";
+			echo "<th>".__('Delay (days)')."</th>";
+			echo "<th>".__('Status')."</th>";
 			// Last column (Del)
-			echo "<th class=header style='text-align:center;'>".__('Op.')."</th>";
+			echo "<th>".__('Op.')."</th>";
 		echo "</tr>";
 	echo "</thead>";
-	echo "<tfoot>";
-		echo "<tr>";
-			echo "<td colspan='8'>";
-				print_button (__('Update'), 'update', false, 'document.forms[\'form-tasks\'].submit()','class="sub upd"');
-			echo "</td>";
-		echo "</tr>";
-	echo "</tfoot>";
 	//Print table content
 	echo "<tbody>";
 		show_task_tree ($table, $id_project, 0, 0, $users);
 	echo "</tbody>";
 echo "</table>";
 echo "</form>";
-echo "</div>";
-
-echo "<div class='divresult'>";
-echo "<table>";
-	echo "<tr><td>";
-		echo "<table>";
-			echo "<tr>";
-				echo "<td>";
-					echo __("Verified").":";
-				echo "</td><td>";
-					echo "<span style='background-color:#B6D7A8;border: 2px solid grey;'>";
-						echo "&nbsp;".$verified."&nbsp;";
-					echo "</span>";
-				echo "</td>";
-			echo "</tr><tr>";
-				echo "<td>";
-					echo __("Completed").":";
-				echo "</td><td>";
-					echo "<span style='background-color:#A4BCFA;border: 2px solid grey;'>";
-						echo "&nbsp;".$completed."&nbsp;";
-					echo "</span>";
-				echo "</td>";
-			echo "</tr><tr>";
-				echo "<td>";
-					echo __("In process").":";
-				echo "</td><td>";
-					echo "<span style='background-color:#FFE599;border: 2px solid grey;'>";
-						echo "&nbsp;".$in_process."&nbsp;";
-					echo "</span>";
-				echo "</td>";
-			echo "</tr><tr>";
-				echo "<td>";
-					echo __("Pending").":";
-				echo "</td><td>";
-					echo "<span style='background-color:#FFFFFF;border: 2px solid grey;'>";
-						echo "&nbsp;".$pending."&nbsp;";
-					echo "</span>";
-				echo "</td>";
-			echo "</tr>";
-		echo "</table>";
-	echo "</td><td>";
-		$content = '<div class="pie_frame">' . graph_workunit_project_user_single(180, 150, $id_project) . '</div>';
-		print_container('planning_hours_worked', __("Hours worked"), $content, 'no', false, '10px');
-	echo "</td><td>";
-		$content = '<div class="pie_frame">' . graph_workunit_project_task_status(180, 150, $id_project) . '</div>';
-		print_container('planning_hours_summary_task', __("Summary task status"), $content, 'no', false, '10px');
-	echo "</td><td>";
-		$content = '<div class="pie_frame">' . graph_project_task_per_user(180, 150, $id_project) . '</div>';
-		print_container('planning_hours_task_user', __("Task per user"), $content, 'no', false, '10px');
-	echo "</td></tr>";
-echo "</table>";
 echo "</div>";
 
 function show_task_row ($table, $id_project, $task, $level, $users) {
@@ -520,13 +486,13 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) 
 			//Check completion for tr background color
 			
 			if ($task['completion'] < 40) {
-				$color = "#FFFFFF";
+				$color = "#b8e0fd";
 			} else if ($task['completion'] < 90) {
-				$color = "#FFE599";
+				$color = "#fceaa2";
 			} else if ($task['completion'] < 100) {
-				$color = "#A4BCFA";
+				$color = "#d2e7a4";
 			} else if ($task['completion'] == 100) {
-				$color = "#B6D7A8";
+				$color = "#fdb6b4";
 			}
 			
 			echo "<tr id=".$task['id']." bgcolor='$color'>";
@@ -602,17 +568,17 @@ $(document).ready (function () {
 	$('select[name^="status"]').change(function() {
 		name = $(this).attr('name');
 		id = name.substr(7)
-		color="#FFFFFF";
+		color="#b8e0fd";
 		completion = $(this).val();
 		
 		if (completion < 40) {
-			color = "#FFFFFF";
+			color = "#b8e0fd";
 		} else if (completion < 90) {
-			color = "#FFE599";
+			color = "#fceaa2";
 		} else if (completion < 100) {
-			color = "#A4BCFA";
+			color = "#d2e7a4";
 		} else if (completion == 100) {
-			color = "#B6D7A8";
+			color = "#fdb6b4";
 		}
 		
 		$('#'+id).attr('bgcolor', color);

@@ -149,7 +149,12 @@ $table->data[4][0] = print_submit_button (__('Search'), "search_btn", false, '',
 
 echo '<div class="divform">';
 	echo '<form method="post">';
-	print_table ($table);
+		print_table ($table);
+	echo '</form>';
+	echo '<form method="post">';
+		echo '<table class="search-table"><tr><td>';
+			echo print_submit_button (__('Create project'));
+		echo '</td></tr></table>';
 	echo '</form>';
 echo '</div>';
 
@@ -172,7 +177,7 @@ $project_groups[] = $nogroup;
 }
 echo "<div class='divresult'>";
 foreach($project_groups as $group) {
-	echo "<table width='99%' class='listing'>";
+	$info_general = "";
 	// Get projects info
 	$where_clause2 = "";
 	if ($search_text != "") {
@@ -196,121 +201,87 @@ foreach($project_groups as $group) {
 	$projects = $aux_projects;
 	
 	$nprojects = count($projects);
-		
-	echo "<tr>";
-	// Project group name
-	echo "<th colspan='7'><img src='images/icons/icono_camara.png' title='Prueba'>";
-	echo "<span><b><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>";
-	echo "&nbsp;"."   |   "."&nbsp;".__('Nº Projects').": ".$nprojects."</b></span>";
-	echo "<a href='javascript:'><img id='btn_".$group["id"]."' class='btn_tree' src='images/arrow_right.png' style='float:right;'></a>";
-	echo "</th>";
-	echo "<tr class='prj_".$group["id"]."' style='display:none'>";
-		echo "<td class='no_border size_min'></td>";
-		echo "<td class='no_border'><b>".__('Name')."</b></td>";
-		echo "<td class='no_border'><b>".__('Manager')."</b></td>";
-		echo "<td class='no_border'><b>".__('Completion')."</b></td>";
-		echo "<td class='no_border'><b>".__('Last update')."</b></td>";
-		if ($view_disabled == 0) {
-			echo "<td class='no_border'><b>".__('Archive')."</b></td>";
-		} elseif ($project['disabled'] && $project_permission['manage']) {
-			echo "<td class='no_border'><b>".__('Delete/Unarchive')."</b></td>";
-		}
-		echo "<td class='no_border size_max'></td>";
-	echo "</tr>";	
 
-	// Projects inside
-	foreach($projects as $project) {
-	echo "<tr class='prj_".$group["id"]."' style='display:none;'>";
-		echo "<td class='no_border size_min'></td>";
-		// Project name
-		echo "<td><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$project["id"]."'>".$project["name"]."</a></td>";
-	
-		// Manager
-		echo "<td>".$project['id_owner']."</a></td>";
-		
-		// Completion
-		if ($project["start"] == $project["end"]) {
-			echo '<td>'.__('Unlimited');
-		} else {
-			$completion = format_numeric (calculate_project_progress ($project['id']));
-			echo "<td>";
-			echo progress_bar($completion, 90, 20);
-		}
-		echo "</td>";
-		
-		// Last update time
-		$sql = sprintf ('SELECT tworkunit.timestamp FROM ttask, tworkunit_task, tworkunit
-						 WHERE ttask.id_project = %d AND ttask.id = tworkunit_task.id_task
-						 AND tworkunit_task.id_workunit = tworkunit.id
-						 ORDER BY tworkunit.timestamp DESC LIMIT 1', $project['id']);
-		$timestamp = get_db_sql ($sql);
-		$timestamp = explode(" ", $timestamp);
-		if ($timestamp[0] != "")
-			echo "<td><span style='font-size: 10px'>".$timestamp[0]."</span></td>";
-		else
-			echo "<td>".__('Never')."</td>";
-		
-		// Disable or delete
-		$project_permission = get_project_access ($config['id_user'], $project['id']);
-	
-		if ($project['id'] != -1 && $project_permission['manage']) {
+		$info_general .= "<tr>";
+			$info_general .= "<td class='no_border size_min'></td>";
+			$info_general .= "<td><b>".__('Name')."</b></td>";
+			$info_general .= "<td><b>".__('Manager')."</b></td>";
+			$info_general .= "<td><b>".__('Completion')."</b></td>";
+			$info_general .= "<td><b>".__('Last update')."</b></td>";
 			if ($view_disabled == 0) {
-				echo '<td><a href="index.php?sec=projects&sec2=operation/projects/project_overview&disable_project=1&id='.$project['id'].'" 
-					onClick="if (!confirm(\''.__('Are you sure project archive?').'\')) return false;"><img src="images/icons/icono_archivar.png" /></a></td>';
+				$info_general .= "<td><b>".__('Archive')."</b></td>";
 			} elseif ($project['disabled'] && $project_permission['manage']) {
-				echo '<td><a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-					onClick="if (!confirm(\''.__('Are you sure delete project?').'\')) return false;">
-					<img src="images/cross.png" /></a></td>';
-				echo '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
-					<img src="images/unarchive.png" /></a></td>';
+				$info_general .= "<td><b>".__('Delete/Unarchive')."</b></td>";
 			}
+			$info_general .= "<td class='no_border size_max'></td>";
+		$info_general .= "</tr>";	
+
+		// Projects inside
+		foreach($projects as $project) {
+		$info_general .= "<tr>";
+			$info_general .= "<td class='no_border size_min'></td>";
+			// Project name
+			$info_general .= "<td><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$project["id"]."'>".$project["name"]."</a></td>";
+		
+			// Manager
+			$info_general .= "<td>".$project['id_owner']."</a></td>";
+			
+			// Completion
+			if ($project["start"] == $project["end"]) {
+				$info_general .= '<td>'.__('Unlimited');
+			} else {
+				$completion = format_numeric (calculate_project_progress ($project['id']));
+				$info_general .= "<td>";
+				$info_general .= progress_bar($completion, 90, 20);
+			}
+			$info_general .= "</td>";
+			
+			// Last update time
+			$sql = sprintf ('SELECT tworkunit.timestamp FROM ttask, tworkunit_task, tworkunit
+							 WHERE ttask.id_project = %d AND ttask.id = tworkunit_task.id_task
+							 AND tworkunit_task.id_workunit = tworkunit.id
+							 ORDER BY tworkunit.timestamp DESC LIMIT 1', $project['id']);
+			$timestamp = get_db_sql ($sql);
+			$timestamp = explode(" ", $timestamp);
+			if ($timestamp[0] != "")
+				$info_general .= "<td><span style='font-size: 10px'>".$timestamp[0]."</span></td>";
+			else
+				$info_general .= "<td>".__('Never')."</td>";
+			
+			// Disable or delete
+			$project_permission = get_project_access ($config['id_user'], $project['id']);
+		
+			if ($project['id'] != -1 && $project_permission['manage']) {
+				if ($view_disabled == 0) {
+					$info_general .= '<td><a href="index.php?sec=projects&sec2=operation/projects/project_overview&disable_project=1&id='.$project['id'].'" 
+						onClick="if (!confirm(\''.__('Are you sure project archive?').'\')) return false;"><img src="images/icons/icono_archivar.png" /></a></td>';
+				} elseif ($project['disabled'] && $project_permission['manage']) {
+					$info_general .= '<td><a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
+						onClick="if (!confirm(\''.__('Are you sure delete project?').'\')) return false;">
+						<img src="images/cross.png" /></a></td>';
+					$info_general .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
+						<img src="images/unarchive.png" /></a></td>';
+				}
+			}
+			$info_general .= "<td class='no_border'></td>";
+		$info_general .= "</td></tr>";
+			
 		}
-		echo "<td class='no_border size_max'></td>";
-	}
-	if($nprojects == 0) {
-		echo "<tr class='prj_".$group["id"]."' style='display:none'>";
-		// Project name
-		echo "<td class='no_border size_min'></td>";
-		echo "<td colspan='5'>";
-			echo "&nbsp;".__('empty')."</td>";
-		echo "</td>";
-		echo "<td class='no_border size_max'></td>";	
-		echo "</tr>";
-	}
-	echo "</table>";
+		if($nprojects == 0) {
+			$info_general .= "<tr>";
+			// Project name
+			$info_general .= "<td class='no_border size_min'></td>";
+			$info_general .= "<td colspan='5'>";
+			$info_general .= "&nbsp;".__('empty')."</td>";
+			$info_general .= "</td>";
+			$info_general .= "<td class='no_border'></td>";	
+			$info_general .= "</tr>";
+		}
+	$title = "<img src='images/icons/icono_camara.png' title='Prueba' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
+	print_container('info_projects_'.$group["id"], $title, $info_general, 'closed', false, '10px', '', '', 6, 'no_border_bottom'); 
 }
 echo "</div>";
 ?>
-
-<script type="text/javascript">
-
-$('.btn_tree').click(function() {
-	id = $(this).attr('id');
-	id = id.split('_');
-	id = id[1];
-	
-	if($('.prj_'+id).css('display') == 'none') {
-		show_branches(id);
-		if($('#nproj_'+id).html() == 0) {
-			hidden_branches(id);
-		}
-	}
-	else {
-		hidden_branches(id);
-	}
-	
-	function show_branches(id) {
-		$('.prj_'+id).fadeIn('slow');
-		$('#btn_'+id).attr('src', 'images/arrow_down.png');
-	}
-	
-	function hidden_branches(id) {
-		$('.prj_'+id).fadeOut('fast');
-		$('#btn_'+id).attr('src', 'images/arrow_right.png');
-	}
-});
-
-</script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">
 	trim_element_on_submit("#text-search_text");

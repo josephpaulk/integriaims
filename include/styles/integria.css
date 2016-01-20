@@ -247,8 +247,11 @@ table.listing th {
 table.listing th span {
 	padding-left: 20px;
 }
+table.listing tr.clickable {
+	cursor: pointer;
+}
 
-table.listing th.clickable img{
+table.listing tr.clickable img{
 	float: right;
 }
 
@@ -278,17 +281,37 @@ div.divhalf-border table.listing td {
 	border-right: 1px solid #dadada;
 }
 
-table.listing tbody#project_involved_people_div td {
+div.divpagecenter {
+	clear:both;
+	width: 97%;
+}
+
+table.listing tbody#project_involved_people_div td,
+table.listing tbody#project_involved_people_report_div td {
 	border-bottom: 0px;
 	background-color: #F7F7F7;	
 }
 
-table.listing tbody#project_activity_div td	{
+table.listing tbody#project_activity_div td,
+table.listing tbody#project_activity_report_div td{
 	border-left: 1px solid #dadada;
 	border-right: 1px solid #dadada;
 }
 
-table.listing tbody#project_involved_people_div td img {
+table.listing tbody#task_information_div td:first-child{
+	border-left: 1px solid #dadada;
+}
+
+table.listing tbody#task_information_div td:last-child{
+	border-right: 1px solid #dadada;
+}
+
+table.listing tbody#task_information_div td table.listing tr td{
+	border: none;
+}
+
+table.listing tbody#project_involved_people_div td img,
+table.listing tbody#project_involved_people_report_div td img {
 	width: 35px;
     height: 35px;
     padding: 10px;
@@ -300,14 +323,15 @@ table.listing tbody#project_involved_people_div td img {
 }
 
 table.listing td.no_border{
-	border-top: 0px;
+	border-bottom: 0px !important;
 }
+
+table.no_border_bottom tr:last-child td{
+	border-bottom: 0px !important;
+}
+
 
 table.listing td.size_min{
-	padding: 6px;
-}
-
-table.listing td.size_max{
 	padding: 15px;
 }
 
@@ -319,8 +343,51 @@ table.listing tr td a img {
 	padding-left: 13px;
 }
 
+table.listing tr th a {
+	padding-left: 13px;
+}
+table.listing tr th.img_arrow {
+	padding-left: 0px;
+}
+
 table.listing .center-graph {
 	text-align: center;
+}
+
+table.listing tr th span {
+	padding: 5px 15px 5px 15px;
+    margin-left: 20px;
+}
+
+div.divpagecenter table.listing tr td{
+	border-bottom: 0px;
+}
+
+div.divpagecenter div.divborderinside {
+	border: 1px solid #dadada;
+	border-radius: 4px;
+	padding: 10px 20px 10px 20px;
+	margin: 10px 30px 10px 30px;
+}
+
+div.divpagecenter table.listing tr td table.listing tr td{
+	border-bottom: 1px solid #dadada;
+}
+
+div.divpagecenter table.listing tr td table.listing tr:first-child{
+	background-color: #F7F7F7;
+}
+
+div.divform table.listing{
+	border:1px solid #DADADA;
+}
+
+div.divform table.listing tbody.container_div tr td {
+    border-bottom: 0px;
+}
+
+div.divform table.listing tbody.container_div tr:nth-child(even) td {
+    padding-left: 40px;
 }
 
 tr.yellow {
@@ -1988,7 +2055,8 @@ td#table1-2-0{
 	padding-top: 10px;
 }
 
-div.divform table.search-table input[type="submit"]{
+div.divform table.search-table input[type="submit"],
+div.divform table.search-table input.submit_update{
 	border-radius: 3px;
     font-size: 1.20em;
 	padding-left: 0px;
@@ -2000,6 +2068,11 @@ div.divform table.search-table input[type="submit"]{
     width: 99%;
     font-weight: 300;
     height: 50px;
+    cursor: pointer;
+}
+
+div.divform table.search-table input.submit_update{
+	margin-top: 12px;
 }
 
 div.incident_container, .integria_form, table.search-table-white {

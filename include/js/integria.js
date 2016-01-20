@@ -465,21 +465,21 @@ $(document).ready (function () {
 
 $(document).ready(function() {
 	// Containers open/close logic
-	$('th.clickable').click(function() {
-		var arrow = $('#' + $(this).attr('id') + ' img').attr('src');
+	$('tr.clickable').click(function() {
+		var arrow = $('#' + $(this).attr('id') + ' th.img_arrow' + ' img').attr('src');
 		var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');
 		var new_arrow = '';
-		
+		console.log(arrow);
 		if($('#' + $(this).attr('id') + '_div').css('display') == 'none') {
 			new_arrow = arrow.replace(/_down/gi, "_right");
-			$('#' + $(this).attr('id') + ' img').attr('class', 'arrow_right');
+			$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('class', 'arrow_right');
 		}
 		else {
 			new_arrow = arrow.replace(/_right/gi, "_down");
-			$('#' + $(this).attr('id') + ' img').attr('class', 'arrow_down');
+			$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('class', 'arrow_down');
 		}
 		
-		$('#' + $(this).attr('id') + ' img').attr('src', new_arrow);
+		$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('src', new_arrow);
 	});
 });
 

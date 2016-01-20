@@ -96,33 +96,33 @@ echo "</h4>";
 // Project info
 
 	//Name
-	$project_info .= '<tr><td colspan="2"><b>'.__('Name').' </b></td></tr>';
+	$project_info .= '<tr><td colspan="2"><b>'.__('Name').':</b></td></tr>';
 	$project_info .= '<tr><td colspan="2">'.$name.'</td></tr>';
 
 	//Only show project progress if there is a project created
 	if ($id_project) {
-		$project_info .= '<tr><td colspan="2"><b>'.__('Current progress').' </b></td></tr>';
+		$project_info .= '<tr><td colspan="2"><b>'.__('Current progress').':</b></td></tr>';
 		$completion =  format_numeric(calculate_project_progress ($id_project));
 		$project_info .= '<tr><td colspan="2">'.progress_bar($completion, 90, 20, $graph_ttl).'</td></tr>';
 	}
 
 	//start and end date
-	$project_info .= '<tr><td><b>'.__('Start').'</b></td>';
-	$project_info .= '<td><b>'.__('End').'</b></td></tr>';
-	$project_info .= '<tr><td><b>'.$start_date.'</b></td>';
-	$project_info .= '<td><b>'.$end_date.'</b></td></tr>';
+	$project_info .= '<tr><td colspan="2"><b>'.__('Start').':</b></td></tr>';
+	$project_info .= '<tr><td colspan="2">'.$start_date.'</td></tr>';
+	$project_info .= '<tr><td colspan="2"><b>'.__('End').':</b></td></tr>';
+	$project_info .= '<tr><td colspan="2">'.$end_date.'</td></tr>';
 
 	//owner
 	$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-	$project_info .= '<tr><td colspan="2"><b>'.__('Project manager').'</b></td></tr>';
+	$project_info .= '<tr><td colspan="2"><b>'.__('Project manager').':</b></td></tr>';
 	$project_info .= '<tr><td colspan="2">'.get_db_value ("nombre_real", "tusuario", "id_usuario", $owner).'</td></tr>';
 
 	//Project Group
-	$project_info .= '<tr><td colspan="2"><b>'.__('Project group').'</b></td></tr>';
+	$project_info .= '<tr><td colspan="2"><b>'.__('Project group').':</b></td></tr>';
 	$project_info .= '<tr><td colspan="2">'.get_db_value ("name", "tproject_group", "id", $id_project_group).'</td></tr>';
 
 	// Description
-	$project_info .= '<tr><td colspan="2"><b>'.__("Description").'</b></td></tr>';
+	$project_info .= '<tr><td colspan="2"><b>'.__("Description").':</b></td></tr>';
 	$project_info .= '<tr><td colspan="2">'.$description.'</td></tr>';
 
 	// People involved
@@ -398,6 +398,7 @@ if ($id_project) {
 			$table_task->width = '100%';
 			$table_task->class = 'listing';
 			$table_task->data = array();
+			$table_task->head = array();
 			
 			$row = array();
 			$row['name'] = __('Task');
@@ -507,11 +508,11 @@ if ($id_project) {
 					}
 					$table_wu->data[] = $row;
 				}
-				$tasks_report .= '<tr><td>'.print_table($table_task, true).'</td></tr>';
-				$tasks_report .= '<tr><td>'.print_table($table_wu, true).'</td></tr>';
+				$tasks_report .= '<tr><td colspan = "2"><div class = "divborderinside">'.print_table($table_task, true);
+				$tasks_report .= print_table($table_wu, true).'</div></td></tr>';
 			}
 			else {
-				$tasks_report .= '<tr><td>'.print_table($table_task, true).'</td></tr>';
+				$tasks_report .= '<tr><td colspan = "2"><div class = "divborderinside">'.print_table($table_task, true).'</div></td></tr>';
 			}
 		}
 	}
@@ -536,7 +537,7 @@ if ($id_project) {
 			echo print_container('project_activity_report', __('Project activity'), $project_activity, 'no', true, true, "container_simple_title", "container_simple_div");
 		}
 	echo '</div>';
-	echo '<div class="hjdkjsa">';
+	echo '<div class="divpagecenter">';
 		echo print_container('project_tasks_report', __('Project tasks'), $tasks_report, 'no', true, true, "container_simple_title", "container_simple_div");
 	echo '</div>';
 }

@@ -1215,7 +1215,7 @@ function integria_help ($help_id, $return = false) {
 }
 
 
-function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '') {
+function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '') {
 	$container_div_style = '';
 	$container_style = '';
 	$h2_class_extra = ' clickable';
@@ -1224,10 +1224,10 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 
 	switch($open) {
 		case 'open':
-			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</th>';
+			$arrow = print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</th>';
 			break;
 		case 'closed':
-			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</th>';
+			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</th>';
 			$container_div_style = 'display: none;';
 			break;
 		case 'no':
@@ -1247,9 +1247,9 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	$container .= '</div>'; // container
 	*/
 	
-	$container = '<table class="listing"><thead><tr>';
-	$container .= '<th>' . $title . '</th>';
-	$container .= '<th id="' . $id . '" class="' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">'. $arrow;
+	$container = '<table class="listing '.$class_extra.'"><thead><tr id="' . $id . '" class="' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">';
+	$container .= '<th colspan = '.$numcolspan.'>' . $title . '</th>';
+	$container .= '<th class = "img_arrow">'. $arrow;
 	$container .= '</tr></thead>';
 	$container .= '<tbody id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
 	$container .= $content;
