@@ -7,6 +7,7 @@
  * branches_json json string with a boolean array of branches
  * id_father int use in js and ajax php, its useful when you have a two subtrees with same agent for diferent each one
  */
+/*
 function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_search) {
 	
 	// Content div
@@ -111,6 +112,56 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 					break;
 			}
 
+			div.attr('hiddenDiv',0);
+			div.slideDown();
+		}
+	}
+}
+*/
+function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_search) {
+	
+	var div = $('#tree_div'+id_father+'_task_'+div_id);
+	// Tree image
+	var image = $('#tree_image'+id_father+'_task_'+div_id);
+	// Content div visibility
+	var hiddenDiv = div.attr('hiddenDiv');
+	// Content div load status
+	var loadDiv = div.attr('loadDiv');
+
+	//If has no data
+	if (loadDiv == -1)
+		return;
+	
+	if (loadDiv == 0) {
+		div.attr('loadDiv', 2);
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: "page=operation/projects/task&print_subtree=1&id_project=" + id_project
+			+ "&id_item=" + div_id + "&branches_json=" + branches_json + "&sql_search=" + sql_search,
+			success: function(msg) {
+				var icon_path = 'images';
+				if (msg.length != 0) {
+					div.html(msg);
+					div.attr('hiddendiv',1);
+					div.attr('loadDiv', 1);
+				} else {
+					div.html("");
+					div.attr('hiddendiv', 1);
+					div.attr('loadDiv', -1);
+				}
+			}
+		});
+	}
+	else {
+		var icon_path = 'images';
+		if (hiddenDiv == 0) {
+			div.slideUp()
+			div.attr('hiddenDiv',1);
+			image.attr('src',icon_path+'/arrow_right.png');
+		}
+		else {
+			image.attr('src',icon_path+'/arrow_down.png');
 			div.attr('hiddenDiv',0);
 			div.slideDown();
 		}

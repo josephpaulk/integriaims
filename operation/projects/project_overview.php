@@ -151,7 +151,7 @@ echo '<div class="divform">';
 	echo '<form method="post">';
 		print_table ($table);
 	echo '</form>';
-	echo '<form method="post">';
+	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/project_detail&create_project=1">';
 		echo '<table class="search-table"><tr><td>';
 			echo print_submit_button (__('Create project'));
 		echo '</td></tr></table>';

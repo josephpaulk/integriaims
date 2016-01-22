@@ -359,6 +359,16 @@ table.listing tr th span {
     margin-left: 20px;
 }
 
+table.listing tr td.sublisting table {
+	margin: 0px;
+	width: 90%;
+	padding-left: 5%;
+}
+
+table.listing tr td.sublisting table tr td{
+	border-top: 0px;
+}
+
 div.divpagecenter table.listing tr td{
 	border-bottom: 0px;
 }
