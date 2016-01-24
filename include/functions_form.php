@@ -531,7 +531,7 @@ function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label
 		$task_out = "";
 	}
 	
-	$sql = get_projects_query ($id_user, $where);
+	$sql = "select tp.* from tproject tp, ttask tt where tp.id=tt.id_project and disabled = 0 ORDER BY name;";
 	$new = true;
 	
 	while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
