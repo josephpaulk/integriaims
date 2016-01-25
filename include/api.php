@@ -49,14 +49,16 @@ $api_password = get_db_value_filter('value', 'tconfig', array('token' => 'api_pa
 
 $correct_login = false;
 
-if (!empty($api_password)) {
-	if ($pass === $api_password) {
-		$correct_login = true;
-	}
-}
-else {
-	if (ip_acl_check ($ip_origin)) {
-		$correct_login = true;
+if (ip_acl_check ($ip_origin)){
+	$user_stored_pass = get_db_value ("password", "tusuario", "id_usuario", $user);
+	if (md5 ($user_pass) === $user_stored_pass){
+		if (!empty($api_password)) {
+			if ($pass === $api_password) {
+				$correct_login = true;
+			}
+		} else {
+			$correct_login = true;
+		}
 	}
 }
 
@@ -178,7 +180,8 @@ switch ($op){
 		break;
 	}
 	case "validate_user":
-		echo api_validate_user ($return_type, $user, $user_pass);
+		$params = explode($token, $params);
+		echo api_validate_user ($return_type, $user, $params);
 		break;
 	case "get_last_cron_execution":
 	{
