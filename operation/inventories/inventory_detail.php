@@ -837,6 +837,26 @@ if (!id_object) {
 	add_validate_form_element_rules('#text-name', rules, messages);
 }
 
+// Rules: #text-name
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			page: "include/ajax/remote_validations",
+			search_existing_inventory: 1,
+			name: function() { return $('#text-name').val() },
+			inventory_id: <?php echo $id_inventory ?>
+		}
+	}
+};
+messages = {
+	required: "<?php echo __('Name required'); ?>",
+	remote: "<?php echo __('This name already exists'); ?>"
+};
+add_validate_form_element_rules('#text-name', rules, messages);
+
 </script>
 
 <?php //endif; ?>
