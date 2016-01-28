@@ -41,6 +41,7 @@ $hard_limit = 20;
 $enforce_soft_limit = 1;
 $id_sla = 0;
 $email_from = '';
+$email_group = '';
 
 $creacion_grupo = (bool) get_parameter ('creacion_grupo');
 	
@@ -70,6 +71,7 @@ if ($id) {
 		$user_level = $group["nivel"];
 		$incident_type = $group["id_incident_type"];
 		$email_from = $group["email_from"];
+		$email_group = $group["email_group"];
 		
 		//Inventory == zero is an empty string
 		if ($id_inventory == 0) {
@@ -159,6 +161,8 @@ $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\"
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
+
+$table->data[7][0] = print_textarea ("email_group", 5, 40, $email_group,'', true, __('Email group').print_help_tip (__("Place each email address in a new line. You can use regular expresions"), true));
 
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);

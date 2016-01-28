@@ -1373,6 +1373,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$email_group = get_db_sql ("SELECT email_group FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
@@ -1487,7 +1488,6 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		
 	if (((!$config['email_ticket_on_creation_and_closing']) || ($mode == 5) || ($mode == 1)) && (!$owner_disabled)) {
 		integria_sendmail ($email_owner, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
-		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
 	}
 
     // Send a copy to each address in "email_copy"
@@ -1501,13 +1501,24 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
     }
 
 	// Incident owner
-	if (($email_owner != $email_creator) AND (!$config['email_ticket_on_creation_and_closing']) AND (!$creator_disabled)){
+	if ((($email_owner != $email_creator) AND (!$creator_disabled))){
     	$msg_code = "TicketID#$id_inc";
 		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
     	$msg_code .= "/".$row["id_creator"];
 
 		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
-    }	
+		
+		// Send emails to the people in the group added
+		if($email_group){
+			$email_g = explode(',',$email_group);
+			foreach ($email_g as $k){
+				integria_sendmail ($k, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");	
+			}
+		}
+    
+    }
+    
+    	
 	//if ($public == 1){
 	if (($public == 1) AND (!$config['email_ticket_on_creation_and_closing'])){
 		// Send email for all users with workunits for this incident

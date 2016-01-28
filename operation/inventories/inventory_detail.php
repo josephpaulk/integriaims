@@ -307,7 +307,7 @@ if ($update) {
 					$is_unique = inventories_check_unique_field($values['data'], $label['type']);
 					
 					if (!$is_unique) {
-						$msg_err .= '<h3 class="err">'.__(" Field '").$label['label'].__("' not updated. Value must be unique").'</h3>'; 
+						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not updated. Value must be unique").'</h3>'; 
 					}
 				}
 				$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
@@ -318,10 +318,12 @@ if ($update) {
 				$values['id_inventory'] = $id;
 				
 				$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
-				if ($exists_id && $is_unique != 0) 
-					process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
-				else
-					process_sql_insert('tobject_field_data', $values);
+				if($is_unique != 0){
+					if ($exists_id) 
+						process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
+					else
+						process_sql_insert('tobject_field_data', $values);
+				}
 		}
 		
 		inventory_tracking($id,INVENTORY_OBJECT_TYPE, $id_object_type);
@@ -470,13 +472,13 @@ if ($create) {
 					$is_unique = inventories_check_unique_field($values_insert['data'], $label['type']);
 					
 					if (!$is_unique) {
-						$msg_err .= '<h3 class="err">'.__(" Field '").$label['label'].__("' not created. Value must be unique").'</h3>'; 
+						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not created. Value must be unique").'</h3>'; 
 					}
 				}
 				$values_insert['id_object_type_field'] = $id_object_field;
 				$id_object_type_field = get_db_value('id', 'tobject_type_field', 'id_object_type', $id_object_type);
 				
-				if ($is_unique)
+				if ($is_unique != 0)
 					process_sql_insert('tobject_field_data', $values_insert);
 			
 			}
