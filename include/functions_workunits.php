@@ -87,7 +87,7 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 				mail_incident ($incident_id, $user, $wu_text, $timeused, 10, 7);
 			}
 			if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)) {
-				mail_incident ($incident_id, $user, $wu_text, $timeused, 10, $public);
+				mail_incident ($incident_id, $user, $wu_text, $timeused, 10);
 			}
 		}	
 	} else {
