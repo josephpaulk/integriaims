@@ -148,9 +148,14 @@ p {
 table {
 	border: none;
 	padding: 0px;
-	margin-top: 10px;
 	margin-bottom: 10px;
-	background: transparent;
+}
+
+.search-table-button, .search-table {
+	background: #F7F7F7;
+}
+.search-table-button {
+	padding-left: 10px;
 }
 
 table.box {
@@ -232,6 +237,7 @@ table.listing {
 	border-spacing: 0px;
 	text-align: left;
 	width: 100%;
+
 }
 
 table.listing th {
@@ -244,13 +250,24 @@ table.listing th {
 	padding-bottom: 8px;
 	margin-left: 5px;
 }
+
+table.listing .head_clickleft {
+	border-top: 1px solid #dadada;
+	border-bottom: 1px solid #dadada;
+	border-left: 1px solid #dadada;
+}
+table.listing .head_clickright {
+	border-top: 1px solid #dadada;
+	border-bottom: 1px solid #dadada;
+	border-right: 1px solid #dadada;
+}
+
 table.listing th span {
 	padding-left: 20px;
 }
 table.listing tr.clickable {
 	cursor: pointer;
 }
-
 table.listing tr.clickable img{
 	float: right;
 }
@@ -488,9 +505,9 @@ input {
 
 input[type="text"] {
 	height: 20px;
-	width: 96% !important;
-    background-color: #F7F7F7;
+    background-color: #FFF;
     color: #707070;
+    width: 90%;
 }
 
 input[type="file"] {
@@ -502,7 +519,7 @@ textarea {
 	color: #606060;
 	font: normal 1em Courier, Arial, sans-serif;
 	border: 1px solid #D8D8D8;
-    background-color: #F7F7F7;
+    background-color: #FFF;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	width: 93%;
@@ -533,19 +550,17 @@ input.dialogbtn {
 select {
 	color:#707070;
 	border: 1px solid #D8D8D8;
-    background-color: #F7F7F7;
+    background-color: #FFF;
 	border-radius: 3px;
 }
 
 select[multiple] {
 	height: 150px;
-	width: 99% !important;
 	overflow-x: auto;
 }
 
 select:not([multiple]) {
 	height: 24px;
-	width: 99% !important;
 }
 
 .ui-multiselect, .ui-state-default {
@@ -2099,9 +2114,7 @@ table.search-table-white, table.pipeline-table {
 table.search-table-white {
 	background: none;
 }
-table.search-table-button {
-	width: 20%;
-}
+
 table.search-table-button tr:last-child td {
 	padding-top: 15px;
 	text-align: right;
@@ -2174,7 +2187,7 @@ input.ui-autocomplete-input {
 	background-image: url("../../images/group.png");
 	background-repeat: no-repeat;
 	background-position: 97% 50%;
-    background-color: #F7F7F7 !important;
+    background-color: #FFF !important;
 }
 
 input.company_autocomplete {

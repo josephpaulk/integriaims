@@ -215,7 +215,7 @@ if ($set_progress > -1 ) {
 
 if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	if ($operation == "create") {
-		echo "<h1>".__('New Work order')."</h1>";
+		echo "<h2>".__('New Work order')."</h2><h4>".__('Add work')."</h4>";
 		
 		$progress = 0;
 		$priority = 2;
@@ -322,7 +322,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$table->colspan[6][0] = 2;
 		$table->data = array ();
 		
-		$table->data[0][0] = print_input_text ('name', $name, '', 80, 120, true,
+		$table->data[0][0] = print_input_text ('name', $name, '', 50, 120, true,
 			__('Title'));
 		
 		$table->data[0][1] = print_select (get_priorities (), 'priority', $priority,

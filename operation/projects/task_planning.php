@@ -384,19 +384,19 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	echo "</td>";
 	
 	// Fourth column (Start date)
-	echo "<td style='text-align:center;'>";
+	echo "<td>";
 	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
 	
 	echo "</td>";
 
 	// Fifth column (End date)
-	echo "<td style='text-align:center;'>";
+	echo "<td>";
 	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
 	echo "</td>";
 	
 	//Worked time based on workunits
 	$worked_time = get_task_workunit_hours ($id_task);
-	echo "<td style='text-align:left;'>".$worked_time."</td>";
+	echo "<td>".$worked_time."</td>";
 	
 	// Sixth column (Delay)
 	//If task was completed delay is 0
@@ -418,7 +418,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 		}
 	}
 	
-	echo "<td style='text-align:left;'>".$delay."</td>";
+	echo "<td>".$delay."</td>";
 
 	// Seventh column (Delay)
 	

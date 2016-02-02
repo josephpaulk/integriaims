@@ -32,7 +32,7 @@ echo '<h1>'.__('Project tracking').' &raquo; '.$project['name'].'</h1>';
 $trackings = get_db_all_rows_field_filter ('tproject_track', 'id_project', $id);
 
 if ($trackings !== false) {
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->head = array ();

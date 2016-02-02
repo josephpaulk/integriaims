@@ -58,11 +58,13 @@ if ($operation == "insert"){
 	
 	// People add for TASK
 	if ($id_task != -1) {
+		
 		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id_user", $id_user);
+		$temp_id_user = ($temp_id_user != false) ? $temp_id_user : $id_user;
 		$temp_id_role = get_db_value('id', 'trole', 'id', $id_role);
 		
 		$filter['id_role']= $temp_id_role;
-		$filter['id_user']= $temp_id_user;
+		$filter['id_user']= $temp_id_user ;
 		$filter['id_task']= $id_task;
 		
 		$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);
@@ -191,116 +193,24 @@ if ($operation == 'insert_all') {
 // ---------------------
 // Edition / View mode
 // ---------------------
-
-
 echo $result_output;
- 
-// --------------------
-// Main task form table
-// --------------------
 
-if ($id_task != -1) {
-	echo "<h1>".__('Task human resources management')." &raquo; ".get_db_value('name', 'ttask','id',$id_task)."</h1>";
-
-	$sql = "SELECT COUNT(*) FROM trole_people_task where id_task = $id_task";
-	$result = mysql_query($sql);
-	$row=mysql_fetch_array($result);
-	if ($row[0] > 0){
-		echo "<h3>".__('Assigned roles')."</h3>";
-		$sql = "SELECT * FROM trole_people_task where id_task = $id_task";
-		$result = mysql_query($sql);
-		echo "<table width=500 class='listing'>";
-		echo "<th>".__('User');
-		echo "<th>".__('Role');
-		echo "<th>".__('Total work time (Hrs)');
-
-		if ($task_permission["manage"]) {
-			echo "<th>".__('Delete');
-		}
-		
-		$color = 1;
-		while ($row=mysql_fetch_array($result)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-			}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-			}
-			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
-			echo "<td valign='top' class='$tdcolor'>".get_db_value('name','trole','id',$row["id_role"]);
-
-            echo "<td valign=top>";
-            echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_user=".$row["id_user"]."'><b>";
-            echo get_task_workunit_hours_user ($id_task, $row["id_user"]);
-            echo "</a></b></td>";
-
-			if ($task_permission["manage"]) {
-				echo "<td valign='top' class='$tdcolor' align='center'>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
-			}
-		}
-		echo "</table>";
-	}
-} else {
-
-	// MAIN PROJECT PEOPLE LIST
-	echo "<h1>".__('Project people management')." &raquo; ".get_db_value('name', 'tproject','id',$id_project)."</h1>";
-	
-	$sql = "SELECT COUNT(*) FROM trole_people_project WHERE id_project = $id_project";
-	$result = mysql_query($sql);
-	$row=mysql_fetch_array($result);
-	if ($row[0] > 0){
-		echo "<h3>".__('Assigned roles')."</h3>";
-		$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
-		$result = mysql_query($sql);
-		echo "<table width=99% class='listing'>";
-		echo "<th>".__('User');
-		echo "<th>".__('Role');
-		echo "<th>".__('Total work time (Hrs)');
-		if ($project_permission["manage"]) {
-			echo "<th>".__('Delete');
-		}
-		$color = 1;
-		while ($row=mysql_fetch_array($result)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-			}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-			}
-			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
-			echo "<td valign='top' class='$tdcolor'>".get_db_value('name','trole','id',$row["id_role"]);
-            echo "<td valign=top>";
-            echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_user=".$row["id_user"]."'><b>";
-            echo get_project_workunits_hours_user ($id_project, $row["id_user"]);
-            echo "</b></td>";
-			
-			if ($project_permission["manage"]) {
-				echo "<td valign='top' class='$tdcolor' align='center'>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
-			}
-		}
-		echo "</table>";
-	}
-}
+// MAIN PROJECT PEOPLE LIST
+if ($id_task == -1)
+	echo "<h2>".__('Project people management')." </h2><h4> ".get_db_value('name', 'tproject','id',$id_project)."</h4>";
+else
+	echo "<h2>".__('Task human resources management')." </h2><h4> ".get_db_value('name', 'ttask','id',$id_task)."</h4>";
 
 // Role / task assigment
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Only project owner or Project ADMIN could modify
+echo "<div class='divform'>";
 if ($id_task != -1){
 	
 	// Task people manager editor
 	// ===============================
-	echo '<br>';
-	echo "<h3>".__('Role/Group assignment')."</h3>";
-	echo '<br>';
-	echo "<h4>".__('Add users already involved in this project')."</h4>";
-	$table->width = '98%';
-	$table->class = 'search-table-button';
+	$table->width = '100%';
+	$table->class = 'search-table';
 	$table->id = "project_people";
 	$table->size = array ();
 
@@ -321,28 +231,25 @@ if ($id_task != -1){
 		$people_project[$person['id_user'].'/'.$person['id_role']] = $person['id_user'] .' / '. $role_name;
 	}
 
-	$table->data[0][0] = print_label(__('People involved in project').' / '.__('Role'), '', 'text', true);
-	$table->data[1][0] = print_select ($people_project, "people[]", '', '', '', 0, true, 10, false, false, false, 'width: 300px;');
-	$table->data[2][1] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub next"', true);
+	$table->data[0][0] ="<h4>".__('Add users already involved in this project')."</h4>";
+	$table->data[1][0] = print_label(__('People involved in project').' / '.__('Role'), '', 'text', true);
+	$table->data[2][0] = print_select ($people_project, "people[]", '', '', '', 0, true, 10, false, false, false, 'width: 300px;');
+	$table->data[3][0] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub next"', true);
 
 	echo "<form id='form-project_people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert_all'>";
 	print_table($table);
 	echo "</form>";
-
-	echo '<br>';
-	echo "<h4>".__('Add other users')."</h4>";
 	
 	echo "<form id='form-people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
-	echo "<table cellpadding=4 cellspacing=4 width=99% class='search-table-button'>";
+	echo "<table width=100% class='search-table'>";
 
-	echo "<tr><td valign='top' class='datos2'>";
+	echo '<tr><td><h4>'.__('Add other users').'</h4>';
+	echo "<tr><td>";
 	echo __('Role');
-	echo "<td valign='top' class='datos2'>";
 	echo combo_roles ();
 
-	echo "<td valign='top' class='datos2'>";
+	echo "<tr><td>";
 	echo __('User');
-	echo "<td valign='top' class='datos2'>";
 	$params['input_id'] = 'text-user';
 	$params['input_name'] = 'user';
 	$params['return'] = false;
@@ -353,19 +260,19 @@ if ($id_task != -1){
 	echo "<input type=submit class='sub next' value='".__('Update')."'>";
 
 	echo "</table>";
-} else {
+}
+else {
 	// PROYECT PEOPLE MANAGER editor
 	// ===============================
-	echo "<h3>".__('Project role assignment')."</h3>";
-	echo "<form id='form-people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
-	echo "<table width=99% class='search-table-button'>";
+	//echo "<h3>".__('Project role assignment')."</h3>";
+	echo "<form id='' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
+	echo "<table width=100% class='search-table'>";
 
-	echo "<tr><td valign='top' class='datos2'>";
+	echo "<tr><td>";
 	echo __('Role');
-	echo "<td valign='top' class='datos2'>";
 	echo combo_roles ();
 
-	echo "<td valign='top' class='datos2'>";
+	echo "<tr><td>";
 	echo __('User  ');
 	
 	$params['input_id'] = 'text-user';
@@ -379,33 +286,110 @@ if ($id_task != -1){
 
 	echo "</table>";
 }
+echo "</div>";
+	
+// --------------------
+// Main task form table
+// --------------------
+echo "<div class='divresult'>";
+$assigned_role = '<tr>';
+if ($id_task != -1) {
+	
+	$sql = "SELECT COUNT(*) total FROM trole_people_task where id_task = $id_task";
+	$result = get_db_row_sql($sql);
+	if ($result["total"] > 0){
+		
+		$sql = "SELECT * FROM trole_people_task where id_task = $id_task";
+		$result = get_db_all_rows_sql($sql);
+		
+		$assigned_role .= "<td>".__('User');
+		$assigned_role .= "<td>".__('Role');
+		$assigned_role .= "<td>".__('Total work time (Hrs)');
+		$columns = 2;
+		if ($task_permission["manage"]) {
+			$assigned_role .= "<td>".__('Delete');
+			$columns = 3;
+		}
+		
+		$color = 1;
+		foreach ($result as $row) {
+			
+			$assigned_role .= "<tr><td>".$row["id_user"];
+			$assigned_role .= "<td>".get_db_value('name','trole','id',$row["id_role"]);
+
+            $assigned_role .= "<td>";
+            $assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_user=".$row["id_user"]."'><b>";
+            $assigned_role .= get_task_workunit_hours_user ($id_task, $row["id_user"]);
+            $assigned_role .= "</a></b></td>";
+
+			if ($task_permission["manage"]) {
+				$assigned_role .= "<td>";
+				$assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
+			}
+		}
+	}
+}
+else {
+	
+	$sql = "SELECT COUNT(*) total FROM trole_people_project WHERE id_project = $id_project";
+	$result = get_db_row_sql($sql);
+	if ($result["total"] > 0){
+		
+		$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
+		$result = get_db_all_rows_sql($sql);
+		$assigned_role .= "<td>".__('User');
+		$assigned_role .= "<td>".__('Role');
+		$assigned_role .= "<td>".__('Total work time (Hrs)');
+		$columns = 2;
+		if ($project_permission["manage"]) {
+			$assigned_role .= "<td>".__('Delete');
+			$columns = 3;
+		}
+		
+		foreach ($result as $row) {
+			
+			$assigned_role .= "<tr><td >".$row["id_user"];
+			$assigned_role .= "<td>".get_db_value('name','trole','id',$row["id_role"]);
+            $assigned_role .= "<td>";
+            $assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_user=".$row["id_user"]."'><b>";
+            $assigned_role .= get_project_workunits_hours_user ($id_project, $row["id_user"]);
+            $assigned_role .= "</b></td>";
+			
+			if ($project_permission["manage"]) {
+				$assigned_role .= "<td>";
+				$assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
+			}
+		}
+		
+	}
+}
+
+print_container('assigned_roles', "<b>" . __('Assigned roles') . "</b>", $assigned_role, 'open', false, '10px', '', '', $columns, 'no_border_bottom');
 
 // Role informational table
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-$roles = "<table cellpadding=0 cellspacing=0 width=99% class='listing'>";
-$roles .= "<th>".__('Name');
-$roles .= "<th>".__('Description');
-$roles .= "<th>".__('Cost');
-$sql1='SELECT * FROM trole ORDER BY name';
-$result=mysql_query($sql1);
-$color=1;
-while ($row=mysql_fetch_array($result)){
-	if ($color == 1){
-		$tdcolor = "datos";
-		$color = 0;
-	}
-	else {
-		$tdcolor = "datos2";
-		$color = 1;
-	}
-	$roles .= "<tr><td valign='top' class='$tdcolor'><b>".$row["name"]."</b>";
-	$roles .= '<td valign="top" class="'.$tdcolor.'">'.$row["description"];
-	$roles .= '<td valign="top" class="'.$tdcolor.'" align="center">'.$row["cost"];
-}
-$roles .= "</table>";
+$roles = "<tr>";
 
-print_container('people_roles', __('Available roles'), $roles, 'closed', false, '10px');
+$roles .= "<td >".__('Name');
+$roles .= "<td >".__('Description');
+$roles .= "<td>".__('Cost');
+
+$sql1='SELECT * FROM trole ORDER BY name';
+$result = process_sql($sql1);
+
+foreach ($result as $row) {
+	$roles .= "<tr>";
+	//$roles .= "<td class='no_border size_min'></td>";
+	$roles .= "<td >".$row["name"];
+	$roles .= '<td >'.$row["description"];
+	$roles .= '<td>'.$row["cost"];
+}
+
+print_container('people_roles', "<b>" . __('Available roles') . "</b>", $roles, 'closed', false, '10px', '', '', 2, 'no_border_bottom');
+
+echo "</div>";
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>

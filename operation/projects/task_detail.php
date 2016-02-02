@@ -266,9 +266,9 @@ echo $result_output;
 
 if (!$gantt_editor) {
 	if ($operation == "create") {
-		echo '<h1>'.__('Task management');
+		echo '<h2>'.__('Task management') . "<h4>".__("Create taks")."</h4>";
 	} else {
-		echo '<h1>'.__('Task management')."  &raquo ".$task_name;
+		echo '<h2>'.__('Task management'). "<h4>".$task_name;
 	}
 	if ($id_task != -1) {
 		echo "<div id='button-bar-title'>";
@@ -299,14 +299,14 @@ $table->class = 'search-table-button';
 $table->rowspan = array ();
 $table->colspan = array ();
 $table->style = array ();
-$table->style[0] = 'vertical-align: top; width: 30%';
-$table->style[1] = 'vertical-align: top; width: 30%';
-$table->style[2] = 'vertical-align: top; width: 30%';
+$table->style[0] = 'width: 30%';
+$table->style[1] = 'width: 30%';
+$table->style[2] = 'width: 30%';
 $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-$table->data[0][0] = print_input_text ('name', $name, '', 60, 240, true, __('Name'));
+$table->data[0][0] = print_input_text ('name', $name, '', 40, 240, true, __('Name'));
 
 $table->data[0][1] = print_select (get_priorities (), 'priority', $priority,
 	'', '', '', true, false, false, __('Priority'));
@@ -319,8 +319,8 @@ if ($project_permission['manage'] || $operation == "view") {
 
 $table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
 
-$table->data[1][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
-$table->data[1][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
+$table->data[1][0] = print_input_text ('start_date', $start, '', 7, 15, true, __('Start'));
+$table->data[1][1] = print_input_text ('end_date', $end, '', 7, 15, true, __('End'));
 
 $table->data[1][2] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
@@ -336,51 +336,44 @@ $table->data[2][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
 	        false, '', '', true, __('Completion based on hours'))
 	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
 
-$table->data[3][0] = print_input_text ('cc', $cc, '', 60, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
+$table->data[3][0] = print_input_text ('cc', $cc, '', 40, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
 
 $table->colspan[4][0] = 3;
 $completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
 
 $table->data[4][0] = print_label ($completion_label, '', '', true,
-	'<div id="slider" style="margin-top: 5px;"><div class="ui-slider-handle"></div></div>');
+	'<div id="slider" style="margin-top: 15px;margin-bottom: 15px;"><div class="ui-slider-handle"></div></div>');
 $table->data[4][0] .= print_input_hidden ('completion', $completion, true);
 
 //////TABLA ADVANCED
-$table_advanced->width = '98%';
-$table_advanced->class = 'search-table';
-$table_advanced->size = array ();
-$table_advanced->size[0] = '33%';
-$table_advanced->size[1] = '33%';
-$table_advanced->size[2] = '33%';
-$table_advanced->style = array();
-$table_advanced->data = array ();
-
 $links_1 = projects_get_task_links ($id_project, $id_task, 1);
 
+$table_advanced = "<tr>";
 $hint = print_help_tip (__("The task cannot start before all tasks in this section start"), true);
-$table_advanced->data[0][0] = print_select ($links_1, 'link_1', NULL,
+$table_advanced .= "<td>" . print_select ($links_1, 'link_1', NULL,
 								'', '', '', true, false, false, __('Start to start').$hint);
-$table_advanced->data[0][0] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(1,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-$table_advanced->data[0][0] .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(1,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
 $links_0 = projects_get_task_links ($id_project, $id_task, 0);
 
 $hint = print_help_tip (__("The task cannot start before all tasks in this section end"), true);
-$table_advanced->data[0][1] = print_select ($links_0, 'link_0', NULL,
+$table_advanced .= "<td>" .  print_select ($links_0, 'link_0', NULL,
 								'', '', '', true, false, false, __('Finish to start').$hint);
-$table_advanced->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(0,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-$table_advanced->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(0,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
 $links_2 = projects_get_task_links ($id_project, $id_task, 2);
 
 $hint = print_help_tip (__("The task cannot end before all tasks in this section end, although it may end later"), true);
-$table_advanced->data[0][2] = print_select ($links_2, 'link_2', NULL,
+$table_advanced .= "<td>" .  print_select ($links_2, 'link_2', NULL,
 								'', '', '', true, false, false, __('Finish to finish').$hint);
-$table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(2,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-$table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(2,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
 $table->colspan['row_links'][0] = 3;
-$table->data['row_links'][0] = print_container('task_links', __('Task links'), print_table($table_advanced, true), 'open', true, false);
+$table->style['row_links'] = 'margin-top: 10px;';
+$table->data['row_links'][0] = print_container('task_links', __('Task links'), $table_advanced, 'open', true, '10px', '', '', 2, 'no_border_bottom');
 
 $table->colspan[5][0] = 3;
 $table->data[5][0] = print_textarea ('description', 8, 30, $description, '',
@@ -407,7 +400,7 @@ if (($operation != "create" && $task_permission['manage']) || $operation == "cre
 $table->data['button'][0] = $button;
 $table->colspan['button'][0] = 3;
 
-echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+echo '<form id="form-new_project" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 
 print_table ($table);
 

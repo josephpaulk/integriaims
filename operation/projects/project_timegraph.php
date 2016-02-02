@@ -50,8 +50,7 @@ if ($id_project) {
 echo "<div class='divform'>";	
 	echo "<form id='form-time_graph' action='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=" . $id_project . "' method='post'>";
 		echo '<table class="search-table">';
-			echo '<tr><td><b>'.__('User ').' </b></td></tr>';
-			echo '<tr><td>';
+			echo '<tr><td><b>'.__('User ').' </b>';
 				$params = array();
 
 				$params['input_value'] = $id_user_filter;
@@ -62,15 +61,13 @@ echo "<div class='divform'>";
 
 				user_print_autocomplete_input($params);
 			echo '</td></tr>';
-			echo '<tr><td><b>'.__('Start').' </b></td></tr>';
-			echo '<tr><td>';
-				print_help_tip(__('Empty date is all range time of project'));
+			echo '<tr><td><b>'.__('Start').' </b>';
 				print_input_text ('start_date', $start_date, '', 10, 20);
-			echo '</td></tr>';
-			echo '<tr><td><b>'.__('End').' </b></td></tr>';
-			echo '<tr><td>';
 				print_help_tip(__('Empty date is all range time of project'));
+			echo '</td></tr>';
+			echo '<tr><td><b>'.__('End').' </b>';
 				print_input_text ('end_date', $end_date, '', 10, 20);
+				print_help_tip(__('Empty date is all range time of project'));
 			echo '</td></tr>';
 			echo '<tr><td>';
 				print_input_hidden ('id_project', $id_project);

@@ -1248,8 +1248,8 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	*/
 	
 	$container = '<table class="listing '.$class_extra.'"><thead><tr id="' . $id . '" class="' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">';
-	$container .= '<th colspan = '.$numcolspan.'>' . $title . '</th>';
-	$container .= '<th class = "img_arrow">'. $arrow;
+	$container .= '<th class="head_clickleft" colspan = '.$numcolspan.'>' . $title . '</th>';
+	$container .= '<th class = "img_arrow head_clickright">'. $arrow;
 	$container .= '</tr></thead>';
 	$container .= '<tbody id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
 	$container .= $content;
