@@ -77,7 +77,6 @@ if ($update) {
 	$config["incident_type_change"] = (int) get_parameter ("incident_type_change", 0);
 	$config["change_incident_datetime"] = (int) get_parameter ("change_incident_datetime", 0);
 	$config["enabled_ticket_editor"] = get_parameter ("enabled_ticket_editor", 0);
-	$config["email_ticket_on_creation_and_closing"] = (int) get_parameter ("email_ticket_on_creation_and_closing", 0);
 	$config["ticket_owner_is_creator"] = (int) get_parameter ("ticket_owner_is_creator", 0);
 	$config["show_user_name"] = (int) get_parameter ("show_user_name", 0);
 	$config["required_ticket_type"] = (int) get_parameter ("required_ticket_type", 0);
@@ -100,7 +99,6 @@ if ($update) {
 	update_config_token ("incident_type_change", $config["incident_type_change"]);
 	update_config_token ("change_incident_datetime", $config["change_incident_datetime"]);
 	update_config_token ("enabled_ticket_editor", $config["enabled_ticket_editor"]);
-	update_config_token ("email_ticket_on_creation_and_closing", $config["email_ticket_on_creation_and_closing"]);
 	update_config_token ("ticket_owner_is_creator", $config["ticket_owner_is_creator"]);
 	update_config_token ("show_user_name", $config["show_user_name"]);
 	update_config_token ("required_ticket_type", $config["required_ticket_type"]);
@@ -213,6 +211,12 @@ if ($table_anonym === ENTERPRISE_NOT_HOOK) {
 	$table_anonym = "";
 }
 
+$incident_reporter_options_email[0] = __('All');
+$incident_reporter_options_email[1] = __('Creation, closed, workunit and attachments');
+$incident_reporter_options_email[2] = __('Creation and closed');
+$incident_reporter_options_email[3] = __('Workunit and attachment');
+$incident_reporter_options_email[4] = __('None');
+
 $incident_reporter_options[0] = __('Disabled');
 $incident_reporter_options[1] = __('Enabled');
 
@@ -228,8 +232,7 @@ echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',
 	5, 5, true, __('Ticket WU Default time'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, __('Send email on every ticket update')).
-	print_help_tip (__("Enabling this, you will get emails on file attachs also. If left disabled, you only get notifications only in major events on tickets"), true)."</td>";
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options_email, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, false, __('Send email on every ticket update'))."</td>";
 
 echo "<td style='vertical-align: top;'>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. tickets by search')).
 	integria_help ("limit_size", true)."</td>";
@@ -256,7 +259,6 @@ echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change",
 
 echo "<td style='vertical-align: top;'>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_checkbox ("email_ticket_on_creation_and_closing", 1, $config["email_ticket_on_creation_and_closing"], true, __('Send email only on creation and closing '))."</td>";
 echo "</tr>";
 
 echo "<tr>";

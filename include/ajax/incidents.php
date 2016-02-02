@@ -370,11 +370,22 @@ if ($set_params) {
 		
 	if ($result) {
 		
-		$email_notify = get_db_value('notify_email', 'tincidencia', 'id_incidencia', $id_ticket);
 		$owner = get_db_value('id_usuario', 'tincidencia', 'id_incidencia', $id_ticket);
 		
 		// Email notify to all people involved in this incident
-		if ($email_notify == 1) {
+		// Email in list email-copy
+		$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id_ticket.';';
+		$email_copy = get_db_sql($email_copy_sql);
+		if ($email_copy != "") { 
+			if($values['estado'] == 7){
+				mail_incident ($id_ticket, $owner, "", 0, 5, 7);
+			} else {
+				mail_incident ($id_ticket, $owner, "", 0, 0, 7);
+			}
+		}
+		if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4) && ($values['estado'] == 7)) { //add emails only closed
+			mail_incident ($id_ticket, $owner, "", 0, 5);
+		} else if ($config["email_on_incident_update"] == 0){ //add emails updates
 			mail_incident ($id_ticket, $owner, "", 0, 0);
 		}
 		

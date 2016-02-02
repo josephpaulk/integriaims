@@ -257,7 +257,9 @@ function run_auto_incident_close () {
 			create_workunit ($incident["id_incidencia"], $mailtext, $incident["id_usuario"], 0,  0, "", 1);
 	
 			// Send mail warning about this autoclose
-			mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
+			if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
+			}
 		}
 	}
 

@@ -152,7 +152,6 @@ function api_create_incident ($return_type, $user, $params){
 		exit;
 	}
 	
-	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $group");
 	if ($owner == '') {
 		$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $group");
 	}
@@ -186,22 +185,22 @@ function api_create_incident ($return_type, $user, $params){
 		$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
-			id_grupo, id_creator, notify_email, 
+			id_grupo, id_creator, 
 			resolution, email_copy, id_incident_type, extra_data, extra_data2)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d, "%s", %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
+			%d, "%s", %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2);
+			$resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2);
 	} else {
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, estado, prioridad,
-				id_grupo, id_creator, notify_email, 
+				id_grupo, id_creator, 
 				resolution, email_copy, id_incident_type, id_parent, extra_data, extra_data2)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-				"%s", %d, "%s", %d, %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
+				%d, "%s", %d, %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 				$status, $priority, $group, $id_creator,
-				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2);
+				$resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2);
 	}
 
 	if ($check_status && $check_resolution) {
@@ -228,7 +227,10 @@ function api_create_incident ($return_type, $user, $params){
 		incident_tracking ($id, INCIDENT_CREATED);
 
 		// Email notify to all people involved in this incident
-		if ($email_notify) {
+		if ($email_copy != "") { 
+			mail_incident ($id, $user, "", 0, 1, 7);
+		}
+		if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
 			mail_incident ($id, $user, "", 0, 1);
 		}
 		

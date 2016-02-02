@@ -164,13 +164,6 @@ if ($objects) {
 	$obj_table .= "<td><table><tr><td>".__("There is no objects affected")."</td></tr></table></td>";
 }
 
-$email_notify = $incident["notify_email"];
-
-if ($email_notify) { 
-	$email_notify_text = __("Yes");
-} else {
-	$email_notify_text = __("No");
-}
 
 $emails = $incident["email_copy"];
 
@@ -179,7 +172,7 @@ $email_table ="";
 if ($emails) {
 	
 	$email_table = "<tr>";
-	$email_table .= "<td colspan='2' align='right'>".$emails."</td>";
+	$email_table .= "<td colspan='2' align='left'>".$emails."</td>";
 	$email_table .= "</tr>";
 	
 }
@@ -209,7 +202,6 @@ $incident_adv_details .= "<tr>";
 $incident_adv_details .= $obj_table;
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("Notify changes by email").":</td><td align='right'><b>".$email_notify_text."</b></td></tr></table></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= $email_table;
 $incident_adv_details .= "</table>";
