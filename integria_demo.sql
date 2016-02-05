@@ -186,7 +186,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincidencia` WRITE;
 /*!40000 ALTER TABLE `tincidencia` DISABLE KEYS */;
-INSERT INTO `tincidencia` VALUES (1,'2013-02-12 09:50:27','0000-00-00 00:00:00','Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe','THis&#x20;should&#x20;be&#x20;fixed&#x20;ASAP.&#x20;Seems&#x20;to&#x20;have&#x20;something&#x20;wrong&#x20;in&#x20;XXX&#x20;','demo',3,3,2,'2013-02-12 09:53:45','admin',1,0,0,'',NULL,0,0,1,0,'','admin',3,'2013-02-12 09:50:29','', '',0,0,0,0,0,'');
+INSERT INTO `tincidencia` VALUES (1,'2013-02-12 09:50:27','0000-00-00 00:00:00','Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe','THis&#x20;should&#x20;be&#x20;fixed&#x20;ASAP.&#x20;Seems&#x20;to&#x20;have&#x20;something&#x20;wrong&#x20;in&#x20;XXX&#x20;','demo',3,3,2,'2013-02-12 09:53:45','admin',1,0,'',NULL,0,0,1,0,'','admin',3,'2013-02-12 09:50:29','', '',0,0,0,0,0,'');
 /*!40000 ALTER TABLE `tincidencia` ENABLE KEYS */;
 UNLOCK TABLES;
 

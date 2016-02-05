@@ -29,13 +29,17 @@
 function send_group_email ($id_group, $subject, $body) {
 	$group = get_db_row ("tgrupo", "id_grupo", $id_group);
 	$name = $group['nombre'];
-	$email = $group['email'];
+	$emails_group = $group['email_group'];
+	$emails_forced_email = $group['forced_email'];
 	/* If the group has no email, use the email of the risponsable */
-	if ($email == '') {
-		$email = get_user_email ($group['id_user_default']);
+	$email = get_user_email ($group['id_user_default']);
+	integria_sendmail ($email, $subject, $body, false, "", $group['email_from']);
+	if ($emails_group == '') {
+		$email_group = explode(',',$emails_group);
+		foreach ($email_group as $k){
+			integria_sendmail ($k, $subject, $body, false, "", $group['email_from']);	
+		}
 	}
-	
-	integria_sendmail ($email, $subject, $body);
 }
 
 /**

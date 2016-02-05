@@ -1812,7 +1812,7 @@ function get_incident_users ($id_incident) {
 function check_incident_sla_min_response ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
-	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	$sla_info = incidents_get_sla_info ($incident['id_grupo']);
 	
 	if ($sla_info != false) {
 		$id_sla_type = $sla_info['id_sla_type'];
@@ -1820,7 +1820,7 @@ function check_incident_sla_min_response ($id_incident) {
 		switch ($id_sla_type) {
 			case 0: //NORMAL SLA
 				/* If closed, disable any affected SLA */
-				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+				if (($incident['estado'] == 6) || ($incident['estado'] == 7)) {
 					if ($incident['affected_sla_id']) {
 						$sql = sprintf ('UPDATE tincidencia
 							SET affected_sla_id = 0
@@ -1932,7 +1932,7 @@ function check_incident_sla_min_response ($id_incident) {
 function check_incident_sla_max_inactivity ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
-	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	$sla_info = incidents_get_sla_info ($incident['id_grupo']);
 	
 	if ($sla_info != false) {
 		$id_sla_type = $sla_info['id_sla_type'];
@@ -1940,7 +1940,7 @@ function check_incident_sla_max_inactivity ($id_incident) {
 		switch ($id_sla_type) {
 			case 0: //NORMAL SLA
 				/* If closed, disable any affected SLA */
-				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+				if (($incident['estado'] == 6) || ($incident['estado'] == 7)) {
 					if ($incident['affected_sla_id']) {
 						$sql = sprintf ('UPDATE tincidencia
 							SET affected_sla_id = 0
@@ -2028,7 +2028,7 @@ function check_incident_sla_max_inactivity ($id_incident) {
 
 function check_incident_sla_max_response ($id_incident) {
 	$incident = get_incident ($id_incident);
-	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	$sla_info = incidents_get_sla_info ($incident['id_grupo']);
 	
 	if ($sla_info != false) {
 		$id_sla_type = $sla_info['id_sla_type'];
@@ -2036,7 +2036,7 @@ function check_incident_sla_max_response ($id_incident) {
 		switch ($id_sla_type) {
 			case 0: //NORMAL SLA
 				/* If closed, disable any affected SLA */
-				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+				if (($incident['estado'] == 6) || ($incident['estado'] == 7)) {
 					if ($incident['affected_sla_id']) {
 						$sql = sprintf ('UPDATE tincidencia
 							SET affected_sla_id = 0

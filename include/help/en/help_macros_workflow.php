@@ -7,23 +7,33 @@ Following strings will be replaced on runtime on the templates who use it:
 
 <p>
 
-<li>_sitename_: Site name, as defined in setup.</li>
-<li>_incident_title_: Title of the ticket.</li>
-<li>_username_: Name of the user who receive the mail (login name).</li>
-<li>_fullname_: Fullname of the user who receive the mail.</li>
 <li>_incident_id_: ID of ticket.</li>
-<li>_access_url_: Incident URL.</li>
-<li>_creation_timestamp_: Date/Time of ticket creation.</li>
-<li>_update_timestamp_: Last time ticket was updated.</li>
-<li>_owner_: User who manages the ticket.</li>
-<li>_group_: Group assigned to this ticket.</li>
+<li>_incident_title_ = Title of ticket.</li>
+<li>_creation_timestamp_ = Date/Hours Ticket Creation.</li>
+<li>_id_group_: Id group assigned to this ticket.</li>
+<li>_name_group_: Id group assigned to this ticket.</li>
+<li>_update_timestamp_ = The last time the ticket was updated.</li>
 <li>_author_: Creator of ticket.</li>
-<li>_priority_: Ticket priority.</li>
-<li>_status_: Status of the ticket.</li>
-<li>_resolution_: Resolution of the ticket.</li>
+<li>_owner_: User who manages the ticket.</li>
+<li>_id_priority_: Id ticket priority.</li>
+<li>_name_priority_: Name ticket priority.</li>
+<li>_access_url_: Incident URL.</li>
+<li>_sitename_: Site name, as defined in setup.</li>
+<li>_fullname_: Fullname of the user who receive the mail.</li>
+<li>_username_: Name of the user who receive the mail (login name).</li>
+<li>_id_status_: Id status of the ticket.</li>
+<li>_name_status_: Id status of the ticket.</li>
+<li>_id_resolution_: Id resolution of the ticket.</li>
+<li>_name_resolution_: Name resolution of the ticket.</li>
+<li>_incident_epilog_ = Epilogue ticket.</li>
+<li>_incident_closed_by_ = User closes the ticket.</li>
 <li>_incident_own_email_: Owner's email.</li>
-<li>_incident_gr_email_: Group's email.</li>
-<li>_incident_creator_email_: Author's email.</li>
+<li>_incident_group_email_: Group's email.</li>
+<li>_incident_auth_email_: Author's email.</li>
+<li>_owner_: User who manages the incident.</li>
+<li>_id_group_: Group id assigned to the incident.</li>
+<li>_name_group_: Name assigned to the incident group.</li>
+<li>Templates Custom Fields: This allows to create an object type the name of the fields you add can include them as a macro which show the value of that field, example: _Name of the custom field_.</li>
 
 </p>
 
@@ -54,13 +64,13 @@ Ticket #_incident_id_ ((_incident_title_))
 <br>
     LAST UPDATE : _update_timestamp_
 <br>
-    GROUP       : _group_
+    GROUP       : _name_group_
 <br>
     AUTHOR      : _author_
 <br>
     ASSIGNED TO : _owner_
 <br>
-    PRIORITY    : _priority_
+    PRIORITY    : _id_priority_
 <br>
    
 ===================================================

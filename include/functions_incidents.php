@@ -1380,7 +1380,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_group = get_db_sql ("SELECT email_group FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$forced_email = get_db_sql ("SELECT forced_email FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
-	$email_from = get_db_sql ("SELECT forced_email FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$user_defect_group = get_db_sql ("SELECT id_user_default FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
 	$prioridad = get_priority_name($row["prioridad"]);
@@ -1504,6 +1505,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		
 		// Send emails to the people in the group added
 		if($forced_email != 0){
+			$email_default = get_user_email ($user_defect_group);
+			integria_sendmail ($email_default, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
 			if($email_group){
 				$email_g = explode(',',$email_group);
 				foreach ($email_g as $k){
