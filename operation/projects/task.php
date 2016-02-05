@@ -70,25 +70,29 @@ if (defined ('AJAX')) {
 								$sql_search";
 		
 		if (dame_admin($config['id_user'])) {
-			$sql_wo = "SELECT *
-					   FROM ttodo
-					   WHERE id_task=$id_item
-					   ORDER BY name";
+			$sql_wo = "SELECT tw.*
+					    FROM tworkunit tw
+						 INNER JOIN tworkunit_task twt ON
+						 tw.id = twt.id_workunit
+						 AND id_task=$id_item";
 			$sql_wo_count = "SELECT COUNT(*)
-							 FROM ttodo
-							 WHERE id_task=$id_item";
+							  FROM tworkunit tw
+							 INNER JOIN tworkunit_task twt ON
+							 tw.id = twt.id_workunit
+							 AND id_task=$id_item";
 		} else {
-			$sql_wo = "SELECT *
-					   FROM ttodo
-					   WHERE id_task=$id_item
-						  AND (assigned_user='".$config['id_user']."'
-							  OR created_by_user='".$config['id_user']."')
-					   ORDER BY name";
+			$sql_wo = "SELECT tw.*
+					   FROM tworkunit tw
+							 INNER JOIN tworkunit_task twt ON
+							 tw.id = twt.id_workunit
+							 AND id_task=$id_item
+						  WHERE id_user='".$config['id_user']."'";
 			$sql_wo_count = "SELECT COUNT(*)
-							 FROM ttodo
-							 WHERE id_task=$id_item
-								AND (assigned_user='".$config['id_user']."'
-									OR created_by_user='".$config['id_user']."')";
+							 FROM tworkunit tw
+							 INNER JOIN tworkunit_task twt ON
+							 tw.id = twt.id_workunit
+							 AND id_task=$id_item
+							WHERE id_user='".$config['id_user']."'";
 		}
 		
 		if (dame_admin($config['id_user'])) {
@@ -147,19 +151,31 @@ if (defined ('AJAX')) {
 			
 		
 		while ($task = get_db_all_row_by_steps_sql($new, $result, $sql_tasks)) {
-			$sql_count_task = "select count(*) as num from tincidencia where id_task=".($task['id']);
-			$count_task = process_sql ($sql_count_task);
+			$sql_count_issue = "select count(*) as num from tincidencia where id_task=".($task['id']);
+			$count_issue = process_sql ($sql_count_issue);
 			$new = false;
 			$count++;
-			
+			echo "<table>";
 			echo "<tr>";
 			
 			$branches_aux = $branches;
 			
-			if ($count_task[0]['num'] != 0) {
+			if ($count_issue[0]['num'] != 0) {
 				$branches[] = true;
 				$img = print_image ("images/arrow_right.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
-			} 
+			}
+			else {
+				
+				$sql_count_taks = "SELECT COUNT(*) num
+							FROM ttask
+							WHERE id_parent_task=".$task['id'];
+				$count_taks = process_sql ($sql_count_taks);
+				if ($count_taks[0]['num'] != 0) {
+					
+					$branches[] = true;
+					$img = print_image ("images/arrow_right.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
+				}
+			}
 			
 			$task_access = get_project_access ($config["id_user"], $id_project, $task["id"], false, true);
 			if ($task_access["read"]) {
@@ -261,12 +277,12 @@ if (defined ('AJAX')) {
 				}
 				
 				// New WO / Incident
-				$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
+				$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work unit')));
 				$incident_icon = print_image ("images/incident.png", true, array ("style" => 'vertical-align: middle;', "id" => "incident_icon", "title" => __('Ticket')));;
-				$wo_icon = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create&id_task=".$task['id']."'>$wo_icon</a>";
+				$wo_icon = "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=".$task['id_project']."&id_task=".$task['id']."'>$wo_icon</a>";
 				$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
 				$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
-				
+				echo "<table><tr>";
 				echo "<td><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
 				echo "<script type=\"text/javascript\">
 						  $(document).ready (function () {
@@ -277,13 +293,12 @@ if (defined ('AJAX')) {
 				echo "</a></td>";
 				echo "<td>".$priority."</td>";
 				echo "<td>".$name."</td>";
-				echo "<td>".$progress."</span></td>";
+				echo "<td>".$progress."</td>";
 				echo "<td>".$estimation."</td>";
 				echo "<td>".$people."</td>";
 				echo "<td>".$date_start_end."</td>";
 				echo "<td>".$time_used."</td>";
 				echo "<td>".__('New').": ".$launch_icons."</td>";
-				
 			} else {
 				
 				// Task name
@@ -319,78 +334,54 @@ if (defined ('AJAX')) {
 			
 			echo "</tr>";
 		echo "<tr><td colspan = '9' hiddenDiv='1' loadDiv='0' style='display: none;' class='sublisting tree_view tree_div_".$task['id']."' id='tree_div".$task['id']."_task_".$task['id']."'></td></tr>";
+		echo "</table>";
 		}
 		
 		// WORK ORDERS
 		$new = true;
 		$count = 0;
 		echo "<table>";
+		
 		while ($wo = get_db_all_row_by_steps_sql($new, $result, $sql_wo)) {
 			
 			$new = false;
 			$count++;
-		
-			// Background color
-			if ($wo["progress"] == 0 && $wo["end_date"] != "0000-00-00 00:00:00") {
-				if ($wo["end_date"] < date('Y-m-d H:i:s')) {
-					$background_color = "background: #fff0f0;";
-				}
-			} elseif ($wo["progress"] == 1) {
-				$background_color = "background: #f0fff0;";
-			} elseif ($wo["progress"] == 2) {
-				$background_color = "background: #f0f0ff;";
-			} else {
-				$background_color = "";
-			}
 			
 			// WO icon
-			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
-			
-			// Priority
-			$priority = print_priority_flag_image ($wo['priority'], true);
+			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work Unit')));
 			
 			// WO name
-			$name = safe_output($wo['name']);
+			$name = safe_output($wo['description']);
 			
 			if (strlen($name) > 48) {
 				$name = substr ($name, 0, 48) . "...";
 				$name = "<a title='".safe_output($wo['name'])."'
-					href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
+					href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_task=".$id_item."&id_workunit=".$wo['id']."'>".$name."</a>";
 			} else {
-				$name = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
+				$name = "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_task=".$id_item."&id_workunit=".$wo['id']."'>".$name."</a>";
 			}
 			if ($wo["progress"] > 0) {
 				$name = "<s>$name</s>";
 			}
 			
 			// Owner
-			$owner = safe_output($wo['assigned_user']);
+			$owner = safe_output($wo['id_user']);
 			if (strlen($owner) > 10) {
-				$owner = "<a title='".safe_output($wo['assigned_user'])."'
-					href='index.php?sec=projects&sec2=operation/workorders/wo&owner="
-						.$owner."'>".substr ($owner, 0, 10)."...</a>";
+				//~ $owner = "<a title='".safe_output($wo['assigned_user'])."'
+					//~ href='index.php?sec=projects&sec2=operation/workorders/wo&owner="
+						//~ .$owner."'>".substr ($owner, 0, 10)."...</a>";
+				$owner = substr ($owner, 0, 10);
 			} else {
-				$owner = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner="
-					.$owner."'>".$owner."</a>";
+				//~ $owner = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner="
+					//~ .$owner."'>".$owner."</a>";
 			}
 			
-			// Submitter
-			$submitter = safe_output($wo['created_by_user']);
-			if (strlen($submitter) > 10) {
-				$submitter = "<a title='".safe_output($wo['created_by_user'])."'
-					href='index.php?sec=projects&sec2=operation/workorders/wo&creator="
-						.$submitter."'>".substr ($submitter, 0, 10)."...</a>";
-			} else {
-				$submitter = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&creator="
-					.$submitter."'>".$submitter."</a>";
-			}
+			
 			echo '<tr>';
 				//~ echo "<span style='".$background_color." padding: 4px;'>";
 				echo "<td>".$wo_icon."</td>";
-				echo "<td>".$priority."</td>";
 				echo "<td>".$name."</td>";
 				echo "<td>".__('Owner').": <b>".$owner."</b></td>";
-				echo "<td>".__('Creator').": <b>".$submitter."</b></td>";
 			echo '</tr>';
 		}
 		

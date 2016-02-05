@@ -468,41 +468,37 @@ if ($clean_output == 0) {
 			<?php require ("general/header.php"); ?>
 		</div>
 
-	<!--
-	<div id="menu">
-	<?php require ("operation/main_menu.php"); ?>
-	</div>
-	-->
-	
+		<!--
+		<div id="menu">
+		<?php require ("operation/main_menu.php"); ?>
+		</div>
+		-->
+		
 
-        <!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
-        <!-- DO NOT USE CSS HERE -->
+			<!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
+			<!-- DO NOT USE CSS HERE -->
 
-        <table width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px'>
-	<tr>
-
-	<?php
-
-        // Avoid render left menu for some special places (like home).
-        if ($not_show_menu == 0){
-			echo '<td valign=top style="width: 60px;">';
-			echo '<div id="sidebar">';
-			require ("operation/side_menu.php"); 
-			if (give_acl ($config["id_user"], 0, "AR"))
-				require ("operation/tool_menu.php");
-			echo '</div></td>';
-		}
-	?>
-	
-        <td valign=top>
+		<div width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px'>
+			
+			<?php
+			// Avoid render left menu for some special places (like home).
+			if ($not_show_menu == 0){
+					echo '<div id="sidebar">';
+						require ("operation/side_menu.php"); 
+						if (give_acl ($config["id_user"], 0, "AR"))
+							require ("operation/tool_menu.php");
+					echo '</div>';
+			}
+			?>
+				
 			<div id="main">
-			<?php			
+				<?php			
 				// Open a dialog if the database schema update has returned messages
 				if ($minor_release_message) {
 					echo "<div class= 'dialog ui-dialog-content' title='".__("Minor release update")."' id='mr_dialog'>$minor_release_message</div>";
-					echo "<script type='text/javascript'>";
-					echo "	$(document).ready (function () {";
-					echo "		$('#mr_dialog').dialog ({
+						echo "<script type='text/javascript'>";
+							echo "$(document).ready (function () {";
+								echo "$('#mr_dialog').dialog ({
 									resizable: true,
 									draggable: true,
 									modal: true,
@@ -513,16 +509,16 @@ if ($clean_output == 0) {
 									width: 400,
 									height: 150
 								});";
-					echo "		$('#mr_dialog').dialog('open');";
-					echo "	});";
+								echo "$('#mr_dialog').dialog('open');";
+						echo "	});";
 					echo "</script>";
 				}
-				
+
 				if (get_parameter ('login', 0) !== 0) {
 					// Display news dialog
 					include_once("general/news_dialog.php");
 				}
-				
+
 				// Page loader / selector
 				if ($sec2 != "") {
 					if (file_exists ($sec2.".php")) {
@@ -556,10 +552,9 @@ if ($clean_output == 0) {
 						require ("general/home.php");
 					}
 				}
-			?>
+				?>
 			</div>
-
-		</td></tr></table>
+		</div>
 	<!-- wrap ends here -->
 	</div>
 

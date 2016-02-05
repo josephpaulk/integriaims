@@ -29,7 +29,7 @@ echo "<nav id='menu_nav'>";
 						echo "<li><a href='".$row2["link"]."' target='_new' class='mn'>".$row2["name"]."</a></li>";
 					}
 				}
-			echo "</ul></div>";
+			echo "</ul>";
 		echo "</li>";
 	echo "</ul>";
 echo "</nav>";

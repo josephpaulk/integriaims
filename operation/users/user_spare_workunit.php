@@ -354,24 +354,21 @@ if ($operation == 'multiple_wu_insert') {
 
 
 echo "<div id='tabs'>";
-echo "<ul class='ui-tabs-nav'>";
-
-echo "<li class='ui-tabs-title h1'>";
-echo "<img src='images/award_star_silver_1.png'> ";
 
 if ($id_workunit) {
-	echo __('Update workunit');
+	echo "<h2>" ."<img src='images/award_star_silver_1.png'> " . __('Update workunit');
 }
 else {
-	echo __('Add workunit');
+	echo "<h2>". "<img src='images/award_star_silver_1.png'> " . __('Add workunit');
 }
-
+echo "<h4>";
 if ($id_task) {
-	echo ' - ';
 	echo get_db_value ('name', 'ttask', 'id', $id_task);
 }
 
-echo '</h3>';
+echo "<ul class='ui-tabs-nav'>";
+
+echo "<li class='ui-tabs-title'>";
 echo "</li>";
 //If single workunit update multiple addition is disabled
 if ($id_workunit) {
@@ -397,6 +394,7 @@ if ($operation == 'multiple_wu_insert') {
 echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
 echo "</span></li>";
 echo "</ul>";
+echo "</h4>";
 
 //If we inserted multiple workunits then 
 if ($operation == 'multiple_wu_insert') {
@@ -537,6 +535,10 @@ if (!$id_workunit) {
 		echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>"; //Multiple WU
 		echo '<form id="multiple_task_form" method="post" onsubmit="return validate_multiple_form()">';
 		print_input_hidden ('operation', 'multiple_wu_insert');
+		
+		//Massive work unit list
+		create_new_table_multiworkunit(1);
+		echo "</div>";
 		echo "<table width='99%'>";
 		echo "<tr>";
 		echo "<td style='width: 90%;'>";
@@ -549,10 +551,6 @@ if (!$id_workunit) {
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";
-		
-		//Massive work unit list
-		create_new_table_multiworkunit(1);
-		echo "</div>";
 		echo '</form>';
 	}
 }

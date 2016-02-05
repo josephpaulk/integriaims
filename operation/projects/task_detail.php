@@ -266,7 +266,7 @@ echo $result_output;
 
 if (!$gantt_editor) {
 	if ($operation == "create") {
-		echo '<h2>'.__('Task management') . "<h4>".__("Create taks")."</h4>";
+		echo '<h2>'.__('Task management') . "<h4>".__("Create task");
 	} else {
 		echo '<h2>'.__('Task management'). "<h4>".$task_name;
 	}
@@ -275,13 +275,13 @@ if (!$gantt_editor) {
 		echo "<ul>";
 		echo "<li>";
 			echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/task_report&id_project=$id_project&id_task=$id_task'>".
-			print_image ("images/chart_bar_dark.png", true, array("title" => __("Statistics"))) .
+			print_image ("images/chart_bar.png", true, array("title" => __("Statistics"))) .
 			"</a>";
 		echo "</li>";
 		echo "</ul>";
 		echo "</div>";
 	}
-	echo '</h1>';
+	echo '</h4>';
 } else {
 	echo "<div id='button-bar-title' style='margin-top: 5px; margin-bottom: 9px;'>";
 	echo "<ul>";

@@ -62,12 +62,12 @@ echo "<div class='divform'>";
 				user_print_autocomplete_input($params);
 			echo '</td></tr>';
 			echo '<tr><td><b>'.__('Start').' </b>';
-				print_input_text ('start_date', $start_date, '', 10, 20);
 				print_help_tip(__('Empty date is all range time of project'));
+				print_input_text ('start_date', $start_date, '', 10, 20);
 			echo '</td></tr>';
 			echo '<tr><td><b>'.__('End').' </b>';
-				print_input_text ('end_date', $end_date, '', 10, 20);
 				print_help_tip(__('Empty date is all range time of project'));
+				print_input_text ('end_date', $end_date, '', 10, 20);
 			echo '</td></tr>';
 			echo '<tr><td>';
 				print_input_hidden ('id_project', $id_project);
@@ -84,7 +84,7 @@ echo "</div>";
 	</script>
 
 <?php
-	echo "<div id='time_graph' style='margin: 0px auto; width: 800px;'></div>";
+	echo "<div id='time_graph' style='margin: 0px auto; width: 900px; float:right'></div>";
 	if (empty($start_date)) {
 		$start_date = false;
 	}

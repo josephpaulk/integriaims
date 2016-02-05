@@ -133,6 +133,7 @@ if ($action == 'insert') {
 		}
 	}
 }
+
 echo '<h2>'.__('Projects').'</h2>';
 echo '<h4>'.__('Projects overview').'</h4>';
 
@@ -268,11 +269,11 @@ foreach($project_groups as $group) {
 			
 		}
 		if($nprojects == 0) {
-			$info_general .= "<tr>";
+			$info_general = "<tr>";
 			// Project name
 			$info_general .= "<td class='no_border size_min'></td>";
 			$info_general .= "<td colspan='5'>";
-			$info_general .= "&nbsp;".__('empty')."</td>";
+			$info_general .= "<b>" . __("This group doesn't have projects.") . "</b></td>";
 			$info_general .= "</td>";
 			$info_general .= "<td class='no_border'></td>";	
 			$info_general .= "</tr>";

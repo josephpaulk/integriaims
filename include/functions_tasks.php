@@ -200,7 +200,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			$branches[] = true;
 			$img = print_image ("images/arrow_right.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
 		} else {
-			$img = print_image ("images/bullet_black.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
+			$img = print_image ("images/arrow_right.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
 		}
 		
 		
@@ -294,7 +294,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			// New WO / Incident
 			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
 			$incident_icon = print_image ("images/incident.png", true, array ("style" => 'vertical-align: middle;', "id" => "incident_icon", "title" => __('Ticket')));;
-			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create&id_task=".$task['id']."'>$wo_icon</a>";
+			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=".$task['id_project']."&id_task=".$task['id']."'>$wo_icon</a>";
 			$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
 			$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
 			

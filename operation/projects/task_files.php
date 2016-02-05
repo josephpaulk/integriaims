@@ -124,8 +124,8 @@ if ($operation == "delete") {
 // Specific task
 if ($id_task != -1){ 
 	$sql = "SELECT * FROM tattachment WHERE id_task = $id_task";
-	echo "<h3>".__('Attached files');
-	echo " - ".__('Task')." - ".$task_name."</h3>";
+	echo "<h2>".__('Attached files');
+	echo "<h4>".__('Task')." - ".$task_name."</h4>";
 	echo "<table cellpadding=4 cellspacing=4 border='0' width=90% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Filename');
@@ -148,8 +148,8 @@ if ($id_task == -1){
 	$sql = "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name, ttask.id as task_id FROM tattachment, ttask
 			WHERE ttask.id_project = $id_project AND ttask.id = tattachment.id_task";
 
-	echo "<h3>".__('Attached files');
-	echo " - ".__('Project')." - ".$project_name."</h3>";
+	echo "<h2>".__('Attached files');
+	echo "<h4>".__('Project')." - ".$project_name."</h4>";
 	echo "<table cellpadding=4 cellspacing=4 border='0' width=95% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Task');

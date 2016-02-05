@@ -157,6 +157,7 @@ if ($create_mode == 0){
 	echo '<h4>'.__('Create project').'</h4>';
 
 // Right/Left Tables
+$table = new stdClass;
 $table->width = '100%';
 $table->class = "search-table-button";
 $table->style[0] = 'width: 20%';
@@ -172,7 +173,7 @@ $table->cellpadding = 4;
 
 // Name
 $table->colspan[0][0] = 4;
-$table->data[0][0] = '<b>'.__('Name').' </b>';
+$table->data[0][0] = '<b>'.__('Name').' </b><br>';
 $table->data[0][0] .= '<input type="text" name="name" size=70 value="'.$name.'">';
 
 // start and end date
@@ -187,8 +188,7 @@ $table->data[1][2] = "<b>".__('Project manager')." </b>";
 $table->data[1][2] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
 			'', true, '','');
 
-$table->data[1][3] .= '<b>' .  __('Project group') . "</b>";
-
+$table->data[1][3] .= '<b>' .  __('Project group') . "</b><br>";
 if (!$clean_output) {
 	$table->data[1][3] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
 		"id_project_group", $id_project_group, "", __('None'), '0',
@@ -198,8 +198,8 @@ if (!$clean_output) {
 }
 
 // CC
-$table->data[6][0] .= '<tr><td class="datos" colspan=3>
-	<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b>';
+$table->colspan[6][0] = 4;
+$table->data[6][0] .= '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b><br>';
 $table->data[6][0] .= '<input type="text" name="cc" size=70 value="'.$cc.'">';
 
 // Description

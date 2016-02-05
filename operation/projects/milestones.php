@@ -91,8 +91,9 @@ if ($operation == "delete") {
 // CREATE new todo (form)
 // ---------------
 if ($operation == "create") {
-	echo "<h1>".__('Milestone creation')."</h1>";
-	echo '<table class="search-table-button"  width="99%">';
+	echo "<h2>".__('Milestone')."</h2>";
+	echo "<h4>".__('Creation')."</h4>";
+	echo '<table class="search-table-button"  width="100%">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
 	echo "<tr><td class='datos'>".__('Name');
@@ -125,7 +126,8 @@ if ($operation == "create") {
 // Milestone view
 // -------------------------
 if ($operation == ""){
-	echo "<h1>".__('Milestones management')."</h1>";
+	echo "<h2>".__('Milestones')."</h2>";
+	echo "<h4>".__('Management')."</h4>";
 	echo "<table class='listing' width=99%>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');

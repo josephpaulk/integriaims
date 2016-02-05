@@ -286,14 +286,14 @@ if ($id_task != 0) {
 			ORDER BY tworkunit.timestamp DESC', $id_project);
 		
 	}
-	echo '<h1>'.__('Workunit resume');
-	echo ' - '.$project_name.' - '. __('All tasks');
+	echo '<h2>'.__('Workunit resume') . "</h2>";
+	echo '<h4>'.$project_name.' - '. __('All tasks');
 
 	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project", __("PDF report"));
 	if ($report_image) {
-		echo "&nbsp;" . $report_image.'</h1>';
+		echo "&nbsp;" . $report_image;
 	}
-    
+    echo '</h4>';
 }
 
 
@@ -306,10 +306,10 @@ if ($workunits) {
 
 echo '<div id="show_multiple_edit">';
 
-echo '<br><h2>'.__('Massive operations over selected items').'</h2>';
+echo '<br><h4>'.__('Massive operations over selected items').'</h4>';
 $table = new StdClass;
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
 $table->colspan = array ();
 
