@@ -340,7 +340,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
  *
  */
  
-function attach_incident_file ($id, $file_temp, $file_description, $email_notify = false, $file_name = "") {
+function attach_incident_file ($id, $file_temp, $file_description, $file_name = "") {
 	global $config;
 	
 	$file_temp = safe_output ($file_temp); // Decoding HTML entities
@@ -365,10 +365,15 @@ function attach_incident_file ($id, $file_temp, $file_description, $email_notify
 	$result_msg = ui_print_success_message(__('File added'), '', true);
 	
 	// Email notify to all people involved in this incident
-	if ($email_notify) {
-		if ($config["email_on_incident_update"] == 1){
-			mail_incident ($id, $config['id_user'], 0, 0, 2);
-		}
+	
+	// Email in list email-copy
+	$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id.';';
+	$email_copy = get_db_sql($email_copy_sql);
+	if ($email_copy != "") { 
+		mail_incident ($id, $config['id_user'], 0, 0, 2, 7);
+	}
+	if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)){
+		mail_incident ($id, $config['id_user'], 0, 0, 2);
 	}
 	
 	// Copy file to directory and change name
@@ -390,7 +395,7 @@ function attach_incident_file ($id, $file_temp, $file_description, $email_notify
 		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". $link;
 		$public = 1;
 		$timeused = 0;
-		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);
+		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public, 0);
 		
 		$timestamp = print_mysql_timestamp();
 		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
@@ -1373,6 +1378,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$email_group = get_db_sql ("SELECT email_group FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$forced_email = get_db_sql ("SELECT forced_email FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$user_defect_group = get_db_sql ("SELECT id_user_default FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
@@ -1480,61 +1488,68 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	// Create the TicketID for have a secure reference to incident hidden 
 	// in the message. Will be used for POP automatic processing to add workunits
 	// to the incident automatically.
-
-	$msg_code = "TicketID#$id_inc";
-	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
-	$msg_code .= "/" . $row["id_usuario"];
-		
-	if (((!$config['email_ticket_on_creation_and_closing']) || ($mode == 5) || ($mode == 1)) && (!$owner_disabled)) {
+	if ($public != 7){
+		//owner
+		$msg_code = "TicketID#$id_inc";
+		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
+		$msg_code .= "/" . $row["id_usuario"];
 		integria_sendmail ($email_owner, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
-		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
+		
+		//creator
+		if ($email_owner != $email_creator) {
+			$msg_code = "TicketID#$id_inc";
+			$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
+			$msg_code .= "/".$row["id_creator"];
+			integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+		}
+		
+		// Send emails to the people in the group added
+		if($forced_email != 0){
+			$email_default = get_user_email ($user_defect_group);
+			integria_sendmail ($email_default, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+			if($email_group){
+				$email_g = explode(',',$email_group);
+				foreach ($email_g as $k){
+					integria_sendmail ($k, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");	
+				}
+			}
+		}
+	
 	}
-
-    // Send a copy to each address in "email_copy"
-
-    //if ($email_copy != ""){
-	if (($email_copy != "") && (!$config['email_ticket_on_creation_and_closing'])){
-        $emails = explode (",",$email_copy);
-        foreach ($emails as $em){
-        	integria_sendmail ($em, $subject, $text, false, "", $email_from, 0, "", "X-Integria: no_process");
-        }
-    }
-
-	// Incident owner
-	if (($email_owner != $email_creator) AND (!$config['email_ticket_on_creation_and_closing']) AND (!$creator_disabled)){
-    	$msg_code = "TicketID#$id_inc";
-		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
-    	$msg_code .= "/".$row["id_creator"];
-
-		integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
-    }	
-	//if ($public == 1){
-	if (($public == 1) AND (!$config['email_ticket_on_creation_and_closing'])){
+	if ($public == 7){
+		// Send a copy to each address in "email_copy"
+			if ($email_copy != ""){
+				$emails = explode (",",$email_copy);
+				foreach ($emails as $em){
+					integria_sendmail ($em, $subject, $text, false, "", $email_from, 0, "", "X-Integria: no_process");
+				}
+			}
+	}
+	
+	if ($public == 1){
 		// Send email for all users with workunits for this incident
 		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario AND tusuario.disabled=0";
 		if ($result=mysql_query($sql1)) {
 			while ($row=mysql_fetch_array($result)){
 				if (($row[0] != $email_owner) AND ($row[0] != $email_creator)){
-                    
-                    $msg_code = "TicketID#$id_inc";
-            	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
-                	$msg_code .= "/". $row[1];
-
+					$msg_code = "TicketID#$id_inc";
+					$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
+					$msg_code .= "/". $row[1];
 					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
-                }
+				}
 			}
 		}
 
-        // Send email to incident reporters associated to this incident
-        if ($config['incident_reporter'] == 1){
-        	$contacts = get_incident_contact_reporters ($id_inc , true);
+		// Send email to incident reporters associated to this incident
+		if ($config['incident_reporter'] == 1){
+			$contacts = get_incident_contact_reporters ($id_inc , true);
 			if ($contats)
-            foreach ($contacts as $contact) {
-                $contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
-                integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
-            }
-	    }
-    }
+			foreach ($contacts as $contact) {
+				$contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
+				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+			}
+		}
+	}
 }
 
 function people_involved_incident ($id_inc){

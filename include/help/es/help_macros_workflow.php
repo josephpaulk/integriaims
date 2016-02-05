@@ -7,25 +7,34 @@ El asunto y el cuerpo del email pueden formarse mediante macros. A continuación
 
 <p>
 
-<li>_incident_id_ = ID del ticket
-<li>_incident_title_ = Título del ticket
-<li>_creation_timestamp_ = Fecha/Hora de la creación del ticke
-<li>_group_ = Grupo asignado al ticket
-<li>_update_timestamp_ = La última vez que se actualizó el ticket
-<li>_author_ = Creador del ticket
-<li>_owner_ = Usuario que controla el ticket
-<li>_priority_ = Prioridad del ticket
-<li>_access_url_ = Ruta de acceso del ticket
-<li>_sitename_ = Nombre del sitio, tal y como se haya definido en el setup
-<li>_fullname_ = Nombre completo del usuario que recibe el correo
-<li>_username_ = Nombre del usuario que recibe el correo (login name)
-<li>_status_ = Estado del ticket
-<li>_resolution_ = Resolución del ticket
-<li>_incident_epilog_ = Epílogo del ticket
-<li>_incident_closed_by_ = Usuario que cierra el ticket
-<li>_incident_owner_email_: Email del usuario propietario.</li>
+<li>_incident_id_ = ID del ticket.</li>
+<li>_incident_title_ = Título del ticket.</li>
+<li>_creation_timestamp_ = Fecha/Hora de la creación del ticket.</li>
+<li>_id_group_ = Id al Grupo asignado al ticket.</li>
+<li>_name_group_ = Nombre al Grupo asignado al ticket.</li>
+<li>_update_timestamp_ = La última vez que se actualizó el ticket.</li>
+<li>_author_ = Creador del ticket.</li>
+<li>_owner_ = Usuario que controla el ticket.</li>
+<li>_id_priority_: Id de la prioridad del incidente.</li>
+<li>_name_priority_: Nombre de la prioridad del incidente.</li>
+<li>_access_url_ = Ruta de acceso del ticket.</li>
+<li>_sitename_ = Nombre del sitio, tal y como se haya definido en el setup.</li>
+<li>_fullname_ = Nombre completo del usuario que recibe el correo.</li>
+<li>_username_ = Nombre del usuario que recibe el correo (login name).</li>
+<li>_id_status_: Id del Estado del incidente.</li>
+<li>_name_status_: Nombre del Estado del incidente.</li>
+<li>_id_resolution_: Id de la resoluci&oacute;n del incidente.</li>
+<li>_name_resolution_: Nombre de la resoluci&oacute;n del incidente.</li>
+<li>_incident_epilog_ = Epílogo del ticket.</li>
+<li>_incident_closed_by_ = Usuario que cierra el ticket.</li>
+<li>_incident_own_email_: Email del usuario propietario.</li>
 <li>_incident_group_email_: Email del grupo asignado.</li>
-<li>_incident_author_email_: Email del usuario creador del ticket.</li>
+<li>_incident_auth_email_: Email del usuario creador del ticket.</li>
+<li>_owner_: Usuario que gestiona el incidente.</li>
+<li>_id_group_: Id del grupo asignado al incidente.</li>
+<li>_name_group_: Nombre del grupo asignado al incidente.</li>
+<li>_author_: Creador del incidente.</li>
+<li>Plantillas de campos personalizados: Esto permite que al crear un tipo de objeto el nombre de los campos que agregas puedes incluirlos como una macro la cual mostrara el valor de dicho campo: _nombre del campo personalizado_.</li>
 
 </p>
 
@@ -56,13 +65,13 @@ Ticket #_incident_id_ ((_incident_title_))
 <br>
     LAST UPDATE : _update_timestamp_
 <br>
-    GROUP       : _group_
+    GROUP       : _name_group_
 <br>
     AUTHOR      : _author_
 <br>
     ASSIGNED TO : _owner_
 <br>
-    PRIORITY    : _priority_
+    PRIORITY    : _id_priority_
 <br>
    
 ===================================================

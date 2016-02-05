@@ -41,6 +41,7 @@ $hard_limit = 20;
 $enforce_soft_limit = 1;
 $id_sla = 0;
 $email_from = '';
+$email_group = '';
 
 $creacion_grupo = (bool) get_parameter ('creacion_grupo');
 	
@@ -70,6 +71,7 @@ if ($id) {
 		$user_level = $group["nivel"];
 		$incident_type = $group["id_incident_type"];
 		$email_from = $group["email_from"];
+		$email_group = $group["email_group"];
 		
 		//Inventory == zero is an empty string
 		if ($id_inventory == 0) {
@@ -92,11 +94,14 @@ $table->colspan = array ();
 $table->rowspan = array ();
 $table->rowspan[0][2] = 5;
 $table->data = array ();
-
+$table->colspan[7][0] = 2;
 /* First row */
 $table->data[0][0] = print_input_text ('name', $name, '', 20, 0, true, __('Name'));
-$table->data[0][1] = print_checkbox ('forced_email', 1, $forced_email, true, __('Forced email'));
-
+if ($config['enteprise'] == 1){
+	$table->data[0][1] = print_checkbox ('forced_email', 1, $forced_email, true, __('Forced email'));
+} else {
+	$table->data[0][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
+}
 /* Banner preview image is a bit bigger */
 $table->data[0][2] = '<span id="banner_preview">';
 if ($id && $banner != '') {
@@ -136,9 +141,9 @@ $table->data[3][1] = print_select ($banners, "banner", $banner, '', 'None', '', 
 
 $table->data[4][0] = print_input_text ('soft_limit', $soft_limit, '', 10, 0, true , __('Tickets Soft limit')).print_help_tip (__("If it's a standard user it shows the maximum nº of tickets for this group that one user can have opened at the same time. If it's a external user it shows the maximum nº of tickets for this group and user that one user can have opened at the same time"), true);
 
-
-$table->data[4][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
-
+if ($config['enteprise'] == 1){
+	$table->data[4][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
+}
 $table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Tickets Hard limit')).print_help_tip (__("If it's a standard user it shows the nº of maximum tickets for this group, that one user could have in total (open or closed). If it's a external user it shows the nº of maximum tickets for user, for this group, that one user could have in total (open or closed). When this limit is exceeded, the user will receive a notification in the screen when he try to create a ticket, so he won't be able to create any more."), true);
 
 $slas_aux = get_db_all_rows_sql("SELECT id, name FROM tsla ORDER BY name");
@@ -159,7 +164,9 @@ $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\"
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
-
+if ($config['enteprise'] == 1){
+	$table->data[7][0] = print_textarea ("email_group", 5, 40, $email_group,'', true, __('Email group').print_help_tip (__("Place each email address in a new line. You can use regular expresions"), true));
+}
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
 

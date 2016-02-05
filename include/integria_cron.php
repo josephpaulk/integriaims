@@ -257,7 +257,9 @@ function run_auto_incident_close () {
 			create_workunit ($incident["id_incidencia"], $mailtext, $incident["id_usuario"], 0,  0, "", 1);
 	
 			// Send mail warning about this autoclose
-			mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
+			if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
+			}
 		}
 	}
 
@@ -487,11 +489,14 @@ function check_sla_min ($incident) {
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time_subject.tpl", $MACROS);
-	
-	integria_sendmail ($user['direccion'], $subject, $text);
-	insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
-
-	return true;
+	if ($sla['enforced'] == 1){
+		integria_sendmail ($user['direccion'], $subject, $text);
+		insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
+		return true;
+	} else {
+		insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
+		return true;
+	}
 }
 
 /**
@@ -537,8 +542,12 @@ function check_sla_max ($incident) {
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time_subject.tpl", $MACROS);
-	integria_sendmail ($user['direccion'], $subject, $text);
-	insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
+	if ($sla['enforced'] == 1){
+		integria_sendmail ($user['direccion'], $subject, $text);
+		insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
+	} else {
+		insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
+	}
 }
 
 /**
@@ -584,8 +593,12 @@ function check_sla_inactivity ($incident) {
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time_subject.tpl", $MACROS);
-	integria_sendmail ($user['direccion'], $subject, $text);
-	insert_event ('SLA_MAX_INACTIVITY_NOTIFY', $incident['id_incidencia']);
+	if ($sla['enforced'] == 1){
+		integria_sendmail ($user['direccion'], $subject, $text);
+		insert_event ('SLA_MAX_INACTIVITY_NOTIFY', $incident['id_incidencia']);
+	} else {
+		insert_event ('SLA_MAX_INACTIVITY_NOTIFY', $incident['id_incidencia']);
+	}
 }
 
 // This will send pending mail from database queue, using its defined MTA, and swiftmail functions
@@ -1164,7 +1177,15 @@ function delete_old_workflow_event_data () {
 // Crontab control on tconfig, install first run to let user know where is
 
 $installed = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'crontask'");
+$previous = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'previous_crontask'");
 $current_date = date ("Y/m/d H:i:s");
+
+if ($previous == 0) {
+	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('previous_crontask', '$current_date')");
+} else {
+	$previous_cron_date = get_db_sql ("SELECT `value` FROM tconfig WHERE `token` = 'crontask'");
+	process_sql ("UPDATE tconfig SET `value` = '$previous_cron_date' WHERE `token` = 'previous_crontask'");
+}
 
 if ($installed == 0){
 	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('crontask', '$current_date')");
@@ -1218,8 +1239,9 @@ if ($incidents)
 // Check SLA for number of opened items.
 
 $slas = get_slas (false);
+// runs SLAs
 foreach ($slas as $sla) {
-	
+	// searches the groups which has slas
 	$sql = sprintf ('SELECT id_grupo FROM tgrupo WHERE id_grupo != 1 AND id_sla = %d', $sla['id']);
 	
 	$groups = get_db_all_rows_sql ($sql);
@@ -1229,12 +1251,14 @@ foreach ($slas as $sla) {
 	$noticed_groups = array ();
 	
 	foreach ($groups as $group) {
+		// searches for incidents with SLA of a group
 		$sql = sprintf ('SELECT id_incidencia, id_grupo 
-			FROM tincidencia WHERE id_grupo = %d AND affected_sla_id = 0
+			FROM tincidencia WHERE id_grupo = %d
 			AND sla_disabled = 0 AND estado NOT IN (6,7)', $group['id_grupo']);
 			
 		$opened_incidents = get_db_all_rows_sql ($sql);
 		
+		//count tickes with sla
 		if (sizeof ($opened_incidents) <= $sla['max_incidents']) 
 			continue;
 		
@@ -1243,10 +1267,8 @@ foreach ($slas as $sla) {
 			/* Check if it was already notified in a specified time interval */
 			$sql = sprintf ('SELECT COUNT(id) FROM tevent
 				WHERE type = "SLA_MAX_OPENED_INCIDENTS_NOTIFY"
-				AND id_item = %d
-				AND timestamp > "%s"',
-				$incident['id_grupo'],
-				$compare_timestamp);
+				AND id_item = %d AND timestamp > "%s"', $incident['id_grupo'], $compare_timestamp);
+			
 			$notified = get_db_sql ($sql);
 			if ($notified > 0)
 				continue;
@@ -1259,9 +1281,12 @@ foreach ($slas as $sla) {
 				$group_name = dame_nombre_grupo ($incident['id_grupo']);
 				$subject = "[".$config['sitename']."] Openened ticket limit reached ($group_name)";
 				$body = "Opened ticket limit for this group has been exceeded. Please check open tickets.\n";
-				send_group_email ($incident['id_grupo'], $subject, $body);
-				insert_event ('SLA_MAX_OPENED_INCIDENTS_NOTIFY',
-					$incident['id_grupo']);
+				if ($sla['enforced'] == 1){
+					send_group_email ($incident['id_grupo'], $subject, $body);
+					insert_event ('SLA_MAX_OPENED_INCIDENTS_NOTIFY', $incident['id_grupo']);
+				} else {
+					insert_event ('SLA_MAX_OPENED_INCIDENTS_NOTIFY', $incident['id_grupo']);
+				}
 			}
 		}
 	}

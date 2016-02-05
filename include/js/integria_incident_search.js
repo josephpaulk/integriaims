@@ -458,7 +458,6 @@ function process_massive_updates () {
 		parent_ticket_name = $("#text-search_parent").attr("value");
 		parent_ticket_split = parent_ticket_name.split('#');
 		parent_ticket_id = parent_ticket_split[1];	
-		notify_changes = $("#checkbox-mass_email_notify:checked").val();
 		
 		for(var i=0;i<checked_ids.length;i++){
 			values = Array ();
@@ -489,13 +488,6 @@ function process_massive_updates () {
 			if(parent_ticket != 0) {
 				values.push ({name: "id_parent",
 						value: parent_ticket_id});
-			}
-			if(notify_changes == 1) {
-				values.push ({name: "mass_email_notify",
-						value: 1});
-			} else {
-				values.push ({name: "mass_email_notify",
-						value: 0});
 			}
 			values.push ({name: "massive_number_loop",
 					value: i});

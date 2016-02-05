@@ -65,7 +65,12 @@ function api_create_users ($return_type, $user, $params){
 			"User ".$user." try to create user");
 		exit;
 	}
-
+	
+	// If password is empty, set the name as password
+	if (empty($password)) {
+		$password = $user;
+	}
+	
 	$timestamp = print_mysql_timestamp();
 
 	$sql = sprintf ('INSERT INTO tusuario
@@ -142,7 +147,11 @@ function api_create_incident ($return_type, $user, $params){
 	$inicio = $timestamp;
 	$actualizacion = $timestamp;
 
-	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $group");
+	// Check if user and title is not empty and user exists
+	if (empty ($title)){
+		exit;
+	}
+	
 	if ($owner == '') {
 		$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $group");
 	}
@@ -176,22 +185,22 @@ function api_create_incident ($return_type, $user, $params){
 		$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
-			id_grupo, id_creator, notify_email, 
+			id_grupo, id_creator, 
 			resolution, email_copy, id_incident_type, extra_data, extra_data2)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			"%s", %d, "%s", %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
+			%d, "%s", %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$email_notify, $resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2);
+			$resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2);
 	} else {
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, estado, prioridad,
-				id_grupo, id_creator, notify_email, 
+				id_grupo, id_creator, 
 				resolution, email_copy, id_incident_type, id_parent, extra_data, extra_data2)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-				"%s", %d, "%s", %d, %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
+				%d, "%s", %d, %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 				$status, $priority, $group, $id_creator,
-				$email_notify, $resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2);
+				$resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2);
 	}
 
 	if ($check_status && $check_resolution) {
@@ -218,7 +227,10 @@ function api_create_incident ($return_type, $user, $params){
 		incident_tracking ($id, INCIDENT_CREATED);
 
 		// Email notify to all people involved in this incident
-		if ($email_notify) {
+		if ($email_copy != "") { 
+			mail_incident ($id, $user, "", 0, 1, 7);
+		}
+		if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
 			mail_incident ($id, $user, "", 0, 1);
 		}
 		
@@ -282,7 +294,14 @@ function api_get_incidents ($return_type, $user, $params){
 	$result = filter_incidents ($filter);
 	
 	if($result === false) {
-		return "<xml></xml>";
+		switch($return_type) {
+			case "xml":
+				return "<xml></xml>";
+				break;
+			case "csv":
+				return;
+				break;
+		}
 	}
 	
 	$ret = '';
@@ -402,6 +421,12 @@ function api_get_incident_details ($return_type, $user, $id_incident){
 
 function api_update_incident ($return_type, $user, $params){	
 	$id_incident = $params[0];
+	$values['titulo'] = $params[1];
+	
+	// Check if user and title is not empty and user exists
+	if (empty ($values['titulo'])){
+		return;
+	}
 	
 	if(!check_user_incident($user, $id_incident)) {
 		return;
@@ -409,7 +434,6 @@ function api_update_incident ($return_type, $user, $params){
 	
 	$timestamp = print_mysql_timestamp();
 	
-	$values['titulo'] = $params[1];
 	$values['descripcion'] = $params[2];
 	$values['epilog'] = $params[3];
 	$values['id_grupo'] = $params[4];
@@ -686,6 +710,7 @@ function api_get_incident_files ($return_type, $user, $id_incident){
 	$filter = array();
 	
 	$result = get_incident_files ($id_incident);
+	$result = clean_numerics($result);
 	
 	if($result === false) {
 		return '';
@@ -1158,8 +1183,17 @@ function api_get_inventories($return_type, $param){
 	return $ret;
 }
 
-function api_validate_user ($return_type, $user, $pass){
-	return get_db_sql ("select count(id_usuario) FROM tusuario WHERE disabled = 0 AND id_usuario = '$user' AND password = md5('$pass')");
+function api_validate_user ($return_type, $user, $param){
+	$user_check = $param[0];
+	$pass_check = $param[1];
+	
+	$validate = get_db_sql ("select count(id_usuario) FROM tusuario WHERE disabled = 0 AND id_usuario = '$user_check' AND password = md5('$pass_check')");
+	switch ($return_type) {
+		case "xml":
+			return "<xml>" . $validate . "</xml>";
+		case "csv":
+			return $validate;
+	}
 }
 
 /**
@@ -1211,7 +1245,9 @@ function api_create_lead ($return_type, $user, $params){
 	}
 
 	// Invalid lead information, abort
-	if (($fullname == "") OR ($email == "") ){
+	$check_user = api_get_user_exists ("csv", $user);
+	$check_language = get_db_value ("id_language", "tlanguage", "id_language", $language);
+	if (($fullname == "") OR ($email == "") OR !($check_user) OR empty($check_language)){
 			$result = 0;
 	} else { 
 
@@ -1272,6 +1308,37 @@ function api_get_last_cron_execution ($return_type, $user, $params) {
 		$return = "<xml>\n";
 		$return .= "<cronjob>\n";
 		$return .= "<last_exec>".$minutes."</last_exec>\n";
+		$return .= "</cronjob>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $minutes;
+	}
+	
+	return $return;
+	
+}
+
+function api_get_previous_cron_execution ($return_type, $user, $params) {
+
+	$now = strtotime(date('Y/m/d H:i:s'));
+	
+	$last_exec = get_db_value('value', 'tconfig', 'token', 'previous_crontask');
+	
+	if (($last_exec === false) || ($last_exec == '')){
+		$minutes = -1;
+	} else {
+		$unix = strtotime($last_exec);
+		
+		$minutes = ($now - $unix) / 60;
+		$minutes = round($minutes, 0);
+	}
+
+	$return = '';
+	
+	if($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<cronjob>\n";
+		$return .= "<previous_exec>".$minutes."</previous_exec>\n";
 		$return .= "</cronjob>\n";
 		$return .= "</xml>\n";
 	} else {
@@ -1432,6 +1499,12 @@ function api_create_invoice ($return_type, $params) {
 	if ($data["status"] && !$data["invoice_payment_date"]) {
 		$data["invoice_payment_date"] = date('Y-m-d H:i:s', time());	
 	}
+	if ($data["id_language"] == "") {
+		$data["id_language"] = "en_GB";
+	}
+
+	$check_user = get_db_value ("id_usuario", "tusuario", "id_usuario", $data["id_user"]);
+	$check_locked_user = get_db_value ("id_usuario", "tusuario", "id_usuario", $data["locked_id_user"]);
 
 	#Check for empty billing id
 	if (!$data["bill_id"]) {
@@ -1452,7 +1525,13 @@ function api_create_invoice ($return_type, $params) {
  	} else if (!$data["invoice_type"]) {
  		$res_data["status"] = 0;
 		$res_data["error"] = "empty invoice type (Submitted or Received)";
- 	} else {
+	} else if ( empty ($check_user) && !empty ($data["id_user"])){
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "user does not exist";		
+	} else if ( $data["locked"] && empty ($check_locked_user)){
+ 		$res_data["status"] = 0;
+		$res_data["error"] = "user locked does not exist";	
+	} else {
 
  		#Check if billing id exists
 		$invoice_id = get_db_value("id", "tinvoice", "bill_id", $data["bill_id"]);
@@ -1493,23 +1572,28 @@ function api_create_invoice ($return_type, $params) {
 function api_create_company ($return_type, $params) {
 
 	$name = $params[0];
-	$address = $params[1];
-	$fiscal_id = $params[2];
-	$id_company_role = $params[3];
-	$country = $params[4];
 	$manager = $params[5];
-	$id_parent = $params[6];
+	$user_check = api_get_user_exists ("csv", $manager);
+	if (!empty($name) && ($user_check || empty ($manager))) {
+		$address = empty ($params[1]) ? '' : $params[1];
+		$fiscal_id = empty ($params[2]) ? 0 : $params[2];
+		$id_company_role = empty ($params[3]) ? 0 : $params[3];
+		$country = empty ($params[4]) ? '' : $params[4];
+		$id_parent = empty ($params[6]) ? 0 : $params[6];
 
-	$comments = "Created from SaaS portal";
-	$website = "";
+		$comments = "Created from SaaS portal";
+		$website = "";
 
-	$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
-				 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent)";
-	
-	$id = process_sql ($sql, 'insert_id');	
+		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
+					 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent)";
+		
+		$id = process_sql ($sql, 'insert_id');	
 
-	$res = $id;
-	if (!$id) {
+		$res = $id;
+		if (!$id) {
+			$res = 0;
+		}
+	} else {
 		$res = 0;
 	}
 
@@ -1555,7 +1639,12 @@ function api_get_user_exists ($return_type, $params) {
 }
 
 function api_delete_user($return_type, $params) {
-
+	
+	// Cannot delete the admin user
+	if ($params === 'admin') {
+		return;
+	}
+	
 	$sql = sprintf('DELETE FROM tusuario WHERE id_usuario = "%s"', $params);
 
 	$ret = process_sql($sql);
@@ -1812,10 +1901,22 @@ function api_add_address_to_newsletter ($return_type, $user, $params) {
 	$values['status'] = 0;
 	$values['datetime'] = print_mysql_timestamp();
 	$values['validated'] = 0;
-
-	$result = process_sql_insert('tnewsletter_address', $values);
 	
-	echo $result;
+	$check_id_newsletter = get_db_value ("id", "tnewsletter", "id", $values['id_newsletter']);
+	
+	$result = 0;
+	if (!empty ($check_id_newsletter)) {
+		$result = process_sql_insert('tnewsletter_address', $values);
+	}
+	
+	switch ($return_type) {
+		case "xml":
+			echo xml_node ($result);
+			break;
+		case "csv":
+			echo $result;
+			break;
+	}
 	return;
 }
 

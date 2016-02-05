@@ -1812,7 +1812,7 @@ function get_incident_users ($id_incident) {
 function check_incident_sla_min_response ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
-	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	$sla_info = incidents_get_sla_info ($incident['id_grupo']);
 	
 	if ($sla_info != false) {
 		$id_sla_type = $sla_info['id_sla_type'];
@@ -1820,7 +1820,7 @@ function check_incident_sla_min_response ($id_incident) {
 		switch ($id_sla_type) {
 			case 0: //NORMAL SLA
 				/* If closed, disable any affected SLA */
-				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+				if (($incident['estado'] == 6) || ($incident['estado'] == 7)) {
 					if ($incident['affected_sla_id']) {
 						$sql = sprintf ('UPDATE tincidencia
 							SET affected_sla_id = 0
@@ -1932,7 +1932,7 @@ function check_incident_sla_min_response ($id_incident) {
 function check_incident_sla_max_inactivity ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
-	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	$sla_info = incidents_get_sla_info ($incident['id_grupo']);
 	
 	if ($sla_info != false) {
 		$id_sla_type = $sla_info['id_sla_type'];
@@ -1940,7 +1940,7 @@ function check_incident_sla_max_inactivity ($id_incident) {
 		switch ($id_sla_type) {
 			case 0: //NORMAL SLA
 				/* If closed, disable any affected SLA */
-				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+				if (($incident['estado'] == 6) || ($incident['estado'] == 7)) {
 					if ($incident['affected_sla_id']) {
 						$sql = sprintf ('UPDATE tincidencia
 							SET affected_sla_id = 0
@@ -2028,7 +2028,7 @@ function check_incident_sla_max_inactivity ($id_incident) {
 
 function check_incident_sla_max_response ($id_incident) {
 	$incident = get_incident ($id_incident);
-	$sla_info = incidents_get_sla_info ($incident['id_group']);
+	$sla_info = incidents_get_sla_info ($incident['id_grupo']);
 	
 	if ($sla_info != false) {
 		$id_sla_type = $sla_info['id_sla_type'];
@@ -2036,7 +2036,7 @@ function check_incident_sla_max_response ($id_incident) {
 		switch ($id_sla_type) {
 			case 0: //NORMAL SLA
 				/* If closed, disable any affected SLA */
-				if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+				if (($incident['estado'] == 6) || ($incident['estado'] == 7)) {
 					if ($incident['affected_sla_id']) {
 						$sql = sprintf ('UPDATE tincidencia
 							SET affected_sla_id = 0
@@ -2832,20 +2832,31 @@ function get_filter_by_company_accessibility ($id_user) {
 // Returns the task of an invoice
 function get_invoice_tax ($id_invoice) {
 	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
-	$tax = json_decode($tax,true);
+	$long_tax = strlen($tax);
+	if (substr($tax, -$long_tax, 1) == '{'){
+		$tax = json_decode($tax,true);
+	}
 	return $tax;
 }
 // Returns the sum task of an invoice
 function get_invoice_tax_sum ($id_invoice) {
 	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
-	$tax = json_decode($tax,true);
-	$tax_sum = array_sum($tax);
+	$long_tax = strlen($tax);
+	if (substr($tax, -$long_tax, 1) == '{'){
+		$tax = json_decode($tax,true);
+		$tax_sum = array_sum($tax);
+	} else {
+		$tax_sum = $tax; 
+	}
 	return $tax_sum;
 }
-
+// Returns the task_name of an invoice
 function get_invoice_tax_name ($id_invoice) {
 	$tax_name = get_db_value ('tax_name', 'tinvoice', 'id', $id_invoice);
-	$tax_name = json_decode($tax_name,true);
+	$long_tax_name = strlen($tax_name);
+	if (substr($tax_name, -$long_tax_name, 1) == '{'){
+		$tax_name = json_decode($tax_name,true);
+	}
 	return $tax_name;
 }
 
@@ -2888,6 +2899,12 @@ function get_invoice_irpf ($id_invoice) {
 	$discount_irpf = get_db_value ('irpf', 'tinvoice', 'id', $id_invoice);
 	
 	return $discount_irpf;
+}
+
+function get_invoice_concept_retention($id_invoice){
+	$discount_irpf_name = get_db_value ('concept_irpf', 'tinvoice', 'id', $id_invoice);
+	
+	return $discount_irpf_name;
 }
 
 function get_user_work_home ($id_user, $year){

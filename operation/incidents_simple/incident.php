@@ -65,7 +65,7 @@ if($add_workunit) {
 	$public = 1;
 	$timeused = "0.05";
 	
-	$result = create_workunit ($incident_id, $note, $config["id_user"], $timeused, 0, "", $public);
+	$result = create_workunit ($incident_id, $note, $config["id_user"], $timeused, 0, "", $public, 0);
 	
 	if($result) {
 		ui_print_success_message(__('Workunit added'));

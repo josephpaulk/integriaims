@@ -56,7 +56,6 @@ if($create_incident) {
 	$estado = 1; // New
 	$resolution = 0; // None
 	$email_copy = '';
-	$email_notify = get_db_value ("forced_email", "tgrupo", "id_grupo", $group_id);
 	$id_parent = 0;
 	$epilog = '';
 	
@@ -80,13 +79,13 @@ if($create_incident) {
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
-			id_grupo, id_creator, notify_email, id_task,
+			id_grupo, id_creator, id_task,
 			resolution, id_incident_type, sla_disabled, email_copy, epilog)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			%d, %d, %d, %d, %d, "%s", "%s")', $timestamp, $timestamp,
+			%d, %d, %d, %d, "%s", "%s")', $timestamp, $timestamp,
 			$title, $description, $id_user_responsible,
 			$estado, $priority, $group_id, $id_creator,
-			$email_notify, $id_task, $resolution, $id_incident_type,
+			$id_task, $resolution, $id_incident_type,
 			$sla_disabled, $email_copy, $epilog);
 			
 	$id = process_sql ($sql, 'insert_id');
@@ -107,7 +106,10 @@ if($create_incident) {
 		incidents_set_tracking ($id, 'create', $priority, $estado, $resolution, $id_user_responsible, $group_id);
 
 		// Email notify to all people involved in this incident
-		if ($email_notify) {
+		if ($email_copy != "") { 
+			mail_incident ($id, $id_user_responsible, "", 0, 1, 7);
+		}
+		if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
 			mail_incident ($id, $id_user_responsible, "", 0, 1);
 		}
 		

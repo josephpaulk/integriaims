@@ -284,8 +284,6 @@ if ($has_im) {
 	$table->data[1][1] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'));
 	$table->data[1][1] .= print_input_hidden ('id_parent', $id_parent, true);
 	$table->data[1][1] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
-	//Email notify
-	$table->data[1][2] = print_checkbox_extended ('mass_email_notify', 1, 1, false, '', '', true, __('Notify changes by email'));
 	//Delete tickets
 	$table->data[1][3] = print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
 }

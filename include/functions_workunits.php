@@ -59,6 +59,7 @@ function lock_task_workunit ($id_workunit) {
 }
 
 function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1, $work_home = 0, $workflow = false) {
+	global $config;
 	$fecha = print_mysql_timestamp();
 	$sql = sprintf ('UPDATE tincidencia
 		SET affected_sla_id = 0, actualizacion = "%s"  
@@ -79,11 +80,16 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 	$res = process_sql ($sql);
 	
 	if ($res !== false) {
-		// Email notify to all people involved in this incident
-		$email_notify = get_db_value ("notify_email", "tincidencia", "id_incidencia", $incident_id);
-		if (($email_notify == 1) AND ($send_email == 1)) {
-			mail_incident ($incident_id, $user, $wu_text, $timeused, 10, $public);
-		}
+		$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$incident_id.';';
+		$email_copy = get_db_sql($email_copy_sql);
+		if ($send_email == 1){
+			if ($email_copy != "") { 
+				mail_incident ($incident_id, $user, $wu_text, $timeused, 10, 7);
+			}
+			if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($incident_id, $user, $wu_text, $timeused, 10);
+			}
+		}	
 	} else {
 		//Delete workunit
 		$sql = sprintf ('DELETE FROM tworkunit WHERE id = %d',$id_workunit);

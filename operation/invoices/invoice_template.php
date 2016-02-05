@@ -4,7 +4,11 @@
 			<table style="width:620px; text-align:right;">
 				<tr>
 					<td style="text-align:left; font-size:16px; color:black; max-width:100px;">
-						<?php echo  '<div><img style="width:150px; padding: 0px; align: left; margin: 0px;" align=left src="'.$header_logo.'"></div>';?>
+						<?php
+						if($header_logo != 'images/none'){ 
+							echo '<div><img style="width:150px; padding: 0px; align: left; margin: 0px;" align=left src="'.$header_logo.'"></div>';
+						}
+						?>
 					</td>
 					<td style="font-size:14px; color:black;">
 						<?php echo '<div style="font-size:14px;"><pre>'.$config["invoice_header"].'</pre></div>' ?>
@@ -140,42 +144,68 @@
 			<table style="border-top: 1px solid grey; padding: 5px 15px 0px 15px; width:620px;">
 				<tr>
 					<td style=" text-align:left; font-size:12px;  width: 400px;">
-						<?php echo __('Total amount without taxes or discounts') ?>
+						<?php echo __('Tax Base') ?>
 					</td>
 					<td style=" text-align:right; font-size:12px; color:black;">
 						<?php echo '<b>'.format_numeric($amount,2).' '.$invoice['currency'].'</b>' ?>
 					</td>
 				</tr>
 			</table>
-			<table style="border-top: 1px solid grey; padding: 5px 15px 0px 15px; width:620px;">
-				<tr>
-					<td style=" text-align:left; font-size:12px; width: 220px;">
-						<?php echo $concept_discount_before ?>
-					</td>
-					<td style=" text-align:left; font-size:12px; width: 155px;">
-						<?php echo $discount_before.'%' ?>
-					</td>
-					<td style=" text-align:right; font-size:12px; color:black; ">
-						<?php echo '<b>'.format_numeric($before_amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-				</tr>
-			</table>
-			<table style="border-top: 2px solid black; padding: 5px 15px 0px 15px; width:620px;">
-				<tr>
-					<td style=" text-align:left; font-size:12px; color:black; width: 220px;">
-						<?php echo __('Concept Taxes') ?>
-					</td>
-					<td style=" text-align:left; font-size:12px; color:black; width: 155px;">
-						<?php echo __('Taxes (%)') ?>
-					</td>
-					<td style="text-align:right; font-size:12px; color:black;">
-						<?php echo __('Total Taxes') ?>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<table style="width:155px;">
-							<?php
+			<?php
+			if ($before_amount != 0){
+				echo '<table style="border-top: 1px solid grey; padding: 5px 15px 0px 15px; width:620px;">';
+				echo '<tr>';
+					echo '<td style=" text-align:left; font-size:12px; width: 220px;">';
+						 echo $concept_discount_before; 
+					echo '</td>';
+					echo '<td style=" text-align:left; font-size:12px; width: 155px;">';
+						 echo $discount_before.'%';
+					echo '</td>';
+					echo '<td style=" text-align:right; font-size:12px; color:black; ">';
+						echo '<b>'.format_numeric($before_amount,2).' '.$invoice['currency'].'</b>';
+					echo '</td>';
+				echo '</tr>';
+			echo '</table>';
+			}
+			if ($tax != 0) {
+			echo '<table style="border-top: 2px solid black; padding: 5px 15px 0px 15px; width:620px;">';
+				echo '<tr>';
+					echo '<td style=" text-align:left; font-size:12px; color:black; width: 220px;">';
+						echo __('Concept Taxes');
+					echo '</td>';
+					echo '<td style=" text-align:left; font-size:12px; color:black; width: 155px;">';
+						echo __('Taxes (%)');
+					echo '</td>';
+					echo '<td style="text-align:right; font-size:12px; color:black;">';
+						echo __('Total Taxes'); 
+					echo '</td>';
+				echo '</tr>';
+				echo '<tr>';
+				if (is_numeric($tax2)){	
+					echo '<td>';
+						echo '<table style="width:155px;">';									 
+							echo '<tr>';
+								echo '<td style="padding-top:5px; font-size:11px; text-align:left;">'.$invoice['tax_name'].'</td>';
+							echo '</tr>';
+						echo '</table>';
+					echo '</td>';
+					echo '<td>';
+						echo '<table style="width:155px;">';									 
+							echo '<tr>';
+								echo '<td style="padding-top:5px; font-size:11px; text-align:left;">'.$invoice['tax'].'</td>';
+							echo '</tr>';
+						echo '</table>';
+					echo '</td>';
+					echo '<td>';
+						echo '<table style="width:310px;">';									 
+							echo '<tr>';
+								echo '<td style="padding-top:5px; font-size:11px; text-align:right;">'.format_numeric($total_before * ($invoice['tax']/100)).' '.$invoice['currency'].'</td>';
+							echo '</tr>';
+						echo '</table>';
+					echo '</td>';
+				} else {
+					echo '<td>';
+						echo '<table style="width:155px;">';
 								if ($invoice['tax_name'] != "") {
 									foreach ( json_decode($invoice['tax_name']) as $key => $campo) { 
 										echo '<tr>';
@@ -183,12 +213,10 @@
 										echo '</tr>';
 									}
 								}
-							?>	
-						</table>
-					</td>
-					<td>
-						<table style="width:155px;">
-							<?php	
+						echo '</table>';
+					echo '</td>';
+					echo '<td>';
+						echo '<table style="width:155px;">';	
 								if ($invoice['tax'] != "") {
 									foreach ( json_decode($invoice['tax']) as $key => $campo) { 
 										echo '<tr>';
@@ -196,12 +224,10 @@
 										echo '</tr>';
 									}
 								}
-							?>
-						</table>
-					</td>
-					<td>
-						<table style="width:310px;">
-							<?php	
+						echo '</table>';
+					echo '</td>';
+					echo '<td>';
+						echo '<table style="width:310px;">';
 								if ($invoice['tax'] != "") {
 									foreach ( json_decode($invoice['tax']) as $key => $campo) { 
 										echo '<tr>';
@@ -209,74 +235,85 @@
 										echo '</tr>';
 									}
 								}
-							?>
-						</table>
-					</td>
-				</tr>
-			</table>
-			<table style="border-top: 1px solid grey; padding: 5px 15px 0px 15px; width:620px;">
-				<tr>
-					<td style="font-size:12px; color:black; width:220px; text-align:left;">
-						<?php echo __('Total Taxes'). '</b>' ?>
-					</td>
-					<td style="font-size:12px; color:black; width:155px; text-align:left;">
-						<?php echo $tax.'%'.'</b>' ?>
-					</td>
-					<td style="font-size:12px; color:black; text-align:right;">
-						<?php echo '<b>'.format_numeric($tax_amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-				</tr>
-			</table>
-			<table style="border-top: 1px solid black; padding: 5px 15px 0px 15px; width:620px;">
-				<tr>
-					<td style=" text-align:left; font-size:12px; color:black; width: 220px;">
-						<?php echo __('IRPF').'</b>' ?>
-					</td>
-					<td style=" text-align:left; font-size:12px; color:black; width: 155px;">
-						<?php echo $irpf.'%' ?>
-					</td>
-					<td style=" text-align:right; font-size:12px; color:black; ">
-						<?php echo '<b>'.format_numeric($irpf_amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-				</tr>
-			</table>
-			<table style="border-top:2px solid black; border-bottom:1px solid black; width:620px; padding: 5px 15px 0px 15px;">
-				<tr>
-					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
-						<?php echo '<b>'.__('Total amount without taxes or discounts').'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
-						<?php echo '<b>'.__('Discount before taxes').'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
-						<?php echo '<b>'.'Total Tax'. ' ('.$tax.'%)'.'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
-						<?php echo '<b>'.__('IRPF').'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:14px; color:black;">
-						<?php echo '<b>'.__('Total amount').'</b>' ?>
-					</td>
-				</tr>
-				<tr>
-					<td style="padding-bottom:15px; width:124px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($before_amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($tax_amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($irpf_amount,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-					<td style="padding-bottom:15px; width:124px; font-size:15px;">
-						<?php echo '<b>'.format_numeric($total,2).' '.$invoice['currency'].'</b>' ?>
-					</td>
-				</tr>
-			</table>
-			<?php
+						echo '</table>';
+					echo '</td>';
+					}
+				echo '</tr>';
+			echo '</table>';
+			echo '<table style="border-top: 1px solid grey; padding: 5px 15px 0px 15px; width:620px;">';
+				echo '<tr>';
+					echo '<td style="font-size:12px; color:black; width:220px; text-align:left;">';
+						echo __('Total Taxes'). '</b>';
+					echo '</td>';
+					echo '<td style="font-size:12px; color:black; width:155px; text-align:left;">';
+						echo $tax.'%'.'</b>';
+					echo '</td>';
+					echo '<td style="font-size:12px; color:black; text-align:right;">';
+						echo '<b>'.format_numeric($tax_amount,2).' '.$invoice['currency'].'</b>';
+					echo '</td>';
+				echo '</tr>';
+			echo '</table>';
+			}
+			if ($irpf_amount != 0){
+				echo '<table style="border-top: 1px solid black; padding: 5px 15px 0px 15px; width:620px;">';
+					echo '<tr>';
+						echo '<td style=" text-align:left; font-size:12px; color:black; width: 220px;">';
+							echo '</b>'. $concept_retention .'</b>';
+						echo '</td>';
+						echo '<td style=" text-align:left; font-size:12px; color:black; width: 155px;">';
+							echo $irpf.'%';
+						echo '</td>';
+						echo '<td style=" text-align:right; font-size:12px; color:black; ">';
+							echo '<b>'.format_numeric($irpf_amount,2).' '.$invoice['currency'].'</b>';
+						echo '</td>';
+					echo '</tr>';
+				echo '</table>';
+			}
+			if ($irpf_amount != 0){
+				$tdwidth = 124;	
+			} else {
+				$tdwidth = 155;	
+			}
+			echo '<table style="border-top:2px solid black; border-bottom:1px solid black; width:620px; padding: 5px 15px 0px 15px;">';
+				echo '<tr>';
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
+						echo '<b>'.__('Tax Base').'</b>';
+					echo '</td>';
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
+						echo '<b>'.__('Discount before taxes').'</b>';
+					echo '</td>';
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
+						echo '<b>'.__('Total Tax'). ' ('.$tax.'%)'.'</b>';
+					echo '</td>';
+					if ($irpf_amount != 0){
+						echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
+							echo '<b>'.__('Retention').'</b>';
+						echo '</td>';
+					}
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:14px; color:black;">';
+						echo '<b>'.__('Total amount').'</b>';
+					echo '</td>';
+				echo '</tr>';
+				echo '<tr>';
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:15px;">';
+						echo '<b>'.format_numeric($amount,2).' '.$invoice['currency'].'</b>';
+					echo '</td>';
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:15px;">';
+						echo '<b>'.format_numeric($before_amount,2).' '.$invoice['currency'].'</b>';
+					echo '</td>';
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:15px;">';
+						echo '<b>'.format_numeric($tax_amount,2).' '.$invoice['currency'].'</b>';
+					echo '</td>';
+					if ($irpf_amount != 0){
+						echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:15px;">';
+							echo '<b>'.format_numeric($irpf_amount,2).' '.$invoice['currency'].'</b>';
+						echo '</td>';
+					}
+					echo '<td style="padding-bottom:15px; width:'. $tdwidth .'px; font-size:15px;">';
+						echo '<b>'.format_numeric($total,2).' '.$invoice['currency'].'</b>';
+					echo '</td>';
+				echo '</tr>';
+			echo '</table>';
 			if ($invoice['description']) {
 				echo "<table style='border-bottom:1px solid black; width:620px; text-align:center; padding-bottom:15px; '>
 							<tr>

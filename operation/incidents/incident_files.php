@@ -86,7 +86,14 @@ if (defined ('AJAX')) {
 				if ($id_attachment) {
 					incident_tracking ($id, INCIDENT_FILE_ADDED);
 					// Email notify to all people involved in this incident
-					if ($config["email_on_incident_update"]) {
+					// Email in list email-copy
+					$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id.';';
+					$email_copy = get_db_sql($email_copy_sql);
+					if ($email_copy != "") { 
+						mail_incident ($id, $config['id_user'], 0, 0, 2, 7);
+					}
+					
+					if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)) {
 						mail_incident ($id, $config['id_user'], 0, 0, 2);
 					}
 

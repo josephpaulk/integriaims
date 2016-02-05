@@ -165,7 +165,7 @@ function load_config() {
 		$config["sql_query_limit"] = 1500;
 	
 	if (!isset ($config["pdffont"]))
-		$config["pdffont"] = $config["homedir"]."/include/fonts/FreeSans.ttf";
+		$config["pdffont"] = $config["homedir"]."include/fonts/FreeSans.ttf";
 	
 	if (!isset ($config["font"])){
 		$config["font"] = $config["homedir"]."/include/fonts/smallfont.ttf";
@@ -284,9 +284,6 @@ function load_config() {
 	}
 	if (!isset($config["enabled_ticket_editor"])){
 		$config["enabled_ticket_editor"] = 0;
-	}
-	if (!isset($config["email_ticket_on_creation_and_closing"])){
-		$config["email_ticket_on_creation_and_closing"] = 0;
 	}
 	if (!isset($config["batch_email_validation"])) {
 		$config["batch_email_validation"] = 10;

@@ -39,7 +39,6 @@ if (isset ($_POST["quick_delete"])) {
 	$row2=mysql_fetch_array($result2);
 	if ($row2) {
 		$id_author_inc = $row2["id_usuario"];
-		$email_notify = $row2["notify_email"];
 		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			borrar_incidencia($id_inc);
 

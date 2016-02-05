@@ -377,7 +377,6 @@ if ($quick_delete) {
 	$row2=mysql_fetch_array($result2);
 	if ($row2) {
 		$id_author_inc = $row2["id_usuario"];
-		$email_notify = $row2["notify_email"];
 		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			borrar_incidencia($id_inc);
 
@@ -428,18 +427,6 @@ if ($action == 'update') {
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
-	$email_notify = (int)get_parameter ('email_notify_form', 0);
-
-	//For massive operations
-	$mass_email_notify = get_parameter ('mass_email_notify', -1);
-	if ($mass_email_notify != -1) {
-		if (!$mass_email_notify) {
-			$email_notify = 0;
-		}
-		if ($mass_email_notify) {
-			$email_notify = 1;
-		}
-	}
 
 	$epilog = get_parameter ('epilog', $old_incident['epilog']);
 	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
@@ -450,7 +437,7 @@ if ($action == 'update') {
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
-	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
+	$email_copy = get_parameter ('email_copy', '');
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
 	$blocked = get_parameter('blocked', $old_incident['blocked']);
 	
@@ -514,7 +501,6 @@ if ($action == 'update') {
 			'id_grupo' => $grupo,
 			'id_usuario' => $user,
 			'closed_by' => $closed_by,
-			'notify_email' => $email_notify,
 			'prioridad' => $priority,
 			'descripcion' => $description,
 			'epilog' => $epilog,
@@ -534,6 +520,10 @@ if ($action == 'update') {
 	// When close incident set close date to current date
 	if ($estado == 7) {
 		$values['cierre'] = $timestamp;
+	}
+	// When re-open incident set score to 0
+	if(($incident["score"] != 0) AND ($incident["estado"] != 7)){
+		$values['score'] = 0;
 	}
 
 	$result = process_sql_update('tincidencia', $values, array('id_incidencia' => $id));
@@ -568,12 +558,22 @@ if ($action == 'update') {
 		$result_msg = "<h3 class='suc'>".__('Ticket successfully updated')."</h3>";
 
 	// Email notify to all people involved in this incident
-	if ($email_notify == 1) {
-		if (($estado == 7) || ($config["email_on_incident_update"] == 1)) {
-            if (($estado == 7))
-    			mail_incident ($id, $user, "", 0, 5);
-            else
-    			mail_incident ($id, $user, "", 0, 0);
+	// Email in list email-copy
+	if ($email_copy != "") { 
+		if (($incident["score"] == 0) || ($old_status == 7)) {
+			if($estado == 7){
+				mail_incident ($id, $user, "", 0, 5, 7);
+			} else {
+				mail_incident ($id, $user, "", 0, 0, 7);
+			}
+		}
+	}
+	// Email owner and creator
+	if (($incident["score"] == 0) || ($old_status == 7)) {
+		if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4) && ($estado == 7)) { //add emails only closed
+    		mail_incident ($id, $user, "", 0, 5);
+    	} else if ($config["email_on_incident_update"] == 0){ //add emails updates
+    		mail_incident ($id, $user, "", 0, 0);
 		}
 	}
 
@@ -607,7 +607,6 @@ if ($action == "insert" && !$id) {
 		$resolution = 0;
 	}
 	$id_task = (int) get_parameter ("id_task");
-	$email_notify = (bool) get_parameter ('email_notify_form');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
@@ -619,10 +618,6 @@ if ($action == "insert" && !$id) {
 	$old_status = $estado;
 	$old_resolution = $resolution;
 	
-	//Get notify flag from group if the user doesn't has IM flag
-	if (give_acl ($config['id_user'], $id_grupo, "IW")) {
-		$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $grupo);
-	}
 	
 	// If user is not provided, is the currently logged user or user group by default
 	//~ $usuario = get_parameter ("id_user", $config['id_user']);
@@ -687,7 +682,6 @@ if ($action == "insert" && !$id) {
 				'prioridad' => $priority,
 				'id_grupo' => $grupo,
 				'id_creator' => $id_creator,
-				'notify_email' => $email_notify,
 				'id_task' => $id_task,
 				'resolution' => $resolution,
 				'id_incident_type' => $id_incident_type,
@@ -724,7 +718,10 @@ if ($action == "insert" && !$id) {
 
 
 			// Email notify to all people involved in this incident
-			if ($email_notify) {
+			if ($email_copy != "") { 
+				mail_incident ($id, $usuario, "", 0, 1, 7);
+			}
+			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
 				mail_incident ($id, $usuario, "", 0, 1);
 			}
 			
@@ -760,7 +757,7 @@ if ($action == "insert" && !$id) {
 						} else {
 							$file_description = __('No description available');
 						}
-						$file_result = attach_incident_file ($id, $file["location"], $file_description, false, $file["name"]);
+						$file_result = attach_incident_file ($id, $file["location"], $file_description, $file["name"]);
 					}
 				}
 			}
@@ -802,7 +799,6 @@ if ($id) {
 	$nombre_real = dame_nombre_real($usuario);
 	$id_grupo = $incident["id_grupo"];
 	$id_creator = $incident["id_creator"];
-	$email_notify=$incident["notify_email"];
 	$resolution = $incident["resolution"];
 	$epilog = $incident["epilog"];
 	$id_task = $incident["id_task"];
@@ -838,14 +834,6 @@ if ($id) {
 		$id_creator = $config['id_user'];
 	}
 	
-	//Email notify default value is the same that forced_email group field
-	$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $id_group);
-	
-	if($email_notify) {
-		$email_notify = 1;
-	} else {
-		$email_notify = 0;
-	}
 	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
@@ -1019,22 +1007,22 @@ if ($disabled) {
 
 $table->data[1][0] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
+$table->data[1][1] = combo_incident_status ($estado, $blocked_incident, 0, true, false, '', '', 0);
+
 if (!$create_incident){
 	if ($incident["estado"] != STATUS_CLOSED) {
-		$table->data[1][1] = "<div id='div_incident_resolution' style='display: none;'>";
+		$table->data[1][2] = "<div id='div_incident_resolution' style='display: none;'>";
 	} else {
-		$table->data[1][1] = "<div id='div_incident_resolution'>";
+		$table->data[1][2] = "<div id='div_incident_resolution'>";
 	}
 	if ($has_im)
-		$table->data[1][1] .= combo_incident_resolution ($resolution, $blocked_incident, true);
+		$table->data[1][2] .= combo_incident_resolution ($resolution, $blocked_incident, true);
 	else {
-		$table->data[1][1] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
-		$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
+		$table->data[1][2] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
+		$table->data[1][2] .= print_input_hidden ('incident_resolution', $resolution, true);
 	}
-	$table->data[1][1] .= "</div>";
+	$table->data[1][2] .= "</div>";
 }
-
-$table->data[1][2] = combo_incident_status ($estado, $blocked_incident, 0, true, false, '', '', 0);
 
 if ($incident["estado"] != STATUS_CLOSED) {
 		$table->data[1][3] = "<div id='div_incident_block' style='display: none;'>";
@@ -1165,14 +1153,9 @@ if ($has_im && $create_incident){
 }
 
 if ($has_im){
-	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
-			$blocked_incident, '', '', true, __('SLA disabled'));
-
-    $table_advanced->data[1][0] = print_checkbox ("email_notify_form", 1, $email_notify, true, __('Notify changes by email '), $blocked_incident);
-
+	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled, $blocked_incident, '', '', true, __('SLA disabled'));
 } else {
 	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);
-	$table_advanced->data[1][0] = print_input_hidden ('email_notify', 1, true);
 }
 
 $parent_name = $id_parent ? (__('Ticket').' #'.$id_parent) : __('None');
@@ -1429,14 +1412,6 @@ $(document).ready (function () {
 	var id_user = $("#text-id_user").val();
 	var id_group = $("#grupo_form").val();
 
-	//Configure default values for field "notify by email" based on selected group
-	var group_info = get_group_info(id_group);
-		
-	if (group_info.forced_email != "0") {
-		$("#checkbox-email_notify").prop("checked", true);
-	} else {
-		$("#checkbox-email_notify").prop("checked", false);
-	}	
 	
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
@@ -1458,11 +1433,6 @@ $(document).ready (function () {
 		
 		var group_info = get_group_info(group);
 		
-		if (group_info.forced_email != "0") {
-			$("#checkbox-email_notify").prop("checked", true);
-		} else {
-			$("#checkbox-email_notify").prop("checked", false);
-		}
 		
 		$("#text-id_user").val(group_info.id_user_default);
 		$("#plain-id_user").html(group_info.id_user_default);

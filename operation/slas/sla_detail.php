@@ -52,13 +52,13 @@ if ($create_sla) {
     $time_from = (int) get_parameter ("time_from", 0);
     $time_to = (int) get_parameter ("time_to", 0);
     $no_holidays = (int) get_parameter ('no_holidays', 0);
-    $sla_type = (int) get_parameter ('sla_type', 0);
+    $id_sla_type = (int) get_parameter ('id_sla_type', 0);
 
 	$sql = sprintf ('INSERT INTO tsla (`name`, `description`, id_sla_base,
-		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity, no_holidays)
-		VALUE ("%s", "%s", %d, %.2f, %.2f, %d, %d, %d, %d, %d, %.2f, %d)',
+		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity, no_holidays, id_sla_type)
+		VALUE ("%s", "%s", %d, %.2f, %.2f, %d, %d, %d, %d, %d, %.2f, %d, %d)',
 		$name, $description, $id_sla_base, $min_response,
-		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to, $max_inactivity, $no_holidays);
+		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to, $max_inactivity, $no_holidays, $id_sla_type);
 
 	$id = process_sql ($sql);
 	if ($id === false)
@@ -88,13 +88,13 @@ if ($update_sla) {
     $time_to = (int) get_parameter ("time_to", 0);
     $max_inactivity = (float) get_parameter ('max_inactivity');
     $no_holidays = (int) get_parameter ('no_holidays', 0);
-    $sla_type = (int) get_parameter ('sla_type', 0);
+    $id_sla_type = (int) get_parameter ('id_sla_type', 0);
 
 	$sql = sprintf ('UPDATE tsla SET max_inactivity = %.2f, enforced = %d, description = "%s",
 		name = "%s", max_incidents = %d, min_response = %.2f, max_response = %.2f,
-		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d, no_holidays = %d WHERE id = %d', $max_inactivity, 
+		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d, no_holidays = %d, id_sla_type = %d WHERE id = %d', $max_inactivity, 
 		$enforced, $description, $name, $max_incidents, $min_response,
-		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $no_holidays, $id);
+		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $no_holidays, $id_sla_type, $id);
 
 	$result = process_sql ($sql);
 	if (! $result)
@@ -134,7 +134,7 @@ if ($id || $new_sla) {
         $time_from = 8;
         $time_to = 18;
 		$no_holidays = 1;
-		$sla_type = 0;
+		$id_sla_type = 0;
 	} else {
 		$sla = get_db_row ('tsla', 'id', $id);
 		$name = $sla['name'];
@@ -149,7 +149,7 @@ if ($id || $new_sla) {
         $time_from = $sla["time_from"];
         $time_to = $sla["time_to"];
         $no_holidays = $sla["no_holidays"];
-        $sla_type = $sla["id_sla_type"];
+        $id_sla_type = $sla["id_sla_type"];
 
 	}
 
@@ -166,11 +166,11 @@ if ($id || $new_sla) {
 	$table->data[0][2] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
 		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
 		
-	$sla_type_arr[0] = __("Normal SLA");
-	$sla_type_arr[1] = __("Third party SLA");
-	$sla_type_arr[2] = __("Both");
+	$id_sla_type_arr[0] = __("Normal SLA");
+	$id_sla_type_arr[1] = __("Third party SLA");
+	$id_sla_type_arr[2] = __("Both");
 					
-	$table->data[0][3] = print_select ($sla_type_arr, 'sla_type', $sla_type,'', '', '0', true, 0, false, __('SLA Type'));
+	$table->data[0][3] = print_select ($id_sla_type_arr, 'id_sla_type', $id_sla_type,'', '', '0', true, 0, false, __('SLA Type'));
 
 	$table->data[1][0] = print_label(__('Max. response time (in hours)'), '', 'text', true);
 	$table->data[1][0] .= '&nbsp;'."<input type='text' name='min_response' id='text-min_response' value='$min_response' size='5' maxlenght='100' onChange='hours_to_dms(\"min\")'>";

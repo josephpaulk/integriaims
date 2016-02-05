@@ -31,6 +31,7 @@ $search_existing_company = (bool) get_parameter ('search_existing_company');
 $search_existing_fiscal_id = (bool) get_parameter ('search_existing_fiscal_id');
 $search_existing_company_role = (bool) get_parameter ('search_existing_company_role');
 $search_existing_invoice = (bool) get_parameter ('search_existing_invoice');
+$search_existing_inventory = (bool) get_parameter ('search_existing_inventory');
 $search_existing_contract = (bool) get_parameter ('search_existing_contract');
 $search_existing_contract_number = (bool) get_parameter ('search_existing_contract_number');
 $search_existing_contact = (bool) get_parameter ('search_existing_contact');
@@ -916,6 +917,36 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
+} elseif ($search_existing_inventory) {
+	require_once ('include/functions_db.php');
+	$name = (string) get_parameter ('name');
+	$inventory_id = get_parameter ('inventory_id', 0);
+	$old_name = -1;
+	//~ $invoice_type = get_parameter ('invoice_type');
+	//~ 
+	//~ if ($invoice_type == 'Received') {
+		//~ // Don't check Bill ID
+		//~ echo json_encode(true);
+		//~ return;
+	//~ }
+	
+	if ($inventory_id) {
+		$old_name = get_db_value("name", "tinventory", "id", $inventory_id);
+	}
+	
+	// Checks if the name is in the db
+	$query_result = get_db_value("name", "tinventory", "name", $name);
+	if ($query_result) {
+		if ($name != $old_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+
 }
 
 if ($search_duplicate_name) {			
