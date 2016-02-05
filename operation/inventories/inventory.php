@@ -24,7 +24,8 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 	exit;
 }
 
-echo '<h1>' . __('Inventory overview');
+echo '<h2>' . __('Inventory') . '</h2>';
+echo '<h4>' . __('Overview');
 
 if (!$clean_output) {
 	echo "<div id='button-bar-title'>";
@@ -41,7 +42,7 @@ if (!$clean_output) {
 	echo "</li>";
 	echo "</ul>";
 }
-echo '</h1>';
+echo '</h4>';
 
 $id = (int) get_parameter ('id');
 
