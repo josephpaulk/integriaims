@@ -24,7 +24,8 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-echo "<h1>" . __("Tags management") . "</h1>";
+echo "<h2>" . __("Tags management") . "</h2>";
+echo "<h4>" . __("List of tags") . "</h4>";
 
 // Tag info
 $id = (int) get_parameter('id');

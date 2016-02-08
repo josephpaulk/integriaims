@@ -24,7 +24,8 @@ if (! give_acl($config["id_user"], 0, "VM")) {
 	exit;
 }
 
-echo '<h1>'.__('Manufacturers management').'</h1>';
+echo '<h2>' . __('Manufacturers') . '</h2>';
+echo '<h4>' . __('Management').'</h4>';
 
 $id = (int) get_parameter ('id');
 $new_manufacturer = (bool) get_parameter ('new_manufacturer');

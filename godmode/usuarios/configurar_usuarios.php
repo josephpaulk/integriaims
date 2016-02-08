@@ -73,7 +73,7 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 
 	if ($rowdup === false) {
 		echo "<h3 class='error'>".__('There was a problem loading user')."</h3>";
-		echo "</table>";
+		//echo "</table>";
 		include ("general/footer.php");
 		exit;
 	}
@@ -292,12 +292,13 @@ if ($action == 'create'){
 
 if (isset($_GET["alta"])){
 	if ($_GET["alta"]==1){
-		echo '<h1>'.__('Create user').'</h1>';
+		echo '<h2>'.__('Create user').'</h2>';
 	}
 }
 
 if (isset($_GET["update_user"]) OR isset($_GET["nuevo_usuario"])){
-	echo '<h1>'.__('Update user').'</h1>';
+	echo '<h2>'.__('Update user').'</h2>';
+	echo '<h4>'.$update_user.'</h4>';
 }
 
 if (isset($_GET["alta"]))

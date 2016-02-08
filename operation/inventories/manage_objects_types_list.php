@@ -53,15 +53,16 @@ $external_label = "";
 //**********************************************************************
 
 echo '<div id="tabs">';
-
+echo '<h2>' . strtoupper(__('Inventory')) . '</h2>';
+echo '<h4>' . strtoupper(__('Field list'));
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-title">' . strtoupper(__('Field list')) . '</li>';
 if (!empty($id_object_type)) {
 	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '"><span>'.__('Object details').'</span></a></li>';
 	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '"><span>'.__('Fields').'</span></a></li>';
 }
 echo '</ul>';
+echo '</h4>';
 echo '</div>';
 
 //**********************************************************************

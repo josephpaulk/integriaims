@@ -56,9 +56,10 @@ if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") 
 $sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id, ttask.priority FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY tproject.name DESC";
 
 
-echo "<h1>".__('Global task assignment')." ".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h1>";
+echo "<h2>".__('Global task assignment')."</h2><h4>".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h4>";
 
 if (give_acl ($config["id_user"], 0, "PM")) {
+	echo "<div class='divform'>";
 	echo "<form id='form-user_task_assignment' name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
 	
 	echo "<table style='width: 99%;' class=search-table>";
@@ -66,15 +67,17 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 	// Show user
 	//combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
 	$src_code = print_image('images/group.png', true, false, true);
-	echo print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
+	echo "<b>" . __("User") . "</b>" . print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '');
 		//. print_help_tip (__("Type at least two characters to search"), true);
-	echo "<td>";
+	echo "<tr><td>";
 	print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
 	echo "<td>";
 	echo "</form></table>";
+	echo "</div>";
 }
 
+echo "<div class='divresult'>";
 echo "<table  class='listing' width=99%>";
 echo "<th>".__('Pri');
 echo "<th>".__('Project');
@@ -117,7 +120,7 @@ while ($row=mysql_fetch_array($result)){
 
 }
 echo "</table>";
-
+echo "</div>";
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>

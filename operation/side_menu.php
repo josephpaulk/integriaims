@@ -1410,7 +1410,7 @@ echo "<a title='".__('User Info')."'href='index.php?sec=agenda&sec2=operation/us
 				else
 					echo '<img src="images/accept.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
 				
-				echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
+				//echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
 				echo "<br>";
 				echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment'>".__( "My task assigments")."</a>";		
 			}

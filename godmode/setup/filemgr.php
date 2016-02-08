@@ -61,7 +61,8 @@ if ($delete != ""){
 	}
 }
 
-echo "<h1>".__("File manager")."</h1>";
+echo "<h2>".__("File manager")."</h2>";
+echo "<h4>".__("Upload images")."</h4>";
 
 $current_directory = get_parameter ("directory", "/");
 
@@ -85,6 +86,7 @@ if (preg_match("/^\//", $current_directory))
 if (preg_match("/^manager/", $current_directory))
 	$current_directory = "images";
 
+echo "<div class='divform'>";
 echo "<table cellpadding='4' cellspacing='4' width='99%' class='search-table'>";
 
 echo "<tr><td class='datos'>";
@@ -97,12 +99,12 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 $available_directory[$current_directory] = $current_directory;
 
 echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
-print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, __("Base directory"),"","margin-top:3px;");
-echo "&nbsp;&nbsp;<input type=submit class='sub next' style='margin-top:2px;' value='".__("Go")."'>";
+print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, __("Base directory"),"","");
+echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
 echo "</form>";
 
 if (is_writable($current_directory)) {
-	echo "<td class='datos'><br>";
+	echo "<tr><td class='datos'>";
 	$action = 'index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file';
 	
 	$into_form = "<input type='hidden' name='directory' value='$current_directory'>";
@@ -110,14 +112,16 @@ if (is_writable($current_directory)) {
 	print_input_file_progress($action,$into_form,'','sub next',false);
 
 	echo "</table>";
+	echo "</div>";
 } else {
 	echo "</table>";
+	echo "</div>";
 	echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
 	echo '<p>';
 	echo __('Please check that current directory has write rights for HTTP server');
 	echo "</p>";
 }
-
+echo "<div class='divresult'>";
 echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0 title='" . __('Refresh') . "'></a></h1>";
 // Upload form
 
@@ -158,7 +162,7 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 		$dirs = null;
 		$nondirs = null;
 		
-		echo "<table width='99%' class='listing'>";
+		echo "<table width='100%' class='listing'>";
 		
 		$prev_dir = explode( "/", $current_directory );
 		$prev_dir_str = "";
@@ -263,7 +267,7 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 			echo "</form>";
 		}
 	}
-
+echo "</div>";
 
 ?>
 

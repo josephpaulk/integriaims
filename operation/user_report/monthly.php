@@ -95,7 +95,9 @@ if ($lock_month != ""){
 	}
 }
 
-echo "<h1>".__('Monthly report for')." $id";
+echo "<h2>".__('Monthly report') . "</h2>";
+
+echo "<h4>" . __("For") . ": " . $id;
 // Lock all workunits in this month
 echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
 echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
@@ -106,7 +108,7 @@ if ($report_image) {
 	echo "&nbsp;&nbsp;" . $report_image;
 }
 
-echo "</h1>";
+echo "</h4>";
 
 $first_of_month = gmmktime(0,0,0,$month,1,$year);
 

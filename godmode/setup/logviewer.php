@@ -33,10 +33,11 @@ if ($delete == 1){
 	}
 }
 
-echo "<h1>" . __("Error log") . "</h1>";
+echo "<h2>" . __("Error log") . "</h2>";
+echo "<h4>" . __("View file") . "</h4>";
 
 if (!file_exists($file_name)){
-	echo "<div class='under_tabs_info'>".__("Cannot find file"). "(".$file_name.")</div>";
+	echo "<h2 class='error'>".__("Cannot find file"). "(".$file_name.")</h2>";
 }  else {
 
 	$filesize = filesize($file_name);

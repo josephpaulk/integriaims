@@ -291,6 +291,7 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 
 	$sql1 = "$query1 LIMIT $offset, ". $size_page;
 	
+	echo "<div class='divresult'>";
 	echo '<table width="99%" class="listing">';
 	if ($filter == 0){
 		echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
@@ -381,5 +382,6 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 		}
 	}
 	echo "</table>";
+	echo "</div>";
 }
 ?>

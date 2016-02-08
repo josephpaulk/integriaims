@@ -987,4 +987,24 @@ function html_render_tags_view ($tags, $return = false) {
 	echo $tags_view;
 }
 
+function html_render_tags_view_manage ($tags, $return = false) {
+	$tags_view = '<div class="divresult">';
+	$tags_view .= '<div class="tags-view">';
+	
+	if (!empty($tags) && is_array($tags)) {
+		foreach ($tags as $tag) {
+			if (empty($tag[TAGS_TABLE_ID_COL]) || empty($tag[TAGS_TABLE_NAME_COL]) || empty($tag[TAGS_TABLE_COLOUR_COL]))
+				continue;
+			
+			$tags_view .= html_render_tag($tag, true);
+		}
+	}
+	
+	$tags_view .= '</div>';
+	$tags_view .= '</div>';
+	
+	if ($return)
+		return $tags_view;
+	echo $tags_view;
+}
 ?>

@@ -66,6 +66,18 @@ h4{
 	border-bottom: 1px solid #9d9d9c;
 	font-weight: normal;
 }
+h4 form a img{
+	vertical-align: middle;
+}
+h2 a img{
+	vertical-align: middle;
+}
+h4 a img{
+	vertical-align: middle;
+}
+h4 img{
+	vertical-align: middle;
+}
 
 h1 { font-size: 1.2em; }
 h2 { font-size: 1.10em; }
@@ -210,10 +222,15 @@ div.divform {
 }
 
 div.divresult {
-	float: left;
+	float: right;
 	width: 74%;
     padding-left: 35px;
     padding-right: 35px;
+}
+
+.divresult_right {
+	float: right;
+	width: 74%;
 }
 
 div.divhalf {
@@ -237,7 +254,6 @@ table.listing {
 	border-spacing: 0px;
 	text-align: left;
 	width: 100%;
-
 }
 
 table.listing th {
@@ -274,8 +290,8 @@ table.listing tr.clickable img{
 
 table.listing td {
 	border-top: 1px solid #dadada;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding-left: 15px;
+	padding-right: 0px;
 	padding-top: 8px;
 	padding-bottom: 8px;
 }
@@ -507,7 +523,6 @@ input[type="text"] {
 	height: 20px;
     background-color: #FFF;
     color: #707070;
-    width: 90%;
 }
 
 input[type="file"] {
@@ -2150,9 +2165,12 @@ table.databox_color_without_line tr:last-child td {
 
 .pagination {
 	margin-top: 4px;
+	margin-bottom: 15px;
 	text-align: left;
 }
-
+.pagination a img{
+	vertical-align: middle;
+}
 input.inventory_obj_search {
 	background-image: url("../../images/zoom.png");
 	background-repeat: no-repeat;

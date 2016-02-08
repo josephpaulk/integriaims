@@ -116,7 +116,7 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	$start_date = substr ($now, 0, 10);
 	$wu_user = $config["id_user"];	
 	
-	echo "<table id='wu_".$number."' class='search-table' width='99%'>";
+	echo "<table id='wu_".$number."' class='search-table-button' width='99%'>";
 	
 	echo "<tr>";
 	
@@ -204,7 +204,7 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	echo "</tr>";
 	
 	echo "<tr>";
-	echo "<td colspan=5>";
+	echo "<td colspan=5 style='text-align:left;'>";
 	echo print_textarea ('description_'.$number, 4, 30, false, '', true, __('Description'));
 	echo "</td>";
 	echo "</tr>";

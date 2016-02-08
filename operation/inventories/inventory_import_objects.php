@@ -19,7 +19,8 @@ check_login ();
 
 include_once('include/functions_inventories.php');
 
-echo "<h1>".__('Import objects from CSV')."</h1>";
+echo "<h2>".__('Inventory')."</h2>";
+echo "<h4>".__('Import objects from CSV')."</h4>";
 
 
 $upload_file = (int) get_parameter('upload_file');
@@ -46,11 +47,12 @@ $table->data[1][0] = "<b>".__('Load file')."</b>";
 $table->data[1][0] = '<input class="sub" name="file" type="file" />&nbsp;';
 $table->data[1][0] .= '<input type="submit" class="sub upload" value="' . __('Upload File') . '" />';
 
+echo "<div class='divform' >";
 echo '<form enctype="multipart/form-data" action="index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects" method="POST">';
 print_input_hidden ('upload_file', 1);
 print_table ($table);
 
 
 echo '</form>';
-
+echo "</div>"
 ?>

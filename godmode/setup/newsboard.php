@@ -25,9 +25,13 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-echo "<h1>".__('Newsboard management')."</h1>";
+echo "<h2>".__('Newsboard management')."</h2>";
 
-$operation = get_parameter ("operation");
+$operation = get_parameter ("operation","");
+if ($operation == "create")
+	echo "<h4>".__('Create Newsboard')."</h4>";
+if ($operation == "" || $operation == "insert")
+	echo "<h4>".__('List Newsboard')."</h4>";
 
 // ---------------
 // CREATE newsboard
@@ -125,6 +129,7 @@ if ($operation == "create") {
 // TODO VIEW of my OWN items
 // -------------------------
 if ($operation == "") {
+	
 	$sql = sprintf ('SELECT * FROM tnewsboard');
 	$todos = get_db_all_rows_sql ($sql);
 	if ($todos === false)

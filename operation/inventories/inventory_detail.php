@@ -104,28 +104,17 @@ $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
 if (!defined ('AJAX')) {
 	if (!$id) {
-		echo "<h1>".__('Create inventory object')."</h1>";
+		echo "<h2>".__('Create')."</h2>";
+		echo "<h4>".__('Inventory object')."</h4>";
 	} else if ($inventory_name) {
 		//**********************************************************************
 		// Tabs
 		//**********************************************************************
 		/* Tabs list */
-		print_inventory_tabs('details', $id, $inventory_name);
+		print_inventory_tabs('details', $id, $inventory_name,$manage_permission);
 	
 		if ($id) {
 			$inventory = get_inventory ($id);
-		
-			if ($manage_permission) {
-				echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px;'>";
-				echo "<ul>";	
-				echo "<li style='padding: 3px;'>";
-				echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
-				print_input_hidden ('quick_delete', $id);
-				echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete inventory object")))."</a>";
-				echo '</form>';
-				echo "</li>";
-				echo "</div>";
-			}
 		}
 	}
 }

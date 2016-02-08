@@ -786,11 +786,11 @@ function show_workunit_user ($id_workunit, $full = 0, $show_multiple=true) {
 echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_workunit'>";
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
-	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
-	echo "<tr><td rowspan=4 width='7%'>";
+	echo "<table class='' width='100%' style='margin: 0px; background: transparent;'>";
+	echo "<tr><td rowspan=4 width='2%'>";
 	print_user_avatar ($id_user, true);
 
-	echo "<td width='60%'><b>";
+	echo "<td width='20%'><b>";
 	if ($id_task){
 		echo __('Task')." </b> : ";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$id_task&operation=view'>$task_title</A>";
@@ -799,10 +799,17 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>$incident_title</A>";
 	}
 	echo "</td>";
+	echo "<td><b>";
+	if ($id_task) {
+		echo __('Project')." </b> : ";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>$project_title</A>";
+	} else {
+		echo __('Group')."</b> : ";
+		echo dame_nombre_grupo (get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
+	}
+	echo "</td>";
 	echo "<td width='13%'>";
 	echo "<b>".__('Duration')."</b>";
-	echo "</td>";
-	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
 	echo "</td>";
 	echo "<td>";
@@ -815,15 +822,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 	echo "</span>";
 	echo "</td></tr>";	
 	echo "<tr>";
-	echo "<td><b>";
-	if ($id_task) {
-		echo __('Project')." </b> : ";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>$project_title</A>";
-	} else {
-		echo __('Group')."</b> : ";
-		echo dame_nombre_grupo (get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
-	}
-	echo "</td>";
+	
 	echo "<td><b>";
 
 	if ($have_cost != 0){
@@ -834,18 +833,8 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		$cost = __('N/A');
 	echo __('Cost');
 	echo "</b>";
-	echo "</td>";
-	echo "<td>";
 	echo " : ".$cost;
 	echo "</td>";
-	if ($show_multiple) {
-		echo "<td>";
-		echo print_checkbox_extended ('op_multiple[]', $id_workunit, false, false, '', '', true);
-		echo "</td>";
-	}
-	echo "</tr>";
-
-	echo "<tr>";
 	echo "<td><b>";
 	echo __('Work from home');
 	echo "</b>";
@@ -857,9 +846,17 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 	echo "</td>";
 	echo "<td><b>";
 	echo __('Profile');
-	echo "</b></td><td>";
-	echo " : ".get_db_value ("name", "trole", "id", $profile);
-	
+	echo "</b>";
+	$profile_name = get_db_value ("name", "trole", "id", $profile);
+	echo " : ";
+	echo ($profile_name == false) ? "N/A" : $profile_name;
+	echo "</td>";
+	if ($show_multiple) {
+		echo "<td>";
+		echo print_checkbox_extended ('op_multiple[]', $id_workunit, false, false, '', '', true);
+		echo "</td>";
+	}
+	echo "</tr>";
 	echo "<tr>";
 	echo "<td>";
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
@@ -875,12 +872,11 @@ echo "</form>";
 	// Body
 	//echo "<div class='notebody'>";
 	echo "<div class='notebody' id='wu_$id_workunit'>";
-	echo "<table width='100%'  class='blank'>";
+	echo "<table width='100%'  class=''>";
 	echo "<tr><td valign='top'>";
 
 	if ((strlen($nota) > 1024) AND ($full == 0)) {
 		echo topi_richtext (clean_output_breaks (substr ($nota, 0, 1024)));
-		echo "<br><br>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
 		echo __('Read more...');
 		echo "</a>";
@@ -888,7 +884,7 @@ echo "</form>";
 		echo topi_richtext(clean_output_breaks($nota));
 	}
 	echo "<td valign='top'>";
-	echo "<table width='100%'  class='blank'>";
+	echo "<table width='100%'  class=''>";
 
 	if ($_GET["sec2"] == "operation/users/user_workunit_report")
 		$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
@@ -901,14 +897,12 @@ echo "</form>";
 	
 	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], 0, "TM")) ) {
 		echo "<tr><td align='right'>";
-		echo "<br>";
 		echo "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png'  title='".__('Delete workunit')."'/></a>";
 	}
 
 	// Edit workunit
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], 0, "UM")) )) {
 		echo "<tr><td align='right'>";
-		echo "<br>";
 		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&id_profile=$id_profile'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
 		echo "</td>";
 	}
@@ -916,12 +910,11 @@ echo "</form>";
 	// Lock workunit
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "")  )) {
 		echo "<tr><td align='right'>";
-		echo "<br>";
 		echo "<a class='lock_workunit' id='lock-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";
 		echo "</td>";
 	} else {
 		echo "<tr><td align='right'>";
-		echo "<br><img src='images/rosette.png' title='".__('Locked by')." $locked'";
+		echo "<img src='images/rosette.png' title='".__('Locked by')." $locked'";
 		echo print_user_avatar ($locked, true);
 		echo "</td>";
 	}
@@ -1224,26 +1217,29 @@ function form_search_users ($return = false, $filter=false) {
 	$table->style = array ();
 	$table->data = array ();
 
-	$table->data[0][0] = print_input_text ("search_text", $search_text, '', 15, 0, true, __('Search text'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, '', 18, 0, true, __('Search text'));
 
 	$user_status = array();
 	$user_status[0] = __('Enabled');
 	$user_status[1] = __('Disabled');
-	$table->data[0][1] = print_select ($user_status, 'disabled_user', $disabled_user, '', __('Any'), -1, true, 0, false, __('User status'));
+	$table->data[1][0] = print_select ($user_status, 'disabled_user', $disabled_user, '', __('Any'), -1, true, 0, false, __('User status'));
 
 	$global_profile = array();
 	$global_profile[-1] = __('External');
 	$global_profile[0] = __('Standard');
 	$global_profile[1] = __('Administrator');
-	$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
 
-	$table->data[0][3] = print_select (get_user_groups(), 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
-
-	$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[3][0] = print_select (get_user_groups(), 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
 	
+	$table->colspan[2][0] = 4;
+	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	
+	$output .= "<div class='divform'>";
 	$output .= '<form name="bskd" method=post id="saved-user-form" action="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
+	$output .= '</div>';
 		
 	if ($return)
 		return $output;

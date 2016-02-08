@@ -280,8 +280,8 @@ if (defined ('AJAX')) {
 }
 
 
-echo "<h1>" . __("Offline update") . "</h1>";
-
+echo "<h2>" . __("Offline update") . "</h2>";
+echo "<h4>" . __("Update Integria") . "</h4>";
 ?>
 
 <form id="form-offline_update" class="fileupload_form" method="post" enctype="multipart/form-data">

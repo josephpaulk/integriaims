@@ -365,6 +365,8 @@ echo "<h4>";
 if ($id_task) {
 	echo get_db_value ('name', 'ttask', 'id', $id_task);
 }
+else
+	echo __("New work unit");
 
 echo "<ul class='ui-tabs-nav'>";
 
@@ -520,7 +522,7 @@ if (!$id_workunit) {
 	
 	if ($operation == 'multiple_wu_insert') {
 		echo "<div id='tab2' class='ui-tabs-panel'>"; //Multiple WU
-		echo "<table width='99%'>";
+		echo "<table width='99%' class='search-table-button'>";
 		echo "<tr>";
 		echo "<td style='text-align: right;'>";
 		echo print_button (__('Add new parse Workunit'), 'add_link', false, 'location.href=\'index.php?sec=users&sec2=operation/users/user_spare_workunit\'', 'class="sub create"');

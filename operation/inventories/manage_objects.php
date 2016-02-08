@@ -55,15 +55,17 @@ if ($get_icon) {
 //**********************************************************************
 
 echo '<div id="tabs">';
-
+echo '<h2>' . strtoupper(__('Inventory Object')) . '</h2>';
+echo '<h4>' . strtoupper(__('Management'));
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-title">' . strtoupper(__('Object management')) . '</li>';
+
 if (!empty($id)) {
 	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id . '"><span>'.__('Object details').'</span></a></li>';
 	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id . '"><span>'.__('Fields').'</span></a></li>';
 }
 echo '</ul>';
+echo '</h2>';
 echo '</div>';
 
 //**********************************************************************
@@ -204,7 +206,7 @@ if (! $id && ! $create) {
 	
 	$table->width = '99%';
 	
-	if ($objects !== false) {		
+	if ($objects !== false) {	
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array ();
@@ -217,7 +219,7 @@ if (! $id && ! $create) {
 		$table->style[1] = 'font-weight: bold';
 		$table->align = array ();
 		
-		echo '<table width="90%" class="listing">';
+		//echo '<table width="90%" class="listing">';
 		foreach ($objects as $object) {
 			
 			$has_external_fields = get_db_value_sql("SELECT COUNT(id) FROM tobject_type_field WHERE type='external' AND id_object_type=".$object['id']);

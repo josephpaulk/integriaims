@@ -47,7 +47,8 @@ if ($delete) {
 	}
 }
 
-echo "<h1>".__("User fields")."</h1>";
+echo "<h2>".__("User fields")."</h2>";
+echo "<h4>".__("List fields")."</h4>";
 		
 $user_fields = get_db_all_rows_sql ("SELECT * FROM tuser_field");
 
@@ -106,7 +107,7 @@ if (!empty($user_fields)) {
 	}
 	print_table($table);
 } else {
-	echo "<h4>".__("No fields")."</h4>";
+	echo "<h2 class='error'>".__("No fields")."</h4>";
 }
 
 echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=users&sec2=godmode/usuarios/user_field_editor'>";

@@ -32,7 +32,8 @@ if (! user_visible_for_me ($config["id_user"], $id_user)) {
 	no_permission ();
 }
 
-echo '<h1>'.__('User details').'</h1>';
+echo '<h2>'.__('User details').'</h2>';
+echo '<h4>'.$id_user.'</h4>';
 
 $upload_avatar = (bool) get_parameter ('upload_avatar');
 $update_user = (bool) get_parameter ('update_user');

@@ -42,7 +42,7 @@
   font-weight: bold;
   color: #ff9000;
   display: block; 
-  line-height: 55px;
+  height: 55px;
 }
 #menu_nav > ul > li:hover, #menu_nav > ul > li:focus, #menu_nav > ul > li.sideselcolor{
     background-color: #ff9000;

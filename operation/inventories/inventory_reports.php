@@ -18,7 +18,8 @@ check_login ();
 
 require_once ('include/functions_inventories.php');
 
-echo '<h1>'.__('Inventory reports').'</h1>';
+echo '<h2>'.__('Inventory reports').'</h2>';
+echo '<h4>'.__('List of reports').'</h4>';
 
 $delete = (bool) get_parameter ('delete_report');
 

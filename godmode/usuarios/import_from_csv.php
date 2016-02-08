@@ -17,7 +17,8 @@ check_login ();
 
 require_once('include/functions_user.php');
 
-echo "<h1>" . __('IMPORT USERS FROM CSV') . integria_help ("import_from_csv", true) . "</h1>";
+echo "<h2>" . __('IMPORT USERS'). "</h2>";
+echo "<h4>" . __('FROM CSV') . integria_help ("import_from_csv", true) . "</h4>";
 
 $upload_file = (int) get_parameter('upload_file');
 $group = (int)get_parameter('group');
@@ -52,7 +53,7 @@ $table->data[0][0] = combo_groups_visible_for_me ($config['id_user'], 'group', 0
 
 $table->data[1][0] = "<label>".__('Profiles')."</label>";
 
-$table->data[1][0] .= "<select name='perfil' class='w155'>";
+$table->data[1][0] .= "<select name='perfil' class='w155' style='width: 218px;' >";
 	$sql='SELECT * FROM tprofile ORDER BY name';
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
@@ -60,26 +61,28 @@ $table->data[1][0] .= "<select name='perfil' class='w155'>";
 	}
 $table->data[1][0] .= '</select>';
 
-$table->data[0][1] = "<label>".__('Global profile')."</label>";
-$table->data[0][1] .= __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked>';
-$table->data[0][1] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
-$table->data[0][1] .= __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
+$table->data[2][0] = "<label>".__('Global profile')."</label>";
+$table->data[2][0] .= __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked>';
+$table->data[2][0] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
+$table->data[2][0] .= __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
 
-$table->data[1][1] = "<label>".__('Enable policy password')."</label>";
-$table->data[1][1] .= __('Yes').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="1">';
-$table->data[1][1] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
-$table->data[1][1] .= __('No').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="0" checked>';
+$table->data[3][1] = "<label>".__('Enable policy password')."</label>";
+$table->data[3][1] .= __('Yes').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="1">';
+$table->data[3][1] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
+$table->data[3][1] .= __('No').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="0" checked>';
 
 $ficheros = list_files('images/avatars/', "png", 1, 0, "small");
 $avatar_forlist = $avatar . ".png";
-$table->data[2][0] = print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, __('Avatar'));
+$table->data[4][0] = print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, __('Avatar'));
 
 $table->data[7][0] = "<label>".__('Load file')."</label>";
-$table->data[8][0] = '<input class="sub" name="file" type="file" /><br />';
-$table->data[8][3] = '<input type="submit" class="sub next" value="' . __('Upload File') . '" />';
-echo '<form enctype="multipart/form-data" action="index.php?sec=users&sec2=godmode/usuarios/import_from_csv" method="POST">';
-print_input_hidden ('upload_file', 1);
-print_table ($table);
-echo '</form>';
+$table->data[7][0] .= '<input class="sub" name="file" type="file" /><br />';
+$table->data[8][0] = '<input type="submit" class="sub next" value="' . __('Upload File') . '" />';
+echo "<div class='divform'>";
+	echo '<form enctype="multipart/form-data" action="index.php?sec=users&sec2=godmode/usuarios/import_from_csv" method="POST">';
+		print_input_hidden ('upload_file', 1);
+		print_table ($table);
+	echo '</form>';
+echo '</div>';
 
 ?>

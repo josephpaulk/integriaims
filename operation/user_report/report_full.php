@@ -115,12 +115,9 @@ if ($user_id != ""){
 	$do_search = 1;
 }
 
-echo "<h1>";
-
-
-echo __("Full report");
+echo "<h2>" . __("Full report") . "</h2>";
+echo "<h4>";
 if ($user_id != "") {
-	echo " &raquo; ";
 	echo dame_nombre_real ($user_id);
 }
 
@@ -138,7 +135,7 @@ if ($clean_output == 0){
 	}
 }
 
-echo  "</h1>";
+echo  "</h4>";
 
 if ($clean_output == 0){
 

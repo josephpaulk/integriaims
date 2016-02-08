@@ -49,7 +49,8 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 	exit;
 }
 
-echo '<h1>'.__('Group management').'</h1>';
+echo '<h2>'.__('Group management').'</h2>';
+echo '<h4>'.__('List groups').'</h4>';
 
 $create_group = (bool) get_parameter ('create_group');
 $update_group = (bool) get_parameter ('update_group');
@@ -163,28 +164,38 @@ if ($delete_group) {
 
 $offset = get_parameter ("offset", 0);
 $search_text = get_parameter ("search_text", "");
-
-echo "<table class='search-table' style='width: 99%;'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>";
-echo "<td>";
-echo "<b>".__('Search text')."</b>&nbsp;&nbsp;";
-print_input_text ("search_text", $search_text, '', 40, 0, false);
-echo "</td>";
-echo "<td>";
-print_submit_button (__('Search'), '', false, 'class="sub next"', false, false);
-echo "</td>";
-echo "</table></form>";
+echo "<div class='divform'>";
+	echo "<form name='bskd' method=post action='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>";
+		echo "<table class='search-table' style='width: 100%;'>";
+			echo "<tr>";
+				echo "<td>";
+				echo "<b>".__('Search text')."</b>&nbsp;&nbsp;";
+					print_input_text ("search_text", $search_text, '', 20, 0, false);
+				echo "</td>";
+			echo "</tr>";
+			echo "<tr>";
+				echo "<td>";
+					print_submit_button (__('Search'), '', false, 'class="sub next"', false, false);
+				echo "</td>";
+			echo "</tr>";
+		echo "</table>";
+	echo "</form>";
+	echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/configurar_grupo">';
+		echo "<table class='search-table' style='width: 100%;'>";
+			echo "<tr>";
+				echo "<td>";
+					print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
+				echo "</td>";
+			echo "</tr>";
+		echo "</table>";
+	echo '</form>';
+echo "</div>";
 
 $groups = get_db_all_rows_sql ("SELECT * FROM tgrupo WHERE nombre LIKE '%$search_text%' ORDER BY nombre");
 
 $groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/grupos/lista_grupos");
 
 print_groups_table ($groups);
-
-echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/configurar_grupo">';
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
-echo '</div>';
-echo '</form>';
 
 
 ?>

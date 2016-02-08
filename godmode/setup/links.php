@@ -26,7 +26,16 @@ if (give_acl($config["id_user"], 0, "FM")==0) {
 	no_permission();
 }
 
-echo "<h1>".__('Link management')."</h1>";
+echo "<h2>".__('Link management')."</h2>";
+
+$add = (bool) get_parameter ('add');
+$edit = (bool) get_parameter ('edit');
+if ($add)
+	echo "<h4>".__('Add Link')."</h4>";
+elseif ($edit)
+	echo "<h4>".__('Edit Link')."</h4>";
+else
+	echo "<h4>".__('List Link')."</h4>";
 
 if (isset($_POST["create"])){ // If create
 	$name = clean_input ($_POST["name"]);
@@ -65,9 +74,6 @@ if ($delete != 0){
 
 }
 
-$add = (bool) get_parameter ('add');
-$edit = (bool) get_parameter ('edit');
-
 // Main form view for Links edit
 if ($add || $edit) {
 	if ($edit) {
@@ -88,10 +94,11 @@ if ($add || $edit) {
 	}
 
 	// Create link
-	echo '<table class="search-table-button" cellpadding="4" cellspacing="4" width="99%">';   
+	echo "<div class='divform'>";
+	echo '<table class="search-table" cellpadding="4" cellspacing="4" width="99%">';   
 	echo '<form name="ilink" method="post" action="index.php?sec=godmode&sec2=godmode/setup/links">';	
-	echo '<tr><td class="datos">'.__('Link name').'<td class="datos"><input type="text" name="name"  value="'.$nombre.'">';
-	echo '<tr><td class="datos2">'.__('Link').'<td class="datos2"><input type="text" name="link"  value="'.$link.'">';
+	echo '<tr><td class="datos"><b>'.__('Link name').'</b><input type="text" name="name"  value="'.$nombre.'">';
+	echo '<tr><td class="datos2"><b>'.__('Link').'</b><input type="text" name="link"  value="'.$link.'">';
 	if ($creation_mode == 1) {
 		print_input_hidden ('create', 1);
 		echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub create' value='".__('Create')."'>";
@@ -101,6 +108,7 @@ if ($add || $edit) {
 		echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub upd' value='".__('Update')."'>";
 	}
 	echo '</form></table>';
+	echo "</div>";
 } else {
 	// Main list view for Links editor
 	$table->width = '99%';

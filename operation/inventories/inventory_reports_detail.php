@@ -152,7 +152,11 @@ if ($render_html == 1){
     return;
 }
 
-echo "<h1>".__('Inventory reports')."</h1>";
+echo "<h2>".__('Inventory reports')."</h2>";
+if ($id)
+	echo "<h4>".__('Update')."</h4>";
+else
+	echo "<h4>".__('Create')."</h4>";
 
 echo $result_msg;
 
