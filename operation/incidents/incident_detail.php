@@ -293,7 +293,7 @@ if (defined ('AJAX')) {
 			} 
 		}
 
-		ksort($allowed_resolution);
+		//~ ksort($allowed_resolution);
 		echo json_encode($allowed_resolution);
 
 		return;

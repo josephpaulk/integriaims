@@ -1302,6 +1302,7 @@ function set_allowed_resolution () {
 		dataType: "json",
 		async: false,
 		success: function (data) {
+			data.orderArray(value);
 			$("#incident_resolution").empty();
 			jQuery.each (data, function (id, value) {
 
@@ -1313,6 +1314,17 @@ function set_allowed_resolution () {
 			});
 		}
 	});
+}
+
+function orderArray(field){
+   return function(a,b){
+      if( a[field] > b[field]){
+          return 1;
+      }else if( a[field] < b[field] ){
+          return -1;
+      }
+      return 0;
+   }
 }
 
 function setParams (id_ticket) {

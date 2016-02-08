@@ -2324,7 +2324,7 @@ function get_indicent_status () {
 
 function get_incident_resolutions () {
 	$retval = array ();
-	$resolutions = get_db_all_rows_in_table ('tincident_resolution');
+	$resolutions = get_db_all_rows_in_table ('tincident_resolution', 'name');
 	
 	/* Translators: stands for "Incident is fixed" */
 	__('Fixed');

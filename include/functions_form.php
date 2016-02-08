@@ -333,12 +333,12 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 	if($for_massives) {
 		$output .= print_select (get_incident_resolutions (),
 						'mass_resolution', $actual, '', __('Select'),
-						-1, true, false, false, $label);
+						-1, true, false, true, $label);
 	}
 	else {
 		$output .= print_select (get_incident_resolutions (),
 						$name, $actual, $script, __('None'),
-						0, true, false, false, $label);
+						0, true, false, true, $label);
 	}
 	
 	if ($return)
