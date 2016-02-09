@@ -101,15 +101,15 @@ if (defined ('AJAX')) {
 
 echo "<div id='incident-search-content'>";
 
+echo "<h2>" . __("Support") . "</h2>";
 if (get_parameter ('id_myticket') == 1){
-	echo "<h1>" .__('My Tickets');
+	echo "<h4>" .__('My Tickets');
 } else {
-	echo "<h1>" .__('Ticket search');
+	echo "<h4>" .__('Ticket search');
 }
 echo "<div id='button-bar-title'>";
 
 echo "</div>";
-echo "</h1>";
 
 echo "<div class='under_tabs_info'>";
 echo "</div>";
@@ -118,14 +118,14 @@ echo "</div>";
 print_autorefresh_button();
 
 
-echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 6px;'>";
+echo "<div id='button-bar-title' style='margin-right: 12px;'>";
 echo "<ul>";	
-echo "<li style='padding: 4px;'>";
+echo "<li style=''>";
 echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."&nbsp;".integria_help ("custom_search", true)."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";
-
+echo "</h4>";
 $search_form = (bool) get_parameter ('search_form');
 $create_custom_search = (bool) get_parameter ('save-search');
 $delete_custom_search = (bool) get_parameter ('delete_custom_search');
@@ -293,7 +293,8 @@ $table->colspan[2][0] = 4;
 
 $massive_oper_incidents = print_table ($table, true);
 
-echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
+//echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
+echo $massive_oper_incidents;
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
 ?>

@@ -78,8 +78,8 @@ if (!$stats) {
 		echo "<tr>";
 			echo "<td style='vertical-align:top; width: 33%;'>";
 				//Print Incident detail
-				$incident_detail = "<table class='details_table alternate'>";
-				$incident_detail .= "<tr>";
+				//$incident_detail = "<table class='details_table alternate'>";
+				$incident_detail = "<tr>";
 				$incident_detail .= "<td><strong>".__("Open")."</strong>:</td>";
 				$incident_detail .= "<td style='text-align:right;'>".sprintf(__("%s ago"), human_time_comparation($incident['inicio']))."</td>";
 				$incident_detail .= "</tr>";
@@ -103,13 +103,13 @@ if (!$stats) {
 				$incident_detail .= "<td><strong>".__("Time no third people")."</strong>:</td>";
 				$incident_detail .= "<td style='text-align:right;'>".give_human_time($stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD],true,true,true)."</td>";
 				$incident_detail .= "</tr>";
-				$incident_detail .= "</table>";
+				//$incident_detail .= "</table>";
 				
-				echo print_container('incident_tracking_detail', __('General statistics'), $incident_detail, 'no', true, '20px');
+				echo print_container('incident_tracking_detail', __('General statistics'), $incident_detail, 'open', true, '20px');
 			echo "</td>";
 			echo "<td style='vertical-align:top; width: 33%;'>";
 				$workunit_count = get_incident_count_workunits ($id);
-				$workunit_detail = "<table class='details_table alternate'>";
+				//$workunit_detail = "<table class='details_table alternate'>";
 				if ($workunit_count) {
 					$work_hours = get_incident_workunit_hours ($id);
 					$workunits = get_incident_workunits ($id);	
@@ -138,10 +138,10 @@ if (!$stats) {
 					$workunit_detail .= "</td>";
 					$workunit_detail .= "</tr>";
 				}
-				$workunit_detail .= "</table>";
+				//$workunit_detail .= "</table>";
 				$workunit_detail .= "</td>";
 				
-				echo print_container('incident_tracking_workunit_detail', __('Workunits statistics'), $workunit_detail, 'no', true, '20px');
+				echo print_container('incident_tracking_workunit_detail', __('Workunits statistics'), $workunit_detail, 'open', true, '20px');
 			echo "<td style='vertical-align:top; width: 33%;'>";
 
 				if ($workunit_count) {
@@ -149,9 +149,9 @@ if (!$stats) {
 				} else {
 					$workunit_graphic = "<em>".__("There are not workunits")."</em>";
 				}
-				$workunit_graphic = '<div class="pie_frame">' . $workunit_graphic . '</div>';
+				$workunit_graphic = '<tr><td><div class="pie_frame">' . $workunit_graphic . '</div></td></tr>';
 				
-				echo print_container('incident_tracking_workunit_graphic', __('Activity by user (# WU)'), $workunit_graphic, 'no', true, '20px');
+				echo print_container('incident_tracking_workunit_graphic', __('Activity by user (# WU)'), $workunit_graphic, 'open', true, '20px');
 
 			echo "</td>";		
 		echo "</tr>";
@@ -161,7 +161,7 @@ if (!$stats) {
 	echo "<table width='99%'>";
 		echo "<tr>";
 			echo "<td style='vertical-align:top;width: 33%;'>";
-				$tracking_status = "<table class='details_table alternate'>";
+				//$tracking_status = "<table class='details_table alternate'>";
 				foreach ($stats[INCIDENT_METRIC_STATUS] as $key => $value) {
 					$name = get_db_value ('name', 'tincident_status', 'id', $key);
 					$tracking_status .= "<tr>";
@@ -169,12 +169,12 @@ if (!$stats) {
 					$tracking_status .= "<td style='text-align:right;'>".give_human_time($value,true,true,true)."</td>";
 					$tracking_status .= "</tr>";
 				}
-				$tracking_status .= "</table>";
+				//$tracking_status .= "</table>";
 				
-				echo print_container('incident_tracking_status', __('Statistics by status'), $tracking_status, 'no', true, '20px');
+				echo print_container('incident_tracking_status', __('Statistics by status'), $tracking_status, 'open', true, '20px');
 			echo "</td>";
 			echo "<td style='vertical-align:top;width: 33%;'>";
-				$tracking_group = "<table class='details_table alternate'>";
+				//$tracking_group = "<table class='details_table alternate'>";
 				foreach ($stats[INCIDENT_METRIC_GROUP] as $key => $value) {
 					$name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
 					$tracking_group .= "<tr>";
@@ -182,12 +182,12 @@ if (!$stats) {
 					$tracking_group .= "<td style='text-align:right;'>".give_human_time($value,true,true,true)."</td>";
 					$tracking_group .= "</tr>";
 				}
-				$tracking_group .= "</table>";
+				//$tracking_group .= "</table>";
 				
-				echo print_container('incident_tracking_group', __('Statistics by group'), $tracking_group, 'no', true, '20px');
+				echo print_container('incident_tracking_group', __('Statistics by group'), $tracking_group, 'open', true, '20px');
 			echo "</td>";	
 			echo "<td style='vertical-align:top;width: 33%;'>";
-				$tracking_user = "<table class='details_table alternate'>";
+				//$tracking_user = "<table class='details_table alternate'>";
 				foreach ($stats[INCIDENT_METRIC_USER] as $key => $value) {
 					$name = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
 					$tracking_user .= "<tr>";
@@ -195,9 +195,9 @@ if (!$stats) {
 					$tracking_user .= "<td style='text-align:right;'>".give_human_time($value,true,true,true)."</td>";
 					$tracking_user .= "</tr>";
 				}
-				$tracking_user .= "</table>";
+				//$tracking_user .= "</table>";
 				
-				echo print_container('incident_tracking_user', __('Statistics by owner'), $tracking_user, 'no', true, '20px');
+				echo print_container('incident_tracking_user', __('Statistics by owner'), $tracking_user, 'open', true, '20px');
 			echo "</td>";	
 		echo "</tr>";
 	echo "</table>";

@@ -166,55 +166,52 @@ else if ($delete) {
 if (isset($crud_operation))
 	echo $crud_operation['message'];
 
-$table->width = '98%';
+$table->width = '100%';
 $table->class = 'search-table';
 $table->style = array ();
 $table->colspan = array ();
-$table->style[0] = 'font-weight: bold; text-align: right;';
+$table->style[0] = 'font-weight: bold;';
 $table->style[1] = 'text-align: left;';
-$table->style[2] = 'font-weight: bold; text-align: right;';
+$table->style[2] = 'font-weight: bold;';
 $table->style[3] = 'text-align: left;';
-$table->style[4] = 'font-weight: bold; text-align: right;';
+$table->style[4] = 'font-weight: bold';
 $table->style[5] = 'text-align: left;';
 $table->style[6] = 'text-align: right;';
 $table->data = array ();
 
-$row = array();
-
 // Name
-$row[0] = __('Name') . '&nbsp;';
-$row[1] = print_input_text('name', $name, '', 25, 100, true);
+$table->data[0][0] = __('Name') . '&nbsp;';
+$table->data[0][0] .= print_input_text('name', $name, '', 25, 100, true);
 
 // Colour
-$row[2] = __('Colour') . '&nbsp;';
+$table->data[1][0] = __('Colour') . '<br>';
 $tag_colours = get_available_tag_colours();
-$row[3] = print_select($tag_colours, 'colour', $colour, '', '', '', true, false, false);
+$table->data[1][0] .= print_select($tag_colours, 'colour', $colour, '', '', '', true, false, false);
 
 // Preview
-$row[4] = __('Preview') . '&nbsp;';
-$row[5] = '<span id="tag-preview"></span>';
+$table->data[3][0] = __('Preview') . '&nbsp;';
+$table->data[4][0] = '<span id="tag-preview"></span>';
 
-$row[6] = print_input_hidden('id', $id, true);
+$table->data[6][0] = print_input_hidden('id', $id, true);
 if (empty($id)) {
-	$row[6] .= print_input_hidden('action', 'create', true);
+	$table->data[6][0] .= print_input_hidden('action', 'create', true);
 }
 else {
-	$row[6] .= print_input_hidden('action', 'update', true);
+	$table->data[6][0] .= print_input_hidden('action', 'update', true);
 }
-$row[6] .= print_submit_button(__('Add'), 'create_btn', false, 'class="sub create"', true);
-$row[6] .= print_submit_button(__('Update'), 'update_btn', false, 'class="sub upd"', true);
-$row[6] .= '&nbsp;';
-$row[6] .= print_submit_button(__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
+$table->data[6][0] .= print_submit_button(__('Add'), 'create_btn', false, 'class="sub create"', true);
+$table->data[6][0] .= print_submit_button(__('Update'), 'update_btn', false, 'class="sub upd"', true);
+$table->data[6][0] .= print_submit_button(__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
 
-$table->data[] = $row;
-
+echo "<div class='divform'>";
 echo '<form id="tags-form" method="POST">';
 print_table($table);
 echo '</form>';
+echo '</div>';
 
 // List
 $tags = get_available_tags();
-html_render_tags_view ($tags);
+html_render_tags_view_manage ($tags);
 
 ?>
 

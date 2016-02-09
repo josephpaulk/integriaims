@@ -2383,7 +2383,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	// ----------------------------------------
 	// Here we print the result of the search
 	// ----------------------------------------
-	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="listing" id="incident_search_result_table">';
 
 	echo '<thead>';
 	echo "<tr>";
@@ -3144,7 +3144,7 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 	// ----------------------------------------
 	// Here we print the result of the search
 	// ----------------------------------------
-	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="listing" id="incident_search_result_table">';
 
 	echo '<thead>';
 	echo "<tr>";

@@ -27,9 +27,10 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 	exit;
 }
 
-echo "<h1>".__('SLA Management');
+echo '<h2>'.__('Support').'</h2>';
+echo "<h4>".__('SLA Management');
 echo integria_help ("sla", true);
-echo "</h1>";
+echo "</h4>";
 
 $id = (int) get_parameter ('id');
 $new_sla = (bool) get_parameter ('new_sla');
@@ -233,19 +234,25 @@ if ($id || $new_sla) {
 			$search_text, $search_text);
 	}
 
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 20, 100, true);
+	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo "<div style='padding: 5px; padding-bottom: 15px; padding-top: 15px;'>";
-	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
-	print_table ($table);
-	echo '</form>';
+	echo "<div class='divform'>";
+		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
+			print_table ($table);
+		echo '</form>';
+		echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
+			unset($table->data);
+			$table->data[0][0] = print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"',true);
+			$table->data[0][0] .= print_input_hidden ('new_sla', 1);
+			print_table ($table);
+		echo '</form>';
 	echo "</div>";
 	
 	
@@ -253,7 +260,7 @@ if ($id || $new_sla) {
 	$slas = get_db_all_rows_sql ($sql);
 	
 	if ($slas !== false) {
-		$table->width = "99%";
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -289,15 +296,10 @@ if ($id || $new_sla) {
 						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);
 		}
-		print_table ($table);
+		echo "<div class='divresult'>";
+			print_table ($table);
+		echo "</div>";
 	}
-	
-	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
-	print_input_hidden ('new_sla', 1);
-	echo '</div>';
-	echo '</form>';
 }
 ?>
 

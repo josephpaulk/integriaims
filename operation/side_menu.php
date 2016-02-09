@@ -473,17 +473,20 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			
 		// Incident type and SLA management only PM
 		if (give_acl ($config['id_user'], 0, "IM")) {
+			
 			if ($sec2 == "operation/incidents/type_detail")
 				echo "<li id='sideseltipo_ticket' class='sideselcolor'>";
 			else
 				echo "<li id='tipo_ticket'>";
 			echo "<a   title='".__('Ticket Types')."' href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>1</a></li>";
 			// SLA Management
+			
 			if ($sec2 == "operation/slas/sla_detail")
 				echo "<li id='sideselsla' class='sideselcolor'>";
 			else
 				echo "<li id='sla'>";
 			echo "<a   title='".__('SLA')."' href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>1</a></li>";
+			
 		}
 		
 		//Workflow rules
@@ -534,17 +537,17 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	}
 	echo "</ul>";
 //~ Revisar
-	// Dynamic inventory sub options menu
-	echo '<h3>'.__('Inventory').' #<span class="id-inventory-menu">';
-	if ($id_inventory)
-		echo $id_inventory;
-	echo '</span></h3>';
-
-	echo "<ul class='sidemenu'>";
-		echo '<li>';
-			echo '<a id="inventory-create-incident" href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_inventory='.$id_inventory.'">'.__('Create ticket').'</a>';
-		echo '</li>';
-	echo "</ul>";
+	//~ // Dynamic inventory sub options menu
+	//~ echo '<h3>'.__('Inventory').' #<span class="id-inventory-menu">';
+	//~ if ($id_inventory)
+		//~ echo $id_inventory;
+	//~ echo '</span></h3>';
+//~ 
+	//~ echo "<ul class='sidemenu'>";
+		//~ echo '<li>';
+			//~ echo '<a id="inventory-create-incident" href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_inventory='.$id_inventory.'">'.__('Create ticket').'</a>';
+		//~ echo '</li>';
+	//~ echo "</ul>";
 	echo "</li>";
 }
 

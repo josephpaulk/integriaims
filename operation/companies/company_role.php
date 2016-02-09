@@ -26,7 +26,8 @@ if (!$section_manage_permission) {
 	exit;
 }
 
-echo "<h1>".__('Company role management')."</h1>";
+echo "<h2>".__('Customers')."</h2>";
+echo "<h4>".__('Company role management')."</h4>";
 
 $id = (int) get_parameter ('id');
 

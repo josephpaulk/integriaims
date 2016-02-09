@@ -869,12 +869,12 @@ $has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
 
 if ($id) {	
 	
-	echo "<h1>";
+	echo "<h2>";
 	if ($affected_sla_id != 0) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Ticket').' #'.$id.' - '.ui_print_truncate_text($incident['titulo'],50)."&nbsp;&nbsp;".'<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/world.png", true, array("title" => __("Link to ticket"))).'</a>';
+	echo __('Ticket').' #'.$id.'</h2><h4>'.ui_print_truncate_text($incident['titulo'],50)."&nbsp;&nbsp;".'<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/world.png", true, array("title" => __("Link to ticket"))).'</a>';
 	
     if (give_acl($config["id_user"], 0, "IM")){
         if ($incident["score"] > 0){
@@ -918,7 +918,7 @@ if ($id) {
 	echo "</ul>";
 	echo "</div>";	
 
-	echo "</h1>";
+	echo "</h4>";
 	
 	
 	
@@ -931,13 +931,15 @@ if ($id) {
     }
 
 } else {
-	if (! defined ('AJAX'))
-		echo "<h1>".__('Create ticket')."</h1>";
+	if (! defined ('AJAX')) {
+		echo "<h2>".__('Support')."</h2>";
+		echo "<h4>".__('Create ticket')."</h4>";
+	}
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
 $table->width = '98%';
-$table->class = 'search-table-button';
+$table->class = 'search-table';
 $table->id = "incident-editor";
 $table->size = array ();
 $table->size[0] = '430px';
@@ -1234,8 +1236,8 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 
 // END TABLE ADVANCED
 
-$table->colspan['row_advanced'][0] = 4;
-$table->data['row_advanced'][0] = print_container('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+//$table->colspan['row_advanced'][0] = 4;
+//$table->data['row_advanced'][0] = print_container('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
 
 
 $table->colspan[9][0] = 4;
@@ -1289,8 +1291,8 @@ if (!$create_incident){
 	$html .= print_table($table_description, true);
 	$html .= "</div>";
 
-	$table->colspan[10][0] = 4;
-	$table->data[10][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
+	//~ $table->colspan[10][0] = 4;
+	//~ $table->data[10][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
 }
 
 if ($create_incident) {
@@ -1301,21 +1303,31 @@ if ($create_incident) {
 } else {
 	$button = print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
-		$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);
+	$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);
 }
 
-$table->colspan['button'][0] = 4;
-$table->data['button'][0] = $button;
+//~ $table->colspan['button'][0] = 4;
+//~ $table->data['button'][0] = $button;
 
 if ($has_permission){
 	if ($create_incident) {
 		$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
 		echo '<form id="incident_status_form" method="post" enctype="multipart/form-data">';
 		print_table ($table);
+		echo "<h4>".__('Advanced parameters')."</h4>";
+		print_table($table_advanced);
+		echo "<h4>" . __('File upload')."</h4>";
+		echo $html;
+		echo $button;
 		echo '</form>';
 	} else {
 		echo '<form id="incident_status_form" method="post">';
 		print_table ($table);
+		echo "<h4>".__('Advanced parameters')."</h4>";
+		print_table($table_advanced);
+		echo "<h4>" . __('File upload')."</h4>";
+		echo $html;
+		echo $button;
 		echo '</form>';
 	}
 } else {

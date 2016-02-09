@@ -405,7 +405,8 @@ if ($sort_items) {
 	}
 }
 
-echo '<h1>'.__('Ticket types').'</h1>';
+echo '<h2>'.__('Support').'</h2>';
+echo '<h4>'.__('Ticket types').'</h4>';
 
 // FORM (Update / Create)
 if ($id || $new_type) {
@@ -584,7 +585,8 @@ if ($id || $new_type) {
 
 	}
 //LISTADO GENERAL	
-} else {
+}
+else {
 	$search_text = (string) get_parameter ('search_text');
 	
 	$where_clause = '';
@@ -592,18 +594,26 @@ if ($id || $new_type) {
 		$where_clause .= sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
 	}
 
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 20, 100, true);
+	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post">';
-	print_table ($table);
-	echo '</form>';
+	echo '<div class="divform">';
+		echo '<form method="post">';
+			print_table ($table);
+		echo '</form>';
+		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
+			unset($table->data);
+			$table->data[0][0] = print_submit_button (__('Create type'), 'new_btn', false, 'class="sub next"',true);
+			$table->data[0][0] .= print_input_hidden ('new_type', 1);
+			print_table ($table);
+		echo '</form>';
+	echo '</div>';
 
 	$sql = "SELECT * FROM tincident_type $where_clause ORDER BY name";
 	$types = get_db_all_rows_sql ($sql);
@@ -641,15 +651,10 @@ if ($id || $new_type) {
 			}
 			array_push ($table->data, $data);
 		}
-		print_table ($table);
+		echo '<div class="divresult">';
+			print_table ($table);
+		echo '</div>';
 	}
-	
-	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	print_submit_button (__('Create type'), 'new_btn', false, 'class="sub next"');
-	print_input_hidden ('new_type', 1);
-	echo '</div>';
-	echo '</form>';
 }
 
 ?>
