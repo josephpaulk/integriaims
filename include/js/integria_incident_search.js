@@ -1296,35 +1296,22 @@ function set_allowed_resolution () {
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		//~ data: "page=operation/incidents/incident_detail&get_allowed_resolution=1&status="+status,
-		//~ data: "page=operation/incidents/incident_detail&get_allowed_resolution=1&status="+status+"&id_incident="+id_incident,
 		data: "page=operation/incidents/incident_detail&get_allowed_resolution=1&status="+status+"&id_incident="+id_incident+"&resolution="+resolution,
 		dataType: "json",
 		async: false,
 		success: function (data) {
-			data.orderArray(value);
 			$("#incident_resolution").empty();
-			jQuery.each (data, function (id, value) {
-
-				if (id == resolution) {
-					$("select[name='incident_resolution']").append($("<option selected>").val(id).html(value));
-				} else {
-					$("select[name='incident_resolution']").append($("<option>").val(id).html(value));
-				}
+			jQuery.each (data, function (index, obj) {
+				$.each(obj, function(id, value ) {
+					if (id == resolution) {
+						$("select[name='incident_resolution']").append($("<option selected>").val(id).html(value));
+					} else {
+						$("select[name='incident_resolution']").append($("<option>").val(id).html(value));
+					}
+				});
 			});
 		}
 	});
-}
-
-function orderArray(field){
-   return function(a,b){
-      if( a[field] > b[field]){
-          return 1;
-      }else if( a[field] < b[field] ){
-          return -1;
-      }
-      return 0;
-   }
 }
 
 function setParams (id_ticket) {
