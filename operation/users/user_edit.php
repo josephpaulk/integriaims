@@ -181,8 +181,10 @@ $table->data[0][2] .= "<div id='avatar_box' mode='select'>";
 $table->data[0][2] .= "<div id='avatar_select'>";
 $files = list_files ('images/avatars/', "png", 1, 0, "small");
 if($avatar){
-$avatar = $avatar.".png";
-$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
+	$avatar = $avatar.".png";
+	$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
+} else {
+	$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/avatar_notyet.png">';	
 }
 $table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 5px; margin-bottom: 5px;');
 if ($has_permission) {

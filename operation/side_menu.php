@@ -1334,6 +1334,8 @@ echo '<div class="portletBody" id="userdiv">';
 echo '<div style="float: left; padding: 7px 7px 0px 0px; ">';
 if($avatar){
 	echo '<img src="images/avatars/'.$avatar.'.png" style="height: 30px;" />';
+} else {
+	echo '<img src="images/avatars/avatar_notyet.png" style="height: 30px;" />';
 }
 echo '</div>';
 
