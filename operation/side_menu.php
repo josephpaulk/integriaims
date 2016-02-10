@@ -1332,7 +1332,9 @@ echo '<h3>'.__('User info').'</h3>';
 echo '<div class="portletBody" id="userdiv">';
 
 echo '<div style="float: left; padding: 7px 7px 0px 0px; ">';
-echo '<img src="images/avatars/'.$avatar.'.png" style="height: 30px;" />';
+if($avatar){
+	echo '<img src="images/avatars/'.$avatar.'.png" style="height: 30px;" />';
+}
 echo '</div>';
 
 echo '<div style="float: left;">';
