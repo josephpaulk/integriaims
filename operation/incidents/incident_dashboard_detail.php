@@ -128,7 +128,7 @@ $incident_details .= "<td>".$type."</td>";
 $incident_details .= "</tr>";
 //$incident_details .= "</table>";
 
-$left_side = print_container('incident_details', __('Details'), $incident_details, 'open', true, true, '', 'no_border_center', 5);
+$left_side = print_container('incident_details', __('Details'), $incident_details, 'open', true, true, '', 'no_border_center', 5, 'less_widht');
 
 /* Description */
 $incident_description = clean_output_breaks($incident["descripcion"]);
@@ -137,7 +137,7 @@ $incident_table = "<tr>";
 $incident_table .= "<td>".$incident_description."</td>";
 $incident_table .= "</tr>";
 
-$left_side .= print_container('incident_description', __('Description'), $incident_table);
+$left_side .= print_container('incident_description', __('Description'), $incident_table, 'open', true, true, '', '', 5, 'less_widht');
 
 // Advanced details
 $editor = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["editor"]));
@@ -176,7 +176,7 @@ $email_table ="";
 if ($emails) {
 	
 	$email_table = "<tr>";
-	$email_table .= "<td colspan='2' align='left'>".$emails."</td>";
+	$email_table .= "<td colspan='2' align='right'>".$emails."</td>";
 	$email_table .= "</tr>";
 	
 }
@@ -210,7 +210,7 @@ $incident_adv_details .= "</tr>";
 $incident_adv_details .= $email_table;
 //$incident_adv_details .= "</table>";
 
-$left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details, 'open', true, true, '', 'no_border', 5);
+$left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details, 'open', true, true, '', 'no_border', 5, 'less_widht');
 
 if ($incident["id_incident_type"]) {
 
@@ -260,7 +260,7 @@ if ($incident["id_incident_type"]) {
 
 	//$incident_custom_fields .= "</table>";
 
-	$left_side .= print_container('incident_custom_fields', __('Custom fields'), $incident_custom_fields, 'open',true, true, '' , 'no_border',4);
+	$left_side .= print_container('incident_custom_fields', __('Custom fields'), $incident_custom_fields, 'open',true, true, '' , 'no_border',4, 'less_widht');
 }
 
 /**** DASHBOARD RIGHT SIDE ****/
@@ -316,7 +316,7 @@ $incident_users .= "</tr>";
 
 //$incident_users .= "</table>";
 
-$right_side = print_container('incident_users', __('People').print_help_tip (_('Click on icons for more details'), true), $incident_users,'open',true,'','','',4);
+$right_side = print_container('incident_users', __('People').print_help_tip (_('Click on icons for more details'), true), $incident_users,'open',true,'','','',4, 'less_widht');
 
 // Quick editor
 if ($config['enabled_ticket_editor']) {
@@ -388,7 +388,7 @@ if ($config['enabled_ticket_editor']) {
 
 		//$ticket_editor .= "</table>";
 
-		$right_side .= print_container('ticket_editor', __('Quick edit'), $ticket_editor,'open', true, true,'','no_border',4,'');
+		$right_side .= print_container('ticket_editor', __('Quick edit'), $ticket_editor,'open', true, true,'','no_border',4, 'less_widht');
 	}
 }
 
@@ -442,7 +442,7 @@ $incident_dates .= "</td>";
 $incident_dates .= "</tr>";
 //$incident_dates .= "</table>";
 
-$right_side .= print_container('incident_dates', __('Dates'), $incident_dates, 'open',true,true,'','no_border_center',4);
+$right_side .= print_container('incident_dates', __('Dates'), $incident_dates, 'open',true,true,'','no_border_center',4, 'less_widht');
 
 // Review Score
 if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] == 7) AND ($incident['score'] != 0)) {
@@ -475,7 +475,7 @@ if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] ==
 			//$ticket_score .= "</table>";
 		}
 		
-	$right_side .= print_container('ticket_score', __('Review score'), $ticket_score);
+	$right_side .= print_container('ticket_score', __('Review score'), $ticket_score,'opem', true, true, '', '', 5, 'less_widht');
 }
 
 // SLA information
@@ -535,7 +535,7 @@ if ($incident["sla_disabled"]) {
 	//$incident_sla .= "</table>";
 }
 
-$right_side .= print_container('incident_sla', __('SLA information'), $incident_sla, 'open', true, true, '', 'no_border', 4);
+$right_side .= print_container('incident_sla', __('SLA information'), $incident_sla, 'open', true, true, '', 'no_border', 4, 'less_widht');
 
 $table->data[0][0] = $left_side;
 $table->data[0][1] = $right_side;

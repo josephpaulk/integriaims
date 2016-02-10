@@ -66,14 +66,12 @@
 
 #menu_nav li ul {
     display: none;
-    position: relative;
-    width: 0;
+    position: absolute;
     height: auto;
     overflow: hidden;
     left: 100%;
     margin-left: 1px;
-    bottom: 100%;
-    margin-top: -1px;
+    top: 0;
 }
 #menu_nav li:hover ul {
   display: block;

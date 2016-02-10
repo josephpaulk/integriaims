@@ -108,20 +108,21 @@ if ($insert_workunit) {
 	}
 }
 
+$table = new StdClass();
 $table->width = '100%';
-$table->class = 'integria_form';
+$table->class = 'search-table';
 $table->colspan = array ();
 $table->colspan[1][0] = 6;
 $table->colspan[2][0] = 6;
 $table->data = array ();
 $table->size = array();
 $table->style = array();
-$table->style[0] = 'vertical-align: top; padding-top: 10px;';
-$table->style[1] = 'vertical-align: top; padding-top: 10px;';
-$table->style[2] = 'vertical-align: top;';
-$table->style[3] = 'vertical-align: top;';
-$table->style[4] = 'vertical-align: top;';
-$table->style[5] = 'vertical-align: top;';
+//~ $table->style[0] = 'vertical-align: top; padding-top: 10px;';
+//~ $table->style[1] = 'vertical-align: top; padding-top: 10px;';
+//~ $table->style[2] = 'vertical-align: top;';
+//~ $table->style[3] = 'vertical-align: top;';
+//~ $table->style[4] = 'vertical-align: top;';
+//~ $table->style[5] = 'vertical-align: top;';
 $table->data[0][0] = print_image('images/calendar_orange.png', true) . '&nbsp' . print_mysql_timestamp(0, "Y-m-d");
 $table->data[0][1] = print_image('images/clock_orange.png', true) . '&nbsp' . print_mysql_timestamp(0, "H:i:s");
 $table->data[0][2] = combo_roles (1, 'work_profile', __('Profile'), true);
@@ -144,19 +145,16 @@ if (!$clean_output) {
 
 	echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_incident.'&tab=workunits#incident-operations">';
 
-	echo "<div style='width: 98%;'>";
+	echo "<div style='width: 100%;'>";
 	print_table ($table);
 	echo "</div>";
 
 	echo "</form>";
 
-	echo '<ul class="ui-tabs-nav">';
-	echo '<li class="ui-tabs-title">';
-	echo "<h2>".__('Comments')."</h2>";
-	echo '</li>';
-	echo '</ul>';
+	echo "<h4>".__('Comments')."</h4>";
+	
 } else {
-	echo "<h1 class='ticket_clean_report_title'>".__('Comments')."</h1>";
+	echo "<h4 class='ticket_clean_report_title'>".__('Comments')."</h4>";
 }
 
 echo '<div id="comment-list">';

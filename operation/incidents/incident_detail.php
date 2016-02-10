@@ -423,7 +423,7 @@ if ($action == 'update') {
 
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
-	$sla_disabled = (int) get_parameter ('sla_disabled', $old_incident['sla_disabled']); //Get SLA given on submit
+	$sla_disabled = (int) get_parameter ('sla_disabled'); //Get SLA given on submit
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
@@ -1155,7 +1155,8 @@ if ($has_im && $create_incident){
 }
 
 if ($has_im){
-	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled, $blocked_incident, '', '', true, __('SLA disabled'));
+	$table_advanced->data[0][2] = print_checkbox ('sla_disabled', 1, $sla_disabled,	true, __('SLA disabled'), $blocked_incident);
+
 } else {
 	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);
 }
@@ -1296,14 +1297,18 @@ if (!$create_incident){
 }
 
 if ($create_incident) {
-	$button = print_input_hidden ('action', 'insert', true);
+	$button = "<div style='width:100%; text-align:right;'>";
+	$button .= print_input_hidden ('action', 'insert', true);
 	if (give_acl ($config["id_user"], 0, "IW")) {
 		$button .= print_submit_button (__('Create'), 'action2', false, 'class="sub create"', true);
 	}
+	$button .= '</div>';
 } else {
-	$button = print_input_hidden ('id', $id, true);
+	$button = "<div style='width:100%; text-align:right;'>";
+	$button .= print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
 	$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);
+	$button .= '</div>';
 }
 
 //~ $table->colspan['button'][0] = 4;
@@ -1325,8 +1330,6 @@ if ($has_permission){
 		print_table ($table);
 		echo "<h4>".__('Advanced parameters')."</h4>";
 		print_table($table_advanced);
-		echo "<h4>" . __('File upload')."</h4>";
-		echo $html;
 		echo $button;
 		echo '</form>';
 	}

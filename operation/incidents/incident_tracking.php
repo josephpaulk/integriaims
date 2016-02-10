@@ -65,7 +65,7 @@ if ($clean_output) {
 $stats = incidents_get_incident_stats($id);
 
 if (!$stats) {
-	echo "<table width='99%'>";
+	echo "<table width='100%'>";
 		echo "<tr>";
 			echo "<td style='vertical-align:top; width: 33%;'>";
 			echo __("There isn't statistics for this ticket");
@@ -74,7 +74,7 @@ if (!$stats) {
 	echo "</table>";
 } else {
 
-	echo "<table width='99%'>";
+	echo "<table width='100%'>";
 		echo "<tr>";
 			echo "<td style='vertical-align:top; width: 33%;'>";
 				//Print Incident detail
@@ -105,7 +105,7 @@ if (!$stats) {
 				$incident_detail .= "</tr>";
 				//$incident_detail .= "</table>";
 				
-				echo print_container('incident_tracking_detail', __('General statistics'), $incident_detail, 'open', true, '20px');
+				echo print_container('incident_tracking_detail', __('General statistics'), $incident_detail, 'open', true, '20px', '', '', 1, 'less_widht');
 			echo "</td>";
 			echo "<td style='vertical-align:top; width: 33%;'>";
 				$workunit_count = get_incident_count_workunits ($id);
@@ -141,7 +141,7 @@ if (!$stats) {
 				//$workunit_detail .= "</table>";
 				$workunit_detail .= "</td>";
 				
-				echo print_container('incident_tracking_workunit_detail', __('Workunits statistics'), $workunit_detail, 'open', true, '20px');
+				echo print_container('incident_tracking_workunit_detail', __('Workunits statistics'), $workunit_detail, 'open', true, '20px', '', '', 1, 'less_widht');
 			echo "<td style='vertical-align:top; width: 33%;'>";
 
 				if ($workunit_count) {
@@ -151,14 +151,14 @@ if (!$stats) {
 				}
 				$workunit_graphic = '<tr><td><div class="pie_frame">' . $workunit_graphic . '</div></td></tr>';
 				
-				echo print_container('incident_tracking_workunit_graphic', __('Activity by user (# WU)'), $workunit_graphic, 'open', true, '20px');
+				echo print_container('incident_tracking_workunit_graphic', __('Activity by user (# WU)'), $workunit_graphic, 'open', true, '20px', '', '', 1, 'less_widht');
 
 			echo "</td>";		
 		echo "</tr>";
 	echo "</table>";
 
 	//Get incident statistics
-	echo "<table width='99%'>";
+	echo "<table width='100%'>";
 		echo "<tr>";
 			echo "<td style='vertical-align:top;width: 33%;'>";
 				//$tracking_status = "<table class='details_table alternate'>";
@@ -171,7 +171,7 @@ if (!$stats) {
 				}
 				//$tracking_status .= "</table>";
 				
-				echo print_container('incident_tracking_status', __('Statistics by status'), $tracking_status, 'open', true, '20px');
+				echo print_container('incident_tracking_status', __('Statistics by status'), $tracking_status, 'open', true, '20px', '', '', 1, 'less_widht');
 			echo "</td>";
 			echo "<td style='vertical-align:top;width: 33%;'>";
 				//$tracking_group = "<table class='details_table alternate'>";
@@ -184,7 +184,7 @@ if (!$stats) {
 				}
 				//$tracking_group .= "</table>";
 				
-				echo print_container('incident_tracking_group', __('Statistics by group'), $tracking_group, 'open', true, '20px');
+				echo print_container('incident_tracking_group', __('Statistics by group'), $tracking_group, 'open', true, '20px', '', '', 1, 'less_widht');
 			echo "</td>";	
 			echo "<td style='vertical-align:top;width: 33%;'>";
 				//$tracking_user = "<table class='details_table alternate'>";
@@ -197,7 +197,7 @@ if (!$stats) {
 				}
 				//$tracking_user .= "</table>";
 				
-				echo print_container('incident_tracking_user', __('Statistics by owner'), $tracking_user, 'open', true, '20px');
+				echo print_container('incident_tracking_user', __('Statistics by owner'), $tracking_user, 'open', true, '20px', '', '', 1, 'less_widht');
 			echo "</td>";	
 		echo "</tr>";
 	echo "</table>";
@@ -207,7 +207,7 @@ $trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id
 
 if ($trackings !== false) {
 	unset($table);
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->head = array ();
