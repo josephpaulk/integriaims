@@ -541,7 +541,7 @@ function print_array_pagination ($array, $url, $offset = 0){
 }
 
 // Render data in a fashion way :-)
-function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep=",") {
+function format_numeric ( $number, $decimals=1, $dec_point=",", $thousands_sep=" ") {
 	if (is_numeric($number)){
 		if ($number == 0)
 			return 0;

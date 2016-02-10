@@ -305,9 +305,9 @@ if ($update) {
 				
 				if ($label['unique']) {
 					$is_unique = inventories_check_unique_field($values['data'], $label['type']);
-					
+					$is_unique_distinct = inventories_check_unique_update($values, $label['type'] );
 					if (!$is_unique) {
-						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not updated. Value must be unique").'</h3>'; 
+						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not updated. Value must be unique").'</h3>';
 					}
 				}
 				$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
@@ -318,7 +318,7 @@ if ($update) {
 				$values['id_inventory'] = $id;
 				
 				$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
-				if($is_unique != 0){
+				if ($is_unique_distinct['id_object_type_field'] != $values['id_object_type_field']){
 					if ($exists_id) 
 						process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
 					else
@@ -465,20 +465,23 @@ if ($create) {
 				$values_insert['id_inventory'] = $id;
 				//~ $values_insert['data'] = get_parameter (base64_encode($label['label']));
 				$data_name = get_parameter (base64_encode($label['label']));
-				$data_name_arr = explode("#", $data_name);
-				$values_insert['data']  = $data_name_arr[0];
+				//~ $data_name_arr = explode("#", $data_name);
+				//~ foreach($data_name_arr as $data) {
+					//~ $values_insert['data'] .= safe_input($data);
+				//~ }
+				$values_insert['data']  = $data_name;
 			
 				if ($label['unique']) {
 					$is_unique = inventories_check_unique_field($values_insert['data'], $label['type']);
-					
+					$is_unique_distinct = inventories_check_unique_update($values_insert, $label['type']);
 					if (!$is_unique) {
 						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not created. Value must be unique").'</h3>'; 
 					}
 				}
 				$values_insert['id_object_type_field'] = $id_object_field;
 				$id_object_type_field = get_db_value('id', 'tobject_type_field', 'id_object_type', $id_object_type);
-				
-				if ($is_unique != 0)
+
+				if ($is_unique_distinct['id_object_type_field'] != $values_insert['id_object_type_field'])
 					process_sql_insert('tobject_field_data', $values_insert);
 			
 			}
