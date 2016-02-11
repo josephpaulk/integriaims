@@ -1239,13 +1239,15 @@ function form_search_users ($return = false, $filter=false) {
 	$global_profile[0] = __('Standard');
 	$global_profile[1] = __('Administrator');
 	$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
-
-	$table->data[0][3] = print_select (get_user_groups(), 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
-
+	$group_name = get_user_groups();
+	$group_name[-1] = __('Groupless');
+	
+	$table->data[0][3] = print_select ($group_name, 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
+	
 	$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form name="bskd" method=post id="saved-user-form" action="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios">';
-	$output .= print_table ($table, true);
+		$output .= print_table ($table, true);
 	$output .= '</form>';
 		
 	if ($return)
