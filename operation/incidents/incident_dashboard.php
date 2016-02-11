@@ -151,8 +151,11 @@ if (!$rows) {
 		
 		$search_by_owner .= "<td>";
 		$search_by_owner .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_user=".$owners["id_usuario"]."'>";
-		$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
-	
+		if($owners["avatar"]){
+			$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
+		} else {
+			$search_by_owner .= '<div class="bubble_little"></div>';
+		}
 		$long_name = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $owners["id_usuario"]));
 	
 		$search_by_owner .= $long_name." (".count($incidents).")";

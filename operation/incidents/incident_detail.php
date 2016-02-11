@@ -292,9 +292,14 @@ if (defined ('AJAX')) {
 				$allowed_resolution[0] = __("None");
 			} 
 		}
-
-		ksort($allowed_resolution);
-		echo json_encode($allowed_resolution);
+		
+		$i = 0;
+		foreach ($allowed_resolution as $id => $value) {
+			$resolution_aux[$i][$id] = $value;
+			$i++;
+		}
+		
+		echo json_encode($resolution_aux);
 
 		return;
 	}
@@ -303,6 +308,15 @@ if (defined ('AJAX')) {
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
 $id_task = (int) get_parameter ('id_task');
+
+$is_enterprise = false;
+
+/* Enterprise support */
+if (file_exists ("enterprise/load_enterprise.php")) {
+	require_once ("enterprise/load_enterprise.php");
+	$is_enterprise = true;
+}
+
 
 if ($id) {
 	$incident = get_incident ($id);
@@ -335,7 +349,7 @@ if (isset($incident)) {
 	//Incident creators must see their incidents
 	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
 
-	if ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) {
+	if (($incident["id_creator"] != $config["id_user"]) && ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl)) {
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket  (External user) ".$id);
 		include ("general/noaccess.php");
@@ -435,7 +449,11 @@ if ($action == 'update') {
 	}
 	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
-	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
+	if ($_POST['id_parent'] == 0) {
+		$id_parent = 0;
+	} else {
+		$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
+	}
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', '');
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
@@ -863,9 +881,9 @@ if (! $id) {
 }
 
 //The user with IW flag or the incident owner can modify all data from the incident.
-$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW")  || ($usuario == $config['id_user']));
-$has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
-$has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
+$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW")  || ($usuario == $config['id_user']) || ($id_creator == $config['id_user']));
+$has_im = (give_acl ($config['id_user'], $id_grupo, "IM") || ($id_creator == $config['id_user']));
+$has_iw = (give_acl ($config['id_user'], $id_grupo, "IW") || ($id_creator == $config['id_user']));
 
 if ($id) {	
 	
@@ -1347,6 +1365,11 @@ echo '<div id="id_user_hidden" style="display:none;">';
 	print_input_text('id_user_hidden', $config['id_user']);
 echo '</div>';
 
+//is_enterprise hidden
+echo '<div id="is_enterprise_hidden" style="display:none;">';
+	print_input_text('is_enterprise_hidden', $is_enterprise);
+echo '</div>';
+
 echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."' id='inventory_search_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
@@ -1426,7 +1449,6 @@ $(document).ready (function () {
 	var id_incident = <?php echo $id?>;
 	var id_user = $("#text-id_user").val();
 	var id_group = $("#grupo_form").val();
-
 	
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
@@ -1447,8 +1469,7 @@ $(document).ready (function () {
 		var group = $("#grupo_form").val();
 		
 		var group_info = get_group_info(group);
-		
-		
+				
 		$("#text-id_user").val(group_info.id_user_default);
 		$("#plain-id_user").html(group_info.id_user_default);
 		$("#hidden-id_user").val(group_info.id_user_default);

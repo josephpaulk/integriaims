@@ -48,12 +48,12 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 43),
+('current_package', 45),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 38);
+('minor_release', 39);
 
 -- Default password is 'integria'
 
@@ -106,7 +106,7 @@ INSERT INTO tincident_status (id,name) VALUES
 
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
-INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png',2,0),
 (2,'Pandora&#x20;agents','Imported&#x20;agents&#x20;from&#x20;Pandora&#x20;FMS','pandora.png',0,1),

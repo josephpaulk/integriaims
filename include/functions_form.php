@@ -333,12 +333,12 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 	if($for_massives) {
 		$output .= print_select (get_incident_resolutions (),
 						'mass_resolution', $actual, '', __('Select'),
-						-1, true, false, false, $label);
+						-1, true, false, true, $label);
 	}
 	else {
 		$output .= print_select (get_incident_resolutions (),
 						$name, $actual, $script, __('None'),
-						0, true, false, false, $label);
+						0, true, false, true, $label);
 	}
 	
 	if ($return)
@@ -531,7 +531,10 @@ function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label
 		$task_out = "";
 	}
 	
-	$sql = "select tp.* from tproject tp, ttask tt where tp.id=tt.id_project and disabled = 0 ORDER BY name;";
+	$sql = "select tp.* from tproject tp, ttask tt, trole_people_project tpp  
+			where tp.id=tt.id_project and tpp.id_project=tp.id and disabled = 0 
+			and tpp.id_user="."'".$id_user."'"." ORDER BY name;";
+
 	$new = true;
 	
 	while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
@@ -1228,16 +1231,20 @@ function form_search_users ($return = false, $filter=false) {
 	$global_profile[-1] = __('External');
 	$global_profile[0] = __('Standard');
 	$global_profile[1] = __('Administrator');
-	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
-
-	$table->data[3][0] = print_select (get_user_groups(), 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
+	$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	$group_name = get_user_groups();
+	$group_name[-1] = __('Groupless');
+	
+	$table->data[0][3] = print_select ($group_name, 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
+	
+	$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$table->colspan[2][0] = 4;
 	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= "<div class='divform'>";
 	$output .= '<form name="bskd" method=post id="saved-user-form" action="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios">';
-	$output .= print_table ($table, true);
+		$output .= print_table ($table, true);
 	$output .= '</form>';
 	$output .= '</div>';
 		

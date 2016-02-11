@@ -180,9 +180,13 @@ $avatar_help_tip = print_help_tip (__('The avatar should be PNG type and its hei
 $table->data[0][2] = print_label (__('Avatar'). $avatar_help_tip, '', '', true) ;
 $table->data[0][2] .= "<div id='avatar_box' mode='select'>";
 $table->data[0][2] .= "<div id='avatar_select'>";
-$avatar = $avatar.".png";
-$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
 $files = list_files ('images/avatars/', "png", 1, 0, "small");
+if($avatar){
+	$avatar = $avatar.".png";
+	$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
+} else {
+	$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/avatar_notyet.png">';	
+}
 $table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 5px; margin-bottom: 5px;');
 if ($has_permission) {
 	$table->data[0][2] .= "<div style='text-align:center;'>";

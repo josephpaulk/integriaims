@@ -1104,13 +1104,12 @@ function inventories_printTable($id_item, $type, $id_father) {
 
 function inventories_check_unique_field($data, $type) {
 	
-	$sql_unique = "SELECT data FROM tobject_field_data 
-				WHERE id_object_type_field IN (
-					SELECT id FROM tobject_type_field
-					WHERE type='$type')";
-					
-	$all_data = get_db_all_rows_sql($sql_unique);
+	$sql_unique = "select fd.data from tobject_type_field tf, tobject_field_data fd 
+				   where tf.id = fd.id_object_type_field AND tf.`unique`=1;";
 	
+	
+	$all_data = get_db_all_rows_sql($sql_unique);
+
 	foreach ($all_data as $key => $dat) {
 		if ($dat['data'] == $data && $data != '') {
 			return false;
@@ -1119,13 +1118,29 @@ function inventories_check_unique_field($data, $type) {
 	return true;
 }
 
+function inventories_check_unique_update($values, $type	) {
+	
+	$sql_unique = "select fd.data, fd.id_object_type_field, fd.id from tobject_type_field tf, tobject_field_data fd 
+				   where tf.id = fd.id_object_type_field AND tf.`unique`=1;";
+	
+	$all_data = get_db_all_rows_sql($sql_unique);
+
+	foreach ($all_data as $key => $dat) {
+		if ($dat['data'] == $values['data'] && $values['data'] != '') {
+			$values['no_update'] = 1;
+			$values['id_object_type_field'] = $dat['id_object_type_field'];
+		}
+	}
+	return $values;
+}
+
 // Checks if $data exists on an unique field
 function inventories_check_no_unique_field($data, $type) {
 	
 	$sql_unique = "SELECT data FROM tobject_field_data 
 				WHERE id_object_type_field IN (
 					SELECT id FROM tobject_type_field
-					WHERE type='$type' AND unique=1)";
+					WHERE type='$type' AND `unique`=0)";
 					
 	$all_data = get_db_all_rows_sql($sql_unique);
 	
@@ -1218,7 +1233,6 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		$inventories = $inventories_aux;
 	}
 
-	$inventories = $inventories_aux;
 	if ($inventories === false) {
 		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
 	} else {
@@ -1251,12 +1265,17 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				}
 			}
 			$table->head[$i] = __('Actions');
+			if ($write_permission) {
+				$table->head[$i] = print_checkbox ('inventorycb-all', "", false, true);
+			}
 		} else {
 			if (!$clean_output) {
 				$table->head[7] = __('Actions');
 			}
+			if ($write_permission) {
+				$table->head[8] = print_checkbox ('inventorycb-all', "", false, true);
+			}
 		}
-		$table->head[8] = print_checkbox ('inventorycb-all', "", false, true);
 		
 		$count = $count_inv;
 
@@ -1343,6 +1362,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 						$data[$i] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 					}
 				}
+				if ($write_permission) {
+					$data[$i] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+				}
 
 			} else {
 				if (!$clean_output) {
@@ -1354,13 +1376,13 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 						$data[7] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 					}
 				}
-				
+				if ($write_permission) {
+					$data[8] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+				}	
 			}
-			$data[8] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+			
+			
 			$table->rowclass[$idx] = 'inventory_info_' . $inventory["id"];
-			
-			
-
 				$idx++;
 				
 				array_push ($table->data, $data);
@@ -1416,8 +1438,11 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
 				$table->rowstyle[$idx] = 'display: none;';
-				$table->colspan[$idx]["row_info"] = 8;
-
+				if ($write_permission) {
+					$table->colspan[$idx]["row_info"] = 8;
+				} else {
+					$table->colspan[$idx]["row_info"] = 7;
+				}
 		
 				
 				array_push ($table->data, $data_info);

@@ -275,7 +275,11 @@ $avatar_creator = get_db_value_filter ("avatar", "tusuario", array("id_usuario" 
 $incident_users .= "<td>";
 $creator = $incident['id_creator'];
 $options["onclick"]="openUserInfo(\"$creator\")";
-$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true, $options) . '</div>';
+if($avatar_creator){
+	$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true, $options) . '</div>';
+} else {
+	$incident_users .= '<div class="bubble"></div>';
+}
 $incident_users .= '<span>' . __('Created by') . ':</span><br>' . $long_name_creator;
 $incident_users .= "</td>";
 
@@ -285,7 +289,11 @@ $owner = $incident['id_usuario'];
 $options["onclick"]="openUserInfo(\"$owner\")";
 
 $incident_users .= "<td>";
-$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true, $options) . '</div>';
+if($avatar_asigned){
+	$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true, $options) . '</div>';
+} else {
+	$incident_users .= '<div class="bubble"></div>';
+}
 $incident_users .= '<span>' . __('Owned by') . ':</span><br>' . $long_name_asigned;
 $incident_users .= "</td>";
 

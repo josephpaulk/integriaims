@@ -143,7 +143,7 @@ function load_config() {
 	
 	// Mail address used to send mails
 	if (!isset ($config["mail_from"]))
-		$config["mail_from"] = "integria@localhost";
+		$config["mail_from"] = "integria@localhost.com";
 	
 	if (!isset ($config["site_logo"])){
 		$config["site_logo"] = "integria_logo.png";

@@ -780,6 +780,7 @@ CREATE TABLE  `tprofile` (
   `frr` tinyint(1) NOT NULL default '0',
   `frw` tinyint(1) NOT NULL default '0',
   `frm` tinyint(1) NOT NULL default '0',
+  `si` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

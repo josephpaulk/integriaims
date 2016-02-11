@@ -216,6 +216,46 @@ if ($id_project) {
 	
 	$left_side .= print_container('project_labour', __('Labour'), $labour);
 	
+	// People involved
+	//Get users with tasks
+	$sql = sprintf("SELECT DISTINCT id_user FROM trole_people_task, ttask WHERE ttask.id_project= %d AND ttask.id = trole_people_task.id_task", $id_project);
+	
+	$users_aux = get_db_all_rows_sql($sql);
+	
+	if(empty($users_aux)) {
+		$users_aux = array();
+	}
+	
+	foreach ($users_aux as $ua) {
+		$users_involved[] = $ua['id_user'];
+	}
+	
+	//Delete duplicated items
+	if (empty($users_involved)) {
+		$users_involved = array();
+	}
+	else {
+		$users_involved = array_unique($users_involved);
+	}
+	
+	$people_involved = "<div style='padding-bottom: 20px;'>";
+	foreach ($users_involved as $u) {
+		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
+		if ($avatar) {
+			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
+			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 title='".$u."'/>";
+			$people_involved .= "</a>";
+		} else {
+			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
+			$people_involved .= "<img src='images/avatars/avatar_notyet.png' width=40 height=40 title='".$u."'/>";
+			$people_involved .= "</a>";
+		}
+	}
+	$people_involved .= "</div>";
+	
+	// Task distribution
+	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
+	
 	// Budget
 
 	$budget .= "<tr>";

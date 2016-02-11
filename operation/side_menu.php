@@ -1424,6 +1424,73 @@ echo "<a title='".__('User Info')."'href='index.php?sec=agenda&sec2=operation/us
 echo "</li>";
 echo "</ul>";
 echo "</nav>";
+=======
+echo '<div class="portlet">';
+//echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
+echo '<h3>'.__('User info').'</h3>';
+//echo '</a>';
+echo '<div class="portletBody" id="userdiv">';
+
+echo '<div style="float: left; padding: 7px 7px 0px 0px; ">';
+if($avatar){
+	echo '<img src="images/avatars/'.$avatar.'.png" style="height: 30px;" />';
+} else {
+	echo '<img src="images/avatars/avatar_notyet.png" style="height: 30px;" />';
+}
+echo '</div>';
+
+echo '<div style="float: left;">';
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
+echo '<strong>'.$config['id_user'].'</strong>';
+echo '</a>';
+echo '<em style="display: block; margin-top: -2px;">'.$realname.'</em>';
+echo '</div>';
+
+echo "<div style='clear:both; margin-bottom: 10px;'></div>";
+
+// Link to workunit calendar (month)
+echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
+echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
+
+if (give_acl ($config["id_user"], 0, "IR")) {
+	echo "&nbsp;";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
+	echo '<img src="images/incident.png" title="'.__('My tickets').'"></a>';
+}
+if (give_acl ($config["id_user"], 0, "PR")) {
+	// Link to Work user spare inster
+	echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
+	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
+
+	// Link to User detailed graph view
+	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full&user_id='.$config['id_user'].'">';
+	echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
+
+	// Week Workunit meter
+	$begin_week = week_start_day ();
+	$begin_week .= " 00:00:00";
+	$end_week = date ('Y-m-d H:i:s', strtotime ("$begin_week + 1 week"));
+	$total_hours = 5 * $config["hours_perday"];
+	$sql = sprintf ('SELECT SUM(duration)
+		FROM tworkunit WHERE timestamp > "%s"
+		AND timestamp < "%s"
+		AND id_user = "%s"',
+		$begin_week, $end_week, $config['id_user']);
+	$week_hours = get_db_sql ($sql);
+	$ratio = $week_hours." ".__('over')." ".$total_hours;
+	if ($week_hours < $total_hours)
+		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
+	else
+		echo '<img src="images/accept.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+	
+	echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
+
+}
+
+echo '</div></div>';
+
+// Div for the calendar entry
+echo "<div class='dialog ui-dialog-content' id='agenda_entry'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/agenda.js"></script>

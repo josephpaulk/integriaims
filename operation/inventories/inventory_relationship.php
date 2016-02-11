@@ -118,11 +118,12 @@ if (empty($all_links)) {
 		$ids_str .= ','.$id_src.','.$id_dst;
 		
 		$url = "index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&delete_link=1&id_src=$id_src&id_dst=$id_dst&id=$id";
+		$url_id_src = 'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_src;
+		$url_id_dst = 'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_dst;
 		
-		$data[0] = inventories_link_get_name($id_src);
-		$data[1] = inventories_link_get_name($id_dst);
-		$data[2] = "<a
-		onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url . "'>
+		$data[0] = "<a href=".$url_id_src.">". inventories_link_get_name($id_src) ."</a>";
+		$data[1] = "<a href=".$url_id_dst.">". inventories_link_get_name($id_dst) ."</a>";
+		$data[2] = "<a onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url . "'>
 		<img src='images/cross.png' border=0 /></a>";
 
 		array_push ($table->data, $data);
