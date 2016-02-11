@@ -111,7 +111,8 @@ if ($id || $new_manufacturer) {
 		$id_company_role = $manufacturer["id_company_role"];
 	}
 	
-	$table->width = "99%";
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -151,8 +152,9 @@ if ($id || $new_manufacturer) {
 		$where_clause = sprintf ('WHERE name LIKE "%%%s%%" OR comments LIKE "%%%s%%"',
 			$search_text, $search_text);
 	}
-
-	$table->width = '99%';
+	
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -172,7 +174,8 @@ if ($id || $new_manufacturer) {
 
 	if ($manufacturers !== false) {
 		unset ($table);
-		$table->width = "99%";
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();

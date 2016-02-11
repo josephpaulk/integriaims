@@ -46,7 +46,8 @@ if (!$filter_btn) {
     $show_wo = 1;
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = "search-table";
 $table->data = array ();
 $table->colspan = array ();

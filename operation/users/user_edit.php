@@ -157,7 +157,8 @@ if ($update_user) {
 	}
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
 $table->rowspan[0][2] = 4;

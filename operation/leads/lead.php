@@ -61,7 +61,8 @@ $delete = get_parameter("delete");
 if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete) {
 
 	echo "<div id='lead-search-content'>";
-	echo "<h1>".$title;
+	echo "<h2>" . _("Leads") . "</h2>";
+	echo "<h4>".$title;
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	
@@ -83,7 +84,7 @@ if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete
 	
 	echo "</ul>";
 	echo "</div>";
-	echo "</h1>";
+	echo "</h4>";
 }
 	
 switch ($tab) {
@@ -100,4 +101,4 @@ switch ($tab) {
 		include("lead_detail.php");
 }
 
-</script>
+?>

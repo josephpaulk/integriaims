@@ -188,7 +188,7 @@ $(document).ready (function () {
 	?>
 
 	$("#global_search").focusin(function () {
-		$("#global_search").animate({width: "200px"}, 500);
+		$("#global_search").animate({width: "150px"}, 500);
 	});
 
 	$("#global_search").focusout(function () {

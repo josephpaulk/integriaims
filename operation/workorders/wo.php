@@ -314,8 +314,10 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 	// Display main form / view 
 
-	if ($tab == ""){ 
-		$table->width = '99%';
+	if ($tab == ""){
+		
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'search-table-button';
 		$table->colspan = array ();
 		
@@ -494,12 +496,13 @@ if ($operation == "") {
 	}
 
 	echo '<form id="form-search_wo" action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
-
+	
+	$table = new StdClass();
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "99%";
+	$table->width = "100%";
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 
@@ -578,7 +581,8 @@ if ($operation == "") {
 
 	if ($wos !== false) {
 		unset ($table);
-		$table->width = "99%";
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();

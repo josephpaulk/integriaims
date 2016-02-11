@@ -162,6 +162,36 @@ if ($id) {
 	}
 	
 	$op = get_parameter ("op", "");
+	echo '<h2>';
+	switch ($op) {
+		case "activities":
+			echo strtoupper(__('Activities'));
+			break;
+		case "files":
+			echo strtoupper(__('Files'));
+			break;
+		case "invoices":
+			echo strtoupper(__('Invoices'));
+			break;
+		case "leads":
+			echo strtoupper(__('Leads'));
+			break;
+		case "contracts":
+			echo strtoupper(__('Contracts'));
+			break;
+		case "contacts":
+			echo strtoupper(__('Contacts'));
+			break;
+		case "projects":
+			echo strtoupper(__('Projects'));
+			break;
+		default:
+			echo strtoupper(__('Company details'));
+	}
+	echo '</h2>';
+	
+	$company = get_db_row ('tcompany', 'id', $id);
+	echo '<h4>' . sprintf(__('Company: %s'), $company['name']);
 	
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	if ($op == "projects")
@@ -177,12 +207,11 @@ if ($id) {
 	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
 	
 	/*
-		if ($op == "inventory")
-			echo '<li class="ui-tabs-selected">';
-		else
-			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
-
+	if ($op == "inventory")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
 	*/
 	
 	if ($op == "invoices")
@@ -223,40 +252,10 @@ if ($id) {
 	
 	echo '<li class="ui-tabs">';
 	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail"><span>'.__("Search").'</span></a></li>';
-
-	echo '<li class="ui-tabs-title">';
-	switch ($op) {
-		case "activities":
-			echo strtoupper(__('Activities'));
-			break;
-		case "files":
-			echo strtoupper(__('Files'));
-			break;
-		case "invoices":
-			echo strtoupper(__('Invoices'));
-			break;
-		case "leads":
-			echo strtoupper(__('Leads'));
-			break;
-		case "contracts":
-			echo strtoupper(__('Contracts'));
-			break;
-		case "contacts":
-			echo strtoupper(__('Contacts'));
-			break;
-		case "projects":
-			echo strtoupper(__('Projects'));
-			break;
-		default:
-			echo strtoupper(__('Company details'));
-	}
-	echo '</li>';
 		
 	echo '</ul>';
-
-	$company = get_db_row ('tcompany', 'id', $id);
-	
-	echo '<div class="under_tabs_info">' . sprintf(__('Company: %s'), $company['name']) . '</div><br>';
+	 
+	echo '</h4>';
 	
 	$message = get_parameter('message', '');
 	if ($message != '') {
@@ -283,7 +282,8 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	}
 	
 	if($new_company) {
-		echo "<h1>".__('New company')."</h1>";
+		echo "<h2>".__('Companies')."</h2>";
+		echo "<h4>".__('New company')."</h4>";
 	}
 
 	if (!$new_company && $op == "") { 
@@ -314,7 +314,8 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$last_update = '';
 	}
 	
-	$table->width = '99%';
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -398,8 +399,9 @@ elseif ($op == "activities") {
 	}
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
-
-	$table->width = "99%";
+	
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->size = array ();
@@ -492,6 +494,20 @@ elseif ($op == "activities") {
 
 elseif ($op == "contracts") {
 	
+	if ($write_permission || $manage_permission) {
+		echo '<div class="divform">';
+		echo '<table class="search-table">';
+		echo '<tr>';
+		echo '<td>';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
+			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+			print_input_hidden ('new_contract', 1);
+		echo '</form>';
+		echo '</td>';
+		echo '</tr>';
+		echo '</table>';
+		echo '</div>';
+	}
 	//$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 	//$contracts = crm_get_user_contracts($config['id_user'], $contracts);
 	$where_clause = "WHERE id_company=$id";
@@ -501,8 +517,9 @@ elseif ($op == "contracts") {
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 	
 	if ($contracts !== false) {
-	
-		$table->width = "99%";
+		
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -533,19 +550,12 @@ elseif ($op == "contracts") {
 			$data[5] = get_contract_status_name($contract["status"]);
 		
 			array_push ($table->data, $data);
-		}	
-		print_table ($table);
-
-
-		if ($write_permission || $manage_permission) {
-			
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
-			echo '<div style="width: '.$table->width.'; text-align: right;">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new_contract', 1);
-			echo '</div>';
-			echo '</form>';
 		}
+		if ($write_permission || $manage_permission)
+			echo '<div class="divresult">';
+		print_table ($table);
+		if ($write_permission || $manage_permission)
+			echo '</div>';
 	}
 }
 
@@ -553,10 +563,24 @@ elseif ($op == "contracts") {
 
 elseif ($op == "contacts") {
 	
+	if ($write_permission || $manage_permission) {
+		echo '<div class="divform">';
+		echo '<table class="search-table">';
+		echo '<tr>';
+		echo '<td>';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new_contact', 1);
+		echo '</form>';
+		echo '</td>';
+		echo '</tr>';
+		echo '</table>';
+		echo '</div>';
+	}
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
-		
+	
 	$table->class = 'listing';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->head = array ();
 	$table->head[0] = __('Contact');
 	$table->head[1] = __('Email');
@@ -584,16 +608,12 @@ elseif ($op == "contacts") {
 		$data[3] = print_help_tip ($details, true, 'tip_view');
 		array_push ($table->data, $data);			
 	}
+	if ($write_permission || $manage_permission)
+		echo '<div class="divresult">';
 	print_table ($table);
-	
-	if ($write_permission || $manage_permission) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
-		echo '<div style="width: '.$table->width.'; text-align: right;">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-		print_input_hidden ('new_contact', 1);
+	if ($write_permission || $manage_permission)
 		echo '</div>';
-		echo '</form>';
-	}
+	
 } // end of contact view
 
 // INVOICES LISTING
@@ -663,12 +683,24 @@ elseif ($op == "invoices") {
 		} else {
 			$invoices = crm_get_all_invoices ("id_company = $id");
 		}
-		
-		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
-		
+		if ($section_write_permission || $section_manage_permission) {
+			echo '<div class="divform">';
+			echo '<table class="search-table">';
+			echo '<tr>';
+			echo '<td>';
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
+				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+				print_input_hidden ('new_invoice', 1);
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</table>';
+			echo '</div>';
+		}
 		if ($invoices !== false) {
-		
-			$table->width = "98%";
+			
+			$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
+			$table->width = "100%";
 			$table->class = "listing";
 			$table->cellspacing = 0;
 			$table->cellpadding = 0;
@@ -746,14 +778,11 @@ elseif ($op == "invoices") {
 				
 				array_push ($table->data, $data);
 			}	
+			if ($write_permission || $manage_permission)
+				echo '<div class="divresult">';
 			print_table ($table);
-			
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
-			echo '<div class="button" style="width: '.$table->width.'">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new_invoice', 1);
-			echo '</div>';
-			echo '</form>';
+			if ($write_permission || $manage_permission)
+				echo '</div>';	
 		}
 	} 
 }
@@ -762,6 +791,20 @@ elseif ($op == "invoices") {
 
 elseif ($op == "leads") {
 	
+	if ($section_write_permission || $section_manage_permission) {
+		echo '<div class="divform">';
+		echo '<table class="search-table">';
+		echo '<tr>';
+		echo '<td>';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id_company='.$id.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new', 1);
+		echo '</form>';
+		echo '</td>';
+		echo '</tr>';
+		echo '</table>';
+		echo '</div>';
+	}
 	$leads = crm_get_all_leads ("WHERE id_company = $id and progress < 100");
 	
 	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
@@ -769,8 +812,9 @@ elseif ($op == "leads") {
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 	
 	if ($leads !== false) {
-	
-		$table->width = "99%";
+		
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -805,17 +849,11 @@ elseif ($op == "leads") {
 			
 			array_push ($table->data, $data);
 		}	
+		if ($write_permission || $manage_permission)
+			echo '<div class="divresult">';
 		print_table ($table);
-		
-		if ($section_write_permission || $section_manage_permission) {
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id_company='.$id.'">';
-			echo '<div style="width: '.$table->width.'; text-align: right;">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new', 1);
-			echo '</div>';
-			echo '</form>';
-		}
-		
+		if ($write_permission || $manage_permission)
+			echo '</div>';		
 	}
 }
 else if ($op == 'projects') {
@@ -845,7 +883,8 @@ if ((!$id) AND ($new_company == 0)){
 	
 	// Search // General Company listing
 	echo "<div id='inventory-search-content'>";
-	echo "<h1>".__('Company management');
+	echo "<h2>".__('Company management') . "</h2>";
+	echo "<h4>".__('List Company');
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
@@ -853,7 +892,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
-	echo "</h1>";
+	echo "</h4>";
 
 	$search_text = (string) get_parameter ("search_text");	
 	$search_role = (int) get_parameter ("search_role");
@@ -945,7 +984,7 @@ if ((!$id) AND ($new_company == 0)){
 
 	$search_params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
 	
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->style = array ();
 	$table->data = array ();
@@ -989,8 +1028,9 @@ if ((!$id) AND ($new_company == 0)){
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$search_params", $offset);
 
 	if ($companies !== false) {
-
-		$table->width = "99%";
+		
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();

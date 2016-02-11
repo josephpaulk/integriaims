@@ -94,8 +94,10 @@ if ($operation == "delete") {
 // ---------------
 
 if (($operation == "create") || ($operation == "edit")){
-    
+    echo "<h2>".__('CRM Template management')."</h2>";
+	
 	if ($operation == "create"){
+		echo "<h4>".__('Create CRM Template')."</h4>";
     	$name = "";
     	$description = "";
     	$id_language = "";
@@ -103,6 +105,7 @@ if (($operation == "create") || ($operation == "edit")){
     	$subject = "";
 
     } else {
+		echo "<h4>".__('Update CRM Template')."</h4>";
     	// TODO: Check ACL here. Dont allow to read Id not my company or child (or admin)
 		$template = get_db_row ("tcrm_template", "id", $id);
 		$name = $template["name"];
@@ -112,7 +115,7 @@ if (($operation == "create") || ($operation == "edit")){
 		$subject = $template["subject"];
     }
 
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[3][0] = 2;
@@ -148,7 +151,7 @@ if (($operation == "create") || ($operation == "edit")){
 	$table->data['button'][0] = $button;
 	$table->colspan['button'][0] = 2;
 	
-	echo '<form id="form-template_manager" method="post" action="index.php?sec=leads&sec2=operation/leads/template_manager">';
+	echo '<form id="form-template_manager" method="post" action="index.php?sec=customers&sec2=operation/leads/template_manager">';
 	print_table ($table);
 	echo '</form>';
 }
@@ -157,54 +160,63 @@ if (($operation == "create") || ($operation == "edit")){
 // LIST OF CRM TEMPLATES
 // -------------------------
 if ($operation == "") {
-	echo "<h1>".__('CRM Template management')."</h1>";
+	echo "<h2>".__('CRM Template management')."</h2>";
+	echo "<h4>".__('List CRM Template')."</h4>";
 
 	//TODO: Show only my companies templates or my "child" companies tempaltes (and all if I'm admin)
-
+	echo '<div class="divform">';
+    echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/template_manager">';
+	echo '<table class="search-table" style="width: 100%;">';
+	echo '<tr>';
+	echo '<td>';
+	print_submit_button (__('Create'), 'crt', false, 'class="sub create"');
+	print_input_hidden ('operation', 'create');
+	echo '</td>';
+	echo '</tr>';
+	echo '</table></form>';
+	echo "</div>";
+	
 	if (dame_admin($config["id_user"]))
 		$sql = sprintf ('SELECT * FROM tcrm_template');
 	else
 		$sql = sprintf ('SELECT * FROM tcrm_template');
-
+	
+	
 	$todos = get_db_all_rows_sql ($sql);
-	if ($todos === false)
-		$todos = array ();
-
-	echo '<table class="listing" width="99%">';
-	echo "<th>".__('Name');
-	echo "<th>".__('Language');
-	echo "<th>".__('Company');
-	echo "<th>".__('Operations');
-
-	foreach ($todos as $todo) {
-		
-		echo "<tr><td valign=top>";
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/template_manager&operation=edit&id='.$todo["id"].'">';
-		echo "<b>". $todo["name"]."</b></a>";
-    
-		echo "<td valign=top>";
-		echo "<b>".$todo["id_language"]."</b>";
-    
-	    echo "<td valign=top>";
-	    $company_name = get_db_value('name','tcompany','id',$todo["id_company"]);
-		echo $company_name;
-    	
-		echo '<td align="center" valign=top>';
-
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/template_manager&operation=edit&id='.$todo["id"].'"><img border=0 src="images/wrench.png"></a> ';
-
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/template_manager&operation=delete&id='.$todo["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
-
+	echo "<div class='divresult'>";
+	if ($todos === false) {
+		echo "<h3>"._('No data to show')."</h3>";
 	}
-	echo "</table>";
+	else {
+		echo '<table class="listing" width="100%">';
+		echo "<th>".__('Name');
+		echo "<th>".__('Language');
+		echo "<th>".__('Company');
+		echo "<th>".__('Operations');
 
+		foreach ($todos as $todo) {
+			
+			echo "<tr><td>";
+			echo '<a href="index.php?sec=customers&sec2=operation/leads/template_manager&operation=edit&id='.$todo["id"].'">';
+			echo "<b>". $todo["name"]."</b></a>";
+		
+			echo "<td>";
+			echo "<b>".$todo["id_language"]."</b>";
+		
+			echo "<td valign=top>";
+			$company_name = get_db_value('name','tcompany','id',$todo["id_company"]);
+			echo $company_name;
+			
+			echo '<td>';
 
-    echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/template_manager">';
-	echo '<div style="width: 99%; text-align: right;">';
-	print_submit_button (__('Create'), 'crt', false, 'class="sub create"');
-	print_input_hidden ('operation', 'create');
-	echo '</form></div>';
+			echo '<a href="index.php?sec=customers&sec2=operation/leads/template_manager&operation=edit&id='.$todo["id"].'"><img border=0 src="images/wrench.png"></a> ';
 
+			echo '<a href="index.php?sec=customers&sec2=operation/leads/template_manager&operation=delete&id='.$todo["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
+
+		}
+		echo "</table>";
+	}
+	echo "</div>";
 } // Fin bloque else
 
 ?>

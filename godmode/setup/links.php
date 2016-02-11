@@ -95,7 +95,7 @@ if ($add || $edit) {
 
 	// Create link
 	echo "<div class='divform'>";
-	echo '<table class="search-table" cellpadding="4" cellspacing="4" width="99%">';   
+	echo '<table class="search-table" width="100%">';   
 	echo '<form name="ilink" method="post" action="index.php?sec=godmode&sec2=godmode/setup/links">';	
 	echo '<tr><td class="datos"><b>'.__('Link name').'</b><input type="text" name="name"  value="'.$nombre.'">';
 	echo '<tr><td class="datos2"><b>'.__('Link').'</b><input type="text" name="link"  value="'.$link.'">';
@@ -111,7 +111,8 @@ if ($add || $edit) {
 	echo "</div>";
 } else {
 	// Main list view for Links editor
-	$table->width = '99%';
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->style = array ();

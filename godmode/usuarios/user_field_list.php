@@ -56,7 +56,8 @@ if ($user_fields === false) {
 	$user_fields = array ();
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array();

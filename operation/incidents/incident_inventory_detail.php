@@ -60,8 +60,9 @@ $company_id = reset(array_keys($company));
 
 $inventories = get_inventories_in_company ($company_id, false);
 
+$table = new StdClass();
 $table->class = 'listing';
-$table->width = '99%';
+$table->width = '100%';
 $table->head = array ();
 $table->head[0] = __('Name');
 $table->align[4] = 'center';

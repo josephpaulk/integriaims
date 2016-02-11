@@ -59,10 +59,11 @@ $data = array();
 $fileLocation = "";
 switch ($type) {
 	case "contact":
-
-		$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $data["id_contact"]);
+		$id_contact = get_parameter ("id_contact", 0);
 		
+		$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id_contact);
 		$read_permission = check_crm_acl ('other', 'cr', $config['id_user'], $id_company);
+		
 		if (!$read_permission) {
 			audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
 			require ($general_error);

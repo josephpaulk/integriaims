@@ -153,8 +153,9 @@ if ($id || $new_sla) {
         $id_sla_type = $sla["id_sla_type"];
 
 	}
-
-	$table->width = "99%";
+	
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();

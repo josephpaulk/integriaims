@@ -152,17 +152,18 @@ $sql = "SELECT id, name FROM tcrm_template WHERE id_language = '". $lead["id_lan
 
 $id_template = (int) get_parameter ("id_template");
 
-
-// Show form with available templates for this useraco
-echo '<form method="post" id="lead_mail_filter">';
-echo "<table width=99% class='search-table'>";
-echo "<tr><td valign=top> ";
-echo print_select_from_sql ($sql, 'id_template', $id_template, '', __("None"), 0, true, false, true, __("CRM Template to use"));
-echo "</td><td valign=bottom>";
-print_submit_button (__('Apply'), 'apply_btn', false, 'class="sub upd"', false);
-print_input_hidden ('id', $id);
-echo "</td></tr></table>";
-echo "</form>";
+echo "<div class='divform'>";
+	// Show form with available templates for this useraco
+	echo '<form method="post" id="lead_mail_filter">';
+		echo "<table width=100% class='search-table'>";
+		echo "<tr><td>";
+		echo print_select_from_sql ($sql, 'id_template', $id_template, '', __("None"), 0, true, false, true, __("CRM Template to use"));
+		echo "</td></tr><tr><td>";
+		print_submit_button (__('Apply'), 'apply_btn', false, 'class="sub upd"', false);
+		print_input_hidden ('id', $id);
+		echo "</td></tr></table>";
+	echo "</form>";
+echo "</div>";
 
 $sql = "SELECT `description` FROM tlead_activity 
 			WHERE id_lead = $id
@@ -176,7 +177,8 @@ if ($result !== false) {
 	$last_email = "";
 }
 
-$table->width = "99%";
+$table = new StdClass();
+$table->width = "100%";
 $table->class = "search-table-button";
 $table->data = array ();
 $table->size = array ();
@@ -201,7 +203,7 @@ $table->data[2][0] = print_textarea ("mail", 10, 1, $mail, 'style="height:350px;
 
 $html = "<div id=\"lead_files\" class=\"fileupload_form\">";
 $html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
-$html .= 		"<table width=\"99%\">";
+$html .= 		"<table width=\"100%\">";
 $html .= 			"<td width=\"45%\">";
 $html .= 				__('Drop the file here');
 $html .= 			"<td>";
@@ -215,7 +217,7 @@ $html .= 		"<input type=\"hidden\" name=\"upfiles\" id=\"upfiles\" />"; // JSON 
 $html .= 	"</div>";
 $html .= 	"<ul></ul>";
 $html .= "</div>";
-$table->data[3][0] = print_container('attachment_upload_container', __('Attachments'), $html, 'closed', true, false);
+//$table->data[3][0] = print_container('attachment_upload_container', __('Attachments'), $html, 'closed', true, false);
 
 $table->data[4][0] = print_textarea ("last_mail", 10, 1, $last_email, 'style="height:350px;"', true, __('Last E-mail'));
 
@@ -223,10 +225,13 @@ $table->data[5][0] = print_submit_button (__('Send email'), 'apply_btn', false, 
 $table->data[5][0] .= print_input_hidden ('id', $id, true);
 $table->data[5][0] .= print_input_hidden ('send', 1, true);
 
-
+echo "<div class='divresult'>";
 echo '<form method="post" id="lead_mail_go">';
 print_table ($table);
+echo "<h4>".__('Attachments')."</h4>";
+echo $html;
 echo "</form>";
+echo "</div>";
 
 ?>
 

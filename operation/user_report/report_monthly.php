@@ -63,7 +63,7 @@ echo "</h4>";
 
 echo '<div class="divform">';
 echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_monthly'>";
-echo "<table class='search-table' style='width:99%'>";
+echo "<table class='search-table' style='width:100%'>";
 	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$prev_month&working_year=$prev_year'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "'></a> ";
 	echo "</td><td>";

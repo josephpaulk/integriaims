@@ -45,7 +45,7 @@ if (!file_exists($file_name)){
 	$data = file_get_contents ($file_name, NULL, NULL, $offset);
 
 	echo "<div class='under_tabs_info'>$file_name ".__("Reading from byte"). " " .$offset ."</div><br>";
-	echo "<div style='width: 99%; text-align: right;'>";
+	echo "<div style='width: 100%; text-align: right;'>";
 	print_button(__("Delete logfile"), '', false, 'window.open(\'index.php?sec=godmode&sec2=godmode/setup/logviewer&delete=1\')', 'class="sub delete"');
 	echo "</div>";
 	echo "</br><textarea style='width: 99%; height: 500px;' name='$file_name'>";

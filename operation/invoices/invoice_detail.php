@@ -54,7 +54,8 @@ if ($message != '') {
 	echo "<h3 class='suc'>".__($message)."</h3>";
 }
 
-echo "<h1>".__('Invoice listing');
+echo "<h2>" . __('Invoice') . "</h2>";
+echo "<h4>" . __('Invoice listing');
 
 echo "<div id='button-bar-title'>";
 		echo "<ul>";
@@ -66,7 +67,7 @@ echo "<div id='button-bar-title'>";
 		echo "</ul>";
 		echo "</div>";
 
-echo "</h1>";
+echo "</h4>";
 
 if ($id_invoice || $id) {
 	
@@ -188,7 +189,7 @@ if ($clean_output == 0){
 
 	$table = new stdClass();
 	$table->id = 'invoices_table';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->size = array();
 	$table->style = array();
@@ -255,7 +256,7 @@ if ($invoices != false) {
 	}
 	
 	$table = new stdClass();
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = "listing";
 	$table->cellspacing = 0;
 	$table->cellpadding = 0;

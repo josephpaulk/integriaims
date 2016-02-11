@@ -83,7 +83,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 						sec2=operation/kb/manage_perms&create2'>";
 	
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Product');
@@ -113,7 +113,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		WHERE tkb_product_group.id_product = tkb_product.id AND tgrupo.id_grupo = tkb_product_group.id_group';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="99%" class="listing">';
+		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Category')."</th>";
 		echo "<th>".__('Group')."</th>";
 		echo "<th>".__('Delete')."</th>";
@@ -146,7 +146,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:99%; text-align: right;">';
+	echo '<div style="width:100%; text-align: right;">';
 	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_perms&create=1'>";
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";

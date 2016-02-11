@@ -97,8 +97,9 @@ if ($search_min_billing != "") {
 	$having .= "HAVING `billing` >= $search_min_billing";
 }
 
+$table = new StdClass();
 $table->class = 'blank';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array();
 $table->style = array();
 $table->colspan = array();

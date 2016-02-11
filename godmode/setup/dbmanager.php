@@ -89,14 +89,14 @@ function dbmgr_main () {
 	    echo "<br /><br />";
 	    echo "<form method='post' action=''>";
 	    print_textarea ('sql', 5, 50, html_entity_decode($sql, ENT_QUOTES));
-        echo "<div style='width: 99%; text-align: right; margin-top: 6px;'>";
+        echo "<div style='width: 100%; text-align: right; margin-top: 6px;'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
 	    echo "</div>";
 	    echo "</form>";
     } else {
         echo "<form method='post' action=''>";
 	    print_textarea ('sql', 2, 40, html_entity_decode($sql, ENT_QUOTES));
-        echo "<div style='width: 99%; text-align: right; margin-top: 6px;'>";
+        echo "<div style='width: 100%; text-align: right; margin-top: 6px;'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
 	    echo "</div>";
 	    echo "</form>";

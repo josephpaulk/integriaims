@@ -232,6 +232,12 @@ var screen_tab_showed = 0;
 
 /* <![CDATA[ */
 $(document).ready (function () {
+	var total_width = $("div#main").width();
+	var less_width = total_width - 200;
+	var percent = Math.round((less_width * 100)/total_width) - 2;
+	
+	$("div.divresult").css('width', percent+'%');
+	
 	// Control the tab and subtab hover. When mouse leave one, 
 	// check if is hover the other before hide the subtab
 	$('li.support a').hover(agent_wizard_tab_show, agent_wizard_tab_hide);
@@ -271,8 +277,13 @@ function agent_wizard_tab_hide() {
 }
 
 $(window).resize(function() {
-	agent_wizard_tab_setup();
-	custom_screen_tab_setup();
+	//agent_wizard_tab_setup();
+	//custom_screen_tab_setup();
+	var total_width = $("div#main").width();
+	var less_width = total_width - 200;
+	var percent = Math.round((less_width * 100)/total_width) - 2;
+	
+	$("div.divresult").css('width', percent+'%');
 });
 
 // Set the position and width of the subtab

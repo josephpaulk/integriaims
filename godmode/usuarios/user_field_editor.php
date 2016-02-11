@@ -108,7 +108,8 @@ if ($id_field)
 else
 	echo '<h4>'.__('Create').'</h4>';
 
-$table->width = "99%";
+$table = new StdClass();
+$table->width = "100%";
 $table->class = "search-table";
 $table->data = array ();
 

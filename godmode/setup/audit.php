@@ -60,7 +60,8 @@ foreach ($actions_arr as $act) {
 	$actions[$act['accion']] = $act['accion'];
 }
 
-$table_search->width = '99%';
+$table_search = new StdClass();
+$table_search->width = '100%';
 $table_search->class = 'search-table';
 $table_search->style = array ();
 $table_search->colspan = array ();
@@ -95,7 +96,8 @@ $total_events = get_db_sql ("SELECT COUNT(ID_sesion) FROM tsesion $where");
 echo "<div class='divresult'>";
 pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/audit&text=$text", $offset);
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'listing';
 $table->head = array ();
 $table->head[0] = __('Accion');

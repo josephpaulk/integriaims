@@ -104,7 +104,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		echo "<input type=hidden name='update2' value=1>";
 	}
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo "<label>" . __('Name') . "</label>";
@@ -131,7 +131,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	$sql1='SELECT * FROM two_category ORDER BY name';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="99%" class="listing">';
+		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Icon')."</th>";
 		echo "<th>".__('Delete')."</th>";
@@ -162,7 +162,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width: 99%;" class="button">';
+	echo '<div style="width: 100%;" class="button">';
 	echo "<form method=post action='index.php?sec=projects&sec2=operation/workorders/wo_category&create=1'>";
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
 	echo "</form></div>";

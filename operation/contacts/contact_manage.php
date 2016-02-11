@@ -178,6 +178,7 @@ if ($delete_contact && $id) {
 // FORM (Update / Create)
 if ($id || $new_contact) {
 	if ($new_contact) {
+		echo "<h4>".__('New Contact')."</h4>";
 		if (!$section_write_permission && !$section_manage_permission) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contact in a group without access");
 			require ("general/noaccess.php");
@@ -213,7 +214,7 @@ if ($id || $new_contact) {
 		$description = $contact['description'];
 	}
 	
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[0][0] = 4;

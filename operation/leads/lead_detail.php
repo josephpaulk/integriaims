@@ -687,6 +687,30 @@ if ($id || $new) {
 	if ($id) {
 
 		$op = get_parameter ("op", "");
+		echo '<h2>';
+		switch ($op) {
+			case "activity":
+				echo strtoupper(__('Activity'));
+				break;
+			case "history":
+				echo strtoupper(__('Tracking'));
+				break;
+			case "mail":
+				echo strtoupper(__('Mail reply'));
+				break;
+			case "files":
+				echo strtoupper(__('Files'));
+				break;
+			case "forward":
+				echo strtoupper(__('Forward lead'));
+				break;
+			default:
+				echo strtoupper(__('Lead details'));
+		}
+		echo '</h2>';
+		
+		$name = get_db_value ('fullname', 'tlead', 'id', $id);
+		echo '<h4>' . sprintf(__('Lead #%s: %s'), $id, $name);
 		
 		echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 		if ($op == "files")
@@ -735,34 +759,10 @@ if ($id || $new) {
 
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search"><span>'.__("Search").'</span></a></li>';
-
-		echo '<li class="ui-tabs-title">';
-		switch ($op) {
-			case "activity":
-				echo strtoupper(__('Activity'));
-				break;
-			case "history":
-				echo strtoupper(__('Tracking'));
-				break;
-			case "mail":
-				echo strtoupper(__('Mail reply'));
-				break;
-			case "files":
-				echo strtoupper(__('Files'));
-				break;
-			case "forward":
-				echo strtoupper(__('Forward lead'));
-				break;
-			default:
-				echo strtoupper(__('Lead details'));
-		}
-		echo '</li>';
-		
+				
 		echo '</ul>';
+		echo '</h4>';
 		
-		$name = get_db_value ('fullname', 'tlead', 'id', $id);
-		
-		echo '<div class="under_tabs_info">' . sprintf(__('Lead #%s: %s'), $id, $name) . '</div><br>';
 	}
 
 	switch ($op) {
@@ -788,7 +788,7 @@ if ($id || $new) {
 			return;
 	}
 
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan['tags'][0] = 4;
@@ -956,7 +956,8 @@ if ($id || $new) {
 	print_table ($table);
 	echo "</form>";
 
-} else {
+}
+else {
 	
 	// Custom search button
 	echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
@@ -1176,33 +1177,36 @@ if ($id || $new) {
 	$table->data['tags'][0] = print_label (__('Tags'), '', 'select', true);
 	$table->data['tags'][0] .= html_render_tags_editor($tag_editor_props, true); 
 	
-	$table_advanced->class = 'search-table';
-	$table_advanced->style = array ();
-	$table_advanced->style[0] = 'font-weight: bold;';
-	$table_advanced->data = array ();
-	$table_advanced->width = "99%";
-	$table_advanced->colspan = array();
-	$table_advanced->colspan[1][1] = 2;
-	
+	//~ $table_advanced->class = 'search-table';
+	//~ $table_advanced->style = array ();
+	//~ $table_advanced->style[0] = 'font-weight: bold;';
+	//~ $table_advanced->data = array ();
+	//~ $table_advanced->width = "99%";
+	//~ $table_advanced->colspan = array();
+	//~ $table_advanced->colspan[1][1] = 2;
+	$table_advanced = '<tr>';
 	$params = array();
 	$params['input_id'] = 'id_company_search';
 	$params['input_name'] = 'id_company_search';
 	$params['input_value'] = $id_company;
 	$params['title'] = __('Managed by');
 	$params['return'] = true;
-	$table_advanced->data[0][0] = print_company_autocomplete_input($params);
-
-	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);
-	
-	$table_advanced->data[0][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+	$table_advanced .= '<td>';
+	$table_advanced .= print_company_autocomplete_input($params);
+	$table_advanced .= '</td><td>';
+	$table_advanced .= combo_kb_products ($id_category, true, 'Product type', true);
+	$table_advanced .= '</td><td>';
+	$table_advanced .= print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', __('Any'), '', true, false, false, __('Language'));
-	
+	$table_advanced .= '</td><tr><td>';
 	$progress_values = lead_progress_array ();
-	$table_advanced->data[1][0] = print_select ($progress_values, 'progress_search', $progress, '', __('Any'), 0, true, 0, false, __('Lead progress') );
-
-	$table_advanced->data[1][1] = get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
-
-	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), print_table($table_advanced, true), 'closed', true, false);
+	$table_advanced .= print_select ($progress_values, 'progress_search', $progress, '', __('Any'), 0, true, 0, false, __('Lead progress') );
+	$table_advanced .= '</td><td>';
+	$table_advanced .= get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
+	$table_advanced .= '</td>';
+	$table_advanced .= '<tr>';
+	
+	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), $table_advanced, 'closed', true, false,'','no_border',3);
 	$table->colspan['advanced'][2] = 4;
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);

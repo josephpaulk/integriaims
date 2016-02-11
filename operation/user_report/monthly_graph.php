@@ -72,7 +72,7 @@ $from_one_month = "$prev_year-$prev_month-$day";
 $next_one_month = "$next_year-$next_month-$day";
 
 echo "<h1>".__('Monthly report for')." $id_user</h1>";
-echo "<table class=search-table width=99%>";
+echo "<table class=search-table width=100%>";
 echo "<tr><td style='text-align: center;'>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$prev_month&year=$prev_year&id=$id_user'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "'> </a>";
 echo "<span style='font-size: 18px;'>".$year."/".$month."</span>";

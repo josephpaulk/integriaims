@@ -125,7 +125,8 @@ if ($update) {
 
 echo '<form method="post">';
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table';
 $table->colspan = array ();
 $table->data = array ();
@@ -158,7 +159,8 @@ foreach ($resolutions as $resolution) {
 
 $table_resolutions = print_table ($table, true);
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table listing';
 $table->colspan = array ();
 $table->data = array ();
@@ -226,7 +228,7 @@ $newsletter_options[1] = __('Enabled');
 $ticket_options[0] = __('Disabled');
 $ticket_options[1] = __('Enabled');
 
-echo "<table width='99%' class='search-table-button
+echo "<table width='100%' class='search-table-button
 '>";
 echo "<tr>";
 echo "<td style='vertical-align: top;'>".print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',

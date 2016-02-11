@@ -87,7 +87,7 @@ if (preg_match("/^manager/", $current_directory))
 	$current_directory = "images";
 
 echo "<div class='divform'>";
-echo "<table cellpadding='4' cellspacing='4' width='99%' class='search-table'>";
+echo "<table width='100%' class='search-table'>";
 
 echo "<tr><td class='datos'>";
 

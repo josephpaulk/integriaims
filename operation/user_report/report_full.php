@@ -140,7 +140,7 @@ echo  "</h4>";
 if ($clean_output == 0){
 
     echo "<form id='form-report_full' method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
-    echo "<table class='search-table-button' style='margin-left: 10px' width='99%'>";
+    echo "<table class='search-table-button' style='margin-left: 10px' width='100%'>";
 
     echo "<tr><td>";
 
@@ -238,7 +238,7 @@ if ($do_search == 0){
 	else
 		echo "<h3>".__("Project activity")."</h3>";
 
-	echo '<table width="99%" class="listing"><tr>';
+	echo '<table width="100%" class="listing"><tr>';
 	if ($only_summary == 0){
 		echo "<th>".__('Project')."</th>";
 		echo "<th>".__('User hours')."</th>";
@@ -514,7 +514,7 @@ if ($do_search == 0){
 			echo "</h4>";
 		} else {
 				
-			echo '<table width="99%" class="listing"><tr>';
+			echo '<table width="100%" class="listing"><tr>';
 			if ($only_summary == 0) {
 				echo "<th>".__('#')."</th>";
 				echo "<th>".__('Ticket'). "<br>".__("Task")."</th>";

@@ -32,7 +32,8 @@ $offset = (int) get_parameter ("offset");
 $total_events = get_db_sql ("SELECT COUNT(id) FROM tevent");
 pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/event", $offset);
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'listing';
 $table->head = array ();
 $table->head[0] = __('Type');

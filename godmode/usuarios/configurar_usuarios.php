@@ -308,7 +308,7 @@ else
 	// Update URL
 	echo '<form name="user_mod" id="form-user_config" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
 
-echo "<table width='99%' class='search-table'>";
+echo "<table width='100%' class='search-table'>";
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');
@@ -559,7 +559,7 @@ enterprise_hook ('show_delete_profiles');
 
 if (isset($_GET["alta"])){
 	echo "</table>";
-	echo "<div class='button' style='width: 99%' >";
+	echo "<div class='button' style='width: 100%' >";
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	print_input_hidden ('action', 'create');
 	echo '</div>';

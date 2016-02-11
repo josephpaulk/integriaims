@@ -42,7 +42,8 @@ if ($upload_file) {
 	}
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table';
 $table->size = array ();
 $table->size[0] = '120px';

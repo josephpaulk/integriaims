@@ -128,7 +128,7 @@ else {
 	// Main list view for Links editor
 	echo "<h2>".__('Role management')."</h2>";
 	echo "<h4>".__('List Role')."</h4>";
-	echo "<table width='99%' class='listing'>";
+	echo "<table width='100%' class='listing'>";
 	echo "<th>".__('Name');
 	echo "<th>".__('Description');
 	echo "<th>".__('Cost');
@@ -154,7 +154,7 @@ else {
 		}
 	}
 	echo "</table>";
-	echo "<table cellpadding='4' cellspacing='4' width='99%'>";
+	echo "<table width='100%'>";
 	echo "<tr><td align='right'>";
 	echo "<form method='post' action='index.php?sec=users&sec2=godmode/usuarios/role_manager&form_add=1'>";
 	echo "<input type='submit' class='sub create' name='form_add' value='".__('Add')."'>";

@@ -20,7 +20,7 @@ strong, b, .bold * {
 }
 
 body {
-	font: 0.93em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.93em  Verdana !important;
 }
 
 body.login {
@@ -148,8 +148,7 @@ p, h1, h2, h3 {
 	margin: 30px 15px 0px 6px;
 }
 h4, h5{
-	margin: 0px 38px 18px 6px;
-    padding-bottom: 5px;
+	margin: 0px 0px 18px 6px;
 }
 p {
 	clear: left;
@@ -216,14 +215,24 @@ table.databox td {
 
 div.divform {
 	float: left;
-	width: 20%;
+	width: 200px !important;
 }
 
 div.divresult {
 	float: right;
-	width: 74%;
-    padding-left: 35px;
-    padding-right: 35px;
+	width: 79%;
+}
+
+.divresult>.divhalf>.listing>.container_div>tr>td>div>embed {
+	width: 100%;
+}
+.divform .search-table input[type="text"] {
+	width: 175px !important;
+	padding-left: 0px;
+}
+.divform .search-table select {
+	width: 175px !important;
+	padding-left: 0px;
 }
 
 .divresult_right {
@@ -238,7 +247,7 @@ div.divhalf {
 
 div.listing-border {
 	margin-left: 5px;
-	width: 102%;
+	width: 100%;
 	border-radius: 4px;
 }
 
@@ -694,13 +703,11 @@ form.searchform input.button {
 	top: 4px; left:65px;
 }
 
-#header img {
-	#padding-top: 10px;
-}
-
 #header #logo_container {
 	float: left;
 	height: 50px;
+	width: 20%;
+	text-align: center;
 }
 
 #header #logo_container img {
@@ -709,29 +716,33 @@ form.searchform input.button {
 }
 
 .header_icons {
-	float: left;
+	float: right;
 	padding-top: 16px;
+	margin-right: 10px;
 }
+
 .header_icons img{
 	margin-left: 5px !important;
 }
 
 .header_menu {
 	float: left;
-	height: 50px;
+	width: 60%;
 }
 
 .header_search {
 	float: left;
 	height: 50px;
+	position: absolute;
 }
 .header_search form {
 	padding-top: 16px;
 }
 .header_search_icon {
 	width: 20%;
-    height: 50px;
-    float: left;
+	height: 50px;
+	float: right;
+	text-align: center;
 }
 
 div.submenu {
@@ -798,12 +809,7 @@ input#global_search {
 }
 
 .table_header {
-	margin-left: 2%;
-	min-width: 1000px;
-	max-width: 1300px;
-	width: 85%;
 	height: 50px;
-	float: right;
 }
 
 .table_header td {
@@ -848,11 +854,9 @@ input#global_search {
 
 /* main column */
 #main {
-	width: 90%;
-	margin-left: 0px;
-    padding-left: 0px;
+	width: 93%;
+	padding-left: 0px;
 	min-height: 500px;
-	padding-top: 1px;
 	float: left;
 }
 
@@ -864,7 +868,7 @@ input#global_search {
 	margin: 0;
 	padding: 0;
 	display: inline;
-	padding: 30px 30px 0px 15px;
+	padding: 30px 0px 0px 10px;
 }
 #sidebar form {
 	display: inline;
@@ -910,14 +914,14 @@ ul.sidemenu {
 
 /* menu */
 #menu {
-	padding: 16px 5% 0% 5%;
+	padding: 16px 0% 0% 0%;
 }
 
 #menu ul {
 	margin: 0px; 
 	padding: 0;
 	float: left;
-	height: 50px;
+	height: 34px;
 	font: bold 0.95em Helvetica, 'Trebuchet MS', Arial, Sans-serif;
 	list-style: none;
 }
@@ -2049,6 +2053,12 @@ table.search-table td img {
     margin-bottom: 5px;
     vertical-align: middle;
 }
+.divform .search-table td img {
+	padding-left: 0px;
+    margin-bottom: 0px;
+    vertical-align: middle;
+    width: 100%;
+}
 
 table.search-table tr:last-child td {
 	padding-top: 1px;
@@ -2074,7 +2084,7 @@ div.divform table.search-table input[type="button"]{
     border-color: #FF9000;
     margin-top: 20px;
     margin-bottom: 10px;
-    width: 99%;
+    width: 175px !important;
     font-weight: 300;
     height: 50px;
     cursor: pointer;

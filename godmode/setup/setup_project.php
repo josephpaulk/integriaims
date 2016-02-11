@@ -57,7 +57,8 @@ if ($update) {
 
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();

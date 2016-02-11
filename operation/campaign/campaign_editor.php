@@ -57,7 +57,7 @@ if ($update) {
 				"expenses" => $expenses);
 	
 	$res = process_sql_update ("tcampaign", $values, array("id" => $id));
-
+	
 	if ($res) {
 		echo "<h3 class='suc'>".__("Campaign updated sucessfully")."</h3>";
 	} else {
@@ -89,7 +89,7 @@ if ($id) {
 if ($new) {
 	$action = "index.php?sec=customers&sec2=operation/campaign/campaign";
 } else {
-	echo '<div class="under_tabs_info">'.__("Campaign").': '.$title.'</div>';
+	//echo '<div class="under_tabs_info">'.__("Campaign").': '.$title.'</div>';
 	$action = "index.php?sec=customers&sec2=operation/campaign/campaign&tab=editor&id=".$id;
 }
 

@@ -1105,7 +1105,7 @@ function crm_print_company_projects_tree($projects) {
 	
 	require_once ("include/functions_tasks.php");  
 	
-	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+	echo '<table width="100%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
 		$img = print_image ("images/input_create.png", true, array ("style" => 'vertical-align: middle;', "id" => $img_id));
 		$img_project = print_image ("images/note.png", true, array ("style" => 'vertical-align: middle;'));
 		

@@ -114,7 +114,7 @@ $first_of_month = gmmktime(0,0,0,$month,1,$year);
 
 list($year, $month_name) = explode(',',gmstrftime('%Y,%B',$first_of_month));
 
-echo "<table width=99% class='search-table' style='padding: 0px; border-spacing: 0px;'>";
+echo "<table width=100% class='search-table' style='padding: 0px; border-spacing: 0px;'>";
 echo "<tr><td colspan=4 class='calendar_annual_header' style='text-align: center;'>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "' class='calendar_arrow'></a>";
 echo "<span class='calendar-month' style='font-size: 0.93em; color: #FFFFFF; padding: 3px;'>" . strtoupper(htmlentities(ucfirst($month_name))) . " $year</span>";

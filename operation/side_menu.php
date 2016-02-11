@@ -1424,7 +1424,7 @@ echo "<a title='".__('User Info')."'href='index.php?sec=agenda&sec2=operation/us
 echo "</li>";
 echo "</ul>";
 echo "</nav>";
-=======
+
 echo '<div class="portlet">';
 //echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
 echo '<h3>'.__('User info').'</h3>';

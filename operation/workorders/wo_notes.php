@@ -63,7 +63,8 @@ if ($delete) {
 	mail_workorder ($id, 5, $res, false, $note);
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();

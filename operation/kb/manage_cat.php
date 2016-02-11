@@ -117,7 +117,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		echo "<input id='id_kb_category' type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Name');
@@ -158,7 +158,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	$sql1='SELECT * FROM tkb_category ORDER BY parent, name';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="99%" class="listing">';
+		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Icon')."</th>";
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Parent')."</th>";
@@ -207,7 +207,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:99%; text-align: right;">';
+	echo '<div style="width:100%; text-align: right;">';
 	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_cat&create=1'>";
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";

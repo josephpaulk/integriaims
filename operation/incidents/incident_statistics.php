@@ -47,7 +47,7 @@ foreach ($filter as $key => $value) {
 print_input_hidden ('sec2', 'operation/reporting/incidents_html');
 print_input_hidden ('clean_output', 1);
 print_input_hidden ('pdf_output', 1);
-echo '</div></form>';
+echo '</form>';
 
 if ($incidents == false) {
 	echo __('Nothing was found');

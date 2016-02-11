@@ -422,7 +422,7 @@ if (isset($result_output)) {
 
 $table = new StdClass;
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
 $table->colspan = array ();
 $table->colspan[6][0] = 3;
@@ -522,7 +522,7 @@ if (!$id_workunit) {
 	
 	if ($operation == 'multiple_wu_insert') {
 		echo "<div id='tab2' class='ui-tabs-panel'>"; //Multiple WU
-		echo "<table width='99%' class='search-table-button'>";
+		echo "<table width='100%' class='search-table-button'>";
 		echo "<tr>";
 		echo "<td style='text-align: right;'>";
 		echo print_button (__('Add new parse Workunit'), 'add_link', false, 'location.href=\'index.php?sec=users&sec2=operation/users/user_spare_workunit\'', 'class="sub create"');
@@ -541,7 +541,7 @@ if (!$id_workunit) {
 		//Massive work unit list
 		create_new_table_multiworkunit(1);
 		echo "</div>";
-		echo "<table width='99%'>";
+		echo "<table width='100%'>";
 		echo "<tr>";
 		echo "<td style='width: 90%;'>";
 		echo "</td>";

@@ -89,8 +89,8 @@ if ($operation == "create") {
     $date = date('Y-m-d', time() + 604800); //one week later
 	$time = date('H:i:s', time());
   
-
-	$table->width = '99%';
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[1][0] = 2;
@@ -135,7 +135,7 @@ if ($operation == "") {
 	if ($todos === false)
 		$todos = array ();
 
-	echo '<table class="listing" width="99%">';
+	echo '<table class="listing" width="100%">';
 	echo "<th>".__('Title');
 	echo "<th>".__('Expire');
 	echo "<th>".__('Expire date');
@@ -166,7 +166,7 @@ if ($operation == "") {
 
 
     echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=create">';
-	echo '<div style="width: 99%; text-align: right;">';
+	echo '<div style="width: 100%; text-align: right;">';
 	print_submit_button (__('Create'), 'crt', false, 'class="sub create');
 	echo '</form></div>';
 

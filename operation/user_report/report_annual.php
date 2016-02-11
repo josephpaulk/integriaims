@@ -75,7 +75,7 @@ if ($clean_output == 0) {
 
 echo "</h4>";
 
-echo "<table class='search-table' width=99% style='text-align:right;'><tr><td>";
+echo "<table class='search-table' width=100% style='text-align:right;'><tr><td>";
 echo "<table style='margin: 0px auto; '><tr>";
 echo "<td style='text-align:right;'>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/annual_workunits&operation=show_vacations&year=$year&id_user=$id_user_show'>".__('Vacations days').'</a>';
@@ -111,7 +111,7 @@ echo "</table>";
 
 echo "</td></tr></table>";
 
-echo "<table style='margin: 0px auto; text-align: center; padding: 0px; width: 99%; border-spacing: 0px;' class='search-table'>";
+echo "<table style='margin: 0px auto; text-align: center; padding: 0px; width: 100%; border-spacing: 0px;' class='search-table'>";
 echo "<tr><td colspan=4 class='calendar_annual_header'>";
 if($pdf_output == 0) {
 	// Prev. year

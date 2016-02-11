@@ -424,7 +424,8 @@ if ($id || $new_type) {
 		//$id_group = $type['id_group'];
 	}
 	
-	$table->width = "99%";
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -474,8 +475,9 @@ if ($id || $new_type) {
 		foreach ($incident_fields as $field) {
 			$all_fields[$field['id']] = $field['label'];
 		}
-
-		$table->width = '99%';
+		
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array();
@@ -561,8 +563,9 @@ if ($id || $new_type) {
 			echo '</div>';
 		echo "</form>";
 		
+		$table_sort = new StdClass();
 		$table_sort->class = 'search-table';
-		$table_sort->width = '99%';
+		$table_sort->width = '100%';
 		$table_sort->colspan[0][0] = 3;
 		$table_sort->size = array();
 		$table_sort->size[0] = '25%';
@@ -619,7 +622,9 @@ else {
 	$types = get_db_all_rows_sql ($sql);
 	
 	if ($types !== false) {
-		$table->width = '99%';
+		
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();

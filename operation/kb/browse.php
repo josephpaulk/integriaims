@@ -223,7 +223,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		echo "<input type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Title');

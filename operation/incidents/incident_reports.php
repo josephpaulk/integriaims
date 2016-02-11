@@ -27,13 +27,12 @@ $id_search = (int) get_parameter('saved_searches');
 $search = (string) get_parameter('search');
 
 		
-echo "<div id='incident-search-content'>";
-echo "<h1>" .__('Ticket reports')."</h1>";
-echo "</div>";
+echo "<h2>" .__('Support')."</h2>";
+echo "<h4>" .__('Ticket reports')."</h4>";
 
 $table_search = new stdClass;
-$table_search->width = '99%';
-$table_search->class = 'search-table-button';
+$table_search->width = '100%';
+$table_search->class = 'search-table';
 $table_search->size = array ();
 $table_search->style = array ();
 $table_search->colspan = array ();
@@ -53,27 +52,22 @@ $table_search->data[2][0] = print_checkbox_extended ('show_stats', 1, $show_stat
 
 $table_search->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 $table_search->colspan[4][0] = 4;
-echo '<form method="post">';
 
-print_table ($table_search);
+echo "<div class= 'divform'>";
+	echo '<form method="post">';
+	print_table ($table_search);
+	echo '</form>';
+echo '</div>';
 
-echo '</form>';
-
+echo "<div class='divresult'>";
 if (isset($search)) {
 	
-	echo "<div id='incident-search-content'>";
-	echo "<h1>".__('Report results');
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	echo "<li>";
+	
+	echo "<h4>".__('Report results');
 	echo '<a href="index.php?sec=reporting&amp;sec2=operation/reporting/incidents_html
 			&amp;custom_search='.$id_search.'&amp;show_stats='.$show_stats.'&amp;show_list='.$show_list.'&amp;clean_output=1&amp;pdf_output=1">
 			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
-	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
-	echo "</h1>";
-	echo "<br>";
+	echo "</h4>";
 	
 	$custom_search = get_custom_search ($id_search, 'incidents');
 
@@ -100,9 +94,10 @@ if (isset($search)) {
 		
 		$statuses = get_indicent_status ();
 		$resolutions = get_incident_resolutions ();
-
+		
+		$table = new StdClass();
 		$table->class = 'listing';
-		$table->width = "99%";
+		$table->width = "100%";
 		$table->style = array ();
 		$table->style[0] = 'font-weight: bold';
 		$table->head = array ();
@@ -170,6 +165,7 @@ if (isset($search)) {
 		print_table ($table);
 	}
 }
+echo "</div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='custom_search'></div>";
 ?>

@@ -96,7 +96,8 @@ if ($create == 1) {
 	$from_address = $issue["from_address"];
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->colspan[3][0] = 3;

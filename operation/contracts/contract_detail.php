@@ -109,7 +109,15 @@ if ($id_contract) {
 
 	$contract_data = get_db_row('tcontract', 'id', $id_contract);	
 	$op = get_parameter ("op", "");
-
+	echo "<h2>".__('Contract Management')."</h2>";
+	echo '<h4>';
+	switch ($op) {
+		case "invoices":
+			echo __('Invoices');
+			break;
+		default:
+			echo __('Update Contract');
+	}
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	
 	if ($op == "invoices")
@@ -126,18 +134,9 @@ if ($id_contract) {
 
 	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$id_contract.'"><span>'.__("Contract management").'</span></a></li>';
 	
-	echo '<li class="ui-tabs-title">';
-	switch ($op) {
-		case "invoices":
-			echo strtoupper(__('Invoices'));
-			break;
-		default:
-			echo strtoupper(__('Contract Management'));
-	}
-	echo '</li>';
 		
 	echo '</ul>';
-	
+	echo '</h4>';
 	$message = get_parameter('message', '');
 	if ($message != '') {
 		echo "<h3 class='suc'>".__($message)."</h3>";
@@ -227,7 +226,8 @@ if ($op == "invoices") {
 		}
 	}
 	 
-} elseif ($op == "") {
+} 
+elseif ($op == "") {
 
 	$id = get_parameter('id_contract');
 	
@@ -461,7 +461,8 @@ if ($op == "invoices") {
 	// FORM (Update / Create)
 	if ($id || $new_contract) {
 		if ($new_contract) {
-			
+			echo "<h2>".__('Contract Management')."</h2>";
+			echo '<h4>' . __('New contract') ."</h4>";
 			if (!$section_write_permission && !$section_manage_permission) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
 				require ("general/noaccess.php");
@@ -496,14 +497,14 @@ if ($op == "invoices") {
 			$status = $contract["status"];
 		}
 		
-		$table->width = '99%';
+		$table->width = '100%';
 		$table->colspan = array ();
 		$table->colspan[4][0] = 2;
 		$table->data = array ();
 		
 		if ($new_contract || ($id && ($write_permission || $manage_permission))) {
 			
-			$table->class = 'search-table-button';
+			$table->class = 'search-table';
 			
 			$params = array();
 			$params['input_id'] = 'id_company';
@@ -533,7 +534,7 @@ if ($op == "invoices") {
 			$html = "";
 			$html .= "<div id=\"contract_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
 			$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
-			$html .= 		"<table width=\"99%\">";
+			$html .= 		"<table width=\"100%\">";
 			$html .= 			"<td width=\"45%\">";
 			$html .= 				__('Drop the file here');
 			$html .= 			"<td>";
@@ -549,7 +550,7 @@ if ($op == "invoices") {
 			$html .= "</div>";
 
 			$table_description = new stdClass;
-			$table_description->width = '99%';
+			$table_description->width = '100%';
 			$table_description->id = 'contract_file_description';
 			$table_description->class = 'search-table-button';
 			$table_description->data = array();
@@ -559,23 +560,24 @@ if ($op == "invoices") {
 			$html .= print_table($table_description, true);
 			$html .= "</div>";
 
-			$table->colspan[5][0] = 4;
-			$table->data[5][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
-
+			//$table->colspan[5][0] = 4;
+			//$table->data[5][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
+			$button = "<div style='width:100%; text-align:right;'>";
 			if ($id) {
-				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+				$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
 				$button .= print_input_hidden ('id_contract', $id, true);
 				$button .= print_input_hidden ('update_contract', 1, true);
 				
-				$table->data['button'][1] = $button;
-				$table->colspan['button'][1] = 2;
+				//$table->data['button'][1] = $button;
+				//$table->colspan['button'][1] = 2;
 			} else {
-				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+				$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
 				$button .= print_input_hidden ('create_contract', 1, true);
 				
-				$table->data['button'][1] = $button;
-				$table->colspan['button'][1] = 2;
+				//$table->data['button'][1] = $button;
+				//$table->colspan['button'][1] = 2;
 			}
+			$button .= "</div>";
 		}
 		else {
 			
@@ -610,6 +612,9 @@ if ($op == "invoices") {
 		
 		echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 		print_table ($table);
+		echo "<h4>".__('File upload')."</h4>";
+		echo $html;
+		echo $button;
 		echo "</form>";
 		
 		if ($id && ($write_permission || $manage_permission)) {
@@ -661,7 +666,10 @@ if ($op == "invoices") {
 			echo "</table>";
 			echo "</div>";
 		}
-	} else {
+	}
+	else {
+		echo "<h2>".__('Contracts')."</h2>";
+		echo "<h4>".__('List of contracts')."</h4>";
 		
 		// Contract listing
 		$search_text = (string) get_parameter ('search_text');
@@ -716,7 +724,7 @@ if ($op == "invoices") {
 		
 		echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 		
-		echo "<table width=99% class='search-table'>";
+		echo "<table width=100% class='search-table'>";
 		echo "<tr>";
 		
 		echo "<td colspan=2>";
@@ -780,7 +788,8 @@ if ($op == "invoices") {
 
 		if ($contracts !== false) {
 			
-			$table->width = "99%";
+			$table = new StdClass();
+			$table->width = "100%";
 			$table->class = "listing";
 			$table->cellspacing = 0;
 			$table->cellpadding = 0;

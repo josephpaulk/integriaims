@@ -191,7 +191,7 @@ if ($delete_custom_search) {
 //FORM AND TABLE TO MANAGE CUSTOM SEARCHES
 $table = new stdClass;
 $table->id = 'saved_searches_table';
-$table->width = '99%';
+$table->width = '100%';
 $table->class = 'search-table';
 $table->size = array ();
 $table->style = array ();
@@ -265,8 +265,9 @@ echo "</form>";
 //Store serialize filter
 serialize_in_temp($filter, $config["id_user"]);
 
+$table = new StdClass();
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->id = 'incident_massive';
 $table->data = array();
 $table->style = array ();

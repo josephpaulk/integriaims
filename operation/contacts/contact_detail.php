@@ -33,6 +33,107 @@ if (!$section_read_permission && !$section_write_permission && !$section_manage_
 	exit;
 }
 
+if (defined ('AJAX')) {
+	$upload_file = (bool) get_parameter("upload_file");
+	if ($upload_file) {
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+		$result["id_attachment"] = 0;
+
+		$upload_status = getFileUploadStatus("upfile");
+		$upload_result = translateFileUploadStatus($upload_status);
+
+		if ($upload_result === true) {
+			$filename = $_FILES["upfile"]['name'];
+			$extension = pathinfo($filename, PATHINFO_EXTENSION);
+			$invalid_extensions = "/^(bat|exe|cmd|sh|php|php1|php2|php3|php4|php5|pl|cgi|386|dll|com|torrent|js|app|jar|
+				pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|
+				htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh)$/i";
+			
+			if (!preg_match($invalid_extensions, $extension)) {
+				// Insert into database
+                $filename_real = safe_output ( $filename ); // Avoid problems with blank spaces
+                $file_temp = sys_get_temp_dir()."/$filename_real";
+                $file_new = str_replace (" ", "_", $filename_real);
+                $filesize = filesize($file_temp); // In bytes
+
+                $sql = sprintf ('INSERT INTO tattachment (id_contact, id_usuario,
+                                filename, description, size)
+                                VALUES (%d, "%s", "%s", "%s", %d)',
+                                $id, $config['id_user'], $file_new, $file_description, $filesize);
+
+                $id_attachment = process_sql ($sql, 'insert_id');
+                if ($id_attachment) {
+					unlink ($file_tmp);
+					$result["status"] = true;
+					$result["id_attachment"] = $id_attachment;
+				}
+			} else {
+				$result["message"] = __('Invalid extension');
+			}
+
+		} else {
+			$result["message"] = $upload_result;
+		}
+		echo json_encode($result);
+		return;
+	}
+
+	$update_file_description = (bool) get_parameter("update_file_description");
+	if ($update_file_description) {
+		$id_file = (int) get_parameter("id_attachment");
+		$file_description = get_parameter("file_description");
+		$result = array();
+		$result["status"] = false;
+		$result["message"] = "";
+
+		$result['status'] = (bool) process_sql_update('tattachment',
+			array('description' => $file_description), array('id_attachment' => $id_file));
+
+		if (!$result['status'])
+			$result['message'] = __('Description not updated');
+
+		echo json_encode($result);
+		return;
+	}
+
+	$get_file_row = (bool) get_parameter("get_file_row");
+	if ($get_file_row) {
+		$id_file = (int) get_parameter("id_attachment");
+		$file = get_incident_file($id, $id_file);
+
+		$html = "";
+		if ($file) {
+			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
+			$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
+
+			$html .= "<tr>";
+			$html .= "<td valign=top>";
+			$html .= '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
+
+			$stat = stat ($real_filename);
+			$html .= "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
+
+			$html .= "<td valign=top class=f9>". $file["description"];
+			$html .= "<td valign=top>". $file["id_usuario"];
+			$html .= "<td valign=top>". byte_convert ($file['size']);
+
+			// Delete attachment
+			if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM')) {
+				$html .= "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"]
+				.'" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='
+				.$id.'&tab=files&id_attachment='.$file["id_attachment"].'&delete_file=1#incident-operations">
+				<img src="images/cross.png"></a>';
+			}
+		}
+
+		echo $html;
+		return;
+	}
+}
+
+
 if ($id || $id_company) {
 	if ($id) {
 		$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
@@ -52,12 +153,39 @@ if ($id || $id_company) {
 $op = get_parameter("op", "details");
 
 if ($id == 0) {
-	echo "<h1>".__('Contact management')."</h1>";
+	echo "<h2>".__('Contact management')."</h2>";
+	if (!$new_contact)
+		echo "<h4>".__('List of Contact')."</h4>";
 }
 
 if ($id != 0) {
-	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
+	
+	echo '<h2>';
+	switch ($op) {
+		case "files":
+			echo strtoupper(__("Files"));
+			break;
+		case "activity":
+			echo strtoupper(__("Activity"));
+			break;
+		case "details":
+			echo strtoupper(__('Contact details'));
+			break;
+		case "incidents":
+			echo strtoupper(__('Tickets'));
+			break;
+		case "inventory":
+			echo strtoupper(__('Inventory'));
+			break;
+		default:
+			echo strtoupper(__('Details'));
+	}
 
+	echo '</h2>';
+	$contact = get_db_row ('tcompany_contact', 'id', $id);
+	echo '<h4>' . sprintf(__('Contact: %s'), $contact['fullname']);
+	
+	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	if ($op == "files")
 		echo '<li class="ui-tabs-selected">';
 	else   
@@ -88,34 +216,8 @@ if ($id != 0) {
 		echo '<li class="ui-tabs">';
 	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=details"><span>'.__("Contact details").'</span></a></li>';
 
-	echo '<li class="ui-tabs-title">';
-	switch ($op) {
-		case "files":
-			echo strtoupper(__("Files"));
-			break;
-		case "activity":
-			echo strtoupper(__("Activity"));
-			break;
-		case "details":
-			echo strtoupper(__('Contact details'));
-			break;
-		case "incidents":
-			echo strtoupper(__('Tickets'));
-			break;
-		case "inventory":
-			echo strtoupper(__('Inventory'));
-			break;
-		default:
-			echo strtoupper(__('Details'));
-	}
-
-	echo '</li>';
-
 	echo '</ul>';
-
-	$contact = get_db_row ('tcompany_contact', 'id', $id);
-
-	echo '<div class="under_tabs_info">' . sprintf(__('Contact: %s'), $contact['fullname']) . '</div>';
+	echo '</h4>';
 }
 
 switch ($op) {
@@ -153,12 +255,12 @@ if ($id == 0 && !$new_contact) {
 	}
 	$search_params = "&search_text=$search_text&id_company=$id_company";
 
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 20, 100, true, __('Search'));
 	
 	$params = array();
 	$params['input_id'] = 'id_company';
@@ -166,23 +268,38 @@ if ($id == 0 && !$new_contact) {
 	$params['input_value'] = $id_company;
 	$params['title'] = __('Company');
 	$params['return'] = true;
-	$table->data[0][1] = print_company_autocomplete_input($params);
+	$table->data[1][0] = print_company_autocomplete_input($params);
 
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$table->data[0][3] = print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contacts=1&where_clause=' . str_replace("'", "\'", $where_clause) . '\')', 'class="sub csv"', true);
-	echo '<form id="contact_search_form" method="post">';
-	print_table ($table);
-	echo '</form>';
+	$table->data[3][0] = print_button(__('Export to CSV'), '', false,
+		'window.open(\'include/export_csv.php?export_csv_contacts=1&where_clause=' . 
+			str_replace("'", "\'", $where_clause) . '\')', 'class="sub"', true);
+	
+	echo "<div class='divform'>";
+		echo '<form id="contact_search_form" method="post">';
+			print_table ($table);
+		echo '</form>';
+		//Show create button only when contact list is displayed
+		if(($section_write_permission || $section_manage_permission) && !$id && !$new_contact) {
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
+			unset($table->data);
+			$table->data[0][0] = print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"',true);
+			$table->data[0][0] .= print_input_hidden ('new_contact', 1);
+			print_table ($table);
+			echo '</form>';
+		}
+	echo '</div>';
 
 	$contacts = crm_get_all_contacts ($where_clause);
-
-	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$search_params", $offset);
-
+	
+	echo "<div class='divresult'>";
 	if ($contacts !== false) {
+		
+		$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$search_params", $offset);
 		unset ($table);
-		$table->width = "99%";
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -214,17 +331,9 @@ if ($id == 0 && !$new_contact) {
 			}	
 			array_push ($table->data, $data);
 		}
+		
 		print_table ($table);
 	}	
-
-	//Show create button only when contact list is displayed
-	if(($section_write_permission || $section_manage_permission) && !$id && !$new_contact) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
-		echo '<div style="width: '.$table->width.'; text-align: right;">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
-		print_input_hidden ('new_contact', 1);
-		echo '</div>';
-		echo '</form>';
-	}
+	echo '</div>';
 }
 ?>

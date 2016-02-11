@@ -361,7 +361,7 @@ echo "</div>";
 // Filter form
 $table_filter = new stdClass;
 $table_filter->id = 'pipeline_filter_form_table';
-$table_filter->width = '99%';
+$table_filter->width = '100%';
 $table_filter->class = 'search-table';
 $table_filter->data = array();
 

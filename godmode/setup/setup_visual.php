@@ -56,7 +56,8 @@ if ($update) {
     update_config_token ("flash_charts", $config["flash_charts"]);
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();

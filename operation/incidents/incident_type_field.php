@@ -55,7 +55,7 @@ if ($id_field) {
 
 echo '<h1>'.__('Ticket fields management').'</h1>';
 
-$table->width = "99%";
+$table->width = "100%";
 $table->class = "search-table-button";
 $table->data = array();
 

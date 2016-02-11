@@ -235,10 +235,11 @@ foreach ($alldata as $row){
 
 echo '<div id="show_multiple_edit">';
 
-echo '<br><h2>'.__('Massive operations over selected items').'</h2>';
+echo '<h2>'.__('Massive operations over selected items').'</h2>';
+
 $table = new StdClass;
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
 $table->colspan = array ();
 

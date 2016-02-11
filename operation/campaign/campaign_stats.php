@@ -27,15 +27,11 @@ if (! give_acl ($config["id_user"], 0, "VM")) {
 
 $campaign = get_db_row("tcampaign", "id", $id);
 
-echo '<div class="under_tabs_info">'.__("Campaign").': '.$campaign["title"].'</div>';
+//echo '<div class="under_tabs_info">'.__("Campaign").': '.$campaign["title"].'</div>';
 
 $table->class = 'blank';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
-$table->style = array ();
-$table->valign = array ();
-$table->colspan = array();
-$table->colsapan = array();
 $table->valign[0] = "top";
 $table->valign[1] = "top";
 $table->size = array();
@@ -85,14 +81,14 @@ if ($leads_funnel != false) {
 
 	$leads_funnel_content = funnel($data, $config["font"], $ttl);
 } else {
-	$leads_funnel_content = "<div style='padding-top: 151px; padding-bottom: 151px'>";
+	$leads_funnel_content = "<td style='padding-top: 151px; padding-bottom: 151px'>";
 	$leads_funnel_content .= __('No data to show');
-	$leads_funnel_content .= "</div>";
+	$leads_funnel_content .= "</td>";
 }
 
 //Print lead's funnel
-$leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content . '</div>';
-echo print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
+$leads_country_content = '<tr>' . $leads_funnel_content . '</tr>';
+$table->data[0][0] = print_container('funnel', __('Leads Funnel'), $leads_country_content, 'open', true, true, "container_simple_title", "container_simple_div",1,"less_widht");
 
 //ROI
 $total_revenue = 0;
@@ -104,7 +100,7 @@ $expenses = $campaign["expenses"];
 
 $roi = (($total_revenue-$expenses) / $expenses) * 100;
 
-$leads_conversion_rate = "<table class='conversion_rate'>";
+//$leads_conversion_rate = "<table class='conversion_rate'>";
 $leads_conversion_rate .= "<tr>";
 $leads_conversion_rate .= "<td class='conversion_value'>";
 $leads_conversion_rate .= sprintf("%.2f %%",$roi);
@@ -116,16 +112,16 @@ $leads_conversion_rate .= __("Total revenue")."<br><br>";
 $leads_conversion_rate .= $total_revenue." ".$config["currency"];
 $leads_conversion_rate .= "</td>";
 $leads_conversion_rate .= "</tr>";
-$leads_conversion_rate .= "</table>";
+//$leads_conversion_rate .= "</table>";
 
-$leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
-echo print_container('conversion_rate', __('ROI'), $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
+//$leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
+$table->data[0][1] = print_container('conversion_rate', __('ROI'), $leads_conversion_rate, 'open', true, true, "container_simple_title", "container_simple_div no_border",1,"less_widht");
 
 //Email statistics
 
 $email_camp_stats = crm_get_campaign_email_stats($campaign["id"]);
 
-$email_stats = "<table class='details_table alternate'>";
+//$email_stats = "<table class='details_table alternate'>";
 $email_stats .= "<tr>";
 $email_stats .= "<td>";
 $email_stats .= "<strong>".__("Emails sent")."</strong>";
@@ -150,12 +146,12 @@ $email_stats .= "<td style='text-align:right'>";
 $email_stats .= sprintf("%.2f %%",$email_camp_stats["ratio"]);
 $email_stats .= "</td>";
 $email_stats .= "</tr>";
-$email_stats .= "</table>";
+//$email_stats .= "</table>";
 
-$email_stats = '<br><div>' . $email_stats . '</div>';
-echo print_container('newsletter_rate', __('Newsletter statistics'), $email_stats, 'no', true, true, "container_simple_title", "container_simple_div");
+//$email_stats = '<br><div>' . $email_stats . '</div>';
+$table->data[1][0] = print_container('newsletter_rate', __('Newsletter statistics'), $email_stats, 'open', true, true, "container_simple_title", "container_simple_div",1,"less_widht");
 
-$lead_stats = "<table class='details_table alternate'>";
+//$lead_stats = "<table class='details_table alternate'>";
 $lead_stats .= "<tr>";
 $lead_stats .= "<td>";
 $lead_stats .= "<strong>".__("Total leads")."</strong>";
@@ -190,10 +186,10 @@ if ($total_leads) {
 $lead_stats .= sprintf("%.2f %%",$conversion_rate);
 $lead_stats .= "</td>";
 $lead_stats .= "</tr>";
-$lead_stats .= "</table>";
+//$lead_stats .= "</table>";
 
-$lead_stats = '<br><div style="padding-left: 20px;">' . $lead_stats . '</div>';
-echo print_container('lead_rate', __('Lead statistics'), $lead_stats, 'no', true, true, "container_simple_title", "container_simple_div");
+//lead_stats = '<br><div style="padding-left: 20px;">' . $lead_stats . '</div>';
+$table->data[1][1] = print_container('lead_rate', __('Lead statistics'), $lead_stats, 'open', true, true, "container_simple_title", "container_simple_div",1,"less_widht");
 
 
 print_table($table);

@@ -97,10 +97,10 @@ if ($update) {
 	update_config_token ("active_validate", $config["active_validate"]);
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
-
 $table->data = array ();
 
 $table->data[2][0] = print_input_text ("notification_period", $config["notification_period"],

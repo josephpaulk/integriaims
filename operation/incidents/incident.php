@@ -120,9 +120,10 @@ if (!$id) {///
 	echo "<br>";
 	echo sprintf(__('Max tickets shown: %d'),$config['limit_size']);
 	echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. tickets by search")."</b>", true));
-
+	
+	$table = new StdClass();
 	$table->class = 'hide result_table listing';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->id = 'incident_search_result_table';
 	$table->head = array ();
 	$table->head[0] = '';
@@ -147,9 +148,10 @@ if (!$id) {///
 	print_table_pager ();
 
 	unset($table);
-
+	
+	$table = new StdClass();
 	$table->class = 'result_table listing';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->id = 'incident_massive';
 
 	$table->style = array ();

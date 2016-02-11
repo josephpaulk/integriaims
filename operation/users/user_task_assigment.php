@@ -62,7 +62,7 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 	echo "<div class='divform'>";
 	echo "<form id='form-user_task_assignment' name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
 	
-	echo "<table style='width: 99%;' class=search-table>";
+	echo "<table style='width: 100%;' class=search-table>";
 	echo "<tr><td style='width: 150px;'>";
 	// Show user
 	//combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
@@ -78,7 +78,7 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 }
 
 echo "<div class='divresult'>";
-echo "<table  class='listing' width=99%>";
+echo "<table  class='listing' width=100%>";
 echo "<th>".__('Pri');
 echo "<th>".__('Project');
 echo "<th>".__('Task');

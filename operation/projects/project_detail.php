@@ -172,7 +172,7 @@ $table->cellpadding = 4;
 //$project_info = '<table class="search-table-button" style="margin-top: 0px;">';
 
 // Name
-$table->colspan[0][0] = 4;
+
 $table->data[0][0] = '<b>'.__('Name').' </b><br>';
 $table->data[0][0] .= '<input type="text" name="name" size=70 value="'.$name.'">';
 
@@ -180,21 +180,21 @@ $table->data[0][0] .= '<input type="text" name="name" size=70 value="'.$name.'">
 $table->data[1][0] = '<b>'.__('Start').' </b>';
 $table->data[1][0] .= print_input_text ('start_date', $start_date, '', 7, 10, true);
 
-$table->data[1][1] = '<b>'.__('End').' </b>';
-$table->data[1][1] .= print_input_text ('end_date', $end_date, '', 7, 10, true);
+$table->data[2][0] = '<b>'.__('End').' </b>';
+$table->data[2][0] .= print_input_text ('end_date', $end_date, '', 7, 10, true);
 
 $id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-$table->data[1][2] = "<b>".__('Project manager')." </b>";
-$table->data[1][2] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
+$table->data[3][0] = "<b>".__('Project manager')." </b>";
+$table->data[3][0] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
 			'', true, '','');
 
-$table->data[1][3] .= '<b>' .  __('Project group') . "</b><br>";
+$table->data[4][0] .= '<b>' .  __('Project group') . "</b><br>";
 if (!$clean_output) {
-	$table->data[1][3] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
+	$table->data[4][0] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
 		"id_project_group", $id_project_group, "", __('None'), '0',
 		true, false, true, false);
 } else {
-	$table->data[1][3] .= get_db_value ("name", "tproject_group", "id", $id_project_group);
+	$table->data[4][0] .= get_db_value ("name", "tproject_group", "id", $id_project_group);
 }
 
 // CC
@@ -283,11 +283,11 @@ echo '<table class="search-table">';
 	
 	// start and end date
 	echo '<tr>';
-		echo '<td><b>'.__('Start').' </b></td>';
-		echo '<td><b>'.__('End').' </b></td>';
+		echo '<td><b>'.__('Start').' </b>';
+		echo print_input_text ('start_date', $start_date, '', 11, 20, true) ."</td>";
 	echo '</tr><tr>';	
-		echo "<td class='date_div'>". print_input_text ('start_date', $start_date, '', 11, 20, true) ."</td>";
-		echo "<td class='date_div'>". print_input_text ('end_date', $end_date, '', 11, 20, true) ."</td>";
+		echo '<td><b>'.__('End').' </b>';
+		echo print_input_text ('end_date', $end_date, '', 11, 20, true) ."</td>";
 	echo '</tr>';
 
 	// Description

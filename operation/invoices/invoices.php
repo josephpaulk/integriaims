@@ -454,14 +454,14 @@ if ($id_invoice > 0){
 	$discount_concept = "";
 }
 
-echo "<h3>";
+echo "<h2>" . __('Invoices');
 if ($id_invoice == "-1") {
-	echo __('Add new invoice');
+	echo "<h4>" . __('Add new invoice');
 }
 else {
 	$is_update = true;
 	
-	echo __('Update invoice'). " ".$invoice["bill_id"];;
+	echo "<h4>" . __('Update invoice'). " ".$invoice["bill_id"];;
 
 	echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1&language='.$language.'">
@@ -474,7 +474,7 @@ else {
 	}
 	echo " <a href='#' onClick='javascript: show_validation_delete(\"delete_company_invoice\",".$id_invoice.",".$id_company.");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 }
-echo "</h3>";
+echo "</h4>";
 
 $generate = get_parameter('generate', 0);
 if ($generate) {
@@ -484,7 +484,7 @@ if ($generate) {
 }
 
 $table->id = 'cost_form';
-$table->width = '98%';
+$table->width = '100%';
 $table->class = 'search-table';
 $table->colspan = array ();
 $table->size = array ();
