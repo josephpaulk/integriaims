@@ -107,14 +107,16 @@ if ($create || $id) {
 		$name = $product["name"];
 		$icon = $product["icon"];
 	}
-
+	
+	echo "<h2>".__('Product management')."</h2>";
 	if ($id == -1) {
-		echo "<h1>".__('Create a new product')."</h1>";
+		echo "<h4>".__('Create a new product')."</h4>";
 	} else {
-		echo "<h1>".__('Update existing product')."</h1>";
+		echo "<h4>".__('Update existing product')."</h4>";
 	}
 	
-	$table->width = '99%';
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->data = array ();
@@ -148,11 +150,25 @@ if ($create || $id) {
 if (! $id && ! $create) {
 	$products = get_db_all_rows_in_table ('tkb_product', 'name');
 	
-	$table->width = '99%';
 	
-	echo "<h1>".__('Defined products')."</h1>";
+	
+	echo "<h2>".__('Defined products')."</h2>";
+	echo "<h4>".__('List products')."</h4>";
+	
+	echo '<div class="divform">';
+	echo '<form method="post">';
+	echo '<table class="search-table">';
+	echo '<tr>';
+	echo '<td>';
+	print_input_hidden ('create', 1);
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	echo "</table></form></div>";
+	
+	echo '<div class="divresult">';
 	if ($products !== false) {
 		
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array ();
@@ -184,12 +200,7 @@ if (! $id && ! $create) {
 		}
 		print_table ($table);
 	}
-	
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	echo '<form method="post">';
-	print_input_hidden ('create', 1);
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	echo "</form></div>";
+	echo "</div>";
 } // end of list
 
 ?>

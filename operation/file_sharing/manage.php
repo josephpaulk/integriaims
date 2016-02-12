@@ -72,7 +72,8 @@ if (defined('AJAX')) {
 	return;
 }
 
-echo "<h1>" . __('File sharing') . "</h1>";
+echo "<h2>" . __('File sharing') . "</h2>";
+echo "<h4>" . __('List File sharing') . "</h4>";
 
 $id_user = get_parameter('id_user', $config['id_user']);
 
@@ -95,7 +96,7 @@ if ($user_is_admin) {
 	echo "</div>";
 
 	// Select user
-	echo "<div>";
+	echo "<div class='divform'>";
 	echo "<form method=post action='index.php?sec=file_sharing&sec2=operation/file_sharing/manage'>";
 
 	$table = new StdClass();
@@ -104,11 +105,9 @@ if ($user_is_admin) {
 	$table->data = array();
 
 	$row = array();
-	$row[] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 50, 250, false, '', '', true, '')
+	$table->data[0][0] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 50, 250, false, '', '', true, '')
 		. print_help_tip (__("Type at least two characters to search"), true);
-	$row[] = print_submit_button (__('Go'), 'sub_btn', false, 'class="next sub"', true);
-
-	$table->data[] = $row;
+	$table->data[1][0] = print_submit_button (__('Go'), 'sub_btn', false, 'class="next sub"', true);
 
 	print_table ($table);
 	unset($table);
@@ -118,12 +117,14 @@ if ($user_is_admin) {
 }
 
 ?>
+<div class="divresult">
+	<div id="" class="">
+		<?php require($config['homedir']."/operation/file_sharing/list.php"); ?>
+	</div>
+</div>
 
 <div id="file_sharing_table" class="table">
 	<div class="table_row">
-		<div id="file_sharing_list_cell" class="table_cell">
-			<?php require($config['homedir']."/operation/file_sharing/list.php"); ?>
-		</div>
 		<div id="file_sharing_upload_cell" class="table_cell">
 			<?php require($config['homedir']."/operation/file_sharing/upload.php"); ?>
 		</div>

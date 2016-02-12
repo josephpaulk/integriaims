@@ -204,7 +204,7 @@ foreach($project_groups as $group) {
 	$nprojects = count($projects);
 
 		$info_general .= "<tr>";
-			$info_general .= "<td class='no_border size_min'></td>";
+			//$info_general .= "<td class='no_border size_min'></td>";
 			$info_general .= "<td><b>".__('Name')."</b></td>";
 			$info_general .= "<td><b>".__('Manager')."</b></td>";
 			$info_general .= "<td><b>".__('Completion')."</b></td>";
@@ -220,7 +220,7 @@ foreach($project_groups as $group) {
 		// Projects inside
 		foreach($projects as $project) {
 		$info_general .= "<tr>";
-			$info_general .= "<td class='no_border size_min'></td>";
+			//$info_general .= "<td class='no_border size_min'></td>";
 			// Project name
 			$info_general .= "<td><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$project["id"]."'>".$project["name"]."</a></td>";
 		

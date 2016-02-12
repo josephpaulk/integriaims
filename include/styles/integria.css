@@ -33,7 +33,7 @@ form {
 }
 
 td, th {
-	font: 0.93em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 12px  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	color: #505050;
 	padding: 1px;
 	line-height: 22px;
@@ -42,8 +42,9 @@ td, th {
 
 /* links */
 a {
-	color: #707070;
+	color: #828282;
 	text-decoration: none;
+	font-weight: normal;
 }
 a:hover {
 	color: #505050;
@@ -61,8 +62,9 @@ h1, h2, h3 {
 }
 h4{
 	color: #383838;
-	border-bottom: 1px solid #9d9d9c;
+	border-bottom: 1px solid #dadada;
 	font-weight: normal;
+	padding-bottom: 4px;
 }
 h4 form a img{
 	vertical-align: middle;
@@ -78,9 +80,15 @@ h4 img{
 }
 
 h1 { font-size: 1.2em; }
-h2 { font-size: 1.10em; }
+h2 { font-size: 13px;
+	 padding-bottom: 7px;
+
+	 }
+
 h3 { font-size: 0.95em; }
-h4 { font-size: 0.9em; }
+h4 { font-size: 0.9em;
+    color: #797979;
+     }
 h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
 
@@ -228,7 +236,7 @@ div.divresult {
 }
 .divform .search-table input[type="text"] {
 	width: 175px !important;
-	padding-left: 0px;
+	padding-left: 3px;
 }
 .divform .search-table select {
 	width: 175px !important;
@@ -544,7 +552,7 @@ textarea {
     background-color: #FFF;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	width: 93%;
+	width: 98%;
 }
 
 input.button {
@@ -1013,11 +1021,11 @@ input.login:focus {
  
 input.sub {	
 	-moz-border-radius: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	font-size: 0.85em;
-	font-weight: bold;
+	font-weight: normal;
 	margin-right: 5px;
-	padding-left: 5px;
+	padding-left: 9px;
 	padding-right: 9px;
 	padding-top: 4px;
 	padding-bottom: 4px;
@@ -1472,7 +1480,7 @@ div#footer {
 	text-align: center;
 	margin-top: 120px;
 	font-size: 10px;
-	border-top: solid 6px #FF9933;
+	border-top: solid 3px #FF9933;
 	text-align: center;
 	background-color: #505050;
 	background-image: url('../../images/darkgrey_bg.png');
@@ -1480,6 +1488,7 @@ div#footer {
 	height: 53px;
    	width:100%;
    	float: left;
+   	padding-top: 10px;
 }
 
 div#footer_installer {
@@ -2053,7 +2062,7 @@ table.search-table td img {
     margin-bottom: 5px;
     vertical-align: middle;
 }
-.divform .search-table td img {
+.divform .search-table td span img {
 	padding-left: 0px;
     margin-bottom: 0px;
     vertical-align: middle;
@@ -2077,7 +2086,7 @@ div.divform table.search-table input[type="submit"],
 div.divform table.search-table input.submit_update,
 div.divform table.search-table input[type="button"]{
 	border-radius: 3px;
-    font-size: 1.20em;
+    font-size: 13px;
 	padding-left: 0px;
     color: white;
     background-color: #FF9000;
@@ -2086,7 +2095,7 @@ div.divform table.search-table input[type="button"]{
     margin-bottom: 10px;
     width: 175px !important;
     font-weight: 300;
-    height: 50px;
+    height: 40px;
     cursor: pointer;
 }
 
@@ -3393,4 +3402,7 @@ img {
 
 .less_widht {
 	width: 95% !important;
+}
+.overview_tiquets {
+	margin-left: 6px;
 }

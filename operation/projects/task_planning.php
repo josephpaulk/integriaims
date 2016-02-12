@@ -262,32 +262,30 @@ echo "<form id='form-new_tasks' method='post' action='index.php?sec=projects&sec
 echo "<table class='search-table'>";
 	
 	// Taskname
-	echo "<tr><td colspan='2'><b>". __('Put taskname in each line'). "</b></td></tr>";
-	echo "<tr><td colspan='2'>";
-		print_textarea ('tasklist', 5, 40);
+	echo "<tr><td><b>". __('Put taskname in each line'). "</b></td></tr>";
+	echo "<tr><td>";
+		print_textarea ('tasklist', 3, 30);
 	echo "</td></tr>";
 	
 	// User assigned by default
-	echo "<tr><td colspan='2'><b>". __("Owner"). "</b></td></tr>";
-	echo "<tr><td colspan='2'>"; 
+	echo "<tr><td><b>". __("Owner"). "</b></td></tr>";
+	echo "<tr><td>"; 
 		print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false);
 	echo "</td></tr>";
 	
 	//Task parent combo
-	echo "<tr><td colspan='2'><b>". __('Parent'). "</b></td></tr>";
-	echo "<tr><td colspan='2'>";
+	echo "<tr><td><b>". __('Parent'). "</b></td></tr>";
+	echo "<tr><td>";
 		combo_task_user_manager ($config['id_user'], 0, false, "", 'padre', __('None'), false, $id_project);
 	echo "</td></tr>";
 	
 	//Start date and End date
 	echo "<tr>";
-		echo "<td><b>".	__('Start'). "</b></td>";
-		echo "<td><b>".	__('End'). "</b></td>";
-	echo "</tr>";
-	echo "<tr><td>";
+		echo "<td><b>".	__('Start'). "</b>";
 		$start = date ("Y-m-d");
 		print_input_text_extended ("start_date2", $start, "start_date", '', 11, 15, 0, '', "", false, false);
-	echo "</td><td>";
+	echo "</tr><tr>";
+		echo "<td><b>".	__('End'). "</b>";
 		$end = date ("Y-m-d");
 		print_input_text_extended ("end_date2", $end, "end_date", '', 11, 15, 0, '', "", false, false);
 	echo "</td></tr>";

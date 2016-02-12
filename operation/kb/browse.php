@@ -212,13 +212,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_language = $row["id_language"];
 		$id_category = $row["id_category"];
 	}
-	
+	echo "<h2>".__('KB item management')."</h2>";
 	if ($id == -1){
-		echo "<h1>".__('Create a new KB item')."</h1>";
+		echo "<h4>".__('Create a new KB item')."</h4>";
 		echo "<form id='form-kb_item' name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/browse&create2'>";
 	}
 	else {
-		echo "<h1>".__('Update existing KB item')."</h1>";
+		echo "<h4>".__('Update existing KB item')."</h4>";
 		echo "<form id='form-kb_item' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/browse&update2'>";
 		echo "<input type=hidden name=id value='$id'>";
 	}
@@ -226,39 +226,39 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Title');
+	echo "<b>" . __('Title') . "</b>";
 	echo "<td class=datos>";
 	echo "<input id='text-name' type=text size=60 name='title' value='$title'>";
 
 	echo "<tr>";
 	echo "<td>";
-	echo __('Language');
+	echo "<b>" . __('Language') . "</b>";
 	echo "<td>";
 	echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
 					$id_language, '', __("Any"), '', true, false, false, '');
 
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";
-	echo __('Data');
+	echo "<b>" . __('Data') . "</b>";
 	echo "<td class=datos2>";
 	print_textarea ("data", 15, 40, $data, '', false,false);
 
 	echo "<tr>";
 	echo "<td class=datos2>";
-	echo __('Product');
+	echo "<b>" . __('Product') . "</b>";
 	echo "<td class=datos2>";
 	combo_product_types($product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Category');
+	echo "<b>" . __('Category') . "</b>";
 	echo "<td class=datos>";
 	combo_kb_categories ($id_category);
 
 	if ($id != -1){
 		echo "<tr>";
 		echo "<td class=datos>";
-		echo __('Attach');
+		echo "<b>" . __('Attach') . "</b>";
 		echo "<td class=datos>";
 		if ($id == -1)
 			echo "<i>".__('Need to create first')."</i>";
@@ -266,7 +266,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "<input type=file size=60 value='userfile' name='userfile'>";
 			echo "<tr>";
 			echo "<td class=datos>";
-			echo __('Attach description');
+			echo "<b>" . __('Attach description') . "</b>";
 			echo "<td class=datos>";
 			echo "<input type=text size=60 name='attach_description' value=''>";
 		}
@@ -311,7 +311,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	// Show list of items
 	// =======================
 
-	echo "<h1>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h1>";
+	echo "<h2>".__('KB Data management')."</h2><h4>".__('Defined data')."</h4>";
 
 	// Search parameter 
 	$free_text = get_parameter ("free_text", "");
@@ -320,13 +320,14 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	$id_language = get_parameter ("id_language", '');
 
 	// Search filters
+	echo "<div class='divform'>";
 	echo '<form method="post" action="?sec=kb&sec2=operation/kb/browse">';
 	echo '<table width="100%" class="search-table">';
 	echo "<tr>";
 	echo "<td>";
 	echo "<label>" . __('Product types') . "</label>";
 	combo_product_types($product, 1);
-	
+	echo "<tr>";
 	echo "<td>";
 	echo "<label>" . __('Categories') . "</label>";
 	combo_kb_categories ($category, 1);
@@ -335,16 +336,16 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<td>";
 	echo "<label>" . __('Search') . "</label>";
 	echo "<input type=text name='free_text' size=25 value='$free_text'>";
-
+	echo "<tr>";
 	echo "<td>";
 	echo "<label>" . __('Language') . "</label>";
 	echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
 						$id_language, '', __("Any"), '', true, false, false, '');
-
+	echo "<tr>";
 	echo "<td >";
 	echo "<input type=submit class='sub search' value='".__('Search')."'>";
 
-	echo "</td></tr></table></form>";
+	echo "</td></tr></table></form></div>";
 
 	// Search filter processing
 	// ========================
@@ -372,8 +373,11 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	
 	$sql1 = "SELECT * FROM tkb_data $condition $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
 	
-	$color =0;
+	$color = 0;
+	echo "<div class='divresult'>";
 	if ($result=mysql_query($sql1)){
+		
+		
 		echo '<table width="100%" class="listing">';
 
 		echo "<th>".__('Title')."</th>";
@@ -423,7 +427,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		$downloads = array();
 		echo "<h3 class='error'>".__('No items found')."</h3>"; 
 	}
-	
+	echo "</div>";
 }
 
 ?>

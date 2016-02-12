@@ -364,7 +364,7 @@ else {
 	}
 }
 
-print_container('assigned_roles', "<b>" . __('Assigned roles') . "</b>", $assigned_role, 'open', false, '10px', '', '', $columns, 'no_border_bottom');
+print_container('assigned_roles', __('Assigned roles'), $assigned_role, 'open', false, '10px', '', '', $columns, 'no_border_bottom');
 
 // Role informational table
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -386,7 +386,7 @@ foreach ($result as $row) {
 	$roles .= '<td>'.$row["cost"];
 }
 
-print_container('people_roles', "<b>" . __('Available roles') . "</b>", $roles, 'closed', false, '10px', '', '', 2, 'no_border_bottom');
+print_container('people_roles', __('Available roles'), $roles, 'closed', false, '10px', '', '', 2, 'no_border_bottom');
 
 echo "</div>";
 

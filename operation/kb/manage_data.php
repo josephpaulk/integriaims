@@ -213,52 +213,52 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<h2>".__('KB Data management')."</h2>";	
 	if ($id == -1){
-		echo "<h3>".__('Create a new KB item')."</a></h3>";
+		echo "<h4>".__('Create a new KB item')."</a></h4>";
 		echo "<form id='form-kb_item' name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&create2'>";
 	}
 	else {
-		echo "<h3>".__('Update existing KB item')."</a></h3>";
+		echo "<h4>".__('Update existing KB item')."</h4>";
 		echo "<form id='form-kb_item' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
 		echo "<input id='id_kb_item' type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Title');
+	echo "<b>" . __('Title') . "</b>";
 	echo "<td class=datos>";
 	echo "<input id='text-name' type=text size=60 name='title' value='$title'>";
 
 	echo "<tr>";
 	echo "<td>";
-	echo __('Language');
+	echo "<b>" . __('Language') . "</b>";
 	echo "<td>";
 	echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
 					$id_language, '', __("Any"), '', true, false, false, '');
 
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";
-	echo __('Data');
+	echo "<b>" . __('Data') . "</b>";
 	echo "<td class=datos2>";
 	print_textarea ("data", 15, 40, $data, '', false,false);
 
 	echo "<tr>";
 	echo "<td class=datos2>";
-	echo __('Product');
+	echo "<b>" . __('Product') . "</b>";
 	echo "<td class=datos2>";
 	//combo_kb_products ($id_product);
 	combo_product_types($product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Category');
+	echo "<b>" . __('Category') . "</b>";
 	echo "<td class=datos>";
 	combo_kb_categories ($id_category);
 
 	if ($id != -1){
 		echo "<tr>";
 		echo "<td class=datos>";
-		echo __('Attach');
+		echo "<b>" . __('Attach') . "</b>";
 		echo "<td class=datos>";
 		if ($id == -1)
 			echo "<i>".__('Need to create first')."</i>";
@@ -266,20 +266,20 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "<input type=file size=60 value='userfile' name='userfile'>";
 			echo "<tr>";
 			echo "<td class=datos>";
-			echo __('Attach description');
+			echo "<b>" . __('Attach description') . "</b>";
 			echo "<td class=datos>";
 			echo "<input type=text size=60 name='attach_description' value=''>";
 		}
 	}
-
-	echo "</table>";
-	
-	echo '<div class="button" style="width:90%">';
+	echo "<tr>";
+	echo "<td colspan=2>";
 	if ($id == -1)
 		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	else
 		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div>";
+	
+	echo "</table>";
+	
 	echo "</form>";
 
 	// Show list of attachments

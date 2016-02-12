@@ -30,7 +30,7 @@ echo "<h4>" . __("Tickets overview") . "</h4>";
 /* Users affected by the incident */
 $table = new StdClass();
 $table->width = '100%';
-$table->class = "none";
+$table->class = "overview_tiquets";
 $table->size = array ();
 $table->size[0] = '50%';
 $table->size[1] = '50%';
@@ -74,7 +74,7 @@ if ($custom_searches === false) {
 }
 
 $table->colspan[0][0] = 2;
-$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom, 'open', true, '20px', '', '', 1, 'less_widht');
+$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom, 'open', true, '20px', '', 'no_border', 1, '');
 
 $groups = get_user_groups();
 
@@ -111,7 +111,7 @@ foreach ($groups as $key => $grp) {
 	$count++;
 }
 
-$left_side = print_container('incident_search_by_group', __('Search by group'), $search_by_group, 'open', true, '20px', '', '', 1, 'less_widht');
+$left_side = print_container('incident_search_by_group', __('Search by group'), $search_by_group, 'open', true, '20px', '', 'no_border', 1, 'less_widht');
 
 $rows = get_db_all_rows_sql ("SELECT DISTINCT(ti.id_usuario), tu.avatar 
 								FROM tincidencia ti, tusuario tu 
@@ -171,7 +171,7 @@ if (!$rows) {
 	}
 }
 
-$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner, 'open', true, '20px', '', '', 1, 'less_widht');
+$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner, 'open', true, '20px', '', 'no_border', 1, 'less_widht');
 
 
 /**** DASHBOARD RIGHT SIDE ****/
@@ -198,7 +198,7 @@ foreach ($rows as $key => $status) {
 	}
 }
 
-$right_side = print_container('incident_search_by_status', __('Search by status'), $search_by_status, 'open', true, '20px', '', '', 1, 'less_widht');
+$right_side = print_container('incident_search_by_status', __('Search by status'), $search_by_status, 'open', true, '20px', '', 'no_border', 1, '');
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_type ORDER BY name ASC");
 
@@ -242,7 +242,7 @@ if (!$rows) {
 	}
 }
 
-$right_side .= print_container('incident_search_by_type', __('Search by type'), $search_by_type, 'open', true, '20px', '', '', 1, 'less_widht');
+$right_side .= print_container('incident_search_by_type', __('Search by type'), $search_by_type, 'open', true, '20px', '', 'no_border', 1, '');
 
 //Get open incident and count them by priority
 $incidents = get_incidents("estado <> 7", false);
@@ -292,7 +292,7 @@ for ($i = 0; $i<=5; $i++) {
 
 $search_by_priority .="</tr>";
 
-$right_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority,'open',true,true,'','',5,'search_by_priority less_widht');
+$right_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority,'open',true,true,'','no_border',5,'search_by_priority ');
 
 $table->data[1][0] = $left_side;
 $table->data[1][1] = $right_side;
