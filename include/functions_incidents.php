@@ -1426,6 +1426,22 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		//$ticket_score =  '<a href="'.$config["base_url"].'"/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id="'.$id_inc.'">'."Click hear to scoring".'</a>';
 	}
 
+	//name for fields
+	$sql_name_custom = 'select ttf.label from tincident_field_data tfd, tincident_type_field ttf 
+						where tfd.id_incident_field = ttf.id and tfd.id_incident='.$id_inc.';';
+	$name_custom = get_db_all_rows_sql($sql_name_custom);
+	if ($name_custom === false) {
+		$name_custom = array();
+	}
+
+	foreach ($name_custom as $p){
+		//value according to the name of the custom fields 
+		$sql_value_custom = "select tfd.data from tincident_field_data tfd, tincident_type_field ttf 
+							 where tfd.id_incident_field = ttf.id and tfd.id_incident=".$id_inc." and ttf.label='".$p['label']."';";
+		$value_custom = get_db_sql($sql_value_custom);
+		$MACROS['_'.$p['label'].'_'] = $value_custom;
+	}
+				
 	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_fullname_"] = dame_nombre_real ($usuario);
 	$MACROS["_username_"] = $usuario;
