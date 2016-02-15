@@ -56,6 +56,10 @@ a:hover {
 	text-decoration: underline;
 }
 
+div.no-hover a:hover{
+	text-decoration: none;
+}
+
 /* headers */
 h1, h2, h3 {
 	font: bold 1em Verdana, Arial, 'Trebuchet MS', Tahoma, Sans-serif;

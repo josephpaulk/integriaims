@@ -87,14 +87,14 @@ function refresh_external_id(id_object_type_field, id_inventory, id_value, data_
 		$.ajax({
 			type: "POST",
 			url: "ajax.php",
-			data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+id_value, 
+			data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+data_name, 
 			dataType: "html",
 			success: function(data){
 				show_fields();
 			}
 		});
 	} else {
-		$("#"+id_object_type_field).val(id_value+"#"+data_name);
+		$("#"+id_object_type_field).val(data_name);
 	}
 
 }
@@ -280,11 +280,11 @@ function show_fields() {
 						a.appendChild(img);
 						lbl.appendChild(a);
 						
-						id_inventory = $('#text-id_object_hidden').val();
+						id_inventory = $('#text-id_object_hidden').val(value['data']);
 					}
 					
 					i++;
-					
+					/*
 					if (value['type'] == 'external') {
 						if (value['data'] != '') {
 							
@@ -339,6 +339,7 @@ function show_fields() {
 							});
 						}
 					}
+					*/	
 				}
 				
 				if ((value['type'] == "textarea")) {

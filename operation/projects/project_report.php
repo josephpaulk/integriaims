@@ -241,9 +241,13 @@ if ($id_project) {
 	$people_involved = "<div style='padding-bottom: 20px;'>";
 	foreach ($users_involved as $u) {
 		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
-		if ($avatar != "") {
+		if ($avatar) {
 			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
 			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 title='".$u."'/>";
+			$people_involved .= "</a>";
+		} else {
+			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
+			$people_involved .= "<img src='images/avatars/avatar_notyet.png' width=40 height=40 title='".$u."'/>";
 			$people_involved .= "</a>";
 		}
 	}

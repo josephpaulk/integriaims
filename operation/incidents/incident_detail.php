@@ -449,7 +449,11 @@ if ($action == 'update') {
 	}
 	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
-	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
+	if ($_POST['id_parent'] == 0) {
+		$id_parent = 0;
+	} else {
+		$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
+	}
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', '');
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);

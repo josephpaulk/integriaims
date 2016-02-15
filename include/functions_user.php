@@ -286,7 +286,9 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 		$search .= " AND nivel = $level";
 	}
 
-	if ($group > 0) {
+	if ($group == -1){
+		$search .= " AND id_usuario NOT IN (select id_usuario from tusuario_perfil)";
+	} else if($group > 0) {
 		$search .= " AND id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
 	}
 

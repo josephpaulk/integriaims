@@ -328,8 +328,10 @@ if ($id_project) {
 	$people_involved = "<div style='padding-bottom: 20px;'>";
 	foreach ($users_involved as $u) {
 		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
-		if ($avatar != "") {
+		if ($avatar) {
 			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
+		} else {
+			$people_involved .= "<img src='images/avatars/avatar_notyet.png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 		}
 	}
 	$people_involved .= "</div>";
