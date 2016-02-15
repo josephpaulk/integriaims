@@ -349,7 +349,7 @@ if (isset($incident)) {
 	//Incident creators must see their incidents
 	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
 
-	if (($incident["id_creator"] != $config["id_user"]) && ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl)) {
+	if ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) {
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket  (External user) ".$id);
 		include ("general/noaccess.php");
@@ -880,10 +880,13 @@ if (! $id) {
 	}
 }
 
-//The user with IW flag or the incident owner can modify all data from the incident.
-$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW")  || ($usuario == $config['id_user']) || ($id_creator == $config['id_user']));
-$has_im = (give_acl ($config['id_user'], $id_grupo, "IM") || ($id_creator == $config['id_user']));
-$has_iw = (give_acl ($config['id_user'], $id_grupo, "IW") || ($id_creator == $config['id_user']));
+//The user with IW flag can modify all data from the incident.
+$has_permission = give_acl ($config['id_user'], $id_grupo, "IW");
+$has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
+$has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
+//~ $has_permission = (give_acl ($config['id_user'], $id_grupo, "IW")  || ($usuario == $config['id_user']) || ($id_creator == $config['id_user']));
+//~ $has_im = (give_acl ($config['id_user'], $id_grupo, "IM") || ($id_creator == $config['id_user']));
+//~ $has_iw = (give_acl ($config['id_user'], $id_grupo, "IW") || ($id_creator == $config['id_user']));
 
 if ($id) {	
 	

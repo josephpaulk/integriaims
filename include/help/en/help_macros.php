@@ -25,6 +25,7 @@ Following strings will be replaced on runtime on the templates who use it:
 <li>_havecost_: For project WU reports only.
 <li>_taskname_: For project reports only.
 <li>_projectname_: For project reports only.
+<li>Templates Custom Fields: This allows to create an object type the name of the fields you add can include them as a macro which show the value of that field, example: _Name of the custom field_.</li>
 
 </p>
 <p>

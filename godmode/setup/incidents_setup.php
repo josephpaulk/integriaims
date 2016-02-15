@@ -277,15 +277,16 @@ echo "<td style='vertical-align: top;'>".print_checkbox ("show_creator_blank", 1
 echo "<td style='vertical-align: top;'>".print_checkbox ("change_creator_owner", 1, $config["change_creator_owner"], true, __('Allow to change user creator and user owner'))."</td>";
 echo "</tr>";
 
-echo "<tr>";
-echo "<td><br><h3>".__('Workflow')."</h3></td>";
-echo "</tr>";
+if ($is_enterprise) {
+	echo "<tr>";
+	echo "<td><br><h3>".__('Workflow')."</h3></td>";
+	echo "</tr>";
 
-echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("check_closed_incidents", 1, $config["check_closed_incidents"], true, __('Check closed tickets when running workflow rules'))."</td>";
-echo "<td style='vertical-align: top;'>".print_input_text ("days_check_closed_incidents", $config["days_check_closed_incidents"], '', 5, 255, true, __('Days to check closed tickets'));
-
-echo "</tr>";
+	echo "<tr>";
+	echo "<td style='vertical-align: top;'>".print_checkbox ("check_closed_incidents", 1, $config["check_closed_incidents"], true, __('Check closed tickets when running workflow rules'))."</td>";
+	echo "<td style='vertical-align: top;'>".print_input_text ("days_check_closed_incidents", $config["days_check_closed_incidents"], '', 5, 255, true, __('Days to check closed tickets'));
+	echo "</tr>";
+}
 
 echo "<tr>";
 echo "<td><h3>".__('Status')."</h3></td>";
