@@ -226,7 +226,14 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 	}
 	
 	$user_groups = get_user_groups ($id_user, $privilege, $returnAllGroup, $returnAllColumns);
-	
+	$user_groups_flag_si = get_user_groups ($id_user, "SI", $returnAllGroup, $returnAllColumns);
+
+	if (!empty($user_groups_flag_si)) {
+		foreach ($user_groups_flag_si as $group_flag) {
+			array_push ($user_groups, $group_flag);
+		}
+	}
+
 	if ($id_groups !== null) {
 		$childrens = groups_get_childrens($id_groups);
 		foreach ($childrens as $child) {

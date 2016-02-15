@@ -25,6 +25,7 @@ Las siguientes palabras ser&aacute;n reemplazadas por el valor real en las plant
 <li>_havecost_: Solo para reportes de unidades de trabajo de un proyecto.
 <li>_taskname_: Solo para reportes de proyecto.
 <li>_projectname_: Solo para reportes de proyecto.
+<li>Plantillas de campos personalizados: Esto permite que al crear un tipo de objeto el nombre de los campos que agregas puedes incluirlos como una macro la cual mostrara el valor de dicho campo: _nombre del campo personalizado_.</li>
 
 </p>
 <p>
