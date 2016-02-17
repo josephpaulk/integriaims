@@ -146,7 +146,11 @@ if ($incident["sla_disabled"]) {
 }
 
 $task = incidents_get_incident_task_text($id);
-$parent = __("Ticket")." #".$incident["id_parent"];
+if ($incident["id_parent"]){
+	$parent = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_parent"]."'>".__("Ticket")." #".$incident["id_parent"]."</a>";
+} else {
+	$parent = __("Ticket")." #".$incident["id_parent"];
+}
 
 $objects = get_inventories_in_incident($id);
 

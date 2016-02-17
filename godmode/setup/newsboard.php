@@ -149,13 +149,16 @@ if ($operation == "") {
 		}
 		
 	    echo "<td valign=top>";
-		echo $todo["expire_timestamp"];
-    	
+	    if ($todo["expire_timestamp"] == "0000-00-00 00:00:00"){
+			echo __('No expiration date');
+		} else {
+			echo $todo["expire_timestamp"];
+		}
 		echo '<td align="center" valign=top>';
 		echo '<a href="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=delete&id='.$todo["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
 
         echo "<tr><td colspan=3 style='border-bottom: 1px solid #acacac'>";
-	echo clean_output_breaks ($todo["content"]);
+	echo clean_output ($todo["content"]);
 	}
 	echo "</table>";
 
