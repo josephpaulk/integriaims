@@ -1413,7 +1413,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 								$table_info->data[$j][$j] .= $ob_field['data'];
 								$j++;
 								if (isset($ob_field['external_label']) && ($ob_field['external_label'] != '')) {
-									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_reference_field']." = ".$ob_field['data']);
+									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_label']." = '".$ob_field['data'] ."'" );
 
 									$table_info->align[$j] = 'left;';
 									$table_info->data[$j][$j] = '<b>'.$ob_field['external_label'];
