@@ -356,10 +356,10 @@ if ($operation == 'multiple_wu_insert') {
 echo "<div id='tabs'>";
 
 if ($id_workunit) {
-	echo "<h2>" ."<img src='images/award_star_silver_1.png'> " . __('Update workunit');
+	echo "<h2>" . __('Update workunit');
 }
 else {
-	echo "<h2>". "<img src='images/award_star_silver_1.png'> " . __('Add workunit');
+	echo "<h2>" . __('Add workunit');
 }
 echo "<h4>";
 if ($id_task) {
@@ -397,6 +397,7 @@ echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
 echo "</span></li>";
 echo "</ul>";
 echo "</h4>";
+echo "</div>";
 
 //If we inserted multiple workunits then 
 if ($operation == 'multiple_wu_insert') {
@@ -512,7 +513,7 @@ $table->colspan[7][0] = 2;
 
 echo '<form id="single_task_form" method="post" onsubmit="return validate_single_form()">';
 print_table ($table);
-echo '</form>';	
+echo '</form>';
 
 echo "</div>";
 
@@ -540,7 +541,6 @@ if (!$id_workunit) {
 		
 		//Massive work unit list
 		create_new_table_multiworkunit(1);
-		echo "</div>";
 		echo "<table width='100%'>";
 		echo "<tr>";
 		echo "<td style='width: 90%;'>";
@@ -555,11 +555,10 @@ if (!$id_workunit) {
 		echo "</table>";
 		echo '</form>';
 	}
+	echo '</div>';
 }
 
-echo "</div>"; // End div tabs
 
-echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>

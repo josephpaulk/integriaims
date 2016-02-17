@@ -19,6 +19,7 @@ if (!isset($config["id_user"]))
 global $show_projects;
 global $show_incidents;
 global $show_inventory;
+global $show_reports;
 global $show_customers;
 global $show_kb;
 global $show_file_releases;
@@ -75,7 +76,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/user_project_timegraph'>".__('Project timemap')."</a></li>";
 
-			// Project create
+			/*// Project create
 			if ($section_permission['write']) {
 				if ($sec2 == "operation/projects/project_detail" && $id_project < 0)
 					echo "<li id='sidesel'>";
@@ -83,7 +84,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 					echo "<li>";
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&create_project=1'>".__('Create project')."</a></li>";
 			}
-			
+			*/
 			if($show_projects != MENU_LIMITED && $show_projects != MENU_MINIMAL) {
 				// View disabled projects
 				if (($sec2 == "operation/projects/project") AND (isset($_REQUEST["view_disabled"])) )
@@ -316,6 +317,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "</a></li>";
 			}
 
+			/*
 			// Incidents for this task
 			$task_incidents = get_incident_task($id_task);
 			if ( $task_incidents > 0){
@@ -328,7 +330,8 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo " ($task_incidents / $task_incidents_wu ".__('Hours').")";
 				echo "</a></li>";
 			}
-
+			*/
+			
 			// Files
 			$numberfiles = get_number_files_task ($id_task);
 			if ($numberfiles > 0){
@@ -423,16 +426,16 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
-			
+			$search_id_user = (bool) get_parameter ('search_id_user', false);
 			//~ My Tickets
-			if ($sec2 == "operation/incidents/incident_search")
+			if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
 			
 			//~ Search Tickets
-			if ($sec2 == "operation/incidents/incident_search")
+			if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";

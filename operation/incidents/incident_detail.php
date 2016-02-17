@@ -959,7 +959,7 @@ if ($id) {
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
-$table->width = '98%';
+$table->width = '100%';
 $table->class = 'search-table';
 $table->id = "incident-editor";
 $table->size = array ();
@@ -1072,6 +1072,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
+	$params_creator['attributes'] = 'style="width:210px;"';
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	//add button to display info user for creator
 	$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
@@ -1107,6 +1108,7 @@ if ($has_im) {
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	$params_assigned['disabled'] = $disabled_creator;
+	$params_assigned['attributes'] = 'style="width:210px;"';
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 	//add button to display info user for owner
 	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 1);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
@@ -1126,7 +1128,7 @@ if (!$create_incident){
 	$params_closed['return'] = true;
 	$params_closed['return_help'] = true;
 	$params_closed['disabled'] = $blocked_incident;
-
+	$params_closed['attributes'] = 'style="width:210px;"';
 	//Only print closed by option when incident status is closed
 	if ($incident["estado"] == STATUS_CLOSED) {
 		$table->data[2][2] = "<div id='closed_by_wrapper'>";
@@ -1149,7 +1151,7 @@ $table->colspan[4][0] = 3;
 $table->data[4][0] = "";
 
 //////TABLA ADVANCED
-$table_advanced->width = '98%';
+$table_advanced->width = '100%';
 $table_advanced->class = 'search-table';
 $table_advanced->size = array ();
 $table_advanced->size[0] = '33%';
@@ -1258,8 +1260,8 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 
 // END TABLE ADVANCED
 
-//$table->colspan['row_advanced'][0] = 4;
-//$table->data['row_advanced'][0] = print_container('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+$table->colspan['row_advanced'][0] = 4;
+$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
 
 
 $table->colspan[9][0] = 4;
@@ -1287,7 +1289,7 @@ if (!$create_incident){
 	$html = "";
 	$html .= "<div id=\"incident_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
 	$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
-	$html .= 		"<table width=\"99%\">";
+	$html .= 		"<table width=\"100%\">";
 	$html .= 			"<td width=\"45%\">";
 	$html .= 				__('Drop the file here');
 	$html .= 			"<td>";
@@ -1303,7 +1305,7 @@ if (!$create_incident){
 	$html .= "</div>";
 
 	$table_description = new stdClass;
-	$table_description->width = '99%';
+	$table_description->width = '100%';
 	$table_description->id = 'incident_file_description';
 	$table_description->class = 'search-table-button';
 	$table_description->data = array();
@@ -1313,8 +1315,8 @@ if (!$create_incident){
 	$html .= print_table($table_description, true);
 	$html .= "</div>";
 
-	//~ $table->colspan[10][0] = 4;
-	//~ $table->data[10][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
+	$table->colspan[10][0] = 4;
+	$table->data[10][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, false);
 }
 
 if ($create_incident) {
@@ -1340,17 +1342,16 @@ if ($has_permission){
 		$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
 		echo '<form id="incident_status_form" method="post" enctype="multipart/form-data">';
 		print_table ($table);
-		echo "<h4>".__('Advanced parameters')."</h4>";
-		print_table($table_advanced);
-		echo "<h4>" . __('File upload')."</h4>";
-		echo $html;
+		
+		//echo print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+		//echo "<h4>" . __('File upload')."</h4>";
+		//echo $html;
 		echo $button;
 		echo '</form>';
 	} else {
 		echo '<form id="incident_status_form" method="post">';
 		print_table ($table);
-		echo "<h4>".__('Advanced parameters')."</h4>";
-		print_table($table_advanced);
+		//echo print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
 		echo $button;
 		echo '</form>';
 	}

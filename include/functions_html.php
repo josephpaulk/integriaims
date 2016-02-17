@@ -1264,6 +1264,49 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	}
 }
 
+function print_container_div($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '') {
+	$container_div_style = '';
+	$container_style = '';
+	$h2_class_extra = ' clickable';
+	$arrow = '';
+	$onclick = 'toggleDiv (\'' . $id . '_div\')';
+
+	switch($open) {
+		case 'open':
+			$arrow = print_image('images/arrow_down.png', true, array('class' => 'arrow_down'));
+			break;
+		case 'closed':
+			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right'));
+			$container_div_style = 'display: none;';
+			break;
+		case 'no':
+		default:
+			$onclick = '';
+			$h2_class_extra = '';
+			break;
+	}
+	
+	if ($margin) {
+		$container_style .= " margin-right: 10px;";
+	}
+	
+	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">' . $title;
+	$container .= $arrow;
+	$container .= '</h2>';
+	$container .= '<div id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
+	$container .= $content;
+	$container .= '</div>';
+	$container .= '</div>'; // container
+	
+	if ($return) {
+		return $container;
+	}
+	else {
+		echo $container;
+	}
+}
+
 function print_autorefresh_button ($name = "autorefresh", $text = "", $return = false, $token = "incidents_autorefresh", $form_id = "saved-searches-form") {
 	global $config;
 	
@@ -1301,7 +1344,7 @@ function print_autorefresh_button ($name = "autorefresh", $text = "", $return = 
 	$html .= "</li>";
 	$html .= "</ul>";
 	$html .= "</div>";
-	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px; padding-bottom: 3px; margin-top: 6px;'>";
+	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px; padding-bottom: 3px; margin-top: -12px;'>";
 	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
 	$html .= "</div>";
 	$html .= "</div>";
@@ -1393,9 +1436,9 @@ function get_last_date_control ($last_date = 0, $id = 'last_date_search', $label
 	$html  = print_select (get_last_dates(), $id, $last_date, $script, '', '', true, 0, false, $label);
 	$html .= "<br>";
 	$html .= "<div id='start_end_dates' $hidden>";
-	$html .= 	"<div id='$start_date_name' style='display: inline-block;'>" . print_input_text ($start_date_name, $start_date, "", 21, 100, true, $start_date_label) . "</div>";
+	$html .= 	"<div id='$start_date_name' style='display: inline-block;'>" . print_input_text ($start_date_name, $start_date, "", 8, 100, true, $start_date_label) . "</div>";
 	$html .= 	"&nbsp;";
-	$html .= 	"<div id='$end_date_name' style='display: inline-block;'>" . print_input_text ($end_date_name, $end_date, "", 21, 100, true, $end_date_label) . "</div>";
+	$html .= 	"<div id='$end_date_name' style='display: inline-block;'>" . print_input_text ($end_date_name, $end_date, "", 8, 100, true, $end_date_label) . "</div>";
 	$html .= "</div>";
 
 	return $html;

@@ -175,25 +175,25 @@ if ($id || $new_sla) {
 	$table->data[0][3] = print_select ($id_sla_type_arr, 'id_sla_type', $id_sla_type,'', '', '0', true, 0, false, __('SLA Type'));
 
 	$table->data[1][0] = print_label(__('Max. response time (in hours)'), '', 'text', true);
-	$table->data[1][0] .= '&nbsp;'."<input type='text' name='min_response' id='text-min_response' value='$min_response' size='5' maxlenght='100' onChange='hours_to_dms(\"min\")'>";
+	$table->data[1][0] .= "<input type='text' name='min_response' id='text-min_response' value='$min_response' size='5' maxlenght='100' onChange='hours_to_dms(\"min\")'>";
 		
 	$min_response_time = incidents_hours_to_dayminseg ($min_response);
-	$table->data[1][0] .= '&nbsp;'.print_input_text ('min_response_time', $min_response_time, '',
+	$table->data[1][0] .= print_input_text ('min_response_time', $min_response_time, '',
 		7, 100, true, '', true);
 
 	$table->data[1][1] = print_label(__('Max. resolution time (in hours)'), '', 'text', true);
-	$table->data[1][1] .= '&nbsp;'."<input type='text' name='max_response' id='text-max_response' value='$max_response' size='5' maxlenght='100' onChange='hours_to_dms(\"max\")'>";
+	$table->data[1][1] .= "<input type='text' name='max_response' id='text-max_response' value='$max_response' size='5' maxlenght='100' onChange='hours_to_dms(\"max\")'>";
 	$max_response_time = incidents_hours_to_dayminseg ($max_response);
-	$table->data[1][1] .= '&nbsp;'.print_input_text ('max_response_time', $max_response_time, '',
+	$table->data[1][1] .= print_input_text ('max_response_time', $max_response_time, '',
 		7, 100, true, '', true);
 
 	$table->data[1][2] = print_input_text ("max_incidents", $max_incidents, '',
 		5, 100, true, __('Max. tickets at the same time'));
 
 	$table->data[1][3] = print_label(__('Max. ticket inactivity (in hours)'), '', 'text', true);
-	$table->data[1][3] .= '&nbsp;'."<input type='text' name='max_inactivity' id='text-max_inactivity' value='$max_inactivity' size='5' maxlenght='100' onChange='hours_to_dms(\"inactivity\")'>";
+	$table->data[1][3] .= "<input type='text' name='max_inactivity' id='text-max_inactivity' value='$max_inactivity' size='5' maxlenght='100' onChange='hours_to_dms(\"inactivity\")'>";
 	$max_inactivity_time = incidents_hours_to_dayminseg ($max_inactivity);
-	$table->data[1][3] .= '&nbsp;'.print_input_text ('max_inactivity_time', $max_inactivity_time, '',
+	$table->data[1][3] .= print_input_text ('max_inactivity_time', $max_inactivity_time, '',
 		7, 100, true, '', true);
 		
 
@@ -225,7 +225,8 @@ if ($id || $new_sla) {
 	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	print_table ($table);
 	echo "</form>";
-} else {
+}
+else {
 	$search_text = (string) get_parameter ('search_text');
 	
 	$where_clause = "";

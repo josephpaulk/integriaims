@@ -66,8 +66,7 @@ echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report
 echo "<table class='search-table' style='width:100%'>";
 	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$prev_month&working_year=$prev_year'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "'></a> ";
-	echo "</td><td>";
-	echo "<select name='working_month' style='width: 100%;'>";
+	echo "<select name='working_month' style='width: 125px !important;'>";
 	//echo "<option value='$working_month'>".getmonth($working_month);
 	for ($ax=1; $ax <= $now_month; $ax++){
 		if ($working_month == $ax)
@@ -76,17 +75,16 @@ echo "<table class='search-table' style='width:100%'>";
 			echo "<option value='$ax'>".getmonth($ax);
 	}
 	echo "</select>";
-	echo "</td><td>";
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'><img src='images/control_fastforward_blue.png' title='" . __('Next') . "'></a> ";
 	echo "</td>";
-	echo "<tr><td colspan=3>";
-	echo "<b>" . __('Filter') . "</b>";
+	echo "<tr><td>";
+	echo "<b>" . __('Filter') . "</b><br>";
 	
 	$search = get_parameter ("search", '');
 	print_input_text ('search', $search, '', 25);
 
 	echo "</td></tr>";
-	echo "<tr><td colspan=3>";
+	echo "<tr><td>";
 		
 	echo "<input type=submit class='sub search' value='".__('Search')."'>";
 

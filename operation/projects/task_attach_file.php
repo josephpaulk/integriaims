@@ -53,16 +53,16 @@ echo "<h4>" . __('Task').": ".$task_name."</h4>";
 echo "<div class='divform' id='upload_control'>";
 echo "<table cellpadding=4 cellspacing=4 border=0 width='20%' class='search-table'>";
 echo "<tr>";
-echo '<td class="datos">'.__('Filename').'</td><td class="datos">';
+echo '<td class="datos"><b>'.__('Filename') . "</b>";
 
 $action = "index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile";
 
 $into_form = '';
 //~ $into_form .=  '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
-$into_form .=  '<tr><td class="datos2">'.__('Description').'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
+$into_form .=  '<tr><td class="datos2"><b>'.__('Description').'</b><br><input type="text" name="file_description" size=47 style="width:255px !important;">';
 $into_form .=  "</td></tr>";
 $into_form .=  "";
-$into_form .=  '<tr><td colspan=3 class="datos2"><input type="button" id="button-upload" name="upload" value="'.__('Upload').'" class="">';
+$into_form .=  '<tr><td style="text-align:center" class="datos2"><input type="button" id="button-upload" name="upload" value="'.__('Upload').'" class="">';
 $into_form .= "</form></table>";
 
 // Important: Set id 'form-add-file' to form. It's used from ajax control

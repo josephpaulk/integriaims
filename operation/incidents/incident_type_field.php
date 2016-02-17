@@ -53,7 +53,8 @@ if ($id_field) {
 	}
 }
 
-echo '<h1>'.__('Ticket fields management').'</h1>';
+echo '<h2>'.__('Ticket fields management').'</h2>';
+echo '<h4>'.__('Update field').'</h4>';
 
 $table->width = "100%";
 $table->class = "search-table-button";
@@ -124,7 +125,7 @@ if ($add_field) {
 }
 
 $table->data['button'][0] = $button;
-$table->colspan['button'][0] = 3;
+$table->colspan['button'][0] = 4;
 
 if ($add_field) {
 echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&add_field=1">';

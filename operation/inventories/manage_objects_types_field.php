@@ -89,7 +89,7 @@ echo '</div>';
 // Field update form
 //**********************************************************************
 
-$table->width = '99%';
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->colspan[0][0] = 2;

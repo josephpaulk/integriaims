@@ -48,7 +48,7 @@ if ($get_company_search) {
 		$search_date_end = '';
 	}
 	
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->style = array ();
 	

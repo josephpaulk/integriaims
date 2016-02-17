@@ -77,13 +77,14 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_group = $row["id_group"];
 
 	}
-
-	echo "<h1>".__('Create a new category access')."</h1>";
+	
+	echo "<h2>".__('File release category access management')."</h2>";
+	echo "<h4>".__('Create a new category access')."</h4>";
 	echo "<form name=catman method='post' action='index.php?sec=download&
 						sec2=operation/download/manage_perms&create2'>";
 	
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Category');
@@ -107,11 +108,11 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h1>".__('File release category access management')." &raquo; ".__('Assigned categories / group')."</h1>";
+	echo "<h2>".__('File release category access management')."</h2><h4>".__('Assigned categories / group')."</h4>";
 	$sql1='SELECT tdownload_category.name as category, tgrupo.nombre as grupo, id_category, tdownload_category_group.id_group FROM tdownload_category_group, tdownload_category, tgrupo WHERE tdownload_category_group.id_category = tdownload_category.id AND tgrupo.id_grupo = tdownload_category_group.id_group';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="99%" class="listing">';
+		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Category')."</th>";
 		echo "<th>".__('Group')."</th>";
 		echo "<th>".__('Delete')."</th>";

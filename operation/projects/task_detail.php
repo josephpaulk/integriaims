@@ -319,24 +319,25 @@ if ($project_permission['manage'] || $operation == "view") {
 
 $table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
 
-$table->data[1][0] = print_input_text ('start_date', $start, '', 7, 15, true, __('Start'));
-$table->data[1][1] = print_input_text ('end_date', $end, '', 7, 15, true, __('End'));
-
-$table->data[1][2] = print_select (get_periodicities (), 'periodicity',
+$table->data[1][0] = print_input_text ('cc', $cc, '', 40, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
+$table->data[1][1] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
 
-$table->data[2][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
-$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: show_calculation();'>" . print_image('images/play.gif', true, array('title' => __('Calculate hours'))) . "</a>";
-
-$table->data[2][1] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
-	11, true, __('Estimated cost'));
-$table->data[2][1] .= ' '.$config['currency'];
-	
-$table->data[2][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
+$table->data[1][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
 	        false, '', '', true, __('Completion based on hours'))
 	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
 
-$table->data[3][0] = print_input_text ('cc', $cc, '', 40, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
+$table->data[2][0] = print_input_text ('start_date', $start, '', 8, 15, true, __('Start'));
+$table->data[2][1] = print_input_text ('end_date', $end, '', 8, 15, true, __('End'));
+
+
+
+$table->data[2][3] = print_input_text ('hours', $hours, '', 8, 5, true, __('Estimated hours'));
+$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_calculation();'>" . print_image('images/play.gif', true, array('title' => __('Calculate hours'))) . "</a>";
+
+$table->data[3][0] = print_input_text ('estimated_cost', $estimated_cost, '', 8,
+	11, true, __('Estimated cost'));
+$table->data[3][0] .= ' '.$config['currency'];
 
 $table->colspan[4][0] = 3;
 $completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
@@ -350,7 +351,7 @@ $links_1 = projects_get_task_links ($id_project, $id_task, 1);
 
 $table_advanced = "<tr>";
 $hint = print_help_tip (__("The task cannot start before all tasks in this section start"), true);
-$table_advanced .= "<td>" . print_select ($links_1, 'link_1', NULL,
+$table_advanced .= "<td style='text-align:left;'>" . print_select ($links_1, 'link_1', NULL,
 								'', '', '', true, false, false, __('Start to start').$hint);
 $table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(1,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 $table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
@@ -358,7 +359,7 @@ $table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_
 $links_0 = projects_get_task_links ($id_project, $id_task, 0);
 
 $hint = print_help_tip (__("The task cannot start before all tasks in this section end"), true);
-$table_advanced .= "<td>" .  print_select ($links_0, 'link_0', NULL,
+$table_advanced .= "<td style='text-align:left;'>" .  print_select ($links_0, 'link_0', NULL,
 								'', '', '', true, false, false, __('Finish to start').$hint);
 $table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(0,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 $table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
@@ -366,7 +367,7 @@ $table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_
 $links_2 = projects_get_task_links ($id_project, $id_task, 2);
 
 $hint = print_help_tip (__("The task cannot end before all tasks in this section end, although it may end later"), true);
-$table_advanced .= "<td>" .  print_select ($links_2, 'link_2', NULL,
+$table_advanced .= "<td style='text-align:left;'>" .  print_select ($links_2, 'link_2', NULL,
 								'', '', '', true, false, false, __('Finish to finish').$hint);
 $table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(2,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 $table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";

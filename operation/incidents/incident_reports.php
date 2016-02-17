@@ -88,7 +88,6 @@ if (isset($search)) {
 	}
 	
 	include("incident_statistics.php");
-	 
 	
 	if (($show_list)) {
 		

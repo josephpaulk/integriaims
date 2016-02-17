@@ -565,7 +565,7 @@ if ($id && !$inventory_name) {
 } else {
 
 	$table->class = 'search-table-button';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[4][1] = 2;

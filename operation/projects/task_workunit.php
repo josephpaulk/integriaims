@@ -253,14 +253,14 @@ if ($id_task != 0) {
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);		
 	}
-	echo '<h1>'.__('Workunit resume');
-	echo ' - '.$project_name.' - '.$task_name;
+	echo '<h2>'.__('Workunit resume');
+	echo '</h2><h4>'.$project_name.' - '.$task_name;
 
 	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
 	if ($report_image) {
-		echo "&nbsp;" . $report_image.'</h1>';
+		echo "&nbsp;" . $report_image;
 	}
-    
+    echo "</h4>";
 } elseif ($id_project != 0) {
 	// Whole project
 	

@@ -306,7 +306,7 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 
 // Returns a combo with the incident resolution
 // ----------------------------------------------------------------------
-function combo_incident_resolution ($actual = -1, $disabled = false, $return = false, $for_massives = false, $script = '', $label = true, $name = false) {
+function combo_incident_resolution ($actual = -1, $disabled = false, $return = false, $for_massives = false, $script = '', $label = true, $name = false, $style = false) {
 	$output = '';
 	
 	if ($label) {
@@ -333,12 +333,12 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 	if($for_massives) {
 		$output .= print_select (get_incident_resolutions (),
 						'mass_resolution', $actual, '', __('Select'),
-						-1, true, false, true, $label);
+						-1, true, false, true, $label, false,$style);
 	}
 	else {
 		$output .= print_select (get_incident_resolutions (),
 						$name, $actual, $script, __('None'),
-						0, true, false, true, $label);
+						0, true, false, true, $label, false, $style);
 	}
 	
 	if ($return)
@@ -998,7 +998,7 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table = new stdclass;
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->cellspacing = 2;
 	$table->cellpadding = 2;
@@ -1007,14 +1007,14 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->style = array ();
 	$table->style[0] = 'width: 25%';
 	$table->style[1] = 'width: 25%';
-	$table->style[2] = 'width: 25%; vertical-align:text-top;';
+	$table->style[2] = 'width: 25%;';
 	$table->style[3] = 'width: 25%';
 	$table->rowstyle = array ();
-	$table->rowstyle[1] = 'display: none';
-	$table->rowstyle[2] = 'display: none';
-	$table->rowstyle[3] = 'display: none';
-	$table->rowstyle[4] = 'display: none';
-	$table->rowstyle[5] = 'display: none';
+	//~ $table->rowstyle[1] = 'display: none';
+	//~ $table->rowstyle[2] = 'display: none';
+	//~ $table->rowstyle[3] = 'display: none';
+	//~ $table->rowstyle[4] = 'display: none';
+	//~ $table->rowstyle[5] = 'display: none';
 	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
@@ -1038,80 +1038,92 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
 	$table->data[0][3] = print_checkbox_extended ('search_show_hierarchy', 1, $show_hierarchy, false, '', '', true, __('Show hierarchy'));
- 
+	
+	$table_advanced = new stdclass;
+	$table_advanced->width = "100%";
+	$table_advanced->class = "search-table-button";
+	
+	
 	$params_owner = array();
 	$params_owner['input_id'] = 'text-search_id_user';
 	$params_owner['input_name'] = 'search_id_user';
 	$params_owner['input_value'] = $search_id_user;
 	$params_owner['title'] = __('Owner');
+	$params_owner['attributes'] = 'style="width: 210px;"';
 	$params_owner['return'] = true;
 
-	$table->data[1][0] = user_print_autocomplete_input($params_owner);
+	$table_advanced->data[1][0] = user_print_autocomplete_input($params_owner);
 	
 	$params_editor = array();
 	$params_editor['input_id'] = 'text-search_editor';
 	$params_editor['input_name'] = 'search_editor';
 	$params_editor['input_value'] = $search_editor;
 	$params_editor['title'] = __('Editor');
+	$params_editor['attributes'] = 'style="width: 210px;"';
 	$params_editor['return'] = true;
 
-	$table->data[1][1] = user_print_autocomplete_input($params_editor);
+	$table_advanced->data[1][1] = user_print_autocomplete_input($params_editor);
 	
 	$params_closed_by = array();
 	$params_closed_by['input_id'] = 'text-search_closed_by';
 	$params_closed_by['input_name'] = 'search_closed_by';
 	$params_closed_by['input_value'] = $search_closed_by;
 	$params_closed_by['title'] = __('Closed by');
+	$params_closed_by['attributes'] = 'style="width: 210px;"';
 	$params_closed_by['return'] = true;
 
-	$table->data[1][2] = user_print_autocomplete_input($params_closed_by);
+	$table_advanced->data[1][2] = user_print_autocomplete_input($params_closed_by);
 	
 	$params_creator = array();
 	$params_creator['input_id'] = 'text-search_id_creator';
 	$params_creator['input_name'] = 'search_id_creator';
 	$params_creator['input_value'] = $search_creator;
 	$params_creator['title'] = __('Creator');
+	$params_creator['attributes'] = 'style="width: 210px;"';
 	$params_creator['return'] = true;
 
-	$table->data[1][3] = user_print_autocomplete_input($params_creator);
+	$table_advanced->data[1][3] = user_print_autocomplete_input($params_creator);
 	
-	$table->data[2][0] = print_select (get_priorities(), 'search_priority', $priority,
+	$table_advanced->data[2][0] = print_select (get_priorities(), 'search_priority', $priority,
 			'', __('Any'), -1, true, false, false, __('Priority'), false);
 
-	$table->data[2][1] = print_select (get_incident_resolutions(), 'search_resolution', $resolution,
+	$table_advanced->data[2][1] = print_select (get_incident_resolutions(), 'search_resolution', $resolution,
 			'', __('Any'), -1, true, false, false, __('Resolution'), false);
 	
-	$table->data[2][2] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
+	$table_advanced->data[2][2] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
 	
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	$table->data[2][3] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
-	$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
-	$table->data[2][3] .= print_input_hidden ('id_inventory', $id_inventory, true);
+	$table_advanced->data[2][3] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:210px;'", true, '', __('Inventory'));
+	$table_advanced->data[2][3] .= "<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	$table_advanced->data[2][3] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
 	if (!get_external_user ($config["id_user"]))
-		$table->data[4][0] = print_select (get_companies (), 'search_id_company',
+		$table_advanced->data[4][0] = print_select (get_companies (), 'search_id_company',
 			$id_company, '', __('All'), 0, true, false, false, __('Company'));
 			
-	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
+	$table_advanced->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
 		$search_id_incident_type, 'javascript:change_type_fields_table();', __('All'), 0, true, false, false, __('Ticket type'));
 		
-	$table->data[4][3] = print_checkbox_extended ('search_group_by_project', 1, $group_by_project, false, '', '', true, __('Group by project/task'));
+	$table_advanced->data[4][3] = print_checkbox_extended ('search_group_by_project', 1, $group_by_project, false, '', '', true, __('Group by project/task'));
 
 	$sla_states = array();
 	$sla_states[1] = __('SLA is fired');
 	$sla_states[2] = __('SLA is not fired');
-	$table->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('All'), 0, true, false, false, __('SLA'));
+	$table_advanced->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('All'), 0, true, false, false, __('SLA'));
 	
-	$table->data[5][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), 'search_id_task');
+	$table_advanced->data[5][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), 'search_id_task');
 	
-	$table->data[5][2] = print_input_text ('search_left_sla', $left_sla,'', 7, 0, true, __('SLA > (%)'), false);
+	$table_advanced->data[5][2] = "<div>";
+	$table_advanced->data[5][2] .= "<div style='display: inline-block;'>" . print_input_text ('search_left_sla', $left_sla,'', 8, 0, true, __('SLA > (%)'), false) . "</div>";
 	
-	$table->data[5][3] = print_input_text ('search_right_sla', $right_sla,'', 7, 0, true, __('SLA < (%)'), false);
+	$table_advanced->data[5][2] .= "&nbsp;<div style='display: inline-block;'>" . print_input_text ('search_right_sla', $right_sla,'', 8, 0, true, __('SLA < (%)'), false) . "</div>";
+	$table_advanced->data[5][2] .= "</div>";
 
-	$table_type_fields = new stdclass;
+	$table_type_fields = new StdClass();
 	$table_type_fields->width = "100%";
 	$table_type_fields->class = "search-table";
 	$table_type_fields->data = array();
+	$table_type_fields->align[0] = 'left';
 
 	//Print custom field data
 
@@ -1171,16 +1183,18 @@ function form_search_incident ($return = false, $filter=false) {
 		$table_type_fields_html = print_table($table_type_fields, true);
 	}
 
-	$table->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
+	$table_advanced->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
 	
-	$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" id="show_advanced_search" href="javascript:show_ad_search();">'.__('Advanced search').'></a></div>';
+	//$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" id="show_advanced_search" href="javascript:show_ad_search();">'.__('Advanced search').'></a></div>';
+	$table->colspan['row_advanced'][0] = 5;
+	$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_form', __('Advanced search'), print_table($table_advanced, true), 'closed', true, true);
 	
 	//Store serialize filter
 	serialize_in_temp($filter, $config["id_user"]);
 	
 	$table->data[7][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	$table->data[7][2].= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub csv"', true);
-	$table->colspan[7][2] = 4;
+	$table->colspan[7][2] = 5;
 	
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= print_table ($table, true);
@@ -1231,13 +1245,11 @@ function form_search_users ($return = false, $filter=false) {
 	$global_profile[-1] = __('External');
 	$global_profile[0] = __('Standard');
 	$global_profile[1] = __('Administrator');
-	$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	
 	$group_name = get_user_groups();
 	$group_name[-1] = __('Groupless');
-	
-	$table->data[0][3] = print_select ($group_name, 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
-	
-	$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[3][0] = print_select ($group_name, 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
 	
 	$table->colspan[2][0] = 4;
 	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);

@@ -54,6 +54,7 @@ if ($custom_searches === false) {
         $custom .= "</td>";
         $custom .= "</tr>";
 } else {
+	$custom = "<tr>";
 	foreach ($custom_searches as $cs) {
 		
 		$c_search = get_custom_search ($cs['id'], 'incidents');
@@ -66,11 +67,13 @@ if ($custom_searches === false) {
 		
 		$count_cs = filter_incidents ($filter_search, true);
 		
+		$custom .="<td>";
 		$custom .="<div class='custom_search'>";
 		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]." ". "(". $count_cs.")" . "</a><br>";
 		$custom .="</div>";
+		$custom .="</td>";
 	}
-	$custom .= "<div style='clear:both;'></div>";
+	$custom .= "</tr>";
 }
 
 $table->colspan[0][0] = 2;
@@ -154,7 +157,7 @@ if (!$rows) {
 		if($owners["avatar"]){
 			$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
 		} else {
-			$search_by_owner .= '<div class="bubble_little"></div>';
+			$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/avatar_notyet.png', true) . '</div>';
 		}
 		$long_name = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $owners["id_usuario"]));
 	
@@ -171,7 +174,7 @@ if (!$rows) {
 	}
 }
 
-$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner, 'open', true, '20px', '', 'no_border', 1, 'less_widht');
+$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner, 'open', true, '20px', '', 'no_border', 5, 'less_widht');
 
 
 /**** DASHBOARD RIGHT SIDE ****/
@@ -271,8 +274,9 @@ for ($i = 0; $i<=5; $i++) {
 	$incident_fake = array();
 	$incident_fake["prioridad"] = $db_priority;
 	
-	$search_by_priority .= "<td style='background: " . incidents_get_priority_color($incident_fake) . ";'>";
+	$search_by_priority .= "<td style='padding:0px;'>";
 	$search_by_priority .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_priority=".$db_priority."'>";
+	$search_by_priority .= "<div class='div_search_priority' style='background: " . incidents_get_priority_color($incident_fake) . ";'>";
 
 	// Search in query totals for each priority (based on DB codes, not user codes)
 
@@ -286,7 +290,7 @@ for ($i = 0; $i<=5; $i++) {
 
 	$search_by_priority .= $count_priority;
 
-	$search_by_priority .= "</a>";
+	$search_by_priority .= "</div></a>";
 	$search_by_priority .= "</td>";
 }
 

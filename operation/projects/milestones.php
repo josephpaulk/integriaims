@@ -130,7 +130,7 @@ if ($operation == ""){
 	echo "<h2>".__('Milestones')."</h2>";
 	echo "<h4>".__('Management')."</h4>";
 	echo "<div class='divresult' >";
-	echo "<table class='listing' width=99%>";
+	echo "<table class='listing' width=100%>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');
 	echo "<th>".__('Timestamp');
@@ -162,7 +162,7 @@ if ($operation == ""){
 			
 			// DELETE
 			if ($project_access['write']) {
-				echo '<td class="'.$tdcolor.'" align="center">';
+				echo '<td class="'.$tdcolor.'">';
 				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
 			}
 			

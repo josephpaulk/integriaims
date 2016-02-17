@@ -254,7 +254,7 @@ if (defined ('AJAX')) {
 				
 				//Start/End Date
  				if ($task["start"] == $task["end"]){
-					$date_start_end = date ('Y-m-d', strtotime ($task['start'])) . "<br>";
+					$date_start_end = date ('Y-m-d', strtotime ($task['start'])) . " / ";
 					$date_start_end .= __('Recurrence').': '.get_periodicity ($task['periodicity']);
 				} else {
 					// Start
@@ -262,10 +262,10 @@ if (defined ('AJAX')) {
 					$end = strtotime ($task['end']);
 					$now = time ();
 					
-					$data = date ('Y-m-d', $start) ."<br>";
+					$date_start_end = date ('Y-m-d', $start) ." / ";
 					
 					if ($task['completion'] == 100) {
-						$data .= '<span style="color: green">';
+						$date_start_end .= '<span style="color: green">';
 					} else {
 						if ($now > $end)
 							$date_start_end .= '<span style="color: red">';
@@ -273,7 +273,7 @@ if (defined ('AJAX')) {
 							$date_start_end .= '<span>';
 					}
 					$date_start_end .= date ('Y-m-d', $end);
-					$date_start_end .= '</span>';
+					$date_start_end .= '</span>' ;
 				}
 				
 				// New WO / Incident
@@ -283,7 +283,7 @@ if (defined ('AJAX')) {
 				$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
 				$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
 				echo "<table><tr>";
-				echo "<td><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+				echo "<td style='width:105px;'><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
 				echo "<script type=\"text/javascript\">
 						  $(document).ready (function () {
 							  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\");
@@ -292,11 +292,11 @@ if (defined ('AJAX')) {
 				echo $img;
 				echo "</a></td>";
 				echo "<td>".$priority."</td>";
-				echo "<td>".$name."</td>";
-				echo "<td>".$progress."</td>";
-				echo "<td>".$estimation."</td>";
-				echo "<td>".$people."</td>";
-				echo "<td>".$date_start_end."</td>";
+				echo "<td style='width:220px;'>".$name."</td>";
+				echo "<td style='width:100px;'>".$progress."</td>";
+				echo "<td style='width:50px;'>".$estimation."</td>";
+				echo "<td style='width:30px;'>".$people."</td>";
+				echo "<td style='width:200px;'>".$date_start_end."</td>";
 				echo "<td>".$time_used."</td>";
 				echo "<td>".__('New').": ".$launch_icons."</td>";
 			} else {
@@ -559,7 +559,7 @@ if ($clean_output == 1) {
 	
 	unset ($table);
 
-	$table->width = '90%x';
+	$table->width = '90%';
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->style = array ();

@@ -54,6 +54,9 @@ a:hover {
 div.no-hover a:hover{
 	text-decoration: none;
 }
+a.no_hover:hover{
+	text-decoration: none;
+}
 
 /* headers */
 h1, h2, h3 {
@@ -78,12 +81,15 @@ h4 a img{
 h4 img{
 	vertical-align: middle;
 }
+h4 a:hover{
+	text-decoration: none;
+}
 
 h1 { font-size: 1.2em; }
-h2 { font-size: 13px;
-	 padding-bottom: 7px;
-
-	 }
+h2 {
+	font-size: 13px;
+	padding-bottom: 7px;
+}
 
 h3 { font-size: 0.95em; }
 h4 { font-size: 0.9em;
@@ -153,10 +159,10 @@ h6 { font-size: 0.5em; }
 }
 
 p, h1, h2, h3 {
-	margin: 30px 15px 0px 6px;
+	margin: 30px 15px 0px 0px;
 }
 h4, h5{
-	margin: 0px 0px 18px 6px;
+	margin: 0px 0px 18px 0px;
 }
 p {
 	clear: left;
@@ -172,7 +178,9 @@ table {
 	background: #F7F7F7;
 }
 .search-table-button {
-	padding-left: 10px;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-bottom: 15px;
 }
 
 table.box {
@@ -185,6 +193,7 @@ table.box {
 	padding-bottom: 5px;
 	margin-left: 15px;
 }
+
 table.blank {
 	border: none;
 	background: #fff;
@@ -231,16 +240,17 @@ div.divresult {
 	width: 79%;
 }
 
-.divresult>.divhalf>.listing>.container_div>tr>td>div>embed {
-	width: 100%;
-}
 .divform .search-table input[type="text"] {
-	width: 175px !important;
+	width: 170px !important;
 	padding-left: 3px;
 }
 .divform .search-table select {
 	width: 175px !important;
 	padding-left: 0px;
+}
+.divform .search-table textarea {
+	width: 175px !important;
+	padding: 0px;
 }
 
 .divresult_right {
@@ -387,10 +397,6 @@ table.listing th img{
 	vertical-align:middle;
 }
 
-table.listing tr td a img {
-	padding-left: 13px;
-}
-
 table.listing tr th a {
 	padding-left: 13px;
 }
@@ -409,7 +415,7 @@ table.listing tr th span {
 
 table.listing tr td.sublisting table {
 	margin: 0px;
-	width: 90%;
+	width: 100%;
 	padding-left: 2%;
 }
 
@@ -863,7 +869,7 @@ input#global_search {
 /* main column */
 #main {
 	width: 93%;
-	padding-left: 0px;
+	padding-left: 6px;
 	min-height: 500px;
 	float: left;
 }
@@ -1360,7 +1366,6 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	margin:0px 0px 1px 0px;
 	color:#FFF;
 	font-size: 0.95em;
-	
 	text-transform: none;
 	text-decoration: none;
 
@@ -1376,14 +1381,10 @@ span.users, span.agents, span.data, span.alerts, span.time {
 }
 
 .portletBody{
-	background-color:#eeeeee;
 	padding:10px 10px 10px 8px !important;color:#717171;
 	margin-top: 0px;
 	width:200px;padding:3px 10px 0px 10px;
 }
-
-
-
 
 h3.admin {
 	background-color: #505050;
@@ -1434,7 +1435,7 @@ h3.system {
 }
 
 .notebody {
-	padding: 0px 5px 0px 15px;
+	padding: 10px 5px 10px 15px;
 	margin-bottom: 10px;
 	border-bottom:1px solid #eeeeee;
 	border-right:1px solid #eeeeee;
@@ -2047,7 +2048,6 @@ table.search-table{
 	border: 1px solid #dadada;
     border-radius: 4px;
     padding: 12px 6px 16px 9px;
-    margin-left: 5px;
     text-align: left;
     font-size: 13px; 
     width: 100%;
@@ -2097,6 +2097,7 @@ div.divform table.search-table input[type="button"]{
     font-weight: 300;
     height: 40px;
     cursor: pointer;
+    padding: 0px;
 }
 
 div.divform table.search-table input.submit_update{
@@ -2855,18 +2856,13 @@ div.project_tasks_report_container,
 div.companies_invoiced_container,
 div.currency_invoiced_container,
 div.history_invoiced_container {
-	float:left;
-	margin: 5px;
+	
 }
 
 div.container_ticket_oc_container,
 div.container_ticket_activity_container {
-	float:right !important;
-	width: 96% !important;
-}
-
-#container_top5_group_time {
-	font-size: 11px !important;
+	width: 100% !important;
+	float: left;
 }
 
 .container_top5_group_time_container {
@@ -2903,15 +2899,14 @@ div.container_user_assigned_container,
 div.container_incidents_group_container,
 div.container_incident_creator_group_container,
 div.container_top5_scoring_container {
-	width:30%;
+	width: 32%;
+	float: left;
 }
 
 div.container_sla_compliance_container {
 	clear: right;
 }
 
-div.container_status_incidents_container,
-div.container_priority_incidents_container,
 div.container_longest_closed_container,
 div.container_top5_user_time_container,
 div.funnel_container,
@@ -2928,7 +2923,14 @@ div.project_budget_report_container,
 div.project_workload_distribution_report_container,
 div.companies_invoiced_container,
 div.currency_invoiced_container {
-	width:46%;	
+	width:30%;
+	float: left;
+}
+
+div.container_status_incidents_container,
+div.container_priority_incidents_container {
+	width:48%;
+	float: left;
 }
 
 div.container_adaptor_na_graphic,
@@ -2946,7 +2948,7 @@ div.container_adaptor_na_graphic2 {
 div.container_adaptor_graphic {
 	width:300px; 
 	text-align: center; 
-	margin-top: 48px;
+
 }
 
 h2.container_simple_title {
@@ -3388,7 +3390,6 @@ img {
 	max-width: 90%;
 	max-height: 90%;
 	z-index: 102;
-
 	cursor: pointer;
 }
 
@@ -3405,4 +3406,37 @@ img {
 }
 .overview_tiquets {
 	margin-left: 6px;
+}
+
+.div_search_priority {
+	width:90%;
+	height:100%;
+	padding: 8px 0px 8px 5px;
+	margin-top: 5px;
+	margin-right: 3px;
+	font-weight: bold;
+	border-radius: 2px;
+	border-bottom-right-radius: 10px;
+	line-height: 30px;
+}
+
+.container {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	height: 100%;
+}
+
+.container h2 {
+	margin: 0px;
+	border: 1px solid #dadada;
+	background-color: #F7F7F7;
+	vertical-align: middle;
+	padding: 13px;
+	margin-bottom: 10px;
+}
+.container h2 img{
+	margin-right: 10px;
+	float: right;
+	margin-top: -4px;
+	vertical-align: middle;
 }

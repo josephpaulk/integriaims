@@ -1352,7 +1352,7 @@ else {
 
 	unset($table);
 	$table->class = 'search-table-button';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->id = 'lead_massive';
 	$table->data = array();
 	$table->style = array ();

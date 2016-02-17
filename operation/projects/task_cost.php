@@ -118,7 +118,7 @@ if ($operation == "add"){
 
 if ($operation == "list"){
 
-	echo "<h2>" . __('Cost unit listing'). "</h2><h4>$task_name</h4>";
+	echo "<h2>" . __('Cost unit listing'). "</h2><h4>". __('Task') .": ".$task_name."</h4>";
 	
 	$total = task_cost_invoices ($id_task);
 	
@@ -162,7 +162,7 @@ if ($operation == "list"){
 if ($operation == ""){
 
 	echo "<h2>";
-	echo __('Add cost unit')."</h3><h4> $task_name</h4>";
+	echo __('Add cost unit')."</h2><h4>". __('Task') .": ".$task_name."</h4>";
 	echo "<div id='upload_control' class='divform'>";
 	
 	$action = "index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project";
@@ -173,28 +173,28 @@ if ($operation == ""){
 	$table->class = 'search-table';
 	
 	$table->data[0][0] = "<b>" . __('Bill ID') . "</b>";
-	$table->data[0][0] .= print_input_text ('bill_id', $bill_id, '', 15, 50, true);
+	$table->data[1][0] .= print_input_text_extended ('bill_id', $bill_id, '', '', 15, 50, false, '', 'style="width:255px !important;"', true);
 	
-	$table->data[1][0] = "<b>" . __('Amount') . "</b>";
-	$table->data[1][0] .= print_input_text ('amount', $amount, '', 10, 20, true);//Check
+	$table->data[2][0] = "<b>" . __('Amount') . "</b>";
+	$table->data[3][0] .= print_input_text_extended ('amount', $amount, '', '', 10, 20, false, '', 'style="width:255px !important;"', true);//Check
 	
-	$table->data[2][0] = "<b>" . __('Description') . "</b>";
-	$table->data[2][0] .= print_input_text ('description', $description, '', 60, 250, true);
+	$table->data[4][0] = "<b>" . __('Description') . "</b>";
+	$table->data[5][0] .= print_input_text_extended ('description', '', '', '', 60, 250, false, '', 'style="width:255px !important;"', true);
 	
-	$table->data[3][0] = "<b>" . __('Attach a file') . "</b>";
-	$table->data[3][0] .= '__UPLOAD_CONTROL__';
+	$table->data[6][0] = "<b>" . __('Attach a file') . "</b>";
+	$table->data[7][0] .= '__UPLOAD_CONTROL__';
 	
 	
 	if ($operation == "") {
-		$table->colspan[4][0] = 3;
-		$table->data[4][0] .= print_button (__('Add'), "crt", false, '', 'class=""', true);
-		$table->data[4][0] .= print_input_hidden ('operation', "add", true);
+		$table->align['button'] = 'center';
+		$table->data[8]['button'] .= print_button (__('Add'), "crt", false, '', 'class=""', true);
+		$table->data[8]['button'] .= print_input_hidden ('operation', "add", true);
 		$button_name = "button-crt";
 	} else {
-		$table->colspan[4][0] = 3;
-		$table->data[4][0] .= print_input_hidden ('id', $id_profile, true);
-		$table->data[4][0] .= print_input_hidden ('update_profile', 1, true);
-		$table->data[4][0] .= print_button (__('Update'), "upd", false, '', 'class=""', true);
+		$table->align['button'] = 'center';
+		$table->data[8]['button'] .= print_input_hidden ('id', $id_profile, true);
+		$table->data[8]['button'] .= print_input_hidden ('update_profile', 1, true);
+		$table->data[8]['button'] .= print_button (__('Update'), "upd", false, '', 'class=""', true);
 		$button_name = "button-upd";
 	}
 	

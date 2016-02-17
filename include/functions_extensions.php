@@ -280,10 +280,10 @@ function extensions_call_tab_function ($tabId, $sec2, $tabsId = "") {
  */
 function extensions_print_side_menu_subsection ($sec, $sec2) {
 	global $config;
-	global $show_projects, $show_incidents, $show_inventory,
-			$show_customers, $show_kb, $show_file_releases,
-			$show_people, $show_todo, $show_agenda, $show_setup,
-			$show_wiki;
+	global $show_projects, $show_incidents, $show_inventory, 
+			$show_reports, $show_customers, $show_kb, 
+			$show_file_releases, $show_people, $show_todo, 
+			$show_agenda, $show_setup, $show_wiki;
 	
 	switch ($sec) {
 		case "projects":
@@ -293,6 +293,8 @@ function extensions_print_side_menu_subsection ($sec, $sec2) {
 			$show_subsection = $show_incidents != MENU_HIDDEN;
 			break;
 		case "inventory":
+			$show_reports = $show_reports != MENU_HIDDEN;
+		case "reports":
 			$show_subsection = $show_inventory != MENU_HIDDEN;
 			break;
 		case "customers":

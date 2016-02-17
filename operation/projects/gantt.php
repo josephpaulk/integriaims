@@ -82,7 +82,7 @@ echo "</tr>";
 echo "</table>";
 echo "</form>";
 
-echo '	<div id="gantt_here" style="width:98%; height:490px; margin: 40px auto"></div>';
+echo '	<div id="gantt_here" style="width:100%; height:490px; margin: 40px auto"></div>';
 
 echo '<div id="milestone_explanation" class="gantt_tooltip" style="display:none"></div>';
 

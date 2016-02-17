@@ -152,7 +152,7 @@ FileSharingListController = {
 					$filePackageFiles
 						.addClass("file_sharing_data_item")
 						.addClass("package-files")
-						.append("<img src='images/arrow_down.png' />")
+						.append("<img src='images/arrow_right.png' />")
 						.append($filePackageFilesData)
 						.hover(function(e) {
 							$(this).animate({
@@ -167,9 +167,11 @@ FileSharingListController = {
 						.click(function(e) {
 							if ($filePackageFiles.find("img").hasClass("rotated")) {
 								$filePackageFiles.find("img").removeClass("rotated");
+								$filePackageFiles.find("img").attr("src","images/arrow_right.png");
 							}
 							else {
 								$filePackageFiles.find("img").addClass("rotated");
+								$filePackageFiles.find("img").attr("src","images/arrow_down.png");
 							}
 							$filePackageFilesData.slideToggle();
 						});

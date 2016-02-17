@@ -634,7 +634,7 @@ else {
 		$table->style = array ();
 		$table->style[0] = 'font-weight: bold';
 		$table->head[0] = __('Name');
-		$table->head[1] = __('Wizard');
+		$table->head[1] = __('Description');
 		if (get_admin_user ($config['id_user'])) {
 			$table->head[2] = __('Delete');
 		}
@@ -644,7 +644,7 @@ else {
 			
 			$data[0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.
 				$type['id'].'">'.$type['name'].'</a>';
-			$data[1] = get_db_value ('name', 'tincident_type', 'id', $type['id_wizard']);
+			$data[1] = $type['description'];
 			
 			if (get_admin_user ($config['id_user'])) {
 				$data[2] = '<a href="index.php?sec=incidents&

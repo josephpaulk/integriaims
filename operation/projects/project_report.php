@@ -95,83 +95,83 @@ echo "</h4>";
 
 // Project info
 
-	//Name
-	$project_info .= '<tr><td colspan="2"><b>'.__('Name').':</b></td></tr>';
-	$project_info .= '<tr><td colspan="2">'.$name.'</td></tr>';
+//Name
+$project_info .= '<tr><td colspan="2"><b>'.__('Name').':</b></td></tr>';
+$project_info .= '<tr><td colspan="2">'.$name.'</td></tr>';
 
-	//Only show project progress if there is a project created
-	if ($id_project) {
-		$project_info .= '<tr><td colspan="2"><b>'.__('Current progress').':</b></td></tr>';
-		$completion =  format_numeric(calculate_project_progress ($id_project));
-		$project_info .= '<tr><td colspan="2">'.progress_bar($completion, 90, 20, $graph_ttl).'</td></tr>';
+//Only show project progress if there is a project created
+if ($id_project) {
+	$project_info .= '<tr><td colspan="2"><b>'.__('Current progress').':</b></td></tr>';
+	$completion =  format_numeric(calculate_project_progress ($id_project));
+	$project_info .= '<tr><td colspan="2">'.progress_bar($completion, 90, 20, $graph_ttl).'</td></tr>';
+}
+
+//start and end date
+$project_info .= '<tr><td colspan="2"><b>'.__('Start').':</b></td></tr>';
+$project_info .= '<tr><td colspan="2">'.$start_date.'</td></tr>';
+$project_info .= '<tr><td colspan="2"><b>'.__('End').':</b></td></tr>';
+$project_info .= '<tr><td colspan="2">'.$end_date.'</td></tr>';
+
+//owner
+$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
+$project_info .= '<tr><td colspan="2"><b>'.__('Project manager').':</b></td></tr>';
+$project_info .= '<tr><td colspan="2">'.get_db_value ("nombre_real", "tusuario", "id_usuario", $owner).'</td></tr>';
+
+//Project Group
+$project_info .= '<tr><td colspan="2"><b>'.__('Project group').':</b></td></tr>';
+$project_info .= '<tr><td colspan="2">'.get_db_value ("name", "tproject_group", "id", $id_project_group).'</td></tr>';
+
+// Description
+$project_info .= '<tr><td colspan="2"><b>'.__("Description").':</b></td></tr>';
+$project_info .= '<tr><td colspan="2">'.$description.'</td></tr>';
+
+// People involved
+
+// Calculation
+$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
+$total_hr = get_project_workunit_hours ($id_project);
+$total_planned = get_planned_project_workunit_hours($id_project);
+$total_planned = get_planned_project_workunit_hours($id_project);
+
+$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+$pr_hour = get_project_workunit_hours ($id_project, 1);
+$deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+$total = project_workunit_cost ($id_project, 1);
+$real = project_workunit_cost ($id_project, 0);
+
+$real = $real + get_incident_project_workunit_cost ($id_project);
+
+//Get users with tasks
+$sql = sprintf("SELECT DISTINCT id_user FROM trole_people_task, ttask WHERE ttask.id_project= %d AND ttask.id = trole_people_task.id_task", $id_project);
+
+$users_aux = get_db_all_rows_sql($sql);
+
+if(empty($users_aux)) {
+	$users_aux = array();
+}
+
+foreach ($users_aux as $ua) {
+	$users_involved[] = $ua['id_user'];
+}
+
+//Delete duplicated items
+if (empty($users_involved)) {
+	$users_involved = array();
+}
+else {
+	$users_involved = array_unique($users_involved);
+}
+
+$people_involved = "<tr><td colspan = '2'>";
+foreach ($users_involved as $u) {
+	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
+	if ($avatar != "") {
+		$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
+		$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 title='".$u."'/>";
+		$people_involved .= "</a>";
 	}
-
-	//start and end date
-	$project_info .= '<tr><td colspan="2"><b>'.__('Start').':</b></td></tr>';
-	$project_info .= '<tr><td colspan="2">'.$start_date.'</td></tr>';
-	$project_info .= '<tr><td colspan="2"><b>'.__('End').':</b></td></tr>';
-	$project_info .= '<tr><td colspan="2">'.$end_date.'</td></tr>';
-
-	//owner
-	$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-	$project_info .= '<tr><td colspan="2"><b>'.__('Project manager').':</b></td></tr>';
-	$project_info .= '<tr><td colspan="2">'.get_db_value ("nombre_real", "tusuario", "id_usuario", $owner).'</td></tr>';
-
-	//Project Group
-	$project_info .= '<tr><td colspan="2"><b>'.__('Project group').':</b></td></tr>';
-	$project_info .= '<tr><td colspan="2">'.get_db_value ("name", "tproject_group", "id", $id_project_group).'</td></tr>';
-
-	// Description
-	$project_info .= '<tr><td colspan="2"><b>'.__("Description").':</b></td></tr>';
-	$project_info .= '<tr><td colspan="2">'.$description.'</td></tr>';
-
-	// People involved
-
-	// Calculation
-	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
-	$total_hr = get_project_workunit_hours ($id_project);
-	$total_planned = get_planned_project_workunit_hours($id_project);
-	$total_planned = get_planned_project_workunit_hours($id_project);
-
-	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
-	$pr_hour = get_project_workunit_hours ($id_project, 1);
-    $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
-	$total = project_workunit_cost ($id_project, 1);
-    $real = project_workunit_cost ($id_project, 0);
-
-	$real = $real + get_incident_project_workunit_cost ($id_project);
-	
-	//Get users with tasks
-	$sql = sprintf("SELECT DISTINCT id_user FROM trole_people_task, ttask WHERE ttask.id_project= %d AND ttask.id = trole_people_task.id_task", $id_project);
-
-	$users_aux = get_db_all_rows_sql($sql);
-
-	if(empty($users_aux)) {
-		$users_aux = array();
-	}
-
-	foreach ($users_aux as $ua) {
-		$users_involved[] = $ua['id_user'];
-	}
-
-	//Delete duplicated items
-	if (empty($users_involved)) {
-		$users_involved = array();
-	}
-	else {
-		$users_involved = array_unique($users_involved);
-	}
-
-	$people_involved = "<tr><td colspan = '2'>";
-	foreach ($users_involved as $u) {
-		$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $u);
-		if ($avatar != "") {
-			$people_involved .= "<a href='index.php?sec=users&sec2=enterprise/godmode/usuarios/role_user_global&id_user=".$u."'>";
-			$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 title='".$u."'/>";
-			$people_involved .= "</a>";
-		}
-	}
-	$people_involved .= "</td></tr>";
+}
+$people_involved .= "</td></tr>";
 	
 echo '<div class="divform">';
 	echo print_container('project_info_report', __('Project info'), $project_info, 'no', true, true, "container_simple_title", "container_simple_div");
@@ -577,7 +577,7 @@ if ($id_project) {
 			echo print_container('project_activity_report', __('Project activity'), $project_activity, 'no', true, true, "container_simple_title", "container_simple_div");
 		}
 	echo '</div>';
-	echo '<div class="divpagecenter">';
+	echo '<div class="divresult">';
 		echo print_container('project_tasks_report', __('Project tasks'), $tasks_report, 'no', true, true, "container_simple_title", "container_simple_div");
 	echo '</div>';
 }

@@ -142,7 +142,7 @@ echo print_help_tip (__("Please note that you cannot upload .php or .pl files, a
 
 echo "<form id=\"form-incident_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
 echo 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
-echo 		"<table width=\"99%\">";
+echo 		"<table width=\"100%\">";
 echo 			"<td width=\"45%\">";
 echo 				__('Drop the file here');
 echo 			"<td>";
@@ -157,7 +157,7 @@ echo "</form>";
 
 echo "<div id='file_description_table_hook' style='display:none;'>";
 $table = new stdClass;
-$table->width = '99%';
+$table->width = '100%';
 $table->id = 'incident_file_description';
 $table->class = 'search-table-button';
 $table->data = array();

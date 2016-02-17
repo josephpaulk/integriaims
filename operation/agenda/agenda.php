@@ -29,7 +29,8 @@ if (! give_acl ($config['id_user'], $id_grupo, "AR")) {
 	exit;
 }
 
-echo '<h1>' . __('Agenda').'</h1>';
+echo '<h2>' . __('Agenda').'</h2>';
+echo '<h4>' . __('Full calendar').'</h4>';
 
 echo '<form method="post" action="index.php?sec=agenda&sec2=operation/agenda/agenda">';
 

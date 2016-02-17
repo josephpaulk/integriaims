@@ -43,12 +43,8 @@ $group = get_parameter ("group", 0);
 echo '<h2>'.__('User management') . '</h2>';
 echo '<h4>'.__('List users') . '</h4>';
 
-
-form_search_users (false, $filter_form);
-		
-user_search_result($filter=0, $ajax, $size_page=$config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
-
 echo "<div style='width:100%' class='divform'>";
+	form_search_users (false, $filter_form);
 	echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
 		echo "<table style='width:20%' class='search-table'>";
 			echo "<tr>";
@@ -63,6 +59,7 @@ echo "<div style='width:100%' class='divform'>";
 	echo "</form>";
 echo "</div>";
 
+user_search_result($filter=0, $ajax, $size_page=$config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
 ?>
 
 <script type="text/javascript" src="include/js/integria_users.js"></script>

@@ -77,15 +77,15 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
 
-//if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_reports != MENU_HIDDEN) {
-    // Incident
+if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_reports != MENU_HIDDEN) {
+    // REPORTS
     if ($sec == "reports" )
 	    echo "<li id='current' class='reports'>";
     else
 	    echo "<li class='reports'>";
     echo "<div>|</div>";
-    echo "<a href=''>".__('Reports')."</a></li>";
-//}
+    echo "<a href='index.php?sec=reports&sec2=operation/reporting/reports'>".__('Reports')."</a></li>";
+}
 
 // Customers
 
@@ -254,7 +254,7 @@ $(document).ready (function () {
 function agent_wizard_tab_setup() {		
 	$('.support_submenu').css('left', $('li.support a').offset().left - $('#wrap').offset().left)
 	$('.support_submenu').css('top', $('li.support a').offset().top + $('li.support a').height() + 12)
-	$('.support_submenu').css('width', $('li.support a').width() + 6)
+	$('.support_submenu').css('width', $('li.support a').width() + 50)
 }
 
 function agent_wizard_tab_show() {

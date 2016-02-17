@@ -93,14 +93,15 @@ if ($op == "new" || $id > 0) {
 		$description = $type["description"];
 		$icon = $type["icon"];
 		$type = null;
-
-		echo "<h1>".__('Update existing type')."</h1>";
+		echo "<h2>".__('File release type management')."</h2>";
+		echo "<h4>".__('Update existing type')."</h4>";
 	} else {
-		echo "<h1>".__('Create a new type')."</h1>";
+		echo "<h2>".__('File release type management')."</h2>";
+		echo "<h4>".__('Create a new type')."</h4>";
 	}
 
 	$table = new stdClass;
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->data = array();
 	$table->colspan = array();
@@ -131,7 +132,7 @@ if ($op == "new" || $id > 0) {
 // =======================
 else {
 
-	echo "<h1>".__('File release type management')." &raquo; ".__('Defined types')."</h1>";
+	echo "<h2>".__('File release type management')."</h2><h4>".__('Defined types')."</h4>";
 
 	$types = get_file_types(false, true);
 	if (!$types) {

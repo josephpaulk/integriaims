@@ -159,7 +159,7 @@ if ($create || $id) {
 		echo "<h3>".__('Update existing object')."</h3>";
 	}*/
 	
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	

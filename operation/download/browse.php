@@ -310,8 +310,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	}
 
 	if ($id == -1) {
-
-		echo "<h1>".__('Create a new file release')."</h1>";
+		
+		echo "<h2>".__('Downloads')."</h2>";
+		echo "<h4>".__('Create a new file release')."</h4>";
 
 		$current_directory = $config["homedir"]. "/attachment/downloads";
 
@@ -369,11 +370,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		}
 
 	} else {
-		echo "<h1>".__('Update existing file release')."</h1>";
+		echo "<h2>".__('Downloads')."</h2>";
+		echo "<h4>".__('Update existing file release')."</h4>";
 	}
 	
 	$table = new stdClass;
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->id = 'download_data';
 	$table->class = 'search-table-button';
 	$table->data = array();
@@ -415,7 +417,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 	
 	if ($show_types) {
 
-		echo "<h1>".__('Download')." &raquo; ".__('Types')."</h1>";
+		echo "<h2>".__('Download')."</h2><h4>".__('Types')."</h4>";
 		print_file_types_table();
 
 	} else {
@@ -424,7 +426,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		// Show search controls
 		// ==================================================================
 		
-		echo "<h1>".__('Downloads')." &raquo; ".__('Defined data')."</h1>";
+		echo "<h2>".__('Downloads')."</h2><h4>".__('Defined data')."</h4>";
 		
 		// Search parameter 
 		$free_text = get_parameter ("free_text", "");
@@ -433,7 +435,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		
 		// Search filters
 		$table = new stdClass;
-		$table->width = '99%';
+		$table->width = '100%';
 		$table->class = 'search-table-button';
 		$table->data = array();
 		$table->colspan = array();
@@ -483,7 +485,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		else {
 
 			$table = new stdClass;
-			$table->width = '99%';
+			$table->width = '100%';
 			$table->class = 'listing';
 			$table->head = array();
 			$table->data = array();

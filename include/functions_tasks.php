@@ -269,7 +269,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			//Start/End Date
 			$date_start_end = "";
 			if ($task["start"] == $task["end"]){
-				$date_start_end .= date ('Y-m-d', strtotime ($task['start'])) . "<br>";
+				$date_start_end .= date ('Y-m-d', strtotime ($task['start'])) . " / ";
 				$date_start_end .= get_periodicity ($task['periodicity']);
 			} else {
 				// Start
@@ -277,7 +277,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 				$end = strtotime ($task['end']);
 				$now = time ();
 				
-				$date_start_end .= date ('Y-m-d', $start) ."<br>";
+				$date_start_end .= date ('Y-m-d', $start) ." / ";
 				
 				if ($task['completion'] == 100) {
 					$date_start_end .= '<span style="color: green">';
@@ -292,13 +292,13 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			}
 			
 			// New WO / Incident
-			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
+			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work Unit')));
 			$incident_icon = print_image ("images/incident.png", true, array ("style" => 'vertical-align: middle;', "id" => "incident_icon", "title" => __('Ticket')));;
 			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=".$task['id_project']."&id_task=".$task['id']."'>$wo_icon</a>";
 			$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
 			$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
 			
-			echo "<td><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+			echo "<td style='width:105px;'><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
 			echo "<script type=\"text/javascript\">
 					  $(document).ready (function () {
 						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\");
@@ -307,12 +307,12 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			echo $img;
 			echo "</a></td>";
 			echo "<td>".$priority."</td>";
-			echo "<td>".$name."</td>";
-			echo "<td>".$progress."</span></td>";
-			echo "<td>".$estimation."</td>";
-			echo "<td>".$people."</td>";
-			echo "<td>".$date_start_end."</td>";
-			echo "<td>".$time_used."</td>";
+			echo "<td style='width:250px;'>".$name."</td>";
+			echo "<td style='width:100px;'>".$progress."</span></td>";
+			echo "<td style='width:50px;'>".$estimation."</td>";
+			echo "<td style='width:30px;'>".$people."</td>";
+			echo "<td style='width:200px;'>".$date_start_end."</td>";
+			echo "<td >".$time_used."</td>";
 			echo "<td>".__('New').": ".$launch_icons."</td>";
 		} else {
 			

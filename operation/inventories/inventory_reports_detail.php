@@ -160,7 +160,7 @@ else
 
 echo $result_msg;
 
-$table->width = '99%';
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->data = array ();
 $table->colspan = array ();
