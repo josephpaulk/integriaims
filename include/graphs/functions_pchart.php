@@ -1,7 +1,7 @@
 <?php
 
-// Copyright (c) 2005-2011 Artica Soluciones Tecnologicas
-// Please see http://pandorafms.org for full contribution list
+// Copyright (c) 2005-2016 Artica Soluciones Tecnologicas
+// Please see http://integriaims.com for full contribution list
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License

@@ -1911,9 +1911,7 @@ td.login_button {
 .landing_table {
 	width: 100%;
 	margin: 0 auto;
-	margin-top: 10px;
-	border-collapse:separate;
-	border-spacing:10px;	
+	margin-top: 15px;	
 }
 
 .landing_table td {
@@ -3439,4 +3437,8 @@ img {
 	float: right;
 	margin-top: -4px;
 	vertical-align: middle;
+}
+
+.legendColorBox, .legendLabel {
+	border: 0px none !important;
 }

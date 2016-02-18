@@ -52,8 +52,9 @@ if ($news || $agenda || $todo || $projects || $incidents) {
 }
 
 if ($info) {
-
-	echo '<table class="landing_table">';
+	
+	echo "<div style='float:left; width:106%;'>";
+	echo '<table class="landing_table" width=100%>';
 	echo "<tr>";
 	// LEFT SIDE
 	echo "<td>";
@@ -161,7 +162,7 @@ if ($info) {
 	$subtitle .= __('First 5 events for next ten days');
 	$subtitle .= "</span>";
 	
-	echo print_container('agenda_home', __('Agenda') . $subtitle . $much_more, $agenda_home, 'no');
+	echo print_container_div('agenda_home', __('Agenda') . $subtitle . $much_more, $agenda_home, 'no');
 	
 	
 	// ==============================================================
@@ -194,7 +195,7 @@ if ($info) {
 	$subtitle .= projects_active_user ($config["id_user"]);
 	$subtitle .= "</span>";
 	
-	echo print_container('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no');
+	echo print_container_div('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no');
 	
 	echo "</td>";
 
@@ -244,7 +245,7 @@ if ($info) {
 	$subtitle .= __('Total active WO'). ": ". todos_active_user ($config["id_user"]) . " ".__('(Showing only five)');
 	$subtitle .= "</span>";
 	
-	echo print_container('workorders_home', __('Work orders') . $subtitle . $much_more, $workorders_home, 'no');
+	echo print_container_div('workorders_home', __('Work orders') . $subtitle . $much_more, $workorders_home, 'no');
 	
 	// ==============================================================
 	// Show Incident items
@@ -297,11 +298,13 @@ if ($info) {
 	$subtitle .= __('Total active incidents').": ".incidents_active_user ($config["id_user"]);
 	$subtitle .= "</span>";
 	
-	echo print_container('incidents_home', __('Incidents') . $subtitle . $much_more, $incidents_home, 'no');
+	echo print_container_div('incidents_home', __('Incidents') . $subtitle . $much_more, $incidents_home, 'no');
 	
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
+	
+	echo "</div>";
 
 } else {
 	 if (give_acl ($config["id_user"], 0, "AR")){
