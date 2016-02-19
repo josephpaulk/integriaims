@@ -84,7 +84,7 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     else
 	    echo "<li class='reports'>";
     echo "<div>|</div>";
-    echo "<a href='index.php?sec=reports&sec2=operation/reporting/reports'>".__('Reports')."</a></li>";
+    echo "<a href='index.php?sec=reports&sec2=enterprise/operation/reporting/reports_list'>".__('Reports')."</a></li>";
 }
 
 // Customers

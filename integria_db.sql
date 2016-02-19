@@ -1347,3 +1347,27 @@ CREATE TABLE `tworkflow_status_mapping` (
   `initial` int default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treport` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre`  mediumtext NOT NULL,
+  `type` tinyint unsigned NOT NULL DEFAULT 0,
+  `subtype` tinyint unsigned NOT NULL DEFAULT 0,
+  `id_group` mediumint(9) NOT NULL default 0,
+  `fields_to_show` longtext NOT NULL default '',
+  `order_by` text NOT NULL default '',
+  `group_by` text NOT NULL default '',
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treport_type` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre`  mediumtext NOT NULL,
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treport_subtype` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre`  mediumtext NOT NULL,
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
