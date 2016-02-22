@@ -37,8 +37,8 @@ if ($operation == "read"){
 	$result = mysql_query ($sql);
 	return;
 }
-echo "<html><head>";
-echo "</head>";
+echo "<html lang='en-US'>";
+echo "<head><meta charset='UTF-8'></head>";
 echo "<body style='padding: 15px; margin: 20px;'>";
 
 if ($operation == "subscribe") {
@@ -50,7 +50,7 @@ if ($operation == "subscribe") {
 		return;
 	
 	$now = date ("Y-m-d H:i:s");
-	echo "<form method=post action='".$config["base_url"]."/include/newsletter.php'>";
+	echo "<form method=post action='".$config["base_url"]."include/newsletter.php'>";
 
 	if (!$clean) {
 		echo "<h3>";
@@ -76,9 +76,10 @@ if ($operation == "subscribe") {
 	echo "<input type=hidden name='validation1' value='".md5($config["dbpass"].$bool)."'>";
 	echo "<input type=hidden name='validation2' value='$bool'>";
 	echo "<input type=hidden name='operation' value='subscribe_data'>";
-	echo "<input type=hidden name='newsletter' value='$id'>";
-	
+	echo "<input type=hidden name='newsletter' value='$id'></td>";
+
 	echo "</table></form>";
+	echo "<button onclick='history.go(-1);'>".__('Back')."</button>";
 	return;
 }
 
@@ -92,7 +93,7 @@ if ($operation == "subscribe_data"){
 	$now = date ("Y-m-d H:i:s");
 	
 	echo "<h3>". __("Thanks for your subscription. You should receive an email to confirm you have been subscribed to this newsletter")."</h3>";
-	
+	echo "<button onclick='history.go(-1);'>".__('Back')."</button>";
 	if ($validation1 == md5($config["dbpass"].$validation2)){
 	
 		// check if already subscribed
@@ -108,7 +109,7 @@ if ($operation == "subscribe_data"){
 
 				$text .= __("Welcome to")." ".$newsletter_name. " ".__("newsletter"). "\n\n";
 				$text .= __("Please use this URL to de-subscribe yourself from this newsletter:")."\n\n";
-				$text .= $config["base_url"]."/include/newsletter.php?operation=desubscribe&id=$newsletter";
+				$text .= $config["base_url"]."include/newsletter.php?operation=desubscribe&id=$newsletter";
 				$text .= "\n\n".__("Thank you");
 				
 				integria_sendmail ($email, "Newsletter subscription - $newsletter_name", $text);
@@ -130,7 +131,7 @@ if ($operation == "desubscribe") {
 		return;
 	
 	$now = date ("Y-m-d H:i:s");
-	echo "<form method=post action='".$config["base_url"]."/include/newsletter.php'>";
+	echo "<form method=post action='".$config["base_url"]."include/newsletter.php'>";
 	
 	if (!$clean) {
 		echo "<h3>";

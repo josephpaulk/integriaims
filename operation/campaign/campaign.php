@@ -52,7 +52,7 @@ switch ($tab) {
 
 echo "<h1>".$title;
 
-if ($tab == "editor" ||$tab == "stats") {
+if (($tab == "editor" and $id) || $tab == "stats") {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo '<li>';
