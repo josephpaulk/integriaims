@@ -1306,7 +1306,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			else 
 				$name_owner = '--';
 
-			$data[2] = "<a href=".'index.php?sec=inventory&sec2=users&sec2=operation/users/user_edit&id='.$inventory['owner'].">".$name_owner.'</a>';
+			$data[2] = "<a href=".'index.php?sec=users&sec2=operation/users/user_edit&id='.$inventory['owner'].">".$name_owner.'</a>';
 
 			if ($inventory["id_parent"] != 0) {
 				$name_parent = get_db_value('name', 'tinventory', 'id', $inventory['id_parent']);
@@ -1335,7 +1335,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			
 			if ($inventory['id_contract'] != 0) {
 				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
-				$data[6] = "<a href=".'index.php?sec=inventory&sec2=customers&sec2=operation/contracts/contract_detail&id_contract='.$inventory['id_contract'].">".$name_contract.'</a>';
+				$data[6] = "<a href=".'index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$inventory['id_contract'].">".$name_contract.'</a>';
 			} else { 
 				$name_contract = '--';
 				$data[6] = $name_contract;
