@@ -191,20 +191,51 @@ if ($operation == 'insert') {
 	$wu_user = $id_user;
 	$work_home = get_parameter ("work_home");
 	// Multi-day assigment
-	if ($split){
-		$nuevafecha = strtotime ( '+1 day' , strtotime ( $timestamp ) );
-		$timestamp = date ( 'Y-m-j' , $nuevafecha );
-	}
-	if ($forward && $duration > $config["hours_perday"]) {
+	// Forward
+	if (($forward) && ($duration > $config["hours_perday"])) {
 		$total_days = ceil ($duration / $config["hours_perday"]);
 		$total_days_sum = 0;
 		$hours_day = 0;
 		for ($i = 0; $i < $total_days; $i++) {
-			if (! $forward)
-				$current_timestamp = calcdate_business_prev ($timestamp, $i);
-			else
-				$current_timestamp = calcdate_business ($timestamp, $i);
+			$current_timestamp = calcdate_business ($timestamp, $i);
+			if (($total_days_sum + 8) > $duration)
+				$hours_day = $duration - $total_days_sum;
+			else 
+				$hours_day = $config["hours_perday"];
+				
+			$total_days_sum += $hours_day;
 			
+			$sql = sprintf ('INSERT INTO tworkunit 
+				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
+				VALUES ("%s", %f, "%s", "%s", %d, %d, %d, %d)',
+				$current_timestamp, $hours_day, $id_user, $description,
+				$have_cost, $id_profile, $public, $work_home);
+				
+			$id_workunit = process_sql ($sql, 'insert_id');
+			if ($id_workunit !== false) {
+				$sql = sprintf ('INSERT INTO tworkunit_task 
+					(id_task, id_workunit) VALUES (%d, %d)',
+					$id_task, $id_workunit);
+				$result = process_sql ($sql, 'insert_id');
+				if ($result !== false) {
+					$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+				} else {
+					$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+				}
+			}
+			else {
+				$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+			}
+		}
+		mail_project (0, $config['id_user'], $id_workunit, $id_task,
+			"This is part of a multi-workunit assigment of $duration hours");
+	// backward
+	} elseif (($split) && ($duration > $config["hours_perday"])) {
+		$total_days = ceil ($duration / $config["hours_perday"]);
+		$total_days_sum = 0;
+		$hours_day = 0;
+		for ($i = 0; $i < $total_days; $i++) {
+			$current_timestamp = calcdate_business_prev ($timestamp, $i);
 			if (($total_days_sum + 8) > $duration)
 				$hours_day = $duration - $total_days_sum;
 			else 
@@ -400,9 +431,7 @@ echo "</ul>";
 
 //If we inserted multiple workunits then 
 if ($operation == 'multiple_wu_insert') {
-	
 	echo "<div id='tab1' class='ui-tabs-panel ui-tabs-hide'>"; //Single WU
-	
 }
 else {
 	echo "<div id='tab1' class='ui-tabs-panel'>"; //Single WU
@@ -479,14 +508,12 @@ $table->data[3][0] = print_checkbox ('have_cost', 1, $have_cost, true,
 $table->data[3][1] = print_checkbox ('public', 1, $public, true, __('Public'));
 
 if (! $id_workunit) {
-	$table->data[4][0] = print_checkbox ('forward', 1, false, true,
-		__('Forward'));
-	$table->data[4][0] .= print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'),
+	$table->data[4][0] = print_checkbox ('forward', 1, false, true, __('Forward'));
+	$table->data[4][0] .= print_help_tip (__('If this checkbox is activated, propagation will be forward'),
 		true);
 	
-	$table->data[4][1] = print_checkbox ('split', 1, false, true,
-		__('Split > 1day'));
-	$table->data[4][1] .= print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'),
+	$table->data[4][1] = print_checkbox ('split', 1, false, true, __('Backward'));
+	$table->data[4][1] .= print_help_tip (__('If this checkbox is activated, propagation will be backward'),
 		true);
 }
 
@@ -586,7 +613,10 @@ function username_hook () {
 //single task validation form
 function validate_single_form() {
 	var val = $("#id_task").val();
-	
+	var forward = $("#checkbox-forward:checked").val();
+	var back = $("#checkbox-split:checked").val();
+	console.log(forward);
+	console.log(back);
 	if (val == 0) {
 		
 		var error_textbox = document.getElementById("error_task");
@@ -599,7 +629,22 @@ function validate_single_form() {
 		pulsate("#error_task");
 		return false;  
 		
-	} 
+	}
+	 
+	if (forward == 1 && back == 1) {
+		
+		var error_textbox = document.getElementById("error_check");
+		console.log(error_textbox);
+		if (error_textbox == null) {
+			$('#single_task_form').prepend("<h3 id='error_check' class='error'><?php echo __("You can not have both click forward and backward")?></h3>");
+		}
+		
+		pulsate("#checkbox-forward");
+		pulsate("#checkbox-split");
+		pulsate("#error_check");
+		return false;  
+		
+	}
 	
 	return true;
 }
