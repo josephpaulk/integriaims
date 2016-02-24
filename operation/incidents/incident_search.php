@@ -45,6 +45,14 @@ if (defined ('AJAX')) {
 	$filter['left_sla'] = $form_values['search_left_sla'];
 	$filter['right_sla'] = $form_values['search_right_sla'];
 	$filter['show_hierarchy'] = $form_values['show_hierarchy'];
+	
+	$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
+
+	if ($type_fields) {
+		foreach ($type_fields as $type_field) {
+			$filter['type_field_'.$type_field['id']] = $form_values['search_type_field_'.$type_field['id']];
+		}
+	}
 
 	$result = create_custom_search ($search_name, 'incidents', $filter);
 }
