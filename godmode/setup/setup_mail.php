@@ -72,6 +72,7 @@ if ($update) {
 	$config["news_batch_newsletter"] = get_parameter ("news_batch_newsletter", 0);
 	$config["batch_email_validation"] = get_parameter ("batch_email_validation", 0);
 	$config["active_validate"] = get_parameter("active_validate", 0);
+	$config["select_pop_imap"] = get_parameter("select_pop_imap");
 	
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
 	update_config_token ("FOOTER_EMAIL", $config["FOOTER_EMAIL"]);
@@ -95,12 +96,17 @@ if ($update) {
 	update_config_token ("news_batch_newsletter", $config["news_batch_newsletter"]);
 	update_config_token ("batch_email_validation", $config["batch_email_validation"]);
 	update_config_token ("active_validate", $config["active_validate"]);
+	update_config_token ("select_pop_imap", $config["select_pop_imap"]);
 }
+
+$popimap[0] = __('POP');
+$popimap[1] = __('IMAP');
 
 $table = new StdClass();
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
+
 $table->data = array ();
 
 $table->data[2][0] = print_input_text ("notification_period", $config["notification_period"],
@@ -144,7 +150,8 @@ $table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsle
 $table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
    
 $table->colspan[8][0] = 3;
-$table->data[8][1] = "<h4>".__("POP/IMAP Parameters")."</h4>";
+$table->data[8][0] = "<h4>".__("POP/IMAP Parameters")."</h4>";
+$table->data[8][1] = print_select ($popimap, "select_pop_imap", $config["select_pop_imap"], '','','',true,0,true, __('Select IMAP or POP'));
 
 $table->data[9][0] = print_input_text ("pop_host", $config["pop_host"],
 	'', 25, 30, true, __('POP/IMAP Host'));

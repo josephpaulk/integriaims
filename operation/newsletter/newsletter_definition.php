@@ -214,13 +214,13 @@ if ($newsletters !== false) {
 		
 		$data[2] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"]);
 		
-		$data[3] = "<a href='".$config["base_url"]."/include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
+		$data[3] = "<a href='".$config["base_url"]."include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
 
-		$data[3] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
+		$data[3] .= "<a href='".$config["base_url"]."include/newsletter.php?operation=subscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
 
-		$data[4] = "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
+		$data[4] = "<a href='".$config["base_url"]."include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."'>".__("Full form")."</a><br>";
 
-		$data[4] .= "<a href='".$config["base_url"]."/include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
+		$data[4] .= "<a href='".$config["base_url"]."include/newsletter.php?operation=desubscribe&id=".$newsletter["id"]."&clean=1'>".__("Clean form")."</a>";
 		
 		$validated_addr = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"] . " AND validated = 1 AND status = 0");
 		$data[5] = "<a href='index.php?sec=customers&sec2=operation/newsletter/address_definition&search_status=0&search_validate=0&search_newsletter=".

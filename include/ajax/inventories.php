@@ -223,7 +223,7 @@ if ($get_inventory_search) {
 	$table_search->data[2][1] = user_print_autocomplete_input($params_associated);
 	
 	$companies = get_companies();
-	array_unshift($companies, __("All"));
+	$companies[0] = __("All");
 	$table_search->data[2][2] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 200px;');
 	
 	$table_search->data[3][0] = "&nbsp;";

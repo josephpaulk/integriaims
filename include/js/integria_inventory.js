@@ -254,10 +254,13 @@ function show_fields() {
 				
 					if (value['type'] == 'external') {
 						
+						element.readOnly = true;
 						id_object_type_field = value['id'];
 						
 						a = document.createElement('a');
 						a.title = __("Show table");
+						a2 = document.createElement('a');
+						a2.title = __("Delete");
 						table_name = value['external_table_name'];
 						id_table = value['external_reference_field'];
 						parent_name_enco = value['label_parent_enco'];
@@ -270,6 +273,7 @@ function show_fields() {
 					
 						//~ a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'")';
 						a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'","'+external_label+'")';
+						a2.href = 'javascript: removeExternal(id="'+element.id+'")';
 						
 						img=document.createElement('img');
 						img.id='img_show_external_table';
@@ -277,8 +281,15 @@ function show_fields() {
 						img.width='16';
 						img.src='images/lupa.gif';
 						
+						img2=document.createElement('img');
+						img2.id='img_delete_external_table';
+						img2.src='images/cross.png';
+						
 						a.appendChild(img);
 						lbl.appendChild(a);
+						
+						a2.appendChild(img2);
+						lbl.appendChild(a2);
 						
 						id_inventory = $('#text-id_object_hidden').val(value['data']);
 					}
@@ -558,6 +569,10 @@ function removeUser() {
 	});
 
 	$('input[name^="users"][value="'+selected_id+'"]').remove();
+}
+
+function removeExternal(id) {
+	$("#"+id).attr("value", "");	
 }
 
 // Show the modal window of inventory search in incident detail

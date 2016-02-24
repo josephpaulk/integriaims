@@ -68,7 +68,24 @@ if ($export_csv_invoices) {
 		$rows_aux[$key]['amount4'] = $invoice['amount4'];
 		$rows_aux[$key]['amount5'] = $invoice['amount5'];
 		$rows_aux[$key]['total_amount'] = $invoice['amount1']+$invoice['amount2']+$invoice['amount3']+$invoice['amount4']+$invoice['amount5'];
-		$rows_aux[$key]['tax'] = $invoice['tax'];
+		if (substr($invoice["tax"], -$long_tax, 1) == '{'){
+			$rows_aux2 = json_decode($invoice['tax']);
+			foreach ($rows_aux2 as $key2=>$invoice2) {
+				$rows_aux[$key][$key2] = $invoice2;	
+			}
+		} else {
+			$rows_aux[$key]['tax'] = $invoice["tax"];
+		}
+		if (substr($invoice["tax_name"], -$long_tax, 1) == '{'){
+			$rows_aux3 = json_decode($invoice['tax_name']);
+			foreach ($rows_aux3 as $key3=>$invoice3) {
+				$rows_aux[$key][$key3] = $invoice3;	
+			}
+		} else {
+			$rows_aux[$key]['tax_name'] = $invoice["tax_name"];
+		}
+		$rows_aux[$key]['retention'] = $invoice['irpf'];
+		$rows_aux[$key]['concept_retention'] = $invoice['concept_irpf'];
 		$rows_aux[$key]['currency'] = $invoice['currency'];
 		$rows_aux[$key]['description'] = $invoice['description'];
 		$rows_aux[$key]['id_attachment'] = $invoice['id_attachment'];
@@ -76,6 +93,7 @@ if ($export_csv_invoices) {
 		$rows_aux[$key]['locked_id_user'] = $invoice['locked_id_user'];
 		$rows_aux[$key]['invoice_create_date'] = $invoice['invoice_create_date'];
 		$rows_aux[$key]['invoice_payment_date'] = $invoice['invoice_payment_date'];
+		$rows_aux[$key]['invoice_expiration_date'] = $invoice['invoice_expiration_date'];
 		$rows_aux[$key]['status'] = $invoice['status'];
 		$rows_aux[$key]['invoice_type'] = $invoice['invoice_type'];
 		$rows_aux[$key]['reference'] = $invoice['reference'];
@@ -85,7 +103,6 @@ if ($export_csv_invoices) {
 	$rows = $rows_aux;
 	
 	$filename = clean_output ('invoices_export').'-'.date ("YmdHi");
-	
 }
 
 if ($export_csv_contracts) {
@@ -262,11 +279,12 @@ if ($export_csv_audit) {
 
 if ($export_csv_tickets) {
 	$filter = unserialize_in_temp($config["id_user"]);
+	
 	$rows = incidents_search_result ($filter, false, true, false, false, true, false, true);
 
 	if ($rows === false)
 		return;	
-
+	
 	$filename = clean_output ('tickets_export').'-'.date ("YmdHi");
 }
 
@@ -274,7 +292,6 @@ if ($export_csv_tickets) {
 if (empty($rows))
 	die(__('Empty data'));
 
-$csv_head = implode(';', array_keys($rows[0]));
 $csv_lines = array();
 
 $search = array();
@@ -288,26 +305,50 @@ $search[] = "\n";
 $search[] = '"';
 // Delete ' !!!
 $search[] = "'";
+// Delete , !!!
+$search[] = ",";
+// Delete , !!!
+$search[] = ";";
 
 // Item / data
+// select array more long
+$count_rows = count($rows);
+$max_rows = 0;
+for ($i=0; $i < $count_rows; $i++){
+	if (count($rows[$i]) > $max_rows){
+		$max_rows = $rows[$i];	
+	}	
+}
+
+//selects all fields of different arrays
 foreach ($rows as $row) {
+	$diff = array_diff_key($row, $max_rows);
+	if($diff){
+		foreach ($diff as $key => $values){
+			$max_rows[$key] = " ";
+		}
+	}
+}
+$max_rows_prepare = $max_rows;
 
+
+foreach ($rows as $row) {
+	//head
+	$csv_head = implode(';', array_keys($max_rows_prepare));
+	//inicialice $line
 	$line = array();
-
-	foreach ($row as $value) {
-		$cell = str_replace ($search, " ", safe_output($value));
+	//loop that compares whether a field
+	foreach ($max_rows_prepare as $k=>$v){
+		if(array_key_exists($k, $row)){
+			$cell = str_replace ($search, " ", safe_output($row[$k]));
+		} else {
+			$cell = " ";
+		}
 		// Change ; !!	
 		$cell = str_replace (";", ",", $cell);
-
 		$line[] = $cell;
 	}
-
 	$line = implode(';', $line);
-	
-	if ($export_csv_invoices) {
-		$line = str_replace (".", ",", $line);
-	}
-
 	$csv_lines[] = $line;
 }
 
@@ -324,7 +365,7 @@ $standard_encoding = (bool) $config['csv_standard_encoding'];
 
 // Item / data
 foreach ($csv_lines as $line) {
-	if ($standard_encoding)
+	if (!$standard_encoding)
 		echo $line . "\n";
 	else
 		echo mb_convert_encoding($line, 'UTF-16LE', 'UTF-8') . "\n";

@@ -57,7 +57,7 @@ switch ($tab) {
 echo "<h2>"._('Campaigns') . "</h2>";
 echo "<h4>".$title;
 
-if ($tab == "editor" ||$tab == "stats") {
+if (($tab == "editor" and $id) || $tab == "stats") {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo '<li>';

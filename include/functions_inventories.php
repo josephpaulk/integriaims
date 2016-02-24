@@ -1306,7 +1306,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			else 
 				$name_owner = '--';
 
-			$data[2] = "<a href=".'index.php?sec=inventory&sec2=users&sec2=operation/users/user_edit&id='.$inventory['owner'].">".$name_owner.'</a>';
+			$data[2] = "<a href=".'index.php?sec=users&sec2=operation/users/user_edit&id='.$inventory['owner'].">".$name_owner.'</a>';
 
 			if ($inventory["id_parent"] != 0) {
 				$name_parent = get_db_value('name', 'tinventory', 'id', $inventory['id_parent']);
@@ -1335,7 +1335,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			
 			if ($inventory['id_contract'] != 0) {
 				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
-				$data[6] = "<a href=".'index.php?sec=inventory&sec2=customers&sec2=operation/contracts/contract_detail&id_contract='.$inventory['id_contract'].">".$name_contract.'</a>';
+				$data[6] = "<a href=".'index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$inventory['id_contract'].">".$name_contract.'</a>';
 			} else { 
 				$name_contract = '--';
 				$data[6] = $name_contract;
@@ -1413,7 +1413,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 								$table_info->data[$j][$j] .= $ob_field['data'];
 								$j++;
 								if (isset($ob_field['external_label']) && ($ob_field['external_label'] != '')) {
-									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_reference_field']." = ".$ob_field['data']);
+									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_label']." = '".$ob_field['data'] ."'" );
 
 									$table_info->align[$j] = 'left;';
 									$table_info->data[$j][$j] = '<b>'.$ob_field['external_label'];

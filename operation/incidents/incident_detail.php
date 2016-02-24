@@ -314,6 +314,7 @@ $is_enterprise = false;
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
 	require_once ("enterprise/load_enterprise.php");
+	require_once ("enterprise/include/functions_incidents.php");
 	$is_enterprise = true;
 }
 
@@ -572,8 +573,12 @@ if ($action == 'update') {
 	
 	if ($result === false)
 		$result_msg = "<h3 class='error'>".__('There was a problem updating ticket')."</h3>";
-	else
+	else {
 		$result_msg = "<h3 class='suc'>".__('Ticket successfully updated')."</h3>";
+		if ($is_enterprise) {
+			incidents_run_realtime_workflow_rules ($id);
+		}
+	}
 
 	// Email notify to all people involved in this incident
 	// Email in list email-copy
@@ -762,6 +767,11 @@ if ($action == "insert" && !$id) {
 					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
 					process_sql_insert('tincident_field_data', $values_insert);
 				}
+			}
+			
+			// EXECUTE WORKFLOW RULES AT REALTIME
+			if ($is_enterprise) {
+				incidents_run_realtime_workflow_rules ($id);
 			}
 			
 			// ATTACH A FILE IF IS PROVIDED

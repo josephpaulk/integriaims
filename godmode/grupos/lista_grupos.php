@@ -61,8 +61,8 @@ if ($create_group) {
 	$name = (string) get_parameter ('name');
 	$icon = (string) get_parameter ('icon');
     $parent = (int) get_parameter ('parent');
-	$soft_limit = (int) get_parameter ('soft_limit');
-	$hard_limit = (int) get_parameter ('hard_limit');
+	$soft_limit = (int) get_parameter ('soft_limit', 0);
+	$hard_limit = (int) get_parameter ('hard_limit', 0);
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
 	$id_inventory = (int) get_parameter("id_inventory", 0);
 	$banner = (string) get_parameter ('banner');
