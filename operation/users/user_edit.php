@@ -224,7 +224,7 @@ $table->data[1][1] = print_input_text ('location', $location, '', 20, 250, true,
 
 if ($has_permission) {
 	$table->data[2][0] = print_input_text ('email', $email, '', 20, 60, true, __('Email'));
-	$table->data[2][0] .= print_help_tip (__('You can write multiple emails divided by commas'), true);
+	$table->data[2][0] .= print_help_tip (__('You can add several email addresses, separated by commas.'), true);
 	$table->data[2][1] = print_input_text ('phone', $phone, '', 20, 40, true, __('Telephone'));
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 		'language_code', $lang, '', __('Default'), '', true, false, false, __('Language'));
