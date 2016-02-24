@@ -350,8 +350,8 @@ if ($set_params) {
 	if (!$old_incident['old_status2']) {
 		$values['old_status'] = $old_incident["old_status"];
 		$values['old_resolution'] = $old_incident["old_resolution"];
-		$values['old_status2'] = $estado;
-		$values['old_resolution2'] = $resolution;
+		$values['old_status2'] = $values['estado'];
+		$values['old_resolution2'] = $values['resolution'];
 	} else {
 		if (($old_incident['old_status2'] == $values['estado']) && ($old_incident['old_resolution2'] == $values['resolution'])) {
 			$values['old_status'] = $old_incident["old_status"];
@@ -361,8 +361,8 @@ if ($set_params) {
 		} else {
 			$values['old_status'] = $old_incident["old_status2"];
 			$values['old_resolution'] = $old_incident["old_resolution2"];
-			$values['old_status2'] = $estado;
-			$values['old_resolution2'] = $resolution;
+			$values['old_status2'] = $values['estado'];
+			$values['old_resolution2'] = $values['resolution'];
 		}
 	}
 

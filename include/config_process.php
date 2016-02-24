@@ -98,8 +98,6 @@ session_start();
 
 global $develop_bypass;
 
-$develop_bypass = 0;
-
 /* Help to debug problems. Override global PHP configuration */
 if (!isset($develop_bypass)) $develop_bypass = 0;
 
