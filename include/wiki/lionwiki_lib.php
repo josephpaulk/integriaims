@@ -578,8 +578,10 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 				if (substr($f, -4) == '.bak')
 					$files[] = $f;
 			
+			$i = count($files);
 			rsort($files);
-			
+			$f1=$files[$i - 1];
+			$f2=$files[$i - 2];
 			error_show_lionwiki("Location:$self" . "action=diff&page=".u($page)."&f1=$files[0]&f2=$files[1]");
 		}
 		
