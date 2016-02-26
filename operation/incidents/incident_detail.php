@@ -738,15 +738,6 @@ if ($action == "insert" && !$id) {
 				// Do not send mail in this WU
 				create_workunit ($id, $wu_text, $editor, $config["iwu_defaultime"], 0, "", 1, 0);
 			}
-
-
-			// Email notify to all people involved in this incident
-			if ($email_copy != "") { 
-				mail_incident ($id, $usuario, "", 0, 1, 7);
-			}
-			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
-				mail_incident ($id, $usuario, "", 0, 1);
-			}
 			
 			//insert data to incident type fields
 			if ($id_incident_type != 0) {
@@ -767,6 +758,14 @@ if ($action == "insert" && !$id) {
 					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
 					process_sql_insert('tincident_field_data', $values_insert);
 				}
+			}
+			
+			// Email notify to all people involved in this incident
+			if ($email_copy != "") { 
+				mail_incident ($id, $usuario, "", 0, 1, 7);
+			}
+			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($id, $usuario, "", 0, 1);
 			}
 			
 			// EXECUTE WORKFLOW RULES AT REALTIME
