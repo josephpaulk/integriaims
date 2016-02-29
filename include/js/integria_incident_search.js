@@ -436,6 +436,7 @@ function process_massive_updates () {
 	var task;
 	var parent_ticket;
 	var notify_changes;
+	var groups;
 
 	$(".cb_incident").each(function() {
 		id = this.id.split ("-").pop ();
@@ -454,6 +455,7 @@ function process_massive_updates () {
 		priority = $("#mass_priority").attr("value");
 		resolution = $("#mass_resolution").attr("value");
 		assigned_user = $("#mass_assigned_user").attr("value");
+		groups = $("#mass_groups").attr("value");
 		task = $("#task_user").attr("value");
 		parent_ticket_name = $("#text-search_parent").attr("value");
 		parent_ticket_split = parent_ticket_name.split('#');
@@ -480,6 +482,11 @@ function process_massive_updates () {
 			if(assigned_user != -1) {
 				values.push ({name: "id_user",
 						value: assigned_user});
+			}
+			if(groups != -1) {
+				console.log(groups);
+				values.push ({name: "grupo_form",
+						value: groups});
 			}
 			if(task != 0) {
 				values.push ({name: "id_task",

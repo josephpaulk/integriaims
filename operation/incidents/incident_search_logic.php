@@ -278,12 +278,14 @@ $table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM 
 
 //Task
 $table->data[1][0] = combo_task_user (0, $config["id_user"], 0, 0, true);
+//Groups
+$table->data[1][1] =  print_select_from_sql('SELECT id_grupo, nombre FROM tgrupo;', 'mass_groups', '0', '', __('Select'), -1, true, false, true, __('Groups'));
 
 if ($has_im) {
 	//Parent ticket
-	$table->data[1][1] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'));
-	$table->data[1][1] .= print_input_hidden ('id_parent', $id_parent, true);
-	$table->data[1][1] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
+	$table->data[1][2] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'));
+	$table->data[1][2] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table->data[1][2] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 	//Delete tickets
 	$table->data[1][3] = print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
 }
