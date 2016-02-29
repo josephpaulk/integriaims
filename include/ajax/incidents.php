@@ -343,6 +343,7 @@ if ($set_params) {
 	$values['resolution'] = get_parameter ('id_resolution');
 	$values['estado'] = get_parameter ('id_status');
 	$values['id_usuario'] = get_parameter ('id_user');
+	$values['id_grupo'] = get_parameter ('id_groups');
 	$values['actualizacion'] = date('Y:m:d H:i:s');
 
 	$old_incident = get_incident ($id_ticket);

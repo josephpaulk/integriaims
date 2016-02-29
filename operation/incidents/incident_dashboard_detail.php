@@ -386,8 +386,11 @@ if ($config['enabled_ticket_editor']) {
 		$ticket_editor .= "<td>";
 		$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "");
 		$ticket_editor .= "</td>";
+		$ticket_editor .= "</tr>";
 		
-		$ticket_editor .= "<td>";
+		$ticket_editor .= "<tr><td>";
+		$ticket_editor .= print_select_from_sql('SELECT id_grupo, nombre FROM tgrupo;', 'incident_groups', $id_grupo, '', '', '', true, false, true, __('Groups'));
+		$ticket_editor .= "</td><td>";
 		$img = print_image("images/accept.png", true, array("title" => __("Update")));
 		$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setParams($id);'>" . $img ."</a>";
 		$ticket_editor .= "</td>";
