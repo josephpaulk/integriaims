@@ -1278,6 +1278,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 extensions_print_side_menu_subsection($sec, $sec2);
 
 // Calendar box
+if (give_acl ($config['id_user'], $id_grupo, "AR")) {
 $month = get_parameter ("month", date ('n'));
 $year = get_parameter ("year", date ('y'));
 
@@ -1295,6 +1296,7 @@ echo "<img style='vertical-align:middle' width='20px' src='images/calendar_orang
 echo '</a>';
 echo "</li>";
 
+if (give_acl ($config['id_user'], $id_grupo, "AW")) {
 echo "<li>";
 if ($sec == 'agenda') {
 	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, true)'>
@@ -1304,9 +1306,11 @@ if ($sec == 'agenda') {
 		<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
 }
 echo "</li>";
+}
 echo "</ul>";
 
 echo "</div>";
+}
 // End of calendar box
 
 // Testing boxes for side menus
