@@ -642,11 +642,11 @@ rules = {
         }
 	}
 };
-//~ messages = {
-	//~ required: "<?php echo __('Name required')?>",
-	//~ remote: "<?php echo __('This name already exists')?>"
-//~ };
-//~ add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This name already exists')?>"
+};
+add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
 // Rules: input[name="pass1"]
 rules = {
 	required: true
