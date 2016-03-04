@@ -561,6 +561,20 @@ function update_linked_fields(label_childs, id_parent, value_parent) {
 	});
 }
 
+function show_incident_groups_fields(id_incident_type, option_any) {
+	var result;
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&set_ticket_groups=1&id_incident_type="+ id_incident_type +'&option_any='+option_any,
+		dataType: "text",
+		async: false, //Important if not you cannot handle responseText!
+		success: function(data){	
+			result = data;
+		}
+	});
+	return result;
+}
 function show_incident_type_fields(numRow) {
 
 	id_incident_type = $("#id_incident_type").val();
@@ -977,6 +991,41 @@ $.ajax({
 		}
 	});	
 }
+//add
+function incident_show_groups_search (filter) {
+	
+$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&get_group_search=1&ajax=1&"+filter,
+		dataType: "html",
+		success: function(data){	
+			$("#group_search_window").html (data);
+			$("#group_search_window").show ();
+			$("#group_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 535,
+					height: 350
+				});
+			$("#group_search_window").dialog('open');
+			
+			$("#group_search_window").ready (function () {
+				$('.pass').click(function() { return !$('#origin option:selected').remove().appendTo('#destiny').attr('selected', 'selected'); });  
+				$('.remove').click(function() { return !$('#destiny option:selected').remove().appendTo('#origin').attr('selected', false);});
+				$('.remove').click(function() { return $('#destiny option').attr('selected', 'selected');});
+				$('.passall').click(function() { $('#origin option').each(function() { $(this).remove().appendTo('#destiny').attr('selected', 'selected'); }); });
+				$('.removeall').click(function() { $('#destiny option').each(function() { $(this).remove().appendTo('#origin'); }); });
+				$('.submit').click(function() { $('#destiny').attr('selected', 'selected'); });	
+			});
+		}
+	});	
+}
 
 function incident_show_user_search (filter, clickin) {
 	
@@ -1049,6 +1098,16 @@ function loadContactEmail(email) {
 	$("#text-email_copy").val(content);
 
 	$("#contact_search_window").dialog("close");
+}
+//add
+function loadgroups() {
+	var multipleValues = $("#destiny").val() || [];
+	$("#text-id_group").val(multipleValues.join( ", " ));
+	$("#group_search_window").dialog("close");
+}
+//add
+function clean_groups_field () {
+	$("#text-id_group").attr("value", "");	
 }
 
 function setTicketScore(id_ticket, score) {

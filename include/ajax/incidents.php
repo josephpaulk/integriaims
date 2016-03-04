@@ -21,6 +21,7 @@ include_once("include/functions_incidents.php");
 $get_incidents_search = get_parameter('get_incidents_search', 0);
 $get_incident_name = get_parameter('get_incident_name', 0);
 $get_contact_search = get_parameter('get_contact_search',0);
+$get_group_search = get_parameter('get_group_search',0);
 $get_user_search = get_parameter('get_user_search',0);
 $clickin = get_parameter('clickin', 2);
 $id_ticket = get_parameter('id_ticket', 0);
@@ -92,6 +93,39 @@ if ($get_incident_name) {
 	$name = get_db_value ("titulo", "tincidencia", "id_incidencia", $id);
 	
 	echo $name;
+}
+
+if ($get_group_search) {
+	
+	//Get group if was not defined
+	if($id_grupo==0) {
+		$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
+		
+		//If no group assigned use ALL by default
+		if (!$id_grupo_incident) {
+			$id_grupo_incident = 1;
+		}
+		
+	} else {
+		$id_grupo_incident = $id_grupo;
+	}
+
+	$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'nombre'));
+	
+	echo '<div class="div_ui div_left_ui">';
+		echo print_select ($groups, "origin", $id_grupo_incident, '', '', 0, true, true, false);
+	echo '</div>';
+	echo '<div class="div_middle_ui">';
+		echo '<a class="pass left"><img src="images/flecha_dcha.png"/></a><br/>';
+		echo '<a class="passall left"><img src="images/go_finish.png"/></a><br/>';
+		echo '<a class="remove right"><img src="images/flecha_izqda.png"/></a><br/>';
+		echo '<a class="removeall right"><img src="images/go_begin.png"/></a>';
+	echo '</div>';
+	echo '<div class="div_ui div_right_ui">';
+		echo '<select name="destiny" id="destiny" multiple="multiple"></select>';
+	echo '</div>';	
+	echo '<p class="button_send_groups"><input type="button" value='.__('Submit').' onclick="loadgroups()" /></p>';
+	echo '</form>';
 }
 
 if ($get_contact_search) {

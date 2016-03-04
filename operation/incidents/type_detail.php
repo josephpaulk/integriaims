@@ -18,6 +18,8 @@ global $config;
 
 check_login ();
 
+require_once ('include/functions_incidents.php');
+
 if (! give_acl ($config["id_user"], 0, "IM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket type section");
 	require ("general/noaccess.php");
@@ -262,8 +264,8 @@ if ($create_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
+	$values['id_group'] = (string) get_parameter ('id_group');
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
-	//$values['id_group'] = (int) get_parameter ('id_group');
 	
 	if ($values['name'] != "") {
 
@@ -313,8 +315,8 @@ if ($update_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
+	$values['id_group'] = (string) get_parameter ('id_group');
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
-	//$values['id_group'] = (int) get_parameter ('id_group');
 
 	if ($values['name'] != "") {
 		$result = process_sql_update('tincident_type', $values, array('id' => $id));
@@ -413,14 +415,14 @@ if ($id || $new_type) {
 		$id = 0;
 		$name = "";
 		$description = "";
+		$id_group = "";
 		//$id_wizard = "";
-		//$id_group = "";
 	} else {
 		$type = get_db_row ('tincident_type', 'id', $id);
 		$name = $type['name'];
 		$description = $type['description'];
+		$id_group = $type['id_group'];
 		//$id_wizard = $type['id_wizard'];
-		//$id_group = $type['id_group'];
 	}
 	
 	$table->width = "99%";
@@ -431,12 +433,17 @@ if ($id || $new_type) {
 	$table->colspan[2][0] = 2;
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
-/*
-	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
-		'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
-	$table->data[1][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
-		'id_group', $id_group, '', 'Select', 0, true, false, false, __('Group'));
-*/
+	$table->data[0][1] = print_input_text ('id_group', $id_group,"", 40, 100, true, __("Groups"), false, false, true);
+	$table->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	$table->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	
+	/*
+		$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
+			'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
+		$table->data[1][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
+			'id_group', $id_group, '', 'Select', 0, true, false, false, __('Group'));
+	*/
+	
 	$table->data[1][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
 	
 	if ($id) {
@@ -651,9 +658,10 @@ if ($id || $new_type) {
 	echo '</div>';
 	echo '</form>';
 }
-
+	echo "<div class= 'dialog ui-dialog-content' title='".__("Groups")."' id='group_search_window'></div>";
 ?>
 
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" >
