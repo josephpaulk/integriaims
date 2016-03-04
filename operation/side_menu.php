@@ -1315,35 +1315,40 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 extensions_print_side_menu_subsection($sec, $sec2);
 
 // Calendar box
+if (give_acl ($config['id_user'], $id_grupo, "AR")) {
 $month = get_parameter ("month", date ('n'));
 $year = get_parameter ("year", date ('y'));
-if (($sec2 == "operation/agenda/agenda"))
-	echo "<li id='sideselcalendario' class='sideselcolor'>";
-else
-	echo "<li id='calendario'>";
-echo "<a title='".__('Calendar')."' href='index.php?sec=agenda&sec2=operation/agenda/agenda'>1</a>";
-	echo "<ul>";
-		echo "<li><h1>".__('Calendar')."</h1></li>";
-		
-		echo '<li id="calendar_div">';
-			echo generate_calendar ($year, $month, array(), 1, NULL, $config["first_day_week"]);
-		echo '</li>';
-		echo "<li>";
-			echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
-				echo "<img style='vertical-align:middle' width='20px' src='images/calendar_orange.png'>&nbsp;".__('Full calendar');
-			echo '</a>';
-		echo "</li>";
-		echo "<li>";
-			if ($sec == 'agenda') {
-				echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, true)'>
-					<img src='images/add.png'>&nbsp;".__('Add entry')."</a>";
-			} else {
-				echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, false)'>
-					<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
-			}
-		echo "</li>";
-	echo "</ul>";
-echo "</li>";	
+
+echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
+// echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
+echo '<h3>'.__('Calendar').'</h3>';
+echo '<div id="calendar_div">';
+echo generate_calendar ($year, $month, array(), 1, NULL, $config["first_day_week"]);
+echo '</div>';
+
+echo "<ul class='sidemenu'>";
+echo "<li>";
+echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
+echo "<img style='vertical-align:middle' width='20px' src='images/calendar_orange.png'>&nbsp;".__('Full calendar');
+echo '</a>';
+echo "</li>";
+
+if (give_acl ($config['id_user'], $id_grupo, "AW")) {
+echo "<li>";
+if ($sec == 'agenda') {
+	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, true)'>
+		<img src='images/add.png'>&nbsp;".__('Add entry')."</a>";
+} else {
+	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, false)'>
+		<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
+}
+echo "</li>";
+}
+echo "</ul>";
+
+echo "</div>";
+}
+// End of calendar box
 
 // Testing boxes for side menus
 $user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);

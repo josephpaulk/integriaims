@@ -3442,3 +3442,40 @@ img {
 .legendColorBox, .legendLabel {
 	border: 0px none !important;
 }
+
+/*Style for groups in type_detail*/
+.div_left_ui{
+	float: left;
+}
+.div_right_ui{
+	float: right;
+}
+.div_middle_ui{
+	float: left;
+	width: 10%;
+	height: 230px;
+}
+.div_middle_ui a {
+	cursor: pointer;
+}
+.div_middle_ui img{
+	width: 30px;
+	height: 30px;
+	padding-top: 20px;
+}
+.div_ui{
+	width: 45%;
+}
+.div_ui select[multiple]{
+	width: 100% !important;
+	height: 230px;
+}
+.button_send_groups input{
+	background: #FF9200;
+    width: 20%;
+    height: 40px;
+    color: #ffffff;
+    margin-left: 15px;
+    margin-top: 10px;
+} 
+/* End comments */

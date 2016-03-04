@@ -368,8 +368,17 @@ if ($nivel != 1) {
 <td class="datos2"><input type="text" name="num_employee" value="<?php echo $num_employee ?>">
 
 <tr><td class="datos2"><?php echo __('Real name') ?>
-<td class="datos2"><input type="text" size=25 name="nombre_real" value="<?php echo $nombre_real ?>">
-
+<td class="datos2">
+<?php
+	if (isset($_GET["alta"])){
+		echo '<input type="text" size=20 name="nombre_real" value="'.$nombre_real.'">';
+	} else {
+		echo '<i>';
+		echo $nombre_real;
+		echo "</i>";
+	}
+?>
+</td>
 <tr><td class="datos"><?php echo __('Password') ?>
 <td class="datos"><input type="password" name="pass1" value="<?php echo $password ?>">
 <tr><td class="datos2"><?php echo __('Password confirmation') ?>
@@ -634,11 +643,11 @@ rules = {
         }
 	}
 };
-//~ messages = {
-	//~ required: "<?php echo __('Name required')?>",
-	//~ remote: "<?php echo __('This name already exists')?>"
-//~ };
-//~ add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This name already exists')?>"
+};
+add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
 // Rules: input[name="pass1"]
 rules = {
 	required: true

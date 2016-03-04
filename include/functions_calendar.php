@@ -568,23 +568,23 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
     		$calendar .= "<td class='calendar'>$day</td>";
         elseif ($normal == 1){
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar day_worked_projects'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_worked_projects' style='background-color: #98FF8B'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		} 
         elseif ($normal == 2) {
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar day_vacation'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_vacation' style='background-color: #FFFF80'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
         elseif ($normal == 3) {
             $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar day_worked_incidents'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_worked_incidents' style='background-color: #FF7BFE; color: #FFFFFF'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
 		elseif ($normal == 5) {
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-			$calendar .= "<td class='calendar day_work_home'><a href='$mylink' title='$total_wu'>$day</a></td>";
+			$calendar .= "<td class='calendar day_work_home' style='background-color: #79d8ed'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
 		elseif ($normal == 4) {
             $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar day_other'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_other' style='background-color: #FFDE46'><a href='$mylink' title='$total_wu'>$day</a></td>";
         }
 	}
 	if($weekday != 7) $calendar .= '<td class="calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days

@@ -346,6 +346,17 @@ if ($config['enabled_ticket_editor']) {
 		$priority = $incident_data['prioridad'];
 		$owner = $incident_data['id_usuario'];
 		$status = $incident['estado'];
+		$id_incident_type = $incident['id_incident_type'];
+		
+		//add
+		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
+		if($id_group_type != "" && $id_group_type != "0"){
+			$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			$groups_selected = explode(', ', $id_group_type);
+			$groups = array_intersect($groups_all, $groups_selected);
+		} else {
+			$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+		}
 
 		//$ticket_editor .= "<table style='width: 100%;'>";
 		$ticket_editor = "<tr>";
@@ -390,8 +401,11 @@ if ($config['enabled_ticket_editor']) {
 		$ticket_editor .= "<td>";
 		$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "");
 		$ticket_editor .= "</td>";
+		$ticket_editor .= "</tr>";
 		
-		$ticket_editor .= "<td>";
+		$ticket_editor .= "<tr><td>";
+		$ticket_editor .= print_select ($groups, "grupo_form", $id_grupo, '', '', 0, true, false, false, __('Group'), $blocked_incident);
+		$ticket_editor .= "</td><td>";
 		$img = print_image("images/accept.png", true, array("title" => __("Update")));
 		$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setParams($id);'>" . $img ."</a>";
 		$ticket_editor .= "</td>";

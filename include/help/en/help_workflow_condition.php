@@ -1,22 +1,19 @@
 <h1>Condiciones de reglas de flujo de trabajo</h1>
 
 <p>
-En general las reglas de workflow se dispararán UNA SOLA vez, de forma que si establece una regla para cambiar por ejemplo, el usuario asignado a la incidencia cuando una incidencia tenga más de 30 dias de vida, y el usuario asignado es X, pero luego manualmente alguien vuelve a poner ese usuario X, la regla NO se volverá a disparar. La única excepción de este comportamiento es cuando la condición es el tiempo de actualización.
-
+As general rule, workflow rules will only fired ONCE. So you set a rule to change, for example the user if user = "xxx" and group = "zzz" and later, someone, manually change again the user to "xxx", rule will not fired, because it matches that ticket before. This prevents problems on workflow definitions, which could be harmful on some conditions.
 </p>
 <p>
-
-Si establece una regla para que salte cuando el ticket lleva más de X tiempo sin actualizar, se creará automáticamente una acción por defecto para “actualizar el ticket”. Esto hará que no salte continuamente la condición. Pasado ese X tiempo, el sistema podrá ejecutar de nuevo la misma regla de Workflow. Esta es la excepción, ya que para ninguna otra condición (Prioridad, Propietaro, Estado, Creacion ó Grupo), se podrá volver a ejecutar una regla.
-
+The only exception to this behaviour is where condition is update time. If you set a rule to fire when the ticket is more than X time without an update, it will create automatically a default action to "update the ticket". This will avoid rule to fire again and again.
 </p>
 <p>
-Caso típico de uso para este tipo de condición:
+This is a typical case for that kind of condition:
 <br>
 <br>
-Necesita enviar un email de aviso a un coordinador, cuando una incidencia de prioridad muy alta y de un grupo determinado lleva más de 5 días sin actualizaciones. 
+“I need to send an email to a coordinator, when a ticket with high priority on a specific group has more than 5 days without any update"
 <br>
 <br>
-Simplemente tiene que rellenar en la condición “Match all fields”, el grupo específico y la prioriad muy alta, solo para incidencias asignadas. En “Time Update” escogeremos un mes.
+Create a condition with "Match all fields", specific group, high priority and in time update choose 5 days
 </p>
 
 <p>
@@ -24,7 +21,7 @@ Simplemente tiene que rellenar en la condición “Match all fields”, el grupo
 </p>
 
 <p>
-Al añadir la acción de enviar un mail, se creará automáticamente la accion de actualizar el ticket, que dejaremos tal cual, para actualizar el ticket y evitar que siga saltando la regla. 
+By adding the act of sending an email , the action Refresh the ticket, we'll leave as it is created automatically , paragraph Update ticket and prevent further jumping Rule.
 </p>
 
 <p>
@@ -34,6 +31,6 @@ Al añadir la acción de enviar un mail, se creará automáticamente la accion d
 <?php print_image("images/help/workflow_actions2.png", false, false); ?>
 </p>
 <p>
-Al pasar una semana, si no se ha actualizado la incidencia, volverá a saltar la regla y asi de forma indefinida.
+To spend a week, if you have not updated the incidence, it will skip the rule and so indefinitely.
 </p>
 

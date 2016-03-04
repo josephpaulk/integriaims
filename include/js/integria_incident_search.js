@@ -436,6 +436,7 @@ function process_massive_updates () {
 	var task;
 	var parent_ticket;
 	var notify_changes;
+	var groups;
 
 	$(".cb_incident").each(function() {
 		id = this.id.split ("-").pop ();
@@ -454,6 +455,7 @@ function process_massive_updates () {
 		priority = $("#mass_priority").attr("value");
 		resolution = $("#mass_resolution").attr("value");
 		assigned_user = $("#mass_assigned_user").attr("value");
+		groups = $("#mass_groups").attr("value");
 		task = $("#task_user").attr("value");
 		parent_ticket_name = $("#text-search_parent").attr("value");
 		parent_ticket_split = parent_ticket_name.split('#');
@@ -480,6 +482,11 @@ function process_massive_updates () {
 			if(assigned_user != -1) {
 				values.push ({name: "id_user",
 						value: assigned_user});
+			}
+			if(groups != -1) {
+				console.log(groups);
+				values.push ({name: "grupo_form",
+						value: groups});
 			}
 			if(task != 0) {
 				values.push ({name: "id_task",
@@ -554,6 +561,20 @@ function update_linked_fields(label_childs, id_parent, value_parent) {
 	});
 }
 
+function show_incident_groups_fields(id_incident_type, option_any) {
+	var result;
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&set_ticket_groups=1&id_incident_type="+ id_incident_type +'&option_any='+option_any,
+		dataType: "text",
+		async: false, //Important if not you cannot handle responseText!
+		success: function(data){	
+			result = data;
+		}
+	});
+	return result;
+}
 function show_incident_type_fields(numRow) {
 
 	id_incident_type = $("#id_incident_type").val();
@@ -970,6 +991,41 @@ $.ajax({
 		}
 	});	
 }
+//add
+function incident_show_groups_search (filter) {
+	
+$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&get_group_search=1&ajax=1&"+filter,
+		dataType: "html",
+		success: function(data){	
+			$("#group_search_window").html (data);
+			$("#group_search_window").show ();
+			$("#group_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 535,
+					height: 350
+				});
+			$("#group_search_window").dialog('open');
+			
+			$("#group_search_window").ready (function () {
+				$('.pass').click(function() { return !$('#origin option:selected').remove().appendTo('#destiny').attr('selected', 'selected'); });  
+				$('.remove').click(function() { return !$('#destiny option:selected').remove().appendTo('#origin').attr('selected', false);});
+				$('.remove').click(function() { return $('#destiny option').attr('selected', 'selected');});
+				$('.passall').click(function() { $('#origin option').each(function() { $(this).remove().appendTo('#destiny').attr('selected', 'selected'); }); });
+				$('.removeall').click(function() { $('#destiny option').each(function() { $(this).remove().appendTo('#origin'); }); });
+				$('.submit').click(function() { $('#destiny').attr('selected', 'selected'); });	
+			});
+		}
+	});	
+}
 
 function incident_show_user_search (filter, clickin) {
 	
@@ -1042,6 +1098,16 @@ function loadContactEmail(email) {
 	$("#text-email_copy").val(content);
 
 	$("#contact_search_window").dialog("close");
+}
+//add
+function loadgroups() {
+	var multipleValues = $("#destiny").val() || [];
+	$("#text-id_group").val(multipleValues.join( ", " ));
+	$("#group_search_window").dialog("close");
+}
+//add
+function clean_groups_field () {
+	$("#text-id_group").attr("value", "");	
 }
 
 function setTicketScore(id_ticket, score) {
@@ -1320,11 +1386,12 @@ function setParams (id_ticket) {
 	var id_resolution = $('#incident_resolution').val();
 	var id_status = $('#incident_status').val();
 	var id_user = $('#text-owner_editor').val();
+	var id_groups = $('#incident_groups').val();
 	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/incidents&set_params=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority +"&id_resolution="+id_resolution+"&id_status="+id_status+"&id_user="+id_user,
+		data: "page=include/ajax/incidents&set_params=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority +"&id_resolution="+id_resolution+"&id_status="+id_status+"&id_user="+id_user+"&id_groups="+id_groups,
 		dataType: "text",
 		async: false,
 		success: function (data) {

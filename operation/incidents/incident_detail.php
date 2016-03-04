@@ -30,12 +30,11 @@ if (defined ('AJAX')) {
 	$upload_file = (bool) get_parameter('upload_file');
 	$remove_tmp_file = (bool) get_parameter('remove_tmp_file');
 	$get_owner = (bool) get_parameter('get_owner', 0);
-	$get_owner = (bool) get_parameter('get_owner', 0);
 	$reopen_ticket = (bool) get_parameter('reopen_ticket', 0);
 	$get_initial_status = (bool) get_parameter('get_initial_status', 0);
 	$get_allowed_status = (bool) get_parameter('get_allowed_status', 0);
 	$get_allowed_resolution = (bool) get_parameter('get_allowed_resolution', 0);
-	
+	$set_ticket_groups = (bool) get_parameter('set_ticket_groups', 0);
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -301,6 +300,27 @@ if (defined ('AJAX')) {
 		
 		echo json_encode($resolution_aux);
 
+		return;
+	}
+	//add
+	if ($set_ticket_groups) {
+		$id_incident_type = (int)get_parameter('id_incident_type');
+		$option_any = (int)get_parameter('option_any');
+		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
+		if($id_group_type != "" && $id_group_type != "0"){
+			$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			$groups_selected = explode(', ', $id_group_type);
+			$groups = array_intersect($groups_all, $groups_selected);
+			if($option_any){
+				$groups[0] = __('Any');
+			}
+		} else {
+			$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			if($option_any){
+				$groups[0] = __('Any');
+			}
+		}
+		echo json_encode($groups);
 		return;
 	}
 }
@@ -738,15 +758,6 @@ if ($action == "insert" && !$id) {
 				// Do not send mail in this WU
 				create_workunit ($id, $wu_text, $editor, $config["iwu_defaultime"], 0, "", 1, 0);
 			}
-
-
-			// Email notify to all people involved in this incident
-			if ($email_copy != "") { 
-				mail_incident ($id, $usuario, "", 0, 1, 7);
-			}
-			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
-				mail_incident ($id, $usuario, "", 0, 1);
-			}
 			
 			//insert data to incident type fields
 			if ($id_incident_type != 0) {
@@ -767,6 +778,14 @@ if ($action == "insert" && !$id) {
 					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
 					process_sql_insert('tincident_field_data', $values_insert);
 				}
+			}
+			
+			// Email notify to all people involved in this incident
+			if ($email_copy != "") { 
+				mail_incident ($id, $usuario, "", 0, 1, 7);
+			}
+			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($id, $usuario, "", 0, 1);
 			}
 			
 			// EXECUTE WORKFLOW RULES AT REALTIME
@@ -1001,12 +1020,8 @@ if($id_grupo==0) {
 	$id_grupo_incident = $id_grupo;
 }
 
-$groups = users_get_groups_for_select ($config['id_user'], "IW", false,  true);
-
-$table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group'), $blocked_incident) . "<div id='group_spinner'></div>";
-
 $types = get_incident_types (true, $config['required_ticket_type']);
-$table->data[0][2] = print_label (__('Ticket type'), '','',true);
+$table->data[0][1] = print_label (__('Ticket type'), '','',true);
 
 //Disabled incident type if any, type changes not allowed
 if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_user'])) {
@@ -1025,8 +1040,19 @@ if ($config['required_ticket_type']) {
 	$select = 'select';
 }
 
-$table->data[0][2] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
+$table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
+$table->data[0][1] .= print_help_tip (__("When changing the ticket type, it's possible for the group to change as well"), true);
 
+$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
+if($id_group_type != "" && $id_group_type != "0"){
+	$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+	$groups_selected = explode(', ', $id_group_type);
+	$groups = array_intersect($groups_all, $groups_selected);
+} else {
+	$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+}
+
+$table->data[0][2] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group'), $blocked_incident) . "<div id='group_spinner'></div>";
 $disabled = false;
 
 if ($disabled) {
@@ -1469,6 +1495,17 @@ $(document).ready (function () {
 		id_user_ticket = $('#text-id_user_hidden').val();
 		incident_limit("#submit-accion", id_user_ticket, id_group);
 	}
+
+	$("#id_incident_type").change (function () {
+		var id_incident_type = $("#id_incident_type").val();
+		var incident_groups = show_incident_groups_fields(id_incident_type);
+		var obj = jQuery.parseJSON(incident_groups);
+		
+		$("#grupo_form option").remove();
+		for (var id in obj){
+			$("#grupo_form").append(new Option(obj[id], id));
+		}
+	});
 	
 	$("#grupo_form").change (function () {
 		id_user = $("#text-id_user").val();

@@ -404,7 +404,7 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
  * @param string Alternative HTML string.
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false, $label = false, $type = false) {
+function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false, $label = false, $type = false, $readonly = false) {
 	if (!$type) {
 		$type = $password ? 'password' : 'text';
 	}
@@ -436,6 +436,9 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	
 	if ($disabled)
 		$output .= ' disabled';
+		
+	if ($readonly)
+		$output .= ' readonly';
 	
 	if (is_array($attributes)) {
 		foreach ($attributes as $name => $value) {
@@ -681,8 +684,8 @@ function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength 
  * @param int Maximum length allowed (optional).
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false, $disabled = false, $type = false) {
-	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, $disabled, '', '', true, false, $label, $type);
+function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false, $disabled = false, $type = false, $readonly = false) {
+	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, $disabled, '', '', true, false, $label, $type, $readonly);
 
 	if ($return)
 		return $output;

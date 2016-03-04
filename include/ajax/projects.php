@@ -116,7 +116,7 @@ function get_tasks_gantt (&$tasks, $project_id, $project_start, $project_end, $p
 				array_push ($tasks, $task_aux);
 			}
 			
-			get_tasks_gantt (&$tasks, $project_id, $project_start, $project_end, $task['id'], $depth + 1, $show_actual);
+			get_tasks_gantt ($tasks, $project_id, $project_start, $project_end, $task['id'], $depth + 1, $show_actual);
 		}
     }
 }

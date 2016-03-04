@@ -198,12 +198,6 @@ if (defined ('AJAX')) {
 		
 		$cont = get_db_all_rows_sql($sql);
 
-		// Add no object type
-		$last_key = count($cont);
-		$cont[$last_key]['name'] = __('No object type');
-		$cont[$last_key]['icon'] ="box.png";
-		$cont[$last_key]['id'] = 0;
-
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
 		$cont_size = count($cont);
