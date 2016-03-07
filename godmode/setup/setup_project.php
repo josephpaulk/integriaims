@@ -83,11 +83,11 @@ $table->data[2][0] = print_input_text ("currency", $config["currency"], '',
 	
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 2;
 
 echo "<form name='setup_project' method='post'>";
-
 print_table ($table);
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 ?>

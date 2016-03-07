@@ -799,7 +799,8 @@ if ($id || $new) {
 		$table->class = "search-table-button";
 		
 		if ($id == 0) {
-			echo "<h1>".__('Create lead')."</h1>";
+			echo "<h2>".__('Leads management')."</h2>";
+			echo "<h4>".__('Create lead')."</h4>";
 		}
 
 		$campaigns = crm_get_campaigns_combo_list();
@@ -810,25 +811,25 @@ if ($id || $new) {
 
 		$table->data[1][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		$table->data[1][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));
-		$table->data[2][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
-		$table->data[2][1] = print_input_text ("country", $country, "", 35, 100, true, __('Country'));
-		$table->data[3][0] = print_input_text ("estimated_sale", $estimated_sale, "", 12, 100, true, __('Estimated sale'));
+		$table->data[2][0] = print_input_text ("email", $email, "", 18, 100, true, __('Email'));
+		$table->data[2][1] = print_input_text ("country", $country, "", 18, 100, true, __('Country'));
+		$table->data[3][0] = print_input_text ("estimated_sale", $estimated_sale, "", 18, 100, true, __('Estimated sale'));
 		$table->data[3][0] .= print_help_tip (__("Use only integer values, p.e: 23000 instead 23,000 or 23,000.00"), true);
 
 		$estimated_close_date = !empty($estimated_close_date) && $estimated_close_date != '0000-00-00 00:00:00' ? date("Y-m-d", strtotime($estimated_close_date)) : "";
-		$table->data[3][1] = print_input_text ("estimated_close_date", $estimated_close_date, "", 15, 20, true, __('Estimated close date'));
+		$table->data[3][1] = print_input_text ("estimated_close_date", $estimated_close_date, "", 18, 20, true, __('Estimated close date'));
 
-		$table->data[4][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
+		$table->data[4][0] = print_input_text ("phone", $phone, "", 18, 60, true, __('Phone number'));
 
 		$progress_values = lead_progress_array ();
 
 		$table->data[4][1] = print_select ($progress_values, 'progress', $progress, '', '', 0, true, 0, false, __('Lead progress') );
 
-		$table->data[5][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
+		$table->data[5][0] = print_input_text ('position', $position, '', 18, 50, true, __('Position'));
 
-		$table->data[5][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
+		$table->data[5][1] = print_input_text ("mobile", $mobile, "", 18, 60, true, __('Mobile number'));
 		
-		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
+		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 18, 30, false, '',
 			array(), true, '', __("Owner") )
 		. print_help_tip (__("Type at least two characters to search"), true);
 
@@ -862,6 +863,7 @@ if ($id || $new) {
 		$params['input_value'] = $id_company;
 		$params['title'] = __('Managed by');
 		$params['return'] = true;
+		$params['attributes'] = "style='width:210px;'";
 		$table->data[7][1] = print_company_autocomplete_input($params);
 
 		if ($id_company) {
@@ -884,17 +886,6 @@ if ($id || $new) {
 		
 		$table->data[10][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 		
-		if ($id) {
-			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-			$button .= print_input_hidden ('update', 1, true);
-			$button .= print_input_hidden ('id', $id, true);
-		} else {
-			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-			$button .= print_input_hidden ('create', 1, true);
-		}
-		
-		$table->colspan[count($table->data) + 1][0] = 4;
-		$table->data[count($table->data) + 1][0] = $button;
 	}
 	else {
 		
@@ -954,6 +945,22 @@ if ($id || $new) {
 	
 	echo '<form method="post" id="lead_form">';
 	print_table ($table);
+	if ($section_write_permission || $section_manage_permission) {
+		echo "<div style='text-align:right; width:100%'>";
+			unset($table->data);
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update', 1, true);
+				$button .= print_input_hidden ('id', $id, true);
+			} else {
+				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+				$button .= print_input_hidden ('create', 1, true);
+			}
+			$table->data[1][0] = $button;
+			print_table ($table);
+		echo "</div>";
+	}
 	echo "</form>";
 
 }

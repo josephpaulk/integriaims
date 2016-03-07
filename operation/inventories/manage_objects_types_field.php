@@ -36,34 +36,34 @@ $action = get_parameter ('action');
 switch ($action) {
 	default:
 	case "create":
-			$label = "";
-			$type = "numeric";
-			$combo_value = "";
-			$external_table_name = "";
-			$external_reference_field = "";
-			$parent_table_name = "";
-			$parent_reference_field = "";
-			$unique = 0;
-			$inherit = 0;
-			$show_list = 0;
-			$not_allow_updates = 0;
-			$external_label = "";
-			break;
+		$label = "";
+		$type = "numeric";
+		$combo_value = "";
+		$external_table_name = "";
+		$external_reference_field = "";
+		$parent_table_name = "";
+		$parent_reference_field = "";
+		$unique = 0;
+		$inherit = 0;
+		$show_list = 0;
+		$not_allow_updates = 0;
+		$external_label = "";
+		break;
 	case "update":
-			$object_type_field = get_db_row_filter('tobject_type_field', array('id' => $id_object_type_field));
-			$label = $object_type_field["label"];
-			$type = $object_type_field["type"];
-			$combo_value = $object_type_field["combo_value"];
-			$external_table_name = $object_type_field["external_table_name"];
-			$external_reference_field = $object_type_field["external_reference_field"];
-			$parent_table_name = $object_type_field["parent_table_name"];
-			$parent_reference_field = $object_type_field["parent_reference_field"];
-			$unique = $object_type_field["unique"];
-			$inherit = $object_type_field["inherit"];
-			$show_list = $object_type_field["show_list"];
-			$not_allow_updates = $object_type_field["not_allow_updates"];
-			$external_label = $object_type_field["external_label"];
-			break;			
+		$object_type_field = get_db_row_filter('tobject_type_field', array('id' => $id_object_type_field));
+		$label = $object_type_field["label"];
+		$type = $object_type_field["type"];
+		$combo_value = $object_type_field["combo_value"];
+		$external_table_name = $object_type_field["external_table_name"];
+		$external_reference_field = $object_type_field["external_reference_field"];
+		$parent_table_name = $object_type_field["parent_table_name"];
+		$parent_reference_field = $object_type_field["parent_reference_field"];
+		$unique = $object_type_field["unique"];
+		$inherit = $object_type_field["inherit"];
+		$show_list = $object_type_field["show_list"];
+		$not_allow_updates = $object_type_field["not_allow_updates"];
+		$external_label = $object_type_field["external_label"];
+		break;			
 }
 
 //**********************************************************************
@@ -71,8 +71,8 @@ switch ($action) {
 //**********************************************************************
 
 echo '<div id="tabs">';
-echo '<h2>' . strtoupper(__('Inventory')) . '</h2>';
-echo '<h4>' . strtoupper(__('Object types management'));
+echo '<h2>' . __('Inventory') . '</h2>';
+echo '<h4>' . __('Object types management');
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
 	
@@ -92,8 +92,6 @@ echo '</div>';
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
-$table->colspan[0][0] = 2;
-$table->colspan[2][0] = 2;
 $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Label'));
@@ -114,23 +112,28 @@ $table->data[13][0] = print_checkbox ('show_list', 1, $show_list, __('Show in li
 $table->data[14][0] = '<label>' . __('Not allow updates') . print_help_tip(__('With this value checked this field will not be update when we receive remote inventory data'), true) . '</label>';
 $table->data[15][0] = print_checkbox ('not_allow_updates', 1, $not_allow_updates, __('Not allow updates'));
 
-if (empty($id_object_type_field)) {
-	$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
-	$button .= print_input_hidden ('id', $id_object_type, true);
-	$button .= print_input_hidden ('action_db', 'insert', true);
-	$button .= print_input_hidden ('action', 'create', true);
-} else {
-	$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
-	$button .= print_input_hidden ('id', $id_object_type, true);
-	$button .= print_input_hidden ('id_object_type_field', $id_object_type_field, true);
-	$button .= print_input_hidden ('action_db', 'update', true);
-	$button .= print_input_hidden ('action', 'update', true);
-}
-
-$table->data[16][0] = $button;
-
 echo "<form id='form-manage_objects_types_field' method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list'>";
 print_table ($table);
+	echo '<div style="width:100%;">';
+		unset($table->data);
+		$table->width = '100%';
+		$table->class = "button-form";
+		if (empty($id_object_type_field)) {
+			$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
+			$button .= print_input_hidden ('id', $id_object_type, true);
+			$button .= print_input_hidden ('action_db', 'insert', true);
+			$button .= print_input_hidden ('action', 'create', true);
+		} else {
+			$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('id', $id_object_type, true);
+			$button .= print_input_hidden ('id_object_type_field', $id_object_type_field, true);
+			$button .= print_input_hidden ('action_db', 'update', true);
+			$button .= print_input_hidden ('action', 'update', true);
+		}
+		$table->data[16][0] = $button;
+		print_table ($table);
+	echo "</div>";	
+echo "</form>";
 
 ?>
 

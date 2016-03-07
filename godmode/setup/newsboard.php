@@ -117,11 +117,11 @@ if ($operation == "create") {
 	$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
 	$button .= print_input_hidden ('operation', 'insert', true);
 	
-	$table->data['button'][0] = $button;
-	$table->colspan['button'][0] = 4;
-	
 	echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
 	print_table ($table);
+		echo "<div class='button-form'>";
+			echo $button;
+		echo "</div>";
 	echo '</form>';
 }
 
@@ -169,9 +169,9 @@ if ($operation == "") {
 
 
     echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=create">';
-	echo '<div style="width: 100%; text-align: right;">';
+	echo '<div class="button-form">';
 	print_submit_button (__('Create'), 'crt', false, 'class="sub create');
-	echo '</form></div>';
+	echo '</div></form>';
 
 } // Fin bloque else
 

@@ -2616,8 +2616,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 
 	if ($print_result_count) {
 		echo "<h5>".$count.__(" ticket(s) found")."</h5>";
-	}
-	echo "<br>";	
+	}	
 }
 
 //Returns color value (hex) for incident priority

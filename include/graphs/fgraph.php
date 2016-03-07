@@ -366,6 +366,7 @@ function pie2d_graph($flash_chart, $chart_data, $width, $height,
 function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '', $ttl = 1) {
 	// This library allows only 8 colors
+	include_once('functions_flot.php');
 	$max_values = 8;
 
 	// Process data and decode it from HTML encoding
@@ -396,10 +397,13 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 	if($flash_chart) {
 		switch($graph_type) {
 			case "2d":
-					return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
+					//return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
-			case "3d":				
-					return fs_3d_pie_chart(array_values($chart_data), array_keys($chart_data), $width, $height);
+			case "3d":
+					return flot_pie_chart(array_values($chart_data),
+							array_keys($chart_data), $width, $height, $water_mark,
+							$font, $font_size);
+					//return fs_3d_pie_chart(array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
 		}
 	}

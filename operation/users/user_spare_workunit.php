@@ -499,6 +499,7 @@ if (dame_admin ($config['id_user'])) {
 	$params['title'] = 'Username';
 	$params['return'] = true;
 	$params['return_help'] = true;
+	$params['attributes'] = "style='width:210px;'";
 	
 	$table->data[2][1] = user_print_autocomplete_input($params);
 }
@@ -522,24 +523,32 @@ $table->data[5][0] = print_checkbox ('work_home', 1, $work_home, true, __('Work 
 
 $table->data[6][0] = print_textarea ('description', 10, 30, $description,
 	'', true, __('Description'));
-	
-if ($id_workunit) {
-	$button = print_input_hidden ('operation', 'update', true);
-	$button .= print_input_hidden ('id_workunit', $id_workunit, true);
-	$button .= print_input_hidden ("wu_user", $wu_user, true);
-	$button .= print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"', true);
-}
-else {
-	$button .= print_input_hidden ('operation', 'insert', true);
-	$button .= print_submit_button (__('Add'), 'btn_add', false, 'class="sub create"', true);
-}
-$button .= print_input_hidden ('timestamp', $now, true);
-
-$table->data[7][0] = $button;
-$table->colspan[7][0] = 2;
 
 echo '<form id="single_task_form" method="post" onsubmit="return validate_single_form()">';
 print_table ($table);
+
+$button = '';
+echo '<div style="width:100%;">';
+	unset($table->data);
+	$table->width = '100%';
+	$table->class = "button-form";
+	if ($id_workunit) {
+		$button = print_input_hidden ('operation', 'update', true);
+		$button .= print_input_hidden ('id_workunit', $id_workunit, true);
+		$button .= print_input_hidden ("wu_user", $wu_user, true);
+		$button .= print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"', true);
+	}
+	else {
+		$button .= print_input_hidden ('operation', 'insert', true);
+		$button .= print_submit_button (__('Add'), 'btn_add', false, 'class="sub create"', true);
+	}
+	$button .= print_input_hidden ('timestamp', $now, true);
+
+	$table->data[7][0] = $button;
+	$table->colspan[7][0] = 2;
+
+	print_table($table);
+echo '</div>';
 echo '</form>';
 
 echo "</div>";
@@ -568,7 +577,7 @@ if (!$id_workunit) {
 		
 		//Massive work unit list
 		create_new_table_multiworkunit(1);
-		echo "<table width='100%'>";
+		echo "<table width='100%' class='button-form'>";
 		echo "<tr>";
 		echo "<td style='width: 90%;'>";
 		echo "</td>";

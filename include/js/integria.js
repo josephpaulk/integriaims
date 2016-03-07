@@ -2,10 +2,18 @@
 /* Function to hide/unhide a specific Div id */
 function toggleDiv (div, animate) {
 	var item = (typeof div == "string") ? $("#" + div) : $(div);
-	if (typeof animate !== "undefined" && animate == true)
+	var id = div.replace("_div","");
+	if (typeof animate !== "undefined" && animate == true) {
 		item.slideToggle();
-	else
+	}
+	else {
+		var class_img = $("#"+id+" img").attr("class");
+		if (class_img == 'arrow_down')
+			$("#"+id+" img").addClass('arrow_right').removeClass('arrow_down').attr("src",'images/arrow_right.png');
+		else
+			$("#"+id+" img").addClass('arrow_down').removeClass('arrow_right').attr("src",'images/arrow_down.png');
 		item.toggle();
+	}
 }
 
 function winopeng (url, wid) {

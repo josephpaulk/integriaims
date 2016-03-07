@@ -18,7 +18,7 @@ check_login ();
 
 require_once ('include/functions_inventories.php');
 
-echo '<h2>'.__('Inventory reports').'</h2>';
+echo '<h2>'.__('Custom reports').'</h2>';
 echo '<h4>'.__('List of reports').'</h4>';
 
 $delete = (bool) get_parameter ('delete_report');
@@ -42,6 +42,8 @@ if (dame_admin ($config['id_user'])) {
 	$sql = "SELECT * FROM tinventory_reports WHERE id_group IN ".$all_groups_str;
 	$reports = get_db_all_rows_sql($sql);
 }
+
+echo "<div class='divresult'>";
 
 if ($reports === false) {
 
@@ -85,13 +87,18 @@ if ($reports === false) {
 
 	print_table ($table);
 }
-
+echo "</div>";
+echo "<div class='divform'>";
 echo '<form method="post" action="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">';
-echo '<div class="button" style="width: 99%">';
+echo '<table class="search-table" style="width: 100%">';
+echo '<tr>';
+echo '<td>';
 if(dame_admin ($config['id_user'])) {
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 }
-echo '</div>';
+echo '</td>';
+echo '</tr>';
+echo '</table>';
 echo '</form>';
-
+echo '</div>';
 ?>

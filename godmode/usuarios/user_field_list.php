@@ -74,6 +74,8 @@ $table->head[4] = __("Action");
 
 $data = array();
 
+echo "<div class='divresult'>";
+
 if (!empty($user_fields)) {
 	foreach ($user_fields as $field) {
 		$url_delete = "index.php?sec=users&sec2=godmode/usuarios/user_field_list&delete=1&id=".$field['id'];
@@ -110,12 +112,18 @@ if (!empty($user_fields)) {
 } else {
 	echo "<h2 class='error'>".__("No fields")."</h4>";
 }
+echo "</div>";
 
-echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=users&sec2=godmode/usuarios/user_field_editor'>";
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-		print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
-	echo '</div>';
-echo "</form>";
-
+echo '<div class="divform">';
+	echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=users&sec2=godmode/usuarios/user_field_editor'>";
+		echo "<table class='search-table'>";
+			echo "<tr>";
+				echo "<td>";
+					print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
+				echo "</td>";
+			echo "</tr>";
+		echo "</table>";
+	echo "</form>";
+echo '</div>';
 
 ?>

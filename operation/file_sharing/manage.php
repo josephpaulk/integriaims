@@ -91,10 +91,6 @@ if ($user_is_admin) {
 	$memory_limit = (float) ini_get('memory_limit');
 	$upload_mb = min($max_upload, $max_post, $memory_limit);
 
-	echo "<div class=\"upload-params-info\">";
-	echo sprintf(__("The users can upload files with a maximum size of %sMB"), $upload_mb) . ". " . __("To increase this value, change your server settings") . ".";
-	echo "</div>";
-
 	// Select user
 	echo "<div class='divform'>";
 	echo "<form method=post action='index.php?sec=file_sharing&sec2=operation/file_sharing/manage'>";
@@ -118,17 +114,23 @@ if ($user_is_admin) {
 
 ?>
 <div class="divresult">
-	<div id="" class="">
-		<?php require($config['homedir']."/operation/file_sharing/list.php"); ?>
+	
+	<?php
+	echo "<div class=\"upload-params-info\">";
+	echo sprintf(__("The users can upload files with a maximum size of %sMB"), $upload_mb) . ". " . __("To increase this value, change your server settings") . ".";
+	echo "</div>";
+	?>
+	<div id="file_sharing_table" class="table">
+		<div class="table_row">
+			<div id="file_sharing_upload_cell" class="table_cell">
+				<?php require($config['homedir']."/operation/file_sharing/upload.php"); ?>
+			</div>
+		</div>
 	</div>
 </div>
 
-<div id="file_sharing_table" class="table">
-	<div class="table_row">
-		<div id="file_sharing_upload_cell" class="table_cell">
-			<?php require($config['homedir']."/operation/file_sharing/upload.php"); ?>
-		</div>
-	</div>
+<div id="" class="">
+	<?php require($config['homedir']."/operation/file_sharing/list.php"); ?>
 </div>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>

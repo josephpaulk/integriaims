@@ -192,7 +192,7 @@ if ($delete_custom_search) {
 $table = new stdClass;
 $table->id = 'saved_searches_table';
 $table->width = '100%';
-$table->class = 'search-table';
+$table->class = 'search-table-button';
 $table->size = array ();
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
@@ -288,16 +288,16 @@ if ($has_im) {
 	$table->data[1][2] .= print_input_hidden ('id_parent', $id_parent, true);
 	$table->data[1][2] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 	//Delete tickets
-	$table->data[1][3] = print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
+	$table->data[1][3] = "<b>" . __("Delete all tickets") . "</b>";
+	$table->data[1][3] .= print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
 }
 
-$table->data[2][0] = print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true);
+$table->data[2][0] = "<div class='button-form'>" . print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true) . "</div>";
 $table->colspan[2][0] = 4;
 
 $massive_oper_incidents = print_table ($table, true);
 
-//echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
-echo $massive_oper_incidents;
+echo print_container_div('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
 ?>

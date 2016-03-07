@@ -32,7 +32,7 @@ global $show_wiki;
 
 // PROJECTS
 echo "<nav id='menu_nav'>";
-echo "<ul>";
+echo "<ul id='menu_slide'>";
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {
 	$id_project = get_parameter ('id_project', -1);
 	$id_task = get_parameter ('id_task', -1);
@@ -58,7 +58,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		echo "<li id='sideselproject' class='sideselcolor'>";
 	else
 		echo "<li id='proyectos'>";
-	echo "<a   title='".__('Projects')."'href='index.php?sec=projects&sec2=operation/projects/project_overview'>1</a>";
+	//echo "<a   title='".__('Projects')."'href='index.php?sec=projects&sec2=operation/projects/project_overview'>1</a>";
 		
 		echo "<ul>";
 			echo "<li><h1>".__('Projects')."</h1></li>";
@@ -76,7 +76,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/user_project_timegraph'>".__('Project timemap')."</a></li>";
 
-			/*// Project create
+			//Project create
 			if ($section_permission['write']) {
 				if ($sec2 == "operation/projects/project_detail" && $id_project < 0)
 					echo "<li id='sidesel'>";
@@ -84,7 +84,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 					echo "<li>";
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&create_project=1'>".__('Create project')."</a></li>";
 			}
-			*/
+			
 			if($show_projects != MENU_LIMITED && $show_projects != MENU_MINIMAL) {
 				// View disabled projects
 				if (($sec2 == "operation/projects/project") AND (isset($_REQUEST["view_disabled"])) )
@@ -102,7 +102,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/role_user_global'>".__('Global assigment')."</a></li>";
 			}		
 			
-		echo "</ul>";	
+		echo "</ul>";
 	echo "</li>";
 		
 	if ($id_project > 0) {
@@ -114,7 +114,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			echo "<li id='sideselgestionproyectos' class='sideselcolor'>";
 		else
 			echo "<li id='gestionproyectos'>";
-		echo "<a   title='".__('Project Management')."' href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>1</a>";
+		//echo "<a   title='".__('Project Management')."' href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>1</a>";
 		
 		echo "<ul>";
 			echo"<li><h1>".__('Project Management')."</h1></li>";
@@ -229,7 +229,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			echo "<li id='sideseldetallestareas' class='sideselcolor'>";
 		else
 			echo "<li id='detallestareas'>";
-		echo "<a title='".__('Task').": $task_title' href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>1</a>";
+		//echo "<a title='".__('Task').": $task_title' href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>1</a>";
 	
 			echo "<ul>";
 			  echo"<li><h1>".__('Task').": $task_title</h1></li>";
@@ -354,7 +354,6 @@ if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projec
 		echo "<li id='sideselgrupos' class='sideselcolor'>";
 	else
 		echo "<li id='grupos'>";
-		echo "<a title='".__('Projects groups')."' href='index.php?sec=projects&sec2=operation/projects/project_group_detail'>1</a>";
 		
 		echo "<ul>";
             echo "<li><h1>".__('Projects groups')."</h1></li>";
@@ -415,7 +414,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		echo "<li id='sideselticket' class='sideselcolor'>";
 	else
 		echo "<li id='ticket'>";
-	echo "<a title='".__('Incidents')."' href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>1</a>";
+	//echo "<a title='".__('Incidents')."' href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>1</a>";
 		
 		echo "<ul>";
 			echo "<li><h1>".__('Incidents')."</h1></li>";
@@ -481,15 +480,33 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li id='sideseltipo_ticket' class='sideselcolor'>";
 			else
 				echo "<li id='tipo_ticket'>";
-			echo "<a   title='".__('Ticket Types')."' href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>1</a></li>";
-			// SLA Management
+			//echo "<a   title='".__('Ticket Types')."' href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>1</a></li>";
+			echo "<ul>";
+				echo "<li><h1>".__('Tickets')."</h1></li>";
+				if ($sec2 == "operation/incidents/type_detail")
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__("Ticket Management")."</a></li>";
+			echo "</ul>";
+			echo "</li>";
 			
+			
+			// SLA Management
 			if ($sec2 == "operation/slas/sla_detail")
 				echo "<li id='sideselsla' class='sideselcolor'>";
 			else
 				echo "<li id='sla'>";
-			echo "<a   title='".__('SLA')."' href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>1</a></li>";
-			
+				
+			echo "<ul>";
+				echo "<li><h1>".__('SLA')."</h1></li>";
+				if ($sec2 == "operation/slas/sla_detail")
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>".__("SLA Management")."</a></li>";
+			echo "</ul>";
+			echo "</li>";
 		}
 		
 		//Workflow rules
@@ -508,7 +525,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 		echo "<li id='sideselinventario' class='sideselcolor'>";
 	else
 		echo "<li id='inventario'>";
-	echo "<a title='".__('Inventory')."' href='index.php?sec=inventory&sec2=operation/inventories/inventory'>1</a>";
+	//echo "<a title='".__('Inventory')."' href='index.php?sec=inventory&sec2=operation/inventories/inventory'>1</a>";
     echo "<ul>";
 		echo "<li><h1>".__('Inventory')."</h1></li>";
            
@@ -566,7 +583,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 		echo "<li id='sideselclientes' class='sideselcolor'>";
 	else
 		echo "<li id='clientes'>";
-	echo "<a   title='".__('Customers')."' href='index.php?sec=customers&sec2=operation/companies/company_detail'>1</a>";
+	//echo "<a   title='".__('Customers')."' href='index.php?sec=customers&sec2=operation/companies/company_detail'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Customers')."</h1></li>";
 	
@@ -581,9 +598,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 		
 		if ($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
 			if ($new_company)
-				echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
-				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a></li>";
 		}
 
@@ -608,9 +625,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 		// new
 		if (($sec2 == "operation/invoices/invoice_detail" || $sec2 == "operation/invoices/invoices") && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
 			if ($new_invoice)
-				echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
-				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoices&new_invoice=1'>".__('New invoice')."</a></li>";
 		}
 		
@@ -626,9 +643,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 		// new
 		if ($sec2 == "operation/contracts/contract_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
 			if ($new_contract)
-				echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
-				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a></li>";
 		}
 
@@ -643,9 +660,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 
 		if ($sec2 == "operation/contacts/contact_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
 			if ($new_contact)
-				echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
-				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a></li>";
 		}
 
@@ -660,9 +677,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 
 		if ($sec2 == "operation/leads/lead" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
 			if ($new_lead)
-				echo "<li id='sidesel' style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
-				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&new=1'>".__('New lead')."</a></li>";
 		}
 		echo "</ul>";
@@ -676,7 +693,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CM") && $show_custo
 		echo "<li id='sideseltemplates' class='sideselcolor'>";
 	else
 		echo "<li id='templates'>";
-		echo "<a   title='".__('CRM Templates')."' href='index.php?sec=customers&sec2=operation/leads/template_manager'>1</a>";
+		//echo "<a   title='".__('CRM Templates')."' href='index.php?sec=customers&sec2=operation/leads/template_manager'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('CRM Templates')."</h1></li>";
 
@@ -699,7 +716,7 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 		echo "<li id='sideselnewsletter' class='sideselcolor'>";
 	else
 		echo "<li id='newsletter'>";
-		echo "<a   title='".__('Newsletter')."' href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>1</a>";
+		//echo "<a   title='".__('Newsletter')."' href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Newsletter')."</h1></li>";
 			
@@ -709,7 +726,7 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 				echo "<li>";
 			echo "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>".__('Newsletters')."</a></li>";
 
-			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<li style='margin-left: 15px;'>";
 				echo "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&create=1'>".__('New newsletter')."</a>";
 			echo "</li>";
 			
@@ -719,7 +736,7 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 				echo "<li>";
 			echo "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_definition'>".__('Issues')."</a></li>";
 
-			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<li style='margin-left: 15px;'>";
 				echo "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&create=1'>".__('New issue')."</a>";
 			echo "</li>";
 			
@@ -729,11 +746,11 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 				echo "<li>";
 			echo "<a href='index.php?sec=customers&sec2=operation/newsletter/address_definition'>".__('Addresses')."</a></li>";
 
-			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<li style='margin-left: 15px;'>";
 				echo "<a href='index.php?sec=customers&sec2=operation/newsletter/address_creation&create=1'>".__('New address')."</a>";
 			echo "</li>";
 			
-			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<li style='margin-left: 15px;'>";
 				echo "<a href='index.php?sec=customers&sec2=operation/newsletter/manage_address&create=1'>".__('Manage address')."</a>";
 			echo "</li>";
 			
@@ -753,7 +770,7 @@ if (($sec == "customers") && (give_acl ($config["id_user"], 0, "VM")) && ($show_
 		echo "<li id='sideselcampana' class='sideselcolor'>";
 	else
 		echo "<li id='campana'>";
-		echo "<a   title='".__('Campaign')."' href='index.php?sec=customers&sec2=operation/campaign/campaign'>1</a>";
+		//echo "<a   title='".__('Campaign')."' href='index.php?sec=customers&sec2=operation/campaign/campaign'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Campaign')."</h1></li>";
 
@@ -772,7 +789,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inven
 		echo "<li id='sideselfabricantes' class='sideselcolor'>";
 	else
 		echo "<li id='fabricantes'>";
-		echo "<a title='".__('Manufacturers')."' href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>1</a>";
+		//echo "<a title='".__('Manufacturers')."' href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Manufacturers')."</h1></li>";
 			// Building overview
@@ -791,7 +808,7 @@ if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_invent
 		echo "<li id='sideselobjetos_inventario' class='sideselcolor'>";
 	else
 		echo "<li id='objetos_inventario'>";
-	echo "<a title='".__('Inventory objects')."' href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>1</a>";
+	//echo "<a title='".__('Inventory objects')."' href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Inventory objects')."</h1></li>";
 
@@ -820,7 +837,7 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_H
 		echo "<li id='sideselknowledge_base' class='sideselcolor'>";
 	else
 		echo "<li id='knowledge_base'>";
-	echo "<a title='".__('Knowledge Base')."' href='index.php?sec=kb&sec2=operation/kb/browse'>1</a>";
+	//echo "<a title='".__('Knowledge Base')."' href='index.php?sec=kb&sec2=operation/kb/browse'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Knowledge Base')."</h1></li>";
 			// KB Browser
@@ -871,7 +888,7 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "FRR") && $show_file_
 		echo "<li id='sideseldownloads' class='sideselcolor'>";
 	else
 		echo "<li id='downloads'>";
-	echo "<a title='".__('File releases')."' href='index.php?sec=download&sec2=operation/download/browse&show_types=1'>1</a>";
+	//echo "<a title='".__('File releases')."' href='index.php?sec=download&sec2=operation/download/browse&show_types=1'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('File releases')."</h1></li>";
 
@@ -924,7 +941,7 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 		echo "<li id='sideselgestion' class='sideselcolor'>";
 	else
 		echo "<li id='gestion'>";
-	echo "<a   title='".__('Setup')."' href='index.php?sec=godmode&sec2=godmode/setup/setup'>1</a>";
+	//echo "<a   title='".__('Setup')."' href='index.php?sec=godmode&sec2=godmode/setup/setup'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Setup')."</h1></li>";
 	
@@ -1037,7 +1054,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		echo "<li id='sideselmyself' class='sideselcolor'>";
 	else
 		echo "<li id='myself'>";
-	echo "<a   title='".__('Myself')."' href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
+	//echo "<a   title='".__('Myself')."' href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Myself')."</h1></li>";
 	
@@ -1092,7 +1109,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<li id='sideselinformes' class='sideselcolor'>";
 		else	
 			echo "<li id='informes'>";
-		echo "<a title='".__('People reporting')."'href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
+		//echo "<a title='".__('People reporting')."'href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 			echo "<ul>";
 				echo "<li><h1>".__('People reporting')."</h1></li>";		
 
@@ -1140,7 +1157,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<li id='sideselinformes' class='sideselcolor'>";
 		else	
 			echo "<li id='informes'>";
-		echo "<a title='".__('People reporting')."'href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
+		//echo "<a title='".__('People reporting')."'href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 			echo "<ul>";
 				echo "<li><h1>".__('People reporting')."</h1></li>";
 		
@@ -1166,7 +1183,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 				echo "<li id='sideselmanage' class='sideselcolor'>";
 			else
 				echo "<li id='manage'>";
-			echo "<a   title='".__('People management')."' href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>1</a>";
+			//echo "<a   title='".__('People management')."' href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>1</a>";
 				echo "<ul>";
 					echo "<li><h1>".__('People management')."</h1></li>";
 			
@@ -1178,7 +1195,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
 					
 					if ($sec2 == "godmode/usuarios/lista_usuarios") {
-						echo "<li style='margin-left: 15px; font-size: 10px;'>";
+						echo "<li style='margin-left: 15px;'>";
 						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
 						echo "</li>";
 					}
@@ -1212,7 +1229,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 					echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
 					
 					if ($sec2 == "godmode/grupos/lista_grupos"){
-						echo "<li style='margin-left: 15px; font-size: 10px;'>";
+						echo "<li style='margin-left: 15px;'>";
 						echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
 					}
 				}
@@ -1233,7 +1250,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		echo "<li id='sideselwiki' class='sideselcolor'>";
 	else		
 		echo "<li id='wiki'>";
-	echo "<a   title='".__('Wiki')."' href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
+	//echo "<a   title='".__('Wiki')."' href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 		echo "<ul>";
 		
 		// Todo overview
@@ -1318,35 +1335,35 @@ extensions_print_side_menu_subsection($sec, $sec2);
 if (give_acl ($config['id_user'], $id_grupo, "AR")) {
 $month = get_parameter ("month", date ('n'));
 $year = get_parameter ("year", date ('y'));
-
-echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
-// echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
-echo '<h3>'.__('Calendar').'</h3>';
-echo '<div id="calendar_div">';
-echo generate_calendar ($year, $month, array(), 1, NULL, $config["first_day_week"]);
-echo '</div>';
-
-echo "<ul class='sidemenu'>";
-echo "<li>";
-echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
-echo "<img style='vertical-align:middle' width='20px' src='images/calendar_orange.png'>&nbsp;".__('Full calendar');
-echo '</a>';
-echo "</li>";
-
+if (($sec2 == "operation/agenda/agenda"))
+	echo "<li id='sideselcalendario' class='sideselcolor'>";
+else
+	echo "<li id='calendario'>";
+	//echo "<a title='".__('Calendar')."' href='index.php?sec=agenda&sec2=operation/agenda/agenda'>1</a>";
+	echo "<ul>";
+		echo "<li><h1>".__('Calendar')."</h1></li>";
+		
+		echo '<li id="calendar_div">';
+			echo generate_calendar ($year, $month, array(), 1, NULL, $config["first_day_week"]);
+		echo '</li>';
+		echo "<li>";
+			echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
+				echo "<img style='vertical-align:middle' width='20px' src='images/calendar_orange.png'>&nbsp;".__('Full calendar');
+			echo '</a>';
+		echo "</li>";
 if (give_acl ($config['id_user'], $id_grupo, "AW")) {
-echo "<li>";
-if ($sec == 'agenda') {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, true)'>
-		<img src='images/add.png'>&nbsp;".__('Add entry')."</a>";
-} else {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, false)'>
-		<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
+		echo "<li>";
+			if ($sec == 'agenda') {
+				echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, true)'>
+					<img src='images/add.png'>&nbsp;".__('Add entry')."</a>";
+			} else {
+				echo "<a href='javascript:;' onClick='show_agenda_entry(0, \"\", 0, false)'>
+					<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
+			}
+		echo "</li>";
 }
+	echo "</ul>";
 echo "</li>";
-}
-echo "</ul>";
-
-echo "</div>";
 }
 // End of calendar box
 
@@ -1370,7 +1387,7 @@ if (($sec2 == "operation/users/user_edit"))
 	echo "<li id='sideselinfo_usuario' class='sideselcolor'>";
 else
 	echo "<li id='info_usuario'>";
-echo "<a title='".__('User Info')."'href='index.php?sec=agenda&sec2=operation/users/user_edit'>1</a>";
+	//echo "<a title='".__('User Info')."'href='index.php?sec=agenda&sec2=operation/users/user_edit'>1</a>";
 	echo "<ul>";
 		echo "<li><h1>".__('User Info')."</h1></li>";
 		echo '<li>';

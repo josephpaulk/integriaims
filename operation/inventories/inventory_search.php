@@ -198,6 +198,12 @@ if (defined ('AJAX')) {
 		
 		$cont = get_db_all_rows_sql($sql);
 
+		// Add no object type
+		$last_key = count($cont);
+		$cont[$last_key]['name'] = __('No object type');
+		$cont[$last_key]['icon'] ="box.png";
+		$cont[$last_key]['id'] = 0;
+
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
 		$cont_size = count($cont);
@@ -379,7 +385,7 @@ if (!$clean_output) {
 	
 	echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		$table_search = new StdClass();
-		$table_search->class = 'search-table';
+		$table_search->class = 'search-table-button';
 		$table_search->width = '100%';
 		$table_search->data = array ();
 		$table_search->size[0] = "40%";
@@ -417,14 +423,14 @@ if (!$clean_output) {
 		$table_search->data[2][1] = print_checkbox_extended ('last_update', 1, $last_update,
 		false, '', '', true, __('Last updated'));
 
-		$buttons = '<div style=" text-align: right;">';
+		$buttons = '<div class="button-form">';
 		$buttons .= print_input_hidden ('search', 1, true);
 		$buttons .= print_input_hidden ('mode', $mode, true);
 		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 		
 		$filter["query"] = $sql_search;
 		serialize_in_temp($filter, $config["id_user"]);
-		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
+		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub"', true);
 
 		$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
 		$buttons .= '</div>';
@@ -462,16 +468,16 @@ switch ($mode) {
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
 		if ($write_permission) {
-			echo '<div style=" text-align: right;">';
-			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+			echo '<div class="button-form">';
+			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 			echo '</div>';
 		}
 		break;
 	default:
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
 		if ($write_permission) {	
-			echo '<div style=" text-align: right;">';
-			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+			echo '<div class="button-form">';
+			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 			echo '</div>';
 		}
 		break;

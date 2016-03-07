@@ -125,6 +125,9 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 		$graph_ttl = 1;
 	}
 	
+	echo "<table class='blank' style='width:100%'>";
+	echo "<tr><td style='width:60%' valign='top'>";
+	
 	$sql = "SELECT t.*
 			FROM ttask t
 			WHERE t.id_parent_task=0

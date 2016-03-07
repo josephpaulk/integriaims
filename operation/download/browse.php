@@ -369,7 +369,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "</form>";
 		}
 
-	} else {
+	}
+	else {
 		echo "<h2>".__('Downloads')."</h2>";
 		echo "<h4>".__('Update existing file release')."</h4>";
 	}
@@ -391,19 +392,31 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	$table->data[1][2] = print_select (get_file_types(true, true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
 	$table->data[2][0] = print_textarea ("description", 5, 40, $description, '', true, __('Description'));
 	
+	
+	
 	if ($id == -1) {
-
-		$table->data[3][0] = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
 		$form_file_release = '<form style="display:none;" id="form-file_release" enctype="multipart/form-data" name=prodman2 method="post" action="index.php?sec=download&sec2=operation/download/browse&create2=1">';
 	
 	} else {
-
-		$table->data[3][0] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
 		$form_file_release = "<form id='form-file_release' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
 		$form_file_release .= "<input id='id_download' type=hidden name=id value='$id'>";
 	}
-
+	
 	$form_file_release .= print_table($table, true);
+	
+	
+	
+	$form_file_release .= "<div class='button-form' >";
+	
+	unset($table->data);
+	$table->class = "button-form";
+	if ($id == -1) {
+		$table->data[3][0] = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);	
+	} else {
+		$table->data[3][0] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+	}
+	$form_file_release .= print_table($table, true);
+	
 	$form_file_release .= "</form>";
 
 	echo $form_file_release;
@@ -420,7 +433,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		echo "<h2>".__('Download')."</h2><h4>".__('Types')."</h4>";
 		print_file_types_table();
 
-	} else {
+	}
+	else {
 
 		// ==================================================================
 		// Show search controls
@@ -436,19 +450,21 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		// Search filters
 		$table = new stdClass;
 		$table->width = '100%';
-		$table->class = 'search-table-button';
+		$table->class = 'search-table';
 		$table->data = array();
 		$table->colspan = array();
 		$table->colspan[1][0] = 3;
 
 		$table->data[0][0] = print_input_text ('free_text', $free_text, '', 40, 100, true, __('Search'));
-		$table->data[0][1] = combo_download_categories ($id_category, true, true, true);
-		$table->data[0][2] = print_select (get_file_types(true), 'id_type', $id_type, '', __('Any'), 0, true, 0, false, __('Type'));
-		$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		$table->data[1][1] = combo_download_categories ($id_category, true, true, true);
+		$table->data[2][2] = print_select (get_file_types(true), 'id_type', $id_type, '', __('Any'), 0, true, 0, false, __('Type'));
+		$table->data[3][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
+		echo "<div class='divform'>";
 		echo '<form method="post" action="index.php?sec=download&sec2=operation/download/browse">';
 		echo print_table($table, true);
 		echo "</form>";
+		echo "</div>";
 		
 		// ==================================================================
 		// Download listings
@@ -477,7 +493,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		$color = 0;
 		
 		$downloads = process_sql($sql);
-
+		
+		echo "<div class='divresult'>";
+		
 		if($downloads == false) {
 			$downloads = array();
 			echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
@@ -561,6 +579,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 			
 			print_table($table);
 		}
+		echo "</div>";
 	}
 
 }

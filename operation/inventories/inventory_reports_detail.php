@@ -186,10 +186,10 @@ if (dame_admin ($config['id_user'])) {
 	}
 }
 
-$table->data[2][0] = $button;
-
 echo '<form id="form-inventory_report" method="post">';
 print_table ($table);
+if (dame_admin ($config['id_user'])) 
+	echo "<div class='button-form'>" . $button . "</div>";
 echo '</form>';
 ?>
 

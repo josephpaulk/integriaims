@@ -94,7 +94,7 @@ else
 
 $table = new StdClass();
 $table->width = '100%';
-$table->class = 'search-table';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->rowspan = array ();
 $table->rowspan[0][2] = 5;
@@ -165,7 +165,7 @@ $table->data[5][1] = print_select ($slas,
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Ticket SLA'));
 	
 $table->data[6][0] = print_input_text ('inventory_name', $inventory_name,'', 25, 0, true, __('Default Inventory object'), false);	
-$table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
+$table->data[6][0] .= '&nbsp;&nbsp;' . "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search parent')."</a>";
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
@@ -177,7 +177,7 @@ print_table ($table);
 
 enterprise_hook("groups_email_queue_form", array($autocreate_user, $grant_access, $send_welcome, $default_company, $welcome_email, $email_queue,$default_profile,$user_level, $incident_type));
 
-echo '<div class="button" style="width: '.$table->width.'">';
+echo '<div class="button-form" style="width: '.$table->width.'">';
 
 if ($id) {
 	print_submit_button (__('Update'), '', false, 'class="sub upd"');

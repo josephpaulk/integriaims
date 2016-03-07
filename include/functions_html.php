@@ -902,6 +902,14 @@ function print_table (&$table, $return = false) {
 		}
 	}
 	
+	if (isset ($table->cellstyle)) {
+		foreach ($table->cellstyle as $keyrow => $cstyle) {
+			foreach ($cstyle as $key => $cst) {
+				$cellstyle[$keyrow][$key] = $cst;
+			}
+		}
+	}
+	
 	if (empty ($table->width)) {
 		$table->width = '80%';
 	}
@@ -992,9 +1000,13 @@ function print_table (&$table, $return = false) {
 				if (!isset ($style[$key])) {
 					$style[$key] = '';
 				}
-
+				
+				if (!isset ($cellstyle[$keyrow][$key])) {
+					$cellstyle[$keyrow][$key] = '';
+				}
+				
 				$output .= '<td id="'.$tableid.'-'.$keyrow.'-'.$key.
-					'" style="'. $style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key].
+					'" style="'. $cellstyle[$keyrow][$key].$style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key].
 					'" '.$colspan[$keyrow][$key].' '.$rowspan[$keyrow][$key].
 					' class="'.$class.'">'. $item .'</td>'."\n";
 			}
@@ -1267,9 +1279,8 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	}
 }
 
-function print_container_div($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '') {
+function print_container_div($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '', $container_style) {
 	$container_div_style = '';
-	$container_style = '';
 	$h2_class_extra = ' clickable';
 	$arrow = '';
 	$onclick = 'toggleDiv (\'' . $id . '_div\')';
@@ -1280,7 +1291,7 @@ function print_container_div($id, $title, $content, $open = 'open', $return = tr
 			break;
 		case 'closed':
 			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right'));
-			$container_div_style = 'display: none;';
+			$container_div_style .= ' display: none;';
 			break;
 		case 'no':
 		default:
@@ -1503,6 +1514,10 @@ function print_company_autocomplete_input ($parameters) {
 	}
 	
 	$attributes = 'class="company_autocomplete"';
+	if (isset($parameters['attributes'])) {
+		if (!is_array($parameters['attributes']))
+			$attributes .= $parameters['attributes'];
+	}
 	
 	$html = "";
 	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title)). print_help_tip (__($help_message), $return_help);

@@ -77,7 +77,6 @@ if (isset($_GET["create_dir"])) {
 
 }
 
-
 // A miminal security check to avoid directory traversal
 if (preg_match("/\.\./", $current_directory))
 	$current_directory = "images";
@@ -87,6 +86,7 @@ if (preg_match("/^manager/", $current_directory))
 	$current_directory = "images";
 
 echo "<div class='divform'>";
+
 echo "<table width='100%' class='search-table'>";
 
 echo "<tr><td class='datos'>";
@@ -99,7 +99,7 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 $available_directory[$current_directory] = $current_directory;
 
 echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
-print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, __("Base directory"),"","");
+print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, '',"","");
 echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
 echo "</form>";
 
@@ -121,8 +121,9 @@ if (is_writable($current_directory)) {
 	echo __('Please check that current directory has write rights for HTTP server');
 	echo "</p>";
 }
-echo "<div class='divresult'>";
-echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0 title='" . __('Refresh') . "'></a></h1>";
+
+echo "<div class='divresult' style=''>";
+echo "<h4 style='width: 93% !important; float:right;'>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0 title='" . __('Refresh') . "'></a></h4>";
 // Upload form
 
 	// List files
@@ -162,7 +163,7 @@ echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index
 		$dirs = null;
 		$nondirs = null;
 		
-		echo "<table width='100%' class='listing'>";
+		echo "<table width='100%' class='listing' style='width: 93% !important; float:right;'>";
 		
 		$prev_dir = explode( "/", $current_directory );
 		$prev_dir_str = "";

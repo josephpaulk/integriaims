@@ -989,7 +989,7 @@ if ($id) {
 
 echo '<div class="result">'.$result_msg.'</div>';
 $table->width = '100%';
-$table->class = 'search-table';
+$table->class = 'search-table-button';
 $table->id = "incident-editor";
 $table->size = array ();
 $table->size[0] = '430px';
@@ -1002,7 +1002,7 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 
 if ($has_permission && (!$blocked_incident)) {
-	$table->data[0][0] = print_input_text ('titulo', $titulo, '', 55, 100, true, __('Title'));
+	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, '', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
@@ -1297,7 +1297,7 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 // END TABLE ADVANCED
 
 $table->colspan['row_advanced'][0] = 4;
-$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, true);
 
 
 $table->colspan[9][0] = 4;
@@ -1352,18 +1352,18 @@ if (!$create_incident){
 	$html .= "</div>";
 
 	$table->colspan[10][0] = 4;
-	$table->data[10][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, false);
+	$table->data[10][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
 }
 
 if ($create_incident) {
-	$button = "<div style='width:100%; text-align:right;'>";
+	$button = "<div class='button-form'>";
 	$button .= print_input_hidden ('action', 'insert', true);
 	if (give_acl ($config["id_user"], 0, "IW")) {
 		$button .= print_submit_button (__('Create'), 'action2', false, 'class="sub create"', true);
 	}
 	$button .= '</div>';
 } else {
-	$button = "<div style='width:100%; text-align:right;'>";
+	$button = "<div class='button-form'>";
 	$button .= print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
 	$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);

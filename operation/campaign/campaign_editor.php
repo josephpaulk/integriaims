@@ -93,8 +93,8 @@ if ($new) {
 	$action = "index.php?sec=customers&sec2=operation/campaign/campaign&tab=editor&id=".$id;
 }
 
-$table->width = '98%';
-$table->class = 'databox';
+$table->width = '100%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -117,16 +117,22 @@ $table->data[1][0] = print_textarea ('description', 9, 80, $description, false, 
 
 echo "<form action='".$action."' method='post'>";
 
-if ($new) {
-	$table->data[2][0] = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
-	$table->data[2][0] .= print_input_hidden ('create', 1, true);
-} else {
-	$table->data[2][0] = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-	$table->data[2][0] .= print_input_hidden ('update', 1, true);
-}
-
 print_table ($table);
 
+	echo '<div style="width:100%;">';
+		unset($table->data);
+		unset($table->head);
+		$table->width = '100%';
+		$table->class = "button-form";
+		if ($new) {
+			$table->data[2][0] = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+			$table->data[2][0] .= print_input_hidden ('create', 1, true);
+		} else {
+			$table->data[2][0] = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+			$table->data[2][0] .= print_input_hidden ('update', 1, true);
+		}
+		print_table ($table);
+	echo "</div>";
 echo "</form>";
 
 ?>

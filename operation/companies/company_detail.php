@@ -330,7 +330,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	}
 
 
-	$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, $disabled_write, '',
+	$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 18, 30, $disabled_write, '',
 	array(), true, '', __('Manager'));
 	if (!$disabled_write) {
 		$table->data[0][1] .= print_help_tip (__("Type at least two characters to search"), true);
@@ -338,37 +338,42 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, true, "", "", true, false,  __('Parent company'));
+	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 18, 0, true, "", "", true, false,  __('Parent company'));
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 	$table->data[1][0] .= "&nbsp;<a href='javascript:show_company_search(\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Add parent')."'><img src='images/zoom.png'></a>";
 	$table->data[1][0] .= "&nbsp;<a href='javascript:clearParent();' title='".__('Clear parent')."'><img src='images/cross.png'></a>";
 	
-	$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'), $disabled_write);
+	$table->data[1][1] = print_input_text ("last_update", $last_update, "", 18, 100, true, __('Last update'), $disabled_write);
 	
-	$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 15, 100, true, __('Fiscal ID'), $disabled_write);
+	$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 18, 100, true, __('Fiscal ID'), $disabled_write);
 	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'), $disabled_write);
 
 	$table->data[3][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'), $disabled_write);
-	$table->data[3][1] = print_input_text ("country", $country, "", 20, 100, true, __('Country'), $disabled_write);
+	$table->data[3][1] = print_input_text ("country", $country, "", 18, 100, true, __('Country'), $disabled_write);
 
 	$table->data[4][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'), $disabled_write);
 	$table->data[5][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'), $disabled_write);
 	
-	if ($id > 0 && ($write_permission || $manage_permission)) {
-		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update_company', 1, true);
-		$button .= print_input_hidden ('id', $id, true);
-	} elseif ( $id == 0 && $section_write_permission || $section_manage_permission) {
-		$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('create_company', 1, true);
-	}
-	
-	$table->data[6][0] = $button;
-	$table->colspan[6][0] = 2;
-	
 	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
+	echo "<div style='width:100%; text-align:right;'>";
+		unset($table->data);
+		$table->class = "button-form";
+		$table->width = "100%";
+		if ($id > 0 && ($write_permission || $manage_permission)) {
+			$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('update_company', 1, true);
+			$button .= print_input_hidden ('id', $id, true);
+		} elseif ( $id == 0 && $section_write_permission || $section_manage_permission) {
+			$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('create_company', 1, true);
+		}
+			
+		$table->data[6][0] = $button;
+		$table->colspan[6][0] = 2;
+		print_table ($table);
+	echo "</div>";
 	echo '</form>';
 }
 
@@ -409,10 +414,16 @@ elseif ($op == "activities") {
 
 	$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
 	$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
-	$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
 
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
 	print_table($table);
+		echo "<div class='no' style='width:100%; text-align:right;'>";
+			unset($table->data);
+			$table->class = "button-form";
+			$table->width = "100%";
+			$table->data[0][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
+			print_table($table);
+		echo '</div>';
 	echo '</form>';
 
 	$contacts = crm_get_all_contacts (sprintf(" WHERE id_company = %d", $id));
@@ -431,11 +442,10 @@ elseif ($op == "activities") {
 	if ($act_contacts !== false) {
 		$activities = array_merge($activities, $act_contacts);
 	}
-	
-	$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=activities");
 
-	if ($activities !== false) {	
-
+	if ($activities !== false) {
+		
+		$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=activities");
 		$aux_activities = array();
 
 		foreach ($activities as $key => $act) {
@@ -988,11 +998,11 @@ if ((!$id) AND ($new_company == 0)){
 	$table->class = 'search-table-button';
 	$table->style = array ();
 	$table->data = array ();
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][0] = print_input_text_extended ("search_text", $search_text, "", '', 15, 100, false, '', "style='width:210px;'", true, '', __('Search'));
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
-	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 10, 100, true, __('Country'));
-	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 15, 100, true, __('Country'));
+	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '', array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
 	
 	// $companies_name = crm_get_companies_list("", false, "ORDER BY name", true);
 	// $table->data[1][0] = print_select ($companies_name, 'search_parent', $search_parent, '', __('Any'), 0, true, false, false, __('Parent'));
@@ -1002,19 +1012,13 @@ if ((!$id) AND ($new_company == 0)){
 	$params['input_value'] = $search_parent;
 	$params['title'] = __('Parent');
 	$params['return'] = true;
+	$params['attributes'] = 'style="width:210px;"';
+	
 	$table->data[1][0] = print_company_autocomplete_input($params);
 
 	$table->data[1][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 	$table->data[1][3] = print_input_text ('search_min_billing', $search_min_billing, '', 15, 20, true, __('Min. billing'));
-		
-	$buttons = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	// Delete new lines from the string
-	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . str_replace('"', "\'", $where_clause) . '&date=' . $date . '\')', 'class="sub csv"', true);
-		
-	$table->data[2][0] = $buttons;
-	$table->colspan[2][0] = 4;
 
 	echo '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
@@ -1022,12 +1026,25 @@ if ((!$id) AND ($new_company == 0)){
 	print_input_hidden ('order_by_activity', $order_by_activity);
 	print_input_hidden ('order_by_company', $order_by_company);
 	print_input_hidden ('order_by_billing', $order_by_billing);
+	unset($table->data);
+	echo "<div style='width:100%;'>";
+		$table->width = '100%';
+		$table->class = 'button-form';
+		$buttons =  print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		// Delete new lines from the string
+		$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . str_replace('"', "\'", $where_clause) . '&date=' . $date . '\')', 'class="sub"', true);
+		
+		$table->data[2][0] = $buttons;
+		$table->colspan[2][0] = 4;
+		print_table ($table);
+	echo "</div>";
 	echo '</form>';
 	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
-	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$search_params", $offset);
 
 	if ($companies !== false) {
+		$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$search_params", $offset);
 		
 		$table = new StdClass();
 		$table->width = "100%";

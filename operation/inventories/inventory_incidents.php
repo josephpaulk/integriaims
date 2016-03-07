@@ -33,7 +33,8 @@ if (! give_acl ($config['id_user'], get_inventory_group ($id), 'IR')) {
 
 print_inventory_tabs('incidents', $id, $inventory_name);
 
-$table->width = '99%';
+echo '<div class="divresult" id="">';
+$table->width = '100%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
@@ -66,9 +67,12 @@ foreach ($incidents as $incident) {
 }
 
 print_table ($table);
+echo '</div>';
 
-echo '<div id="inventories-stats">';
+echo '<div class="divform" id="">';
+echo "<table class='search-table'><tr><td>";
 echo print_html_report_button ("index.php?sec=inventory&sec2=operation/reporting/incidents_html&search_id_inventory=$id", __('HTML report'), "submit-incident_report", "target='_blank'");
+echo "</td></tr></table>";
 echo '</div>';
 
 ?>

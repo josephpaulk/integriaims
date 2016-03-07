@@ -485,7 +485,7 @@ if ($generate) {
 
 $table->id = 'cost_form';
 $table->width = '100%';
-$table->class = 'search-table';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->size = array ();
 $table->data = array ();
@@ -551,15 +551,15 @@ $table->data[4][1] = print_input_text ('invoice_contract_number', $invoice_contr
 $table->data[5][0] = "<h4>".__('Concept')."</h4>";
 $table->data[5][1] = "<h4>".__('Amount')."</h4>";
 $table->data[6][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
-$table->data[6][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
+$table->data[6][1] = print_input_text ('amount1', $amount[0], '', 18, 20, true);
 $table->data[7][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
-$table->data[7][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
+$table->data[7][1] = print_input_text ('amount2', $amount[1], '', 18, 20, true);
 $table->data[8][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
-$table->data[8][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
+$table->data[8][1] = print_input_text ('amount3', $amount[2], '', 18, 20, true);
 $table->data[9][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
-$table->data[9][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
+$table->data[9][1] = print_input_text ('amount4', $amount[3], '', 18, 20, true);
 $table->data[10][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
-$table->data[10][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
+$table->data[10][1] = print_input_text ('amount5', $amount[4], '', 18, 20, true);
 $table->data[11][0] = print_input_text ('discount_before', $discount_before, '', 5, 20, true, __('Discount before taxes (%)'));
 $table->data[11][1] = print_input_text ('discount_concept', $discount_concept, '', 20, 50, true, __('Concept discount'));
 
@@ -611,7 +611,7 @@ if (is_string($tax_name)){
 
 $table->data[13][0] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('Retention (%)'));
 $table->data[13][1] = print_input_text ('concept_irpf', $concept_irpf, '', 20, 50, true, __('Concept Retention'));
-$table->data[14][0] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
+$table->data[14][0] = print_input_text ('currency', $currency, '', 5, 3, true, __('Currency'));
 
 echo '<div id="msg_ok_hidden" style="display:none;">';
 	echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
@@ -655,7 +655,7 @@ action="index.php?sec=customers&sec2=operation/companies/company_detail
 
 print_table ($table);
 
-echo '<div class="button" style="width:'.$table->width.';">';
+echo '<div class="button-form" style="width:'.$table->width.';">';
 if ($id_invoice != -1) {
 	print_submit_button (__('Update'), 'button-upd', false, 'class="sub upd"');
 	print_input_hidden ('id', $id);

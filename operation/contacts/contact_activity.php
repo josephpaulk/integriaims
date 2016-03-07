@@ -59,10 +59,15 @@ $table->style = array ();
 
 $table->data[0][0] = "<h3>".__("Add activity")."</h3>";
 $table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
-$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
 
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&op=activity&id='.$id.'&op2=add">';
 print_table($table);
+	echo "<div class='no' style='width:100%; text-align:right;'>";
+		unset($table->data);
+		$table->class = "button-form";
+		$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
+		print_table($table);
+	echo '</div>';
 echo '</form>';
 
 $sql = "SELECT * FROM tcontact_activity WHERE id_contact = $id ORDER BY creation DESC";

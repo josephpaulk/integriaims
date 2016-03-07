@@ -498,13 +498,14 @@ elseif ($op == "") {
 		}
 		
 		$table->width = '100%';
+		$table->class = 'search-table-button';
 		$table->colspan = array ();
 		$table->colspan[4][0] = 2;
 		$table->data = array ();
 		
 		if ($new_contract || ($id && ($write_permission || $manage_permission))) {
 			
-			$table->class = 'search-table';
+			$table->class = 'search-table-button';
 			
 			$params = array();
 			$params['input_id'] = 'id_company';
@@ -560,9 +561,10 @@ elseif ($op == "") {
 			$html .= print_table($table_description, true);
 			$html .= "</div>";
 
-			//$table->colspan[5][0] = 4;
-			//$table->data[5][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
-			$button = "<div style='width:100%; text-align:right;'>";
+			$table->colspan[5][0] = 4;
+			$table->data[5][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
+			
+			$button = "<div class='button-form' style='width:100%; text-align:right;'>";
 			if ($id) {
 				$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
 				$button .= print_input_hidden ('id_contract', $id, true);
@@ -612,9 +614,8 @@ elseif ($op == "") {
 		
 		echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 		print_table ($table);
-		echo "<h4>".__('File upload')."</h4>";
-		echo $html;
-		echo $button;
+		
+			echo $button;
 		echo "</form>";
 		
 		if ($id && ($write_permission || $manage_permission)) {
@@ -724,7 +725,7 @@ elseif ($op == "") {
 		
 		echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 		
-		echo "<table width=100% class='search-table'>";
+		echo "<table width=100% class='search-table-button'>";
 		echo "<tr>";
 		
 		echo "<td colspan=2>";
@@ -769,24 +770,26 @@ elseif ($op == "") {
 		echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To'));
 		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
 		echo "</td>";
-		
-		echo "<td valign=bottom align='right'>";
-		echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-		// Delete new lines from the string
-		$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-		echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-		echo "</td>";
 		echo "</tr>";
 		
 		echo "</table>";
+		
+		echo "<div class='button-form' style='width:100%;'>";
+			echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+			// Delete new lines from the string
+			$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+			echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+		echo "</div>";
 		
 		echo '</form>';
 			
 		$contracts = crm_get_all_contracts ($where_clause);
 
-		$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
+		
 
 		if ($contracts !== false) {
+			
+			$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
 			
 			$table = new StdClass();
 			$table->width = "100%";
@@ -854,7 +857,7 @@ elseif ($op == "") {
 		
 		if ($section_write_permission || $section_manage_permission) {
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
-			echo '<div style="width: '.$table->width.'; text-align: right;">';
+			echo '<div style="width: '.$table->width.';" class="button-form">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 			print_input_hidden ('new_contract', 1);
 			echo '</div>';

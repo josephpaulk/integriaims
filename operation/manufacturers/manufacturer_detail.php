@@ -129,20 +129,24 @@ if ($id || $new_manufacturer) {
 	$table->data[1][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
 	$table->data[2][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	
-	if ($id) {
-		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update_manufacturer', 1, true);
-		$button .= print_input_hidden ('id', $id, true);
-	} else {
-		$button = print_input_hidden ('create_manufacturer', 1, true);
-		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub create"', true);
-	}
-	
-	$table->data[3][0] = $button;
-	$table->colspan[3][0] = 2;
-	
 	echo '<form id="form-manufacturer_detail" method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
 	print_table ($table);
+		echo '<div style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update_manufacturer', 1, true);
+				$button .= print_input_hidden ('id', $id, true);
+			} else {
+				$button = print_input_hidden ('create_manufacturer', 1, true);
+				$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub create"', true);
+			}
+			$table->data[3][0] = $button;
+			$table->colspan[3][0] = 2;
+			print_table ($table);
+		echo "</div>";
 	echo "</form>";
 }
 else {

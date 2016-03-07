@@ -252,11 +252,12 @@ $button .= print_submit_button (__("Reactivate pending mails"), 'pending_ok', fa
 $button .= print_submit_button (__("Delete pending mails"), 'pending_delete', false, 'class="sub delete"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data[21][0] = $button;
-$table->colspan[21][0] = 3;
-
 echo "<form name='setup' method='post'>";
 print_table ($table);
+
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 ?>
 

@@ -82,12 +82,12 @@ if ($update_extras == 1){
 	$generic_8 = (string) get_parameter ('generic8');
 	$has_permission = give_acl ($config['id_user'], $id_group, "VW");
 	if (! $has_permission) {
-                // Doesn't have access to this page
-                audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to 
-update inventory extras without permission#".$id);
-                include ("general/noaccess.php");
-                exit;
-        }
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to 
+			update inventory extras without permission#".$id);
+		include ("general/noaccess.php");
+		exit;
+	}
 	$result = process_sql_update ('tinventory',
                 array ('generic_1' => $generic_1,
                         'generic_2' => $generic_2,
@@ -99,14 +99,12 @@ update inventory extras without permission#".$id);
                         'generic_8' => $generic_8),
                 array ('id' => $id));
 
-        if ($result !== false) {
-                $result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
-        } else {
-                $result_msg = '<h3 class="error">'.__('There was an error updating inventory 
-object').'</h3>';
-        }
-
-        echo $result_msg;
+	if ($result !== false) {
+		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+	} else {
+		$result_msg = '<h3 class="error">'.__('There was an error updating inventory object').'</h3>';
+	}
+	echo $result_msg;
 	
 }
 

@@ -125,11 +125,12 @@ $table->data[3][1] = print_input_text ("fontsize", $config["fontsize"], '', 3, 5
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data[4][0] = $button;
-$table->colspan[4][0] = 2;
-
 echo "<form name='setup' method='post'>";
 print_table ($table);
+
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 ?>
 

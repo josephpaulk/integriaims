@@ -89,14 +89,14 @@ function dbmgr_main () {
 	    echo "<br /><br />";
 	    echo "<form method='post' action=''>";
 	    print_textarea ('sql', 5, 50, html_entity_decode($sql, ENT_QUOTES));
-        echo "<div style='width: 100%; text-align: right; margin-top: 6px;'>";
+        echo "<div class='button-form'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
 	    echo "</div>";
 	    echo "</form>";
     } else {
         echo "<form method='post' action=''>";
 	    print_textarea ('sql', 2, 40, html_entity_decode($sql, ENT_QUOTES));
-        echo "<div style='width: 100%; text-align: right; margin-top: 6px;'>";
+        echo "<div class='button-form'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
 	    echo "</div>";
 	    echo "</form>";
@@ -105,10 +105,6 @@ function dbmgr_main () {
 	// Processing SQL Code
 	if ($sql == '')
 		return;
-
-	echo "<br />";
-	echo "<hr />";
-	echo "<br />";
 	
 	$error = '';
 	$result = dbmanager_query ($sql, $error);
@@ -124,13 +120,15 @@ function dbmgr_main () {
 		return;
 	}
 	
-	$table->width = '90%';
+	$table->width = '100%';
 	$table->class = 'dbmanager';
 	$table->head = array_keys ($result[0]);
 	
 	$table->data = $result;
 	
+	echo "<div style='overflow-x:scroll;'>";
 	print_table ($table);
+	echo "</div>";
 }
 
 dbmgr_main ();

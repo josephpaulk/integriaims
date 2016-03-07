@@ -308,7 +308,7 @@ else
 	// Update URL
 	echo '<form name="user_mod" id="form-user_config" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
 
-echo "<table width='100%' class='search-table'>";
+echo "<table width='100%' class='search-table-button'>";
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');

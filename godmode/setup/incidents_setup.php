@@ -161,11 +161,11 @@ $table_resolutions = print_table ($table, true);
 
 $table = new StdClass();
 $table->width = '100%';
-$table->class = 'search-table listing';
+$table->class = 'search-table';
 $table->colspan = array ();
 $table->data = array ();
 
-$date_table = "<table>";
+$date_table = "<table >";
 $date_table .= "<tr>";
 $date_table .= "<td>";
 $date_table .= "<input id='new_day' type='text' name='new_day' width='15' size='15'>";
@@ -176,7 +176,7 @@ $date_table .= "</td>";
 $date_table .= "</tr>";
 $date_table .= "</table>";
 
-$table->data[0][0] =print_checkbox ("working_weekends", 1, $config["working_weekends"], 
+$table->data[0][0] = print_checkbox ("working_weekends", 1, $config["working_weekends"], 
 					true, __("Weekends are working days"));
 $table->data[0][1] = $date_table;
 
@@ -228,63 +228,62 @@ $newsletter_options[1] = __('Enabled');
 $ticket_options[0] = __('Disabled');
 $ticket_options[1] = __('Enabled');
 
-echo "<table width='100%' class='search-table-button
-'>";
+echo "<table width='100%' class='search-table-button'>";
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',
+echo "<td style=''>".print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',
 	5, 5, true, __('Ticket WU Default time'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options_email, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, false, __('Send email on every ticket update'))."</td>";
+echo "<td style=''>".print_select ($incident_reporter_options_email, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, false, __('Send email on every ticket update'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. tickets by search')).
+echo "<td style=''>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. tickets by search')).
 	integria_help ("limit_size", true)."</td>";
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show ticket owner'))."</td>";	
+echo "<td style=''>".print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show ticket owner'))."</td>";	
 
-echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show ticket creator'))."</td>";
+echo "<td style=''>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show ticket creator'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto ticket close')).
+echo "<td style=''>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto ticket close')).
 	integria_help ("auto_incident_close", true)."</td>";
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
+echo "<td style=''>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on ticket creation'))."</td>";
+echo "<td style=''>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on ticket creation'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_select ($ticket_options, "enabled_ticket_editor", $config["enabled_ticket_editor"], '','','',true, 0, true, __('Enable quick edit mode'))."</td>";
+echo "<td style=''>".print_select ($ticket_options, "enabled_ticket_editor", $config["enabled_ticket_editor"], '','','',true, 0, true, __('Enable quick edit mode'))."</td>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticket type'))."</td>";
+echo "<td style=''>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticket type'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
+echo "<td style=''>".print_checkbox ("change_incident_datetime", 1, $config["change_incident_datetime"], true, __('Allow to set the date/time in creation '))."</td>";
 
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("ticket_owner_is_creator", 1, $config["ticket_owner_is_creator"], true, __('Ignore user defined by the group for owner'))."</td>";
+echo "<td style=''>".print_checkbox ("ticket_owner_is_creator", 1, $config["ticket_owner_is_creator"], true, __('Ignore user defined by the group for owner'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_checkbox ("show_user_name", 1, $config["show_user_name"], true, __('Show user name instead of id in the ticket search'))."</td>";
+echo "<td style=''>".print_checkbox ("show_user_name", 1, $config["show_user_name"], true, __('Show user name instead of id in the ticket search'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_checkbox ("required_ticket_type", 1, $config["required_ticket_type"], true, __('Required ticket type'))."</td>";
+echo "<td style=''>".print_checkbox ("required_ticket_type", 1, $config["required_ticket_type"], true, __('Required ticket type'))."</td>";
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top;'>".print_checkbox ("show_creator_blank", 1, $config["show_creator_blank"], true, __('Ignore user creator by default'))."</td>";
+echo "<td style=''>".print_checkbox ("show_creator_blank", 1, $config["show_creator_blank"], true, __('Ignore user creator by default'))."</td>";
 
-echo "<td style='vertical-align: top;'>".print_checkbox ("change_creator_owner", 1, $config["change_creator_owner"], true, __('Allow to change user creator and user owner'))."</td>";
+echo "<td style=''>".print_checkbox ("change_creator_owner", 1, $config["change_creator_owner"], true, __('Allow to change user creator and user owner'))."</td>";
 echo "</tr>";
 
 if ($is_enterprise) {
 	echo "<tr>";
-	echo "<td><br><h3>".__('Workflow')."</h3></td>";
+	echo "<td><h3>".__('Workflow')."</h3></td>";
 	echo "</tr>";
 
 	echo "<tr>";
-	echo "<td style='vertical-align: top;'>".print_checkbox ("check_closed_incidents", 1, $config["check_closed_incidents"], true, __('Check closed tickets when running workflow rules'))."</td>";
-	echo "<td style='vertical-align: top;'>".print_input_text ("days_check_closed_incidents", $config["days_check_closed_incidents"], '', 5, 255, true, __('Days to check closed tickets'));
+	echo "<td style=''>".print_checkbox ("check_closed_incidents", 1, $config["check_closed_incidents"], true, __('Check closed tickets when running workflow rules'))."</td>";
+	echo "<td style=''>".print_input_text ("days_check_closed_incidents", $config["days_check_closed_incidents"], '', 5, 255, true, __('Days to check closed tickets'));
 	echo "</tr>";
 }
 
@@ -295,17 +294,19 @@ echo "<td><h3>".__("Non-working days")."</h3></td>";
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style='vertical-align: top; width: 280px'>".$table_status."</td>";
-echo "<td style='vertical-align: top; width: 280px'>".$table_resolutions."</td>";
-echo "<td style='vertical-align: top;'>".$holidays_table;
+echo "<td style='vertical-align:top; width: 280px'>".$table_status."</td>";
+echo "<td style='vertical-align:top; width: 280px'>".$table_resolutions."</td>";
+echo "<td style='vertical-align:top; '>".$holidays_table;
 echo $table_anonym;
 echo "</td>";
 echo "</tr>";
-echo "<tr><td colspan=3>";
+echo "</table>";
+
+echo "<div class='button-form'>";
 print_input_hidden ('update', 1);
 print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
-echo "</td></tr>";
-echo "</table>";
+echo "</div>";
+
 echo '</form>';
 ?>
 

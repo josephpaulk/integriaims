@@ -157,79 +157,85 @@ else {
 	echo '<h2>'.__('Projects').'</h2>';
 	echo '<h4>'.__('Create project').'</h4>';
 
-// Right/Left Tables
-$table = new stdClass;
-$table->width = '100%';
-$table->class = "search-table-button";
-$table->style[0] = 'width: 20%';
-$table->style[1] = 'width: 20%';
-$table->style[2] = 'width: 20%';
-$table->style[3] = 'width: 20%';
-$table->data = array ();
-$table->cellspacing = 4;
-$table->cellpadding = 4;
+	// Right/Left Tables
+	$table = new stdClass;
+	$table->width = '100%';
+	$table->class = "search-table-button";
+	$table->style[0] = 'width: 20%';
+	$table->style[1] = 'width: 20%';
+	$table->style[2] = 'width: 20%';
+	$table->style[3] = 'width: 20%';
+	$table->data = array ();
+	$table->cellspacing = 4;
+	$table->cellpadding = 4;
 
-// Project info
-//$project_info = '<table class="search-table-button" style="margin-top: 0px;">';
+	// Project info
+	//$project_info = '<table class="search-table-button" style="margin-top: 0px;">';
 
-// Name
+	// Name
 
-$table->data[0][0] = '<b>'.__('Name').' </b>';
-$table->data[0][0] .= '<input type="text" name="name" size=50 value="'.$name.'">';
-// CC
-//$table->colspan[6][0] = 4;
-$table->data[0][1] .= '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b>';
-$table->data[0][1] .= '<input type="text" name="cc" size=50 value="'.$cc.'">';
+	$table->data[0][0] = '<b>'.__('Name').' </b>';
+	$table->data[0][0] .= '<input type="text" name="name" size=50 value="'.$name.'">';
+	// CC
+	//$table->colspan[6][0] = 4;
+	$table->data[0][1] .= '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b>';
+	$table->data[0][1] .= '<input type="text" name="cc" size=50 value="'.$cc.'">';
 
-// start and end date
-$table->data[1][0] = '<b>'.__('Start').' </b>';
-$table->data[1][0] .= print_input_text ('start_date', $start_date, '', 7, 10, true);
+	// start and end date
+	$table->data[1][0] = '<b>'.__('Start').' </b>';
+	$table->data[1][0] .= print_input_text ('start_date', $start_date, '', 7, 10, true);
 
-$table->data[1][0] .= '&nbsp;&nbsp;<b>'.__('End').' </b>';
-$table->data[1][0] .= print_input_text ('end_date', $end_date, '', 7, 10, true);
+	$table->data[1][0] .= '&nbsp;&nbsp;<b>'.__('End').' </b>';
+	$table->data[1][0] .= print_input_text ('end_date', $end_date, '', 7, 10, true);
 
-$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-$table->data[1][1] = "<b>".__('Project manager')." </b>";
-$table->data[1][1] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
-			'', true, '','');
+	$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
+	$table->data[1][1] = "<b>".__('Project manager')." </b>";
+	$table->data[1][1] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
+				'', true, '','');
 
-$table->data[1][1] .= '&nbsp;&nbsp;<b>' .  __('Project group') . "</b>";
-if (!$clean_output) {
-	$table->data[1][1] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
-		"id_project_group", $id_project_group, "", __('None'), '0',
-		true, false, true, false);
-} else {
-	$table->data[1][1] .= get_db_value ("name", "tproject_group", "id", $id_project_group);
-}
-
-// Description
-$table->colspan[7][0] = 4;
-$table->data[7][0] .= "<b>".__("Description")."</b>";
-$table->data[7][0] .= '<textarea name="description" style="height: 40px;">';
-$table->data[7][0] .= $description;
-$table->data[7][0] .= "</textarea>";
-
-if (!$clean_output)  {
-	$table->colspan[8][0] = 4;
-	$table->data[8][0] .= '<div style="width:100%; text-align: right;">';
-	
-	if ($id_project && $project_access['manage']) {
-		$table->data[8][0] .= print_input_hidden ('id_project', $id_project, true);
-		$table->data[8][0] .= print_input_hidden ('action', 'update', true);
-		$table->data[8][0] .= print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
-	} elseif (!$id_project) {
-		$table->data[8][0] .= print_input_hidden ('action', 'insert');
-		$table->data[8][0] .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+	$table->data[1][1] .= '&nbsp;&nbsp;<b>' .  __('Project group') . "</b>";
+	if (!$clean_output) {
+		$table->data[1][1] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
+			"id_project_group", $id_project_group, "", __('None'), '0',
+			true, false, true, false);
+	} else {
+		$table->data[1][1] .= get_db_value ("name", "tproject_group", "id", $id_project_group);
 	}
-	
-	$table->data[8][0] .= '</div>';
-	//$table->data .= "</td></tr>";
-}
-print_table ($table);
-//$project_info .= "</table>";
 
-//echo $project_info;
-//echo print_container('project_info', __('Project info'), $project_info, 'open', false, '10px', '', '', 5, 'no_border_bottom');
+	// Description
+	$table->colspan[7][0] = 4;
+	$table->data[7][0] .= "<b>".__("Description")."</b>";
+	$table->data[7][0] .= '<textarea name="description" style="height: 40px;">';
+	$table->data[7][0] .= $description;
+	$table->data[7][0] .= "</textarea>";
+
+	print_table ($table);
+
+	echo '<div style="width:100%;">';
+	if (!$clean_output)  {
+		
+		unset($table->data);
+		$table->class = "button-form";
+		$table->colspan[8][0] = 4;
+		//$table->data[8][0] .= ;
+		
+		if ($id_project && $project_access['manage']) {
+			$table->data[8][0] .= print_input_hidden ('id_project', $id_project, true);
+			$table->data[8][0] .= print_input_hidden ('action', 'update', true);
+			$table->data[8][0] .= print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+		} elseif (!$id_project) {
+			$table->data[8][0] .= print_input_hidden ('action', 'insert');
+			$table->data[8][0] .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+		}
+		
+		//$table->data .= "</td></tr>";
+		print_table ($table);
+	}
+	echo '</div>';
+	//$project_info .= "</table>";
+
+	//echo $project_info;
+	//echo print_container('project_info', __('Project info'), $project_info, 'open', false, '10px', '', '', 5, 'no_border_bottom');
 
 }
 

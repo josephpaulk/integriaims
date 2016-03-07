@@ -210,20 +210,27 @@ if ($id || $new_sla) {
 
 	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
 
-	if ($id) {
-		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update_sla', 1, true);
-		$button .= print_input_hidden ("id", $id, true);
-	} else {
-		$button = print_input_hidden ('create_sla', 1, true);
-		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
-	}
 	
-	$table->data[4][0] = $button;
-	$table->colspan[4][0] = 4;
 	
 	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	print_table ($table);
+		echo '<div style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update_sla', 1, true);
+				$button .= print_input_hidden ("id", $id, true);
+			} else {
+				$button = print_input_hidden ('create_sla', 1, true);
+				$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
+			}
+			
+			$table->data[4][0] = $button;
+			$table->colspan[4][0] = 4;
+			print_table ($table);
+		echo "</div>";	
 	echo "</form>";
 }
 else {

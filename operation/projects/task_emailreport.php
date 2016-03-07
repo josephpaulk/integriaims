@@ -91,12 +91,23 @@ print_input_text ('title', $title, '', 80, 175, false, __('Subject'));
 echo "<tr><td>";
 print_textarea ('description', 15, 50, $description, '',	false, __('Message text'));
 echo "<tr><td>";
-print_submit_button (__('Send'), 'create_btn', false, 'class="sub create"');
-print_input_hidden ('operation', 'generate_email');
-print_input_hidden ('id_project', $id_project);
-print_input_hidden ('id_task', $id_task);
-
 echo '</table>';
+
+$button = '';
+echo '<div style="width:100%;">';
+unset($table->data);
+$table->width = '100%';
+$table->class = "button-form";
+$button .= print_submit_button (__('Send'), 'create_btn', false, 'class="sub create"', true);
+$button .= print_input_hidden ('operation', 'generate_email',true);
+$button .= print_input_hidden ('id_project', $id_project, true);
+$button .= print_input_hidden ('id_task', $id_task, true);
+
+$table->data[7][0] = $button;
+$table->colspan[7][0] = 2;
+
+print_table($table);
+echo '</div>';
 echo '</form>';
 
 ?>

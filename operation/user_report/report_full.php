@@ -140,7 +140,7 @@ echo  "</h4>";
 if ($clean_output == 0){
 
     echo "<form id='form-report_full' method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
-    echo "<table class='search-table-button' style='margin-left: 10px' width='100%'>";
+    echo "<table class='search-table-button' style='' width='100%'>";
 
     echo "<tr><td>";
 
@@ -220,11 +220,14 @@ if ($clean_output == 0){
 
     // TODO: Meter aqui inventario, con un control nuevo, tipo AJAX similar al de los usuarios.
 
-    echo "<tr><td colspan=3 align=right>";
-    print_input_hidden('show_filter', 1);
-    print_submit_button (__('Show'), 'show_btn', false, 'class="sub zoom"');
-    echo "</form>";
     echo "</table>";
+    
+    echo "<div class='button-form'>";
+		print_input_hidden('show_filter', 1);
+		print_submit_button (__('Show'), 'show_btn', false, 'class="sub zoom"');
+    echo "</div>";
+    
+    echo "</form>";
 }
 
 if ($do_search == 0){

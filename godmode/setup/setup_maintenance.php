@@ -119,11 +119,11 @@ $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Reset to default'), 'reset_button', false, 'class="sub upd"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 3;
-
 echo '<form id="setup_maintenance" name="setup" method="post">';
 print_table ($table);
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 
 ?>

@@ -180,21 +180,25 @@ if ($create || $id) {
 	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
 	$table->colspan[2][0] = 2;
-
-	
-	if ($id == -1) {
-		$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true);
-		$button .= print_input_hidden ('insert_object', 1, true);
-	} else {
-		$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('id', $id, true);
-		$button .= print_input_hidden ('update_object', 1, true);
-	}
-	
-	$table->data[3][0] = $button;
 	
 	echo '<form id="form-manage_objects" method="post">';
 	print_table ($table);
+		echo '<div style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id == -1) {
+				$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true);
+				$button .= print_input_hidden ('insert_object', 1, true);
+			} else {
+				$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('id', $id, true);
+				$button .= print_input_hidden ('update_object', 1, true);
+			}
+			
+			$table->data[3][0] = $button;
+			print_table ($table);
+		echo '</div>';
 	echo '</form>';
 }
 
@@ -205,7 +209,7 @@ if (! $id && ! $create) {
 	$objects = get_db_all_rows_in_table ('tobject_type', 'name');
 	
 	$table->width = '99%';
-	
+	echo "<div class='divresult'>";
 	if ($objects !== false) {	
 		$table->class = 'listing';
 		$table->data = array ();
@@ -253,11 +257,17 @@ if (! $id && ! $create) {
 	} else {
 		echo "<h4>".__('No objects')."</h4>";
 	}
-	
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
+	echo "</div>";
+	echo '<div class="divform">';
 	echo '<form method="post">';
+	echo '<table class="search-table">';
+	echo '<tr>';
+	echo '<td>';
 	print_input_hidden ('create', 1);
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	echo '</td>';
+	echo '</tr>';
+	echo '</table>';
 	echo "</form></div>";
 } // end of list
 

@@ -109,10 +109,13 @@ if ($id || $new_role) {
 		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
 	}
 	
-	$table->data['button'][0] = $button;
+	
 		
 	echo '<form id="form-company_role" method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 		print_table ($table);
+		echo "<div class='button-form'>";
+			echo $button;
+		echo "</div>";
 	echo '</form>';
 }
 else {

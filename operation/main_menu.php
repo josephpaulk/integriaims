@@ -63,12 +63,53 @@ if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl) {
     else
 	    echo "<li class='support'>";
 	echo "<div>|</div>";
-	echo "<a href='" . $support_link . "'>".__('Support')."</a></li>";
+	echo "<a href='" . $support_link . "'>".__('Support')."</a>";
+	
+	echo '<ul class="submenu support_submenu">';
+	// Incidents
+	if ($incidents_acl){
+		// Incident
+		if ($sec == "incidents" )
+			echo "<li id='current' class='incident'>";
+		else
+			echo "<li class='incident'>";
+		echo "<a href='" . $incidents_link . "'>".__('Tickets')."</a></li>";
+	}
+	// KB
+	if ($kb_acl) {
+		if ($sec == "kb" )
+			echo "<li id='current' class='kb'>";
+		else
+			echo "<li class='kb'>";
+		echo "<a href='" . $kb_link . "'>".__('KB')."</a></li>";
+	}
+	// FILE RELEASES
+	if ($download_acl) {
+		if ($show_file_releases != MENU_HIDDEN) {
+			// File Releases
+			if ($sec == "download" )
+				echo "<li id='current' class='files'>";
+			else
+				echo "<li class='files'>";
+			echo "<a href='" . $download_link . "'>".__('File Releases')."</a></li>";
+		}
+	}
+	// FILE SHARING
+	if ($file_sharing_acl) {
+		if ($sec == "file_sharing" )
+			echo "<li id='current' class='files'>";
+		else
+			echo "<li class='files'>";
+		echo "<a href='" . $file_sharing_link . "'>".__('File Sharing')."</a></li>";
+	}
+
+	echo '</ul>';
+	echo "</li>";
+	
 }
 
 // Inventory
 if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_inventory != MENU_HIDDEN) {
-    // Incident
     if ($sec == "inventory" )
 	    echo "<li id='current' class='inventory'>";
     else
@@ -142,7 +183,34 @@ if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != 
 				echo "<li id='current' class='custom_screen'>";
 			else
 				echo "<li class='custom_screen'>";
-			echo "<a href='" . $custom_link . "'>".__('Custom screens')."</a></li>";
+			echo "<a href='" . $custom_link . "'>".__('Custom screens')."</a>";
+			
+			echo '<ul class="submenu custom_submenu">';
+			if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+				$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
+				if (!empty($custom_screens)) {
+					foreach ($custom_screens as $custom_screen_id => $custom_screen) {
+						if (isset($custom_screen['menuEnabled']) && (bool) $custom_screen['menuEnabled']) {
+							if ($sec == "custom_screen-$custom_screen_id")
+								echo "<li id='current' class='custom_screen'>";
+							else
+								echo "<li class='custom_screen'>";
+								
+							$len = strlen($custom_screen['name']);
+							if ($len <= 12) {
+								$str_custom_name = $custom_screen['name'];
+								$title = "";
+							} else {
+								$str_custom_name = substr($custom_screen['name'], 0, 9)."...";
+								$title = "title='" . $custom_screen['name'] . "'";
+							}
+							echo "<a href='index.php?sec=custom_screen-$custom_screen_id&sec2=enterprise/operation/custom_screens/custom_screens&id=$custom_screen_id' $title>" . $str_custom_name . "</a></li>";
+						}
+					}
+				}
+			}
+			echo '</ul>';
+			echo "</li>";
 		}
 	}
 	
@@ -150,85 +218,11 @@ if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != 
 
 echo "</ul>";
 
-echo '<div class="submenu support_submenu">';
-echo '<ul class="submenu">';
-
-// Incidents
-if ($incidents_acl){
-    // Incident
-    if ($sec == "incidents" )
-	    echo "<li id='current' class='incident'>";
-    else
-	    echo "<li class='incident'>";
-		
-	echo "<a href='" . $incidents_link . "'>".__('Tickets')."</a></li>";
-}
-
-// KB
-if ($kb_acl) {
-	if ($sec == "kb" )
-		echo "<li id='current' class='kb'>";
-	else
-		echo "<li class='kb'>";
-	echo "<a href='" . $kb_link . "'>".__('KB')."</a></li>";
-}
-
-// FILE RELEASES
-if ($download_acl) {
-	if ($show_file_releases != MENU_HIDDEN) {
-		// File Releases
-		if ($sec == "download" )
-				echo "<li id='current' class='files'>";
-		else
-				echo "<li class='files'>";
-		echo "<a href='" . $download_link . "'>".__('File Releases')."</a></li>";
-	}
-}
-
-// FILE SHARING
-if ($file_sharing_acl) {
-	if ($sec == "file_sharing" )
-			echo "<li id='current' class='files'>";
-	else
-			echo "<li class='files'>";
-	echo "<a href='" . $file_sharing_link . "'>".__('File Sharing')."</a></li>";
-}
-
-echo '</ul>';
-echo '</div>';
-
-echo '<div class="submenu custom_submenu">';
-echo '<ul class="submenu">';
-if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
-	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
-	if (!empty($custom_screens)) {
-		foreach ($custom_screens as $custom_screen_id => $custom_screen) {
-			if (isset($custom_screen['menuEnabled']) && (bool) $custom_screen['menuEnabled']) {
-				if ($sec == "custom_screen-$custom_screen_id")
-					echo "<li id='current' class='custom_screen'>";
-				else
-					echo "<li class='custom_screen'>";
-					
-				$len = strlen($custom_screen['name']);
-				if ($len <= 12) {
-					$str_custom_name = $custom_screen['name'];
-					$title = "";
-				} else {
-					$str_custom_name = substr($custom_screen['name'], 0, 9)."...";
-					$title = "title='" . $custom_screen['name'] . "'";
-				}
-				echo "<a href='index.php?sec=custom_screen-$custom_screen_id&sec2=enterprise/operation/custom_screens/custom_screens&id=$custom_screen_id' $title>" . $str_custom_name . "</a></li>";
-			}
-		}
-	}
-}
-echo '</ul>';
-echo '</div>';
-
 ?>
 <script type="text/javascript">	
 var wizard_tab_showed = 0;
 var screen_tab_showed = 0;
+var last_id = false;
 
 /* <![CDATA[ */
 $(document).ready (function () {
@@ -247,14 +241,39 @@ $(document).ready (function () {
 	$('li.custom_screen a').hover(custom_screen_tab_show, custom_screen_tab_hide);
 	
 	$('.custom_submenu').hover(custom_screen_tab_show, custom_screen_tab_hide);
-
+	
+	$('#menu_slide li').click(function() {
+		if (last_id != false) {
+			$("#"+last_id+" ul").hide();
+		}
+		var id = $(this).attr('id');
+		
+		$("#"+id+" ul").show();
+		last_id = id;
+	});
+	
+	$('div#main').click(function() {
+		
+		if (last_id != false) {
+			$("#"+last_id+" ul").hide();
+		}
+	});
+	$('div#header').click(function() {
+		
+		if (last_id != false) {
+			$("#"+last_id+" ul").hide();
+		}
+	});
+	
 });
 
 // Set the position and width of the subtab
-function agent_wizard_tab_setup() {		
-	$('.support_submenu').css('left', $('li.support a').offset().left - $('#wrap').offset().left)
-	$('.support_submenu').css('top', $('li.support a').offset().top + $('li.support a').height() + 12)
-	$('.support_submenu').css('width', $('li.support a').width() + 50)
+function agent_wizard_tab_setup() {
+	/*
+		$('.support_submenu').css('left', $('li.support a').offset().left - $('#wrap').offset().left)
+		$('.support_submenu').css('top', $('li.support a').offset().top + $('li.support a').height() + 12)
+		$('.support_submenu').css('width', $('li.support a').width() + 50);
+	*/
 }
 
 function agent_wizard_tab_show() {
@@ -288,9 +307,11 @@ $(window).resize(function() {
 
 // Set the position and width of the subtab
 function custom_screen_tab_setup() {		
+	/*
 	$('.custom_submenu').css('left', $('li.custom_screen a').offset().left - $('#wrap').offset().left)
 	$('.custom_submenu').css('top', $('li.custom_screen a').offset().top + $('li.custom_screen a').height() + 12)
-	$('.custom_submenu').css('width', $('li.custom_screen a').width() + 6)
+	$('.custom_submenu').css('width', $('li.custom_screen a').width() + 6);
+	*/
 }
 
 function custom_screen_tab_show() {
@@ -304,7 +325,7 @@ function custom_screen_tab_show() {
 
 function custom_screen_tab_hide() {
 	screen_tab_showed = screen_tab_showed - 1;
-
+	
 	setTimeout(function() {
 		if(screen_tab_showed <= 0) {
 			$('.custom_submenu').hide("fast");

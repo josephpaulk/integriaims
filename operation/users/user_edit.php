@@ -164,9 +164,6 @@ $table->rowspan = array ();
 $table->rowspan[0][2] = 4;
 $table->colspan = array ();
 $table->colspan[5][0] = 3;
-$table->style[0] = 'vertical-align: top';
-$table->style[1] = 'vertical-align: top';
-$table->style[2] = 'vertical-align: top';
 $table->size = array ();
 $table->size[2] = '100px';
 $table->data = array ();
@@ -247,13 +244,12 @@ if ($has_permission) {
 if ($has_permission) {
 	echo '<form id="form-user_edit" method="post" action="index.php?sec=users&sec2=operation/users/user_edit" enctype="multipart/form-data">';
 	
-	$data = print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"', true);
-	$data .= print_input_hidden ('update_user', 1, true);
-	
-	$table->colspan[count($table->data)+1][0] = 3;
-	$table->data[count($table->data)+1][0] = $data;
-	
 	print_table ($table);
+	echo "<div class='button-form' >";
+		$data = print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"', true);
+		$data .= print_input_hidden ('update_user', 1, true);
+		echo $data;
+	echo "</div>";
 	
 	$table->data = array ();
 	$table->data[0][0] = print_input_password ('password', '', '', 20, 20, true, __('Password'));
@@ -261,12 +257,11 @@ if ($has_permission) {
 	
 	echo '<h1>'.__('Change password').'</h1>';
 	
-	$data = print_submit_button (__('Update'), 'pass_upd_btn', false, 'class="upd sub"', true);
+	$data = "<div class='button-form' >" . print_submit_button (__('Update'), 'pass_upd_btn', false, 'class="upd sub"', true);
 	$data .= print_input_hidden ('update_user', 1, true);
-	$data .= print_input_hidden ('id', $user["id_usuario"], true);
+	$data .= print_input_hidden ('id', $user["id_usuario"], true) . "</div>";
 	
-	$table->colspan[count($table->data)+1][0] = 2;
-	$table->data[count($table->data)+1][0] = $data;
+	$table->data[0][3] = $data;
 	
 	print_table ($table);
 

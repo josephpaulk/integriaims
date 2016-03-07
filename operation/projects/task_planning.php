@@ -574,9 +574,9 @@ $(document).ready (function () {
 		} else if (completion < 90) {
 			color = "#fceaa2";
 		} else if (completion < 100) {
-			color = "#d2e7a4";
+			color = "#b8e0fd";
 		} else if (completion == 100) {
-			color = "#fdb6b4";
+			color = "#D2E7A4";
 		}
 		
 		$('#'+id).attr('bgcolor', color);

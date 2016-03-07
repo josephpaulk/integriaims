@@ -223,8 +223,6 @@ echo "<title>" . $config["sitename"] . "</title>";
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" src="include/js/d3.v3.js"></script>
 
-<script type="text/javascript">
-</script>
 <!--[if lte IE 7]>
 <script type="text/javascript" src="include/js/jquery.bgiframe.js"></script>
 <link rel="stylesheet" href="include/styles/integria-ie-fixes.css" type="text/css" />
@@ -427,6 +425,7 @@ load_menu_visibility();
 	"Create contact" : "<?php echo __('Create contact')?>",
 	"Search parent inventory" : "<?php echo __('Search parent inventory')?>"
 };
+
 </script>
 
 <?php

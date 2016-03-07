@@ -15,9 +15,9 @@
 
 // Sponsors / Banner
 echo "<nav id='menu_nav'>";
-	echo "<ul>";
+	echo "<ul id='menu_slide'>";
 		echo "<li id='enlaces'>";
-			echo "<a title='".__('Links')."'href='#'>1</a>";
+			//echo "<a title='".__('Links')."'href='#'>1</a>";
 			echo "<ul>";
 				echo "<li><h1>".__('Links')."</h1></li>";
 				$sql1='SELECT * FROM tlink ORDER BY name';

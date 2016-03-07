@@ -860,13 +860,6 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		echo "</td>";
 	}
 	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
-	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
-	echo "<b>".$id_user."</b>";
-	echo "</a>";
-	echo " ".__('said on').' '.$timestamp;
-	echo "</td></tr>";
 	
 	echo "</table>";
 	echo "</div>";
@@ -874,20 +867,20 @@ echo "</form>";
 
 	// Body
 	//echo "<div class='notebody'>";
-	echo "<div class='notebody' id='wu_$id_workunit'>";
-	echo "<table width='100%'  class=''>";
-	echo "<tr><td valign='top'>";
+	$output = "<div class='notebody' id='wu_$id_workunit'>";
+	$output .=  "<table width='100%'  class=''>";
+	$output .= "<tr><td valign='top'>";
 
 	if ((strlen($nota) > 1024) AND ($full == 0)) {
-		echo topi_richtext (clean_output_breaks (substr ($nota, 0, 1024)));
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
-		echo __('Read more...');
-		echo "</a>";
+		$output .= topi_richtext (clean_output_breaks (substr ($nota, 0, 1024)));
+		$output .= "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
+		$output .= __('Read more...');
+		$output .= "</a>";
 	} else {
-		echo topi_richtext(clean_output_breaks($nota));
+		$output .= topi_richtext(clean_output_breaks($nota));
 	}
-	echo "<td valign='top'>";
-	echo "<table width='100%'  class=''>";
+	$output .= "<td valign='top'>";
+	$output .= "<table width='100%'  class=''>";
 
 	if ($_GET["sec2"] == "operation/users/user_workunit_report")
 		$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
@@ -899,32 +892,38 @@ echo "</form>";
 	}
 	
 	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], 0, "TM")) ) {
-		echo "<tr><td align='right'>";
-		echo "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png'  title='".__('Delete workunit')."'/></a>";
+		$output .= "<tr><td align='right'>";
+		$output .= "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png'  title='".__('Delete workunit')."'/></a>";
 	}
 
 	// Edit workunit
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], 0, "UM")) )) {
-		echo "<tr><td align='right'>";
-		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&id_profile=$id_profile'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
-		echo "</td>";
+		$output .= "<tr><td align='right'>";
+		$output .= "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&id_profile=$id_profile'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
+		$output .= "</td>";
 	}
 
 	// Lock workunit
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "")  )) {
-		echo "<tr><td align='right'>";
-		echo "<a class='lock_workunit' id='lock-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";
-		echo "</td>";
+		$output .= "<tr><td align='right'>";
+		$output .= "<a class='lock_workunit' id='lock-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";
+		$output .= "</td>";
 	} else {
-		echo "<tr><td align='right'>";
-		echo "<img src='images/rosette.png' title='".__('Locked by')." $locked'";
-		echo print_user_avatar ($locked, true);
-		echo "</td>";
+		$output .= "<tr><td align='right'>";
+		$output .= "<img src='images/rosette.png' title='".__('Locked by')." $locked'";
+		$output .= print_user_avatar ($locked, true);
+		$output .= "</td>";
 	}
 
-  	echo "</tr></table>";
-	echo "</tr></table>";
-	echo "</div>";
+  	$output .= "</tr></table>";
+	$output .= "</tr></table>";
+	$output .= "</div>";
+	
+	$title = "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
+	$title .= "<b>".$id_user."</b>";
+	$title .= "</a>";
+	$title .= " ".__('said on').' '.$timestamp;
+	print_container_div("dest-".$id_workunit, $title, $output, 'closed', false, false, '', '', 1, '', "margin-top:0px;");
 }
 
 function form_search_incident ($return = false, $filter=false) {
@@ -1024,7 +1023,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowspan[2][2] = 2;
 	
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
-		'', 50, 100, true, __('Search string'));
+		'', 30, 100, true, __('Search string'));
 	
 	$available_status = get_indicent_status();
 	$available_status[-10] = __("Not closed");
@@ -1089,13 +1088,16 @@ function form_search_incident ($return = false, $filter=false) {
 
 	$table_advanced->data[2][1] = print_select (get_incident_resolutions(), 'search_resolution', $resolution,
 			'', __('Any'), -1, true, false, false, __('Resolution'), false);
-	
-	$table_advanced->data[2][2] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
-	
+			
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	$table_advanced->data[2][3] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:210px;'", true, '', __('Inventory'));
-	$table_advanced->data[2][3] .= "<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
-	$table_advanced->data[2][3] .= print_input_hidden ('id_inventory', $id_inventory, true);
+	$table_advanced->data[2][2] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:210px;'", true, '', __('Inventory'));
+	$table_advanced->data[2][2] .= "<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	$table_advanced->data[2][2] .= print_input_hidden ('id_inventory', $id_inventory, true);
+	
+	$table_advanced->data[2][3] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
+	$table_advanced->rowspan[2][3] = 2;
+	$table_advanced->cellstyle[2][3] = "vertical-align:top;";
+	
 	
 	if (!get_external_user ($config["id_user"]))
 		$table_advanced->data[4][0] = print_select (get_companies (), 'search_id_company',
@@ -1192,13 +1194,12 @@ function form_search_incident ($return = false, $filter=false) {
 	//Store serialize filter
 	serialize_in_temp($filter, $config["id_user"]);
 	
-	$table->data[7][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
-	$table->data[7][2].= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub csv"', true);
-	$table->colspan[7][2] = 5;
 	
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
-	$output .= print_table ($table, true);
-	$output .= '</form>';
+	$output .= "<div class='divform'><table class='search-table'><tr><td>" . print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$output .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub"', true) . "</td></tr></table></div>";
+	$output .= '<div class="divresult">' . print_table ($table, true);
+	$output .= '</form></div>';
 		
 	echo "<div class= 'dialog ui-dialog-content' id='search_inventory_window'></div>";
 	
@@ -1254,11 +1255,9 @@ function form_search_users ($return = false, $filter=false) {
 	$table->colspan[2][0] = 4;
 	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
-	$output .= "<div class='divform'>";
 	$output .= '<form name="bskd" method=post id="saved-user-form" action="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios">';
 		$output .= print_table ($table, true);
 	$output .= '</form>';
-	$output .= '</div>';
 		
 	if ($return)
 		return $output;

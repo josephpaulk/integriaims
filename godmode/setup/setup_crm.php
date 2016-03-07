@@ -95,7 +95,7 @@ function get_logo_files () {
 $imagelist = get_logo_files ();
 
 $table->colspan[0][0] = 2;
-$table->data[0][0] = "<h3>".__('Invoice generation parameters')."</h3><br>";
+$table->data[0][0] = "<h4>".__('Invoice generation parameters')."</h4>";
 
 $table->data[1][0] = print_select ($imagelist, 'invoice_logo', $config["invoice_logo"], '', __('None'), 'none',  true, 0, true, __('Invoice header logo'));
 $table->data[1][0] .= print_help_tip (__('You can submit your own logo in "images/custom_logo" folder using the file uploader'), true);
@@ -113,9 +113,9 @@ $table->data[5][0] = print_checkbox ("invoice_auto_id", 1, $config["invoice_auto
 $table->data[5][1] = print_input_text ('invoice_id_pattern', $config["invoice_id_pattern"], '', 10, 20, true, __('Invoice ID pattern')).print_help_tip (__('Data not in square brackets will be fixed, while data in square brackets will be the number from which a sequence will be calculated. Example: FAC[100]'), true);
 
 $table->colspan[7][0] = 2;
-$table->data[7][0] = "<h3>".__('Lead parameters')."</h3><br>";
+$table->data[7][0] = "<h4>".__('Lead parameters')."</h4>";
 
-$table->data[8][0] = "<h3>".__('Lead progress defintion')."</h3><br>";
+$table->data[8][0] = "<h5>".__('Lead progress defintion')."</h5>";
 
 $table->data[8][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
@@ -138,14 +138,12 @@ $table->data[18][0] = print_input_text ('progress_200', $progress_values["200"],
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 2;
-
-
-
-
 echo '<form name="setup" method="post">';
 print_table ($table);
+
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 
 ?>

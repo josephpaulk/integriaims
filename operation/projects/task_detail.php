@@ -294,6 +294,34 @@ if (!$gantt_editor) {
 	echo "</div>";	
 }
 
+echo '<form id="form-new_project" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+/*
+$button = '';
+echo '<div style="width:12%; float: right;">';
+if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
+	
+	$table->width = '100%';
+	$table->class = "button-form";
+	if ($operation != "create") {
+
+		if ($gantt_editor) {
+			$button .= print_submit_button (__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
+		}
+		$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('operation', 'update', true);
+	} else {
+		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+		$button .= print_input_hidden ('operation', 'insert', true);
+	}
+	$button .= print_input_hidden ('id_project', $id_project, true);
+	$button .= print_input_hidden ('id_task', $id_task, true);
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 3;
+}
+
+	print_table($table);
+echo '</div>';
+*/
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
@@ -306,7 +334,7 @@ $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-$table->data[0][0] = print_input_text ('name', $name, '', 40, 240, true, __('Name'));
+$table->data[0][0] = print_input_text_extended ('name', $name, '', '', 40, 240, false, '', "style='width:300px;'", true, false, __('Name'));
 
 $table->data[0][1] = print_select (get_priorities (), 'priority', $priority,
 	'', '', '', true, false, false, __('Priority'));
@@ -319,7 +347,7 @@ if ($project_permission['manage'] || $operation == "view") {
 
 $table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
 
-$table->data[1][0] = print_input_text ('cc', $cc, '', 40, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
+$table->data[1][0] = print_input_text_extended ('cc', $cc, '', '', 40, 240, false, '', "style='width:300px;'", true, false, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
 $table->data[1][1] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
 
@@ -343,7 +371,7 @@ $table->colspan[4][0] = 3;
 $completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
 
 $table->data[4][0] = print_label ($completion_label, '', '', true,
-	'<div id="slider" style="margin-top: 15px;margin-bottom: 15px;"><div class="ui-slider-handle"></div></div>');
+	'<div id="slider" style="margin-top: 15px;margin-bottom: 15px; width: 99%;"><div class="ui-slider-handle"></div></div>');
 $table->data[4][0] .= print_input_hidden ('completion', $completion, true);
 
 //////TABLA ADVANCED
@@ -374,15 +402,20 @@ $table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_
 
 $table->colspan['row_links'][0] = 3;
 $table->style['row_links'] = 'margin-top: 10px;';
-$table->data['row_links'][0] = print_container('task_links', __('Task links'), $table_advanced, 'open', true, '10px', '', '', 2, 'no_border_bottom');
+$table->data['row_links'][0] = print_container('task_links', __('Task links'), $table_advanced, 'open', true, '10px', '', '', 2, 'no_border_bottom " style="width: 99%;"');
 
 $table->colspan[5][0] = 3;
 $table->data[5][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
-$button = '';
+print_table ($table);
 
+$button = '';
+echo '<div class="button-form" style="width:100%;">';
 if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
+	unset($table->data);
+	$table->width = '100%';
+	$table->class = "button-form";
 	if ($operation != "create") {
 
 		if ($gantt_editor) {
@@ -396,14 +429,12 @@ if (($operation != "create" && $task_permission['manage']) || $operation == "cre
 	}
 	$button .= print_input_hidden ('id_project', $id_project, true);
 	$button .= print_input_hidden ('id_task', $id_task, true);
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 3;
 }
 
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 3;
-
-echo '<form id="form-new_project" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
-
-print_table ($table);
+	print_table($table);
+echo '</div>';
 
 //Print input hidden for task links which actually exist
 foreach ($links_0 as $k => $l) {

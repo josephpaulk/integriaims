@@ -219,13 +219,13 @@ $table->data[7][1] .=  '&nbsp;&nbsp;' . __('Other') . '&nbsp;' . print_radio_but
 
 $table->data[8][0] = print_checkbox ("enable_update_manager", 1, $config["enable_update_manager"], true, __('Enable update manager updates'));
 
-$table->data[9][0] = print_input_hidden ('update', 1, true);
-$table->data[9][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->colspan[9][0] = 2;
-
 echo "<form name='setup' method='post'>";
-
 print_table ($table);
+
+	echo "<div class='button-form'>";
+		print_input_hidden ('update', 1);
+		print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
+	echo "</div>";
 echo '</form>';
 ?>
 

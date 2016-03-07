@@ -448,25 +448,31 @@ if ($id || $new_type) {
 	
 	$table->data[1][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
 	
-	if ($id) {
-		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update_type', 1, true);
-		$button .= print_input_hidden ('id', $id, true);
-	} else {
-		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
-		$button .= print_input_hidden ('create_type', 1, true);
-	}
-	
-	$table->data[2][0] = $button;
-	
 	echo '<form id="form-type_detail" method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
 	print_table ($table);
+	
+		echo '<div class="button-form" style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update_type', 1, true);
+				$button .= print_input_hidden ('id', $id, true);
+			} else {
+				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+				$button .= print_input_hidden ('create_type', 1, true);
+			}
+			$table->data[2][0] = $button;
+			print_table ($table);
+		echo '</div>';
 	echo '</form>';
 	unset($table);
 
 	if ($show_fields) {
 		//FIELD MANAGEMENT
-		echo "<h1>".__("Ticket fields")."</h1>";
+		echo "<div class='divresult'>";
+		echo "<h4>".__("Ticket fields")."</h4>";
 		if ($id == '') {
 			$id = get_parameter('id');
 		}
@@ -560,39 +566,43 @@ if ($id || $new_type) {
 				array_push ($table->data, $data);
 			}
 			print_table($table);
-		} else {
+		} 
+		else {
 			echo "<h4>".__("No fields")."</h4>";
 		}
-
-		echo "<form id='form-add_field' name='dataedit' method='post' action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id."'>";
-			echo '<div style="width: '.$table->width.'; text-align: right;">';
-				print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
-			echo '</div>';
-		echo "</form>";
 		
-		$table_sort = new StdClass();
-		$table_sort->class = 'search-table';
-		$table_sort->width = '100%';
-		$table_sort->colspan[0][0] = 3;
-		$table_sort->size = array();
-		$table_sort->size[0] = '25%';
-		$table_sort->size[1] = '25%';
-		$table_sort->size[2] = '25%';
-		$table_sort->size[3] = '25%';
+		echo '</div>';
+		echo "<div class='divform'>";
+			
+			
+			$table_sort = new StdClass();
+			$table_sort->class = 'search-table';
+			$table_sort->width = '100%';
+			$table_sort->colspan[0][0] = 3;
+			$table_sort->size = array();
+			$table_sort->size[0] = '25%';
+			$table_sort->size[1] = '25%';
+			$table_sort->size[2] = '25%';
+			$table_sort->size[3] = '25%';
 
-		$table_sort->data[0][0] = "<b>". __("Sort items") . "</b>";
+			$table_sort->data[0][0] = "<b>". __("Sort items") . "</b>";
 
-		$table_sort->data[1][0] = __('Sort selected items from position: ');
-		$table_sort->data[1][1] =  print_select (array('before' => __('Move before to'), 'after' => __('Move after to')), 'move_to', '', '', '', '0', true);
-		$table_sort->data[1][2] = print_input_text_extended('position_to_sort', 1,'text-position_to_sort', '', 3, 10, false, "only_numbers('position_to_sort');", '', true);
-		$table_sort->data[1][2] .= print_input_hidden('ids_items_to_sort', '', true);
-		$table_sort->data[1][3] = print_submit_button(__('Sort'), 'sort_submit', false, 'class="sub upd"', true);
+			$table_sort->data[1][0] = __('Sort selected items from position: ');
+			$table_sort->data[2][0] =  print_select (array('before' => __('Move before to'), 'after' => __('Move after to')), 'move_to', '', '', '', '0', true);
+			$table_sort->data[3][0] = print_input_text_extended('position_to_sort', 1,'text-position_to_sort', '', 3, 10, false, "only_numbers('position_to_sort');", '', true);
+			$table_sort->data[4][0] .= print_input_hidden('ids_items_to_sort', '', true);
+			$table_sort->data[5][0] = print_submit_button(__('Sort'), 'sort_submit', false, 'class="sub upd"', true);
 
-		echo "<form action='index.php?sec=incidents&sec2=operation/incidents/type_detail&sort_items=1&id=" . $id . "'
-			method='post' onsubmit='return added_ids_sorted_items_to_hidden_input();'>";
-		print_table($table_sort);
-		echo "</form>";
-
+			echo "<form action='index.php?sec=incidents&sec2=operation/incidents/type_detail&sort_items=1&id=" . $id . "'
+				method='post' onsubmit='return added_ids_sorted_items_to_hidden_input();'>";
+			print_table($table_sort);
+			echo "</form>";
+			echo "<form id='form-add_field' name='dataedit' method='post' action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id."'>";
+				unset($table_sort->data);
+				$table_sort->data[0][0] = print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', true);
+				print_table($table_sort);
+			echo "</form>";
+		echo '</div>';
 	}
 //LISTADO GENERAL	
 }
