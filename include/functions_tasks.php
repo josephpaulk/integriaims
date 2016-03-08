@@ -66,7 +66,8 @@ function task_duration_recursive ($id_task){
 	
 	$sum = 0;
 	foreach ($tasks as $task) {
-		$sum += task_duration_recursive ($task[id]);
+		$sum += $sum + get_task_workunit_hours ($task['id']);
+		task_duration_recursive ($task['id']);
 	}
 	return $sum + get_task_workunit_hours ($id_task);
 }

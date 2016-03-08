@@ -17,6 +17,7 @@
 global $config;
 
 $search_existing_project = (bool) get_parameter ('search_existing_project');
+$search_name_category = (bool) get_parameter ('search_name_category');
 $search_existing_task = (bool) get_parameter ('search_existing_task');
 $search_existing_incident = (bool) get_parameter ('search_existing_incident');
 $search_existing_incident_type = (bool) get_parameter ('search_existing_incident_type');
@@ -79,6 +80,31 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
+} elseif ($search_name_category) {
+	require_once ('include/functions_db.php');
+	
+	$category_name = get_parameter ('category_name');
+	$category_id = (int) get_parameter ('category_id');
+	$old_category_name = "";
+	
+	// If edition mode, get the name of editing project
+	if ($category_id) {
+		$old_category_name = get_db_value("name", "two_category", "id", $category_id);
+	}
+	
+	// Checks if the project is in the db
+	$query_result = get_db_value("name", "two_category", "name", $category_name);
+	if ($query_result) {
+		if ($category_name != $old_category_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+
 } elseif ($search_existing_task) {
 	require_once ('include/functions_db.php');
 	

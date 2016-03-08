@@ -108,7 +108,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo "<label>" . __('Name') . "</label>";
-	echo "<input type=text size=20 name=name value='$name'>";
+	echo "<input type=text size=20 name=name value=".$name.">";
 
     echo "<td class=datos>";
 	echo "<label>" . __('Icon') . "</label>";
@@ -174,6 +174,26 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" >
 // Form validation
-trim_element_on_submit('#text-search_text');
-trim_element_on_submit('#text-name');
+trim_element_on_submit('input[name="name"]');
+validate_form("#categoryform");
+// Rules: input[name="name"]
+var rules, messages;
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+          page: "include/ajax/remote_validations",
+          search_name_category: 1,
+          category_name: function() { return $('input[name="name"]').val() },
+          category_id: <?php echo $id; ?>
+        }
+	}
+};
+messages = {
+	required: "<?php echo __('Name required'); ?>",
+	remote: "<?php echo __('This Name Category already exists'); ?>"
+};
+add_validate_form_element_rules('input[name="name"]', rules, messages);
 </script>
