@@ -65,7 +65,9 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 		SET affected_sla_id = 0, actualizacion = "%s"  
 		WHERE id_incidencia = %d', $fecha, $incident_id);
 	process_sql ($sql);
-
+	
+	$task_id = get_db_value ('id_task', 'tincidencia', 'id_incidencia', $incident_id);
+	
 	if (!$workflow) {
 		incident_tracking ($incident_id, INCIDENT_WORKUNIT_ADDED);
 	}
@@ -74,10 +76,16 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public, work_home)
 			VALUES ("%s", %.2f, "%s", "%s", %d, %d)', $fecha, $timeused, $user, $wu_text, $public, $work_home);
 	$id_workunit = process_sql ($sql, "insert_id");
+	
 	$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
-			VALUES (%d, %d)',
-			$incident_id, $id_workunit);
+			VALUES (%d, %d)', $incident_id, $id_workunit);
 	$res = process_sql ($sql);
+	
+	if($task_id){
+		$sql = sprintf ('INSERT INTO tworkunit_task (id_task, id_workunit)
+						VALUES (%d, %d)', $task_id, $id_workunit);
+		$res = process_sql ($sql);
+	}
 	
 	if ($res !== false) {
 		$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$incident_id.';';
