@@ -383,7 +383,15 @@ if ($search) {
 
 if (!$clean_output) {
 	
-	echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+	$form .= '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		$buttons = '<div class="button-form">';
+		$buttons .= print_input_hidden ('search', 1, true);
+		$buttons .= print_input_hidden ('mode', $mode, true);
+		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+		$buttons .= '</div>';
+		
+		$form = "<div class='divform'>".$buttons."</div>";
+		$form .= "<div class='divresult'>";
 		$table_search = new StdClass();
 		$table_search->class = 'search-table-button';
 		$table_search->width = '100%';
@@ -423,17 +431,6 @@ if (!$clean_output) {
 		$table_search->data[2][1] = print_checkbox_extended ('last_update', 1, $last_update,
 		false, '', '', true, __('Last updated'));
 
-		$buttons = '<div class="button-form">';
-		$buttons .= print_input_hidden ('search', 1, true);
-		$buttons .= print_input_hidden ('mode', $mode, true);
-		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
-		
-		$filter["query"] = $sql_search;
-		serialize_in_temp($filter, $config["id_user"]);
-		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub"', true);
-
-		$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
-		$buttons .= '</div>';
 
 		$all_inventory_status = inventories_get_inventory_status ();
 		array_unshift($all_inventory_status, __("All"));
@@ -451,11 +448,14 @@ if (!$clean_output) {
 		array_unshift($companies, __("All"));
 		$table_search->data[4][0] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 218px;');
 				
-		$table_search->data[5][0] = $buttons;
-		$table_search->colspan[5][0] = 4;
+		//~ $table_search->data[5][0] = $buttons;
+		//~ $table_search->colspan[5][0] = 4;
 
-		print_table($table_search);
-	echo '</form>';
+		$form .= print_table($table_search, true);
+		$form .= '</div>';
+	$form .= '</form>';
+	
+	print_container_div("inventory_form",__("Inventory form search"),$form, 'closed', false, false);
 
 }
 

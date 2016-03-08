@@ -31,6 +31,15 @@ if (!$clean_output) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
+	$sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
+	$filter["query"] = $sql_search;
+	serialize_in_temp($filter, $config["id_user"]);
+	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
+
+	$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
+	echo $buttons;
+	echo "</li>";
+	echo "<li>";
 	echo "<a id='listview_form_submit' href='#'>" .
 		print_image ("images/list_view.png", true, array("title" => __("List view"))) .
 		"</a>";

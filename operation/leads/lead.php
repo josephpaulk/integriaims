@@ -68,6 +68,10 @@ if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete
 	
 	if ($tab == "search" || $tab == "") {
 		echo "<li>";
+		// Custom search button
+			echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
+		echo "</li>";
+		echo "<li>";
 		echo "<a id='lead_stats_form_submit' href='javascript: changeAction(\"pipeline\");'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
 		echo "</li>";
 	}

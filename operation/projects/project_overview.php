@@ -205,16 +205,16 @@ foreach($project_groups as $group) {
 
 		$info_general .= "<tr>";
 			//$info_general .= "<td class='no_border size_min'></td>";
-			$info_general .= "<td><b>".__('Name')."</b></td>";
-			$info_general .= "<td><b>".__('Manager')."</b></td>";
-			$info_general .= "<td><b>".__('Completion')."</b></td>";
-			$info_general .= "<td><b>".__('Last update')."</b></td>";
+			$info_general .= "<td style='width: 30%'><b>".__('Name')."</b></td>";
+			$info_general .= "<td style='width: 15%'><b>".__('Manager')."</b></td>";
+			$info_general .= "<td style='width: 15%'><b>".__('Completion')."</b></td>";
+			$info_general .= "<td style='width: 15%'><b>".__('Last update')."</b></td>";
 			if ($view_disabled == 0) {
 				$info_general .= "<td><b>".__('Archive')."</b></td>";
 			} elseif ($project['disabled'] && $project_permission['manage']) {
 				$info_general .= "<td><b>".__('Delete/Unarchive')."</b></td>";
 			}
-			$info_general .= "<td class='no_border size_max'></td>";
+			//$info_general .= "<td class='no_border size_max'></td>";
 		$info_general .= "</tr>";	
 
 		// Projects inside
@@ -264,14 +264,14 @@ foreach($project_groups as $group) {
 						<img src="images/unarchive.png" /></a></td>';
 				}
 			}
-			$info_general .= "<td class='no_border'></td>";
-		$info_general .= "</td></tr>";
+			//$info_general .= "<td class='no_border'></td>";
+		$info_general .= "</tr>";
 			
 		}
 		if($nprojects == 0) {
 			$info_general = "<tr>";
 			// Project name
-			$info_general .= "<td class='no_border size_min'></td>";
+			//$info_general .= "<td class='no_border size_min'></td>";
 			$info_general .= "<td colspan='5'>";
 			$info_general .= "<b>" . __("This group doesn't have projects.") . "</b></td>";
 			$info_general .= "</td>";

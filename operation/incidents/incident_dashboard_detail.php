@@ -584,10 +584,10 @@ if (!$clean_output) {
 		echo "</li>";
 	}
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/star_dark.png", true, array("title" => __('Comments'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/icono_comentarios.png", true, array("title" => __('Comments'))).'</a>';
 	echo '</li>';
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/icono_files.png", true, array("title" => __('Files'))).'</a>';
 	echo '</li>';
 	echo '<li>';
 	echo '<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&clean_output=1">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Statistics'))).'</a>';

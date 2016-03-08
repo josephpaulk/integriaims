@@ -953,8 +953,12 @@ function print_table (&$table, $return = false) {
 			if (!isset ($align[$key])) {
 				$align[$key] = '';
 			}
+			if (isset ($table->head_colspan[$key])) {
+				$headColspan = 'colspan = "' . $table->head_colspan[$key] . '"';
+			}
+			else $headColspan = '';
 
-			$output .= '<th class="header c'.$key.'" scope="col">'. $heading .'</th>';
+			$output .= '<th class="header c'.$key. '" '.$headColspan.' scope="col">'. $heading .'</th>';
 		}
 		$output .= '</tr>'."\n";
 	}
@@ -1287,10 +1291,10 @@ function print_container_div($id, $title, $content, $open = 'open', $return = tr
 
 	switch($open) {
 		case 'open':
-			$arrow = print_image('images/arrow_down.png', true, array('class' => 'arrow_down'));
+			$arrow = print_image('images/arrow_down.png', true, array('class' => 'arrow_down', 'id' => $id."_arrow"));
 			break;
 		case 'closed':
-			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right'));
+			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right', 'id' => $id."_arrow"));
 			$container_div_style .= ' display: none;';
 			break;
 		case 'no':
@@ -1362,6 +1366,49 @@ function print_autorefresh_button ($name = "autorefresh", $text = "", $return = 
 	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
 	$html .= "</div>";
 	$html .= "</div>";
+	
+	if ($return) {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function print_autorefresh_button_ticket ($name = "autorefresh", $text = "", $return = false, $token = "incidents_autorefresh", $form_id = "saved-searches-form") {
+	global $config;
+	
+	$html .= "<script type='text/javascript'>
+				$(document).ready (function () {
+					var seconds = readCookie('$token');
+					if (seconds) {
+						enableAutorefresh (\"button-$name\", \"$token\", \"$form_id\");
+						$('#".$name."_time').val(seconds);
+					} else {
+						$('#".$name."_time').val(60);
+					}
+				});
+			</script>";
+	
+	if ($text == "") {
+		$text = __("Enable autorefresh");
+	}
+	
+	$values = array();
+	$values[5] = '5 '.__('seconds');
+	$values[15] = '15 '.__('seconds');
+	$values[30] = '30 '.__('seconds');
+	$values[60] = '1 '.__('minute');
+	$values[300] = '5 '.__('minutes');
+	$values[900] = '15 '.__('minutes');
+	$values[1800] = '30 '.__('minutes');
+	$values[3600] = '1 '.__('hour');
+	
+	$html .= "<li style=''>";
+	$html .= "<a reload_enabled='0' name='$name' id='button-$name' href='javascript:' onclick='toggleAutorefresh (\"button-$name\", \"$token\", \"$form_id\")'>$text</a>";
+	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px;'>";
+	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
+	$html .= "</div>";
+	$html .= "</li>";
 	
 	if ($return) {
 		return $html;

@@ -458,9 +458,9 @@ echo "<div class='divresult'>";
 	$workload_distribution = '<tr><td colspan="2" style="text-align:center">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</td></tr>';
 	
 	// Project activity graph
-	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
+	$project_activity = project_activity_graph ($id_project, 750, 300, true, 1, 50, true);
 	if ($project_activity) {
-		$project_activity = '<tr><td colspan="2" style="text-align:center" class = "center-graph">' . $project_activity . '</td></tr>';
+		$project_activity = '<tr><td colspan="2" style="padding:20px;">' . $project_activity . '</td></tr>';
 	}
 	
 	// Costs (client / total)

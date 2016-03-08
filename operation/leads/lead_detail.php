@@ -966,20 +966,11 @@ if ($id || $new) {
 }
 else {
 	
-	// Custom search button
-	echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
-	echo "<ul>";
-	echo "<li style='padding: 3px;'>";
-	echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
-	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
-	
 	//FORM AND TABLE TO MANAGE CUSTOM SEARCHES
 	$table = new stdClass;
 	$table->id = 'saved_searches_table';
 	$table->width = '99%';
-	$table->class = 'search-table';
+	$table->class = 'search-table-button';
 	$table->size = array ();
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold';
@@ -990,7 +981,7 @@ else {
 						 AND section = "leads"
 					 ORDER BY name',
 					 $config['id_user']);
-	$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('None'), 0, true, false, true, __('Custom searches'));
+	$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('None'), 0, true, false, true, __('Custom searchs'));
 
 	//If a custom search was selected display cross
 	if ($id_search) {
@@ -1153,22 +1144,20 @@ else {
 			$where_clause .= ' AND id IN (-1) ';
 	}
 	
-	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
+	$form = '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
 
-	$table->class = 'search-table';
+	$table->class = 'search-table-button';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->colspan = array();
 	$table->colspan['tags'][0] = 4;
 
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 21, 100, true, __('Search'));
 	
-	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 15, 30, false, '',
-			array(), true, '', __('Owner'))
-
-		. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 21, 30, false, '',
+			array(), true, '', __('Owner'). print_help_tip (__("Type at least two characters to search"), true));
 
 	$table->data[0][2] =  print_checkbox ("show_100_search", 1, $show_100, true, __("Show finished leads"));
 
@@ -1202,36 +1191,40 @@ else {
 	$table_advanced .= print_company_autocomplete_input($params);
 	$table_advanced .= '</td><td>';
 	$table_advanced .= combo_kb_products ($id_category, true, 'Product type', true);
-	$table_advanced .= '</td><td>';
-	$table_advanced .= print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'id_language', $id_language, '', __('Any'), '', true, false, false, __('Language'));
-	$table_advanced .= '</td><tr><td>';
+	$table_advanced .= '</td>';
+	$table_advanced .= "<td rowspan=2 valign=top>".get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
+	$table_advanced .= '</td>';
+	$table_advanced .= '<tr><td>';
 	$progress_values = lead_progress_array ();
 	$table_advanced .= print_select ($progress_values, 'progress_search', $progress, '', __('Any'), 0, true, 0, false, __('Lead progress') );
 	$table_advanced .= '</td><td>';
-	$table_advanced .= get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
-	$table_advanced .= '</td>';
+	$table_advanced .= print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+		'id_language', $id_language, '', __('Any'), '', true, false, false, __('Language'));
 	$table_advanced .= '<tr>';
 	
 	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), $table_advanced, 'closed', true, false,'','no_border',3);
 	$table->colspan['advanced'][2] = 4;
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$table->data[3][0] = print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
-	$table->data[3][0] .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
 	
-	$table->align[3]="right";
-	$table->align[3][0]="right";
-	$table->colspan[3][0]="3";
-	$table->size[3][0]="100%";
-
-	print_table ($table);
+	$form .= "<div class='divresult'>";
+	$form .= print_table ($table,true);
+	$form .= '</div>';
 	$table->data = array ();
 	
+	$form .= "<div class='divform'>";
+		$form .= "<div class='button-form' style='width:100%;'>";
+			$form .= print_button(__('Export to CSV'), '', false, 
+				'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . 
+					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
+			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
+		$form .= '</div>';
+	$form .= '</div>';
 	
-
-	echo '</form>';
-
+	$form .= '</form>';
+	
+	print_container_div("lead_form",__("Leads form search"),$form, 'closed', false, false);
+		
 	$leads = crm_get_all_leads ($where_clause);
 
 	if ($leads == false) {
@@ -1239,12 +1232,11 @@ else {
 	} else {
 		$count_total_leads = count($leads);
 	}
-	
-	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$search_params", $offset);
 
 	if ($leads !== false) {
+		$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$search_params", $offset);
 		unset ($table);
-		$table->width = "99%";
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -1350,11 +1342,11 @@ else {
 	
 	if ($section_write_permission || $section_manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search">';
-		echo '<div style="width: '.$table->width.'; text-align: right;">';
+		echo '<div class="button-form" style="text-align:right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 		print_input_hidden ('new', 1);
 		echo '</div>';
-		echo '</form><br>';
+		echo '</form>';
 	}
 
 	unset($table);
@@ -1369,12 +1361,11 @@ else {
 	$visible_users = get_user_visible_users ($config['id_user']);
 	$table->data[0][2] = print_select($visible_users, 'mass_assigned_user_leads', '0', '', __('Select'), -1, true, false, true, __('Assigned user'));
 
-	$table->data[1][0] = print_submit_button (__('Update'), 'massive_leads_update', false, 'class="sub next"', true);
-	$table->colspan[1][0] = 4;
+	$table->data[0][3] = "<div class='button-form'>" . print_submit_button (__('Update'), 'massive_leads_update', false, 'class="sub next"', true) . "</div>";
 
 	$massive_oper_leads = print_table ($table, true);
 
-	echo print_container('massive_oper_leads', __('Massive operations over selected items'), $massive_oper_leads, 'closed', true, '20px');
+	echo print_container_div('massive_oper_leads', __('Massive operations over selected items'), $massive_oper_leads, 'closed', true, '20px');
 }
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";

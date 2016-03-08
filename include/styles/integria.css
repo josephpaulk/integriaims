@@ -1040,6 +1040,7 @@ input.sub {
 	padding-right: 9px;
 	padding-top: 4px;
 	padding-bottom: 4px;
+	background-color: #FFF;
 }
 
 input.next {
@@ -2312,8 +2313,12 @@ td.mini_calendar table {
 	text-align: center;
 	border-spacing: 0px;
 	margin: 8px auto;
-	width: 95px;
+	width: 120px;
 	height: 85px;
+	vertical-align: top;
+}
+td.mini_calendar {
+	vertical-align: top;
 }
 
 td.mini_calendar table th {

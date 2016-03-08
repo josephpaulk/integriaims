@@ -558,7 +558,7 @@ if ($modo == "edicion") { // Only show groups for existing users
 	enterprise_hook ('manage_profiles');
 	echo "</table>";
 
-	echo "<div class='button' style='width:720px'>";
+	echo "<div class='button-form' style=''>";
 	print_input_hidden ('action', 'update');
 	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo "</div><br>";
@@ -567,8 +567,8 @@ if ($modo == "edicion") { // Only show groups for existing users
 enterprise_hook ('show_delete_profiles');
 
 if (isset($_GET["alta"])){
-	echo "</table>";
-	echo "<div class='button' style='width: 100%' >";
+	//echo "</table>";
+	echo "<div class='button-form' style='width: 100%' >";
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	print_input_hidden ('action', 'create');
 	echo '</div>';

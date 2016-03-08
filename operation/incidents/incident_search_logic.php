@@ -107,22 +107,15 @@ if (get_parameter ('id_myticket') == 1){
 } else {
 	echo "<h4>" .__('Ticket search');
 }
-echo "<div id='button-bar-title'>";
-
-echo "</div>";
-
-echo "<div class='under_tabs_info'>";
-echo "</div>";
-
-
-print_autorefresh_button();
 
 
 echo "<div id='button-bar-title' style='margin-right: 12px;'>";
-echo "<ul>";	
+echo "<ul>";
+print_autorefresh_button_ticket();
 echo "<li style=''>";
 echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."&nbsp;".integria_help ("custom_search", true)."</a>";
 echo "</li>";
+
 echo "</ul>";
 echo "</div>";
 echo "</h4>";

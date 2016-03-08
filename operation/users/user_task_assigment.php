@@ -63,11 +63,12 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 	echo "<form id='form-user_task_assignment' name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
 	
 	echo "<table style='width: 100%;' class=search-table>";
-	echo "<tr><td style='width: 150px;'>";
+	echo "<tr><td>";
 	// Show user
 	//combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
 	$src_code = print_image('images/group.png', true, false, true);
-	echo "<b>" . __("User") . "</b>" . print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
+	echo "<b>" . __("User") . "</b>";
+	echo "<tr><td>" . print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '');
 		//. print_help_tip (__("Type at least two characters to search"), true);
 	echo "<tr><td>";

@@ -139,11 +139,19 @@ if ($add || $edit) {
 		array_push ($table->data, $data);
 	}
 	
-	print_table ($table);
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	echo '<form method="post">';
-	print_input_hidden ('add', 1);
-	print_submit_button (__('Add'), 'add_btn', false, 'class="sub create"');
-	echo "</form>";
+	echo "<div class='divresult'>";
+		print_table ($table);
+	echo "</div>";
+	
+	echo "<div class='divform'>";
+		echo '<form method="post">';
+			$table = new StdClass();
+			$table->width = '100%';
+			$table->class = 'search-table';
+			$table->data[0][0] = print_input_hidden ('add', 1,true);
+			$table->data[0][0] .= print_submit_button (__('Add'), 'add_btn', false, 'class="sub create"',true);
+			print_table ($table);
+		echo "</form>";
+	echo "</div>";
 }
 ?>

@@ -1004,7 +1004,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data = array ();
 	$table->size = array ();
 	$table->style = array ();
-	$table->style[0] = 'width: 25%';
+	$table->style[0] = 'width: 35%';
 	$table->style[1] = 'width: 25%';
 	$table->style[2] = 'width: 25%;';
 	$table->style[3] = 'width: 25%';
@@ -1090,7 +1090,7 @@ function form_search_incident ($return = false, $filter=false) {
 			'', __('Any'), -1, true, false, false, __('Resolution'), false);
 			
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	$table_advanced->data[2][2] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:210px;'", true, '', __('Inventory'));
+	$table_advanced->data[2][2] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:195px;'", true, '', __('Inventory'));
 	$table_advanced->data[2][2] .= "<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
 	$table_advanced->data[2][2] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	

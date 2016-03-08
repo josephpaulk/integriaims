@@ -892,17 +892,7 @@ if ((!$id) AND ($new_company == 0)){
 	}
 	
 	// Search // General Company listing
-	echo "<div id='inventory-search-content'>";
-	echo "<h2>".__('Company management') . "</h2>";
-	echo "<h4>".__('List Company');
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	echo "<li>";
-	echo "<a id='company_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
-	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
-	echo "</h4>";
+	//echo "<div id='inventory-search-content'>";
 
 	$search_text = (string) get_parameter ("search_text");	
 	$search_role = (int) get_parameter ("search_role");
@@ -991,7 +981,26 @@ if ((!$id) AND ($new_company == 0)){
 		$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 		$billing_order_image = "&nbsp;<a href='javascript:changeBillingOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
 	}
-
+	
+	echo "<h2>".__('Company management') . "</h2>";
+	echo "<h4>".__('List Company');
+		echo "<div id='button-bar-title'>";
+			echo "<ul>";
+				echo "<li>";
+					$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+					$buttons = print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . 
+						str_replace('"', "\'", $where_clause) . '&date=' . $date . '\')', 'class="sub csv"', true);
+					echo $buttons;
+				echo "</li>";
+				echo "<li>";
+					echo "<a id='company_stats_form_submit' href='javascript: changeAction();'>".
+						print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
+				echo "</li>";
+			echo "</ul>";
+		echo "</div>";
+	echo "</h4>";
+	
+	
 	$search_params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing";
 	
 	$table->width = '100%';
@@ -1020,26 +1029,25 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 	$table->data[1][3] = print_input_text ('search_min_billing', $search_min_billing, '', 15, 20, true, __('Min. billing'));
 
-	echo '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
-	print_table ($table);
-	// Input hidden for ORDER
-	print_input_hidden ('order_by_activity', $order_by_activity);
-	print_input_hidden ('order_by_company', $order_by_company);
-	print_input_hidden ('order_by_billing', $order_by_billing);
-	unset($table->data);
-	echo "<div style='width:100%;'>";
-		$table->width = '100%';
-		$table->class = 'button-form';
-		$buttons =  print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-		// Delete new lines from the string
-		$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . str_replace('"', "\'", $where_clause) . '&date=' . $date . '\')', 'class="sub"', true);
+	$form = '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		
-		$table->data[2][0] = $buttons;
-		$table->colspan[2][0] = 4;
-		print_table ($table);
-	echo "</div>";
-	echo '</form>';
+	$form .= "<div class='divform' >";
+		$form .= "<div class='button-form'>";
+			// Input hidden for ORDER
+			$form .= print_input_hidden ('order_by_activity', $order_by_activity,true);
+			$form .= print_input_hidden ('order_by_company', $order_by_company,true);
+			$form .= print_input_hidden ('order_by_billing', $order_by_billing,true);
+			$form .=  print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		$form .= "</div>";
+	$form .= "</div>";
+	
+	$form .= "<div class='divresult' >";
+		$form .= print_table ($table,true);
+	$form .= "</div>";
+	
+	$form .= '</form>';
+	
+	print_container_div("companys_form",__("Companies form search"),$form, 'closed', false, false);
 	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
 
@@ -1128,6 +1136,15 @@ if ((!$id) AND ($new_company == 0)){
 		print_table ($table);
 	}
 	
+	if ($write_permission || $manage_permission) {
+		echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+		echo "<div class='button-form'>";
+				$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('new_company', 1, true);
+			echo $button;
+		echo "</div>";
+		echo '</form>';
+	}
 }
 
 echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";

@@ -669,9 +669,7 @@ elseif ($op == "") {
 		}
 	}
 	else {
-		echo "<h2>".__('Contracts')."</h2>";
-		echo "<h4>".__('List of contracts')."</h4>";
-		
+				
 		// Contract listing
 		$search_text = (string) get_parameter ('search_text');
 		$search_company_role = (int) get_parameter ('search_company_role');
@@ -723,70 +721,84 @@ elseif ($op == "") {
 			$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
 		}
 		
-		echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
+		echo "<h2>".__('Contracts')."</h2>";
+		echo "<h4>".__('List of contracts');
+			echo "<div id='button-bar-title'>";
+				echo "<ul>";
+					echo "<li>";
+						// Delete new lines from the string
+						$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+						echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . 
+							str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+					echo "</li>";
+				echo "</ul>";
+			echo "</div>";
+		echo "</h4>";
 		
-		echo "<table width=100% class='search-table-button'>";
-		echo "<tr>";
 		
-		echo "<td colspan=2>";
-		echo print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
-		echo "</td>";
+		$form = '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 		
-		echo "<td>";
-		echo print_select (get_company_roles(), 'search_company_role',
+		$form .= "<div class='divresult'>";
+		$form .= "<table width=100% class='search-table-button'>";
+		$form .= "<tr>";
+		
+		$form .= "<td colspan=2>";
+		$form .= print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
+		$form .= "</td>";
+		
+		$form .= "<td>";
+		$form .= print_select (get_company_roles(), 'search_company_role',
 			$search_company_role, '', __('All'), 0, true, false, false, __('Company roles'));	
-		echo "</td>";
+		$form .= "</td>";
 		
-		echo "<td>";
-		echo print_select (get_contract_status(), 'search_status',
+		$form .= "<td>";
+		$form .= print_select (get_contract_status(), 'search_status',
 			$search_status, '', __('Any'), -1, true, false, false, __('Status'));	
-		echo "</td>";
+		$form .= "</td>";
 		
-		echo "<td>";
-		echo print_select (get_contract_expire_days(), 'search_expire_days',
+		$form .= "<td>";
+		$form .= print_select (get_contract_expire_days(), 'search_expire_days',
 			$search_expire_days, '', __('None'), 0, true, false, false, __('Out of date'));	
-		echo "</td>";
+		$form .= "</td>";
 		
-		echo "</tr>";
+		$form .= "</tr>";
+		$form .= "<tr>";
 		
-		echo "<tr>";
+		$form .= "<td>";
+		$form .= print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Begining From') .
+			"<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td>";
 		
-		echo "<td>";
-		echo print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Begining From'));
-		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-		echo "</td>";
+		$form .= "<td>";
+		$form .= print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Begining To').
+			"<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td>";
 		
-		echo "<td>";
-		echo print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Begining To'));
-		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-		echo "</td>";
+		$form .= "<td>";
+		$form .= print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending From')."<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td>";
 		
-		echo "<td>";
-		echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending From'));
-		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-		echo "</td>";
+		$form .= "<td>";
+		$form .= print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To').
+			"<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td>";
+		$form .= "</tr>";
 		
-		echo "<td>";
-		echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To'));
-		echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
-		echo "</td>";
-		echo "</tr>";
+		$form .= "</table>";
+		$form .= "</div>";
 		
-		echo "</table>";
+		$form .= "<div class='divform'>";
+			$form .= "<div class='button-form' style='width:100%;'>";
+				$form .= print_submit_button (__('Search'), 
+					"search_btn", false, 'class="sub search"', true);
+			$form .= "</div>";
+		$form .= "</div>";
 		
-		echo "<div class='button-form' style='width:100%;'>";
-			echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-			// Delete new lines from the string
-			$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-			echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-		echo "</div>";
+		$form .= '</form>';
 		
-		echo '</form>';
-			
+		print_container_div("contract_form",__("Contracts form search"),$form, 'closed', false, false);
+		
 		$contracts = crm_get_all_contracts ($where_clause);
-
-		
-
 		if ($contracts !== false) {
 			
 			$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");

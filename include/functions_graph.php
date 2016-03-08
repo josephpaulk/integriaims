@@ -1442,23 +1442,24 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
 	$chart = array();
 	$names = array();
 	$chart2 = array();
-
+	
 	// Calculate chart data
 	for ($i = 0; $i < $resolution; $i++) {
-		$timestamp = $start_unixdate + ($interval * $i);
+		//$timestamp =  $start_unixdate + ($interval * $i);
+		$timestamp = strtotime($data[$i]['timestamp']);
 		$total = 0;
 		$j = 0;
 
-		while (isset ($data[$j])){
-            $dftime = strtotime($data[$j]['timestamp']);
-
-			if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
-				$total += ($data[$j]['duration']);
-			}
-			$j++;
-		} 
-
-    	$time_format = "M d";
+		//~ while (isset ($data[$j])){
+            //~ $dftime = strtotime($data[$j]['timestamp']);
+			//~ if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
+				//~ $total += ($data[$j]['duration']);
+			//~ }
+			//~ $j++;
+		//~ }
+		
+		$total = ($data[$i]['duration']);
+    	$time_format = "d M Y";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human]['graph'] = $total;
    	}
@@ -1468,7 +1469,7 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
    	$colors['graph']['alpha'] = 100;
 	
 	if ($area) {
-		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', '', __('Hours'), $config["base_url"], '', $config['font'], $config['fontsize'], '', $ttl);
+		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', __('Dates'), __('Hours'), $config["base_url"], '', $config['font'], $config['fontsize'], 'h', $ttl);
 	} else {
 		$output .= vbar_graph ($config['flash_charts'], $chart2, $width, $height, $colors, array(), "", "", $config["base_url"], "", $config['font'], $config['fontsize'],true, $ttl);
 		$output .= "</div>";
