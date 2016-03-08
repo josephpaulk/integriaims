@@ -272,7 +272,7 @@ if ($mode == 0) {
 				imagePng($imgPng); 
 		   	}
 		   	else 
-		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, 6);
+		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, 7);
    			break;
    		case 2:
 			if ($progress > 100 || $progress < 0) {
@@ -284,7 +284,7 @@ if ($mode == 0) {
 				imagePng($imgPng); 
 		   	}
 		   	else 
-		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, 6);
+		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, 7);
    			break;   			
    	}
 }

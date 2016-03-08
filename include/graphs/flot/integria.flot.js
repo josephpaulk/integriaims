@@ -33,7 +33,7 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 			formatter: function(label, series) {
 				return '<div style="font-size:' + font_size + 'pt;' +
 					'text-align:center;padding:2px;color:white;">' +
-						label + '<br/>' + series.percent.toFixed(2) + '%</div>';
+						label + ': ' + series.percent.toFixed(2) + '%</div>';
 			},
 			background: {
 				opacity: 0.5,
@@ -72,32 +72,35 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 				}
 		}
 
-	switch (legend_position) {
-		case 'bottom':
-			if (width > height)
-				offset = - (height / 5);
-			else
-				offset = - (width / 5);
-			conf_pie.series.pie.radius = 1 / 2.5;
-			conf_pie.series.pie.offset = {top: offset};
-			conf_pie.legend.position = "se";
-			break;
-		case 'right':
-		case 'inner':
-			conf_pie.legend.container = $('#'+graph_id+"_legend");
-		default:
-			//TODO FOR TOP OR LEFT OR RIGHT
-			break;
-	}
+	//~ switch (legend_position) {
+		//~ case 'bottom':
+			//~ if (width > height)
+				//~ offset = - (height / 5);
+			//~ else
+				//~ offset = - (width / 5);
+			//~ conf_pie.series.pie.radius = 1 / 2.5;
+			//~ conf_pie.series.pie.offset = {top: offset};
+			//~ conf_pie.legend.position = "se";
+			//~ break;
+		//~ case 'right':
+		//~ case 'inner':
+			//~ conf_pie.legend.container = $('#'+graph_id+"_legend");
+		//~ default:
+			//~ //TODO FOR TOP OR LEFT OR RIGHT
+			//~ break;
+	//~ }
 
 	var plot = $.plot($('#'+graph_id), data, conf_pie);
 
 	var legends = $('#'+graph_id+' .legendLabel');
 	legends.each(function () {
-		$(this).css('width', $(this).width());
+		$(this).css('width', $(this).width()+10);
 		$(this).css('font-size', font_size+'pt');
 	});
-
+	
+	$('.legend>div').css('right',($('.legend>div').height()*-2));
+	$('.legend>table').css('right',($('.legend>div').height()*-2));
+	
 	// Events
 	$('#' + graph_id).bind('plothover', pieHover);
 	$('#' + graph_id).bind('plotclick', pieClick);
@@ -546,12 +549,12 @@ function showTooltip(x, y, color, contents) {
     }).appendTo("body").fadeIn(200);
 }
 
-function integriaFlotVBars(graph_id, values, labels, labels_long, legend, colors, water_mark, maxvalue, water_mark, separator, separator2) {
+function integriaFlotVBars(graph_id, values, labels, labels_long, legend, colors, water_mark, maxvalue, water_mark, separator, separator2, unit, xaxisname, yaxisname) {
 
 	values = values.split(separator2);
 	legend = legend.split(separator);
 	labels_long = labels_long.split(separator);
-	//colors = colors.split(separator);
+	colors = colors.split(separator);
 	var colors_data = ['#FC4444','#FFA631','#FAD403','#5BB6E5','#F2919D','#80BA27'];
 	var datas = new Array();
 	
@@ -589,18 +592,21 @@ function integriaFlotVBars(graph_id, values, labels, labels_long, legend, colors
 				barWidth: 1
 			}
 		},
+		color: colors_data,
 		xaxis: {
+			axisLabel: xaxisname,
 			axisLabelUseCanvas: true,
-			axisLabelFontSizePixels: 7,
-			axisLabelFontFamily: 'Verdana, Arial',
-			axisLabelPadding: 0,
+			axisLabelFontSizePixels: 12,
+			axisLabelFontFamily: 'Verdana',
+			axisLabelPadding: 10,
 			ticks: xFormatter,
 			labelWidth: 130,
 		},
 		yaxis: {
+			axisLabel: yaxisname,
 			axisLabelUseCanvas: true,
-			axisLabelFontSizePixels: 7,
-			axisLabelFontFamily: 'Verdana, Arial',
+			axisLabelFontSizePixels: 12,
+			axisLabelFontFamily: 'Verdana',
 			axisLabelPadding: 100,
 			autoscaleMargin: 0.02,
 			tickFormatter: function (v, axis) {
@@ -612,7 +618,7 @@ function integriaFlotVBars(graph_id, values, labels, labels_long, legend, colors
 			labelBoxBorderColor: "#000000",
 			margin: 100,
 			container: true,
-			sorted: false
+			sorted: false,
 		},
 		grid: {
 			hoverable: true,
@@ -623,58 +629,15 @@ function integriaFlotVBars(graph_id, values, labels, labels_long, legend, colors
 	
 	var plot = $.plot($('#'+graph_id),datas, options );
 	$('#' + graph_id).VUseTooltip();
-	$('#' + graph_id).css("margin-left","25px");
-	$('#' + graph_id).css("margin-right","20px");
-	// Adjust the top of yaxis tick to set it in the middle of the bars
-	//yAxisHeight = $('#'+graph_id+' .yAxis .tickLabel').css('height').split('px')[0];
-	
-	//plot.getPlaceholder().onload = function(){pruebas};
-	//~ i = 0;
-	//~ $('#'+graph_id+' .xAxis .tickLabel').each(function() {
-		//~ $(this).css('display','none');
-		//~ $(this).addClass("legend_"+i);
-		//~ i++;
-		//~ tickNewTop = parseInt(parseInt(tickTop) - (yAxisHeight/2)-3);
-		//~ $(this).css('top', tickNewTop+'px');
-		//~
-		//~ valuesNewTop = parseInt(parseInt(tickTop) - (yAxisHeight));
-		//~
-		//~ $('#value_'+i+'_'+graph_id).css('top',parseInt(plot.offset().top) + parseInt(valuesNewTop));
-//~
-		//~ pixelPerValue = parseInt(plot.width()) / maxvalue;
-		//~
-		//~ inCanvasValuePos = parseInt(pixelPerValue * ($('#value_'+i+'_'+graph_id).html()));
-		//~
-		//~ $('#value_'+i+'_'+graph_id).css('left',plot.offset().left + inCanvasValuePos - $('#value_'+i+'_'+graph_id).css('width').split('px')[0] - 3);
-	//~ });
-	
-	// When resize the window, adjust the values
-	//~ $('#'+graph_id).parent().resize(function () {
-		//~ i = 0;
-		//~ pixelPerValue = parseInt(plot.width()) / maxvalue;
-		//~
-		//~ $('#'+graph_id+' .yAxis .tickLabel').each(function() {
-			//~ inCanvasValuePos = parseInt(pixelPerValue * ($('#value_'+i+'_'+graph_id).html()));
-			//~
-			//~ $('#value_'+i+'_'+graph_id).css('left',plot.offset().left + inCanvasValuePos - $('#value_'+i+'_'+graph_id).css('width').split('px')[0] - 3);
-			//~ i++;
-		//~ });
-	//~ });
-	
-	
+	$('#' + graph_id).css("margin-left","45px");
+	$('#' + graph_id).css("margin-right","20px");	
 	
 	$('#'+graph_id+' .yAxis .tickLabel').each(function() {
-		label = parseFloat($(this).text());
-		text = label.toLocaleString();
-		if ( label >= 1000000)
-			text = text.substring(0,4) + "M";
-		else if (label >= 100000)
-				text = text.substring(0,3) + "K";
-			else if (label >= 1000)
-					text = text.substring(0,2) + "K";
-		
-		$(this).text(text);
+		var right = $(this).css("right").split('px')[0];
+		right_new = (parseInt(right) + 30);
+		$(this).css("right", right_new +"px");
 	});
+	
 	// Format functions
 	function xFormatter(v, axis) {
 		format = new Array();
@@ -691,7 +654,7 @@ function integriaFlotVBars(graph_id, values, labels, labels_long, legend, colors
 	function lFormatter(v, axis) {
 		return '<div style=color:#000>'+v+'</div>';
 	}
-
+	
 	// Events
 	//~ $('#'+graph_id).bind('plothover',  function (event, pos, item) {
 		//~ $('.values_'+graph_id).css('font-weight', '');

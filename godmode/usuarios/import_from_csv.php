@@ -77,7 +77,8 @@ $avatar_forlist = $avatar . ".png";
 $table->data[4][0] = print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, __('Avatar'));
 
 $table->data[7][0] = "<label>".__('Load file')."</label>";
-$table->data[7][0] .= '<input class="sub" name="file" type="file" /><br />';
+$table->data[7][0] .= '<input class="sub" name="file" type="file" />';
+$table->cellstyle[8][0] = "text-align:center;";
 $table->data[8][0] = '<input type="submit" class="sub next" value="' . __('Upload File') . '" />';
 echo "<div class='divform'>";
 	echo '<form enctype="multipart/form-data" action="index.php?sec=users&sec2=godmode/usuarios/import_from_csv" method="POST">';

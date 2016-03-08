@@ -44,6 +44,8 @@ function include_javascript_dependencies_flot_graph($return = false) {
 			<script language="javascript" type="text/javascript" src="'.
 				$config["public_url"] . '/include/graphs/flot/jquery.flot.threshold.js' .'"></script>
 			<script language="javascript" type="text/javascript" src="'.
+				$config["public_url"] . '/include/graphs/flot/jquery.flot.axislabels.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="'.
 				$config["public_url"] . '/include/graphs/flot/jquery.flot.symbol.min.js' .'"></script>
 			<script language="javascript" type="text/javascript" src="'.
 				$config["public_url"] . '/include/graphs/flot/integria.flot.js' .'"></script>';
@@ -592,7 +594,7 @@ function flot_hcolumn_chart ($graph_data, $width, $height, $water_mark) {
 	$data = array();
 	
 	foreach ($graph_data as $label => $values) {
-		$labels[] = io_safe_output($label);
+		$labels[] = $label;
 		$i--;
 		
 		foreach ($values as $key => $value) {
@@ -632,7 +634,7 @@ function flot_hcolumn_chart ($graph_data, $width, $height, $water_mark) {
 	$return .= "<script type='text/javascript'>";
 	
 	$return .= "integriaFlotHBars('$graph_id', '$values', '$labels',
-		false, $max, '$water_mark', '$separator', '$separator2')";
+		false, '$max', '$water_mark', '$separator', '$separator2')";
 	
 	$return .= "</script>";
 	
@@ -640,7 +642,7 @@ function flot_hcolumn_chart ($graph_data, $width, $height, $water_mark) {
 }
 
 // Returns a 3D column chart
-function flot_vcolumn_chart ($graph_data, $width, $height, $color, $legend, $long_index, $homeurl, $unit, $water_mark, $homedir) {
+function flot_vcolumn_chart ($graph_data, $width, $height, $color, $legend, $long_index, $homeurl, $unit, $water_mark, $homedir, $xaxisname, $yaxisname) {
 	global $config;
 	
 	include_javascript_dependencies_flot_graph();
@@ -692,7 +694,7 @@ function flot_vcolumn_chart ($graph_data, $width, $height, $color, $legend, $lon
 	$max = 0;
 	$i = count($graph_data);
 	foreach ($graph_data as $label => $values) {
-		$labels[] = io_safe_output($label);
+		$labels[] = $label;
 		$i--;
 		
 		foreach ($values as $key => $value) {
@@ -730,7 +732,7 @@ function flot_vcolumn_chart ($graph_data, $width, $height, $color, $legend, $lon
 	// Javascript code
 	$return .= "<script type='text/javascript'>";
 	
-	$return .= "integriaFlotVBars('$graph_id', '$values', '$labels', '$labels', '$legend', '$colors', false, $max, '$water_mark', '$separator', '$separator2')";
+	$return .= "integriaFlotVBars('$graph_id', '$values', '$labels', '$labels', '$legend', '$colors', false, '$max', '$water_mark', '$separator', '$separator2', '$unit', '$xaxisname', '$yaxisname')";
 	
 	$return .= "</script>";
 	

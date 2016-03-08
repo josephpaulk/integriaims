@@ -143,7 +143,7 @@ function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1, $reduce_data_columns = false) {
 		
 	if($flash_chart) {
-		echo fs_2d_column_chart ($chart_data, $width, $height, $homedir, $reduce_data_columns, $xaxisname, $yaxisname);
+		echo flot_hcolumn_chart ($chart_data, $width, $height, $homedir, $reduce_data_columns, $xaxisname, $yaxisname);
 	}
 	else {
 		$graph = array();
@@ -185,7 +185,8 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 	}
 	
 	if($flash_chart) {
-		return fs_area_graph($chart_data, $width, $height, $color, $legend, $long_index, $homedir, $unit);
+		//~ return fs_area_graph($chart_data, $width, $height, $color, $legend, $long_index, $homedir, $unit);
+		return flot_vcolumn_chart($chart_data, $width, $height, $color, $legend, $long_index, $homedir, $unit, '','',$xaxisname, $yaxisname);
 	}
 	else {
 		$graph = array();
