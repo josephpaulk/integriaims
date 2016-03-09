@@ -96,11 +96,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo __('Group');
 	echo "<td class=datos2>";
 	combo_groups_visible_for_me ($config["id_user"], 'id_group', 1, 'KR', $id_group, false, 0 );
-	if ($id == -1)
-		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
-	else
-		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
 	echo "</table>";
+	echo "<div class='button-form'>";
+		if ($id == -1)
+			echo print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
+		else
+			echo print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+	echo "</div>";
 	echo "</form>";
 
 }
@@ -111,6 +113,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<h2>".__('File release category access management')."</h2><h4>".__('Assigned categories / group')."</h4>";
 	$sql1='SELECT tdownload_category.name as category, tgrupo.nombre as grupo, id_category, tdownload_category_group.id_group FROM tdownload_category_group, tdownload_category, tgrupo WHERE tdownload_category_group.id_category = tdownload_category.id AND tgrupo.id_grupo = tdownload_category_group.id_group';
 	$color =0;
+	echo "<div class='divresult'>";
 	if ($result=mysql_query($sql1)){
 		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Category')."</th>";
@@ -128,14 +131,14 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			echo "<tr>";
 			
 			// Category
-			echo "<td class='".$tdcolor."' align='left'>";
+			echo "<td class='".$tdcolor."'>";
 			echo $row['category'];
 			
 			// Group
-			echo "<td class='$tdcolor' valign='top'>";
+			echo "<td class='$tdcolor'>";
 			echo $row['grupo'];		
 			// Delete
-			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+			echo "<td class='".$tdcolor."f9' >";
 			echo "<a href='index.php?sec=download&
 						sec2=operation/download/manage_perms&
 						delete=1&id_category=".$row["id_category"]."&id_group=".$row["id_group"]."' 
@@ -144,11 +147,20 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 						<img border='0' src='images/cross.png'></a>";
 		}
 		echo "</table>";
-	}			
-	echo '<div style="width:99%; text-align: right;">';
-	echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_perms&create=1'>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	echo "</form></div>";
+	}
+	echo "</div>";
+	
+	echo '<div class="divform">';
+		echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_perms&create=1'>";
+			echo '<table class="search-table">';
+				echo '<tr>';
+					echo '<td>';
+						print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+					echo "</td>";
+				echo "</tr>";
+			echo "</table>";
+		echo "</form>";
+	echo "</div>";
 } // end of list
 
 ?>

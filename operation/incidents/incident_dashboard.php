@@ -77,7 +77,7 @@ if ($custom_searches === false) {
 }
 
 $table->colspan[0][0] = 2;
-$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom, 'open', true, '20px', '', 'no_border', 1, '');
+$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom, 'open', true, '20px', '', 'no_border', count($custom_searches), '');
 
 $groups = get_user_groups();
 

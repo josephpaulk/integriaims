@@ -125,13 +125,16 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	$files = list_files ('images/download_category/', "png", 1, 0);
 	print_select ($files, 'icon', $icon, '', __('None'), "");
-	
-	if ($id == -1)
-		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
-	else
-		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
 		
 	echo "</table>";
+	
+	echo "<div class='button-form'>";
+	if ($id == -1)
+		echo print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
+	else
+		echo print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+	
+	echo "</div>";
 	echo "</form>";
 
 }
@@ -142,6 +145,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<h2>".__('File release category management')." </h2><h4>".__('Defined categories')."</h4>";
 	$sql1='SELECT * FROM tdownload_category ORDER BY name';
 	$color =0;
+	echo '<div class="divresult">';
 	if ($result=mysql_query($sql1)){
 		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Name')."</th>";
@@ -188,11 +192,20 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 						<img border='0' src='images/cross.png'></a>";
 		}
 		echo "</table>";
-	}			
-	echo '<div style="width:100%; text-align: right;">';
-	echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_cat&create=1'>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
-	echo "</form></div>";
+	}
+	echo "</div>";
+			
+	echo '<div class="divform">';
+		echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_cat&create=1'>";
+			echo "<table class='search-table'>";
+				echo "<tr>";
+					echo "<td>";
+						print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
+					echo "</td>";
+				echo "</tr>";
+			echo "</table>";
+		echo "</form>";
+	echo "</div>";
 } // end of list
 
 ?>
