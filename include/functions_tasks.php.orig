@@ -248,7 +248,14 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			else
 				$estimation = "--";
 			
+<<<<<<< HEAD
+			// Time used on all child tasks + this task
+			$recursive_timeused = task_duration_recursive ($task["id"]);
+			
+			$time_used = "";
+=======
 			$time_used = _('Time used') . ": ";
+>>>>>>> master
 			
 			if ($taskhours == 0)
 				$time_used .= "--";
