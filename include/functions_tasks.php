@@ -21,7 +21,7 @@
  * @param int Id of the task to calculate.
  */
 function set_task_completion ($id_task) {
-	$hours_worked = get_task_workunit_hours ($id_task);
+	$hours_worked = task_duration_recursive ($id_task);
 	$hours_estimated = get_db_value ('hours', 'ttask', 'id', $id_task);
 
 	if($hours_estimated == 0) {
@@ -35,7 +35,7 @@ function set_task_completion ($id_task) {
 }
 
 function get_task_completion ($id_task) {
-	$hours_worked = get_task_workunit_hours ($id_task);
+	$hours_worked = task_duration_recursive ($id_task);
 	$hours_estimated = get_db_value ('hours', 'ttask', 'id', $id_task);
 
 	if($hours_estimated == 0) {
@@ -228,24 +228,24 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 				$name = "<s>$name</s>";
 			}
 			
+			// Time used on all child tasks + this task
+			$recursive_timeused = task_duration_recursive ($task["id"]);
+			
 			// Completion
-			$progress = progress_bar($task['completion'], 70, 20, $graph_ttl);
+			$progress = progress_bar($recursive_timeused, 70, 20, $graph_ttl);
 			
 			// Estimation
 			$imghelp = "Estimated hours = ".$task['hours'];
 			$taskhours = get_task_workunit_hours ($task['id']);
 			$imghelp .= ", Worked hours = $taskhours";
 			$a = round ($task["hours"]);
-			$b = round ($taskhours);
+			$b = round ($recursive_timeused);
 			$mode = 2;
 			
 			if ($a > 0)
 				$estimation = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp, $graph_ttl);
 			else
 				$estimation = "--";
-			
-			// Time used on all child tasks + this task
-			$recursive_timeused = task_duration_recursive ($task["id"]);
 			
 			$time_used = _('Time used') . ": ";
 			
@@ -254,12 +254,12 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			elseif ($taskhours == $recursive_timeused)
 				$time_used .= $taskhours;
 			else
-				$time_used .= $taskhours . "<span title='Subtasks WU/HR'> (".$recursive_timeused. ")</span>";
+				$time_used .= "<span title='".__('Total')."'>" .$recursive_timeused. "</span>". "<span title=".__('Task and Tickets')."> (".$taskhours.")</span>";
 				
 			$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
 		
 			if ($wu_incidents > 0)
-			$time_used .= "<span title='".__("Time spent in related tickets")."'> ($wu_incidents)</span>";
+			$time_used .= "<span title='".__("Task Tickets")."'> (".$wu_incidents.")</span>";
 			
 			// People
 			$people = combo_users_task ($task['id'], 1, true);

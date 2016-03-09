@@ -457,6 +457,7 @@ add_ranged_datepicker ("#text-start_date", "#text-end_date", function (datetext)
 });
 
 $(document).ready (function () {
+	submit_task_editor_form_gantt();
 	$("#textarea-description").TextAreaResizer ();
 	
 	$("#slider").slider ({

@@ -1251,12 +1251,14 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		$table->head[4] = __('Object type');
 		$table->head[5] = __('Manufacturer');
 		$table->head[6] = __('Contract');
+		$table->head[7] = __('Status');
+		$table->head[8] = __('Receipt date');	
 		
 		if ($result_check) {
 			
 			$res_object_fields = inventories_get_all_type_field ($result_check, false, true);
 			
-			$i = 6;
+			$i = 8;
 			foreach ($res_object_fields as $key => $object_field) {
 				
 				if (isset($object_field["label"])) {
@@ -1270,10 +1272,10 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			}
 		} else {
 			if (!$clean_output) {
-				$table->head[7] = __('Actions');
+				$table->head[9] = __('Actions');
 			}
 			if ($write_permission) {
-				$table->head[8] = print_checkbox ('inventorycb-all', "", false, true);
+				$table->head[10] = print_checkbox ('inventorycb-all', "", false, true);
 			}
 		}
 		
@@ -1341,11 +1343,25 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				$data[6] = $name_contract;
 			}
 			
+			if ($inventory['status'] != "") {
+				$data[7] = $inventory['status'];
+			} else { 
+				$status_none = '--';
+				$data[7] = $status_none;
+			}
+			
+			if ($inventory['receipt_date'] != "") {
+				$data[8] = $inventory['receipt_date'];
+			} else { 
+				$receipt_date = '--';
+				$data[8] = $receipt_date;
+			}
+			
 			if ($result_check) {
 
 				$result_object_fields = inventories_get_all_type_field ($result_check, $inventory['id'], true);
 				
-				$i = 6;
+				$i = 8;
 				foreach ($result_object_fields as $k => $ob_field) {
 					if (isset($ob_field["label"])) {
 						$data[$i] = $ob_field['data'];
@@ -1355,8 +1371,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				if (!$clean_output) {
 					$data[$i] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
-					$data[$i] .= print_image ("images/information.png", true,
-						array ("title" => __('Show object type fields')));
+					$data[$i] .= print_image ("images/information.png", true, array ("title" => __('Show object type fields')));
 					$data[$i] .= '</a>&nbsp;';
 					if ($write_permission) {
 						$data[$i] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
@@ -1368,16 +1383,15 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 
 			} else {
 				if (!$clean_output) {
-					$data[7] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
-					$data[7] .= print_image ("images/information.png", true,
-						array ("title" => __('Show object type fields')));
-					$data[7] .= '</a>&nbsp;';
+					$data[9] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
+					$data[9] .= print_image ("images/information.png", true, array ("title" => __('Show object type fields')));
+					$data[9] .= '</a>&nbsp;';
 					if ($write_permission) {
-						$data[7] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+						$data[9] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 					}
 				}
 				if ($write_permission) {
-					$data[8] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+					$data[10] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
 				}	
 			}
 			
@@ -1402,42 +1416,56 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				if (empty($res_obj_fields)) {
 					$table_info->data[0][0] = '<b>'.__('No data to show').'</b>';
+					$data_info['row_info'] = print_table($table_info, true);
+					$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
+					$table->rowstyle[$idx] = 'display: none;';
 				} else {
 					$j = 0;
-					foreach ($res_obj_fields as $k => $ob_field) {
+					$k = 0;
+					foreach ($res_obj_fields as $l => $ob_field) {
 						if (isset($ob_field['label']) && ($ob_field['label'] != "")) {
 							if ($ob_field['type'] == 'external') {
 								$table_info->align[$j] = 'left;';
-								$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
-								$table_info->data[$j][$j] .= ' : '.'</b>';
-								$table_info->data[$j][$j] .= $ob_field['data'];
-								$j++;
+								$table_info->data[$j][$k] = '<b>'.$ob_field['label'];
+								$table_info->data[$j][$k] .= ' : '.'</b>';
+								$table_info->data[$j][$k] .= $ob_field['data'];
+								$k++;
+								if ($k % 4 == 0){
+									$j++;
+									$k = 0;
+								}
 								if (isset($ob_field['external_label']) && ($ob_field['external_label'] != '')) {
 									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_label']." = '".$ob_field['data'] ."'" );
 
 									$table_info->align[$j] = 'left;';
-									$table_info->data[$j][$j] = '<b>'.$ob_field['external_label'];
-									$table_info->data[$j][$j] .= ' : '.'</b>';
-									$table_info->data[$j][$j] .= $label_value;
-									$j++;
+									$table_info->data[$j][$k] = '<b>'.$ob_field['external_label'];
+									$table_info->data[$j][$k] .= ' : '.'</b>';
+									$table_info->data[$j][$k] .= $label_value;
+									$k++;
+									if ($k % 4 == 0){
+										$j++;
+										$k = 0;
+									}
 								}
 							} else {
 								$table_info->align[$j] = 'left;';
-								$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
-								$table_info->data[$j][$j] .= ' : '.'</b>';
-								$table_info->data[$j][$j] .= $ob_field['data'];
-								$j++;
+								$table_info->data[$j][$k] = '<b>'.$ob_field['label'];
+								$table_info->data[$j][$k] .= ' : '.'</b>';
+								$table_info->data[$j][$k] .= $ob_field['data'];
+								$k++;
+								if ($k % 4 == 0){
+									$j++;
+									$k = 0;
+								}
 							}
 						}
 					}
+				$data_info['row_info'] = print_table($table_info, true);
+				$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
+				$table->rowstyle[$idx] = 'display: "";';
 				}
 				
-				$data_info['row_info'] = print_table($table_info, true);
 				
-				$table_info->colspan[0][0] = 6;
-				
-				$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
-				$table->rowstyle[$idx] = 'display: none;';
 				if ($write_permission) {
 					$table->colspan[$idx]["row_info"] = 8;
 				} else {
