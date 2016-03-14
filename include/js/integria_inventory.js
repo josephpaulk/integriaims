@@ -575,38 +575,6 @@ function removeExternal(id) {
 	$("#"+id).attr("value", "");	
 }
 
-// Show the modal window of inventory search in incident detail
-function incident_show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
-		dataType: "html",
-		success: function(data){	
-			$("#inventory_search_window").html (data);
-			$("#inventory_search_window").show ();
-
-			$("#inventory_search_window").dialog ({
-					resizable: true,
-					draggable: true,
-					modal: true,
-					overlay: {
-						opacity: 0.5,
-						background: "black"
-					},
-					width: 920,
-					height: 850
-				});
-			$("#inventory_search_window").dialog('open');
-			
-			var idUser = "<?php echo $config['id_user'] ?>";
-		
-			bindAutocomplete ("#text-owner_search", idUser);
-		}
-	});
-}
-
 /**
  * loadSubTree asincronous load ajax the agents or modules (pass type, id to search and binary structure of branch),
  * change the [+] or [-] image (with same more or less div id) of tree and anime (for show or hide)

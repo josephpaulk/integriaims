@@ -1092,7 +1092,7 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
 	$table->data[2][3] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
-	$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
 	$table->data[2][3] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
 	if (!get_external_user ($config["id_user"]))

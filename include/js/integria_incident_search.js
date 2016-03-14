@@ -1283,34 +1283,6 @@ function change_type_fields_table() {
 	});
 }
 
-// Show the modal window of inventory search
-function show_search_inventory(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
-	
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
-		dataType: "html",
-		success: function(data) {
-			$("#search_inventory_window").html (data);
-			$("#search_inventory_window").show ();
-			
-			$("#search_inventory_window").dialog ({
-					resizable: true,
-					draggable: true,
-					modal: true,
-					overlay: {
-						opacity: 0.5,
-						background: "black"
-					},
-					width: 920,
-					height: 700
-				});
-			$("#search_inventory_window").dialog('open');
-		}
-	});
-}
-
 function set_initial_status () {
 
 	$.ajax({
