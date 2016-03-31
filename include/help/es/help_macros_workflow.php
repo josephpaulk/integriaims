@@ -34,6 +34,7 @@ El asunto y el cuerpo del email pueden formarse mediante macros. A continuación
 <li>_id_group_: Id del grupo asignado al incidente.</li>
 <li>_name_group_: Nombre del grupo asignado al incidente.</li>
 <li>_author_: Creador del incidente.</li>
+<li>_type_tickets_: Tipo de tickets.</li>
 <li>Plantillas de campos personalizados: Esto permite que al crear un tipo de objeto el nombre de los campos que agregas puedes incluirlos como una macro la cual mostrara el valor de dicho campo: _nombre del campo personalizado_.</li>
 
 </p>

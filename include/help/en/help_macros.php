@@ -15,6 +15,7 @@ Following strings will be replaced on runtime on the templates who use it:
 <li>_owner_: User who manages the incident.
 <li>_group_: Group assigned to this incident.
 <li>_author_: Creator of incident.
+<li>_type_tickets_: Tickets type.
 <li>_priority_: Incident priority.
 <li>_status_: Status of the incident.
 <li>_resolution_: Resolution of the incident.
