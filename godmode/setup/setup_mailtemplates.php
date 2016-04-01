@@ -71,7 +71,8 @@ if ($update != "none") {
 
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->colspan[2][0] = 2;
@@ -87,11 +88,12 @@ $table->data[1][0] .= integria_help ("macros", true);
 
 $table->data[2][0] = print_textarea ("template_content", 30, 44, $data,'', true, __('Template contents'));
 
-$table->data[3][0] = print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->colspan[3][0] = 2;
-
 echo "<form name='setup' method='post'>";
 print_table ($table);
+	
+	echo "<div class='button-form'>";
+		print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
+	echo "</div>";
 echo '</form>';
 ?>
 

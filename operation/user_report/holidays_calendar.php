@@ -21,7 +21,8 @@ check_login ();
 require_once('include/functions_user.php');
 
 
-echo "<h1>".__("Holidays calendar")."</h1>";
+echo "<h2>".__("People")."</h2>";
+echo "<h4>".__("Holidays calendar")."</h4>";
 echo "<div id='calendar'></div>";
 
 ?>

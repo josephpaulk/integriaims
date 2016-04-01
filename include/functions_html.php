@@ -309,7 +309,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 	}
 
 	if ($style == "")
-		$output .= '<select style="width: 170px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+		$output .= '<select style="width: 218px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 	else
 		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 
@@ -902,6 +902,14 @@ function print_table (&$table, $return = false) {
 		}
 	}
 	
+	if (isset ($table->cellstyle)) {
+		foreach ($table->cellstyle as $keyrow => $cstyle) {
+			foreach ($cstyle as $key => $cst) {
+				$cellstyle[$keyrow][$key] = $cst;
+			}
+		}
+	}
+	
 	if (empty ($table->width)) {
 		$table->width = '80%';
 	}
@@ -945,8 +953,12 @@ function print_table (&$table, $return = false) {
 			if (!isset ($align[$key])) {
 				$align[$key] = '';
 			}
+			if (isset ($table->head_colspan[$key])) {
+				$headColspan = 'colspan = "' . $table->head_colspan[$key] . '"';
+			}
+			else $headColspan = '';
 
-			$output .= '<th class="header c'.$key.'" scope="col">'. $heading .'</th>';
+			$output .= '<th class="header c'.$key. '" '.$headColspan.' scope="col">'. $heading .'</th>';
 		}
 		$output .= '</tr>'."\n";
 	}
@@ -992,9 +1004,13 @@ function print_table (&$table, $return = false) {
 				if (!isset ($style[$key])) {
 					$style[$key] = '';
 				}
-
+				
+				if (!isset ($cellstyle[$keyrow][$key])) {
+					$cellstyle[$keyrow][$key] = '';
+				}
+				
 				$output .= '<td id="'.$tableid.'-'.$keyrow.'-'.$key.
-					'" style="'. $style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key].
+					'" style="'. $cellstyle[$keyrow][$key].$style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key].
 					'" '.$colspan[$keyrow][$key].' '.$rowspan[$keyrow][$key].
 					' class="'.$class.'">'. $item .'</td>'."\n";
 			}
@@ -1218,38 +1234,82 @@ function integria_help ($help_id, $return = false) {
 }
 
 
-function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '') {
+function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '') {
 	$container_div_style = '';
 	$container_style = '';
-	$h2_style = '';
 	$h2_class_extra = ' clickable';
 	$arrow = '';
 	$onclick = 'toggleDiv (\'' . $id . '_div\')';
 
 	switch($open) {
 		case 'open':
-			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
+			$arrow = print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</th>';
 			break;
 		case 'closed':
-			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</h2>';
+			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</th>';
 			$container_div_style = 'display: none;';
 			break;
 		case 'no':
 		default:
 			$onclick = '';
-			$h2_style = 'cursor: auto;';
+			$h2_class_extra = '';
+			break;
+	}
+	/*
+	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">' . $title;
+	$container .= $arrow;
+	$container .= '</h2>';
+	$container .= '<div id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
+	$container .= $content;
+	$container .= '</div>';
+	$container .= '</div>'; // container
+	*/
+	
+	$container = '<table class="listing '.$class_extra.'"><thead><tr id="' . $id . '" class="' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">';
+	$container .= '<th class="head_clickleft" colspan = '.$numcolspan.'>' . $title . '</th>';
+	$container .= '<th class = "img_arrow head_clickright">'. $arrow;
+	$container .= '</tr></thead>';
+	$container .= '<tbody id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
+	$container .= $content;
+	$container .= '</tbody>';
+	$container .= '</table>'; // container
+	
+	if ($return) {
+		return $container;
+	}
+	else {
+		echo $container;
+	}
+}
+
+function print_container_div($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '', $container_style = '') {
+	$container_div_style = '';
+	$h2_class_extra = ' clickable';
+	$arrow = '';
+	$onclick = 'toggleDiv (\'' . $id . '_div\')';
+
+	switch($open) {
+		case 'open':
+			$arrow = print_image('images/arrow_down.png', true, array('class' => 'arrow_down', 'id' => $id."_arrow"));
+			break;
+		case 'closed':
+			$arrow = print_image('images/arrow_right.png', true, array('class' => 'arrow_right', 'id' => $id."_arrow"));
+			$container_div_style .= ' display: none;';
+			break;
+		case 'no':
+		default:
+			$onclick = '';
 			$h2_class_extra = '';
 			break;
 	}
 	
-	if ($margin !== true) {
-		$margin = (int) $margin;
-		$h2_style .= 'padding-left: ' . $margin . 'px; height: 22px;';
-		$container_style = 'padding-left: 0px; padding-bottom: 3px; font-size: 0.90em; min-height: 0px;';
+	if ($margin) {
+		$container_style .= " margin-right: 10px;";
 	}
 	
 	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
-	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' '.$h2_clases.'" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . ' ' . '" onclick="' . $onclick . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';
 	$container .= '<div id="' . $id . '_div" class="container_div '.$div_classes.'" style="' . $container_div_style . '">';
@@ -1295,17 +1355,60 @@ function print_autorefresh_button ($name = "autorefresh", $text = "", $return = 
 	$values[3600] = '1 '.__('hour');
 	
 	$html .= "<div style='float: right;'>";
-	$html .= "<div id='button-bar-title' style='float: left; margin-right: 5px; padding-bottom: 3px; margin-top: 6px;'>";
+	$html .= "<div id='button-bar-title' style=''>";
 	$html .= "<ul>";	
-	$html .= "<li style='padding: 4px;'>";
+	$html .= "<li style=''>";
 	$html .= "<a reload_enabled='0' name='$name' id='button-$name' href='javascript:' onclick='toggleAutorefresh (\"button-$name\", \"$token\", \"$form_id\")'>$text</a>";
 	$html .= "</li>";
 	$html .= "</ul>";
 	$html .= "</div>";
-	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px; padding-bottom: 3px; margin-top: 6px;'>";
+	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px; padding-bottom: 3px; margin-top: -12px;'>";
 	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
 	$html .= "</div>";
 	$html .= "</div>";
+	
+	if ($return) {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function print_autorefresh_button_ticket ($name = "autorefresh", $text = "", $return = false, $token = "incidents_autorefresh", $form_id = "saved-searches-form") {
+	global $config;
+	
+	$html .= "<script type='text/javascript'>
+				$(document).ready (function () {
+					var seconds = readCookie('$token');
+					if (seconds) {
+						enableAutorefresh (\"button-$name\", \"$token\", \"$form_id\");
+						$('#".$name."_time').val(seconds);
+					} else {
+						$('#".$name."_time').val(60);
+					}
+				});
+			</script>";
+	
+	if ($text == "") {
+		$text = __("Enable autorefresh");
+	}
+	
+	$values = array();
+	$values[5] = '5 '.__('seconds');
+	$values[15] = '15 '.__('seconds');
+	$values[30] = '30 '.__('seconds');
+	$values[60] = '1 '.__('minute');
+	$values[300] = '5 '.__('minutes');
+	$values[900] = '15 '.__('minutes');
+	$values[1800] = '30 '.__('minutes');
+	$values[3600] = '1 '.__('hour');
+	
+	$html .= "<li style=''>";
+	$html .= "<a reload_enabled='0' name='$name' id='button-$name' href='javascript:' onclick='toggleAutorefresh (\"button-$name\", \"$token\", \"$form_id\")'>$text</a>";
+	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px;'>";
+	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
+	$html .= "</div>";
+	$html .= "</li>";
 	
 	if ($return) {
 		return $html;
@@ -1394,9 +1497,9 @@ function get_last_date_control ($last_date = 0, $id = 'last_date_search', $label
 	$html  = print_select (get_last_dates(), $id, $last_date, $script, '', '', true, 0, false, $label);
 	$html .= "<br>";
 	$html .= "<div id='start_end_dates' $hidden>";
-	$html .= 	"<div id='$start_date_name' style='display: inline-block;'>" . print_input_text ($start_date_name, $start_date, "", 21, 100, true, $start_date_label) . "</div>";
+	$html .= 	"<div id='$start_date_name' style='display: inline-block;'>" . print_input_text ($start_date_name, $start_date, "", 8, 100, true, $start_date_label) . "</div>";
 	$html .= 	"&nbsp;";
-	$html .= 	"<div id='$end_date_name' style='display: inline-block;'>" . print_input_text ($end_date_name, $end_date, "", 21, 100, true, $end_date_label) . "</div>";
+	$html .= 	"<div id='$end_date_name' style='display: inline-block;'>" . print_input_text ($end_date_name, $end_date, "", 8, 100, true, $end_date_label) . "</div>";
 	$html .= "</div>";
 
 	return $html;
@@ -1458,6 +1561,10 @@ function print_company_autocomplete_input ($parameters) {
 	}
 	
 	$attributes = 'class="company_autocomplete"';
+	if (isset($parameters['attributes'])) {
+		if (!is_array($parameters['attributes']))
+			$attributes .= $parameters['attributes'];
+	}
 	
 	$html = "";
 	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title)). print_help_tip (__($help_message), $return_help);

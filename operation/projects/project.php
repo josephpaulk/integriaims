@@ -18,6 +18,14 @@ global $REMOTE_ADDR;
 
 check_login ();
 
+// ACL
+$section_access = get_project_access ($config["id_user"]);
+if (! $section_access["read"]) {
+	// Doesn't have access to this page
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project overview without permission");
+	no_permission();
+}
+
 include_once ("include/functions_projects.php");
 include_once ("include/functions_tasks.php");
 
@@ -45,7 +53,6 @@ $search_text = (string) get_parameter ('search_text');
 $project_permission = get_project_access ($config['id_user'], $id_project);
 
 // Disable project
-// ======================
 if ($disable_project) {
 	
 	if (!$project_permission['manage']) {
@@ -63,7 +70,6 @@ if ($disable_project) {
 }
 
 // Reactivate project
-// ==================
 if ($activate_project) {
 	
 	if (!$project_permission['manage']) {
@@ -81,7 +87,6 @@ if ($activate_project) {
 }
 
 // Delete
-// -----------
 if ($delete_project) {
 	
 	if (!$project_permission['manage']) {
@@ -95,111 +100,41 @@ if ($delete_project) {
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 }
 
-// INSERT PROJECT
-if ($action == 'insert') {
-	
-	if (!$project_permission['write']) {
-		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
-		return;
-	}
-	
-	// Read input variables
-	$id_owner = get_parameter ("id_owner", "");
-	$name = (string) get_parameter ("name");
-	$description = (string) get_parameter ('description');
-	$start_date = (string) get_parameter ('start_date');
-	$end_date = (string) get_parameter ('end_date');
-	$id_project_group = (int) get_parameter ('id_project_group');
-	$cc = get_parameter("cc", "");
-	
-	$error_msg = "";
-	
-	if($id_owner == "") {
-		$id_owner = $config['id_user'];
-		$owner_exists = true;
-	}
-	else {
-		$owner_exists = get_user($id_owner);
-	}
-	if($owner_exists === false) {
-		$error_msg  = '<h3 class="error">'.__('Project manager user does not exist').'</h3>';
-		$id_project = false;
-	}
-	else {
-		$sql = sprintf ('INSERT INTO tproject
-			(name, description, start, end, id_owner, id_project_group, cc)
-			VALUES ("%s", "%s", "%s", "%s", "%s", %d, "%s")',
-			$name, $description, $start_date, $end_date, $id_owner,
-			$id_project_group, $cc);
-		$id_project = process_sql ($sql, 'insert_id');
-	}
-	
-	if ($id_project === false) {
-		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>'.$error_msg;
-	} else {
-		echo '<h3 class="suc">'.__('Successfully created').' #'.$id_project.'</h3>';
-		audit_db ($id_owner, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
-		
-		project_tracking ($id_project, PROJECT_CREATED);
-		
-		// Add this user as profile 1 (project manager) automatically
-		$sql = sprintf ('INSERT INTO trole_people_project
-			(id_project, id_user, id_role)
-			VALUES ("%s", "%s", 1)',
-			$id_project, $id_owner, 1);
-		process_sql ($sql);		
-		// If current user is different than owner, add also current user
-		if ($config['id_user'] != $id_owner) {
-			$sql = sprintf ('INSERT INTO trole_people_project
-				(id_project, id_user, id_role)
-				VALUES (%d, "%s", 1)',
-				$id_project, $config['id_user']);
-			process_sql ($sql);
-		}
-	}
-}
-
 if ($view_disabled) {
-	echo '<h1>'.__('Archived projects').'</h1>';
+	echo '<h2>'.__('Projects').'</h2>';
+	echo '<h4>'.__('Archived projects').'</h4>';
 }
 else {
 	echo '<h1>'.__('Project management').'</h1>';
+	echo '<h3 class="error">No debe mandarte aqui esta desaparece</h3>';
 }
 
 $table = new stdClass;
-$table->width = '99%';
 $table->class = 'search-table';
 $table->style = array ();
-$table->style[0] = 'font-weight: bold;';
-$table->style[2] = 'font-weight: bold;';
 $table->data = array ();
-$table->data[0][0] = __('Search');
-$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[0][2] = __('Group');
-$table->data[0][3] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
-$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+$table->data[0][0] = '<b>'.__('Search').'</b>';
+$table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+$table->data[2][0] = '<b>'.__('Group').'</b>';
+$table->data[3][0] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
+$table->data[4][0] = print_submit_button (__('Search'), "search_btn", false, '', true);
 
-echo '<form method="post">';
-print_table ($table);
-echo '</form>';
-
+echo '<div class="divform">';
+	echo '<form method="post">';
+		print_table ($table);
+	echo '</form>';
+echo '</div>';
 unset ($table);
 
 $table = new stdClass;
 $table->width = '99%';
 $table->class = 'listing';
-$table->style = array ();
-$table->style[0] = '';
-$table->align = array ();
-$table->align[7] = 'center';
 $table->head = array ();
 $table->head[0] = __('Name');
-// PG: Abbreviation for "Project group"
-$table->head[1] = __ ('PG');
-$table->head[2] = __('Manager');
-$table->head[3] = __('Completion');
-$table->head[4] = __('Updated');
-$table->head[5] = '';
+$table->head[1] = __('Manager');
+$table->head[2] = __('Completion');
+$table->head[3] = __('Updated');
+$table->head[4] = '';
 $table->data = array ();
 
 $where_clause = "";
@@ -225,25 +160,13 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 	
 	// Project name
 	$data[0] = '<a href="index.php?sec=projects&sec2=operation/projects/project_detail&id_project='.$project['id'].'">'.$project['name'].'</a>';
-	
-	$data[1] = '';
-	// Project group
-	if ($project['id_project_group']) {
-		$icon = get_db_value ('icon', 'tproject_group', 'id', $project['id_project_group']);
-		$name = get_db_value ('name', 'tproject_group', 'id', $project['id_project_group']);
-		
-		$data[1] = '<a href=index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group='.$project["id_project_group"].'">';
-		$data[1] .= '<img src="images/project_groups_small/'.$icon.'" title="'.$name.'">';
-		$data[1] .= '</a>';
-	}
-
-	$data[2] = $project["id_owner"];
+	$data[1] = $project["id_owner"];
 
 	if ($project["start"] == $project["end"]) {
-		$data[3] = '<img src="images/comments.png"> '.__('Unlimited');
+		$data[2] = __('Unlimited');
 	} else {
 		$completion = format_numeric (calculate_project_progress ($project['id']));
-		$data[3] = progress_bar($completion, 90, 20);
+		$data[2] = progress_bar($completion, 90, 20);
 	}
 
 	// Last update time
@@ -256,37 +179,31 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 		$project['id']);
 	$timestamp = get_db_sql ($sql);
 	if ($timestamp != "")
-		$data[4] = "<span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span>";
+		$data[3] = "<span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span>";
 	else
-		$data[4] = __('Never');
+		$data[3] = __('Never');
 	
-	$data[5] = '';
+	$data[4] = '';
 	// Disable or delete
 	if ($project['id'] != -1 && $project_permission['manage']) {
-		if ($view_disabled == 0) {
-			$table->head[5] = __('Archive');
-			$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
-				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-				<img src="images/archive.png" /></a>';
-		} elseif ($project['disabled'] && $project_permission['manage']) {
-			$table->head[5] = __('Delete/Unarchive');
-			$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-				<img src="images/cross.png" /></a> ';
-			$data[5] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
-				<img src="images/unarchive.png" /></a>';
-		}
+		$table->head[4] = __('Delete/Unarchive');
+		$data[4] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
+			onClick="if (!confirm(\''.__('Are you sure to delete the project?').'\')) return false;">
+			<img src="images/icons/icono_papelera.png" /></a> ';
+		$data[4] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
+			<img src="images/unarchive.png" /></a>';
 	}
 	
 	array_push ($table->data, $data);
 }
-
-if(empty($table->data)) {
-	echo '<h3 class="error">'.__('No projects found').'</h3>';
-}
-else {
-	print_table ($table);
-}
+echo "<div class='divresult'>";
+	if(empty($table->data)) {
+		echo '<h3 class="error">'.__('No projects found').'</h3>';
+	}
+	else {
+		print_table ($table);
+	}
+echo "</div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>

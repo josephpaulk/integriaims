@@ -194,7 +194,8 @@ if (defined ('AJAX')) {
 }
 
 
-echo "<h1>" . __("Update Manager") . "</h1>";
+echo "<h2>" . __("Update Manager") . "</h2>";
+echo "<h4>" . __("Update Integria") . "</h4>";
 
 $enterprise = enterprise_hook('update_manager_enterprise_main');
 

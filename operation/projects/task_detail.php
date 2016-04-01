@@ -266,22 +266,22 @@ echo $result_output;
 
 if (!$gantt_editor) {
 	if ($operation == "create") {
-		echo '<h1>'.__('Task management');
+		echo '<h2>'.__('Task management') . "<h4>".__("Create task");
 	} else {
-		echo '<h1>'.__('Task management')."  &raquo ".$task_name;
+		echo '<h2>'.__('Task management'). "<h4>".$task_name;
 	}
 	if ($id_task != -1) {
 		echo "<div id='button-bar-title'>";
 		echo "<ul>";
 		echo "<li>";
 			echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/task_report&id_project=$id_project&id_task=$id_task'>".
-			print_image ("images/chart_bar_dark.png", true, array("title" => __("Statistics"))) .
+			print_image ("images/chart_bar.png", true, array("title" => __("Statistics"))) .
 			"</a>";
 		echo "</li>";
 		echo "</ul>";
 		echo "</div>";
 	}
-	echo '</h1>';
+	echo '</h4>';
 } else {
 	echo "<div id='button-bar-title' style='margin-top: 5px; margin-bottom: 9px;'>";
 	echo "<ul>";
@@ -294,101 +294,14 @@ if (!$gantt_editor) {
 	echo "</div>";	
 }
 
-$table->width = '100%';
-$table->class = 'search-table-button';
-$table->rowspan = array ();
-$table->colspan = array ();
-$table->style = array ();
-$table->style[0] = 'vertical-align: top; width: 30%';
-$table->style[1] = 'vertical-align: top; width: 30%';
-$table->style[2] = 'vertical-align: top; width: 30%';
-$table->data = array ();
-$table->cellspacing = 2;
-$table->cellpadding = 2;
-
-$table->data[0][0] = print_input_text ('name', $name, '', 60, 240, true, __('Name'));
-
-$table->data[0][1] = print_select (get_priorities (), 'priority', $priority,
-	'', '', '', true, false, false, __('Priority'));
-
-if ($project_permission['manage'] || $operation == "view") {
-	$combo_none = __('None');
-} else {
-	$combo_none = false;
-}
-
-$table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
-
-$table->data[1][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
-$table->data[1][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
-
-$table->data[1][2] = print_select (get_periodicities (), 'periodicity',
-	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
-
-$table->data[2][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
-$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: show_calculation();'>" . print_image('images/play.gif', true, array('title' => __('Calculate hours'))) . "</a>";
-
-$table->data[2][1] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
-	11, true, __('Estimated cost'));
-$table->data[2][1] .= ' '.$config['currency'];
-	
-$table->data[2][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
-	        false, '', '', true, __('Completion based on hours'))
-	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
-
-$table->data[3][0] = print_input_text ('cc', $cc, '', 60, 240, true, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
-
-$table->colspan[4][0] = 3;
-$completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
-
-$table->data[4][0] = print_label ($completion_label, '', '', true,
-	'<div id="slider" style="margin-top: 5px;"><div class="ui-slider-handle"></div></div>');
-$table->data[4][0] .= print_input_hidden ('completion', $completion, true);
-
-//////TABLA ADVANCED
-$table_advanced->width = '98%';
-$table_advanced->class = 'search-table';
-$table_advanced->size = array ();
-$table_advanced->size[0] = '33%';
-$table_advanced->size[1] = '33%';
-$table_advanced->size[2] = '33%';
-$table_advanced->style = array();
-$table_advanced->data = array ();
-
-$links_1 = projects_get_task_links ($id_project, $id_task, 1);
-
-$hint = print_help_tip (__("The task cannot start before all tasks in this section start"), true);
-$table_advanced->data[0][0] = print_select ($links_1, 'link_1', NULL,
-								'', '', '', true, false, false, __('Start to start').$hint);
-$table_advanced->data[0][0] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(1,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-$table_advanced->data[0][0] .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-
-$links_0 = projects_get_task_links ($id_project, $id_task, 0);
-
-$hint = print_help_tip (__("The task cannot start before all tasks in this section end"), true);
-$table_advanced->data[0][1] = print_select ($links_0, 'link_0', NULL,
-								'', '', '', true, false, false, __('Finish to start').$hint);
-$table_advanced->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(0,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-$table_advanced->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-
-$links_2 = projects_get_task_links ($id_project, $id_task, 2);
-
-$hint = print_help_tip (__("The task cannot end before all tasks in this section end, although it may end later"), true);
-$table_advanced->data[0][2] = print_select ($links_2, 'link_2', NULL,
-								'', '', '', true, false, false, __('Finish to finish').$hint);
-$table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(2,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-$table_advanced->data[0][2] .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-
-$table->colspan['row_links'][0] = 3;
-$table->data['row_links'][0] = print_container('task_links', __('Task links'), print_table($table_advanced, true), 'open', true, false);
-
-$table->colspan[5][0] = 3;
-$table->data[5][0] = print_textarea ('description', 8, 30, $description, '',
-	true, __('Description'));
-
+echo '<form id="form-new_project" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+/*
 $button = '';
-
+echo '<div style="width:12%; float: right;">';
 if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
+	
+	$table->width = '100%';
+	$table->class = "button-form";
 	if ($operation != "create") {
 
 		if ($gantt_editor) {
@@ -402,14 +315,126 @@ if (($operation != "create" && $task_permission['manage']) || $operation == "cre
 	}
 	$button .= print_input_hidden ('id_project', $id_project, true);
 	$button .= print_input_hidden ('id_task', $id_task, true);
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 3;
 }
 
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 3;
+	print_table($table);
+echo '</div>';
+*/
+$table->width = '100%';
+$table->class = 'search-table-button';
+$table->rowspan = array ();
+$table->colspan = array ();
+$table->style = array ();
+$table->style[0] = 'width: 30%';
+$table->style[1] = 'width: 30%';
+$table->style[2] = 'width: 30%';
+$table->data = array ();
+$table->cellspacing = 2;
+$table->cellpadding = 2;
 
-echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+$table->data[0][0] = print_input_text_extended ('name', $name, '', '', 40, 240, false, '', "style='width:300px;'", true, false, __('Name'));
+
+$table->data[0][1] = print_select (get_priorities (), 'priority', $priority,
+	'', '', '', true, false, false, __('Priority'));
+
+if ($project_permission['manage'] || $operation == "view") {
+	$combo_none = __('None');
+} else {
+	$combo_none = false;
+}
+
+$table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
+
+$table->data[1][0] = print_input_text_extended ('cc', $cc, '', '', 40, 240, false, '', "style='width:300px;'", true, false, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
+$table->data[1][1] = print_select (get_periodicities (), 'periodicity',
+	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
+
+$table->data[1][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
+	        false, '', '', true, __('Completion based on hours'))
+	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
+
+$table->data[2][0] = print_input_text ('start_date', $start, '', 8, 15, true, __('Start'));
+$table->data[2][1] = print_input_text ('end_date', $end, '', 8, 15, true, __('End'));
+
+
+
+$table->data[2][3] = print_input_text ('hours', $hours, '', 8, 5, true, __('Estimated hours'));
+$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_calculation();'>" . print_image('images/play.gif', true, array('title' => __('Calculate hours'))) . "</a>";
+
+$table->data[3][0] = print_input_text ('estimated_cost', $estimated_cost, '', 8,
+	11, true, __('Estimated cost'));
+$table->data[3][0] .= ' '.$config['currency'];
+
+$table->colspan[4][0] = 3;
+$completion_label = __('Completion')." <em>(<span id=completion>".$completion."%</span>)</em>";
+
+$table->data[4][0] = print_label ($completion_label, '', '', true,
+	'<div id="slider" style="margin-top: 15px;margin-bottom: 15px; width: 99%;"><div class="ui-slider-handle"></div></div>');
+$table->data[4][0] .= print_input_hidden ('completion', $completion, true);
+
+//////TABLA ADVANCED
+$links_1 = projects_get_task_links ($id_project, $id_task, 1);
+
+$table_advanced = "<tr>";
+$hint = print_help_tip (__("The task cannot start before all tasks in this section start"), true);
+$table_advanced .= "<td style='text-align:left;'>" . print_select ($links_1, 'link_1', NULL,
+								'', '', '', true, false, false, __('Start to start').$hint);
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(1,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(1);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+
+$links_0 = projects_get_task_links ($id_project, $id_task, 0);
+
+$hint = print_help_tip (__("The task cannot start before all tasks in this section end"), true);
+$table_advanced .= "<td style='text-align:left;'>" .  print_select ($links_0, 'link_0', NULL,
+								'', '', '', true, false, false, __('Finish to start').$hint);
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(0,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(0);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+
+$links_2 = projects_get_task_links ($id_project, $id_task, 2);
+
+$hint = print_help_tip (__("The task cannot end before all tasks in this section end, although it may end later"), true);
+$table_advanced .= "<td style='text-align:left;'>" .  print_select ($links_2, 'link_2', NULL,
+								'', '', '', true, false, false, __('Finish to finish').$hint);
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: show_task_link_selector(2,".$id_project.",".$id_task.");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+$table_advanced .= "&nbsp;&nbsp;<a href='javascript: remove_link(2);'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+
+$table->colspan['row_links'][0] = 3;
+$table->style['row_links'] = 'margin-top: 10px;';
+$table->data['row_links'][0] = print_container('task_links', __('Task links'), $table_advanced, 'open', true, '10px', '', '', 2, 'no_border_bottom " style="width: 99%;"');
+
+$table->colspan[5][0] = 3;
+$table->data[5][0] = print_textarea ('description', 8, 30, $description, '',
+	true, __('Description'));
 
 print_table ($table);
+
+$button = '';
+echo '<div class="button-form" style="width:100%;">';
+if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
+	unset($table->data);
+	$table->width = '100%';
+	$table->class = "button-form";
+	if ($operation != "create") {
+
+		if ($gantt_editor) {
+			$button .= print_submit_button (__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
+		}
+		$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('operation', 'update', true);
+	} else {
+		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+		$button .= print_input_hidden ('operation', 'insert', true);
+	}
+	$button .= print_input_hidden ('id_project', $id_project, true);
+	$button .= print_input_hidden ('id_task', $id_task, true);
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 3;
+}
+
+	print_table($table);
+echo '</div>';
 
 //Print input hidden for task links which actually exist
 foreach ($links_0 as $k => $l) {

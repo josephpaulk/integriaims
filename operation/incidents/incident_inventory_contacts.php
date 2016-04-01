@@ -25,8 +25,9 @@ $id_incident = $id;
 
 $inventories = get_inventories_in_incident ($id_incident, false);
 
+$table = new StdClass();
 $table->class = 'listing';
-$table->width = '99%';
+$table->width = '100%';
 $table->head = array ();
 $table->head[0] = __('Relationship');
 $table->head[1] = __('Company');
@@ -248,7 +249,8 @@ print_table ($table);
 
 echo '<div id="detail_info" title="'.__("Contact details").'"></div>';
 
-$table->width = "99%";
+$table = new StdClass();
+$table->width = "100%";
 $table->data = array ();
 $table->head = array ();
 $table->head[0] = __('Company');

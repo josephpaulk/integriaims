@@ -54,20 +54,6 @@ if ($message != '') {
 	echo "<h3 class='suc'>".__($message)."</h3>";
 }
 
-echo "<h1>".__('Invoice listing');
-
-echo "<div id='button-bar-title'>";
-		echo "<ul>";
-		echo "<li>";
-		echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_stats".$search_params."'>" .
-			print_image ("images/chart_bar_dark.png", true, array("title" => __("Invoices report"))) .
-			"</a>";
-		echo "</li>";
-		echo "</ul>";
-		echo "</div>";
-
-echo "</h1>";
-
 if ($id_invoice || $id) {
 	
 	if ($id_invoice) {
@@ -182,13 +168,33 @@ if ($search_contract_number != "") {
 	$where_clause .= sprintf (' AND contract_number = "%s"', $search_contract_number);
 }
 
+echo "<h2>" . __('Invoice') . "</h2>";
+echo "<h4>" . __('Invoice listing');
+	echo "<div id='button-bar-title'>";
+		echo "<ul>";
+			echo "<li>";
+				$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+				echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' .
+					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
+				echo print_report_button ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __('Export to PDF')."&nbsp;");
+			echo "</li>";
+			echo "<li>";
+				echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_stats".$search_params."'>" .
+					print_image ("images/chart_bar_dark.png", true, array("title" => __("Invoices report"))) .
+					"</a>";
+			echo "</li>";
+		echo "</ul>";
+	echo "</div>";
+echo "</h4>";
+
+
 if ($clean_output == 0){
 
-	echo '<form method="post">';
+	$form = '<form method="post">';
 
 	$table = new stdClass();
 	$table->id = 'invoices_table';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->size = array();
 	$table->style = array();
@@ -218,14 +224,19 @@ if ($clean_output == 0){
 	$invoice_status_ar['canceled'] = __("Canceled");
 	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
 	
-	$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$table->data[2][0] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_invoices=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
-	$table->data[2][0] .= print_report_button ("index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params", __('Export to PDF')."&nbsp;");
-
-	print_table($table);
+	$form .= "<div class='divform'>";
+		$form .= "<div class='button-form'>";
+			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		$form .= '</div>';
+	$form .= '</div>';
 	
-	echo '</form>';
+	$form .= "<div class='divresult'>";
+		$form .= print_table($table,true);
+	$form .= '</div>';
+	
+	$form .= '</form>';
+	
+	print_container_div("companys_form",__("Invoices form search"),$form, 'closed', false, false);
 }
 
 $invoices = crm_get_all_invoices ($where_clause, $order_by);
@@ -234,10 +245,9 @@ $invoices = crm_get_all_invoices ($where_clause, $order_by);
 if ($clean_output == 1)
 	$config["block_size"] = 5000;
 
-$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail$search_params");
-
 if ($invoices != false) {
 	
+	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail$search_params");
 	$url_id_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=bill_id';
 	$url_create_order = 'index.php?sec=customers&sec2=operation/invoices/invoice_detail'.$search_params.'&order_by=invoice_create_date';
 	switch ($order_by) {
@@ -255,7 +265,7 @@ if ($invoices != false) {
 	}
 	
 	$table = new stdClass();
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = "listing";
 	$table->cellspacing = 0;
 	$table->cellpadding = 0;
@@ -372,7 +382,7 @@ if ($invoices != false) {
 
 if (($write || $manage) AND ($clean_output == 0)) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices">';
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div class="button-form" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_invoice', 1);
 	echo '</div>';

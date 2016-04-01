@@ -2,10 +2,18 @@
 /* Function to hide/unhide a specific Div id */
 function toggleDiv (div, animate) {
 	var item = (typeof div == "string") ? $("#" + div) : $(div);
-	if (typeof animate !== "undefined" && animate == true)
+	var id = div.replace("_div","");
+	if (typeof animate !== "undefined" && animate == true) {
 		item.slideToggle();
-	else
+	}
+	else {
+		var class_img = $("#"+id+" img").attr("class");
+		if (class_img == 'arrow_down')
+			$("#"+id+" #"+id+"_arrow").addClass('arrow_right').removeClass('arrow_down').attr("src",'images/arrow_right.png');
+		else
+			$("#"+id+" #"+id+"_arrow").addClass('arrow_down').removeClass('arrow_right').attr("src",'images/arrow_down.png');
 		item.toggle();
+	}
 }
 
 function winopeng (url, wid) {
@@ -465,21 +473,21 @@ $(document).ready (function () {
 
 $(document).ready(function() {
 	// Containers open/close logic
-	$('.container h2.clickable').click(function() {
-		var arrow = $('#' + $(this).attr('id') + ' img').attr('src');
+	$('tr.clickable').click(function() {
+		var arrow = $('#' + $(this).attr('id') + ' th.img_arrow' + ' img').attr('src');
 		var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');
 		var new_arrow = '';
-		
+		console.log(arrow);
 		if($('#' + $(this).attr('id') + '_div').css('display') == 'none') {
 			new_arrow = arrow.replace(/_down/gi, "_right");
-			$('#' + $(this).attr('id') + ' img').attr('class', 'arrow_right');
+			$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('class', 'arrow_right');
 		}
 		else {
 			new_arrow = arrow.replace(/_right/gi, "_down");
-			$('#' + $(this).attr('id') + ' img').attr('class', 'arrow_down');
+			$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('class', 'arrow_down');
 		}
 		
-		$('#' + $(this).attr('id') + ' img').attr('src', new_arrow);
+		$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('src', new_arrow);
 	});
 });
 

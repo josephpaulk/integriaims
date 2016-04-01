@@ -24,13 +24,13 @@ if (!empty($first_start)) {
 	$first_start = date ("Y-m-d", $first_start);
 }
 
-echo "<h1>";
-echo __("Tickets overview");
-echo "</h1>";
+echo "<h2>" . __("Support") . "</h2>";
+echo "<h4>" . __("Tickets overview") . "</h4>";
 
 /* Users affected by the incident */
+$table = new StdClass();
 $table->width = '100%';
-$table->class = "none";
+$table->class = "overview_tiquets";
 $table->size = array ();
 $table->size[0] = '50%';
 $table->size[1] = '50%';
@@ -47,14 +47,14 @@ $counter = 0;
 $max_per_file = 5;
 
 if ($custom_searches === false) {
-		$custom .= "<table style='margin: 10px auto;'>";
+		
         $custom .= "<tr>";
         $custom .= "<td>";
         $custom .= "<em>".__("There aren't custom search defined for this user")."</em>";
         $custom .= "</td>";
         $custom .= "</tr>";
-		$custom .= "</table>";
 } else {
+	$custom = "<tr>";
 	foreach ($custom_searches as $cs) {
 		
 		$c_search = get_custom_search ($cs['id'], 'incidents');
@@ -67,21 +67,23 @@ if ($custom_searches === false) {
 		
 		$count_cs = filter_incidents ($filter_search, true);
 		
+		$custom .="<td>";
 		$custom .="<div class='custom_search'>";
 		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]." ". "(". $count_cs.")" . "</a><br>";
 		$custom .="</div>";
+		$custom .="</td>";
 	}
-	$custom .= "<div style='clear:both;'></div>";
+	$custom .= "</tr>";
 }
 
 $table->colspan[0][0] = 2;
-$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom);
+$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom, 'open', true, '20px', '', 'no_border', count($custom_searches), '');
 
 $groups = get_user_groups();
 
 asort($groups);
 
-$search_by_group = "<table>";
+$search_by_group = "";
 
 // Remove group All for this filter
 unset($groups[1]);
@@ -112,16 +114,14 @@ foreach ($groups as $key => $grp) {
 	$count++;
 }
 
-$search_by_group .= "</table>";
-
-$left_side = print_container('incident_search_by_group', __('Search by group'), $search_by_group);
+$left_side = print_container('incident_search_by_group', __('Search by group'), $search_by_group, 'open', true, '20px', '', 'no_border', 1, 'less_widht');
 
 $rows = get_db_all_rows_sql ("SELECT DISTINCT(ti.id_usuario), tu.avatar 
 								FROM tincidencia ti, tusuario tu 
 								WHERE tu.id_usuario = ti.id_usuario 
 								ORDER BY ti.id_usuario ASC");
 
-$search_by_owner = "<table>";
+$search_by_owner = "";
 
 if (!$rows) {
 
@@ -157,7 +157,7 @@ if (!$rows) {
 		if($owners["avatar"]){
 			$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
 		} else {
-			$search_by_owner .= '<div class="bubble_little"></div>';
+			$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/avatar_notyet.png', true) . '</div>';
 		}
 		$long_name = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $owners["id_usuario"]));
 	
@@ -174,16 +174,14 @@ if (!$rows) {
 	}
 }
 
-$search_by_owner .= "</table>";
-
-$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner);
+$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner, 'open', true, '20px', '', 'no_border', 5, 'less_widht');
 
 
 /**** DASHBOARD RIGHT SIDE ****/
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_status");
 
-$search_by_status = "<table>";
+$search_by_status = "";
 
 foreach ($rows as $key => $status) {
 	
@@ -203,13 +201,11 @@ foreach ($rows as $key => $status) {
 	}
 }
 
-$search_by_status .= "</table>";
-
-$right_side = print_container('incident_search_by_status', __('Search by status'), $search_by_status);
+$right_side = print_container('incident_search_by_status', __('Search by status'), $search_by_status, 'open', true, '20px', '', 'no_border', 1, '');
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_type ORDER BY name ASC");
 
-$search_by_type = "<table>";
+$search_by_type = "";
 
 if (!$rows) {
 	$search_by_type .="<tr>";
@@ -248,9 +244,8 @@ if (!$rows) {
 		$count++;
 	}
 }
-$search_by_type .= "</table>";
 
-$right_side .= print_container('incident_search_by_type', __('Search by type'), $search_by_type);
+$right_side .= print_container('incident_search_by_type', __('Search by type'), $search_by_type, 'open', true, '20px', '', 'no_border', 1, '');
 
 //Get open incident and count them by priority
 $incidents = get_incidents("estado <> 7", false);
@@ -264,8 +259,6 @@ foreach ($incidents as $inc) {
 		$rows[$inc["prioridad"]] = 1;
 	}
 }
-
-$search_by_priority = "<table class='search_by_priority'>";
 
 $search_by_priority .="<tr>";
 
@@ -281,8 +274,9 @@ for ($i = 0; $i<=5; $i++) {
 	$incident_fake = array();
 	$incident_fake["prioridad"] = $db_priority;
 	
-	$search_by_priority .= "<td style='background: " . incidents_get_priority_color($incident_fake) . ";'>";
+	$search_by_priority .= "<td style='padding:0px;'>";
 	$search_by_priority .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_priority=".$db_priority."'>";
+	$search_by_priority .= "<div class='div_search_priority' style='background: " . incidents_get_priority_color($incident_fake) . ";'>";
 
 	// Search in query totals for each priority (based on DB codes, not user codes)
 
@@ -296,15 +290,13 @@ for ($i = 0; $i<=5; $i++) {
 
 	$search_by_priority .= $count_priority;
 
-	$search_by_priority .= "</a>";
+	$search_by_priority .= "</div></a>";
 	$search_by_priority .= "</td>";
 }
 
 $search_by_priority .="</tr>";
 
-$search_by_priority .= "</table>";
-
-$right_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority);
+$right_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority,'open',true,true,'','no_border',5,'search_by_priority ');
 
 $table->data[1][0] = $left_side;
 $table->data[1][1] = $right_side;

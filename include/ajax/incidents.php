@@ -63,11 +63,13 @@ if ($get_incidents_search) {
 	$ajax = get_parameter("ajax");
 	
 	$filter_form = false;
-	
+	echo "<div style='float:right;'>";
 	form_search_incident (false, $filter_form);
-	
+	echo "</div>";
 	$no_parents = true;
+	
 	incidents_search_result($filter, $ajax, false, false, $no_parents, false, false, false, $id_ticket);
+
 }
 
 if ($get_user_search) {
@@ -242,7 +244,10 @@ if ($get_user_info) {
 	echo "<table>";
 	echo "<tr>";
 	echo "<td>";
-		print_image('images/avatars/' . $info_user['avatar'] . '.png', false, false);
+		if ($info_user['avatar'])
+			print_image('images/avatars/' . $info_user['avatar'] . '.png', false, false);
+		else
+			print_image('images/avatars/avatar_notyet.png', false, false);
 	echo "</td>";
 	echo "<td vertical-align='middle'>";
 			echo $info_user['nombre_real'];

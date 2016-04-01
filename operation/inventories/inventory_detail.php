@@ -104,28 +104,17 @@ $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
 if (!defined ('AJAX')) {
 	if (!$id) {
-		echo "<h1>".__('Create inventory object')."</h1>";
+		echo "<h2>".__('Create')."</h2>";
+		echo "<h4>".__('Inventory object')."</h4>";
 	} else if ($inventory_name) {
 		//**********************************************************************
 		// Tabs
 		//**********************************************************************
 		/* Tabs list */
-		print_inventory_tabs('details', $id, $inventory_name);
+		print_inventory_tabs('details', $id, $inventory_name,$manage_permission);
 	
 		if ($id) {
 			$inventory = get_inventory ($id);
-		
-			if ($manage_permission) {
-				echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px;'>";
-				echo "<ul>";	
-				echo "<li style='padding: 3px;'>";
-				echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
-				print_input_hidden ('quick_delete', $id);
-				echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete inventory object")))."</a>";
-				echo '</form>';
-				echo "</li>";
-				echo "</div>";
-			}
 		}
 	}
 }
@@ -576,7 +565,7 @@ if ($id && !$inventory_name) {
 } else {
 
 	$table->class = 'search-table-button';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[4][1] = 2;
@@ -586,8 +575,7 @@ if ($id && !$inventory_name) {
 	/* First row */
 
 	if ($write_permission || !$id) {
-		$table->data[0][0] = print_input_text ('name', $name, '', 40, 128, true,
-			__('Name'));
+		$table->data[0][0] = print_input_text_extended ('name', $name, '', '', 40, 128, false, "", "style='width:210px;'", true, false, __('Name'));
 	} else {
 		$table->data[0][0] = print_label (__('Name'), '', '', true, $name);
 	}
@@ -597,6 +585,7 @@ if ($id && !$inventory_name) {
 	$params_assigned['input_value'] = $owner;
 	$params_assigned['title'] = 'Owner';
 	$params_assigned['return'] = true;
+	$params_assigned['attributes'] = "style='width:210px;'";
 
 	if ($write_permission || !$id) {
 		$table->data[0][1] = user_print_autocomplete_input($params_assigned);
@@ -614,7 +603,7 @@ if ($id && !$inventory_name) {
 	
 		$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
-		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','', '', '')", "class='inventory_obj_search'", true, false,  __('Parent object'));
+		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','', '', '')", "class='inventory_obj_search' style='width:210px;'", true, false,  __('Parent object'));
 		$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 		$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
@@ -723,7 +712,7 @@ if ($id && !$inventory_name) {
 
 
 	/* Fifth row */
-	$table->data[5][1] = "</div>&nbsp;";
+	//$table->data[5][1] = "</div>";
 
 	$table->colspan[6][0] = 3;	
 	/* Sixth row */
@@ -734,19 +723,25 @@ if ($id && !$inventory_name) {
 	echo '<div class="result">'.$result_msg.$msg_err.'</div>';
 
 	if ($write_permission || !$id) {
-		if ($id) {
-			$button = print_input_hidden ('update_inventory', 1, true);
-			$button .= print_input_hidden ('id', $id, true);
-			$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
-		} else {
-			$button = print_input_hidden ('create_inventory', 1, true);
-			$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
-		}
-		
-		$table->data[7][0] = $button;
 	
 		echo '<form method="post" id="inventory_status_form">';
 		print_table ($table);
+			echo '<div style="width:100%;">';
+				unset($table->data);
+				$table->width = '100%';
+				$table->class = "button-form";
+				if ($id) {
+					$button = print_input_hidden ('update_inventory', 1, true);
+					$button .= print_input_hidden ('id', $id, true);
+					$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
+				} else {
+					$button = print_input_hidden ('create_inventory', 1, true);
+					$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+				}
+				
+				$table->data[7][0] = $button;
+				print_table ($table);
+			echo '</div>';
 		echo '</form>';
 	} else {
 		$table->class = 'search-table';

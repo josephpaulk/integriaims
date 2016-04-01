@@ -55,8 +55,9 @@ $category = '';
 if ($kb_data["id_category"])
 	$category = get_db_value ('name', 'tkb_category', 'id', $kb_data['id_category']);
 
-echo '<h2>'.__('KB article review');
+echo '<h2>'.__('KB article review') . '</h2>';
 
+echo "<h4>" . $title;
 $report_image = print_report_image ("index.php?sec=kb&sec2=operation/kb/browse_data&view=$id", __("PDF"));
 if ($report_image) {
 	echo "&nbsp;&nbsp;&nbsp;";
@@ -67,11 +68,11 @@ if ($edit_perm){
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
 }
-echo '</h2>';
+echo '</h4>';
 
 $avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $kb_data['id_user']);
 
-echo "<p><b>$title</b>";
+//echo "<p><b></b>";
 
 // Title header
 echo "<div class='notetitle' style='height: 50px;'>"; 

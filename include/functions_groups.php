@@ -84,8 +84,8 @@ function print_groups_table ($groups) {
 	enterprise_include("include/functions_groups.php");
 	$return = enterprise_hook ('print_groups_table_extra', array($groups));
 	if ($return === ENTERPRISE_NOT_HOOK){
-
-		echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="listing" id="table1">';
+		echo "<div class='divresult'>";
+		echo '<table width="99%" class="listing" id="table1">';
 		echo '<thead>';
 		echo 	'<tr>';
 		echo 		'<th class="header c0" scope="col">'.__('Users').'</th>';
@@ -184,6 +184,7 @@ function print_groups_table ($groups) {
 			$count++;
 		}
 		echo '</table>';
+		echo '</div>';
 	}
 }
 

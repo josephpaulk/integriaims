@@ -30,9 +30,10 @@ if ($get_events) {
 	$show_projects = get_parameter("show_projects");
 	$show_tasks = get_parameter("show_tasks");
 	$show_events = get_parameter("show_events");
-	$show_wo = get_parameter("show_wo");
+	$show_wo = get_parameter("show_wo", false);
+	$show_wu = get_parameter("show_wu");
 	$show_clients = get_parameter("show_clients");
-	$events = calendar_get_events_agenda($start_date, $end_date, $pn, $config['id_user'], $show_projects, $show_tasks, $show_events, $show_wo, $show_clients);
+	$events = calendar_get_events_agenda($start_date, $end_date, $pn, $config['id_user'], $show_projects, $show_tasks, $show_events, $show_wo, $show_clients, $show_wu);
 
 	$events_result = array();
 

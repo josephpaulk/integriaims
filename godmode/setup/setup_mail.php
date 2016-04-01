@@ -102,8 +102,8 @@ if ($update) {
 $popimap[0] = __('POP');
 $popimap[1] = __('IMAP');
 
-
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 
@@ -149,6 +149,7 @@ $table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsle
 
 $table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
    
+$table->colspan[8][0] = 3;
 $table->data[8][0] = "<h4>".__("POP/IMAP Parameters")."</h4>";
 $table->data[8][1] = print_select ($popimap, "select_pop_imap", $config["select_pop_imap"], '','','',true,0,true, __('Select IMAP or POP'));
 
@@ -251,11 +252,12 @@ $button .= print_submit_button (__("Reactivate pending mails"), 'pending_ok', fa
 $button .= print_submit_button (__("Delete pending mails"), 'pending_delete', false, 'class="sub delete"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data[21][0] = $button;
-$table->colspan[21][0] = 3;
-
 echo "<form name='setup' method='post'>";
 print_table ($table);
+
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 ?>
 

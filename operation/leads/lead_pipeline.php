@@ -58,16 +58,23 @@ if (!empty($tags)) {
 	$params .= '&tags[]='.implode('&tags[]=', $tags);
 }
 
-echo "<div id='incident-search-content'>";
-echo "<h1>". __('Lead pipeline');
+
+echo "<h2>". __('Leads') . "</h2>";
+echo "<h4>". __('Lead pipeline');
+
 echo "<div id='button-bar-title'>";
-echo "<ul>";
-echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
-echo "</li>";
-echo "</ul>";
+	echo "<ul>";
+		// Filter button
+		echo "<li>";
+			echo "<a href='javascript:' onclick='toggleDiv (\"pipeline_filter\")'>".__('Filter form')."</a>";
+		echo "</li>";
+		echo "<li>";
+			echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".
+				print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
+		echo "</li>";
+	echo "</ul>";
 echo "</div>";
-echo "</h1>";
+echo "</h4>" ;
 
 $where_clause = '';
 
@@ -349,20 +356,11 @@ foreach ($progress as $k => $v) {
 	$i++;
 }
 
-// Filter button
-echo "<div id='button-bar-title' style='float:left; margin-left: 7px; padding-bottom: 3px; margin-top: 5px;'>";
-echo "<ul>";
-echo "<li style='padding: 3px;'>";
-echo "<a href='javascript:' onclick='toggleDiv (\"pipeline_filter\")'>".__('Filter form')."</a>";
-echo "</li>";
-echo "</ul>";
-echo "</div>";
-
 // Filter form
 $table_filter = new stdClass;
 $table_filter->id = 'pipeline_filter_form_table';
-$table_filter->width = '99%';
-$table_filter->class = 'search-table';
+$table_filter->width = '100%';
+$table_filter->class = 'search-table-button';
 $table_filter->data = array();
 
 $row = array();
@@ -378,7 +376,7 @@ $order_items = array(
 	);
 $row[] = print_select($order_items, 'order_item', $order_item, '', '', 0, true, false, false, __('Order by'));
 $row[] = print_checkbox('show_closed', 1, (bool)$show_closed, true, __('Show closed leads'));
-$row[] = print_submit_button(__('Filter'), 'filter', false, 'class="sub save" style="margin-top: 13px;"', true);
+$row[] = "<div class='button-form'>" . print_submit_button(__('Filter'), 'filter', false, 'class="sub save" style="margin-top: 13px;"', true) . "</div>";
 
 $table_filter->data[] = $row;
 

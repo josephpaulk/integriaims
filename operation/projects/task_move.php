@@ -28,16 +28,19 @@ if (!$task_permission["manage"]) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task move without permission");
 	no_permission();
 }
+echo "<h2>".__('Move task')."</h2>";
+echo "<h4>".__('Move this task to other project')."</h4>";
 
 //TASK MOVE Operation
+echo "<div class='divform'>";
 echo "<form name='project_move' method='POST' action='index.php?sec=projects&sec2=operation/projects/task&operation=move&id_project=$id_project&id_task=$id_task'>";
-echo "<h3>".__('Move this task to other project')."</h3>";
-echo '<table width="600" class="databox_color" cellpadding=4 cellspacing=4>';
+
+echo '<table width="20%" class="search-table" >';
 
 // Project combo
 echo '<tr><td class="datos"><b>'.__('Destination project').'</b>';
-echo '</td><td class="datos">';
 combo_projects_user ($config["id_user"], 'target_project');
-echo '</td><td class="datos">';
+echo '<tr></td><td class="datos">';
 echo '<input type="submit" class="sub create" name="accion" value="'.__('Move').'" border="0">';
 echo "</form></td></tr></table>";
+echo "</div>";

@@ -185,7 +185,7 @@ if ($operation == "delete"){
 $ahora = date("Y-m-d H:i:s");
 if ($timestamp_h == "")
 	$timestamp_h == $ahora ;
-echo "<h1>";
+echo "<h2>";
 
 echo __('Workunit personal report for user');
 echo " '". dame_nombre_real($id_user). "'.";
@@ -195,17 +195,16 @@ if ($html_report_image) {
 	echo "&nbsp;" . $html_report_image;
 }
 
-echo "</h1>";
+echo "</h2>";
 
-echo "<div class='under_tabs_info'>";
+echo "<h4>";
 echo __("Between dates");
-echo ": ";
 if ($timestamp_l != "" AND $timestamp_h != "")
 	echo " : ".$timestamp_l. " ".__("to")." ".$timestamp_h;
 
 if ($id_task != 0)
-    echo "<br>".__("Task"). " : ".get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
-echo "</div><br>";
+    echo __("Task"). " : ".get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
+echo "</h4>";
 
 if ($id_workunit != -1){
 	$sql= "SELECT * FROM tworkunit WHERE tworkunit.id = $id_workunit";
@@ -236,10 +235,11 @@ foreach ($alldata as $row){
 
 echo '<div id="show_multiple_edit">';
 
-echo '<br><h2>'.__('Massive operations over selected items').'</h2>';
+echo '<h2>'.__('Massive operations over selected items').'</h2>';
+
 $table = new StdClass;
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
 $table->colspan = array ();
 

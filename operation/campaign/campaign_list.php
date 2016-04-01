@@ -60,7 +60,7 @@ if ($create) {
 }
 
 $campaigns = crm_get_campaigns();
-
+echo '<div class="divresult">';
 if (!$campaigns) {
 
 	echo "<h3 class='error'>".__("There aren't campaigns")."</h3>";
@@ -110,12 +110,14 @@ if (!$campaigns) {
 	print_table ($table);
 
 }
-
-echo "<form action='index.php?sec=customers&sec2=operation/campaign/campaign&tab=editor' method='post'>";
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
-print_input_hidden ('new', 1);
 echo "</div>";
-echo "</form>";
 
+echo '<div class="divform">';
+	echo "<form action='index.php?sec=customers&sec2=operation/campaign/campaign&tab=editor' method='post'>";
+		echo "<table class='search-table'><tr><td>";
+			print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
+			print_input_hidden ('new', 1);
+		echo "</td></tr></table>";
+	echo "</form>";
+echo "</div>";
 ?>

@@ -24,11 +24,25 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 	exit;
 }
 
-echo '<h1>' . __('Inventory overview');
+echo '<h2>' . __('Inventory') . '</h2>';
+echo '<h4>' . __('Overview');
 
-if (!$clean_output) {
+if (!$pure) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
+	echo "<li>";
+	$sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
+	$filter["query"] = $sql_search;
+	serialize_in_temp($filter, $config["id_user"]);
+	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
+
+	//~ $buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
+	echo $buttons;
+	echo "</li>";
+	echo "<li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory&pure=1'>" .
+		print_image ("images/html_tabs.png", true, array("title" => __("Test"))) . "</a>";
+	echo "</li>";
 	echo "<li>";
 	echo "<a id='listview_form_submit' href='#'>" .
 		print_image ("images/list_view.png", true, array("title" => __("List view"))) .
@@ -40,8 +54,19 @@ if (!$clean_output) {
 		"</a>";
 	echo "</li>";
 	echo "</ul>";
+	echo "</div>";
 }
-echo '</h1>';
+else {
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+		echo "<a id='' href='index.php?sec=inventory&sec2=operation/inventories/inventory'>" .
+		print_image ("images/flecha_volver.png", true, array("title" => __("Test"))) . "</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
+}
+echo '</h4>';
 
 $id = (int) get_parameter ('id');
 
@@ -81,12 +106,12 @@ if ($update_extras == 1){
 	$generic_8 = (string) get_parameter ('generic8');
 	$has_permission = give_acl ($config['id_user'], $id_group, "VW");
 	if (! $has_permission) {
-                // Doesn't have access to this page
-                audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to 
-update inventory extras without permission#".$id);
-                include ("general/noaccess.php");
-                exit;
-        }
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to 
+			update inventory extras without permission#".$id);
+		include ("general/noaccess.php");
+		exit;
+	}
 	$result = process_sql_update ('tinventory',
                 array ('generic_1' => $generic_1,
                         'generic_2' => $generic_2,
@@ -98,14 +123,12 @@ update inventory extras without permission#".$id);
                         'generic_8' => $generic_8),
                 array ('id' => $id));
 
-        if ($result !== false) {
-                $result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
-        } else {
-                $result_msg = '<h3 class="error">'.__('There was an error updating inventory 
-object').'</h3>';
-        }
-
-        echo $result_msg;
+	if ($result !== false) {
+		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+	} else {
+		$result_msg = '<h3 class="error">'.__('There was an error updating inventory object').'</h3>';
+	}
+	echo $result_msg;
 	
 }
 

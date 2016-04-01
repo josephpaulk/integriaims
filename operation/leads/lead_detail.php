@@ -687,6 +687,30 @@ if ($id || $new) {
 	if ($id) {
 
 		$op = get_parameter ("op", "");
+		echo '<h2>';
+		switch ($op) {
+			case "activity":
+				echo strtoupper(__('Activity'));
+				break;
+			case "history":
+				echo strtoupper(__('Tracking'));
+				break;
+			case "mail":
+				echo strtoupper(__('Mail reply'));
+				break;
+			case "files":
+				echo strtoupper(__('Files'));
+				break;
+			case "forward":
+				echo strtoupper(__('Forward lead'));
+				break;
+			default:
+				echo strtoupper(__('Lead details'));
+		}
+		echo '</h2>';
+		
+		$name = get_db_value ('fullname', 'tlead', 'id', $id);
+		echo '<h4>' . sprintf(__('Lead #%s: %s'), $id, $name);
 		
 		echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 		if ($op == "files")
@@ -735,34 +759,10 @@ if ($id || $new) {
 
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search"><span>'.__("Search").'</span></a></li>';
-
-		echo '<li class="ui-tabs-title">';
-		switch ($op) {
-			case "activity":
-				echo strtoupper(__('Activity'));
-				break;
-			case "history":
-				echo strtoupper(__('Tracking'));
-				break;
-			case "mail":
-				echo strtoupper(__('Mail reply'));
-				break;
-			case "files":
-				echo strtoupper(__('Files'));
-				break;
-			case "forward":
-				echo strtoupper(__('Forward lead'));
-				break;
-			default:
-				echo strtoupper(__('Lead details'));
-		}
-		echo '</li>';
-		
+				
 		echo '</ul>';
+		echo '</h4>';
 		
-		$name = get_db_value ('fullname', 'tlead', 'id', $id);
-		
-		echo '<div class="under_tabs_info">' . sprintf(__('Lead #%s: %s'), $id, $name) . '</div><br>';
 	}
 
 	switch ($op) {
@@ -788,7 +788,7 @@ if ($id || $new) {
 			return;
 	}
 
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan['tags'][0] = 4;
@@ -799,7 +799,8 @@ if ($id || $new) {
 		$table->class = "search-table-button";
 		
 		if ($id == 0) {
-			echo "<h1>".__('Create lead')."</h1>";
+			echo "<h2>".__('Leads management')."</h2>";
+			echo "<h4>".__('Create lead')."</h4>";
 		}
 
 		$campaigns = crm_get_campaigns_combo_list();
@@ -810,25 +811,25 @@ if ($id || $new) {
 
 		$table->data[1][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		$table->data[1][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));
-		$table->data[2][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
-		$table->data[2][1] = print_input_text ("country", $country, "", 35, 100, true, __('Country'));
-		$table->data[3][0] = print_input_text ("estimated_sale", $estimated_sale, "", 12, 100, true, __('Estimated sale'));
+		$table->data[2][0] = print_input_text ("email", $email, "", 18, 100, true, __('Email'));
+		$table->data[2][1] = print_input_text ("country", $country, "", 18, 100, true, __('Country'));
+		$table->data[3][0] = print_input_text ("estimated_sale", $estimated_sale, "", 18, 100, true, __('Estimated sale'));
 		$table->data[3][0] .= print_help_tip (__("Use only integer values, p.e: 23000 instead 23,000 or 23,000.00"), true);
 
 		$estimated_close_date = !empty($estimated_close_date) && $estimated_close_date != '0000-00-00 00:00:00' ? date("Y-m-d", strtotime($estimated_close_date)) : "";
-		$table->data[3][1] = print_input_text ("estimated_close_date", $estimated_close_date, "", 15, 20, true, __('Estimated close date'));
+		$table->data[3][1] = print_input_text ("estimated_close_date", $estimated_close_date, "", 18, 20, true, __('Estimated close date'));
 
-		$table->data[4][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
+		$table->data[4][0] = print_input_text ("phone", $phone, "", 18, 60, true, __('Phone number'));
 
 		$progress_values = lead_progress_array ();
 
 		$table->data[4][1] = print_select ($progress_values, 'progress', $progress, '', '', 0, true, 0, false, __('Lead progress') );
 
-		$table->data[5][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
+		$table->data[5][0] = print_input_text ('position', $position, '', 18, 50, true, __('Position'));
 
-		$table->data[5][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
+		$table->data[5][1] = print_input_text ("mobile", $mobile, "", 18, 60, true, __('Mobile number'));
 		
-		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
+		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 18, 30, false, '',
 			array(), true, '', __("Owner") )
 		. print_help_tip (__("Type at least two characters to search"), true);
 
@@ -862,6 +863,7 @@ if ($id || $new) {
 		$params['input_value'] = $id_company;
 		$params['title'] = __('Managed by');
 		$params['return'] = true;
+		$params['attributes'] = "style='width:210px;'";
 		$table->data[7][1] = print_company_autocomplete_input($params);
 
 		if ($id_company) {
@@ -884,17 +886,6 @@ if ($id || $new) {
 		
 		$table->data[10][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 		
-		if ($id) {
-			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-			$button .= print_input_hidden ('update', 1, true);
-			$button .= print_input_hidden ('id', $id, true);
-		} else {
-			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-			$button .= print_input_hidden ('create', 1, true);
-		}
-		
-		$table->colspan[count($table->data) + 1][0] = 4;
-		$table->data[count($table->data) + 1][0] = $button;
 	}
 	else {
 		
@@ -954,24 +945,32 @@ if ($id || $new) {
 	
 	echo '<form method="post" id="lead_form">';
 	print_table ($table);
+	if ($section_write_permission || $section_manage_permission) {
+		echo "<div style='text-align:right; width:100%'>";
+			unset($table->data);
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update', 1, true);
+				$button .= print_input_hidden ('id', $id, true);
+			} else {
+				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+				$button .= print_input_hidden ('create', 1, true);
+			}
+			$table->data[1][0] = $button;
+			print_table ($table);
+		echo "</div>";
+	}
 	echo "</form>";
 
-} else {
-	
-	// Custom search button
-	echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
-	echo "<ul>";
-	echo "<li style='padding: 3px;'>";
-	echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
-	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
+}
+else {
 	
 	//FORM AND TABLE TO MANAGE CUSTOM SEARCHES
 	$table = new stdClass;
 	$table->id = 'saved_searches_table';
 	$table->width = '99%';
-	$table->class = 'search-table';
+	$table->class = 'search-table-button';
 	$table->size = array ();
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold';
@@ -982,7 +981,7 @@ if ($id || $new) {
 						 AND section = "leads"
 					 ORDER BY name',
 					 $config['id_user']);
-	$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('None'), 0, true, false, true, __('Custom searches'));
+	$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('None'), 0, true, false, true, __('Custom searchs'));
 
 	//If a custom search was selected display cross
 	if ($id_search) {
@@ -1145,22 +1144,20 @@ if ($id || $new) {
 			$where_clause .= ' AND id IN (-1) ';
 	}
 	
-	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
+	$form = '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
 
-	$table->class = 'search-table';
+	$table->class = 'search-table-button';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->colspan = array();
 	$table->colspan['tags'][0] = 4;
 
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 21, 100, true, __('Search'));
 	
-	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 15, 30, false, '',
-			array(), true, '', __('Owner'))
-
-		. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 21, 30, false, '',
+			array(), true, '', __('Owner'). print_help_tip (__("Type at least two characters to search"), true));
 
 	$table->data[0][2] =  print_checkbox ("show_100_search", 1, $show_100, true, __("Show finished leads"));
 
@@ -1176,51 +1173,58 @@ if ($id || $new) {
 	$table->data['tags'][0] = print_label (__('Tags'), '', 'select', true);
 	$table->data['tags'][0] .= html_render_tags_editor($tag_editor_props, true); 
 	
-	$table_advanced->class = 'search-table';
-	$table_advanced->style = array ();
-	$table_advanced->style[0] = 'font-weight: bold;';
-	$table_advanced->data = array ();
-	$table_advanced->width = "99%";
-	$table_advanced->colspan = array();
-	$table_advanced->colspan[1][1] = 2;
-	
+	//~ $table_advanced->class = 'search-table';
+	//~ $table_advanced->style = array ();
+	//~ $table_advanced->style[0] = 'font-weight: bold;';
+	//~ $table_advanced->data = array ();
+	//~ $table_advanced->width = "99%";
+	//~ $table_advanced->colspan = array();
+	//~ $table_advanced->colspan[1][1] = 2;
+	$table_advanced = '<tr>';
 	$params = array();
 	$params['input_id'] = 'id_company_search';
 	$params['input_name'] = 'id_company_search';
 	$params['input_value'] = $id_company;
 	$params['title'] = __('Managed by');
 	$params['return'] = true;
-	$table_advanced->data[0][0] = print_company_autocomplete_input($params);
-
-	$table_advanced->data[0][1] = combo_kb_products ($id_category, true, 'Product type', true);
-	
-	$table_advanced->data[0][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'id_language', $id_language, '', __('Any'), '', true, false, false, __('Language'));
-	
+	$table_advanced .= '<td>';
+	$table_advanced .= print_company_autocomplete_input($params);
+	$table_advanced .= '</td><td>';
+	$table_advanced .= combo_kb_products ($id_category, true, 'Product type', true);
+	$table_advanced .= '</td>';
+	$table_advanced .= "<td rowspan=2 valign=top>".get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
+	$table_advanced .= '</td>';
+	$table_advanced .= '<tr><td>';
 	$progress_values = lead_progress_array ();
-	$table_advanced->data[1][0] = print_select ($progress_values, 'progress_search', $progress, '', __('Any'), 0, true, 0, false, __('Lead progress') );
-
-	$table_advanced->data[1][1] = get_last_date_control ($last_date, 'last_date_search', __('Date'), $start_date, 'start_date_search', __('Start date'), $end_date, 'end_date_search', __('End date'));
-
-	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), print_table($table_advanced, true), 'closed', true, false);
+	$table_advanced .= print_select ($progress_values, 'progress_search', $progress, '', __('Any'), 0, true, 0, false, __('Lead progress') );
+	$table_advanced .= '</td><td>';
+	$table_advanced .= print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+		'id_language', $id_language, '', __('Any'), '', true, false, false, __('Language'));
+	$table_advanced .= '<tr>';
+	
+	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), $table_advanced, 'closed', true, false,'','no_border',3);
 	$table->colspan['advanced'][2] = 4;
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-	$table->data[3][0] = print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
-	$table->data[3][0] .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
 	
-	$table->align[3]="right";
-	$table->align[3][0]="right";
-	$table->colspan[3][0]="3";
-	$table->size[3][0]="100%";
-
-	print_table ($table);
+	$form .= "<div class='divresult'>";
+	$form .= print_table ($table,true);
+	$form .= '</div>';
 	$table->data = array ();
 	
+	$form .= "<div class='divform'>";
+		$form .= "<div class='button-form' style='width:100%;'>";
+			$form .= print_button(__('Export to CSV'), '', false, 
+				'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . 
+					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
+			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
+		$form .= '</div>';
+	$form .= '</div>';
 	
-
-	echo '</form>';
-
+	$form .= '</form>';
+	
+	print_container_div("lead_form",__("Leads form search"),$form, 'closed', false, false);
+		
 	$leads = crm_get_all_leads ($where_clause);
 
 	if ($leads == false) {
@@ -1228,12 +1232,11 @@ if ($id || $new) {
 	} else {
 		$count_total_leads = count($leads);
 	}
-	
-	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$search_params", $offset);
 
 	if ($leads !== false) {
+		$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$search_params", $offset);
 		unset ($table);
-		$table->width = "99%";
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -1339,16 +1342,16 @@ if ($id || $new) {
 	
 	if ($section_write_permission || $section_manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search">';
-		echo '<div style="width: '.$table->width.'; text-align: right;">';
+		echo '<div class="button-form" style="text-align:right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 		print_input_hidden ('new', 1);
 		echo '</div>';
-		echo '</form><br>';
+		echo '</form>';
 	}
 
 	unset($table);
 	$table->class = 'search-table-button';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->id = 'lead_massive';
 	$table->data = array();
 	$table->style = array ();
@@ -1358,12 +1361,11 @@ if ($id || $new) {
 	$visible_users = get_user_visible_users ($config['id_user']);
 	$table->data[0][2] = print_select($visible_users, 'mass_assigned_user_leads', '0', '', __('Select'), -1, true, false, true, __('Assigned user'));
 
-	$table->data[1][0] = print_submit_button (__('Update'), 'massive_leads_update', false, 'class="sub next"', true);
-	$table->colspan[1][0] = 4;
+	$table->data[0][3] = "<div class='button-form'>" . print_submit_button (__('Update'), 'massive_leads_update', false, 'class="sub next"', true) . "</div>";
 
 	$massive_oper_leads = print_table ($table, true);
 
-	echo print_container('massive_oper_leads', __('Massive operations over selected items'), $massive_oper_leads, 'closed', true, '20px');
+	echo print_container_div('massive_oper_leads', __('Massive operations over selected items'), $massive_oper_leads, 'closed', true, '20px');
 }
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";

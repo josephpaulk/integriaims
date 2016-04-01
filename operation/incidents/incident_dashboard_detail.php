@@ -104,8 +104,8 @@ else {
 }
 
 // Details
-$incident_details = "<table width='97%' id='details_table'>";
-$incident_details .= "<tr>";
+//$incident_details = "<table width='97%' id='details_table'>";
+$incident_details = "<tr>";
 $incident_details .= "<td>".__("Status")."</td>";
 $incident_details .= "<td>".__("Group")."</td>";
 $incident_details .= "<td>".__("Priority")."</td>";
@@ -126,14 +126,18 @@ $incident_details .= "<td>".$priority."</td>";
 $incident_details .= "<td>".$resolution."</td>";
 $incident_details .= "<td>".$type."</td>";
 $incident_details .= "</tr>";
-$incident_details .= "</table>";
+//$incident_details .= "</table>";
 
-$left_side = print_container('incident_details', __('Details'), $incident_details, 'no');
+$left_side = print_container('incident_details', __('Details'), $incident_details, 'open', true, true, '', 'no_border_center', 5, 'less_widht');
 
 /* Description */
 $incident_description = clean_output_breaks($incident["descripcion"]);
 
-$left_side .= print_container('incident_description', __('Description'), $incident_description);
+$incident_table = "<tr>";
+$incident_table .= "<td>".$incident_description."</td>";
+$incident_table .= "</tr>";
+
+$left_side .= print_container('incident_description', __('Description'), $incident_table, 'open', true, true, '', '', 5, 'less_widht');
 
 // Advanced details
 $editor = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["editor"]));
@@ -159,13 +163,14 @@ if ($objects) {
 	$obj_table = "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
 	$obj_table .= "<td>".__("Objects affected").":</td>";
 	$obj_table .= "</tr>";
-	$obj_table .= "<tr><td></td>";
-	$obj_table .= "<td><table><tr><td class='advanced_details_icons'></td><td align='right'><b>".$objects."</b></td></tr></table></td>";
+	$obj_table .= "<tr>";
+	$obj_table .= "<td class='advanced_details_icons'></td><td align='right'><b>".$objects."</b></td>";
 	$obj_table .= "</tr>";
-} else {
+}
+else {
 	$objects = __("None");
 	$obj_table = "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
-	$obj_table .= "<td><table><tr><td>".__("There is no objects affected")."</td></tr></table></td>";
+	$obj_table .= "<td>".__("There is no objects affected")."</td>";
 }
 
 
@@ -176,31 +181,31 @@ $email_table ="";
 if ($emails) {
 	
 	$email_table = "<tr>";
-	$email_table .= "<td colspan='2' align='left'>".$emails."</td>";
+	$email_table .= "<td colspan='2' align='right'>".$emails."</td>";
 	$email_table .= "</tr>";
 	
 }
 
-$incident_adv_details .= "<table class='advanced_details_table alternate'>";
+//$incident_adv_details .= "<table class='advanced_details_table alternate'>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/editor.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("Editor").":</td><td align='right'><b>".$editor."</b></td></tr></table></td>";
+$incident_adv_details .= "<td>".__("Editor").":</td><td><b>".$editor."</b></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/group.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("Creator group").":</td><td align='right'><b>".$creator_group."</b></td></tr></table></td>";
+$incident_adv_details .= "<td>".__("Creator group").":</td><td><b>".$creator_group."</b></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/incident.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("Parent ticket").":</td><td align='right'><b>".$parent."</b></td></tr></table></td>";
+$incident_adv_details .= "<td>".__("Parent ticket").":</td><td><b>".$parent."</b></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/task.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("Task").":</td><td align='right'><b>".$task."</b></td></tr></table></td>";
+$incident_adv_details .= "<td>".__("Task").":</td><td><b>".$task."</b></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/sla.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("SLA disabled").":</td><td align='right'><b>".$sla."</b></td></tr></table></td>";
+$incident_adv_details .= "<td>".__("SLA disabled").":</td><td><b>".$sla."</b></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= $obj_table;
@@ -208,9 +213,9 @@ $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= $email_table;
-$incident_adv_details .= "</table>";
+//$incident_adv_details .= "</table>";
 
-$left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details);
+$left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details, 'open', true, true, '', 'no_border', 5, 'less_widht');
 
 if ($incident["id_incident_type"]) {
 
@@ -218,7 +223,7 @@ if ($incident["id_incident_type"]) {
 
 	$incident_custom_fields = "<table class='advanced_details_table alternate'>";
 	$incident_custom_fields .= "<tr>";
-	$incident_custom_fields .= "<td><table><tr><td><b>".$type_name."</b></td></tr></table></td>";
+	$incident_custom_fields .= "<td><b>".$type_name."</b></td>";
 	$incident_custom_fields .= "</tr>";
 
 	$fields = incidents_get_all_type_field ($incident["id_incident_type"], $id);
@@ -230,7 +235,7 @@ if ($incident["id_incident_type"]) {
 			$incident_custom_fields .= "<td>";
 				$incident_custom_fields .= "<table>";
 				$incident_custom_fields .= "<tr>";
-				$incident_custom_fields .= "<td>".$f["label"].":</td><td align='right'><b>".$f["data"]."</b></td>";
+				$incident_custom_fields .= "<td><b>".$f["label"].":</b></td><td>".$f["data"]."</td>";
 				$incident_custom_fields .= "</tr>";
 				$incident_custom_fields .= "</table>";
 			$incident_custom_fields .= "</td>";
@@ -240,7 +245,7 @@ if ($incident["id_incident_type"]) {
 			$incident_custom_fields .= "<td>";
 				$incident_custom_fields .= "<table>";
 				$incident_custom_fields .= "<tr>";
-				$incident_custom_fields .= "<td>".$f["label"].":"."</td>";
+				$incident_custom_fields .= "<td><b>".$f["label"].":"."</b></td>";
 				$incident_custom_fields .= "</tr>";
 				$incident_custom_fields .= "</table>";
 			$incident_custom_fields .= "</td>";
@@ -249,7 +254,7 @@ if ($incident["id_incident_type"]) {
 			$incident_custom_fields .= "<td>";	
 				$incident_custom_fields .= "<table>";
 				$incident_custom_fields .= "<tr>";
-				$incident_custom_fields .= "<td align='right'><b>".clean_output_breaks($f["data"])."</b></td>";
+				$incident_custom_fields .= "<td>".clean_output_breaks($f["data"])."</td>";
 				$incident_custom_fields .= "</tr>";
 				$incident_custom_fields .= "</table>";
 			$incident_custom_fields .= "</td>";
@@ -260,14 +265,14 @@ if ($incident["id_incident_type"]) {
 
 	$incident_custom_fields .= "</table>";
 
-	$left_side .= print_container('incident_custom_fields', __('Custom fields'), $incident_custom_fields);
+	$left_side .= print_container_div('incident_custom_fields', __('Custom fields'), $incident_custom_fields, 'open',true, true, '' , 'no_border',4, 'less_widht');
 }
 
 /**** DASHBOARD RIGHT SIDE ****/
 
 // People
-$incident_users .= "<table style='width: 100%;'>";
-$incident_users .= "<tr>";
+//$incident_users .= "<table style='width: 100%;'>";
+$incident_users = "<tr>";
 
 $long_name_creator = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_creator"]));
 $avatar_creator = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident["id_creator"]));
@@ -292,7 +297,7 @@ $incident_users .= "<td>";
 if($avatar_asigned){
 	$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true, $options) . '</div>';
 } else {
-	$incident_users .= '<div class="bubble"></div>';
+	$incident_users .= '<div class="bubble">'. print_image('images/avatars/avatar_notyet.png', true, $options) . '</div>';
 }
 $incident_users .= '<span>' . __('Owned by') . ':</span><br>' . $long_name_asigned;
 $incident_users .= "</td>";
@@ -322,9 +327,9 @@ $incident_users .= "</td>";
 
 $incident_users .= "</tr>";
 
-$incident_users .= "</table>";
+//$incident_users .= "</table>";
 
-$right_side = print_container('incident_users', __('People').print_help_tip (_('Click on icons for more details'), true), $incident_users);
+$right_side = print_container('incident_users', __('People').print_help_tip (_('Click on icons for more details'), true), $incident_users,'open',true,'','','',4, 'less_widht');
 
 // Quick editor
 if ($config['enabled_ticket_editor']) {
@@ -334,83 +339,86 @@ if ($config['enabled_ticket_editor']) {
 	$has_iw = give_acl ($config['id_user'], $id_grupo, "IW")
 		|| $config['id_user'] == $incident['id_usuario']
 		|| $config['id_user'] == $incident['id_creator'];
-
-	if ($has_iw) {
-		$incident_data = get_incident ($id);
-
-		$resolution = $incident_data['resolution'];
-		$priority = $incident_data['prioridad'];
-		$owner = $incident_data['id_usuario'];
-		$status = $incident['estado'];
-		$id_incident_type = $incident['id_incident_type'];
-		
-		//add
-		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
-		if($id_group_type != "" && $id_group_type != "0"){
-			$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-			$groups_selected = explode(', ', $id_group_type);
-			$groups = array_intersect($groups_all, $groups_selected);
-		} else {
-			$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-		}
-
-		$ticket_editor .= "<table style='width: 100%;'>";
-		$ticket_editor .= "<tr>";
-		$ticket_editor .= "<td>";
-		$ticket_editor .= print_select (get_priorities (true), 'priority_editor', $priority, "", '','', true, false, false, __('Priority'), false, '');
-		$ticket_editor .= "</td>";
-		$ticket_editor .= "<td>";
-			
-		//If IW creator enabled flag is enabled, the user can change the creator
-		$src_code = print_image('images/group.png', true, false, true);
 	
-		$params_assigned['input_id'] = 'text-owner_editor';
-		$params_assigned['input_name'] = 'owner_editor';
-		$params_assigned['input_value'] = $owner;
-		$params_assigned['title'] = __('Owner');
-		$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
-		$params_assigned['return'] = true;
-		$params_assigned['return_help'] = true;
-		
-		if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
+	if (!$pure) {
+		if ($has_iw) {
+			$incident_data = get_incident ($id);
 
-			$ticket_editor .= user_print_autocomplete_input($params_assigned);
-					
-		} else {
+			$resolution = $incident_data['resolution'];
+			$priority = $incident_data['prioridad'];
+			$owner = $incident_data['id_usuario'];
+			$status = $incident['estado'];
+			$id_incident_type = $incident['id_incident_type'];
 			
-			$params_assigned['disabled'] = true;
-			$ticket_editor .= user_print_autocomplete_input($params_assigned);
-		}
+			//add
+			$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
+			if($id_group_type != "" && $id_group_type != "0"){
+				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+				$groups_selected = explode(', ', $id_group_type);
+				$groups = array_intersect($groups_all, $groups_selected);
+			} else {
+				$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			}
+
+			//$ticket_editor .= "<table style='width: 100%;'>";
+			$ticket_editor = "<tr>";
+			$ticket_editor .= "<td>";
+			$ticket_editor .= print_select (get_priorities (true), 'priority_editor', $priority, "", '','', true, false, false, __('Priority'), false, '');
+			$ticket_editor .= "</td>";
+			$ticket_editor .= "<td>";
+				
+			//If IW creator enabled flag is enabled, the user can change the creator
+			$src_code = print_image('images/group.png', true, false, true);
+		
+			$params_assigned['input_id'] = 'text-owner_editor';
+			$params_assigned['input_name'] = 'owner_editor';
+			$params_assigned['input_value'] = $owner;
+			$params_assigned['title'] = __('Owner');
+			$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
+			$params_assigned['return'] = true;
+			$params_assigned['return_help'] = true;
 			
-		$ticket_editor .= "</td>";
-		$ticket_editor .= "</tr>";
+			if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 
-		$ticket_editor .= "<tr>";
-		$ticket_editor .= "<td>";
+				$ticket_editor .= user_print_autocomplete_input($params_assigned);
+						
+			} else {
+				
+				$params_assigned['disabled'] = true;
+				$ticket_editor .= user_print_autocomplete_input($params_assigned);
+			}
+				
+			$ticket_editor .= "</td>";
+			$ticket_editor .= "</tr>";
 
-		if ($has_im)
-			$ticket_editor .= combo_incident_resolution ($resolution, false, true, false, "");
-		else {
-			$ticket_editor .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
+			$ticket_editor .= "<tr>";
+			$ticket_editor .= "<td>";
+
+			if ($has_im)
+				$ticket_editor .= combo_incident_resolution ($resolution, false, true, false, "");
+			else {
+				$ticket_editor .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
+			}
+			$ticket_editor .= "</td>";
+			$ticket_editor .= "<td>";
+			$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "");
+			$ticket_editor .= "</td>";
+			$ticket_editor .= "</tr>";
+			
+			$ticket_editor .= "<tr><td>";
+			$ticket_editor .= print_select ($groups, "grupo_form", $id_grupo, '', '', 0, true, false, false, __('Group'), $blocked_incident);
+			$ticket_editor .= "</td><td valign=bottom>";
+			//~ $img = print_image("images/refresh.png", true, array("title" => __("Update")));
+			//~ $ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setParams($id);'>" . $img ."</a>";
+			$ticket_editor .= "<input type='button' name='update' value='".__("Update")."' class='sub upd' onClick='setParams($id);' />";
+			$ticket_editor .= "</td>";
+			
+			$ticket_editor .= "</tr>";
+
+			//$ticket_editor .= "</table>";
+
+			$right_side .= print_container('ticket_editor', __('Quick edit'), $ticket_editor,'open', true, true,'','no_border',4, 'less_widht');
 		}
-		$ticket_editor .= "</td>";
-		$ticket_editor .= "<td>";
-		$ticket_editor .= combo_incident_status ($status, false, 0, true, false, "");
-		$ticket_editor .= "</td>";
-		$ticket_editor .= "</tr>";
-		
-		$ticket_editor .= "<tr><td>";
-		$ticket_editor .= print_select ($groups, "grupo_form", $id_grupo, '', '', 0, true, false, false, __('Group'), $blocked_incident);
-		$ticket_editor .= "</td><td>";
-		$img = print_image("images/accept.png", true, array("title" => __("Update")));
-		$ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setParams($id);'>" . $img ."</a>";
-		$ticket_editor .= "</td>";
-		
-		$ticket_editor .= "</tr>";
-
-		$ticket_editor .= "</table>";
-
-		$right_side .= print_container('ticket_editor', __('Quick edit'), $ticket_editor);
 	}
 }
 
@@ -421,8 +429,8 @@ if ($incident["cierre"] == "0000-00-00 00:00:00") {
 	$close_text = $incident["cierre"];
 }
 
-$incident_dates .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
-$incident_dates .= "<tr>";
+//$incident_dates .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+$incident_dates = "<tr>";
 $incident_dates .= "<td>".__("Created on").":</td>";
 $incident_dates .= "<td>".__("Updated on").":</td>";
 $incident_dates .= "<td>".__("Closed on").":</td>";
@@ -439,7 +447,7 @@ $incident_dates .= $created_on . "</td>";
 $incident_dates .= "<td id='updated_on' class='mini_calendar'>";
 
 $updated_timestamp = strtotime($incident["actualizacion"]);
-$updated_on = "<table><tr><th>" . strtoupper(date('M\' y', $updated_timestamp)) . "</th></tr>";
+$updated_on = "<table class='no_border'><tr><th>" . strtoupper(date('M\' y', $updated_timestamp)) . "</th></tr>";
 $updated_on .= "<tr><td class='day'>" . date('d', $updated_timestamp) . "</td></tr>";
 $updated_on .= "<tr><td class='time'>" . print_image('images/cal_clock_orange.png', true) . ' ' . date('H:i:s', $updated_timestamp) . "</td></tr></table>";
 
@@ -462,55 +470,55 @@ else {
 $incident_dates .= $closed_on . "</td>";
 $incident_dates .= "</td>";
 $incident_dates .= "</tr>";
-$incident_dates .= "</table>";
+//$incident_dates .= "</table>";
 
-$right_side .= print_container('incident_dates', __('Dates'), $incident_dates);
+$right_side .= print_container('incident_dates', __('Dates'), $incident_dates, 'open',true,true,'','no_border_center',4, 'less_widht');
 
 // Review Score
 if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] == 7) AND ($incident['score'] != 0)) {
 	
-		if (give_acl($config["id_user"], 0, "IM")){
+	if (give_acl($config["id_user"], 0, "IM")){
 
-			$num_stars = round(($incident['score']*5)/10);
-			$ticket_score = "<table style='width: 98%;'>";
-			$ticket_score .= "<tr>";
-			$ticket_score .= "<td>";
-			$ticket_score .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true, false) . '</div>';
-			$ticket_score .= "</td>";
-			$ticket_score .= "<td>";
-			$ticket_score .= __("Scoring").": ". $incident["score"]. "/10";
-			$ticket_score .= '<br>';
-			
-			
-			for ($stars=0;$stars<$num_stars;$stars++) {
-				$ticket_score .= print_image("images/star_naranja.png", true);
-			}
-			
-			$empty_stars=5-$num_stars;
-			for ($stars=0;$stars<$empty_stars;$stars++) {
-				$ticket_score .= print_image("images/star_dark.png", true);
-			}
-
-			$ticket_score .= "</td>";
-
-			$ticket_score .= "</tr>";
-			$ticket_score .= "</table>";
+		$num_stars = round(($incident['score']*5)/10);
+		//$ticket_score = "<table style='width: 98%;'>";
+		$ticket_score .= "<tr>";
+		$ticket_score .= "<td>";
+		$ticket_score .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true, false) . '</div>';
+		$ticket_score .= "</td>";
+		$ticket_score .= "<td>";
+		$ticket_score .= __("Scoring").": ". $incident["score"]. "/10";
+		$ticket_score .= '<br>';
+		
+		
+		for ($stars=0;$stars<$num_stars;$stars++) {
+			$ticket_score .= print_image("images/star_naranja.png", true);
 		}
 		
-	$right_side .= print_container('ticket_score', __('Review score'), $ticket_score);
+		$empty_stars=5-$num_stars;
+		for ($stars=0;$stars<$empty_stars;$stars++) {
+			$ticket_score .= print_image("images/star_dark.png", true);
+		}
+
+		$ticket_score .= "</td>";
+
+		$ticket_score .= "</tr>";
+		//$ticket_score .= "</table>";
+	}
+	
+	$right_side .= print_container('ticket_score', __('Review score'), $ticket_score,'opem', true, true, '', '', 5, 'less_widht');
 }
 
 // SLA information
 if ($incident["sla_disabled"]) {
-	$incident_sla .= '<table width="97%">';
+	//$incident_sla .= '<table width="97%">';
 	$incident_sla .= '<tr>';
 	$incident_sla .= "<td style='text-align: center;'>";
 	$incident_sla .= "<em>".__("SLA disabled")."</em>";
 	$incident_sla .= "</td>";
 	$incident_sla .= "</tr>";
-	$incident_sla .= "</table>";
+	//$incident_sla .= "</table>";
 } else {
-	$incident_sla .= '<table width="97%" style="border-spacing: 10px;">';
+	//$incident_sla .= '<table width="97%" style="border-spacing: 10px;">';
 	$incident_sla .= '<tr>';
 	$incident_sla .= "<td>";
 	$incident_sla .= __('SLA history compliance for: '); 
@@ -554,20 +562,20 @@ if ($incident["sla_disabled"]) {
 	$incident_sla .= "</div>";	
 	$incident_sla .= "</td>";
 	$incident_sla .= "<tr>";
-	$incident_sla .= "</table>";
+	//$incident_sla .= "</table>";
 }
 
-$right_side .= print_container('incident_sla', __('SLA information'), $incident_sla);
+$right_side .= print_container('incident_sla', __('SLA information'), $incident_sla, 'open', true, true, '', 'no_border', 4, 'less_widht');
 
 $table->data[0][0] = $left_side;
 $table->data[0][1] = $right_side;
 
 echo "<div id='indicent-details-view'>";
 
-echo '<h1>'.__('Tickets').' #'.$incident["id_incidencia"].' - '.ui_print_truncate_text($incident['titulo'], 50);
+echo '<h2>'.__('Tickets').' #'.$incident["id_incidencia"].'</h2><h4>'.ui_print_truncate_text($incident['titulo'], 50);
 
 
-if (!$clean_output) {
+if (!$pure) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 
@@ -580,13 +588,13 @@ if (!$clean_output) {
 		echo "</li>";
 	}
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/star_dark.png", true, array("title" => __('Comments'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/icono_comentarios.png", true, array("title" => __('Comments'))).'</a>';
 	echo '</li>';
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/icono_files.png", true, array("title" => __('Files'))).'</a>';
 	echo '</li>';
 	echo '<li>';
-	echo '<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&clean_output=1">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Statistics'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&pure=1">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Statistics'))).'</a>';
 	echo '</li>';
 
 	$tab_extensions = get_tab_extensions($sec2, "indicent-details-view");
@@ -597,11 +605,11 @@ if (!$clean_output) {
 	}
 
 	echo '<li class="ui-tabs">';
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image ("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image ("images/volver_listado.png", true, array("title" => __("Back to search")))."</a>";
 	echo '</li>';
 	echo "</ul>";
 	echo "</div>";
-	echo "</h1>";
+	echo "</h4>";
 
 	$tab = get_parameter("tab", "");
 	foreach ($tab_extensions as $tab_extension) {
@@ -611,8 +619,15 @@ if (!$clean_output) {
 		}
 	}
 } else {
-	//Close title
-	echo "</h1>";
+	
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo '<li class="ui-tabs">';
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$id."'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to ticket")))."</a>";
+	echo '</li>';
+	echo "</ul>";
+	echo "</div>";
+	echo "</h4>";
 }
 
 print_table($table);
@@ -624,13 +639,35 @@ if ($clean_output) {
 	include("incident_files.php");
 	include("incident_workunits.php");
 
-} else {
+}
+else {
 
 	echo "<a name='incident-operations'></a>";
 
-	echo "<div id='tab' class='ui-tabs-panel'>";
+	echo "<div id='tab' class='ui-tabs-panel' style='font-size:0.90em !important'>";
 	$tab = get_parameter("tab", "workunits");
-
+	switch ($tab) {
+		case "workunits":
+			echo "<h4>".__('Add comment');
+			break;
+		case "files":
+			echo "<h4>".__('Add file');
+			break;
+		case "inventory":
+			echo "<h4>".__('Inventory objects');
+			break;
+		case "contacts":
+			echo "<h4>".__('Contacts');
+			break;
+		case "tracking":
+			echo "<h4>".__('Tracking');
+			break;
+		case "tickets":
+			echo "<h4>".__('Tickets');
+			break;
+		default:
+			break;
+	}
 	//Print lower menu tab
 	echo '<ul class="ui-tabs-nav">';
 
@@ -640,7 +677,8 @@ if ($clean_output) {
 		echo '<li class="ui-tabs">';
 	}
 
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=contacts#incident-operations"><span>'.__('Contacts').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
+			'&tab=contacts#incident-operations"><img src="images/" title="'.__('Contacts').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "inventory") {
@@ -649,7 +687,8 @@ if ($clean_output) {
 		echo '<li class="ui-tabs">';
 	}
 
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=inventory#incident-operations"><span>'.__('Inventory').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
+			'&tab=inventory#incident-operations"><img src="images/inventory_tab.png" title="'.__('Inventory').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "tracking") {
@@ -658,7 +697,8 @@ if ($clean_output) {
 		echo '<li class="ui-tabs">';
 	}
 
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tracking#incident-operations"><span>'.__('Tracking').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
+			'&tab=tracking#incident-operations"><img src="images/details_tab.png" title="'.__('Tracking').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "files") {
@@ -666,7 +706,8 @@ if ($clean_output) {
 	} else {
 		echo '<li class="ui-tabs">';
 	}
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
+			'&tab=files#incident-operations"><img src="images/files_tab.png" title="'.__('Files').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "workunits") {
@@ -674,7 +715,8 @@ if ($clean_output) {
 	} else {
 		echo '<li class="ui-tabs">';
 	}
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Comments').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
+			'&tab=workunits#incident-operations"><img src="images/icono_comentarios.png" title="'.__('Comments').'"/></a>';
 	echo '</li>';
 	
 	if ($tab === "tickets") {
@@ -683,36 +725,16 @@ if ($clean_output) {
 		echo '<li class="ui-tabs">';
 	}
 
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tickets#incident-operations"><span>'.__('Associated tickets').'</span></a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
+			'&tab=tickets#incident-operations"><img src="images/tickets_tab.png" title="'.__('Associated tickets').'"/></a>';
 	echo '</li>';
 
-	echo '<li class="ui-tabs-title">';
-	switch ($tab) {
-		case "workunits":
-			echo "<h2>".__('Add comment')."</h2>";
-			break;
-		case "files":
-			echo "<h2>".__('Add file')."</h2>";
-			break;
-		case "inventory":
-			echo "<h2>".__('Inventory objects')."</h2>";
-			break;
-		case "contacts":
-			echo "<h2>".__('Contacts')."</h2>";
-			break;
-		case "tracking":
-			echo "<h2>".__('Tracking')."</h2>";
-			break;
-		case "tickets":
-			echo "<h2>".__('Tickets')."</h2>";
-			break;
-		default:
-			break;
-	}
-	echo '</li>';
+	//echo '<li class="ui-tabs-title">';
+	
+	//echo '</li>';
 
 	echo '</ul>';
-
+	echo "</h4>";
 	switch ($tab) {
 		case "workunits":
 			include("incident_workunits.php");
@@ -735,10 +757,11 @@ if ($clean_output) {
 		default:
 			break;
 	}
-
+	
+	
 	echo "</div>";
 
-	echo "</div>";
+	//echo "</div>";
 }
 
 //parameter to reload page

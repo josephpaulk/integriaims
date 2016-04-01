@@ -26,7 +26,8 @@ if (!$section_manage_permission) {
 	exit;
 }
 
-echo "<h1>".__('Company role management')."</h1>";
+echo "<h2>".__('Customers')."</h2>";
+echo "<h4>".__('Company role management')."</h4>";
 
 $id = (int) get_parameter ('id');
 
@@ -91,7 +92,7 @@ if ($id || $new_role) {
 		$description = $role['description'];
 	}
 	
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->data = array ();
 	$table->colspan = array ();
@@ -108,12 +109,16 @@ if ($id || $new_role) {
 		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
 	}
 	
-	$table->data['button'][0] = $button;
+	
 		
 	echo '<form id="form-company_role" method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 		print_table ($table);
+		echo "<div class='button-form'>";
+			echo $button;
+		echo "</div>";
 	echo '</form>';
-} else {
+}
+else {
 	$search_text = (string) get_parameter ('search_text');
 	
 	$where_clause = " WHERE 1=1 ";
@@ -122,26 +127,36 @@ if ($id || $new_role) {
 			OR description LIKE "%%%s%%")', $search_text, $search_text);
 	}
 
-	$table->width = '99%';
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 20, 100, true);
+	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
-	print_table ($table);
-	echo '</form>';
+	echo '<div class="divform">';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
+			print_table ($table);
+		echo '</form>';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
+			unset($table->data);
+			$table->data[0][0] = print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"',true);
+			$table->data[0][0] .= print_input_hidden ('new_role', 1);
+			print_table ($table);
+		echo '</form>';
+	echo '</div>';
 	
 	$sql = "SELECT * FROM tcompany_role $where_clause ORDER BY name";
-
 	$roles = get_db_all_rows_sql ($sql);
-
+	
+	echo '<div class="divresult">';
 	if ($roles !== false) {
-
-		$table->width = "99%";
+		
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -169,12 +184,7 @@ if ($id || $new_role) {
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-	print_input_hidden ('new_role', 1);
 	echo '</div>';
-	echo '</form>';
 }
 ?>
 

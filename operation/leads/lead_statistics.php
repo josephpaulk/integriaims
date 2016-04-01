@@ -68,7 +68,8 @@ if (!empty($tags)) {
 	$params .= '&tags[]='.implode('&tags[]=', $tags);
 }
 
-echo "<h1>".__('Lead search statistics');
+echo "<h2>".__('Leads') . "</h2>";
+echo "<h4>".__('Lead search statistics');
 
 if (!$clean_output) {
 
@@ -87,7 +88,7 @@ if (!$clean_output) {
 
 }
 
-echo "</h1>";
+echo "</h4>";
 
 $where_clause = "WHERE (1=1 $where_group ";
 
@@ -166,7 +167,7 @@ if (!empty($tags)) {
 $where_clause .= ")";
 
 $table->class = 'blank';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
 $table->style = array ();
 $table->valign = array ();
@@ -220,8 +221,8 @@ if ($leads_funnel != false) {
 	$leads_funnel_content = __('No data to show');
 }
 
-$leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content . '</div>';
-echo print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
+$leads_country_content = '<div class="pie_frame">' . $leads_funnel_content . '</div>';
+echo print_container_div('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 
 //CONVERSION RATE
@@ -280,7 +281,7 @@ if (!$clean_output) {
 
 }
 
-$leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
+$leads_conversion_rate = '<div class="pie_frame">' . $leads_conversion_rate . '</div>';
 
 $container_title = __('Conversion ratio');
 
@@ -288,7 +289,7 @@ if (!$clean_output) {
 	$container_title .= "&nbsp;".print_help_tip(__("Conversion ratio is calculated using closed leads (keep in mind that closed leads don't appear in search by default)"),true);
 }
 
-echo print_container('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container_div('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //COUNTRIES
 $leads_country = crm_get_total_leads_country($where_clause);
@@ -304,11 +305,9 @@ if ($leads_country != false) {
 	$leads_country_content = __('No data to show');
 }
 
-$leads_country_content = '<br><div class="pie_frame">' . $leads_country_content . '</div>';
+$leads_country_content = '<div class="pie_frame">' . $leads_country_content . '</div>';
 
-echo "<div style='clear:both'></div>";
-
-echo print_container('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container_div('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //USERS
 $leads_user = crm_get_total_leads_user($where_clause);
@@ -324,9 +323,9 @@ if ($leads_user !== false) {
 	$leads_user_content = __('No data to show');
 }
 
-$leads_user_content = '<br><div class="pie_frame">' . $leads_user_content . '</div>';
+$leads_user_content = '<div class="pie_frame">' . $leads_user_content . '</div>';
 
-echo print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container_div('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //TOP 10 ESTIMATED SALES
 $where_clause_top10 = $where_clause." AND progress < 100";
@@ -339,10 +338,10 @@ if ($read && $enterprise) {
 if ($leads_sales != false) {
 	$leads_sales_content = print_table(crm_print_estimated_sales_leads($leads_sales), true);
 } else {
-	$leads_sales_content = '<br><div class="pie_frame">' . __('No data to show') . '</div>';
+	$leads_sales_content = '<div class="pie_frame">' . __('No data to show') . '</div>';
 }
 
-echo print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container_div('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //NEW LEADS
 $leads_creation = crm_get_total_leads_creation($where_clause);
@@ -368,8 +367,8 @@ if ($leads_creation !== false) {
 	$leads_creation_content = __('No data to show');
 }
 
-$leads_creation_content = '<br><div class="pie_frame"><br>' . $leads_creation_content . '</div>';
+$leads_creation_content = '<div class="pie_frame"><br>' . $leads_creation_content . '</div>';
 
-echo print_container('new_leads', __('New leads'), $leads_creation_content, 'no', true, true, "container_simple_title", "container_simple_div");
+echo print_container_div('new_leads', __('New leads'), $leads_creation_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 ?>

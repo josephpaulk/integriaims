@@ -81,24 +81,34 @@ Description
 ------------------------------------------------------------------------------------------------------
 ", $task["name"], $project_manager, $task["start"], $task["end"], get_priority_name($task["priority"]), $task_days, $task_cost, $task["completion"], $participants, $task["description"]);
 
-echo "<h1>".__("Task report details")."</h1>";
+echo "<h2>".__("Task report details")."</h2>";
+echo "<h4>" . $project_name . " >> " .$task["name"]."</h4>";
 
 echo "<form method=post action=''>";
-echo "<table width=90% class=databox>";
+echo "<table width=100% class=search-table-button>";
 echo "<tr><td>";
 print_input_text ('title', $title, '', 80, 175, false, __('Subject'));
 echo "<tr><td>";
 print_textarea ('description', 15, 50, $description, '',	false, __('Message text'));
+echo "<tr><td>";
 echo '</table>';
 
-echo '<div class="button" style="width:90%">';
-print_submit_button (__('Send'), 'create_btn', false, 'class="sub create"');
-print_input_hidden ('operation', 'generate_email');
-print_input_hidden ('id_project', $id_project);
-print_input_hidden ('id_task', $id_task);
+$button = '';
+echo '<div style="width:100%;">';
+unset($table->data);
+$table->width = '100%';
+$table->class = "button-form";
+$button .= print_submit_button (__('Send'), 'create_btn', false, 'class="sub create"', true);
+$button .= print_input_hidden ('operation', 'generate_email',true);
+$button .= print_input_hidden ('id_project', $id_project, true);
+$button .= print_input_hidden ('id_task', $id_task, true);
+
+$table->data[7][0] = $button;
+$table->colspan[7][0] = 2;
+
+print_table($table);
 echo '</div>';
 echo '</form>';
-
 
 ?>
 <script type="text/javascript">

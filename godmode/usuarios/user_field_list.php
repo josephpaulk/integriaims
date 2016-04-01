@@ -47,7 +47,8 @@ if ($delete) {
 	}
 }
 
-echo "<h1>".__("User fields")."</h1>";
+echo "<h2>".__("User fields")."</h2>";
+echo "<h4>".__("List fields")."</h4>";
 		
 $user_fields = get_db_all_rows_sql ("SELECT * FROM tuser_field");
 
@@ -55,7 +56,8 @@ if ($user_fields === false) {
 	$user_fields = array ();
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array();
@@ -71,6 +73,8 @@ $table->head[2] = __("Value");
 $table->head[4] = __("Action");
 
 $data = array();
+
+echo "<div class='divresult'>";
 
 if (!empty($user_fields)) {
 	foreach ($user_fields as $field) {
@@ -106,14 +110,20 @@ if (!empty($user_fields)) {
 	}
 	print_table($table);
 } else {
-	echo "<h4>".__("No fields")."</h4>";
+	echo "<h2 class='error'>".__("No fields")."</h4>";
 }
+echo "</div>";
 
-echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=users&sec2=godmode/usuarios/user_field_editor'>";
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-		print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
-	echo '</div>';
-echo "</form>";
-
+echo '<div class="divform">';
+	echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=users&sec2=godmode/usuarios/user_field_editor'>";
+		echo "<table class='search-table'>";
+			echo "<tr>";
+				echo "<td>";
+					print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
+				echo "</td>";
+			echo "</tr>";
+		echo "</table>";
+	echo "</form>";
+echo '</div>';
 
 ?>

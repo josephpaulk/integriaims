@@ -327,6 +327,7 @@ function load_menu_visibility() {
 	global $show_projects;
 	global $show_incidents;
 	global $show_inventory;
+	global $show_reports;
 	global $show_kb;
 	global $show_file_releases;
 	global $show_people;
@@ -350,6 +351,10 @@ function load_menu_visibility() {
 	$show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
 	if($show_inventory == ENTERPRISE_NOT_HOOK) {
 		$show_inventory = MENU_FULL;
+	}
+	$show_reports = enterprise_hook ('get_menu_section_access', array ('reports'));
+	if($show_reports == ENTERPRISE_NOT_HOOK) {
+		$show_reports = MENU_FULL;
 	}
 	$show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
 	if($show_kb == ENTERPRISE_NOT_HOOK) {
@@ -388,6 +393,7 @@ function load_menu_visibility() {
 	$show_box = ($sec == "projects" && $show_projects == MENU_FULL) || 
 				($sec == "incidents" && $show_incidents == MENU_FULL) || 
 				($sec == "inventory" && $show_inventory == MENU_FULL) || 
+				($sec == "reports" && $show_reports == MENU_FULL) || 
 				($sec == "kb" && $show_kb == MENU_FULL) || 
 				($sec == "download" && $show_file_releases == MENU_FULL) || 
 				($sec == "users" && $show_people == MENU_FULL) || 

@@ -49,19 +49,20 @@ else {
 $creator = get_db_value('id_creator','tincidencia','id_incidencia',$id_incident);
 $company = get_user_company($config['id_user']);
 
-echo "<br><h3>".__('Inventory objects related').print_help_tip (__('Inventory objects with a contract of the ticket creator company'), true)."</h3>";
+echo "<h3>".__('Inventory objects related').print_help_tip (__('Inventory objects with a contract of the ticket creator company'), true)."</h3>";
 
 if(empty($company)) {
 	echo '<h3 class="error">'.__('The ticket creator has not company associated.').'</h3>';
-	exit;
+	return;
 }
 
 $company_id = reset(array_keys($company));
 
 $inventories = get_inventories_in_company ($company_id, false);
 
+$table = new StdClass();
 $table->class = 'listing';
-$table->width = '99%';
+$table->width = '100%';
 $table->head = array ();
 $table->head[0] = __('Name');
 $table->align[4] = 'center';

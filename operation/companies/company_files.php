@@ -76,25 +76,33 @@ if (isset($_GET["upload"])) {
 
 // Control to upload file
 
-echo '<div style="width: 99%; text-align: right; margin-bottom: 5px;">';
+echo '<div class="divform">';
+echo '<table class="search-table">';
+		echo '<tr>';
+		echo '<td>';
 echo print_button (__('Upload a new file'), 'add_link', false, '$(\'#upload_div\').slideToggle (); return false', 'class="sub upload"');
 echo '</div>';
-echo '<div id="upload_div" style="width: 95%; padding: 20px; margin: 0px; display: none;" class="integria_form">';
+echo '<div id="upload_div" style="display: none;" class="">';
 $target_directory = 'attachment';
 $action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=files&upload=1";				
-$into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
-print_input_file_progress($action,$into_form,'','sub upload');	
+$into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b><input type=text name=description size=25>";
+print_input_file_progress($action,$into_form,'','sub upload');
+echo '</td>';
+echo '</tr>';
+echo '</table>';
 echo '</div>';
 
 // List of lead attachments
 
 $sql = "SELECT * FROM tattachment WHERE id_company = $id ORDER BY timestamp DESC";
-$files = get_db_all_rows_sql ($sql);	
-$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=files");
+$files = get_db_all_rows_sql ($sql);
+
+echo '<div class="divresult">';
 
 if ($files !== false) {
+	$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=files");
 	unset ($table);
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = "listing";
 	$table->data = array ();
 	$table->size = array ();
@@ -124,11 +132,12 @@ if ($files !== false) {
 		array_push ($table->data, $data);
 		array_push ($table->rowstyle, $style);
 	}
+	
 	print_table ($table);
 
 } else {
 	echo "<h3>". __('There is no files attached for this lead')."</h3>";
 }
-
+echo '</div>';
 
 ?>

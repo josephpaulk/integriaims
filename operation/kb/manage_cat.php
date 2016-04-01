@@ -104,42 +104,43 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$icon = $row["icon"];
 		$parent = $row["parent"];
 	}
-
+	
+	echo "<h2>".__('Category management')."</h2>";
 	if ($id == -1){
-		echo "<h1>".__('Create a new category')."</h1>";
+		echo "<h4>".__('Create a new category')."</h4>";
 		echo "<form id='form-kb_category' name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&create2'>";
 	}
 	else {
-		echo "<h1>".__('Update existing category')."</h1>";
+		echo "<h4>".__('Update existing category')."</h4>";
 		echo "<form id='form-kb_category' name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&update2'>";
 		echo "<input id='id_kb_category' type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Name');
+	echo "<b>" . __('Name') . "</b>";
 	echo "<td class=datos>";
 	echo "<input id='text-name' type=text size=20 name=name value='$name'>";
 
 	echo "<tr>";
 	echo "<td class=datos2>";
-	echo __('Description');
+	echo "<b>" . __('Description') . "</b>";
 	echo "<td class=datos2>";
 	echo "<input type=text size=50 name=description value='$description'>";
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Icon');
+	echo "<b>" . __('Icon') . "</b>";
 	echo "<td class=datos>";
 	$files = list_files ('images/groups_small/', "png", 1, 0);
 print_select ($files, 'icon', $icon, '', __('None'), "");
 
 	echo "<tr>";
 	echo "<td class=datos2>";
-	echo __('Parent');
+	echo "<b>" . __('Parent') . "</b>";
 	echo "<td class=datos2>";
 	combo_kb_categories ( $parent);
 	if ($id == -1)
@@ -154,11 +155,18 @@ print_select ($files, 'icon', $icon, '', __('None'), "");
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h1>".__('KB Category management')." &raquo; ".__('Defined categories')."</h1>";
+	echo "<h2>".__('KB Category management')." </h2><h4>".__('Defined categories')."</h4>";
 	$sql1='SELECT * FROM tkb_category ORDER BY parent, name';
 	$color =0;
+	
+	echo '<div class="divform"><table class="search-table"><tr><td>';
+	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_cat&create=1'>";
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	echo "</form></table></div>";
+	
+	echo '<div class="divresult">';
 	if ($result=mysql_query($sql1)){
-		echo '<table width="99%" class="listing">';
+		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Icon')."</th>";
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Parent')."</th>";
@@ -206,11 +214,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 						<img border='0' src='images/cross.png'></a>";
 		}
 		echo "</table>";
-	}			
-	echo '<div style="width:99%; text-align: right;">';
-	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_cat&create=1'>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	echo "</form></div>";
+	}
+	echo "</div>";
 } // end of list
 
 ?>

@@ -43,20 +43,20 @@ if ($id_project != -1 && !$project_access['read']) {
 	no_permission();
 }
 
-echo "<h1>".$project_name." &raquo; ".__('Gantt graph');
+echo "<h2>".__('Gantt graph'). "</h2><h4>" . __("Project:") . " " .$project_name;
 
 if (!$clean_output) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
 		echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project&clean_output=1'>".
-		print_image ("images/chart_bar_dark.png", true, array("title" => __("Full screen"))) .
+		print_image ("images/chart_bar.png", true, array("title" => __("Full screen"))) .
 		"</a>";
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
 }
-echo"</h1>";
+echo"</h4>";
 
 $scales = array ("month" => __("Month"), "week" => __("Week"), "day" => __("Day"));
 $op_actual = array(0 => __("No"), 1 => __("Yes"));
@@ -82,7 +82,7 @@ echo "</tr>";
 echo "</table>";
 echo "</form>";
 
-echo '	<div id="gantt_here" style="width:98%; height:490px; margin: 40px auto"></div>';
+echo '	<div id="gantt_here" style="width:100%; height:490px; margin: 40px auto"></div>';
 
 echo '<div id="milestone_explanation" class="gantt_tooltip" style="display:none"></div>';
 

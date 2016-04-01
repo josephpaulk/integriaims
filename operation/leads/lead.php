@@ -61,11 +61,16 @@ $delete = get_parameter("delete");
 if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete) {
 
 	echo "<div id='lead-search-content'>";
-	echo "<h1>".$title;
+	echo "<h2>" . _("Leads") . "</h2>";
+	echo "<h4>".$title;
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	
 	if ($tab == "search" || $tab == "") {
+		echo "<li>";
+		// Custom search button
+			echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
+		echo "</li>";
 		echo "<li>";
 		echo "<a id='lead_stats_form_submit' href='javascript: changeAction(\"pipeline\");'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
 		echo "</li>";
@@ -83,7 +88,7 @@ if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete
 	
 	echo "</ul>";
 	echo "</div>";
-	echo "</h1>";
+	echo "</h4>";
 }
 	
 switch ($tab) {
@@ -100,4 +105,4 @@ switch ($tab) {
 		include("lead_detail.php");
 }
 
-</script>
+?>

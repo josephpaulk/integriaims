@@ -15,7 +15,6 @@
 
 global $config;
 check_login ();
-debugPrint($config["flash_charts"], true);
 include_once('include/functions_crm.php');
 
 // Invoice listing

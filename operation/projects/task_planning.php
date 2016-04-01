@@ -37,9 +37,9 @@ if (!$project_access["read"]) {
 }
 
 $project = get_db_row ('tproject', 'id', $id_project);
-$update = get_parameter("update");
-$create = get_parameter("create");
-$delete = get_parameter("delete");
+$update = get_parameter("update", false);
+$create = get_parameter("create", false);
+$delete = get_parameter("delete", false);
 
 if (!$update && !$create && !$delete) {
 	if (! manage_any_task($config["id_user"], $id_project)) {
@@ -215,7 +215,8 @@ if ($create) {
 
 $project_name =  get_db_value ("name", "tproject", "id", $id_project);
 
-echo "<h1>".__("Task planning")." &raquo; $project_name</h1>";
+echo '<h2>'.__('Project management').'</h2>';
+echo "<h4>".__("Task planning")." &raquo; $project_name </h4>";
 
 //Calculate task summary stats!
 
@@ -247,80 +248,6 @@ foreach ($res as $r) {
 	}
 }
 
-echo "<center>";
-echo "<table>";
-echo "<tr>";
-echo "<td>";
-	echo "<table>";
-	echo "<tr>";
-	echo "<strong>";
-	echo "<td>";
-	echo __("Verified").":";
-	echo "</td>";
-	echo "<td>";
-	echo "<span style='background-color:#B6D7A8;border: 2px solid grey;'>";
-	echo "&nbsp;".$verified."&nbsp;";
-	echo "</span>";
-	echo "</td>";
-	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
-	echo __("Completed").":";
-	echo "</td>";
-	echo "<td>";
-	echo "<span style='background-color:#A4BCFA;border: 2px solid grey;'>";
-	echo "&nbsp;".$completed."&nbsp;";
-	echo "</span>";
-	echo "</td>";
-	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
-	echo __("In process").":";
-	echo "</td>";
-	echo "<td>";
-	echo "<span style='background-color:#FFE599;border: 2px solid grey;'>";
-	echo "&nbsp;".$in_process."&nbsp;";
-	echo "</span>";
-	echo "</td>";
-	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
-	echo __("Pending").":";
-	echo "</td>";
-	echo "<td>";
-	echo "<span style='background-color:#FFFFFF;border: 2px solid grey;'>";
-	echo "&nbsp;".$pending."&nbsp;";
-	echo "</span>";
-	echo "</td>";
-	echo "</strong>";
-	echo "</tr>";
-	echo "</table>";
-echo "</td>";
-echo "<td>";
-$content = '<div class="pie_frame">' . graph_workunit_project_user_single(180, 150, $id_project) . '</div>';
-print_container('planning_hours_worked', __("Hours worked"), $content, 'no', false, '10px');
-echo "</td>";
-echo "<td>";
-$content = '<div class="pie_frame">' . graph_workunit_project_task_status(180, 150, $id_project) . '</div>';
-print_container('planning_hours_summary_task', __("Summary task status"), $content, 'no', false, '10px');
-echo "</td>";
-echo "<td>";
-$content = '<div class="pie_frame">' . graph_project_task_per_user(180, 150, $id_project) . '</div>';
-print_container('planning_hours_task_user', __("Task per user"), $content, 'no', false, '10px');
-echo "</td>";
-echo "</tr>";
-echo "</table>";
-echo "</center>";
-
-
-//Create button bar
-echo "<div style='width:100%; border-spacing:0px;' class='button'>";
-// Oppen the task creation
-print_button (__('Add tasks'), 'addmass', false, '', 'class="sub create"');
-// Submit the update form
-print_button (__('Update'), 'update', false, 'document.forms[\'form-tasks\'].submit()','class="sub upd"');
-echo "</div>";
-
 //Get project users
 $sql = sprintf("SELECT DISTINCT(id_user) FROM trole_people_project WHERE id_project = %d", $id_project);
 $users_db = get_db_all_rows_sql ($sql);
@@ -329,77 +256,98 @@ foreach ($users_db as $u) {
 	$users[$u['id_user']] = $u['id_user'];
 }
 
-
-//Hidden div for task creation. Only for PM flag
-echo "<div id='createTaskmass' style='display:none;padding:5px;'>";
+echo "<div class='divform'>";
 //Form for task creation
 echo "<form id='form-new_tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
-echo "<table class='search-table-button' style='width: 99%'><tr><td colspan=4>";
-echo "<strong>".__('Put taskname in each line')."</strong><br>";
-print_textarea ('tasklist', 5, 40);
-
-echo "<tr>";
+echo "<table class='search-table'>";
+	
+	// Taskname
+	echo "<tr><td><b>". __('Put taskname in each line'). "</b></td></tr>";
+	echo "<tr><td>";
+		print_textarea ('tasklist', 3, 30);
+	echo "</td></tr>";
+	
 	// User assigned by default
-	echo "<td>"; 
-	print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
-	echo "</td>";
-
+	echo "<tr><td><b>". __("Owner"). "</b></td></tr>";
+	echo "<tr><td>"; 
+		print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false);
+	echo "</td></tr>";
+	
 	//Task parent combo
-	echo "<td style='width:60'>";
-	combo_task_user_manager ($config['id_user'], 0, false, __('Parent'), 'padre', __('None'), false, $id_project);
-	echo "</td>";
-
-echo "<tr>";
-	//Start date
-	echo "<td>";
-	$start = date ("Y-m-d");
-	print_input_text_extended ("start_date2", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
-	echo "</td>";
-
-	//End date)
-	echo "<td>";
-	$end = date ("Y-m-d");
-	print_input_text_extended ("end_date2", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
-	echo "</td>";
-
-echo "<tr><td colspan=4 align=right>";	
-	echo "<br>";
+	echo "<tr><td><b>". __('Parent'). "</b></td></tr>";
+	echo "<tr><td>";
+		combo_task_user_manager ($config['id_user'], 0, false, "", 'padre', __('None'), false, $id_project);
+	echo "</td></tr>";
+	
+	//Start date and End date
+	echo "<tr>";
+		echo "<td><b>".	__('Start'). "</b><tr><td>";
+		$start = date ("Y-m-d");
+		print_input_text_extended ("start_date2", $start, "start_date", '', 11, 15, 0, '', "", false, false);
+	echo "</tr><tr>";
+		echo "<td><b>".	__('End'). "</b><tr><td>";
+		$end = date ("Y-m-d");
+		print_input_text_extended ("end_date2", $end, "end_date", '', 11, 15, 0, '', "", false, false);
+	echo "</td></tr>";
+	
 	//Create button
-	print_submit_button (__('Create'), 'create', false, 'class="sub create"');
-
+	echo "<tr><td colspan='2'>";
+		print_submit_button (__('Create'), 'create', false);
+	echo "</td></tr>";
 echo "</table>";
 echo "</form>";
+echo "<table class='search-table'>";
+	echo "<tr><td>";
+		print_button (__('Update'), 'update', false, 'document.forms[\'form-tasks\'].submit()','class="submit_update"');
+	echo "</td></tr>";
+echo "</table>";
 echo "</div>";
 
+echo "<div class='divresult'>";
+echo "<table class = 'listing'><tr>";
+	echo "<th>".__("Verified").":<span style='background-color:#d2e7a4;'>&nbsp;".$verified."&nbsp;</span></th>";
+	echo "<th>".__("Completed").":<span style='background-color:#b8e0fd;'>&nbsp;".$completed."&nbsp;</span></th>";
+	echo "<th>".__("In process").":<span style='background-color:#fceaa2;'>&nbsp;".$in_process."&nbsp;</span></th>";
+	echo "<th>".__("Pending").":<span style='background-color:#FFF;'>&nbsp;".$pending."&nbsp;</span></th>";
+echo "</tr></table>";
+
+$content_general .= "<tr><td valign='top' >";
+		$content = '<tr><td colspan="2" valign=top style="height:250px;">'.graph_workunit_project_user_single(350, 150, $id_project).'</td></tr>';
+	$content_general .=	print_container('planning_hours_worked', __("Hours worked"), $content, 'no', true, '10px');
+$content_general .= "</td><td valign='top' >";
+		$content = '<tr><td colspan="2" valign=top style="height:250px;">'. graph_workunit_project_task_status(350, 150, $id_project).'</td></tr>';
+	$content_general .= print_container('planning_hours_summary_task', __("Summary task status"), $content, 'no', true, '10px');
+$content_general .= "</td><td valign='top'  >";
+		$content = '<tr><td colspan="2" valign=top style="height:250px;">'. graph_project_task_per_user(350, 150, $id_project).'</td></tr>';
+	$content_general .= print_container('planning_hours_task_user', __("Task per user"), $content, 'no', true, '10px', '', '', 1, 'less_widht');
+$content_general .= "</td></tr>";
+print_container('task_information', __("Task Information"), $content_general, 'closed', false, '10px', '', '', 2);
 
 //Starting main form for this view
 echo "<form id='form-tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 print_input_hidden('update', 'update');
 //Create table and table header.
-echo "<table class=listing width=100% cellspacing=0 cellpadding=0 border=0px>";
-echo "<thead>";
-echo "<tr>";
-echo "<th class=header style='text-align:center;'>".__('Task')."</th>";
-echo "<th class=header style='text-align:center;'>".__('Owner')."</th>";
-echo "<th class=header style='text-align:center;'>".__('Start date')."</th>";
-echo "<th class=header style='text-align:center;'>".__('End date')."</th>";
-echo "<th class=header style='text-align:center;'>".__('Hours worked')."</th>";
-echo "<th class=header style='text-align:center;'>".__('Delay (days)')."</th>";
-echo "<th class=header style='text-align:center;'>".__('Status')."</th>";
-
-// Last column (Del)
-echo "<th class=header style='text-align:center;'>".__('Op.')."</th>";
-
-echo "</tr>";
-echo "</thead>";
-
-//Print table content
-
-echo "<tbody>";
-show_task_tree ($table, $id_project, 0, 0, $users);
-echo "</tbody>";
+echo "<table class='listing'>";
+	echo "<thead>";
+		echo "<tr>";
+			echo "<th>".__('Task')."</th>";
+			echo "<th>".__('Owner')."</th>";
+			echo "<th>".__('Start date')."</th>";
+			echo "<th>".__('End date')."</th>";
+			echo "<th>".__('Hours worked')."</th>";
+			echo "<th>".__('Delay (days)')."</th>";
+			echo "<th>".__('Status')."</th>";
+			// Last column (Del)
+			echo "<th>".__('Op.')."</th>";
+		echo "</tr>";
+	echo "</thead>";
+	//Print table content
+	echo "<tbody>";
+		show_task_tree ($table, $id_project, 0, 0, $users);
+	echo "</tbody>";
 echo "</table>";
 echo "</form>";
+echo "</div>";
 
 function show_task_row ($table, $id_project, $task, $level, $users) {
 	global $config;
@@ -413,12 +361,12 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	
 	echo "<td>";
 	
-	echo $prefix.print_input_text ("name_".$id_task, $task['name'], "", 40, 0, true);
+	echo $prefix.print_input_text ("name_".$id_task, $task['name'], "", 10, 0, true);
 	
 	echo"</td>";
 	
 	// Thrid column (Owner)Completion
-	echo "<td style='text-align:center;'>";
+	echo "<td>";
 
 	$owners = get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
 	
@@ -434,19 +382,19 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	echo "</td>";
 	
 	// Fourth column (Start date)
-	echo "<td style='text-align:center;'>";
-	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
+	echo "<td>";
+	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 9, 15, 0, '', 'style="font-size:9px;"');
 	
 	echo "</td>";
 
 	// Fifth column (End date)
-	echo "<td style='text-align:center;'>";
-	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
+	echo "<td>";
+	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 9, 15, 0, '', 'style="font-size:9px;"');
 	echo "</td>";
 	
 	//Worked time based on workunits
 	$worked_time = get_task_workunit_hours ($id_task);
-	echo "<td style='text-align:left;'>".$worked_time."</td>";
+	echo "<td>".$worked_time."</td>";
 	
 	// Sixth column (Delay)
 	//If task was completed delay is 0
@@ -468,7 +416,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 		}
 	}
 	
-	echo "<td style='text-align:left;'>".$delay."</td>";
+	echo "<td>".$delay."</td>";
 
 	// Seventh column (Delay)
 	
@@ -536,17 +484,17 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) 
 			//Check completion for tr background color
 			
 			if ($task['completion'] < 40) {
-				$color = "#FFFFFF";
+				$color = "#FFF";
 			} else if ($task['completion'] < 90) {
-				$color = "#FFE599";
+				$color = "#fceaa2";
 			} else if ($task['completion'] < 100) {
-				$color = "#A4BCFA";
+				$color = "#b8e0fd";
 			} else if ($task['completion'] == 100) {
-				$color = "#B6D7A8";
+				$color = "#d2e7a4";
 			}
 			
 			echo "<tr id=".$task['id']." bgcolor='$color'>";
-			show_task_row ($table, $id_project, $task, $level, $users);
+				show_task_row ($table, $id_project, $task, $level, $users);
 			echo "</tr>";
 		}
 		show_task_tree ($table, $id_project, $level + 1, $task['id'], $users);
@@ -614,26 +562,21 @@ add_validate_form_element_rules('[id*=\'text-name\']', rules, messages);
 
 $(document).ready (function () {
 	
-	//Toggle create mass task menu
-	$('#button-addmass').click(function() {
-		$('#createTaskmass').toggle();
-	});
-	
 	//Change row color dinamically when status is changed
 	$('select[name^="status"]').change(function() {
 		name = $(this).attr('name');
 		id = name.substr(7)
-		color="#FFFFFF";
+		color="#b8e0fd";
 		completion = $(this).val();
 		
 		if (completion < 40) {
-			color = "#FFFFFF";
+			color = "#b8e0fd";
 		} else if (completion < 90) {
-			color = "#FFE599";
+			color = "#fceaa2";
 		} else if (completion < 100) {
-			color = "#A4BCFA";
+			color = "#b8e0fd";
 		} else if (completion == 100) {
-			color = "#B6D7A8";
+			color = "#D2E7A4";
 		}
 		
 		$('#'+id).attr('bgcolor', color);

@@ -45,6 +45,7 @@ if (!empty($graph_type)) {
 	include_once($homeurl . 'include/graphs/functions_utils.php');
 }
 
+include_once($homeurl . 'include/graphs/functions_flot.php');
 // Clean the output buffer and turn off output buffering
 ob_end_clean ();
 
@@ -143,7 +144,7 @@ function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1, $reduce_data_columns = false) {
 		
 	if($flash_chart) {
-		echo fs_2d_column_chart ($chart_data, $width, $height, $homedir, $reduce_data_columns, $xaxisname, $yaxisname);
+		echo flot_vcolumn_chart ($chart_data, $width, $height, $homedir, $reduce_data_columns, $xaxisname, $yaxisname);
 	}
 	else {
 		$graph = array();
@@ -185,7 +186,8 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 	}
 	
 	if($flash_chart) {
-		return fs_area_graph($chart_data, $width, $height, $color, $legend, $long_index, $homedir, $unit);
+		//~ return fs_area_graph($chart_data, $width, $height, $color, $legend, $long_index, $homedir, $unit);
+		return flot_vcolumn_chart($chart_data, $width, $height, $color, $legend, $long_index, $homedir, $unit, '','',$xaxisname, $yaxisname);
 	}
 	else {
 		$graph = array();
@@ -328,7 +330,8 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true,
 	$homedir="", $water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1) {
 	if($flash_chart) {
-		return fs_2d_hcolumn_chart ($chart_data, $width, $height);
+		//~ return fs_2d_hcolumn_chart ($chart_data, $width, $height);
+		return flot_hcolumn_chart ($chart_data, $width, $height, $water_mark);
 	}
 	else {
 		$graph = array();
@@ -366,6 +369,7 @@ function pie2d_graph($flash_chart, $chart_data, $width, $height,
 function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '', $ttl = 1) {
 	// This library allows only 8 colors
+	include_once('functions_flot.php');
 	$max_values = 8;
 
 	// Process data and decode it from HTML encoding
@@ -396,10 +400,13 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 	if($flash_chart) {
 		switch($graph_type) {
 			case "2d":
-					return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
+					//return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
-			case "3d":				
-					return fs_3d_pie_chart(array_values($chart_data), array_keys($chart_data), $width, $height);
+			case "3d":
+					return flot_pie_chart(array_values($chart_data),
+							array_keys($chart_data), $width, $height, $water_mark,
+							$font, $font_size);
+					//return fs_3d_pie_chart(array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
 		}
 	}

@@ -14,21 +14,25 @@
 // GNU General Public License for more details.
 
 // Sponsors / Banner
-echo "<div class='portlet' >";
-echo "<h3 class='system'>".__('Links')."</h3>";
-echo "<ul class='sidemenu'>";
-
-$sql1='SELECT * FROM tlink ORDER BY name';
-$result=mysql_query($sql1);
-if ($row=mysql_fetch_array($result)){
-	$sql1='SELECT * FROM tlink ORDER BY name';
-	$result2=mysql_query($sql1);
-	while ($row2=mysql_fetch_array($result2)){
-		echo "<li><a href='".$row2["link"]."' target='_new' class='mn'>".$row2["name"]."</a></li>";
-	}
-}
-echo "</ul></div>";
-
+echo "<nav id='menu_nav'>";
+	echo "<ul id='menu_slide'>";
+		echo "<li id='enlaces'>";
+			//echo "<a title='".__('Links')."'href='#'>1</a>";
+			echo "<ul>";
+				echo "<li><h1>".__('Links')."</h1></li>";
+				$sql1='SELECT * FROM tlink ORDER BY name';
+				$result=mysql_query($sql1);
+				if ($row=mysql_fetch_array($result)){
+					$sql1='SELECT * FROM tlink ORDER BY name';
+					$result2=mysql_query($sql1);
+					while ($row2=mysql_fetch_array($result2)){
+						echo "<li><a href='".$row2["link"]."' target='_new' class='mn'>".$row2["name"]."</a></li>";
+					}
+				}
+			echo "</ul>";
+		echo "</li>";
+	echo "</ul>";
+echo "</nav>";
 
 // Banners
 /*

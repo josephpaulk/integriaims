@@ -167,11 +167,15 @@ if ($render_html == 1){
     return;
 }
 
-echo "<h1>".__('Inventory reports')."</h1>";
+echo "<h2>".__('Inventory reports')."</h2>";
+if ($id)
+	echo "<h4>".__('Update')."</h4>";
+else
+	echo "<h4>".__('Create')."</h4>";
 
 echo $result_msg;
 
-$table->width = '99%';
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->data = array ();
 $table->colspan = array ();
@@ -197,10 +201,10 @@ if (dame_admin ($config['id_user'])) {
 	}
 }
 
-$table->data[2][0] = $button;
-
 echo '<form id="form-inventory_report" method="post">';
 print_table ($table);
+if (dame_admin ($config['id_user'])) 
+	echo "<div class='button-form'>" . $button . "</div>";
 echo '</form>';
 ?>
 

@@ -458,7 +458,7 @@ if ($action == 'update') {
 
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
-	$sla_disabled = (int) get_parameter ('sla_disabled', $old_incident['sla_disabled']); //Get SLA given on submit
+	$sla_disabled = (int) get_parameter ('sla_disabled'); //Get SLA given on submit
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
@@ -919,12 +919,12 @@ $has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
 
 if ($id) {	
 	
-	echo "<h1>";
+	echo "<h2>";
 	if ($affected_sla_id != 0) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Ticket').' #'.$id.' - '.ui_print_truncate_text($incident['titulo'],50)."&nbsp;&nbsp;".'<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/world.png", true, array("title" => __("Link to ticket"))).'</a>';
+	echo __('Ticket').' #'.$id.'</h2><h4>'.ui_print_truncate_text($incident['titulo'],50)."&nbsp;&nbsp;".'<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/world.png", true, array("title" => __("Link to ticket"))).'</a>';
 	
     if (give_acl($config["id_user"], 0, "IM")){
         if ($incident["score"] > 0){
@@ -944,7 +944,7 @@ if ($id) {
 		echo "<li>";
 		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 		print_input_hidden ('quick_delete', $id, false);
-		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/cross.png", true, array("title" => __("Delete"))).'</a>';
+		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/papelera_gris.png", true, array("title" => __("Delete"))).'</a>';
 		echo '</form>';
 		echo "</li>";
 		
@@ -962,13 +962,13 @@ if ($id) {
 	}	
 
 	echo '<li>';
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/volver_listado.png", true, array("title" => __("Back to search")))."</a>";
 	echo '</li>';		
 	
 	echo "</ul>";
 	echo "</div>";	
 
-	echo "</h1>";
+	echo "</h4>";
 	
 	
 	
@@ -981,12 +981,14 @@ if ($id) {
     }
 
 } else {
-	if (! defined ('AJAX'))
-		echo "<h1>".__('Create ticket')."</h1>";
+	if (! defined ('AJAX')) {
+		echo "<h2>".__('Support')."</h2>";
+		echo "<h4>".__('Create ticket')."</h4>";
+	}
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
-$table->width = '98%';
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->id = "incident-editor";
 $table->size = array ();
@@ -1000,7 +1002,7 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 
 if ($has_permission && (!$blocked_incident)) {
-	$table->data[0][0] = print_input_text ('titulo', $titulo, '', 55, 100, true, __('Title'));
+	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, '', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
@@ -1106,6 +1108,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
+	$params_creator['attributes'] = 'style="width:210px;"';
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	//add button to display info user for creator
 	$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
@@ -1141,6 +1144,7 @@ if ($has_im) {
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	$params_assigned['disabled'] = $disabled_creator;
+	$params_assigned['attributes'] = 'style="width:210px;"';
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 	//add button to display info user for owner
 	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 1);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
@@ -1160,7 +1164,7 @@ if (!$create_incident){
 	$params_closed['return'] = true;
 	$params_closed['return_help'] = true;
 	$params_closed['disabled'] = $blocked_incident;
-
+	$params_closed['attributes'] = 'style="width:210px;"';
 	//Only print closed by option when incident status is closed
 	if ($incident["estado"] == STATUS_CLOSED) {
 		$table->data[2][2] = "<div id='closed_by_wrapper'>";
@@ -1183,7 +1187,7 @@ $table->colspan[4][0] = 3;
 $table->data[4][0] = "";
 
 //////TABLA ADVANCED
-$table_advanced->width = '98%';
+$table_advanced->width = '100%';
 $table_advanced->class = 'search-table';
 $table_advanced->size = array ();
 $table_advanced->size[0] = '33%';
@@ -1210,7 +1214,8 @@ if ($has_im && $create_incident){
 }
 
 if ($has_im){
-	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled, $blocked_incident, '', '', true, __('SLA disabled'));
+	$table_advanced->data[0][2] = print_checkbox ('sla_disabled', 1, $sla_disabled,	true, __('SLA disabled'), $blocked_incident);
+
 } else {
 	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);
 }
@@ -1292,7 +1297,7 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 // END TABLE ADVANCED
 
 $table->colspan['row_advanced'][0] = 4;
-$table->data['row_advanced'][0] = print_container('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, true);
 
 
 $table->colspan[9][0] = 4;
@@ -1320,7 +1325,7 @@ if (!$create_incident){
 	$html = "";
 	$html .= "<div id=\"incident_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
 	$html .= 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
-	$html .= 		"<table width=\"99%\">";
+	$html .= 		"<table width=\"100%\">";
 	$html .= 			"<td width=\"45%\">";
 	$html .= 				__('Drop the file here');
 	$html .= 			"<td>";
@@ -1336,7 +1341,7 @@ if (!$create_incident){
 	$html .= "</div>";
 
 	$table_description = new stdClass;
-	$table_description->width = '99%';
+	$table_description->width = '100%';
 	$table_description->id = 'incident_file_description';
 	$table_description->class = 'search-table-button';
 	$table_description->data = array();
@@ -1347,32 +1352,43 @@ if (!$create_incident){
 	$html .= "</div>";
 
 	$table->colspan[10][0] = 4;
-	$table->data[10][0] = print_container('file_upload_container', __('File upload'), $html, 'closed', true, false);
+	$table->data[10][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
 }
 
 if ($create_incident) {
-	$button = print_input_hidden ('action', 'insert', true);
+	$button = "<div class='button-form'>";
+	$button .= print_input_hidden ('action', 'insert', true);
 	if (give_acl ($config["id_user"], 0, "IW")) {
 		$button .= print_submit_button (__('Create'), 'action2', false, 'class="sub create"', true);
 	}
+	$button .= '</div>';
 } else {
-	$button = print_input_hidden ('id', $id, true);
+	$button = "<div class='button-form'>";
+	$button .= print_input_hidden ('id', $id, true);
 	$button .= print_input_hidden ('action', 'update', true);
-		$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);
+	$button .= print_submit_button (__('Update'), 'action2', false, 'class="sub upd"', true);
+	$button .= '</div>';
 }
 
-$table->colspan['button'][0] = 4;
-$table->data['button'][0] = $button;
+//~ $table->colspan['button'][0] = 4;
+//~ $table->data['button'][0] = $button;
 
 if ($has_permission){
 	if ($create_incident) {
 		$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
 		echo '<form id="incident_status_form" method="post" enctype="multipart/form-data">';
 		print_table ($table);
+		
+		//echo print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+		//echo "<h4>" . __('File upload')."</h4>";
+		//echo $html;
+		echo $button;
 		echo '</form>';
 	} else {
 		echo '<form id="incident_status_form" method="post">';
 		print_table ($table);
+		//echo print_container_div('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
+		echo $button;
 		echo '</form>';
 	}
 } else {

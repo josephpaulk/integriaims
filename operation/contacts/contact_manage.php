@@ -178,6 +178,7 @@ if ($delete_contact && $id) {
 // FORM (Update / Create)
 if ($id || $new_contact) {
 	if ($new_contact) {
+		echo "<h4>".__('New Contact')."</h4>";
 		if (!$section_write_permission && !$section_manage_permission) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contact in a group without access");
 			require ("general/noaccess.php");
@@ -213,7 +214,7 @@ if ($id || $new_contact) {
 		$description = $contact['description'];
 	}
 	
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[0][0] = 4;
@@ -246,16 +247,6 @@ if ($id || $new_contact) {
 		
 		$table->data[4][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 		
-		if ($id) {
-			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-			$button .= print_input_hidden ('update_contact', 1, true);
-			$button .= print_input_hidden ('id', $id, true);
-		} else {
-			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-			$button .= print_input_hidden ('create_contact', 1, true);
-		}
-		$table->data['button'][0] = $button;
-		$table->colspan['button'][0] = 2;
 		
 	} else {
 		
@@ -297,6 +288,23 @@ if ($id || $new_contact) {
 	
 	echo '<form method="post" id="contact_form">';
 	print_table ($table);
+	if ($new_contact || ($id && ($write_permission || $manage_permission)) ) {
+		echo "<div class='no' style='width:100%; text-align:right;'>";
+			unset($table->data);
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update_contact', 1, true);
+				$button .= print_input_hidden ('id', $id, true);
+			} else {
+				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+				$button .= print_input_hidden ('create_contact', 1, true);
+			}
+			$table->data['button'][0] = $button;
+			$table->colspan['button'][0] = 2;
+			print_table ($table);
+		echo "</div>";
+	}
 	echo "</form>";
 } 
 

@@ -53,15 +53,16 @@ $external_label = "";
 //**********************************************************************
 
 echo '<div id="tabs">';
-
+echo '<h2>' . strtoupper(__('Inventory')) . '</h2>';
+echo '<h4>' . strtoupper(__('Field list'));
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-title">' . strtoupper(__('Field list')) . '</li>';
 if (!empty($id_object_type)) {
 	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '"><span>'.__('Object details').'</span></a></li>';
 	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '"><span>'.__('Fields').'</span></a></li>';
 }
 echo '</ul>';
+echo '</h4>';
 echo '</div>';
 
 //**********************************************************************
@@ -70,62 +71,63 @@ echo '</div>';
 
 switch ($type) {
 	case "combo":
-				$combo_value = get_parameter('combo_value');
-				break;
+		$combo_value = get_parameter('combo_value');
+		break;
 	case "external":
-				$external_table_name = get_parameter('external_table_name', '');
-				$external_reference_field = get_parameter('external_reference_field', '');
-				$parent_table_name = get_parameter('parent_table_name', '');
-				$parent_reference_field = get_parameter('parent_reference_field', '');
-				$external_label = get_parameter('external_label', '');
-				break;
+		$external_table_name = get_parameter('external_table_name', '');
+		$external_reference_field = get_parameter('external_reference_field', '');
+		$parent_table_name = get_parameter('parent_table_name', '');
+		$parent_reference_field = get_parameter('parent_reference_field', '');
+		$external_label = get_parameter('external_label', '');
+		break;
 	default:
-				break;
+		break;
 }
 
 switch ($action_db) {
 	case "insert":
-			$sql = sprintf ('INSERT INTO tobject_type_field (id_object_type, label, type, combo_value, 
-							external_table_name, external_reference_field, `unique`, inherit, show_list, parent_table_name, parent_reference_field, not_allow_updates, external_label) 
-					VALUES (%d, "%s", "%s", "%s", 
-						    "%s", "%s", %d, %d, %d, "%s", "%s", %d, "%s")',
-					$id_object_type, $label, $type, $combo_value,
-					$external_table_name, $external_reference_field, $unique, $inherit, $show_list, $parent_table_name, $parent_reference_field, $not_allow_updates, $external_label);
-					
-			$id_object_type_field = process_sql ($sql, 'insert_id');
-			
-			if (! $id_object_type_field) {
-				echo '<h3 class="error">'.__('Could not be created').'</h3>';
-			} else {
-				echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-				//insert_event ("OBJECT TYPE CREATED", $id_object_type_field, $id_object_type, $label);
-				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created object type $id_object_type_field - $label");
-			}
-								
-			break;
+		$sql = sprintf ('INSERT INTO tobject_type_field (id_object_type, label, type, combo_value, 
+						external_table_name, external_reference_field, `unique`, inherit, show_list, parent_table_name, parent_reference_field, not_allow_updates, external_label) 
+				VALUES (%d, "%s", "%s", "%s", 
+						"%s", "%s", %d, %d, %d, "%s", "%s", %d, "%s")',
+				$id_object_type, $label, $type, $combo_value,
+				$external_table_name, $external_reference_field, $unique, $inherit, $show_list, $parent_table_name, $parent_reference_field, $not_allow_updates, $external_label);
+				
+		$id_object_type_field = process_sql ($sql, 'insert_id');
+		
+		if (! $id_object_type_field) {
+			echo '<h3 class="error">'.__('Could not be created').'</h3>';
+		} else {
+			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+			//insert_event ("OBJECT TYPE CREATED", $id_object_type_field, $id_object_type, $label);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created object type $id_object_type_field - $label");
+		}
+							
+		break;
 	case "update":
-			$sql = sprintf ('UPDATE tobject_type_field SET label = "%s", type = "%s",
-							combo_value = "%s", external_table_name = "%s", external_reference_field = "%s",
-							`unique` = %d, inherit = %d, show_list = %d, parent_table_name = "%s", parent_reference_field = "%s", not_allow_updates = %d, external_label = "%s"
-							WHERE id = %d', 
-							$label, $type, 
-							$combo_value, $external_table_name, $external_reference_field, 
-							$unique, $inherit, $show_list, $parent_table_name, $parent_reference_field, 
-							$not_allow_updates, $external_label, $id_object_type_field);
+		$sql = sprintf ('UPDATE tobject_type_field SET label = "%s", type = "%s",
+		combo_value = "%s", external_table_name = "%s", external_reference_field = "%s",
+		`unique` = %d, inherit = %d, show_list = %d, parent_table_name = "%s", parent_reference_field = "%s", not_allow_updates = %d, external_label = "%s"
+		WHERE id = %d', 
+		$label, $type, 
+		$combo_value, $external_table_name, $external_reference_field, 
+		$unique, $inherit, $show_list, $parent_table_name, $parent_reference_field, 
+		$not_allow_updates, $external_label, $id_object_type_field);
 
-			$result = process_sql ($sql);
-			
-			if (! $result) {
-				echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
-			} else {
-				echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-				//insert_event ("OBJECT TYPE UPDATED", $id_object_type_field, $id_object_type, $label);
-				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated object type $id_object_type_field - $label");
-			}
+		$result = process_sql ($sql);
+		
+		if (! $result) {
+			echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		}
+		else {
+			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			//insert_event ("OBJECT TYPE UPDATED", $id_object_type_field, $id_object_type, $label);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated object type $id_object_type_field - $label");
+		}
 	
-			break;
+		break;
 	default:
-			break;
+		break;
 }
 
 // Delete Field
@@ -150,7 +152,7 @@ if ($delete_object_type_field) {
 $objects_type_fields = get_db_all_rows_field_filter ('tobject_type_field', 'id_object_type', $id_object_type, 'id');
 
 $table->width = '99%';
-
+echo '<div class="divresult">';
 if ($objects_type_fields !== false) {
 	//echo "<h3>".__('Defined objects types fields')."</h3>";
 	
@@ -191,12 +193,20 @@ if ($objects_type_fields !== false) {
 } else {
 	echo "<h4>".__('No objects types fields')."</h4>";
 }
+echo'</div>';
 
-echo '<div style="width: '.$table->width.'; text-align: right;">';
-echo '<form method="post" action="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_field">';
-print_input_hidden ('action', 'create');
-print_input_hidden ('id', $id_object_type);
-print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-echo '</form></div>';
+echo '<div class="divform">';
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_field">';
+		echo '<table class="search-table">';
+			echo '<tr>';
+				echo '<td>';
+					print_input_hidden ('action', 'create');
+					print_input_hidden ('id', $id_object_type);
+					print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+				echo '</td>';
+			echo '</tr>';
+		echo '</table>';
+	echo '</form>';
+echo'</div>';
 
 ?>

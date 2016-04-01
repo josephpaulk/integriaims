@@ -91,20 +91,22 @@ if ($operation == "delete") {
 // CREATE new todo (form)
 // ---------------
 if ($operation == "create") {
-	echo "<h1>".__('Milestone creation')."</h1>";
-	echo '<table class="search-table-button"  width="99%">';
+	echo "<h2>".__('Milestone')."</h2>";
+	echo "<h4>".__('Creation')."</h4>";
+	
+	echo '<table class="search-table-button"  width="100%">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
-	echo "<tr><td class='datos'>".__('Name');
+	echo "<tr><td class='datos'><b>".__('Name') . "</b>";
 	echo "<td class='datos'><input name='name' size=40>";
 	
-	echo "<tr><td class='datos2'>".__('Timestamp');
+	echo "<tr><td class='datos2'><b>".__('Timestamp') . "</b>";
 	echo "<td class='datos2'>";
     $ahora_date = date("Y-m-d");
 	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$ahora_date'>";
 
-	echo "<tr><td class='datos' valign='top'>".__('Description');
-	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
+	echo "<tr><td class='datos' valign='top'><b>".__('Description') . "</b>";
+	echo "<td class='datos'><textarea name='description' style='width:95%; height:100px'>";
 	echo "</textarea>";
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
@@ -125,8 +127,10 @@ if ($operation == "create") {
 // Milestone view
 // -------------------------
 if ($operation == ""){
-	echo "<h1>".__('Milestones management')."</h1>";
-	echo "<table class='listing' width=99%>";
+	echo "<h2>".__('Milestones')."</h2>";
+	echo "<h4>".__('Management')."</h4>";
+	echo "<div class='divresult' >";
+	echo "<table class='listing' width=100%>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');
 	echo "<th>".__('Timestamp');
@@ -158,23 +162,26 @@ if ($operation == ""){
 			
 			// DELETE
 			if ($project_access['write']) {
-				echo '<td class="'.$tdcolor.'" align="center">';
+				echo '<td class="'.$tdcolor.'">';
 				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
 			}
 			
 		}
 	echo "</table>";
+	echo "</div>";
 
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ($project_access['write']) {
-	    echo "<table class='button' width=99%>";
+		echo "<div class='divform' >";
+	    echo "<table class='search-table' width=100%>";
 	    echo "<tr><td align=right>";
     
 	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";
 	    echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";
 	    echo "</form>";
 	    echo "</table>";
+	    echo "</div>";
     }
 } // Fin bloque else
 

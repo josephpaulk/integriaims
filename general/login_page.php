@@ -48,14 +48,6 @@ if (isset ($login_failed)) {
 	echo "<div id='login_form_data'>";
 }
 
-echo "<a href='index.php'>";
-if (isset($config["site_logo"]))
-	echo '<img src="images/'.$config['site_logo'].'" alt="logo">';
-else
-	echo '<img src="images/loginlogo.png" alt="logo">';
-
-echo '</a>';
-
 // Failed login ??
 
 if (isset ($login_failed)) {
@@ -85,38 +77,53 @@ if (isset ($disable_login)) {
 }
 
 //Login table begins
-echo "<table class='login_table'>";	
-
-echo '<tr>';
-echo "<td colspan=2 class='login_label'>";
-echo "<strong>".__("Username")."</strong>";
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo "<td colspan=2 class='login_input'>";
-echo print_input_text_extended ("nick", '', "nick", '', '', '', false, '', 'class="login"', true);
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td colspan=2 class="login_label">';
-echo "<strong>".__("Password")."</strong>";
-echo '</td>';
-echo '</tr>';
-echo '<tr>';
-echo "<td colspan=2 class='login_input'>";
-echo print_input_text_extended ("pass", '', "pass", '', '', '', false, '', 'class="login"', true, true);
-echo '</td>';
-echo '</tr>';
-echo "<tr>";
-echo "<td>";
-echo '<div id="ver_num">';
-echo $config["version"];
-echo "</div>";
-echo "</td>";
-echo "<td class='login_button'>";
-echo '<input class="sub next login_button" type="submit" value="LOGIN" name="Login">';
-echo '</td></tr>';
+echo "<table class='login_table'>";
+	echo '<tr>';
+		echo "<td rowspan=6 style='width: 250px; border-right: 1px solid #dadada'>";
+			echo "<a href='index.php'>";
+				if (isset($config["site_logo"]))
+					echo '<img src="images/'.$config['site_logo'].'" alt="logo">';
+				else
+					echo '<img src="images/loginlogo.png" alt="logo">';
+			echo '</a>';
+		echo '</td>';
+	echo '</tr>';
+	echo '<tr>';
+		echo "<td class='login_label'>";
+			echo "<strong>".__("Username")."</strong>";
+		echo '</td>';
+	echo '</tr>';
+	echo '<tr>';
+		echo "<td class='login_input'>";
+			echo print_input_text_extended ("nick", '', "nick", '', '',
+				'', false, '', 'class="login" placeholder="'.__("Nick").'"', true);
+		echo '</td>';
+	echo '</tr>';
+	echo '<tr>';
+		echo '<td class="login_label">';
+			echo "<strong>".__("Password")."</strong>";
+		echo '</td>';
+	echo '</tr>';
+	echo '<tr>';
+		echo "<td class='login_input'>";
+			echo print_input_text_extended ("pass", '', "pass", '',
+				'', '', false, '', 'class="login" placeholder="'.__("Password").'"', true, true);
+		echo '</td>';
+	echo '</tr>';
+	echo "<tr>";
+		echo "<td class='login_button'>";
+			echo '<input class="sub next login_button" 
+				type="submit" value="'.__("LOGIN").'" name="Login">';
+		echo '</td>';
+	echo '</tr>';
 echo "</table>";
+
+	echo '<div id="ver_num">';
+		echo '<div id="ver_num_rotate">';
+			echo $config["version"];
+		echo "</div>";
+	echo "</div>";
+	
 echo "</div>";
 
 //show object hidden
@@ -126,10 +133,6 @@ echo '</div>';
 
 echo '</form>';
 echo '</div>';
-
-echo '<div id="bottom_logo">';
-echo "<img src='images/loginbacklogo.png'>";
-echo "</div>";
 
 ?>
 

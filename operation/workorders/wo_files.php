@@ -79,7 +79,7 @@ if (isset($_GET["upload"])) {
 // Control to upload file
 
 
-echo '<div style="width: 99%; text-align: right; margin-bottom: 5px;">';
+echo '<div style="width: 100%; text-align: right; margin-bottom: 5px;">';
 echo print_button (__('Upload a new file'), 'add_link', false, '$(\'#upload_div\').slideToggle (); return false', 'class="sub upload"');
 echo '</div>';
 
@@ -102,7 +102,8 @@ if ($files !== false) {
 	echo "<h3>". __('Current files on this workorder')."</h3>";
 
 	unset ($table);
-	$table->width = "99%";
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "listing";
 	$table->data = array ();
 	$table->size = array ();

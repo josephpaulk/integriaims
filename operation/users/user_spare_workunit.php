@@ -385,24 +385,23 @@ if ($operation == 'multiple_wu_insert') {
 
 
 echo "<div id='tabs'>";
-echo "<ul class='ui-tabs-nav'>";
-
-echo "<li class='ui-tabs-title h1'>";
-echo "<img src='images/award_star_silver_1.png'> ";
 
 if ($id_workunit) {
-	echo __('Update workunit');
+	echo "<h2>" . __('Update workunit');
 }
 else {
-	echo __('Add workunit');
+	echo "<h2>" . __('Add workunit');
 }
-
+echo "<h4>";
 if ($id_task) {
-	echo ' - ';
 	echo get_db_value ('name', 'ttask', 'id', $id_task);
 }
+else
+	echo __("New work unit");
 
-echo '</h3>';
+echo "<ul class='ui-tabs-nav'>";
+
+echo "<li class='ui-tabs-title'>";
 echo "</li>";
 //If single workunit update multiple addition is disabled
 if ($id_workunit) {
@@ -428,6 +427,8 @@ if ($operation == 'multiple_wu_insert') {
 echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
 echo "</span></li>";
 echo "</ul>";
+echo "</h4>";
+echo "</div>";
 
 //If we inserted multiple workunits then 
 if ($operation == 'multiple_wu_insert') {
@@ -451,7 +452,7 @@ if (isset($result_output)) {
 
 $table = new StdClass;
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->data = array ();
 $table->colspan = array ();
 $table->colspan[6][0] = 3;
@@ -498,6 +499,7 @@ if (dame_admin ($config['id_user'])) {
 	$params['title'] = 'Username';
 	$params['return'] = true;
 	$params['return_help'] = true;
+	$params['attributes'] = "style='width:210px;'";
 	
 	$table->data[2][1] = user_print_autocomplete_input($params);
 }
@@ -521,25 +523,33 @@ $table->data[5][0] = print_checkbox ('work_home', 1, $work_home, true, __('Work 
 
 $table->data[6][0] = print_textarea ('description', 10, 30, $description,
 	'', true, __('Description'));
-	
-if ($id_workunit) {
-	$button = print_input_hidden ('operation', 'update', true);
-	$button .= print_input_hidden ('id_workunit', $id_workunit, true);
-	$button .= print_input_hidden ("wu_user", $wu_user, true);
-	$button .= print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"', true);
-}
-else {
-	$button .= print_input_hidden ('operation', 'insert', true);
-	$button .= print_submit_button (__('Add'), 'btn_add', false, 'class="sub create"', true);
-}
-$button .= print_input_hidden ('timestamp', $now, true);
-
-$table->data[7][0] = $button;
-$table->colspan[7][0] = 2;
 
 echo '<form id="single_task_form" method="post" onsubmit="return validate_single_form()">';
 print_table ($table);
-echo '</form>';	
+
+$button = '';
+echo '<div style="width:100%;">';
+	unset($table->data);
+	$table->width = '100%';
+	$table->class = "button-form";
+	if ($id_workunit) {
+		$button = print_input_hidden ('operation', 'update', true);
+		$button .= print_input_hidden ('id_workunit', $id_workunit, true);
+		$button .= print_input_hidden ("wu_user", $wu_user, true);
+		$button .= print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"', true);
+	}
+	else {
+		$button .= print_input_hidden ('operation', 'insert', true);
+		$button .= print_submit_button (__('Add'), 'btn_add', false, 'class="sub create"', true);
+	}
+	$button .= print_input_hidden ('timestamp', $now, true);
+
+	$table->data[7][0] = $button;
+	$table->colspan[7][0] = 2;
+
+	print_table($table);
+echo '</div>';
+echo '</form>';
 
 echo "</div>";
 
@@ -549,7 +559,7 @@ if (!$id_workunit) {
 	
 	if ($operation == 'multiple_wu_insert') {
 		echo "<div id='tab2' class='ui-tabs-panel'>"; //Multiple WU
-		echo "<table width='99%'>";
+		echo "<table width='100%' class='search-table-button'>";
 		echo "<tr>";
 		echo "<td style='text-align: right;'>";
 		echo print_button (__('Add new parse Workunit'), 'add_link', false, 'location.href=\'index.php?sec=users&sec2=operation/users/user_spare_workunit\'', 'class="sub create"');
@@ -564,7 +574,10 @@ if (!$id_workunit) {
 		echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>"; //Multiple WU
 		echo '<form id="multiple_task_form" method="post" onsubmit="return validate_multiple_form()">';
 		print_input_hidden ('operation', 'multiple_wu_insert');
-		echo "<table width='99%'>";
+		
+		//Massive work unit list
+		create_new_table_multiworkunit(1);
+		echo "<table width='100%' class='button-form'>";
 		echo "<tr>";
 		echo "<td style='width: 90%;'>";
 		echo "</td>";
@@ -576,17 +589,12 @@ if (!$id_workunit) {
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";
-		
-		//Massive work unit list
-		create_new_table_multiworkunit(1);
-		echo "</div>";
 		echo '</form>';
 	}
+	echo '</div>';
 }
 
-echo "</div>"; // End div tabs
 
-echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>

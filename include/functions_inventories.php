@@ -1410,8 +1410,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 
 				$data_info = array();
 				
-				$table_info->width = '98%';
-				$table_info->class = 'databox_color_without_line';
+				$table_info->width = '100%';
+				$table_info->class = 'no_border';
 				
 				$table_info->size = array ();
 				$table_info->style = array();
@@ -1472,9 +1472,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				
 				if ($write_permission) {
-					$table->colspan[$idx]["row_info"] = 8;
+					$table->colspan[$idx]["row_info"] = 10;
 				} else {
-					$table->colspan[$idx]["row_info"] = 7;
+					$table->colspan[$idx]["row_info"] = 9;
 				}
 		
 				
@@ -1756,7 +1756,7 @@ function inventories_get_stock ($inventories, $status='new') {
 	return $count;
 }
 
-function print_inventory_tabs($selected_tab, $id, $inventory_name) {
+function print_inventory_tabs($selected_tab, $id, $inventory_name, $manage_permission = false) {
 	$details_class = $tracking_class = $contacts_class = $incidents_class = $relationship_class = "ui-tabs";
 	
 	switch ($selected_tab) {
@@ -1782,16 +1782,23 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 			break;
 	}
 	
+	$title2 = sprintf(__('Inventory object #%s: %s'), $id, $inventory_name);
+	echo '<h2>' . $title . '</h2><h4>'.$title2;
+	if ($manage_permission) {
+		echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
+		print_input_hidden ('quick_delete', $id);
+		echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete inventory object")))."</a>";
+		echo '</form>';
+	}
 	echo '<ul class="ui-tabs-nav">';
 	echo '<li class="' . $tracking_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
 	echo '<li class="' . $contacts_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
 	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Tickets').'</span></a></li>';
 	echo '<li class="' . $relationship_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
 	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '"><span>'.__('Details').'</span></a></li>';
-	echo '<li class="ui-tabs-title">' . $title . '</h1></li>';
 	echo '</ul>';
 	
-	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div><br>';
+	echo '</h4>';
 }
 
 function inventories_get_external_tables ($id_object_type) {

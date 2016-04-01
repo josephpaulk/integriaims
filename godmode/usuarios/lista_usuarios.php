@@ -40,24 +40,26 @@ $disabled_user = get_parameter ("disabled_user", -1);
 $level = get_parameter ("level", -10);
 $group = get_parameter ("group", 0);
 
-echo '<h1>'.__('User management') . '</h1>';
+echo '<h2>'.__('User management') . '</h2>';
+echo '<h4>'.__('List users') . '</h4>';
 
-
-form_search_users (false, $filter_form);
-				
-user_search_result($filter=0, $ajax, $size_page=$config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
-
-
-echo "<div style='width:99%' class='button'>";
-
-echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
-echo "<input type='button' onclick='process_massive_operation(\"enable_users\")' class='sub people' name='en' value='".__('Enable selected')."'>";
-echo "<input type='button' onclick='process_massive_operation(\"disable_users\")' class='sub people' name='dis' value='".__('Disable selected')."'>";
-echo "<input type='button' onclick='if (confirm(\"".__('Are you sure?')."\")) process_massive_operation(\"delete_users\");' class='sub delete' name='del' value='".__('Delete selected')."'>";
-echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";
-echo "</form>";
+echo "<div style='width:100%' class='divform'>";
+	form_search_users (false, $filter_form);
+	echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
+		echo "<table style='width:20%' class='search-table'>";
+			echo "<tr>";
+				echo "<td>";
+					echo "<input type='button' onclick='process_massive_operation(\"enable_users\")' class='sub people' name='en' value='".__('Enable selected')."'>";
+					echo "<input type='button' onclick='process_massive_operation(\"disable_users\")' class='sub people' name='dis' value='".__('Disable selected')."'>";
+					echo "<input type='button' onclick='if (confirm(\"".__('Are you sure?')."\")) process_massive_operation(\"delete_users\");' class='sub ' name='del' value='".__('Delete selected')."'>";
+					echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";
+				echo "</td>";
+			echo "</tr>";
+		echo "</table>";
+	echo "</form>";
 echo "</div>";
 
+user_search_result($filter=0, $ajax, $size_page=$config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
 ?>
 
 <script type="text/javascript" src="include/js/integria_users.js"></script>

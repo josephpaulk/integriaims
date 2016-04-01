@@ -109,7 +109,7 @@ switch ($option) {
 	default:
 		break;
 }
-echo "</div>";
+//echo "</div>";
 
 ?>
 

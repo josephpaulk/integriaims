@@ -198,6 +198,12 @@ if (defined ('AJAX')) {
 		
 		$cont = get_db_all_rows_sql($sql);
 
+		// Add no object type
+		$last_key = count($cont);
+		$cont[$last_key]['name'] = __('No object type');
+		$cont[$last_key]['icon'] ="box.png";
+		$cont[$last_key]['id'] = 0;
+
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
 		$cont_size = count($cont);
@@ -375,22 +381,35 @@ if ($search) {
 } 
 
 
-if (!$clean_output) {
+if (!$pure) {
 	
-	echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
-		$table_search->class = 'search-table';
-		$table_search->width = '98%';
+	$form .= '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		$buttons = '<div class="button-form">';
+		$buttons .= print_input_hidden ('search', 1, true);
+		$buttons .= print_input_hidden ('mode', $mode, true);
+		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+		$buttons .= '</div>';
+		
+		$form = "<div class='divform'>".$buttons."</div>";
+		$form .= "<div class='divresult'>";
+		$table_search = new StdClass();
+		$table_search->class = 'search-table-button';
+		$table_search->width = '100%';
 		$table_search->data = array ();
+		$table_search->size[0] = "40%";
+		$table_search->size[1] = "35%";
 		
 		$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
 		
 		$objects_type = get_object_types ();
 		$table_search->data[0][1] = print_label (__('Object type'), '','',true);
-		$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
+		$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type, 'show_type_fields();', 'Select', '', true, 0, true, false, false, '');
 		
+		$table_search->rowspan[0][2] = 4;
+		$table_search->colspan[0][2] = 4;
+		$table_search->valign[2] = "top";
 		$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
-		
-		$table_search->data[0][2] .= print_select($object_fields, 'object_fields_search[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
+		$table_search->data[0][2] .= print_select($object_fields, 'object_fields_search[]', '', '', 'Select', '', true, 4, true, false, false, 'width:300px;');
 		
 		$params_assigned['input_id'] = 'text-owner';
 		$params_assigned['input_name'] = 'owner';
@@ -404,29 +423,18 @@ if (!$clean_output) {
 		$manufacturers = get_manufacturers ();
 		
 		$table_search->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
-			'', __('None'), 0, true, false, false, __('Contract'), '', 'width: 200px;');
+			'', __('None'), 0, true, false, false, __('Contract'), '', '');
 
-		$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
-			$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'), '','width: 200px;');
+		$table_search->data[2][0] = print_select ($manufacturers, 'id_manufacturer',
+			$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'), '','');
 		
-		$table_search->data[1][3] = print_checkbox_extended ('last_update', 1, $last_update,
+		$table_search->data[2][1] = print_checkbox_extended ('last_update', 1, $last_update,
 		false, '', '', true, __('Last updated'));
 
-		$buttons = '<div style=" text-align: right;">';
-		$buttons .= print_input_hidden ('search', 1, true);
-		$buttons .= print_input_hidden ('mode', $mode, true);
-		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
-		
-		$filter["query"] = $sql_search;
-		serialize_in_temp($filter, $config["id_user"]);
-		$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
-
-		$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
-		$buttons .= '</div>';
 
 		$all_inventory_status = inventories_get_inventory_status ();
 		array_unshift($all_inventory_status, __("All"));
-		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status[0], '', '', '', true, false, false, __('Status'));
+		$table_search->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, '', '', '', true, false, false, __('Status'));
 		
 		$params_associated['input_id'] = 'text-associated_user';
 		$params_associated['input_name'] = 'associated_user';
@@ -434,20 +442,20 @@ if (!$clean_output) {
 		$params_associated['title'] = __('Associated user');
 		$params_associated['return'] = true;
 	
-		$table_search->data[2][1] = user_print_autocomplete_input($params_associated);
+		$table_search->data[3][1] = user_print_autocomplete_input($params_associated);
 		
 		$companies = get_companies();
-		$companies[0] = __("All");
-		$table_search->data[2][2] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 200px;');
-		
-		$table_search->data[3][0] = "&nbsp;";
-		$table_search->colspan[3][0] = 4;
-		
-		$table_search->data[4][0] = $buttons;
-		$table_search->colspan[4][0] = 4;
+		array_unshift($companies, __("All"));
+		$table_search->data[4][0] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 218px;');
+				
+		//~ $table_search->data[5][0] = $buttons;
+		//~ $table_search->colspan[5][0] = 4;
 
-		print_table($table_search);
-	echo '</form>';
+		$form .= print_table($table_search, true);
+		$form .= '</div>';
+	$form .= '</form>';
+	
+	print_container_div("inventory_form",__("Inventory form search"),$form, 'closed', false, false);
 
 }
 
@@ -459,20 +467,20 @@ switch ($mode) {
 		break;
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
-		if ($write_permission) {
-			if (!$clean_output) {
-				echo '<div style=" text-align: right;">';
-				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+		if (!$pure) {
+			if ($write_permission) {
+				echo '<div class="button-form">';
+				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 				echo '</div>';
 			}
 		}
 		break;
 	default:
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
-		if ($write_permission) {
-			if (!$clean_output) {	
-				echo '<div style=" text-align: right;">';
-				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+		if (!$pure) {
+			if ($write_permission) {	
+				echo '<div class="button-form">';
+				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 				echo '</div>';
 			}
 		}

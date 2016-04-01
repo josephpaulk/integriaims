@@ -95,24 +95,46 @@ if ($lock_month != ""){
 	}
 }
 
-echo "<h1>".__('Monthly report for')." $id";
-// Lock all workunits in this month
-echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
-echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
-echo "</a>";
+echo "<h2>".__('Monthly report') . "</h2>";
 
-$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id", __("PDF report"));
-if ($report_image) {
-	echo "&nbsp;&nbsp;" . $report_image;
+echo "<h4>" . __("For") . ": " . $id;
+echo "<div id='button-bar-title'><ul>";
+// Lock all workunits in this month
+
+//~ $report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id", __("PDF report"));
+//~ if ($report_image) {
+	//~ echo "&nbsp;&nbsp;" . $report_image;
+//~ }
+
+if (!$pure) {
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
+		echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
+		echo "</a>";
+	echo "</li>";
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&pure=1&id=$id'>";
+		echo "<img src='images/html_tabs.png' border=0 title='". _("HTML"). "'>";
+		echo "</a>";
+	echo "</li>";
+}
+else {
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&pure=0&id=$id'>";
+		echo "<img src='images/flecha_volver.png' border=0 title='". _("Back"). "'>";
+		echo "</a>";
+	echo "</li>";
 }
 
-echo "</h1>";
+echo "</ul>";
+echo "</div>";
+echo "</h4>";
 
 $first_of_month = gmmktime(0,0,0,$month,1,$year);
 
 list($year, $month_name) = explode(',',gmstrftime('%Y,%B',$first_of_month));
 
-echo "<table width=99% class='search-table' style='padding: 0px; border-spacing: 0px;'>";
+echo "<table width=100% class='search-table' style='padding: 0px; border-spacing: 0px;'>";
 echo "<tr><td colspan=4 class='calendar_annual_header' style='text-align: center;'>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "' class='calendar_arrow'></a>";
 echo "<span class='calendar-month' style='font-size: 0.93em; color: #FFFFFF; padding: 3px;'>" . strtoupper(htmlentities(ucfirst($month_name))) . " $year</span>";

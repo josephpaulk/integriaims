@@ -27,9 +27,10 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 	exit;
 }
 
-echo "<h1>".__('SLA Management');
+echo '<h2>'.__('Support').'</h2>';
+echo "<h4>".__('SLA Management');
 echo integria_help ("sla", true);
-echo "</h1>";
+echo "</h4>";
 
 $id = (int) get_parameter ('id');
 $new_sla = (bool) get_parameter ('new_sla');
@@ -152,8 +153,9 @@ if ($id || $new_sla) {
         $id_sla_type = $sla["id_sla_type"];
 
 	}
-
-	$table->width = "99%";
+	
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -173,25 +175,25 @@ if ($id || $new_sla) {
 	$table->data[0][3] = print_select ($id_sla_type_arr, 'id_sla_type', $id_sla_type,'', '', '0', true, 0, false, __('SLA Type'));
 
 	$table->data[1][0] = print_label(__('Max. response time (in hours)'), '', 'text', true);
-	$table->data[1][0] .= '&nbsp;'."<input type='text' name='min_response' id='text-min_response' value='$min_response' size='5' maxlenght='100' onChange='hours_to_dms(\"min\")'>";
+	$table->data[1][0] .= "<input type='text' name='min_response' id='text-min_response' value='$min_response' size='5' maxlenght='100' onChange='hours_to_dms(\"min\")'>";
 		
 	$min_response_time = incidents_hours_to_dayminseg ($min_response);
-	$table->data[1][0] .= '&nbsp;'.print_input_text ('min_response_time', $min_response_time, '',
+	$table->data[1][0] .= print_input_text ('min_response_time', $min_response_time, '',
 		7, 100, true, '', true);
 
 	$table->data[1][1] = print_label(__('Max. resolution time (in hours)'), '', 'text', true);
-	$table->data[1][1] .= '&nbsp;'."<input type='text' name='max_response' id='text-max_response' value='$max_response' size='5' maxlenght='100' onChange='hours_to_dms(\"max\")'>";
+	$table->data[1][1] .= "<input type='text' name='max_response' id='text-max_response' value='$max_response' size='5' maxlenght='100' onChange='hours_to_dms(\"max\")'>";
 	$max_response_time = incidents_hours_to_dayminseg ($max_response);
-	$table->data[1][1] .= '&nbsp;'.print_input_text ('max_response_time', $max_response_time, '',
+	$table->data[1][1] .= print_input_text ('max_response_time', $max_response_time, '',
 		7, 100, true, '', true);
 
 	$table->data[1][2] = print_input_text ("max_incidents", $max_incidents, '',
 		5, 100, true, __('Max. tickets at the same time'));
 
 	$table->data[1][3] = print_label(__('Max. ticket inactivity (in hours)'), '', 'text', true);
-	$table->data[1][3] .= '&nbsp;'."<input type='text' name='max_inactivity' id='text-max_inactivity' value='$max_inactivity' size='5' maxlenght='100' onChange='hours_to_dms(\"inactivity\")'>";
+	$table->data[1][3] .= "<input type='text' name='max_inactivity' id='text-max_inactivity' value='$max_inactivity' size='5' maxlenght='100' onChange='hours_to_dms(\"inactivity\")'>";
 	$max_inactivity_time = incidents_hours_to_dayminseg ($max_inactivity);
-	$table->data[1][3] .= '&nbsp;'.print_input_text ('max_inactivity_time', $max_inactivity_time, '',
+	$table->data[1][3] .= print_input_text ('max_inactivity_time', $max_inactivity_time, '',
 		7, 100, true, '', true);
 		
 
@@ -208,22 +210,30 @@ if ($id || $new_sla) {
 
 	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
 
-	if ($id) {
-		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update_sla', 1, true);
-		$button .= print_input_hidden ("id", $id, true);
-	} else {
-		$button = print_input_hidden ('create_sla', 1, true);
-		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
-	}
 	
-	$table->data[4][0] = $button;
-	$table->colspan[4][0] = 4;
 	
 	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	print_table ($table);
+		echo '<div style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update_sla', 1, true);
+				$button .= print_input_hidden ("id", $id, true);
+			} else {
+				$button = print_input_hidden ('create_sla', 1, true);
+				$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
+			}
+			
+			$table->data[4][0] = $button;
+			$table->colspan[4][0] = 4;
+			print_table ($table);
+		echo "</div>";	
 	echo "</form>";
-} else {
+}
+else {
 	$search_text = (string) get_parameter ('search_text');
 	
 	$where_clause = "";
@@ -233,19 +243,25 @@ if ($id || $new_sla) {
 			$search_text, $search_text);
 	}
 
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 20, 100, true);
+	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo "<div style='padding: 5px; padding-bottom: 15px; padding-top: 15px;'>";
-	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
-	print_table ($table);
-	echo '</form>';
+	echo "<div class='divform'>";
+		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
+			print_table ($table);
+		echo '</form>';
+		echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
+			unset($table->data);
+			$table->data[0][0] = print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"',true);
+			$table->data[0][0] .= print_input_hidden ('new_sla', 1);
+			print_table ($table);
+		echo '</form>';
 	echo "</div>";
 	
 	
@@ -253,7 +269,7 @@ if ($id || $new_sla) {
 	$slas = get_db_all_rows_sql ($sql);
 	
 	if ($slas !== false) {
-		$table->width = "99%";
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -289,15 +305,10 @@ if ($id || $new_sla) {
 						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);
 		}
-		print_table ($table);
+		echo "<div class='divresult'>";
+			print_table ($table);
+		echo "</div>";
 	}
-	
-	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
-	print_input_hidden ('new_sla', 1);
-	echo '</div>';
-	echo '</form>';
 }
 ?>
 

@@ -24,7 +24,8 @@ if (! give_acl($config["id_user"], 0, "VM")) {
 	exit;
 }
 
-echo '<h1>'.__('Manufacturers management').'</h1>';
+echo '<h2>' . __('Manufacturers') . '</h2>';
+echo '<h4>' . __('Management').'</h4>';
 
 $id = (int) get_parameter ('id');
 $new_manufacturer = (bool) get_parameter ('new_manufacturer');
@@ -110,7 +111,8 @@ if ($id || $new_manufacturer) {
 		$id_company_role = $manufacturer["id_company_role"];
 	}
 	
-	$table->width = "99%";
+	$table = new StdClass();
+	$table->width = "100%";
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -127,22 +129,27 @@ if ($id || $new_manufacturer) {
 	$table->data[1][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
 	$table->data[2][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	
-	if ($id) {
-		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('update_manufacturer', 1, true);
-		$button .= print_input_hidden ('id', $id, true);
-	} else {
-		$button = print_input_hidden ('create_manufacturer', 1, true);
-		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub create"', true);
-	}
-	
-	$table->data[3][0] = $button;
-	$table->colspan[3][0] = 2;
-	
 	echo '<form id="form-manufacturer_detail" method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
 	print_table ($table);
+		echo '<div style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id) {
+				$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('update_manufacturer', 1, true);
+				$button .= print_input_hidden ('id', $id, true);
+			} else {
+				$button = print_input_hidden ('create_manufacturer', 1, true);
+				$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub create"', true);
+			}
+			$table->data[3][0] = $button;
+			$table->colspan[3][0] = 2;
+			print_table ($table);
+		echo "</div>";
 	echo "</form>";
-} else {
+}
+else {
 	$search_text = (string) get_parameter ('search_text');
 	
 	$where_clause = "";
@@ -150,28 +157,38 @@ if ($id || $new_manufacturer) {
 		$where_clause = sprintf ('WHERE name LIKE "%%%s%%" OR comments LIKE "%%%s%%"',
 			$search_text, $search_text);
 	}
-
-	$table->width = '99%';
+	
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
-	print_table ($table);
-	echo '</form>';
+	echo "<div class='divform'>";
+		echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
+			print_table ($table);
+		echo '</form>';
+		echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
+			unset ($table->data);
+			$table->data[0][0] = print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"', true);
+			$table->data[0][0] .= print_input_hidden ('new_manufacturer', 1);
+			print_table ($table);
+		echo '</form>';
+	echo '</div>';
 	
 	$sql = "SELECT * FROM tmanufacturer $where_clause ORDER BY name";
 	$manufacturers = get_db_all_rows_sql ($sql);
-
-	$manufacturers = print_array_pagination ($manufacturers, "index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail");
-
+	echo "<div class='divresult'>";
 	if ($manufacturers !== false) {
+		$manufacturers = print_array_pagination ($manufacturers, "index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail");
+		
 		unset ($table);
-		$table->width = "99%";
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -203,13 +220,7 @@ if ($id || $new_manufacturer) {
 		}
 		print_table ($table);
 	}
-	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-	print_input_hidden ('new_manufacturer', 1);
-	echo '</div>';
-	echo '</form>';
+	echo "</div>";
 } // end of list
 
 ?>

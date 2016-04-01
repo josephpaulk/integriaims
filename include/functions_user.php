@@ -23,7 +23,7 @@ function user_print_autocomplete_input($parameters) {
 	if (isset($parameters['return'])) {
 		$return = $parameters['return'];
 	}
-	$input_size = 15;
+	$input_size = 20;
 	if (isset($parameters['size'])) {
 		$input_size = $parameters['size'];
 	}
@@ -57,8 +57,10 @@ function user_print_autocomplete_input($parameters) {
 	}
 	
 	$attributes = '';
-	
-	return print_input_text_extended ($input_name, $input_value, $input_id, '', $input_size, $input_maxlength, $disabled, '', $attributes, $return, '', __($title)). print_help_tip (__($help_message), $return_help);
+	if (isset($parameters['attributes'])) {
+		$attributes = $parameters['attributes'];
+	}
+	return print_input_text_extended ($input_name, $input_value, $input_id, '', $input_size, $input_maxlength, $disabled, '', $attributes, $return, '', $title . print_help_tip ($help_message, $return_help));
 	
 }
 
@@ -300,7 +302,8 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 
 	$sql1 = "$query1 LIMIT $offset, ". $size_page;
 	
-	echo '<table width="99%" class="listing">';
+	echo "<div class='divresult'>";
+	echo '<table width="100%" class="listing">';
 	if ($filter == 0){
 		echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
 		echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
@@ -356,12 +359,12 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 			$url = "javascript:loadContactUser(\"".$nombre."\",\"".$clickin."\");";
 			echo "<a href='".$url."'>".ucfirst($nombre)."</a>";
 		}
-		echo "<td style='font-size:9px'>" . $realname;	
+		echo "<td style=''>" . $realname;	
 		$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
 		echo "<td>".$company_name."</td>";
 
 
-		echo "<td style='font-size:9px'>".human_time_comparation($fecha_registro);
+		echo "<td style=''>".human_time_comparation($fecha_registro);
 		echo "<td>";
 		print_user_avatar ($nombre, true);
 		echo "&nbsp;";
@@ -390,5 +393,6 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 		}
 	}
 	echo "</table>";
+	echo "</div>";
 }
 ?>

@@ -10,54 +10,55 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 	switch ($selected_tab) {
 		case 'setup':
 			$setup_class = 'button-bar-selected';
-			$title = strtoupper(__('General setup'));
+			$title = __('General setup');
 			break;
 		case 'visual':
 			$visual_class = 'button-bar-selected';
-			$title = strtoupper(__('Visual setup'));
+			$title = __('Visual setup');
 			break;
 		case 'password':
 			$password_class = 'button-bar-selected';
-			$title = strtoupper(__('Password policy setup'));
+			$title = __('Password policy setup');
 			break;
 		case 'incidents':
 			$incidents_class = 'button-bar-selected';
-			$title = strtoupper(__('Incident setup'));
+			$title = __('Incident setup');
 			break;
 		case 'mail':
 			$mail_class = 'button-bar-selected';
-			$title = strtoupper(__('Mail setup'));
+			$title = __('Mail setup');
 			break;
 		case 'mailtemplates':
 			$mailtemplates_class = 'button-bar-selected';
-			$title = strtoupper(__('Mail templates setup'));
+			$title = __('Mail templates setup');
 			break;
 		case 'visibility':
 			$visibility_class = 'button-bar-selected';
-			$title = strtoupper(__('Visibility management'));
+			$title = __('Visibility management');
 			break;
 		case 'inventory':
 			$inventory_class = 'button-bar-selected';
-			$title = strtoupper(__('Pandora FMS inventory'));
+			$title = __('Pandora FMS inventory');
 			break;
 		case 'auth':
 			$auth_class = 'button-bar-selected';
-			$title = strtoupper(__('Authentication configuration'));
+			$title = __('Authentication configuration');
 			break;
 		case 'crm':
 			$crm_class = 'button-bar-selected';
-			$title = strtoupper(__('CRM setup'));
+			$title = __('CRM setup');
 			break;
 		case 'maintenance':
 			$maintenance_class = 'button-bar-selected';
-			$title = strtoupper(__('Old data maintenance'));
+			$title = (__('Old data maintenance'));
 			break;
 		case 'project':
 			$project_class = 'button-bar-selected';
-			$title = strtoupper(__('Project management'));
+			$title = (__('Project management'));
 			break;
 	}
-	echo "<h1>".$title;
+	echo "<h2>" . __("Configuration Integria") . "</h2>";
+	echo "<h4>" . $title;
 	echo "<div id='button-bar-title'>";
 	echo '<ul>';
 	echo '<li class="' . $setup_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup"><span><img src="images/cog.png" title="'.__('Setup').'"></span></a></li>';
@@ -79,6 +80,6 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 	echo '</ul>';
 
 	echo '</div>';
-	echo "</h1>";
+	echo "</h4>";
 }
 ?>

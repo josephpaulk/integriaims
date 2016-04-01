@@ -93,14 +93,15 @@ if ($op == "new" || $id > 0) {
 		$description = $type["description"];
 		$icon = $type["icon"];
 		$type = null;
-
-		echo "<h1>".__('Update existing type')."</h1>";
+		echo "<h2>".__('File release type management')."</h2>";
+		echo "<h4>".__('Update existing type')."</h4>";
 	} else {
-		echo "<h1>".__('Create a new type')."</h1>";
+		echo "<h2>".__('File release type management')."</h2>";
+		echo "<h4>".__('Create a new type')."</h4>";
 	}
 
 	$table = new stdClass;
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->data = array();
 	$table->colspan = array();
@@ -112,6 +113,11 @@ if ($op == "new" || $id > 0) {
 	$table->data[0][1] = print_select ($files, 'icon', $icon, '', '', "", true, 0, false, __('Icon'));
 	$table->data[1][0] = print_textarea ("description", 5, 40, $description,'', true, __('Description'));
 
+	echo "<form id='form-file_type' method='post' action='index.php?sec=download&sec2=operation/download/manage_types'>";
+	echo print_table($table, true);
+	
+	unset($table->data);
+	$table->class='button-form';
 	if ($id > 0) {
 		$table->data[2][0] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
 		$table->data[2][0] .= print_input_hidden ('id', $id, true);
@@ -120,8 +126,6 @@ if ($op == "new" || $id > 0) {
 		$table->data[2][0] = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
 		$table->data[2][0] .= print_input_hidden ('op', 'insert', true);
 	}
-
-	echo "<form id='form-file_type' method='post' action='index.php?sec=download&sec2=operation/download/manage_types'>";
 	echo print_table($table, true);
 	echo "</form>";
 
@@ -131,9 +135,11 @@ if ($op == "new" || $id > 0) {
 // =======================
 else {
 
-	echo "<h1>".__('File release type management')." &raquo; ".__('Defined types')."</h1>";
+	echo "<h2>".__('File release type management')."</h2><h4>".__('Defined types')."</h4>";
 
 	$types = get_file_types(false, true);
+	
+	echo "<div class='divresult'>";
 	if (!$types) {
 		$types = array();
 		echo "<h3 class='error'>".__('No types found')."</h3>";
@@ -166,10 +172,14 @@ else {
 		
 		print_table($table);		
 	}
-	echo '<div style="width:99%; text-align: right;">';
+	echo "</div>";
+	
+	echo '<div class="divform">';
 	echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_types'>";
-	print_input_hidden ('op', 'new');
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
+		echo "<table class='search-table'><tr><td>"; 
+		print_input_hidden ('op', 'new');
+		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
+		echo "</td></tr></table>";
 	echo "</form></div>";
 	
 } // end of list

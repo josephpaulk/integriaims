@@ -25,9 +25,13 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-echo "<h1>".__('Newsboard management')."</h1>";
+echo "<h2>".__('Newsboard management')."</h2>";
 
-$operation = get_parameter ("operation");
+$operation = get_parameter ("operation","");
+if ($operation == "create")
+	echo "<h4>".__('Create Newsboard')."</h4>";
+if ($operation == "" || $operation == "insert")
+	echo "<h4>".__('List Newsboard')."</h4>";
 
 // ---------------
 // CREATE newsboard
@@ -85,8 +89,8 @@ if ($operation == "create") {
     $date = date('Y-m-d', time() + 604800); //one week later
 	$time = date('H:i:s', time());
   
-
-	$table->width = '99%';
+	$table = new StdClass();
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[1][0] = 2;
@@ -113,11 +117,11 @@ if ($operation == "create") {
 	$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
 	$button .= print_input_hidden ('operation', 'insert', true);
 	
-	$table->data['button'][0] = $button;
-	$table->colspan['button'][0] = 4;
-	
 	echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
 	print_table ($table);
+		echo "<div class='button-form'>";
+			echo $button;
+		echo "</div>";
 	echo '</form>';
 }
 
@@ -125,12 +129,13 @@ if ($operation == "create") {
 // TODO VIEW of my OWN items
 // -------------------------
 if ($operation == "") {
+	
 	$sql = sprintf ('SELECT * FROM tnewsboard');
 	$todos = get_db_all_rows_sql ($sql);
 	if ($todos === false)
 		$todos = array ();
 
-	echo '<table class="listing" width="99%">';
+	echo '<table class="listing" width="100%">';
 	echo "<th>".__('Title');
 	echo "<th>".__('Expire');
 	echo "<th>".__('Expire date');
@@ -164,9 +169,9 @@ if ($operation == "") {
 
 
     echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=create">';
-	echo '<div style="width: 99%; text-align: right;">';
+	echo '<div class="button-form">';
 	print_submit_button (__('Create'), 'crt', false, 'class="sub create');
-	echo '</form></div>';
+	echo '</div></form>';
 
 } // Fin bloque else
 

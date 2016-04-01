@@ -101,17 +101,23 @@ if ($id_field) {
 
 }
 
-echo '<h1>'.__('User fields editor').'</h1>';
+echo '<h2>'.__('User fields editor').'</h2>';
 
-$table->width = "99%";
-$table->class = "search-table-button";
+if ($id_field)
+	echo '<h4>'.__('Update').'</h4>';
+else
+	echo '<h4>'.__('Create').'</h4>';
+
+$table = new StdClass();
+$table->width = "100%";
+$table->class = "search-table";
 $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
 
 $types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'));
-$table->data[0][1] = print_label (__("Type"), "label-id", 'text', true);
-$table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
+$table->data[1][0] = print_label (__("Type"), "label-id", 'text', true);
+$table->data[1][0] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
 
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
 
@@ -128,9 +134,11 @@ if (!$id_field) {
 $table->data['button'][0] = $button;
 $table->colspan['button'][0] = 3;
 
+echo "<div class='divform'>";
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/usuarios/user_field_editor">';
 print_table ($table);
 echo '</form>';
+echo '</div>';
 
 ?>
 

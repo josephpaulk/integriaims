@@ -79,7 +79,8 @@ if ($update) {
   
 }
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
@@ -111,11 +112,12 @@ if ($table_remote_inventory !== ENTERPRISE_NOT_HOOK) {
 	$table->colspan[3][0] = 2;
 }
 
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 2;
-
 echo "<form name='setup' method='post' id='inventory_status_form'>";
 print_table ($table);
+
+	echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 ?>
 

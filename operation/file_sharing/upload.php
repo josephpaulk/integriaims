@@ -164,8 +164,8 @@ if (!isset($upload_mb)) {
 ?>
 
 <form id="form-file_releases" class="file_sharing fileupload_form" method="post" enctype="multipart/form-data">
-	<div id="drop_file">
-		<table width="99%">
+	<div id="drop_file" style="padding:0px;margin-bottom: 10px;border: 5px solid rgba(0, 0, 0, 0);" >
+		<table width="100%">
 			<tr>
 				<td>
 					<?php echo __('Drop the files here or'); ?>

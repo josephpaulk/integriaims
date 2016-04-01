@@ -685,6 +685,9 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	
 	$project_users = process_sql($sql);
 	
+	if (empty($project_users))
+		return __("This user dont view this data");
+	
 	//Initialize the data for all users
 	$data = array();
 	
@@ -703,7 +706,7 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	
 	$task_per_user = process_sql($sql);
 	if (empty($task_per_user))
-		$task_per_user = array();
+		return __("There is no data to show");
 	
 	foreach ($task_per_user as $tpu) {
 		$id_user = $tpu['id_user'];
@@ -712,7 +715,7 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 		$data[$id_user] = $number_tasks;
 	}
 	
-	if ($data == NULL) {
+	if (empty($data) AND empty($task_per_user) ) {
 		return __("There is no data to show");
 	}
 	else {
@@ -733,7 +736,7 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 	
 	$res = process_sql($sql);
 	if (empty($res))
-		$res = array();
+		return __("There is no data to show");
 	
 	$verified = 0;
 	$completed = 0;
@@ -787,7 +790,7 @@ function graph_workunit_project_user_single ($width, $height, $id_project, $ttl=
 					tproject.id = ttask.id_project 
 					GROUP BY tworkunit.id_user ORDER BY SUM(duration) DESC");
 	$data = NULL;
-				
+	
 	while ($row = mysql_fetch_array($res)) {
 		$data[$row[1]] = $row[0];
 	}
@@ -828,7 +831,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	if ($data == NULL) {
 		return __("There is no data to show");
 	} else {
-		$colors['graph']['fine'] = true;
+		//~ $colors['graph']['fine'] = true;
 		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors, array(), "", "", true, "", "", $config['font'], $config['fontsize'], true, $ttl);
 	}
 }
@@ -1442,23 +1445,24 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
 	$chart = array();
 	$names = array();
 	$chart2 = array();
-
+	
 	// Calculate chart data
 	for ($i = 0; $i < $resolution; $i++) {
-		$timestamp = $start_unixdate + ($interval * $i);
+		//$timestamp =  $start_unixdate + ($interval * $i);
+		$timestamp = strtotime($data[$i]['timestamp']);
 		$total = 0;
 		$j = 0;
 
-		while (isset ($data[$j])){
-            $dftime = strtotime($data[$j]['timestamp']);
-
-			if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
-				$total += ($data[$j]['duration']);
-			}
-			$j++;
-		} 
-
-    	$time_format = "M d";
+		//~ while (isset ($data[$j])){
+            //~ $dftime = strtotime($data[$j]['timestamp']);
+			//~ if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
+				//~ $total += ($data[$j]['duration']);
+			//~ }
+			//~ $j++;
+		//~ }
+		
+		$total = ($data[$i]['duration']);
+    	$time_format = "d M Y";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human]['graph'] = $total;
    	}
@@ -1468,7 +1472,7 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
    	$colors['graph']['alpha'] = 100;
 	
 	if ($area) {
-		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', '', __('Hours'), $config["base_url"], '', $config['font'], $config['fontsize'], '', $ttl);
+		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', __('Dates'), __('Hours'), $config["base_url"], '', $config['font'], $config['fontsize'], 'h', $ttl);
 	} else {
 		$output .= vbar_graph ($config['flash_charts'], $chart2, $width, $height, $colors, array(), "", "", $config["base_url"], "", $config['font'], $config['fontsize'],true, $ttl);
 		$output .= "</div>";

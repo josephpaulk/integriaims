@@ -27,8 +27,9 @@ if (count ($incidents) == 0) {
 }
 else {
 	
+	$table = new StdClass();
 	$table->class = 'listing';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->head = array ();
 	$table->head[0] = __('ID');
 	$table->head[1] = __('Name');

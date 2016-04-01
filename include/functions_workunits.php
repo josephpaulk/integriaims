@@ -124,7 +124,7 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	$start_date = substr ($now, 0, 10);
 	$wu_user = $config["id_user"];	
 	
-	echo "<table id='wu_".$number."' class='search-table' width='99%'>";
+	echo "<table id='wu_".$number."' class='search-table-button' width='100%'>";
 	
 	echo "<tr>";
 	
@@ -212,7 +212,7 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	echo "</tr>";
 	
 	echo "<tr>";
-	echo "<td colspan=5>";
+	echo "<td colspan=5 style='text-align:left;'>";
 	echo print_textarea ('description_'.$number, 4, 30, false, '', true, __('Description'));
 	echo "</td>";
 	echo "</tr>";
@@ -482,7 +482,7 @@ function workunits_print_table_massive_edition($id_task=0, $id_profile=0) {
 	echo '<br><h2>'.__('Massive operations over selected items').'</h2>';
 	$table = new StdClass;
 	$table->class = 'search-table-button';
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->data = array ();
 	$table->colspan = array ();
 

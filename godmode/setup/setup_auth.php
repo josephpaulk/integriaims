@@ -89,10 +89,13 @@ else {
 
 $disabled = false;
 
-$table->width = '99%';
+$table = new StdClass();
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
+$table->size[0] = "40%";
+$table->size[1] = "40%";
 
 $auth_methods = array ('mysql' => __('Local Integria'), 'ldap' => __('LDAP'));
 if ($is_enterprise) {
@@ -162,11 +165,12 @@ if ($is_enterprise) {
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 2;
 
 echo "<form name='setup_auth' method='post'>";
 print_table ($table);
+echo "<div class='button-form'>";
+		echo $button;
+	echo "</div>";
 echo '</form>';
 ?>
 

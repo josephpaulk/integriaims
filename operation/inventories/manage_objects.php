@@ -55,15 +55,17 @@ if ($get_icon) {
 //**********************************************************************
 
 echo '<div id="tabs">';
-
+echo '<h2>' . __('Inventory Object') . '</h2>';
+echo '<h4>' . __('Management');
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-title">' . strtoupper(__('Object management')) . '</li>';
+
 if (!empty($id)) {
 	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id . '"><span>'.__('Object details').'</span></a></li>';
 	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id . '"><span>'.__('Fields').'</span></a></li>';
 }
 echo '</ul>';
+echo '</h2>';
 echo '</div>';
 
 //**********************************************************************
@@ -157,7 +159,7 @@ if ($create || $id) {
 		echo "<h3>".__('Update existing object')."</h3>";
 	}*/
 	
-	$table->width = '99%';
+	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	
@@ -178,21 +180,25 @@ if ($create || $id) {
 	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
 	$table->colspan[2][0] = 2;
-
-	
-	if ($id == -1) {
-		$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true);
-		$button .= print_input_hidden ('insert_object', 1, true);
-	} else {
-		$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('id', $id, true);
-		$button .= print_input_hidden ('update_object', 1, true);
-	}
-	
-	$table->data[3][0] = $button;
 	
 	echo '<form id="form-manage_objects" method="post">';
 	print_table ($table);
+		echo '<div style="width:100%;">';
+			unset($table->data);
+			$table->width = '100%';
+			$table->class = "button-form";
+			if ($id == -1) {
+				$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true);
+				$button .= print_input_hidden ('insert_object', 1, true);
+			} else {
+				$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+				$button .= print_input_hidden ('id', $id, true);
+				$button .= print_input_hidden ('update_object', 1, true);
+			}
+			
+			$table->data[3][0] = $button;
+			print_table ($table);
+		echo '</div>';
 	echo '</form>';
 }
 
@@ -203,8 +209,8 @@ if (! $id && ! $create) {
 	$objects = get_db_all_rows_in_table ('tobject_type', 'name');
 	
 	$table->width = '99%';
-	
-	if ($objects !== false) {		
+	echo "<div class='divresult'>";
+	if ($objects !== false) {	
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array ();
@@ -217,7 +223,7 @@ if (! $id && ! $create) {
 		$table->style[1] = 'font-weight: bold';
 		$table->align = array ();
 		
-		echo '<table width="90%" class="listing">';
+		//echo '<table width="90%" class="listing">';
 		foreach ($objects as $object) {
 			
 			$has_external_fields = get_db_value_sql("SELECT COUNT(id) FROM tobject_type_field WHERE type='external' AND id_object_type=".$object['id']);
@@ -251,11 +257,17 @@ if (! $id && ! $create) {
 	} else {
 		echo "<h4>".__('No objects')."</h4>";
 	}
-	
-	echo '<div style="width: '.$table->width.'; text-align: right;">';
+	echo "</div>";
+	echo '<div class="divform">';
 	echo '<form method="post">';
+	echo '<table class="search-table">';
+	echo '<tr>';
+	echo '<td>';
 	print_input_hidden ('create', 1);
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	echo '</td>';
+	echo '</tr>';
+	echo '</table>';
 	echo "</form></div>";
 } // end of list
 
@@ -270,7 +282,7 @@ $(document).ready (function () {
 		data = this.value;
 		$("#product-icon").fadeOut ('normal', function () {
 			$("#product-icon").attr ("src", "images/products/"+data).fadeIn ();
-		});
+		}).change();
 	})
 });
 

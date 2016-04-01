@@ -73,7 +73,7 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 
 	if ($rowdup === false) {
 		echo "<h3 class='error'>".__('There was a problem loading user')."</h3>";
-		echo "</table>";
+		//echo "</table>";
 		include ("general/footer.php");
 		exit;
 	}
@@ -292,12 +292,13 @@ if ($action == 'create'){
 
 if (isset($_GET["alta"])){
 	if ($_GET["alta"]==1){
-		echo '<h1>'.__('Create user').'</h1>';
+		echo '<h2>'.__('Create user').'</h2>';
 	}
 }
 
 if (isset($_GET["update_user"]) OR isset($_GET["nuevo_usuario"])){
-	echo '<h1>'.__('Update user').'</h1>';
+	echo '<h2>'.__('Update user').'</h2>';
+	echo '<h4>'.$update_user.'</h4>';
 }
 
 if (isset($_GET["alta"]))
@@ -307,7 +308,7 @@ else
 	// Update URL
 	echo '<form name="user_mod" id="form-user_config" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
 
-echo "<table width='99%' class='search-table'>";
+echo "<table width='100%' class='search-table-button'>";
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');
@@ -557,7 +558,7 @@ if ($modo == "edicion") { // Only show groups for existing users
 	enterprise_hook ('manage_profiles');
 	echo "</table>";
 
-	echo "<div class='button' style='width:720px'>";
+	echo "<div class='button-form' style=''>";
 	print_input_hidden ('action', 'update');
 	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo "</div><br>";
@@ -566,8 +567,8 @@ if ($modo == "edicion") { // Only show groups for existing users
 enterprise_hook ('show_delete_profiles');
 
 if (isset($_GET["alta"])){
-	echo "</table>";
-	echo "<div class='button' style='width: 99%' >";
+	//echo "</table>";
+	echo "<div class='button-form' style='width: 100%' >";
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	print_input_hidden ('action', 'create');
 	echo '</div>';

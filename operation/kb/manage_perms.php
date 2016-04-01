@@ -78,42 +78,54 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_group = $row["id_group"];
 	}
 
-	echo "<h1>".__('Create a new product access')."</h1>";
+	echo "<h2>".__('KB data product access management')."</h2>";
+	echo "<h4>".__('Create a new product access')."</h4>";
+	
+	echo '<div class="divform">';
 	echo "<form name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_perms&create2'>";
 	
 	
-	echo '<table width="99%" class="search-table-button">';
+	echo '<table width="100%" class="search-table">';
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Product');
-	echo "<td class=datos>";
+	echo "<b>" . __('Product') . "</b>";
 	combo_kb_products ($id_product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos2>";
-	echo __('Group');
-	echo "<td class=datos2>";
+	echo "<b>" . __('Group') . "</b>";
 	combo_groups_visible_for_me ($config["id_user"], 'id_group', 1, 'KR', $id_group, false, 0 );
 	if ($id == -1)
-		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
+		echo "<tr><td>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
 	else
-		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
+		echo "<tr><td>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
 	echo "</table>";
 	echo "</form>";
+	echo "</div>";
 
 }
 
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h1>".__('KB data product access management')." &raquo; ".__('Assigned products / group')."</h1>";
+	echo "<h2>".__('KB data product access management')."</h2><h4>".__('Assigned products / group')."</h4>";
+	
+	echo '<div class="divform">';
+	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_perms&create=1'>";
+	echo "<table class='search-table'><tr><td>";
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	echo "</table></form></div>";
+	
 	$sql1='SELECT tkb_product.name as product, tgrupo.nombre as grupo, tkb_product_group.id_product, tkb_product_group.id_group 
 		FROM tkb_product_group, tkb_product, tgrupo 
 		WHERE tkb_product_group.id_product = tkb_product.id AND tgrupo.id_grupo = tkb_product_group.id_group';
+	
+	echo '<div class="divresult">';
 	$color =0;
+	
 	if ($result=mysql_query($sql1)){
-		echo '<table width="99%" class="listing">';
+		echo '<table width="100%" class="listing">';
 		echo "<th>".__('Category')."</th>";
 		echo "<th>".__('Group')."</th>";
 		echo "<th>".__('Delete')."</th>";
@@ -133,10 +145,10 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			echo $row['product'];
 			
 			// Group
-			echo "<td class='$tdcolor' valign='top'>";
+			echo "<td class='$tdcolor'>";
 			echo $row['grupo'];		
 			// Delete
-			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+			echo "<td class='".$tdcolor."f9'>";
 			echo "<a href='index.php?sec=kb&
 						sec2=operation/kb/manage_perms&
 						delete=1&id_product=".$row["id_product"]."&id_group=".$row["id_group"]."' 
@@ -146,10 +158,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:99%; text-align: right;">';
-	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_perms&create=1'>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	echo "</form></div>";
+	echo "</div>";
 } // end of list
 
 ?>

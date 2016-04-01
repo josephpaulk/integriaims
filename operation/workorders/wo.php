@@ -215,7 +215,7 @@ if ($set_progress > -1 ) {
 
 if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	if ($operation == "create") {
-		echo "<h1>".__('New Work order')."</h1>";
+		echo "<h2>".__('New Work order')."</h2><h4>".__('Add work')."</h4>";
 		
 		$progress = 0;
 		$priority = 2;
@@ -314,15 +314,17 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 	// Display main form / view 
 
-	if ($tab == ""){ 
-		$table->width = '99%';
+	if ($tab == ""){
+		
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'search-table-button';
 		$table->colspan = array ();
 		
 		$table->colspan[6][0] = 2;
 		$table->data = array ();
 		
-		$table->data[0][0] = print_input_text ('name', $name, '', 80, 120, true,
+		$table->data[0][0] = print_input_text ('name', $name, '', 50, 120, true,
 			__('Title'));
 		
 		$table->data[0][1] = print_select (get_priorities (), 'priority', $priority,
@@ -494,12 +496,13 @@ if ($operation == "") {
 	}
 
 	echo '<form id="form-search_wo" action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
-
+	
+	$table = new StdClass();
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "99%";
+	$table->width = "100%";
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 
@@ -578,7 +581,8 @@ if ($operation == "") {
 
 	if ($wos !== false) {
 		unset ($table);
-		$table->width = "99%";
+		$table = new StdClass();
+		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();

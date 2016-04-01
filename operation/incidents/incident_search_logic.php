@@ -101,31 +101,24 @@ if (defined ('AJAX')) {
 
 echo "<div id='incident-search-content'>";
 
+echo "<h2>" . __("Support") . "</h2>";
 if (get_parameter ('id_myticket') == 1){
-	echo "<h1>" .__('My Tickets');
+	echo "<h4>" .__('My Tickets');
 } else {
-	echo "<h1>" .__('Ticket search');
+	echo "<h4>" .__('Ticket search');
 }
-echo "<div id='button-bar-title'>";
-
-echo "</div>";
-echo "</h1>";
-
-echo "<div class='under_tabs_info'>";
-echo "</div>";
 
 
-print_autorefresh_button();
-
-
-echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 6px;'>";
-echo "<ul>";	
-echo "<li style='padding: 4px;'>";
+echo "<div id='button-bar-title' style='margin-right: 12px;'>";
+echo "<ul>";
+print_autorefresh_button_ticket();
+echo "<li style=''>";
 echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."&nbsp;".integria_help ("custom_search", true)."</a>";
 echo "</li>";
+
 echo "</ul>";
 echo "</div>";
-
+echo "</h4>";
 $search_form = (bool) get_parameter ('search_form');
 $create_custom_search = (bool) get_parameter ('save-search');
 $delete_custom_search = (bool) get_parameter ('delete_custom_search');
@@ -191,8 +184,8 @@ if ($delete_custom_search) {
 //FORM AND TABLE TO MANAGE CUSTOM SEARCHES
 $table = new stdClass;
 $table->id = 'saved_searches_table';
-$table->width = '99%';
-$table->class = 'search-table';
+$table->width = '100%';
+$table->class = 'search-table-button';
 $table->size = array ();
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
@@ -265,8 +258,9 @@ echo "</form>";
 //Store serialize filter
 serialize_in_temp($filter, $config["id_user"]);
 
+$table = new StdClass();
 $table->class = 'search-table-button';
-$table->width = '99%';
+$table->width = '100%';
 $table->id = 'incident_massive';
 $table->data = array();
 $table->style = array ();
@@ -287,15 +281,16 @@ if ($has_im) {
 	$table->data[1][2] .= print_input_hidden ('id_parent', $id_parent, true);
 	$table->data[1][2] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 	//Delete tickets
-	$table->data[1][3] = print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
+	$table->data[1][3] = "<b>" . __("Delete all tickets") . "</b>";
+	$table->data[1][3] .= print_image("images/cross.png", true, array("onclick" => "delete_massive_tickets()", "style" => "cursor: pointer"));
 }
 
-$table->data[2][0] = print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true);
+$table->data[2][0] = "<div class='button-form'>" . print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true) . "</div>";
 $table->colspan[2][0] = 4;
 
 $massive_oper_incidents = print_table ($table, true);
 
-echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
+echo print_container_div('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='inventory_search_window'></div>";
 ?>

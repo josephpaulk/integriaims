@@ -34,7 +34,7 @@ $title = "";
 $subtitle = "";
 switch ($tab) {
 	case "list":
-		$title = __("Campaigns");
+		$title = __("List Campaigns");
 		break;
 	case "editor":
 		$new = get_parameter("new");
@@ -42,15 +42,20 @@ switch ($tab) {
 		if ($new) {
 			$title = __("Campaign creation");
 		} else {
-			$title = __("Campaign edition");
+			$campaign = get_db_row ("tcampaign", "id", $id);
+			$title = $campaign["title"];
+			$title = __("Campaign edition") . ': ' . $title;
 		}	
 		break;
 	case "stats":
-		$title = __("Campaign statistics");
+		$campaign = get_db_row ("tcampaign", "id", $id);
+		$title = $campaign["title"];
+		$title = __("Campaign statistics") . ': ' . $title;
 		break;
 }
 
-echo "<h1>".$title;
+echo "<h2>"._('Campaigns') . "</h2>";
+echo "<h4>".$title;
 
 if (($tab == "editor" and $id) || $tab == "stats") {
 	echo "<div id='button-bar-title'>";
@@ -65,7 +70,7 @@ if (($tab == "editor" and $id) || $tab == "stats") {
 	echo "</div>";
 }
 
-echo "</h1>";
+echo "</h4>";
 
 //Select view
 switch ($tab) {

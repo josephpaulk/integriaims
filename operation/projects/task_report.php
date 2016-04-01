@@ -63,9 +63,9 @@ $count_hours = 1;
 // ********************************************************************************************************
 // Show forms
 // ********************************************************************************************************
-
+echo '<h2>'.__('Task statistics'). "</h2>";
+echo "<h4>".$task_name;
 if (!$gantt_editor) {
-	echo '<h1>'.__('Task statistics')."  &raquo ".$task_name;
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
@@ -87,7 +87,7 @@ if (!$gantt_editor) {
 	echo "</ul>";
 	echo "</div>";		
 }
-
+echo "</h4>";
 $task = get_db_row ('ttask', 'id', $id_task);
 
 // Get values
@@ -119,7 +119,7 @@ $table->cellpadding = 2;
 
 // Task activity graph
 $task_activity = task_activity_graph ($id_task, 600, 150, true, true);
-$table_advanced->width = '98%';
+$table_advanced->width = '100%';
 $table_advanced->class = 'search-table';
 $table_advanced->size = array ();
 $table_advanced->style = array();
@@ -135,9 +135,11 @@ if ($task_activity) {
 }
 
 $table->colspan['row_task_activity'][0] = 3;
-$table->data['row_task_activity'][0] = print_container('task_activity_chart', __('Task activity'), print_table($table_advanced, true), 'open', true, false);	
+$table->data['row_task_activity'][0] = print_container_div('task_activity_chart', __('Task activity'), print_table($table_advanced, true), 'open', true, true);	
+//~ echo "<h4>" . __('Task activity') . "</h4>";
+//~ print_table ($table_advanced);
 
-$table_advanced->width = '98%';
+$table_advanced->width = '100%';
 $table_advanced->class = 'search-table';
 $table_advanced->size = array ();
 $table_advanced->style = array();
@@ -211,7 +213,7 @@ $image = '<div class="graph_frame">' . $image . '</div>';
 $table_advanced->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 
 $table->colspan['row_task_stats'][0] = 3;
-$table->data['row_task_stats'][0] = print_container('task_stats', __('Task statitics'), print_table($table_advanced, true), 'open', true, false);	
+$table->data['row_task_stats'][0] = print_container_div('task_stats', __('Task statitics'), print_table($table_advanced, true), 'open', true, true);	
 
 print_table ($table);
 

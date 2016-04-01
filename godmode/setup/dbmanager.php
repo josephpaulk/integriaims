@@ -71,13 +71,13 @@ function dbmgr_main () {
     $clean_output = get_parameter("clean_output", 0);
 
     if ($clean_output == 0){
-	    echo "<h1>".__('Extensions'). " &raquo; ".__('Database interface');
+	    echo "<h2>".__('Extensions'). "</h2><h4> ".__('Database interface');
 	    $html_report_image = print_html_report_image ("index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql", __("Report"));
 		if ($html_report_image) {
 			echo "&nbsp;&nbsp;" . $html_report_image;
 		}
         
-        echo "</h1>";
+        echo "</h4>";
 	    echo '<div class="note_simple">';
 	    echo __("This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.");
 	    echo '</div>';
@@ -89,14 +89,14 @@ function dbmgr_main () {
 	    echo "<br /><br />";
 	    echo "<form method='post' action=''>";
 	    print_textarea ('sql', 5, 50, html_entity_decode($sql, ENT_QUOTES));
-        echo "<div style='width: 99%; text-align: right; margin-top: 6px;'>";
+        echo "<div class='button-form'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
 	    echo "</div>";
 	    echo "</form>";
     } else {
         echo "<form method='post' action=''>";
 	    print_textarea ('sql', 2, 40, html_entity_decode($sql, ENT_QUOTES));
-        echo "<div style='width: 99%; text-align: right; margin-top: 6px;'>";
+        echo "<div class='button-form'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
 	    echo "</div>";
 	    echo "</form>";
@@ -105,10 +105,6 @@ function dbmgr_main () {
 	// Processing SQL Code
 	if ($sql == '')
 		return;
-
-	echo "<br />";
-	echo "<hr />";
-	echo "<br />";
 	
 	$error = '';
 	$result = dbmanager_query ($sql, $error);
@@ -124,13 +120,15 @@ function dbmgr_main () {
 		return;
 	}
 	
-	$table->width = '90%';
+	$table->width = '100%';
 	$table->class = 'dbmanager';
 	$table->head = array_keys ($result[0]);
 	
 	$table->data = $result;
 	
+	echo "<div style='overflow-x:scroll;'>";
 	print_table ($table);
+	echo "</div>";
 }
 
 dbmgr_main ();
