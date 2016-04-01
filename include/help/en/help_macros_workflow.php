@@ -33,6 +33,7 @@ Following strings will be replaced on runtime on the templates who use it:
 <li>_owner_: User who manages the incident.</li>
 <li>_id_group_: Group id assigned to the incident.</li>
 <li>_name_group_: Name assigned to the incident group.</li>
+<li>_type_tickets_: Tickets type.
 <li>Templates Custom Fields: This allows to create an object type the name of the fields you add can include them as a macro which show the value of that field, example: _Name of the custom field_.</li>
 
 </p>

@@ -1273,9 +1273,10 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		} else {
 			if (!$clean_output) {
 				$table->head[9] = __('Actions');
-			}
+			
 			if ($write_permission) {
 				$table->head[10] = print_checkbox ('inventorycb-all', "", false, true);
+			}
 			}
 		}
 		
@@ -1378,7 +1379,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 					}
 				}
 				if ($write_permission) {
-					$data[$i] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+					if (!$clean_output) {
+						$data[$i] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+					}
 				}
 
 			} else {
@@ -1391,7 +1394,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 					}
 				}
 				if ($write_permission) {
-					$data[10] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+					if (!$clean_output) {
+						$data[10] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+					}
 				}	
 			}
 			

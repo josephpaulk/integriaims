@@ -25,7 +25,9 @@ if (! dame_admin ($config["id_user"])) {
 }
 
 include_once("include/functions_update_manager.php");
-enterprise_include("include/functions_update_manager.php");
+if (file_exists ("enterprise/include/functions_update_manager.php")) {
+	require_once("enterprise/include/functions_update_manager.php");
+}
 
 if (defined ('AJAX')) {
 	$users = get_valid_users_num();

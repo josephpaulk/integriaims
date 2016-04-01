@@ -1384,6 +1384,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$forced_email = get_db_sql ("SELECT forced_email FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$user_defect_group = get_db_sql ("SELECT id_user_default FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$type_ticket = get_db_sql ("SELECT name FROM tincident_type WHERE id = ".$row["id_incident_type"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
 	$prioridad = get_priority_name($row["prioridad"]);
@@ -1462,6 +1463,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
 	$MACROS["_incident_epilog_"] = $row["epilog"];
 	$MACROS["_incident_closed_by_"] = $row["closed_by"];
+	$MACROS["_type_tickets_"] = $type_ticket;
 
 	// Resolve code for its name
 	switch ($mode){

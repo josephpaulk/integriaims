@@ -15,6 +15,7 @@ Las siguientes palabras ser&aacute;n reemplazadas por el valor real en las plant
 <li>_owner_: Usuario que gestiona el incidente.
 <li>_group_: Grupo asignado al incidente.
 <li>_author_: Creador del incidente.
+<li>_type_tickets_: Tipo de tickets.
 <li>_priority_: Prioridad del incidente.
 <li>_status_: Estado del incidente.
 <li>_resolution_: Resoluci&oacute;n del incidente.
@@ -24,8 +25,9 @@ Las siguientes palabras ser&aacute;n reemplazadas por el valor real en las plant
 <li>_wu_text_: Texto de la unidad de trabajo.
 <li>_havecost_: Solo para reportes de unidades de trabajo de un proyecto.
 <li>_taskname_: Solo para reportes de proyecto.
-<li>_projectname_: Solo para reportes de proyecto.
+<li>_projectname_: Solo para reportes de proyecto. 
 <li>Plantillas de campos personalizados: Esto permite que al crear un tipo de objeto el nombre de los campos que agregas puedes incluirlos como una macro la cual mostrara el valor de dicho campo: _nombre del campo personalizado_.</li>
+
 
 </p>
 <p>

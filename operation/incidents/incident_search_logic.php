@@ -292,11 +292,12 @@ $massive_oper_incidents = print_table ($table, true);
 
 echo print_container_div('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
 
-echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='parent_search_window'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Tickets")."' id='inventory_search_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>

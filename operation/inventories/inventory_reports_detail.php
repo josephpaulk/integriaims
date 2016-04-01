@@ -132,23 +132,38 @@ if ($render_html == 1){
 	if ($rows === false)
 		return;
 	
-	// Get the header
-	echo "<table width=99% cellpadding=0 cellspacing=0 class=listing>";
-	echo "<tr>";
-	foreach (array_keys ($rows[0]) as $header_item){
-		echo "<th>".$header_item."</th>";
-	}
-	echo "</tr>";
+	//count $row chunk
+	$row_chunk_cont = count(array_chunk($rows[0], 5));
 	
-	// Get the data row
-	foreach ($rows as $row) {
-		echo "<tr>";
-		foreach ($row as $item) {
-			echo "<td>$item</td>";
+	//keys $row chunk
+	$row_chunk_keys = array_chunk(array_keys($rows[0]), 5);
+		
+	$table = array();
+	for($i=0; $i < $row_chunk_cont; $i++){
+		$table[$i][] = $row_chunk_keys[$i];
+		foreach ($rows as $row) {
+			$row_chunk = array_chunk($row, 5);
+			$table[$i][] = $row_chunk[$i];
 		}
-		echo "</tr>";
 	}
-	echo "</table>";
+
+	foreach ($table as $t){
+		echo "<table width=99% cellpadding=0 cellspacing=0 class=listing>";
+		foreach ($t as $k => $tr){
+			echo "<tr>";
+			if ($k == 0){
+				foreach ($tr as $item){
+					echo "<th>".$item."</th>";
+				}
+			} else {
+				foreach ($tr as $item){
+					echo "<td>".$item."</td>";
+				}
+			}
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
     return;
 }
 

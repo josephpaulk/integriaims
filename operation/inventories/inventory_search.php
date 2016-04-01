@@ -468,17 +468,21 @@ switch ($mode) {
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
 		if ($write_permission) {
-			echo '<div class="button-form">';
-			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
-			echo '</div>';
+			if (!$clean_output) {
+				echo '<div style=" text-align: right;">';
+				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+				echo '</div>';
+			}
 		}
 		break;
 	default:
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
-		if ($write_permission) {	
-			echo '<div class="button-form">';
-			echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
-			echo '</div>';
+		if ($write_permission) {
+			if (!$clean_output) {	
+				echo '<div style=" text-align: right;">';
+				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+				echo '</div>';
+			}
 		}
 		break;
 }
