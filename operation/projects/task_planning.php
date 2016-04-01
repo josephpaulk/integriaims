@@ -37,9 +37,9 @@ if (!$project_access["read"]) {
 }
 
 $project = get_db_row ('tproject', 'id', $id_project);
-$update = get_parameter("update");
-$create = get_parameter("create");
-$delete = get_parameter("delete");
+$update = get_parameter("update", false);
+$create = get_parameter("create", false);
+$delete = get_parameter("delete", false);
 
 if (!$update && !$create && !$delete) {
 	if (! manage_any_task($config["id_user"], $id_project)) {
@@ -312,13 +312,13 @@ echo "<table class = 'listing'><tr>";
 echo "</tr></table>";
 
 $content_general .= "<tr><td valign='top' >";
-		$content = '<tr><td colspan="2" align="center">'.graph_workunit_project_user_single(180, 150, $id_project).'</td></tr>';
+		$content = '<tr><td colspan="2" valign=top style="height:250px;">'.graph_workunit_project_user_single(350, 150, $id_project).'</td></tr>';
 	$content_general .=	print_container('planning_hours_worked', __("Hours worked"), $content, 'no', true, '10px');
 $content_general .= "</td><td valign='top' >";
-		$content = '<tr><td colspan="2" align="center">'. graph_workunit_project_task_status(180, 150, $id_project).'</td></tr>';
+		$content = '<tr><td colspan="2" valign=top style="height:250px;">'. graph_workunit_project_task_status(350, 150, $id_project).'</td></tr>';
 	$content_general .= print_container('planning_hours_summary_task', __("Summary task status"), $content, 'no', true, '10px');
 $content_general .= "</td><td valign='top'  >";
-		$content = '<tr><td colspan="2" align="center">'. graph_project_task_per_user(180, 150, $id_project).'</td></tr>';
+		$content = '<tr><td colspan="2" valign=top style="height:250px;">'. graph_project_task_per_user(350, 150, $id_project).'</td></tr>';
 	$content_general .= print_container('planning_hours_task_user', __("Task per user"), $content, 'no', true, '10px', '', '', 1, 'less_widht');
 $content_general .= "</td></tr>";
 print_container('task_information', __("Task Information"), $content_general, 'closed', false, '10px', '', '', 2);
@@ -383,13 +383,13 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	
 	// Fourth column (Start date)
 	echo "<td>";
-	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
+	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 9, 15, 0, '', 'style="font-size:9px;"');
 	
 	echo "</td>";
 
 	// Fifth column (End date)
 	echo "<td>";
-	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
+	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 9, 15, 0, '', 'style="font-size:9px;"');
 	echo "</td>";
 	
 	//Worked time based on workunits

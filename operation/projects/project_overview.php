@@ -46,7 +46,7 @@ $disable_project = (bool) get_parameter ('disable_project');
 $delete_project = (bool) get_parameter ('delete_project');
 $activate_project = (bool) get_parameter ('activate_project');
 $action = (string) get_parameter ('action');
-$search_id_project_group = (int) get_parameter ('search_id_project_group');
+$search_id_project_group = (int) get_parameter ('search_id_project_group',-1);
 $search_text = (string) get_parameter ('search_text');
 
 
@@ -145,7 +145,17 @@ $table->data = array ();
 $table->data[0][0] = '<b>'.__('Search').'</b>';
 $table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100, true);
 $table->data[2][0] = '<b>'.__('Group').'</b>';
-$table->data[3][0] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
+
+$sql = "SELECT * FROM tproject_group";
+$datos = get_db_all_rows_sql($sql);
+$select = array();
+
+foreach ($datos as $data) {
+	$select[$data["id"]] = $data["name"];
+}
+
+$select[0] = __("Without group");
+$table->data[3][0] = print_select($select, "search_id_project_group", $search_id_project_group, '', __("Any"), -1, true, false, true, false);
 $table->data[4][0] = print_submit_button (__('Search'), "search_btn", false, '', true);
 
 echo '<div class="divform">';
@@ -159,11 +169,14 @@ echo '<div class="divform">';
 	echo '</form>';
 echo '</div>';
 
-if ($search_id_project_group != 0) {
+$project_groups = false;
+$where_clause = '';
+if ($search_id_project_group > 0) {
 	$where_clause = sprintf (" where tproject_group.id=$search_id_project_group ");
 }
-
-$project_groups = process_sql("SELECT * FROM tproject_group".$where_clause." ORDER by name"); 
+if ($search_id_project_group == -1 OR $search_id_project_group > 0) {
+	$project_groups = process_sql("SELECT * FROM tproject_group".$where_clause." ORDER by name"); 
+}
 
 if($project_groups === false) {
 	$project_groups = array();
@@ -176,6 +189,10 @@ if($where_clause == ""){
 	$nogroup["icon"] = '../group.png';
 $project_groups[] = $nogroup;
 }
+if ($search_id_project_group > -1)
+	$apertura = 'open';
+else
+	$apertura = 'closed';
 echo "<div class='divresult'>";
 foreach($project_groups as $group) {
 	$info_general = "";
@@ -279,7 +296,7 @@ foreach($project_groups as $group) {
 			$info_general .= "</tr>";
 		}
 	$title = "<img src='images/icons/icono_camara.png' title='Prueba' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
-	print_container('info_projects_'.$group["id"], $title, $info_general, 'closed', false, '10px', '', '', 6, 'no_border_bottom'); 
+	print_container('info_projects_'.$group["id"], $title, $info_general, $apertura, false, '10px', '', '', 6, 'no_border_bottom'); 
 }
 echo "</div>";
 ?>

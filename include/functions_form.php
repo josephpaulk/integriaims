@@ -911,7 +911,6 @@ echo "</form>";
 	} else {
 		$output .= "<tr><td align='right'>";
 		$output .= "<img src='images/rosette.png' title='".__('Locked by')." $locked'";
-		$output .= print_user_avatar ($locked, true);
 		$output .= "</td>";
 	}
 
@@ -922,7 +921,7 @@ echo "</form>";
 	$title = "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	$title .= "<b>".$id_user."</b>";
 	$title .= "</a>";
-	$title .= " ".__('said on').' '.$timestamp;
+	$title .= " ".__('said on').' '. date("d M Y", strtotime($timestamp));
 	print_container_div("dest-".$id_workunit, $title, $output, 'closed', false, false, '', '', 1, '', "margin-top:0px;");
 }
 
@@ -1091,17 +1090,13 @@ function form_search_incident ($return = false, $filter=false) {
 			
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
 	$table_advanced->data[2][2] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:195px;'", true, '', __('Inventory'));
-	$table_advanced->data[2][2] .= "<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	$table_advanced->data[2][2] .= "<a href='javascript: (\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
 	$table_advanced->data[2][2] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
 	$table_advanced->data[2][3] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
 	$table_advanced->rowspan[2][3] = 2;
 	$table_advanced->cellstyle[2][3] = "vertical-align:top;";
 	
-	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	$table->data[2][3] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
-	$table->data[2][3] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
-	$table->data[2][3] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
 	if (!get_external_user ($config["id_user"]))
 		$table_advanced->data[4][0] = print_select (get_companies (), 'search_id_company',

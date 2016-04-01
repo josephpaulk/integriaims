@@ -117,7 +117,7 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     echo "<div>|</div>";
     echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
-
+/*
 if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_reports != MENU_HIDDEN) {
     // REPORTS
     if ($sec == "reports" )
@@ -125,9 +125,9 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     else
 	    echo "<li class='reports'>";
     echo "<div>|</div>";
-    echo "<a href='index.php?sec=reports&sec2=enterprise/operation/reporting/reports_list'>".__('Reports')."</a></li>";
+    echo "<a href='index.php?sec=reports&sec2=enterprise/operation/reporting/folder'>".__('Reports')."</a></li>";
 }
-
+*/
 // Customers
 
 if ((give_acl($config["id_user"], 0, "CR") || (give_acl($config["id_user"], 0, "CN"))) && (get_external_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {

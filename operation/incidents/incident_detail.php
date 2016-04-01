@@ -944,7 +944,7 @@ if ($id) {
 		echo "<li>";
 		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 		print_input_hidden ('quick_delete', $id, false);
-		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/cross.png", true, array("title" => __("Delete"))).'</a>';
+		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/papelera_gris.png", true, array("title" => __("Delete"))).'</a>';
 		echo '</form>';
 		echo "</li>";
 		
@@ -962,7 +962,7 @@ if ($id) {
 	}	
 
 	echo '<li>';
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/volver_listado.png", true, array("title" => __("Back to search")))."</a>";
 	echo '</li>';		
 	
 	echo "</ul>";

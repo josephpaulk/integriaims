@@ -45,6 +45,7 @@ if (!empty($graph_type)) {
 	include_once($homeurl . 'include/graphs/functions_utils.php');
 }
 
+include_once($homeurl . 'include/graphs/functions_flot.php');
 // Clean the output buffer and turn off output buffering
 ob_end_clean ();
 
@@ -143,7 +144,7 @@ function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1, $reduce_data_columns = false) {
 		
 	if($flash_chart) {
-		echo flot_hcolumn_chart ($chart_data, $width, $height, $homedir, $reduce_data_columns, $xaxisname, $yaxisname);
+		echo flot_vcolumn_chart ($chart_data, $width, $height, $homedir, $reduce_data_columns, $xaxisname, $yaxisname);
 	}
 	else {
 		$graph = array();
@@ -329,7 +330,8 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true,
 	$homedir="", $water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1) {
 	if($flash_chart) {
-		return fs_2d_hcolumn_chart ($chart_data, $width, $height);
+		//~ return fs_2d_hcolumn_chart ($chart_data, $width, $height);
+		return flot_hcolumn_chart ($chart_data, $width, $height, $water_mark);
 	}
 	else {
 		$graph = array();

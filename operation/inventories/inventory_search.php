@@ -381,7 +381,7 @@ if ($search) {
 } 
 
 
-if (!$clean_output) {
+if (!$pure) {
 	
 	$form .= '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		$buttons = '<div class="button-form">';
@@ -467,20 +467,20 @@ switch ($mode) {
 		break;
 	case 'list':
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
-		if ($write_permission) {
-			if (!$clean_output) {
-				echo '<div style=" text-align: right;">';
-				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+		if (!$pure) {
+			if ($write_permission) {
+				echo '<div class="button-form">';
+				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 				echo '</div>';
 			}
 		}
 		break;
 	default:
 		inventories_show_list($sql_search, $sql_search_count, $params, $last_update);
-		if ($write_permission) {
-			if (!$clean_output) {	
-				echo '<div style=" text-align: right;">';
-				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub delete"', true);
+		if (!$pure) {
+			if ($write_permission) {	
+				echo '<div class="button-form">';
+				echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 				echo '</div>';
 			}
 		}

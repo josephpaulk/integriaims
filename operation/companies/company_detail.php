@@ -264,7 +264,6 @@ if ($id) {
 }
 
 // EDIT / CREATE FORM
-
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$disabled_write = false;
@@ -378,13 +377,11 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 }
 
 // Files
-// ~~~~~~~~~
 elseif ($op == "files") {
 	include ("operation/companies/company_files.php");
 }
 
 // Activities
-// ~~~~~~~~~
 elseif ($op == "activities") {
 
 	$op2 = get_parameter ("op2", "");
@@ -501,7 +498,6 @@ elseif ($op == "activities") {
 }
 
 // CONTRACT LISTING
-
 elseif ($op == "contracts") {
 	
 	if ($write_permission || $manage_permission) {
@@ -570,7 +566,6 @@ elseif ($op == "contracts") {
 }
 
 // CONTACT LISTING
-
 elseif ($op == "contacts") {
 	
 	if ($write_permission || $manage_permission) {
@@ -798,7 +793,6 @@ elseif ($op == "invoices") {
 }
 
 // Leads listing
-
 elseif ($op == "leads") {
 	
 	if ($section_write_permission || $section_manage_permission) {
@@ -866,7 +860,9 @@ elseif ($op == "leads") {
 			echo '</div>';		
 	}
 }
-else if ($op == 'projects') {
+
+// Projects
+elseif ($op == 'projects') {
 	$sql = "SELECT DISTINCT id_project FROM trole_people_task, ttask WHERE ttask.id = trole_people_task.id_task
 			AND id_user IN (SELECT id_usuario FROM tusuario WHERE id_company=$id)";
 

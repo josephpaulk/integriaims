@@ -37,7 +37,7 @@ echo '<form method="post" action="index.php?sec=agenda&sec2=operation/agenda/age
 $show_projects = get_parameter("show_projects", 0);
 $show_tasks = get_parameter("show_tasks", 0);
 $show_events = get_parameter("show_events",0);
-$show_wo = get_parameter("show_wo",0);
+$show_wu = get_parameter("show_wu",0);
 $show_clients= get_parameter("show_clients",0);
 $filter_btn = get_parameter("filter_btn",0);
 
@@ -54,7 +54,7 @@ $table->data = array ();
 $table->colspan = array ();
 
 $table->data[0][0] = print_checkbox ('show_events', 1, $show_events, true, __('Show entries'));
-$table->data[0][1] = print_checkbox ('show_wo', 1, $show_wo, true, __('Show workorders'));
+$table->data[0][1] = print_checkbox ('show_wu', 1, $show_wu, true, __('Show Workunits'));
 $table->data[0][2] = print_checkbox ('show_projects', 1, $show_projects, true, __('Show projects'));
 $table->data[0][3] = print_checkbox ('show_tasks', 1, $show_tasks, true, __('Show tasks'));
 $table->data[0][4] = print_checkbox ('show_clients', 1, $show_clients, true, __('Show clients'));
@@ -74,8 +74,8 @@ echo "<td class='legend_color_box legend_project'></td>";
 echo "<td>".__("Projects")."</td>";
 echo "<td class='legend_color_box legend_task'></td>";
 echo "<td>".__("Tasks")."</td>";
-echo "<td class='legend_color_box legend_wo'></td>";
-echo "<td>".__("Workorders")."</td>";
+echo "<td class='legend_color_box legend_wu'></td>";
+echo "<td>".__("Workunits")."</td>";
 echo "<td class='legend_color_box legend_event'></td>";
 echo "<td class='legend_last_box'>".__("Entries")."</td>";
 echo "</tr>";
@@ -113,7 +113,7 @@ echo "</table>";
 	
         var show_projects = <?php echo $show_projects;?>;
         var show_tasks = <?php echo $show_tasks;?>;
-        var show_wo = <?php echo $show_wo;?>;
+        var show_wu = <?php echo $show_wu;?>;
         var show_events = <?php echo $show_events;?>;
         var show_clients = <?php echo $show_clients;?>;
         
@@ -158,7 +158,7 @@ echo "</table>";
         		end_time = end_time/1000; //Convert from miliseconds to seconds
 
                 var url_source = 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time;
-                url_source += '&show_projects='+show_projects+'&show_events='+show_events+'&show_wo='+show_wo+'&show_tasks='+show_tasks+'&show_clients='+show_clients;
+                url_source += '&show_projects='+show_projects+'&show_events='+show_events+'&show_wu='+show_wu+'&show_tasks='+show_tasks+'&show_clients='+show_clients;
 				
         		$.ajax({
             		url: url_source,
@@ -166,7 +166,7 @@ echo "</table>";
             		type: "POST",
             		success: function(data) {
                 		var events = [];
-                		
+						
                 		$(data).each(function() {
                 			
                 			var obj = $(this);

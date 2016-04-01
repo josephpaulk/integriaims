@@ -27,7 +27,7 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 echo '<h2>' . __('Inventory') . '</h2>';
 echo '<h4>' . __('Overview');
 
-if (!$clean_output) {
+if (!$pure) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
@@ -36,8 +36,12 @@ if (!$clean_output) {
 	serialize_in_temp($filter, $config["id_user"]);
 	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
 
-	$buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
+	//~ $buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
 	echo $buttons;
+	echo "</li>";
+	echo "<li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory&pure=1'>" .
+		print_image ("images/html_tabs.png", true, array("title" => __("Test"))) . "</a>";
 	echo "</li>";
 	echo "<li>";
 	echo "<a id='listview_form_submit' href='#'>" .
@@ -50,6 +54,17 @@ if (!$clean_output) {
 		"</a>";
 	echo "</li>";
 	echo "</ul>";
+	echo "</div>";
+}
+else {
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+		echo "<a id='' href='index.php?sec=inventory&sec2=operation/inventories/inventory'>" .
+		print_image ("images/flecha_volver.png", true, array("title" => __("Test"))) . "</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
 }
 echo '</h4>';
 

@@ -98,16 +98,36 @@ if ($lock_month != ""){
 echo "<h2>".__('Monthly report') . "</h2>";
 
 echo "<h4>" . __("For") . ": " . $id;
+echo "<div id='button-bar-title'><ul>";
 // Lock all workunits in this month
-echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
-echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
-echo "</a>";
 
-$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id", __("PDF report"));
-if ($report_image) {
-	echo "&nbsp;&nbsp;" . $report_image;
+//~ $report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id", __("PDF report"));
+//~ if ($report_image) {
+	//~ echo "&nbsp;&nbsp;" . $report_image;
+//~ }
+
+if (!$pure) {
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
+		echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
+		echo "</a>";
+	echo "</li>";
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&pure=1&id=$id'>";
+		echo "<img src='images/html_tabs.png' border=0 title='". _("HTML"). "'>";
+		echo "</a>";
+	echo "</li>";
+}
+else {
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&pure=0&id=$id'>";
+		echo "<img src='images/flecha_volver.png' border=0 title='". _("Back"). "'>";
+		echo "</a>";
+	echo "</li>";
 }
 
+echo "</ul>";
+echo "</div>";
 echo "</h4>";
 
 $first_of_month = gmmktime(0,0,0,$month,1,$year);

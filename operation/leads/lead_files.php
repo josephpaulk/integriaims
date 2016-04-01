@@ -98,11 +98,12 @@ echo '</div>';
 $sql = "SELECT * FROM tattachment WHERE id_lead = $id ORDER BY timestamp DESC";
 $files = get_db_all_rows_sql ($sql);	
 
+echo "<div style='width: 86%; float: right;'>";
 echo "<div class='divresult'>";
 if ($files !== false) {
 	$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files");
 	unset ($table);
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = "listing";
 	$table->data = array ();
 	$table->size = array ();
@@ -137,6 +138,7 @@ if ($files !== false) {
 } else {
 	echo "<h3>". __('There is no files attached for this lead')."</h3>";
 }
+echo "</div>";
 echo "</div>";
 
 ?>

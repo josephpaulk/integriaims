@@ -31,6 +31,7 @@ $date = date('Y-m-d');
 $year = date("Y");
 
 $year = get_parameter ("year", $year);
+
 $prev_year = $year -1 ;
 $next_year = $year +1 ;	
 
@@ -59,20 +60,31 @@ if (($id_user_show == "") || (($id_user_show != $config["id_user"]) && !in_array
 echo "<h2>".__('Annual report')."</h2>";
 echo "<h4>".__('For user').": ". $id_user_show;
 
+echo "<div id='button-bar-title'><ul>";
 if ($clean_output == 0) {
 	// link full screen
-	$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year", __("Full screen"));
-	if ($html_report_image) {
-		echo "&nbsp;&nbsp;" . $html_report_image;
+	if ($pure) {
+		$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year",
+			__("Full screen"), "", array("pure" => 0));
 	}
-
-	// link PDF report
-	$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year", __("PDF report"));
-	if ($report_image) {
-		echo "&nbsp;&nbsp;" . $report_image;
+	else {
+		$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year",
+			__("Full screen"), "", array("pure" => 1));
+	
+		if ($html_report_image) {
+			echo "<li>" . $html_report_image . "</li>";
+		}
+		
+		// link PDF report
+		$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_annual&id_user=$id_user_show&year=$year", __("PDF report"));
+		if ($report_image) {
+			echo "<li>" . $report_image . "</li>";
+		}
 	}
 }
 
+echo "</ul>";
+echo "</div>";
 echo "</h4>";
 
 echo "<table class='search-table' width=100% style='text-align:right;'><tr><td>";

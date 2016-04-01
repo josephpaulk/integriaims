@@ -33,6 +33,7 @@ $result_output = "";
 $id_project_group = 0;
 
 $action = (string) get_parameter ('action');
+$pure = (bool) get_parameter ('pure',0);
 $id_project = (int) get_parameter ('id_project');
 
 $create_project = (bool) get_parameter ('create_project');
@@ -82,12 +83,14 @@ if ($id_project) {
 echo "<h2>".__('Project management')."</h2>";
 echo "<h4>".__('Project report')." &raquo; " . get_db_value ("name", "tproject", "id", $id_project);
 if (!$clean_output) {
-	echo "<div id='button-bar-title'><ul><li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".print_image ("images/go_previous.png", true, array("title" => __("Back to project editor")))."</a></li>";
-		$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
-		if ($report_image) {
-			echo "<li>".$report_image."</li>";
+	echo "<div id='button-bar-title'><ul>";
+		//$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
+		if ($pure === false) {
+			echo "<li><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to project editor")))."</a></li>";
+			echo "<li><a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project&pure=1'>".print_image ("images/html_tabs.png", true, array("title" => __("HTML")))."</a></li>";
 		}
+		else
+			echo "<li><a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project&pure=0'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
 	echo "</ul></div>";
 }
 echo "</h4>";
@@ -440,10 +443,6 @@ if ($id_project) {
 			$table_task->data = array();
 			$table_task->head = array();
 			
-			$row = array();
-			$row['name'] = __('Task');
-			$row['data'] = $task['name'];
-			$table_task->data['task'] = $row;
 			
 			$row = array();
 			$row['name'] = __('Total time').' ('.__('Actual').' / '.__('Estimated').') ('.__('In hours').')';
@@ -548,11 +547,26 @@ if ($id_project) {
 					}
 					$table_wu->data[] = $row;
 				}
-				$tasks_report .= '<tr><td colspan = "2"><div class = "divborderinside">'.print_table($table_task, true);
-				$tasks_report .= print_table($table_wu, true).'</div></td></tr>';
+				
+				$tabla_wu = print_table($table_wu, true);
+				
+				$table_task->data["workunit_".$task['id']][0] =	print_container_div("workunits_".$task['id'], __('Workunit of this task'),
+						$tabla_wu, 'closed', true, false, '', '', 1, '', 'margin-top:0px;');
+				$table_task->colspan["workunit_".$task['id']][0] = 2;
+				
+				$tabla_taks = print_table($table_task, true);
+				
+				$tasks_report .= '<tr><td>' . print_container_div("taks_".$task['id'],
+							__('Task').": ".$task['name'], $tabla_taks,
+							'closed', true, false, '', '', 1, '', 
+								'margin-bottom:0px;') . '</td></tr>';
 			}
 			else {
-				$tasks_report .= '<tr><td colspan = "2"><div class = "divborderinside">'.print_table($table_task, true).'</div></td></tr>';
+				//$tasks_report .= '<tr><td colspan = "2"><div class = "divborderinside">'.print_table($table_task, true).'</div></td></tr>';
+				$tasks_report .= '<tr><td>' .print_container_div("task_".$task['id'],
+							__('Task').": ".$task['name'], 
+						print_table($table_task, true), 'closed', 
+						true, false, '', '', 1, '', '') .'</td></tr>';
 			}
 		}
 	}
@@ -571,7 +585,7 @@ if ($id_project) {
 			echo print_container('project_workload_distribution_report', __('Workload distribution'), $workload_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
 		echo "</div>";
 		// Project activity graph
-		$project_activity = project_activity_graph ($id_project, 650, 150, true, $graph_ttl, 50, true);
+		$project_activity = project_activity_graph ($id_project, 750, 250, true, $graph_ttl, 50, true);
 		if ($project_activity) {
 			$project_activity = '<tr><td colspan = "2" class = "center-graph">' . $project_activity . '</td></tr>';
 			echo print_container('project_activity_report', __('Project activity'), $project_activity, 'no', true, true, "container_simple_title", "container_simple_div");

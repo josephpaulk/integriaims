@@ -53,12 +53,65 @@ if ($news || $agenda || $todo || $projects || $incidents) {
 
 if ($info) {
 	
-	echo "<div style='float:left; width:106%;'>";
+	echo "<div style='width:100%;'>";
 	echo '<table class="landing_table" width=100%>';
 	echo "<tr>";
 	// LEFT SIDE
 	echo "<td>";
+	
+	// ==============================================================
+	// Show Incident items
+	// ==============================================================
 
+	$incidents_home = '';
+	if ($incidents > 0){
+		$sql_2 = "SELECT * FROM tincidencia WHERE (id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."') AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
+		
+		$result_2 = mysql_query($sql_2);
+		if ($result_2){
+			$incidents_home .= "<table width=100% class='landing_incidents listing'>";
+			$incidents_home .= "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Ticket")."</th><th>".__("Last WU")."</th></tr>";
+		}
+		while ($row_2 = mysql_fetch_array($result_2)){
+			$idi = $row_2["id_incidencia"];
+			$incidents_home .= "<tr><td>";
+			$incidents_home .= render_status($row_2["estado"]);
+			$incidents_home .= "<td>";
+			$incidents_home .=print_priority_flag_image ($row_2['prioridad'], true);
+			$incidents_home .= "<td>";
+			$incidents_home .= human_time_comparation ($row_2["actualizacion"]);
+			$incidents_home .= "<td>";
+			
+			$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$idi'>";
+
+			$incidents_home .= $row_2["titulo"];
+			$incidents_home .= "</b></a>";
+			$incidents_home .= "</td>";
+			$incidents_home .= "<td style='font-size: 10px'>";
+			$last_wu = get_incident_lastworkunit ($idi);
+			$incidents_home .= $last_wu["id_user"];
+
+			$incidents_home .= "</td></tr>";
+		}
+		if (isset($row_2))
+			$incidents_home .= "</table>";
+	} else {
+		$incidents_home .= "<div class='landing_empty'>";
+		$incidents_home .= __("There aren't active incidents");
+		$incidents_home .= "</div>";		
+	}
+	
+	$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>";
+	$much_more .= "<img class='much_more' src='images/flecha_dcha.png' title='" . __('Incidents') . "'>";
+	$much_more .= "</a>";
+	
+	$subtitle = "<span class='landing_subtitle'>";
+	$subtitle .= __('Total active incidents').": ".incidents_active_user ($config["id_user"]);
+	$subtitle .= "</span>";
+	
+	echo print_container_div('incidents_home', __('Incidents') . $subtitle . $much_more, $incidents_home, 'no', false, true,'','','','',"height: 400px;");
+	
+	
 	// ==============================================================
 	// Show Agenda items
 	// ==============================================================
@@ -155,7 +208,7 @@ if ($info) {
 	$agenda_home .= "</div>";
 	
 	$much_more = "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>";
-	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "<img class='much_more' src='images/flecha_dcha.png' title='" . __('See more') . "'>";
 	$much_more .= "</a>";
 	
 	$subtitle = "<span class='landing_subtitle'>";
@@ -164,6 +217,11 @@ if ($info) {
 	
 	echo print_container_div('agenda_home', __('Agenda') . $subtitle . $much_more, $agenda_home, 'no');
 	
+	echo "</td>";
+
+	// RIGHT SIDE
+	echo "<td>";
+	echo "<div class='landing_content'>";
 	
 	// ==============================================================
 	// Show Projects items
@@ -187,7 +245,7 @@ if ($info) {
 	}
 	
 	$much_more = "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
-	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "<img class='much_more' src='images/flecha_dcha.png' title='" . __('See more') . "'>";
 	$much_more .= "</a>";
 	
 	$subtitle = "<span class='landing_subtitle'>";
@@ -195,13 +253,7 @@ if ($info) {
 	$subtitle .= projects_active_user ($config["id_user"]);
 	$subtitle .= "</span>";
 	
-	echo print_container_div('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no');
-	
-	echo "</td>";
-
-	// RIGHT SIDE
-	echo "<td>";
-	echo "<div class='landing_content'>";
+	echo print_container_div('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no', false, true,'','','','',"height: 400px;");
 	
 	// ==============================================================
 	// Show WorkOrder items
@@ -238,7 +290,7 @@ if ($info) {
 	}
 	
 	$much_more = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>";
-	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "<img class='much_more' src='images/flecha_dcha.png' title='" . __('See more') . "'>";
 	$much_more .= "</a>";
 	
 	$subtitle = "<span class='landing_subtitle'>";
@@ -247,61 +299,8 @@ if ($info) {
 	
 	echo print_container_div('workorders_home', __('Work orders') . $subtitle . $much_more, $workorders_home, 'no');
 	
-	// ==============================================================
-	// Show Incident items
-	// ==============================================================
-
-	$incidents_home = '';
-	if ($incidents > 0){
-		$sql_2 = "SELECT * FROM tincidencia WHERE (id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."') AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
-		
-		$result_2 = mysql_query($sql_2);
-		if ($result_2){
-			$incidents_home .= "<table width=100% class='landing_incidents listing'>";
-			$incidents_home .= "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Ticket")."</th><th>".__("Last WU")."</th></tr>";
-		}
-		while ($row_2 = mysql_fetch_array($result_2)){
-			$idi = $row_2["id_incidencia"];
-			$incidents_home .= "<tr><td>";
-			$incidents_home .= render_status($row_2["estado"]);
-			$incidents_home .= "<td>";
-			$incidents_home .=print_priority_flag_image ($row_2['prioridad'], true);
-			$incidents_home .= "<td>";
-			$incidents_home .= human_time_comparation ($row_2["actualizacion"]);
-			$incidents_home .= "<td>";
-			
-			$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$idi'>";
-
-			$incidents_home .= $row_2["titulo"];
-			$incidents_home .= "</b></a>";
-			$incidents_home .= "</td>";
-			$incidents_home .= "<td style='font-size: 10px'>";
-			$last_wu = get_incident_lastworkunit ($idi);
-			$incidents_home .= $last_wu["id_user"];
-
-			$incidents_home .= "</td></tr>";
-		}
-		if (isset($row_2))
-			$incidents_home .= "</table>";
-	} else {
-		$incidents_home .= "<div class='landing_empty'>";
-		$incidents_home .= __("There aren't active incidents");
-		$incidents_home .= "</div>";		
-	}
-	
-	$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>";
-
-	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('Incidents') . "'>";
-	$much_more .= "</a>";
-	
-	$subtitle = "<span class='landing_subtitle'>";
-	$subtitle .= __('Total active incidents').": ".incidents_active_user ($config["id_user"]);
-	$subtitle .= "</span>";
-	
-	echo print_container_div('incidents_home', __('Incidents') . $subtitle . $much_more, $incidents_home, 'no');
-	
 	echo "</td>";
-	echo "</tr>";
+	echo "</tr>";	
 	echo "</table>";
 	
 	echo "</div>";

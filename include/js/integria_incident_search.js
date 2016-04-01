@@ -819,8 +819,8 @@ function parent_search_form(filter, id_ticket) {
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 920,
-					height: 700
+					width: 1024,
+					height: 768
 				});
 			$("#parent_search_window").dialog('open');
 			

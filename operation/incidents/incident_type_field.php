@@ -124,8 +124,8 @@ if ($add_field) {
 	}
 }
 
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 4;
+//~ $table->data['button'][0] = $button;
+//~ $table->colspan['button'][0] = 4;
 
 if ($add_field) {
 echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&add_field=1">';
@@ -133,6 +133,8 @@ echo '<form method="post" action="index.php?sec=incidents&sec2=operation/inciden
 	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&update_field=1">';
 }
 print_table ($table);
+
+echo "<div class='button-form'>".$button."</div>";
 echo '</form>';
 
 ?>

@@ -29,7 +29,8 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 	else {
 		label_conf = {
 			show: true,
-			radius: 3/4,
+			radius: 2/3,
+			threshold: 0.1,
 			formatter: function(label, series) {
 				return '<div style="font-size:' + font_size + 'pt;' +
 					'text-align:center;padding:2px;color:white;">' +
@@ -51,10 +52,8 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 			series: {
 				pie: {
 					show: true,
-					radius: 3/4,
-					//offset: {top: -100},
+					radius: 1,
 					label: label_conf,
-					//$label_str
 				}
 			},
 			legend: {
@@ -72,24 +71,6 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 				}
 		}
 
-	//~ switch (legend_position) {
-		//~ case 'bottom':
-			//~ if (width > height)
-				//~ offset = - (height / 5);
-			//~ else
-				//~ offset = - (width / 5);
-			//~ conf_pie.series.pie.radius = 1 / 2.5;
-			//~ conf_pie.series.pie.offset = {top: offset};
-			//~ conf_pie.legend.position = "se";
-			//~ break;
-		//~ case 'right':
-		//~ case 'inner':
-			//~ conf_pie.legend.container = $('#'+graph_id+"_legend");
-		//~ default:
-			//~ //TODO FOR TOP OR LEFT OR RIGHT
-			//~ break;
-	//~ }
-
 	var plot = $.plot($('#'+graph_id), data, conf_pie);
 
 	var legends = $('#'+graph_id+' .legendLabel');
@@ -98,8 +79,14 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 		$(this).css('font-size', font_size+'pt');
 	});
 	
-	$('.legend>div').css('right',($('.legend>div').height()*-2));
-	$('.legend>table').css('right',($('.legend>div').height()*-2));
+	if (height > 200) {
+		$('#'+graph_id+' .legend>div').css('right',( ( height -100) * -1));
+		$('#'+graph_id+' .legend>table').css('right',( (height -100) * -1));
+	}
+	else {
+		$('#'+graph_id+' .legend>div').css('right',( ( height) * -1));
+		$('#'+graph_id+' .legend>table').css('right',( (height) * -1));
+	}
 	
 	// Events
 	$('#' + graph_id).bind('plothover', pieHover);
@@ -278,6 +265,7 @@ function integriaFlotHBars(graph_id, values, labels, water_mark,
 
 	var colors_data = ['#FC4444','#FFA631','#FAD403','#5BB6E5','#F2919D','#80BA27'];
 	values = values.split(separator2);
+	
 	var datas = new Array();
 	for (i = 0; i < values.length; i++) {
 		var serie = values[i].split(separator);
@@ -483,24 +471,24 @@ $.fn.HUseTooltip = function () {
     $(this).bind("plothover", function (event, pos, item) {
         if (item) {
             if ((previousLabel != item.series.label) || (previousPoint != item.seriesIndex)) {
-				$('.legend_'+previousPoint).css("visibility","hidden");
+				$("#"+$(this)[0].id + ' .legend_'+previousPoint).css("visibility","hidden");
                 previousPoint = item.seriesIndex;
                 previousLabel = item.series.label;
                 $("#tooltip").remove();
 
                 var x = item.datapoint[0];
                 var y = item.datapoint[1];
-
+				
                 var color = item.series.color;              
-                $('.legend_'+y).css("visibility","");
+                $("#"+$(this)[0].id + ' .legend_'+y).css("visibility","");
                 showTooltip(item.pageX,
                         item.pageY,
                         color,
-                        "<strong>" + $('.legend_'+x).text() + "</strong>: <strong>" + x + "</strong>");
+                        "<strong>" + $("#"+$(this)[0].id + ' .legend_'+ y).text() + "</strong>: <strong>" + x + "</strong>");
             }
         } else {
             $("#tooltip").remove();
-            $('.legend_'+previousPoint).css("visibility","hidden");
+            $("#"+$(this)[0].id + ' .legend_'+previousPoint).css("visibility","hidden");
             previousPoint = null;
         }
     });
@@ -509,7 +497,7 @@ $.fn.VUseTooltip = function () {
     $(this).bind("plothover", function (event, pos, item) {
         if (item) {
             if ((previousLabel != item.series.label) || (previousPoint != item.seriesIndex)) {
-				$('.legend_'+previousPoint).css("visibility","hidden");
+				$("#"+$(this)[0].id + ' .legend_'+previousPoint).css("visibility","hidden");
                 previousPoint = item.seriesIndex;
                 previousLabel = item.series.label;
                 
@@ -519,15 +507,15 @@ $.fn.VUseTooltip = function () {
                 var y = item.datapoint[1];
 				
                 var color = item.series.color;
-				$('.legend_'+x).css("visibility","");
+				$("#"+$(this)[0].id + ' .legend_'+x).css("visibility","");
                 showTooltip(item.pageX,
                         item.pageY,
                         color,
-                        "<strong>" + $('.legend_'+x).text() + "</strong>"  + " : <strong>" + y + "</strong>");
+                        "<strong>" + $("#"+$(this)[0].id + ' .legend_'+x).text() + "</strong>"  + " : <strong>" + y + "</strong>");
             }
         } else {
             $("#tooltip").remove();
-            $('.legend_'+previousPoint).css("visibility","hidden");
+            $("#"+$(this)[0].id + ' .legend_'+previousPoint).css("visibility","hidden");
             previousPoint = null;
         }
     });

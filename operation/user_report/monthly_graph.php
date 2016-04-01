@@ -71,7 +71,9 @@ $day = date('d', strtotime("now"));
 $from_one_month = "$prev_year-$prev_month-$day";
 $next_one_month = "$next_year-$next_month-$day";
 
-echo "<h1>".__('Monthly report for')." $id_user</h1>";
+echo "<h2>".__('Monthly report') . "</h4>";
+echo "<h4>". __("User") .": " . $id_user . "</h4>";
+
 echo "<table class=search-table width=100%>";
 echo "<tr><td style='text-align: center;'>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$prev_month&year=$prev_year&id=$id_user'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "'> </a>";
@@ -83,14 +85,14 @@ echo "</table>";
 //$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
 echo "<table style='width: 100%; padding: 0px'>";
 echo "<tr><td class=datos>";
-$workunit_by_task = '<br><div class="pie_frame">' . graph_workunit_user (750, 270, $id_user, $from_one_month, 0) . '</div>';
+$workunit_by_task = '<div class="pie_frame">' . graph_workunit_user (750, 270, $id_user, $from_one_month, 0) . '</div>';
 
-echo print_container('month_report_workunit_by_task', __('Workunit by task'), $workunit_by_task, 'no', true, '10px');
+echo print_container_div('month_report_workunit_by_task', __('Workunit by task'), $workunit_by_task, 'no', true, false);
 
 echo "<tr><td class=datos>";
 
-$workunit_by_project = '<br><div class="pie_frame">' . graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0, true) . '</div>'; 
-echo print_container('month_report_workunit_by_project', __('Workunit by project'), $workunit_by_project, 'no', true, '10px');
+$workunit_by_project = '<div class="pie_frame">' . graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0, true) . '</div>'; 
+echo print_container_div('month_report_workunit_by_project', __('Workunit by project'), $workunit_by_project, 'no', true, false);
 
 echo "</table>";
 

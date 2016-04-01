@@ -234,6 +234,7 @@ $login = get_parameter ('login');
 $sec = get_parameter ('sec');
 $sec2 = get_parameter ('sec2');
 $recover = get_parameter('recover','');
+$pure = (bool) get_parameter('pure',false);
 $not_show_menu = 0;
 
 if ($clean_output == 1) {
@@ -454,19 +455,27 @@ echo '<body>';
 $session_id = session_id();
 session_write_close ();
 
+$id_menu = "main";
 // Special pages, which doesn't use sidemenu
-if (($sec2 == "") OR ($sec2 == "general/home") OR ($_POST['login'] == 1 AND $custom_screen_loaded) OR ($sec2 == 'enterprise/operation/custom_screens/custom_screens')) {
+if (($sec2 == "") OR ($sec2 == "general/home") OR
+		($_POST['login'] == 1 AND $custom_screen_loaded) OR
+		($sec2 == 'enterprise/operation/custom_screens/custom_screens') OR
+			($pure == true)) {
 	$not_show_menu = 1;
+	$id_menu = "main_pure";
 }
 
 // Clean output (for reporting or raw output
 if ($clean_output == 0) {
 ?>
 	<div id="wrap">
-		<div id="header">
-			<?php require ("general/header.php"); ?>
-		</div>
-
+		<?php
+		if (!$pure) {
+			echo '<div id="header">';
+				 require ("general/header.php"); 
+			echo "</div>";
+		}
+		?>
 		<!--
 		<div id="menu">
 		<?php require ("operation/main_menu.php"); ?>
@@ -490,7 +499,7 @@ if ($clean_output == 0) {
 			}
 			?>
 				
-			<div id="main">
+			<div id="<?php echo $id_menu; ?>">
 				<?php			
 				// Open a dialog if the database schema update has returned messages
 				if ($minor_release_message) {

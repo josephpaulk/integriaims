@@ -1194,12 +1194,22 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 						echo "<li>";
 					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
 					
-					if ($sec2 == "godmode/usuarios/lista_usuarios") {
-						echo "<li style='margin-left: 15px;'>";
-						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
-						echo "</li>";
-					}
-
+					echo "<li style='margin-left: 15px;'>";
+					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
+					echo "</li>";
+					
+					// Group manager
+					if ($sec2 == "godmode/grupos/lista_grupos")
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+					
+					echo "<li style='margin-left: 15px;'>";
+					echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
+					
+					enterprise_include ("operation/sidemenu_user_mgmt.php");
+					
 					if ($sec2 == "godmode/usuarios/user_field_list")
 						echo "<li id='sidesel'>";
 					else
@@ -1221,20 +1231,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 						echo "<li>";
 					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".__('Manage roles')."</a></li>";
 					
-					// Group manager
-					if ($sec2 == "godmode/grupos/lista_grupos")
-						echo "<li id='sidesel'>";
-					else
-						echo "<li>";
-					echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
-					
-					if ($sec2 == "godmode/grupos/lista_grupos"){
-						echo "<li style='margin-left: 15px;'>";
-						echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
-					}
 				}
-				
-				enterprise_include ("operation/sidemenu_user_mgmt.php");
 				
 				if($show_people != MENU_MINIMAL) {
 					echo "</ul>";
@@ -1408,22 +1405,22 @@ else
 				echo "<div style='clear:both; margin-bottom: 10px;'></div>";
 			echo '</div>';
 			// Link to workunit calendar (month)
-			echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
-			echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
+			echo '<a style="margin-right:10px;" href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
+			echo '<img src="images/workunit_report27.png" title="'.__('Workunit report').'" /></a>';
 
 			if (give_acl ($config["id_user"], 0, "IR")) {
 				echo "&nbsp;";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
-				echo '<img src="images/incident.png" title="'.__('My tickets').'"></a>';
+				echo "<a style='margin-right:10px;'  href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
+				echo '<img src="images/tickets27.png" title="'.__('My tickets').'"></a>';
 			}
 			if (give_acl ($config["id_user"], 0, "PR")) {
 				// Link to Work user spare inster
-				echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
-				echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
+				echo '<a style="margin-right:10px;" href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
+				echo '<img src="images/workunit27.png" title="'.__('Workunit').'"></a>';
 
 				// Link to User detailed graph view
-				echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full&user_id='.$config['id_user'].'">';
-				echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
+				echo '<a style="margin-right:13px;" href="index.php?sec=users&sec2=operation/user_report/report_full&user_id='.$config['id_user'].'">';
+				echo '<img src="images/fullgraphsreport27.png" title="'.__('Full graph report').'"></a>';
 
 				// Week Workunit meter
 				$begin_week = week_start_day ();
@@ -1438,9 +1435,9 @@ else
 				$week_hours = get_db_sql ($sql);
 				$ratio = $week_hours." ".__('over')." ".$total_hours;
 				if ($week_hours < $total_hours)
-					echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
+					echo '<img src="images/exclamacion27.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
 				else
-					echo '<img src="images/accept.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+					echo '<img src="images/ok27.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
 				
 				//echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
 				echo "<br>";

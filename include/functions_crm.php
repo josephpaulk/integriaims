@@ -1105,18 +1105,18 @@ function crm_print_company_projects_tree($projects) {
 	
 	require_once ("include/functions_tasks.php");  
 	
-	echo '<table width="100%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+	//~ echo '<table width="100%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
 		$img = print_image ("images/input_create.png", true, array ("style" => 'vertical-align: middle;', "id" => $img_id));
 		$img_project = print_image ("images/note.png", true, array ("style" => 'vertical-align: middle;'));
 		
 		foreach ($projects as $project) {
 			$project_name = get_db_value('name', 'tproject', 'id', $project['id_project']);
 			//print project name
-			echo '<tr><td colspan="10" valign="top">';
-				echo "
-				<a onfocus='JavaScript: this.blur()' href='javascript: show_detail(\"" . $project['id_project']. "\")'>" .
-				$img . "&nbsp;" . $img_project ."&nbsp;" .  safe_output($project_name)."&nbsp;</a>"."&nbsp;&nbsp;";
-			echo '</td></tr>';
+			//~ echo '<tr><td colspan="10" valign="top">';
+				//~ echo "
+				//~ <a onfocus='JavaScript: this.blur()' href='javascript: show_detail(\"" . $project['id_project']. "\")'>" .
+				//~ $img . "&nbsp;" . $img_project ."&nbsp;" .  safe_output($project_name)."&nbsp;</a>"."&nbsp;&nbsp;";
+			//~ echo '</td></tr>';
 
 			$id_project = $project['id_project'];
 			$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
@@ -1177,6 +1177,8 @@ function crm_print_company_projects_tree($projects) {
 				if ($avatar != "") {
 					$people_involved .= "<img src='images/avatars/".$avatar.".png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 				}
+				else
+					$people_involved .= "<img src='images/avatars/avatar_notyet.png' width=40 height=40 onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 			}
 			$people_involved .= "</div>";
 
@@ -1201,12 +1203,12 @@ function crm_print_company_projects_tree($projects) {
 			$class = $project['id_project']."-project";
 			$tr_status = 'class="'.$class.'"';
 			
-			echo '<tr '.$tr_status.'><td>';
-				echo $table_detail;
-			echo '</td></tr>';
+			//~ echo '<tr '.$tr_status.'><td>';
+			print_container_div("project_".$project['id_project'], $project_name, $table_detail, 'closed', false, true, '', '', 1, '', 'width:32%; float:left;');
+			//~ echo '</td></tr>';
 			
 		}
 		
-	echo '</table>';
+	//~ echo '</table>';
 }
 ?>

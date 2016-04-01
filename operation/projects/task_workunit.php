@@ -261,7 +261,8 @@ if ($id_task != 0) {
 		echo "&nbsp;" . $report_image;
 	}
     echo "</h4>";
-} elseif ($id_project != 0) {
+} 
+elseif ($id_project != 0) {
 	// Whole project
 	
 	$sql_filter = "";
@@ -306,7 +307,7 @@ if ($workunits) {
 
 echo '<div id="show_multiple_edit">';
 
-echo '<br><h4>'.__('Massive operations over selected items').'</h4>';
+echo '<h4>'.__('Massive operations over selected items').'</h4>';
 $table = new StdClass;
 $table->class = 'search-table-button';
 $table->width = '100%';

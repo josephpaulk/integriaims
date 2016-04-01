@@ -33,15 +33,10 @@
 .ui-tabs-nav li {
 	float: right;
 	font-weight: bold;
-	background-color: #505050;
+	background-color: #F7F7F7;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
-	padding-top: 8px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: 1px;
-	margin-bottom: 7px;
-	height: 20px;
+	height: 29px;
 	margin-left: 3px;
 }
 
@@ -80,11 +75,12 @@
 .ui-tabs-nav li a {
 	text-decoration:none;
 	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
-.ui-tabs-nav li a span {
-	text-decoration:none;
-	font-weight: bold;
+.ui-tabs-nav li a img {
+	margin-top: 5px;
 }
 
 .ui-tabs-nav li a span {

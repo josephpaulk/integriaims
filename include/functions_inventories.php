@@ -1410,8 +1410,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 
 				$data_info = array();
 				
-				$table_info->width = '98%';
-				$table_info->class = 'databox_color_without_line';
+				$table_info->width = '100%';
+				$table_info->class = 'no_border';
 				
 				$table_info->size = array ();
 				$table_info->style = array();
@@ -1472,9 +1472,9 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				
 				if ($write_permission) {
-					$table->colspan[$idx]["row_info"] = 8;
+					$table->colspan[$idx]["row_info"] = 10;
 				} else {
-					$table->colspan[$idx]["row_info"] = 7;
+					$table->colspan[$idx]["row_info"] = 9;
 				}
 		
 				

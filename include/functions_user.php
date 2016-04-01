@@ -60,8 +60,7 @@ function user_print_autocomplete_input($parameters) {
 	if (isset($parameters['attributes'])) {
 		$attributes = $parameters['attributes'];
 	}
-	
-	return print_input_text_extended ($input_name, $input_value, $input_id, '', $input_size, $input_maxlength, $disabled, '', $attributes, $return, '', __($title) . print_help_tip (__($help_message), $return_help));
+	return print_input_text_extended ($input_name, $input_value, $input_id, '', $input_size, $input_maxlength, $disabled, '', $attributes, $return, '', $title . print_help_tip ($help_message, $return_help));
 	
 }
 

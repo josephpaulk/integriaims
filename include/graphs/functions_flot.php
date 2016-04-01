@@ -572,7 +572,7 @@ function flot_hcolumn_chart ($graph_data, $width, $height, $water_mark) {
 	$return .= "<div id='value_$graph_id' style='display:none; position:absolute; background:#fff; border: solid 1px #aaa; padding: 2px'></div>";
 	
 	if ($water_mark != '') {
-		$return .= "<div id='watermark_$graph_id' style='display:none; position:absolute;'><img id='watermark_image_$graph_id' src='$water_mark'></div>";
+		$return .= "<div id='watermark_$graph_id' style='display:none; position:absolute;'><img id='watermark_image_$graph_id' src='$water_mark' /></div>";
 		$watermark = 'true';
 	}
 	else {

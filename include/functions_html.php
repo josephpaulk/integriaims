@@ -1283,7 +1283,7 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	}
 }
 
-function print_container_div($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '', $container_style) {
+function print_container_div($id, $title, $content, $open = 'open', $return = true, $margin = true, $h2_clases='', $div_classes= '', $numcolspan = 1, $class_extra = '', $container_style = '') {
 	$container_div_style = '';
 	$h2_class_extra = ' clickable';
 	$arrow = '';

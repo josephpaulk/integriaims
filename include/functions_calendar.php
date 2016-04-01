@@ -216,7 +216,25 @@ function calendar_get_wo_date_range($start, $end){
 	return $result;
 }
 
-function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "", $show_projects=1, $show_tasks=1, $show_events=1, $show_wo=1, $show_clients=1){
+function calendar_get_wu_date_range($start, $end){
+	global $config;
+	
+	
+	$id_user = $config["id_user"];
+
+	$result = array();
+
+	//$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend, ttodo.start_date as wostart FROM ttodo WHERE ttodo.progress = 0 AND ttodo.assigned_user = '$id_user' AND ((ttodo.end_date >= '$start' AND ttodo.end_date <= '$end') OR (ttodo.start_date >= '$start' AND ttodo.start_date <= '$end')) GROUP BY idwo";
+	$sql = "SELECT * FROM tworkunit WHERE id_user = '$id_user' AND (timestamp > '$start' AND timestamp < '$end')";
+	
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["id"] ."|".$row["description"]."|".$row["id_user"]."|".$row["timestamp"]."|".$row["duration"];
+	}
+	return $result;
+}
+
+function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "", $show_projects=1, $show_tasks=1, $show_events=1, $show_wo=0, $show_clients=1, $show_wu=1){
     global $config;
 
 	$cal_events = array();
@@ -263,6 +281,19 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "",
 
 			$wopriority_img = print_priority_flag_image ($wopriority, true);
 			array_push($cal_events, array("name" =>$woname, "start" => strtotime($wostart), "end" => strtotime($woend), "bgColor" => "#6A6D6D", "allDay" => true, "url" => $url));	
+		}
+	}
+
+	if ($show_wu) {
+		$agenda_wu = calendar_get_wu_date_range($mysql_start, $mysql_end, $config["id_user"]);
+		foreach ($agenda_wu as $agenda_wuitem){
+			list ($idwu, $wudescription, $wuid_user, $wutimestamp, $wuduration) = explode ("|", $agenda_wuitem);
+			$wudescription = ($wudescription != false) ? $wudescription : __("No description Workunit ID:")." ".$idwu;
+			$url = "index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_workunit=".$idwu;
+			debugPrint($wutimestamp,true);
+			//$wopriority_img = print_priority_flag_image ($wopriority, true);
+			array_push($cal_events, array("name" =>$wudescription, "start" => strtotime($wutimestamp), 
+				"bgColor" => "#6A6D6D", "allDay" => true, "url" => $url));	
 		}
 	}
 

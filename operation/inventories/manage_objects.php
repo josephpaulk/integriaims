@@ -55,8 +55,8 @@ if ($get_icon) {
 //**********************************************************************
 
 echo '<div id="tabs">';
-echo '<h2>' . strtoupper(__('Inventory Object')) . '</h2>';
-echo '<h4>' . strtoupper(__('Management'));
+echo '<h2>' . __('Inventory Object') . '</h2>';
+echo '<h4>' . __('Management');
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
 
