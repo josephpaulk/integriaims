@@ -150,7 +150,8 @@ function print_file_types_table ($return = false) {
 							 tdownload_type.name AS name,
 							 tdownload_type.description AS description,
 							 tdownload_type.icon AS icon
-						FROM tdownload_type
+						FROM tdownload_type 
+						WHERE 1=1 
 							$condition");
 	
 	$types2 = process_sql("SELECT tdownload_type.id AS id,
