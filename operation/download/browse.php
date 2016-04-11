@@ -392,31 +392,19 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	$table->data[1][2] = print_select (get_file_types(true, true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
 	$table->data[2][0] = print_textarea ("description", 5, 40, $description, '', true, __('Description'));
 	
-	
-	
 	if ($id == -1) {
+
+		$table->data[3][0] = "<div class='button-form'>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</div>";
 		$form_file_release = '<form style="display:none;" id="form-file_release" enctype="multipart/form-data" name=prodman2 method="post" action="index.php?sec=download&sec2=operation/download/browse&create2=1">';
 	
 	} else {
+
+		$table->data[3][0] = "<div class='button-form'>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</div>";
 		$form_file_release = "<form id='form-file_release' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
 		$form_file_release .= "<input id='id_download' type=hidden name=id value='$id'>";
 	}
-	
+
 	$form_file_release .= print_table($table, true);
-	
-	
-	
-	$form_file_release .= "<div class='button-form' >";
-	
-	unset($table->data);
-	$table->class = "button-form";
-	if ($id == -1) {
-		$table->data[3][0] = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);	
-	} else {
-		$table->data[3][0] = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
-	}
-	$form_file_release .= print_table($table, true);
-	
 	$form_file_release .= "</form>";
 
 	echo $form_file_release;
@@ -724,7 +712,7 @@ function form_upload () {
 	});
 
 	function addListItem (progress, filename, filesize) {
-		var tpl = $('<li class="file-release-item" data-file="' + filename + '"><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+		var tpl = $('<li class="file-release-item" data-file="' + filename + '"><input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
 			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
 			'<div class="download_form"></div></li>');
 
