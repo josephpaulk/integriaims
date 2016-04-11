@@ -383,14 +383,14 @@ if ($search) {
 
 if (!$pure) {
 	
-	$form .= '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+	$form = '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		$buttons = '<div class="button-form">';
 		$buttons .= print_input_hidden ('search', 1, true);
 		$buttons .= print_input_hidden ('mode', $mode, true);
 		$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 		$buttons .= '</div>';
 		
-		$form = "<div class='divform'>".$buttons."</div>";
+		$form .= "<div class='divform'>".$buttons."</div>";
 		$form .= "<div class='divresult'>";
 		$table_search = new StdClass();
 		$table_search->class = 'search-table-button';

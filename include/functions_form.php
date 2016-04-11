@@ -921,7 +921,7 @@ echo "</form>";
 	$title = "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	$title .= "<b>".$id_user."</b>";
 	$title .= "</a>";
-	$title .= " ".__('said on').' '. date("d M Y", strtotime($timestamp));
+	$title .= " ".__('said on').' '. $timestamp;
 	print_container_div("dest-".$id_workunit, $title, $output, 'closed', false, false, '', '', 1, '', "margin-top:0px;");
 }
 

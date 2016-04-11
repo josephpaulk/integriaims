@@ -104,10 +104,7 @@ if ($is_enterprise) {
 $table->data[0][0] = print_select ($auth_methods, "auth_methods", $auth_method, '','','',true, 0, true, __('Authentication method'));
 
 $table->data[0][1] = print_input_text ("session_timeout", $config['session_timeout'], '',
-	10, 10, true, __('Session timeout (secs)'));
-
-$table->data[0][1] .= print_help_tip (__("This is defined in seconds. "), true);
-
+	10, 10, true, __('Session timeout (secs)') . print_help_tip (__("This is defined in seconds. "), true));
 
 $table->data[1][0] = '<b>'.__('Autocreate remote users').'</b>';
 $table->data[2][0] =  __('Yes').'&nbsp;'.print_radio_button_extended ('autocreate_remote_users', 1, '', $config['autocreate_remote_users'], false, 'enable_autocreate_profile();', '', true).'&nbsp;&nbsp;';

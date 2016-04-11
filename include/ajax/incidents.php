@@ -85,7 +85,9 @@ if ($get_user_search) {
 	
 	$filter_form = false;
 	
+	echo "<div class='divform'>";
 	form_search_users (false, $filter_form);
+	echo "</div>";
 	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin);
 }
 

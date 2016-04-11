@@ -122,7 +122,8 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 		$now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
 	}
 	$start_date = substr ($now, 0, 10);
-	$wu_user = $config["id_user"];	
+	$wu_user = $config["id_user"];
+	$id_task = (int) get_parameter ("id_task",0);
 	
 	echo "<table id='wu_".$number."' class='search-table-button' width='100%'>";
 	
@@ -151,7 +152,7 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	echo"</td>";
 	
 	echo "<td colspan='2'>";
-	echo combo_task_user_participant ($wu_user,true, 0, true, __("Task"), 'id_task_'.$number,true,false,'check_multiplewu_task();');
+	echo combo_task_user_participant ($wu_user,true, $id_task, true, __("Task"), 'id_task_'.$number,true,false,'check_multiplewu_task();');
 	echo "</td>";
 	
 	echo "<td>";
@@ -194,13 +195,13 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	echo "</td>";
 	
 	echo "<td>";
-	echo print_checkbox ('forward_'.$number, 1, false, true, __('Forward')).
-	print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'), true);
+	echo print_checkbox ('forward_'.$number, 1, false, true, __('Forward').
+	print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'), true));
 	echo "</td>";
  
 	echo "<td>";
-	echo print_checkbox ('split_'.$number, 1, false, true, __('Split > 1day'));
-	echo print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'), true);	
+	echo print_checkbox ('split_'.$number, 1, false, true, __('Split > 1day') .
+	 print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'), true));	
 	echo "</td>";
 	
 	echo "</tr>";

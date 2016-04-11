@@ -135,7 +135,20 @@ if ($action == 'insert') {
 }
 
 echo '<h2>'.__('Projects').'</h2>';
-echo '<h4>'.__('Projects overview').'</h4>';
+echo '<h4>'.__('Projects overview');
+if ($search_id_project_group > -1 ) {
+	echo "<div id='button-bar-title'>";
+		echo "<ul>";
+			echo '<li>';
+				echo '<a href="index.php?sec=projects&sec2=operation/projects/project_overview">'.
+						print_image("images/volver_listado.png",
+						true, array("title" => 
+								__('Back to list all groups'))).'</a>';
+			echo '</li>';
+		echo "</ul>";
+	echo "</div>";
+}
+echo '</h4>';
 
 $table = new stdClass;
 $table->width = '20%';
@@ -144,7 +157,7 @@ $table->style = array ();
 $table->data = array ();
 $table->data[0][0] = '<b>'.__('Search').'</b>';
 $table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[2][0] = '<b>'.__('Group').'</b>';
+$table->data[2][0] = '<b>'.__('Project group').'</b>';
 
 $sql = "SELECT * FROM tproject_group";
 $datos = get_db_all_rows_sql($sql);
@@ -295,7 +308,7 @@ foreach($project_groups as $group) {
 			$info_general .= "<td class='no_border'></td>";	
 			$info_general .= "</tr>";
 		}
-	$title = "<img src='images/icons/icono_camara.png' title='Prueba' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
+	$title = "<img src='images/project_groups_small/" . $group["icon"] . "' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
 	print_container('info_projects_'.$group["id"], $title, $info_general, $apertura, false, '10px', '', '', 6, 'no_border_bottom'); 
 }
 echo "</div>";

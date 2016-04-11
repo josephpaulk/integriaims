@@ -87,6 +87,7 @@ $id_project = (int) get_parameter ("id_project");
 $id_task = (int) get_parameter ("id_task");
 $id_user_filter = (string) get_parameter ("id_user", "");
 $operation = (string) get_parameter ("operation");
+$pure = get_parameter ("pure", 0);
 
 // ACL
 if (! $id_project) {
@@ -253,13 +254,16 @@ if ($id_task != 0) {
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);		
 	}
-	echo '<h2>'.__('Workunit resume');
-	echo '</h2><h4>'.$project_name.' - '.$task_name;
-
-	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project", __("PDF report"));
-	if ($report_image) {
-		echo "&nbsp;" . $report_image;
-	}
+	echo '<h2>' . __('Workunit resume') . "</h2>";
+	echo '<h4>' . $project_name . ': '.$task_name;
+	
+	echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
+	if ($pure == 1)
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&pure=0' title='".__("Back to view")."'><img src='images/go-previous.png'></a>";
+	else
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&pure=1' title='".__("Html report")."'><img src='images/html_tabs.png'></a>";
+    echo '</li>';
+    echo '</ul>';
     echo "</h4>";
 } 
 elseif ($id_project != 0) {
@@ -288,12 +292,15 @@ elseif ($id_project != 0) {
 		
 	}
 	echo '<h2>'.__('Workunit resume') . "</h2>";
-	echo '<h4>'.$project_name.' - '. __('All tasks');
-
-	$report_image = print_report_image ("index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project", __("PDF report"));
-	if ($report_image) {
-		echo "&nbsp;" . $report_image;
-	}
+	echo '<h4>' . $project_name.' - ' . __('All tasks');
+	
+	echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
+	if ($pure == 1)
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pure=0' title='".__("Back to view")."'><img src='images/go-previous.png'></a>";
+	else
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pure=1' title='".__("Html report")."'><img src='images/html_tabs.png'></a>";
+    echo '</li>';
+    echo '</ul>';
     echo '</h4>';
 }
 

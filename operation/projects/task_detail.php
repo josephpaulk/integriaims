@@ -107,10 +107,12 @@ if ($operation == "insert") {
 	if ($name == '') {
 		$operation = 'create';
 		$result_output = '<h3 class="error">'.__('Name cannot be empty').'</h3>';
-	} elseif (strtotime ($start) > strtotime ($end)) {
+	}
+	elseif (strtotime ($start) > strtotime ($end)) {
 		$operation = 'create';
 		$result_output = '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
-	} else {
+	}
+	else {
 		$description = (string) get_parameter ('description');
 		$priority = (int) get_parameter ('priority');
 		$completion = (int) get_parameter ('completion');
@@ -138,35 +140,36 @@ if ($operation == "insert") {
 			$result_output .= "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
 			$result_output .= __("Continue working with task #").$id_task;
 			$result_output .= "</a></h3></p>";
-		// Add all users assigned to current project for new task or parent task if has parent
-		if ($parent != 0)
-			$query1="SELECT * FROM trole_people_task WHERE id_task = $parent";
-		else
-			$query1="SELECT * FROM trole_people_project WHERE id_project = $id_project";
-		$resq1=mysql_query($query1);
-		while ($row=mysql_fetch_array($resq1)){
-			$id_role_tt = $row["id_role"];
-			$id_user_tt = $row["id_user"];
-			$sql = "INSERT INTO trole_people_task
-			(id_task, id_user, id_role) VALUES
-			($id_task, '$id_user_tt', $id_role_tt)";
-			mysql_query($sql);
+			// Add all users assigned to current project for new task or parent task if has parent
+			if ($parent != 0)
+				$query1="SELECT * FROM trole_people_task WHERE id_task = $parent";
+			else
+				$query1="SELECT * FROM trole_people_project WHERE id_project = $id_project";
+			$resq1=mysql_query($query1);
+			while ($row=mysql_fetch_array($resq1)) {
+				$id_role_tt = $row["id_role"];
+				$id_user_tt = $row["id_user"];
+				$sql = "INSERT INTO trole_people_task
+				(id_task, id_user, id_role) VALUES
+				($id_task, '$id_user_tt', $id_role_tt)";
+				mysql_query($sql);
+			}
+			task_tracking ($id_task, TASK_CREATED);
+			project_tracking ($id_project, PROJECT_TASK_ADDED);
+
+
+			//Update task links
+			$links_0 = get_parameter("links_0");
+			$links_1 = get_parameter("links_1");
+			$links_2 = get_parameter("links_2");
+			projects_update_task_links ($id_task, $links_0, 0);
+			projects_update_task_links ($id_task, $links_1, 1);
+			projects_update_task_links ($id_task, $links_2, 2);		
 		}
-		task_tracking ($id_task, TASK_CREATED);
-		project_tracking ($id_project, PROJECT_TASK_ADDED);
-
-
-		//Update task links
-		$links_0 = get_parameter("links_0");
-		$links_1 = get_parameter("links_1");
-		$links_2 = get_parameter("links_2");
-		projects_update_task_links ($id_task, $links_0, 0);
-		projects_update_task_links ($id_task, $links_1, 1);
-		projects_update_task_links ($id_task, $links_2, 2);		
-	} else {
-		$update_mode = 0;
-		$create_mode = 1;
-		$result_output = "<h3 class='error'>".__('Could not be created')."</h3>";
+		else {
+			$update_mode = 0;
+			$create_mode = 1;
+			$result_output = "<h3 class='error'>".__('Could not be created')."</h3>";
 		}
 	}
 }
@@ -204,7 +207,8 @@ if ($operation == "update") {
 	
 	if ($id_task != $parent) {
 		$result = process_sql ($sql);		
-	} else {
+	}
+	else {
 		$result = false;
 	}
 
@@ -227,7 +231,8 @@ if ($operation == "update") {
 		if($count_hours) {
 			$hours = set_task_completion ($id_task);
 		}
-	} else {
+	}
+	else {
 		$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
 	}
 
@@ -267,14 +272,15 @@ echo $result_output;
 if (!$gantt_editor) {
 	if ($operation == "create") {
 		echo '<h2>'.__('Task management') . "<h4>".__("Create task");
-	} else {
+	}
+	else {
 		echo '<h2>'.__('Task management'). "<h4>".$task_name;
 	}
 	if ($id_task != -1) {
 		echo "<div id='button-bar-title'>";
 		echo "<ul>";
 		echo "<li>";
-			echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/task_report&id_project=$id_project&id_task=$id_task'>".
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_report&id_project=$id_project&id_task=$id_task'>".
 			print_image ("images/chart_bar.png", true, array("title" => __("Statistics"))) .
 			"</a>";
 		echo "</li>";
@@ -282,11 +288,12 @@ if (!$gantt_editor) {
 		echo "</div>";
 	}
 	echo '</h4>';
-} else {
+}
+else {
 	echo "<div id='button-bar-title' style='margin-top: 5px; margin-bottom: 9px;'>";
 	echo "<ul>";
 	echo "<li>";
-		echo "<a target='top' onclick='toggle_editor_gantt($id_project, $id_task, \"stats\")'>".
+		echo "<a onclick='toggle_editor_gantt($id_project, $id_task, \"stats\")'>".
 		print_image ("images/chart_bar_dark.png", true, array("title" => __("Statistics"))) .
 		"</a>";
 	echo "</li>";
@@ -295,33 +302,6 @@ if (!$gantt_editor) {
 }
 
 echo '<form id="form-new_project" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
-/*
-$button = '';
-echo '<div style="width:12%; float: right;">';
-if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
-	
-	$table->width = '100%';
-	$table->class = "button-form";
-	if ($operation != "create") {
-
-		if ($gantt_editor) {
-			$button .= print_submit_button (__('Delete'), 'delete_btn', false, 'class="sub delete"', true);
-		}
-		$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-		$button .= print_input_hidden ('operation', 'update', true);
-	} else {
-		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
-		$button .= print_input_hidden ('operation', 'insert', true);
-	}
-	$button .= print_input_hidden ('id_project', $id_project, true);
-	$button .= print_input_hidden ('id_task', $id_task, true);
-	$table->data['button'][0] = $button;
-	$table->colspan['button'][0] = 3;
-}
-
-	print_table($table);
-echo '</div>';
-*/
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
@@ -347,13 +327,15 @@ if ($project_permission['manage'] || $operation == "view") {
 
 $table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
 
-$table->data[1][0] = print_input_text_extended ('cc', $cc, '', '', 40, 240, false, '', "style='width:300px;'", true, false, __('CC').print_help_tip (__("Email to notify changes in workunits"), true));
+$table->data[1][0] = print_input_text_extended ('cc', $cc, '', '', 40,
+			240, false, '', "style='width:300px;'", true, false, 
+				__('CC') . print_help_tip (__("Email to notify changes in workunits"), true));
 $table->data[1][1] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
 
 $table->data[1][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
-	        false, '', '', true, __('Completion based on hours'))
-	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
+		false, '', '', true, __('Completion based on hours') . 
+		print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true));
 
 $table->data[2][0] = print_input_text ('start_date', $start, '', 8, 15, true, __('Start'));
 $table->data[2][1] = print_input_text ('end_date', $end, '', 8, 15, true, __('End'));

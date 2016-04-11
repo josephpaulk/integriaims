@@ -1046,7 +1046,7 @@ $.ajax({
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 920,
+					width: 1024,
 					height: 700
 				});
 			$("#users_search_window").dialog('open');

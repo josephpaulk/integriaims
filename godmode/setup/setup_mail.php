@@ -110,20 +110,18 @@ $table->colspan = array ();
 $table->data = array ();
 
 $table->data[2][0] = print_input_text ("notification_period", $config["notification_period"],
-	'', 7, 7, true, __('Notification period'));
-$table->data[2][0] .= integria_help ("notification_period", true);
+	'', 7, 7, true, __('Notification period') . 
+	integria_help ("notification_period", true));
 
 $table->data[2][1] = print_input_text ("mail_from", $config["mail_from"], '',
 	30, 50, true, __('System mail from address'));
 
-$table->colspan[3][0] = 3;
+$table->colspan[3][0] = 2;
 $table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", true). "</h4>";
 
 $table->data[4][0] = print_input_text ("smtp_host", $config["smtp_host"],
-	'', 35, 200, true, __('SMTP Host'));
-
-$table->data[4][0] .= print_help_tip (__("Left it blank if you want to use your local mail, instead an external SMTP host"), true);
-
+	'', 35, 200, true, __('SMTP Host') . 
+	print_help_tip (__("Left it blank if you want to use your local mail, instead an external SMTP host"), true));
 
 $table->data[4][1] = print_input_text ("smtp_port", $config["smtp_port"],
 	'', 5, 10, true, __('SMTP Port'));
@@ -135,87 +133,76 @@ $table->data[5][1] = print_input_text ("smtp_pass", $config["smtp_pass"],
 	'', 25, 200, true, __('SMTP Password'));
 
 $table->data[6][0] = print_input_text ("smtp_queue_retries", $config["smtp_queue_retries"],
-        '', 5, 10, true, __('SMTP Queue retries'));
-
-$table->data[6][0] .= print_help_tip (__("This are the number of attempts the mail queue try to send the mail. Should be high (20-30) if your internet connection have frequent downtimes and near zero if its stable"), true);
+        '', 5, 10, true, __('SMTP Queue retries') . 
+        print_help_tip (__("This are the number of attempts the mail queue try to send the mail. Should be high (20-30) if your internet connection have frequent downtimes and near zero if its stable"), true));
 
 $table->data[6][1] = print_input_text ("max_pending_mail", $config["max_pending_mail"], '',
-        10, 255, true, __('Max pending mail'));
-$table->data[6][1] .= print_help_tip (__("Maximum number of queued emails. When this number is exceeded, an alert is activated"), true);
+        10, 255, true, __('Max pending mail') . 
+        print_help_tip (__("Maximum number of queued emails. When this number is exceeded, an alert is activated"), true));
 
 $table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsletter"], '',
-        4, 255, true, __('Max. emails sent per execution'));
+        4, 255, true, __('Max. emails sent per execution') . 
+        print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true));
 
-
-$table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
-   
 $table->colspan[8][0] = 3;
 $table->data[8][0] = "<h4>".__("POP/IMAP Parameters")."</h4>";
-$table->data[8][1] = print_select ($popimap, "select_pop_imap", $config["select_pop_imap"], '','','',true,0,true, __('Select IMAP or POP'));
+$table->data[9][0] = print_select ($popimap, "select_pop_imap", $config["select_pop_imap"], '','','',true,0,true, __('Select IMAP or POP'));
 
-$table->data[9][0] = print_input_text ("pop_host", $config["pop_host"],
-	'', 25, 30, true, __('POP/IMAP Host'));
+$table->data[9][1] = print_input_text ("pop_host", $config["pop_host"],
+	'', 25, 30, true, __('POP/IMAP Host') . print_help_tip (__("Use ssl://host.domain.com if want to use IMAP with SSL"), true));
 
-$table->data[9][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use IMAP with SSL"), true);
+$table->data[10][0] = print_input_text ("pop_port", $config["pop_port"],
+	'', 15, 30, true, __('POP/IMAP Port') . 
+	print_help_tip (__("POP3: Port 110, IMAP: Port 143, IMAPS: Port 993, SSL-POP: Port 995"), true));
 
-
-$table->data[9][1] = print_input_text ("pop_port", $config["pop_port"],
-	'', 15, 30, true, __('POP/IMAP Port'));	
-
-$table->data[9][1] .= print_help_tip (__("POP3: Port 110, IMAP: Port 143, IMAPS: Port 993, SSL-POP: Port 995"), true);
-
-$table->data[10][0] = print_input_text ("pop_user", $config["pop_user"],
+$table->data[10][1] = print_input_text ("pop_user", $config["pop_user"],
 	'', 15, 30, true, __('POP/IMAP User'));
 
-$table->data[10][1] = print_input_text ("pop_pass", $config["pop_pass"], 
+$table->data[11][0] = print_input_text ("pop_pass", $config["pop_pass"], 
 	'', 15, 30, true, __('POP/IMAP Password'));
 				
-$table->data[11][1] = "<h4>".__("Newsletter SMTP Parameters")."</h4>";
+$table->data[12][1] = "<h4>".__("Newsletter SMTP Parameters")."</h4>";
 
-$table->data[12][0] = print_input_text ("news_smtp_host", $config["news_smtp_host"],
+$table->data[13][0] = print_input_text ("news_smtp_host", $config["news_smtp_host"],
 	'', 35, 200, true, __('SMTP Host'));
 
-$table->data[12][1] = print_input_text ("news_smtp_port", $config["news_smtp_port"],
+$table->data[13][1] = print_input_text ("news_smtp_port", $config["news_smtp_port"],
 	'', 5, 10, true, __('SMTP Port'));
 
-$table->data[13][0] = print_input_text ("news_smtp_user", $config["news_smtp_user"],
+$table->data[14][0] = print_input_text ("news_smtp_user", $config["news_smtp_user"],
 	'', 25, 200, true, __('SMTP User'));
 
-$table->data[13][1] = print_input_text ("news_smtp_pass", $config["news_smtp_pass"],
+$table->data[14][1] = print_input_text ("news_smtp_pass", $config["news_smtp_pass"],
 	'', 25, 200, true, __('SMTP Password'));
 
+$table->data[15][0] = print_input_text ("news_batch_newsletter", $config["news_batch_newsletter"], '',
+        4, 255, true, __('Max. emails sent per execution') . print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true));
 
-$table->data[14][0] = print_input_text ("news_batch_newsletter", $config["news_batch_newsletter"], '',
-        4, 255, true, __('Max. emails sent per execution'));
+$table->data[15][1] = print_input_text ("batch_email_validation", $config["batch_email_validation"], '',
+        4, 255, true, __('Newsletter email validation batch') . 
+        print_help_tip (__("This means, in each execution of the batch external process (integria_cron) will try to validate this ammount of emails."), true));
 
-
-$table->data[14][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
-
-$table->data[14][1] = print_input_text ("batch_email_validation", $config["batch_email_validation"], '',
-        4, 255, true, __('Newsletter email validation batch'));
-$table->data[14][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron) will try to validate this ammount of emails."), true);
-
-$table->data[15][0] =  print_checkbox ("active_validate", 1, $config["active_validate"], true, __('Activate email validation'));
-
-$table->data[16][1] = "<h4>".__("Mail general texts")."</h4>";
+$table->data[16][0] =  print_checkbox ("active_validate", 1, $config["active_validate"], true, __('Activate email validation'));
 
 $table->colspan[17][0] = 3;
-$table->colspan[18][0] = 3;
+$table->data[17][0] = "<h4>".__("Mail general texts")."</h4>";
+
 $table->colspan[19][0] = 3;
-$table->data[17][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+$table->colspan[20][0] = 3;
+$table->data[19][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
-$table->data[18][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+$table->data[20][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
 	'', true, __('Email footer'));
 
-$table->data[19][1] = "<h4>".__("Mail queue control");
+$table->data[21][1] = "<h4>".__("Mail queue control");
 
 $total_pending = get_db_sql ("SELECT COUNT(*) from tpending_mail");
 
-$table->data[19][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
+$table->data[21][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
 
 if ($total_pending > 0) {
 
-	$table->colspan[20][0] = 3;
+	$table->colspan[22][0] = 3;
 
 	$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
 	$mail_queue .= "<table width=100% class=listing>";
@@ -243,7 +230,7 @@ if ($total_pending > 0) {
 
 	$mail_queue .= "<tr></tr></table></div>";
 
-	$table->data[20][0] = $mail_queue;
+	$table->data[22][0] = $mail_queue;
 }
 
 $button = print_input_hidden ('update', 1, true);

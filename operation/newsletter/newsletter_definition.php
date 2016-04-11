@@ -156,8 +156,9 @@ if ($delete) { // if delete
 
 // General newsletter listing
 
-echo "<h2>".__('Newsletter management')."</h2>";
-echo "<br>";
+echo "<h2>".__('Newsletter')."</h2>";
+echo "<h4>".__('List Newsletter')."</h4>";
+
 $search_text = (string) get_parameter ('search_text');	
 $where_clause = "WHERE 1=1 ";
 
@@ -165,27 +166,39 @@ if ($search_text != "") {
 	$where_clause .= sprintf ('AND name LIKE "%%%s%%"', $search_text);
 }
 
-$table->width = '90%';
+$table->width = '100%';
 $table->class = 'search-table';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold;';
 $table->style[2] = 'font-weight: bold;';
 $table->data = array ();
 $table->data[0][0] = __('Search');
-$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+$table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+$table->data[2][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+
+echo "<div class='divform'>";
 
 echo '<form method="post" action="">';
 print_table ($table);
 echo '</form>';
 
+if($manager) {
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&create=1">';
+	unset($table->data);
+	$table->data[0][1] = print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"',true);
+	print_table ($table);
+	echo '</form>';
+}
+echo "</div>";
+
 $sql = "SELECT * FROM tnewsletter $where_clause ORDER BY name";
 $newsletters = get_db_all_rows_sql ($sql);
 
-$newsletters = print_array_pagination ($newsletters, "index.php?sec=customers&sec2=operation/newsletter/operation/newsletter/newsletter_definition&search_text='$search_text");
-
+echo "<div class='divresult'>";
 if ($newsletters !== false) {
-	$table->width = "90%";
+	$newsletters = print_array_pagination ($newsletters, "index.php?sec=customers&sec2=operation/newsletter/operation/newsletter/newsletter_definition&search_text='$search_text");
+
+	$table->width = "100%";
 	$table->class = "listing";
 	$table->data = array ();
 	$table->style = array ();
@@ -251,13 +264,6 @@ if ($newsletters !== false) {
 	}
 	print_table ($table);
 }
-
-if($manager) {
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&create=1">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-	echo '</div>';
-	echo '</form>';
-}
+echo "</div>";
 
 ?>

@@ -70,6 +70,7 @@ include_once("include/functions_crm.php");
 $create = get_parameter("create", 0);
 $id = get_parameter ("id", 0);
 
+echo "<h2>".__('Newsletter issue management')."</h2>";
 if ($create == 1) {
 	$email_subject = "";
 	$status = "0";
@@ -81,9 +82,10 @@ if ($create == 1) {
 	$campaign = 0;
 	$from_address = "";
 	
-	echo "<h2>".__("Issue creation")."</h2>";
-} else {
-	echo "<h2>".__("Issue update")."</h2>";
+	echo "<h4>".__("Issue creation")."</h4>";
+}
+else {
+	echo "<h4>".__("Issue update")."</h4>";
 	$issue = get_db_row ("tnewsletter_content", "id", $id);
 	$html = $issue["html"];
 	$plain = $issue["plain"];
@@ -106,8 +108,8 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ('email_subject', $email_subject, '', 40, 100, true, __('Email subject'));
 
-$table->data[0][1] = print_input_text ('from_address', $from_address, '', 35, 120, true, __('From address'))
-	. print_help_tip (__('Leave this field empty to use the newsletter from address'), true);
+$table->data[0][1] = print_input_text ('from_address', $from_address, '', 35, 120, true, __('From address')
+	. print_help_tip (__('Leave this field empty to use the newsletter from address'), true));
 
 $table->data[0][2] = "<div style='display:inline-block;'>" . print_input_text ('issue_date', $date, '', 11, 2, true, __('Date')) . "</div>";
 $table->data[0][2] .= "&nbsp;";
@@ -138,18 +140,22 @@ $editor_type_chkbx .= "</small></b></div>";
 
 $table->data[3][0] = print_textarea ("html", 10, 1, $html, 'class="noselected"', true, "<br>" . __('HTML') . $editor_type_chkbx);
 
-$table->data[4][0] = "";
+$buttons = "";
 if ($id) {
-	$table->data[4][0] .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-	$table->data[4][0] .= print_input_hidden ('id', $id, true);
-	$table->data[4][0] .= print_input_hidden ('update', 1, true);
-} else {
-	$table->data[4][0] .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
-	$table->data[4][0] .= print_input_hidden ('create', 1, true);
+	$buttons .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+	$buttons .= print_input_hidden ('id', $id, true);
+	$buttons .= print_input_hidden ('update', 1, true);
+}
+else {
+	$buttons .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+	$buttons .= print_input_hidden ('create', 1, true);
 }
 
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/issue_definition">';
 print_table ($table);
+
+echo "<div class='button-form'>".$buttons."</div>";
+
 echo "</form>";
 
 //id hidden

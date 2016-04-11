@@ -34,7 +34,7 @@ if ($permission === ENTERPRISE_NOT_HOOK) {
 $create = get_parameter("create", 0);
 $id = get_parameter ("id", 0);
 
-
+echo "<h2>".__('Newsletter management')."</h2>";
 if ($create == 1) {
 	
 	if (!$permission) {
@@ -48,9 +48,11 @@ if ($create == 1) {
 	$from_desc = "";
 	$from_address = "";
 	$description = "";
-	echo "<h2>".__("Newsletter creation")."</h2>";
-} else {
-	echo "<h2>".__("Newsletter update")."</h2>";
+	
+	echo "<h4>".__("Newsletter creation")."</h4>";
+}
+else {
+	echo "<h4>".__("Newsletter update")."</h4>";
 	$newsletter = get_db_row ("tnewsletter", "id", $id);
 	$name = $newsletter["name"];
 	$id_group = $newsletter["id_group"];
@@ -58,9 +60,10 @@ if ($create == 1) {
 	$from_address = $newsletter["from_address"];
 	$description = $newsletter["description"];
 }
-	
-$table->width = '90%';
-$table->class = 'databox';
+
+$table = new StdClass();
+$table->width = '100%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->colspan[3][0] = 2;
 $table->data = array ();
@@ -70,7 +73,7 @@ $table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Nam
 
 $table->data[0][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
 		
-$table->data[1][0] = print_input_text ('from_desc', $from_desc, '', 35, 120, true, __('From description'));
+$table->data[1][0] = print_input_text ('from_desc', $from_desc, '', 40, 120, true, __('From description'));
 $table->data[1][1] = print_input_text ('from_address', $from_address, '', 35, 120, true, __('From address'));
 $table->data[3][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 
@@ -79,13 +82,14 @@ print_table ($table);
 
 
 if ($permission) {
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div class="button-form" style="width: '.$table->width.'">';
 
 	if ($id) {
 			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
 			print_input_hidden ('id', $id);
 			print_input_hidden ('update', 1);
-	} else {
+	}
+	else {
 		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
 		print_input_hidden ('create', 1);
 	}

@@ -68,19 +68,19 @@ if ($operation == "attachfile") {
 		no_permission();
 	}
 	
-	$filename = get_parameter ('upfile', false);
-	$filename_real = safe_output($filename);
+	$filename = $_FILES['userfile'];
+	$filename_real = safe_output($filename['name']);
 	$filename_safe = str_replace (" ", "_", $filename_real);
 
-	if ((bool)$filename){ //if file
+	if ($filename['error'] === 0){ //if file
 		if (isset($_POST["file_description"]))
 			$description = $_POST["file_description"];
 		else
 			$description = "No description available";
-			
+		
 		// Insert into database
-		$file_temp = sys_get_temp_dir()."/$filename_real";
-		$filesize = filesize($file_temp);
+		$file_temp = $filename['tmp_name'];
+		$filesize = $filename['size'];
 		
 		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename_safe."','".$description."',".$filesize.") ";
 		$id_attachment = process_sql ($sql, 'insert_id');
@@ -121,11 +121,32 @@ if ($operation == "delete") {
 	$result_output = "<h3 class='suc'>".__('File deleted')."</h3>";
 }
 
+
+
 // Specific task
-if ($id_task != -1){ 
+if ($id_task != -1) { 
 	$sql = "SELECT * FROM tattachment WHERE id_task = $id_task";
 	echo "<h2>".__('Attached files');
 	echo "<h4>".__('Task')." - ".$task_name."</h4>";
+	
+	echo "<div class='divform'>";
+		echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile' enctype='multipart/form-data' >";
+		echo "<table cellpadding=4 cellspacing=4 border=0 width='20%' class='search-table'>";
+		echo "<tr>";
+		echo '<td class="datos"><b>'.__('Filename') . "</b>";
+		$into_form = '';
+		$into_form .=  '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
+		$into_form .=  '<tr><td class="datos2"><b>'.__('Description').'</b><br><input type="text" name="file_description" size=47 style="width:255px !important;">';
+		$into_form .=  "</td></tr>";
+		$into_form .=  "";
+		$into_form .=  '<tr><td style="text-align:center" class="datos2"><input type="submit" id="button-upload" name="upload" value="'.__('Upload').'" class="">';
+		$into_form .= "</table>";
+		echo $into_form;
+		echo "</form>";
+	echo "</div>";
+	
+	echo "<div class='divresult'>";
+	echo "<div class='divresult'>";
 	echo "<table cellpadding=4 cellspacing=4 border='0' width=90% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Filename');
@@ -144,12 +165,13 @@ if ($id_task != -1){
 }
 
 // Whole project
-if ($id_task == -1){
+if ($id_task == -1) {
 	$sql = "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name, ttask.id as task_id FROM tattachment, ttask
 			WHERE ttask.id_project = $id_project AND ttask.id = tattachment.id_task";
 
 	echo "<h2>".__('Attached files');
 	echo "<h4>".__('Project')." - ".$project_name."</h4>";
+	
 	echo "<table cellpadding=4 cellspacing=4 border='0' width=95% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Task');
@@ -234,5 +256,7 @@ if ($res = mysql_query($sql)) {
 }
 echo "</table>";
 
+if ($id_task != -1)
+	echo "</div>";
 
 ?>

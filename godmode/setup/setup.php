@@ -157,17 +157,16 @@ $table->data[0][1] = print_input_text ("sitename", $config["sitename"], '',
 
 $error_log_options[0] = __('Disabled');
 $error_log_options[1] = __('Enabled');
-$table->data[1][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, __('Error log'));
-
-$table->data[1][0] .= print_help_tip (__("This errorlog is on /integria.log"), true);
+$table->data[1][0] = print_select ($error_log_options, "error_log", 
+		$config["error_log"], '','','',true,0,true, __('Error log') . 
+			print_help_tip (__("This errorlog is on /integria.log"), true));
 
 $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',
 	15, 30, true, __('Timezone for integria'));
 
 $table->data[2][0] = print_input_text ("api_acl", $config["api_acl"], '',
-	30, 255, true, __('List of IP with access to API'));
-	
-$table->data[2][0] .= print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true);
+	30, 255, true, __('List of IP with access to API') . 
+	print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true));
 
 $table->data[2][1] = print_input_text ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
@@ -178,10 +177,10 @@ $table->data[3][0] = print_input_text ("max_file_size", $config["max_file_size"]
 		
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
-$table->data[3][1] = print_select ($newsletter_options, "enable_newsletter", $config["enable_newsletter"], '','','',true,0,true, __('Enable newsletter'));
-
-
-$table->data[3][1] .= print_help_tip (__("Enable this option to activate the newsletter feature of Integria IMS"), true);
+$table->data[3][1] = print_select ($newsletter_options,
+		"enable_newsletter", $config["enable_newsletter"], '','','',
+			true,0,true, __('Enable newsletter') . 
+		print_help_tip (__("Enable this option to activate the newsletter feature of Integria IMS"), true));
 
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
@@ -203,13 +202,12 @@ $table->data[5][1] = print_input_text ("loginhash_pwd", $config["loginhash_pwd"]
 $table->data[6][0] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
 
 $table->data[6][1] = print_input_text ("access_port", $config["access_port"], '',
-	10, 255, true, __('Access port'));
-$table->data[6][1] .= print_help_tip (__("Leave blank to use default port (80)"), true);
+	10, 255, true, __('Access port') . 
+	print_help_tip (__("Leave blank to use default port (80)"), true));
 
 $table->data[7][0] = print_input_text ("access_public", $config["access_public"],
-	'', 30, 50, true, __('Public access to server'));
-
-$table->data[7][0] .= print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true);
+	'', 30, 50, true, __('Public access to server') . 
+	print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true));
 
 $csv_standard_encoding = !isset($config['csv_standard_encoding']) ? false : (bool) $config['csv_standard_encoding'];
 $table->data[7][1] = print_label(__('CSV encoding type'), '', '', true);

@@ -27,7 +27,7 @@
   width: 52px;
   height: 55px;
   position:relative;
-  background-color: #f7f7f7;
+  background-color: #e7e7e7;
   border: 1px solid #E0E0E0;
 }
 /*
@@ -121,7 +121,7 @@
 
 #menu_nav ul li ul, #menu_nav ul li ul {
 
-    background-color: #f7f7f7;
+    background-color: #e7e7e7;
     border: 1px solid #E0E0E0;
     width: 200px;
     padding-left: 10px;
@@ -135,8 +135,8 @@
 
 }
 #menu_nav ul ul li:first-child h1{
-      border-bottom:0px solid #ff9000;
-    }
+	border-bottom:0px solid #ff9000;
+}
 
 /*************************IMAGENES*/
 li#proyectos{

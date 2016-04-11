@@ -148,17 +148,17 @@ if ($update) {
 
 //Create a new task
 if ($create) {
-
+	
 	$tasklist = get_parameter ("tasklist");
-
+	
 	// Massive creation of tasks
 	if ($tasklist != "") {
 
 		$tasklist = safe_output ($tasklist);
 
 		$parent = (int) get_parameter ('padre');
-		$start = get_parameter ('start_date2', date ("Y-m-d"));
-		$end = get_parameter ('end_date2', date ("Y-m-d"));
+		$start = get_parameter ('start_date', date ("Y-m-d"));
+		$end = get_parameter ('end_date', date ("Y-m-d"));
 		$owner = get_parameter('dueno');
 		
 		if ($parent) {
@@ -179,8 +179,10 @@ if ($create) {
 		}
 		
 		$data_array = preg_split ("/\n/", $tasklist);
+		
 		foreach ($data_array as $data_item){
 			$data = trim($data_item);
+			
 			if ($data != "") {
 				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_parent_task, start, end) 
 								VALUES (%d, "%s", %d, "%s", "%s")',
@@ -199,7 +201,6 @@ if ($create) {
 									VALUES ("%s", %d, %d)', $owner, $role, $id_task);
 
 					$result2 = process_sql($sql);
-					
 					if (! $result2) {
 						echo "<h3 class='error'>".__('An error ocurred setting the permissions for the task '.$data)."</h3>";
 					}

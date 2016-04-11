@@ -5,7 +5,9 @@
 
 */
 
+/*
 @import url(integria_tip.css);
+*/
 @import url(calendar.css);
 @import url(fixed-bottom-box.css);
 
@@ -3453,6 +3455,7 @@ ul li {
 	padding: 0px;
 	position: absolute;
 	top: 34px;
+	z-index: 999;
 }
 
 .support_submenu li,

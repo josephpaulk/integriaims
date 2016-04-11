@@ -862,7 +862,8 @@ if ($id) {
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
 
-} else {
+}
+else {
 	$create_incident = true;
 	$titulo = "";
 	$description = "";
@@ -877,7 +878,8 @@ if ($id) {
 	$epilog = "";
 	if ($config['show_creator_blank']) {
 		$id_creator = "";
-	} else {
+	}
+	else {
 		$id_creator = $config['id_user'];
 	}
 	
@@ -891,6 +893,7 @@ if ($id) {
     $blocked = 0;
 
 }
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -903,7 +906,8 @@ if (! $id) {
 		$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 		// Take first group defined for this user
 		$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
-	} else {
+	}
+	else {
 		$default_id_group = 1;
 		$number_group = 1;
 	}
@@ -1021,7 +1025,7 @@ if($id_grupo==0) {
 }
 
 $types = get_incident_types (true, $config['required_ticket_type']);
-$table->data[0][1] = print_label (__('Ticket type'), '','',true);
+$table->data[0][1] = print_label (__('Ticket type') . print_help_tip (__("When changing the ticket type, it's possible for the group to change as well"), true), '','',true);
 
 //Disabled incident type if any, type changes not allowed
 if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_user'])) {
@@ -1041,7 +1045,6 @@ if ($config['required_ticket_type']) {
 }
 
 $table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
-$table->data[0][1] .= print_help_tip (__("When changing the ticket type, it's possible for the group to change as well"), true);
 
 $id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 if($id_group_type != "" && $id_group_type != "0"){
@@ -1104,7 +1107,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['input_id'] = 'text-id_creator';
 	$params_creator['input_name'] = 'id_creator';
 	$params_creator['input_value'] = $id_creator;
-	$params_creator['title'] = 'Creator';
+	$params_creator['title'] = __('Creator');
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
@@ -1112,7 +1115,8 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	//add button to display info user for creator
 	$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-} else {
+}
+else {
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 

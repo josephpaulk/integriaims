@@ -69,7 +69,7 @@ if (!$gantt_editor) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
-		echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>".
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>".
 		print_image ("images/go-previous.png", true, array("title" => __("Statistics"))) .
 		"</a>";
 	echo "</li>";
@@ -80,7 +80,7 @@ if (!$gantt_editor) {
 	echo "<div id='button-bar-title' style='margin-top: 5px; margin-bottom: 9px;'>";
 	echo "<ul>";
 	echo "<li>";
-		echo "<a target='top' onclick='toggle_editor_gantt(".$id_project.", ".$id_task.", \"editor\")'>".
+		echo "<a onclick='toggle_editor_gantt(".$id_project.", ".$id_task.", \"editor\")'>".
 		print_image ("images/go-previous.png", true, array("title" => __("Statistics"))) .
 		"</a>";
 	echo "</li>";

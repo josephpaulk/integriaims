@@ -256,20 +256,20 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 					echo "<li>";
 				echo "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task'>".__('Add workunit')."</a></li>";
 
-				// Add task file
-				if ($sec2 == "operation/projects/task_attach_file")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
+				//~ // Add task file
+				//~ if ($sec2 == "operation/projects/task_attach_file")
+					//~ echo "<li id='sidesel'>";
+				//~ else
+					//~ echo "<li>";
+				//~ echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
 				
 				$operation = get_parameter ('operation', '');
-				// Add task cost
-				if ($sec2 == "operation/projects/task_cost" && $operation != "list")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task'>".__('Add cost unit')."</a></li>";
+				//~ // Add task cost
+				//~ if ($sec2 == "operation/projects/task_cost" && $operation != "list")
+					//~ echo "<li id='sidesel'>";
+				//~ else
+					//~ echo "<li>";
+				//~ echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task'>".__('Add cost unit')."</a></li>";
 
 				// Vist task costs
 				if ($sec2 == "operation/projects/task_cost" && $operation == "list")

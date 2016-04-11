@@ -235,8 +235,8 @@ echo "<td style=''>".print_input_text ("iwu_defaultime", $config["iwu_defaultime
 
 echo "<td style=''>".print_select ($incident_reporter_options_email, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, false, __('Send email on every ticket update'))."</td>";
 
-echo "<td style=''>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. tickets by search')).
-	integria_help ("limit_size", true)."</td>";
+echo "<td style=''>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. tickets by search') .
+	integria_help ("limit_size", true))."</td>";
 echo "</tr>";
 
 echo "<tr>";
@@ -244,8 +244,8 @@ echo "<td style=''>".print_select ($incident_reporter_options, "show_owner_incid
 
 echo "<td style=''>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show ticket creator'))."</td>";
 
-echo "<td style=''>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto ticket close')).
-	integria_help ("auto_incident_close", true)."</td>";
+echo "<td style=''>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto ticket close').
+	integria_help ("auto_incident_close", true))."</td>";
 echo "</tr>";
 
 echo "<tr>";

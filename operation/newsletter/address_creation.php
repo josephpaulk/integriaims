@@ -28,10 +28,11 @@ if (! give_acl ($config["id_user"], 0, "CN")) {
 $id_newsletter = 0;
 $data = "";
 
-echo "<h2>".__("Addresses bulk creation")."</h2>";
+echo "<h2>".__("Addresses management")."</h2>";
+echo "<h4>".__("Addresses bulk creation")."</h4>";
 	
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '100%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -43,7 +44,7 @@ $table->data[2][0] = print_textarea ("data", 15, 1, $data, 'data', true, "<br>".
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/address_definition">';
 print_table ($table);
 
-echo '<div class="button" style="width: '.$table->width.'">';
+echo '<div class="button-form" style="width: '.$table->width.'">';
 print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
 print_input_hidden ('create', 1);
 echo "</div>";

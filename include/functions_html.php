@@ -288,7 +288,10 @@ function html_print_select_from_sql ($sql, $name, $selected = '',
  * $nothing_value Value when nothing is selected
  */
 
-function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false, $disabled = false, $style='') {
+function print_select ($fields, $name, $selected = '', $script = '', 
+		$nothing = 'select', $nothing_value = '0', $return = false, 
+		$multiple = 0, $sort = true, $label = false, 
+		$disabled = false, $style='') {
 
 	$output = "\n";
 	
@@ -1567,7 +1570,7 @@ function print_company_autocomplete_input ($parameters) {
 	}
 	
 	$html = "";
-	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title)). print_help_tip (__($help_message), $return_help);
+	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title). print_help_tip (__($help_message), $return_help));
 	$html .= print_input_hidden ($input_name, $input_value, true);
 	if ($filter) {
 		$html .= print_input_hidden ("autocomplete_".$input_name."_filter", $filter, true);

@@ -64,16 +64,13 @@ $table->colspan = array ();
 $table->data = array ();
 
 $table->data[0][0] = print_input_text ("no_wu_completion", $config["no_wu_completion"], '',
-	20, 500, true, __('No WU completion users'));
-$table->data[0][0] .= integria_help ("no_wu_completion", true);
+	20, 500, true, __('No WU completion users') . integria_help ("no_wu_completion", true));
 
 $table->data[0][1] = print_input_text ("hours_perday", $config["hours_perday"], '',
-	5, 5, true, __('Work hours per day'));
-$table->data[0][1] .= integria_help ("hours_perday", true);
+	5, 5, true, __('Work hours per day') . integria_help ("hours_perday", true));
 
 $table->data[1][0] = print_input_text ("autowu_completion", $config["autowu_completion"],
-	'', 7, 7, true, __('Auto WU Completion (days)'));
-$table->data[1][0] .= integria_help ("autowu_completion", true);
+	'', 7, 7, true, __('Auto WU Completion (days)') . integria_help ("autowu_completion", true));
 
 $table->data[1][1] = print_input_text ("pwu_defaultime", $config["pwu_defaultime"], '',
 	5, 5, true, __('Project WU Default time'));

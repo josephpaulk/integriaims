@@ -69,15 +69,15 @@ if ($operation == "delete"){
 
 if ($operation == "add"){
 	
-	$filename = get_parameter ('upfile', false);
+	$filename = $_FILES["upfile"];
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
 	$amount = (float) get_parameter ("amount", 0);
 	$user_id = $config["id_user"];
 
-	if ($filename != ""){
-		$file_temp = sys_get_temp_dir()."/$filename";
-		$filesize = filesize($file_temp);
+	if ($filename["error"] === 0){
+		$file_temp = $filename["tmp_name"];
+		$filesize = $filename["size"];
 		
 		// Creating the attach
 		$sql = sprintf ('INSERT INTO tattachment (id_usuario, filename, description, size) VALUES ("%s", "%s", "%s", "%s")',
@@ -119,17 +119,60 @@ if ($operation == "add"){
 if ($operation == "list"){
 
 	echo "<h2>" . __('Cost unit listing'). "</h2><h4>". __('Task') .": ".$task_name."</h4>";
-	
 	$total = task_cost_invoices ($id_task);
-	
 	echo "<h4>".__("Total cost for this task"). " : $total</h4>";
+	
+	echo "<div id='' class='divform'>";
+	echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project' enctype='multipart/form-data' >";
+	//~ $action = "index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project";
+	
+	$table = new StdClass();
+	$table->id = 'cost_form';
+	$table->width = '100%';
+	$table->class = 'search-table';
+	
+	$table->data[0][0] = "<b>" . __('Bill ID') . "</b>";
+	$table->data[1][0] .= print_input_text_extended ('bill_id', $bill_id, '', '', 15, 50, false, '', 'style="width:255px !important;"', true);
+	
+	$table->data[2][0] = "<b>" . __('Amount') . "</b>";
+	$table->data[3][0] .= print_input_text_extended ('amount', $amount, '', '', 10, 20, false, '', 'style="width:255px !important;"', true);//Check
+	
+	$table->data[4][0] = "<b>" . __('Description') . "</b>";
+	$table->data[5][0] .= print_input_text_extended ('description', '', '', '', 60, 250, false, '', 'style="width:255px !important;"', true);
+	
+	$table->data[6][0] = "<b>" . __('Attach a file') . "</b>";
+	$table->data[7][0] = '<input type="file" name="upfile" value="upfile" class="sub" size="30">';
+	
+	
+	//~ if ($operation == "") {
+		$table->align['button'] = 'center';
+		$table->data[8]['button'] .= print_submit_button (__('Add'), "crt", false, '', true);
+		$table->data[8]['button'] .= print_input_hidden ('operation', "add", true);
+		//~ $button_name = "button-crt";
+	//~ } else {
+		//~ $table->align['button'] = 'center';
+		//~ $table->data[8]['button'] .= print_input_hidden ('id', $id_profile, true);
+		//~ $table->data[8]['button'] .= print_input_hidden ('update_profile', 1, true);
+		//~ $table->data[8]['button'] .= print_button (__('Update'), "upd", false, '', 'class=""', true);
+		//~ $button_name = "button-upd";
+	//~ }
+	
+	print_table ($table);	
 
+	//~ print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
+	
+	echo "</form>";
+	echo "</div>";
+	
+	echo "<div id='' class='divresult'>";
+	echo "<div id='' class='divresult'>";
+	
 	$costs = get_db_all_rows_sql ("SELECT * FROM tinvoice WHERE id_task = $id_task");
 	if ($costs === false)
 		$costs = array ();
 	
 	$table->class = 'listing';
-	$table->width = '90%';
+	$table->width = '100%';
 	$table->data = array ();
 	
 	$table->head = array ();
@@ -155,53 +198,56 @@ if ($operation == "list"){
 		array_push ($table->data, $data);
 	}
 	print_table ($table);
-
+	echo "</div>";
+	echo "</div>";
 }	
 
 
 if ($operation == ""){
 
-	echo "<h2>";
-	echo __('Add cost unit')."</h2><h4>". __('Task') .": ".$task_name."</h4>";
-	echo "<div id='upload_control' class='divform'>";
+	//~ echo "<h2>";
+	//~ echo __('Add cost unit')."</h2><h4>". __('Task') .": ".$task_name."</h4>";
 	
-	$action = "index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project";
+	//~ echo "<div id='' class='divform'>";
+	//~ echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project' enctype='multipart/form-data' >";
+	//~ $action = "index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project";
 	
-	$table = new StdClass();
-	$table->id = 'cost_form';
-	$table->width = '90%';
-	$table->class = 'search-table';
+	//~ $table = new StdClass();
+	//~ $table->id = 'cost_form';
+	//~ $table->width = '100%';
+	//~ $table->class = 'search-table';
+	//~ 
+	//~ $table->data[0][0] = "<b>" . __('Bill ID') . "</b>";
+	//~ $table->data[1][0] .= print_input_text_extended ('bill_id', $bill_id, '', '', 15, 50, false, '', 'style="width:255px !important;"', true);
+	//~ 
+	//~ $table->data[2][0] = "<b>" . __('Amount') . "</b>";
+	//~ $table->data[3][0] .= print_input_text_extended ('amount', $amount, '', '', 10, 20, false, '', 'style="width:255px !important;"', true);//Check
+	//~ 
+	//~ $table->data[4][0] = "<b>" . __('Description') . "</b>";
+	//~ $table->data[5][0] .= print_input_text_extended ('description', '', '', '', 60, 250, false, '', 'style="width:255px !important;"', true);
+	//~ 
+	//~ $table->data[6][0] = "<b>" . __('Attach a file') . "</b>";
+	//~ $table->data[7][0] = '<input type="file" name="upfile" value="upfile" class="sub" size="30">';
 	
-	$table->data[0][0] = "<b>" . __('Bill ID') . "</b>";
-	$table->data[1][0] .= print_input_text_extended ('bill_id', $bill_id, '', '', 15, 50, false, '', 'style="width:255px !important;"', true);
 	
-	$table->data[2][0] = "<b>" . __('Amount') . "</b>";
-	$table->data[3][0] .= print_input_text_extended ('amount', $amount, '', '', 10, 20, false, '', 'style="width:255px !important;"', true);//Check
+	//~ if ($operation == "") {
+		//~ $table->align['button'] = 'center';
+		//~ $table->data[8]['button'] .= print_button (__('Add'), "crt", false, '', 'class=""', true);
+		//~ $table->data[8]['button'] .= print_input_hidden ('operation', "add", true);
+		//~ $button_name = "button-crt";
+	//~ } else {
+		//~ $table->align['button'] = 'center';
+		//~ $table->data[8]['button'] .= print_input_hidden ('id', $id_profile, true);
+		//~ $table->data[8]['button'] .= print_input_hidden ('update_profile', 1, true);
+		//~ $table->data[8]['button'] .= print_button (__('Update'), "upd", false, '', 'class=""', true);
+		//~ $button_name = "button-upd";
+	//~ }
 	
-	$table->data[4][0] = "<b>" . __('Description') . "</b>";
-	$table->data[5][0] .= print_input_text_extended ('description', '', '', '', 60, 250, false, '', 'style="width:255px !important;"', true);
-	
-	$table->data[6][0] = "<b>" . __('Attach a file') . "</b>";
-	$table->data[7][0] .= '__UPLOAD_CONTROL__';
-	
-	
-	if ($operation == "") {
-		$table->align['button'] = 'center';
-		$table->data[8]['button'] .= print_button (__('Add'), "crt", false, '', 'class=""', true);
-		$table->data[8]['button'] .= print_input_hidden ('operation', "add", true);
-		$button_name = "button-crt";
-	} else {
-		$table->align['button'] = 'center';
-		$table->data[8]['button'] .= print_input_hidden ('id', $id_profile, true);
-		$table->data[8]['button'] .= print_input_hidden ('update_profile', 1, true);
-		$table->data[8]['button'] .= print_button (__('Update'), "upd", false, '', 'class=""', true);
-		$button_name = "button-upd";
-	}
-	
-	$into_form = print_table ($table, true);	
+	//~ print_table ($table);	
 
-	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
+	//~ print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
 	
-	echo "</div>";
+	//~ echo "</form>";
+	//~ echo "</div>";
 }
 ?>

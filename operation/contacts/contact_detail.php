@@ -190,31 +190,31 @@ if ($id != 0) {
 		echo '<li class="ui-tabs-selected">';
 	else   
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/icono_files.png"/></a></li>';
 
 	if ($op == "inventory")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=inventory" title="'.__("Inventory").'"><img src="images/inventory_tab.png"/></a></li>';
 
 	if ($op == "incidents")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=incidents"><span>'.__("Tickets").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=incidents" title="'.__("Tickets").'"><img src="images/incident_dark.png"/></a></li>';
 
 	if ($op == "activity")
 		echo '<li class="ui-tabs-selected">';
 	else   
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=activity" title="'.__("Activity").'"><img src="images/list_view.png"/></a></li>';
 
 	if ($op == "details")
 		echo '<li class="ui-tabs-selected">';
 	else   
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=details"><span>'.__("Contact details").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=details" title="'.__("Contact details").'"><img src="images/details_tab.png"/></a></li>';
 
 	echo '</ul>';
 	echo '</h4>';

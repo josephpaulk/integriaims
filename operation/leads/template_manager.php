@@ -148,11 +148,12 @@ if (($operation == "create") || ($operation == "edit")){
 		$button .= print_input_hidden ('id', $id, true);
 	}
 	
-	$table->data['button'][0] = $button;
-	$table->colspan['button'][0] = 2;
+	//~ $table->data['button'][0] = $button;
+	//~ $table->colspan['button'][0] = 2;
 	
 	echo '<form id="form-template_manager" method="post" action="index.php?sec=customers&sec2=operation/leads/template_manager">';
 	print_table ($table);
+	echo "<div class='button-form'>".$button."</div>";
 	echo '</form>';
 }
 

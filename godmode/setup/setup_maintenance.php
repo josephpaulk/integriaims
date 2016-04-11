@@ -67,16 +67,13 @@ $table->data = array ();
 $row = array();
 $cell = 0;
 
-$row[$cell] = print_input_text ("max_days_events", $config["max_days_events"], '', 4, 4, true, __('Days to delete events'));
-$row[$cell] .= integria_help ("old_events", true);
+$row[$cell] = print_input_text ("max_days_events", $config["max_days_events"], '', 4, 4, true, __('Days to delete events') . integria_help ("old_events", true));
 $cell++;
 
-$row[$cell] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete tickets'));
-$row[$cell] .= integria_help ("old_incidents", true);
+$row[$cell] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete tickets') . integria_help ("old_incidents", true));
 $cell++;
 
-$row[$cell] = print_input_text ("max_days_wu", $config["max_days_wu"], '', 4, 4, true, __('Days to delete work units'));
-$row[$cell] .= integria_help ("old_wu", true);
+$row[$cell] = print_input_text ("max_days_wu", $config["max_days_wu"], '', 4, 4, true, __('Days to delete work units') . integria_help ("old_wu", true));
 $cell++;
 
 $table->data[] = $row;
@@ -84,16 +81,13 @@ $table->data[] = $row;
 $row = array();
 $cell = 0;
 
-$row[$cell] = print_input_text ("max_days_wo", $config["max_days_wo"], '', 4, 4, true, __('Days to delete work orders'));
-$row[$cell] .= integria_help ("old_wo", true);
+$row[$cell] = print_input_text ("max_days_wo", $config["max_days_wo"], '', 4, 4, true, __('Days to delete work orders') . integria_help ("old_wo", true));
 $cell++;
 
-$row[$cell] = print_input_text ("max_days_audit", $config["max_days_audit"], '', 4, 4, true, __('Days to delete audit data'));
-$row[$cell] .= integria_help ("old_audit", true);
+$row[$cell] = print_input_text ("max_days_audit", $config["max_days_audit"], '', 4, 4, true, __('Days to delete audit data') . integria_help ("old_audit", true));
 $cell++;
 
-$row[$cell] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions'));
-$row[$cell] .= integria_help ("old_sessions", true);
+$row[$cell] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions') . integria_help ("old_sessions", true));
 $cell++;
 
 $table->data[] = $row;
@@ -101,16 +95,13 @@ $table->data[] = $row;
 $row = array();
 $cell = 0;
 
-$row[$cell] = print_input_text ("max_days_workflow_events", $config["max_days_workflow_events"], '', 4, 4, true, __('Days to delete workflow events'));
-$row[$cell] .= integria_help ("old_workflow_events", true);
+$row[$cell] = print_input_text ("max_days_workflow_events", $config["max_days_workflow_events"], '', 4, 4, true, __('Days to delete workflow events') . integria_help ("old_workflow_events", true));
 $cell++;
 
-$row[$cell] = print_input_text ("max_days_fs_files", $config["max_days_fs_files"], '', 4, 4, true, __('Days to delete old file sharing files'));
-$row[$cell] .= integria_help ("old_fs_files", true);
+$row[$cell] = print_input_text ("max_days_fs_files", $config["max_days_fs_files"], '', 4, 4, true, __('Days to delete old file sharing files') . integria_help ("old_fs_files", true));
 $cell++;
 
-$row[$cell] = print_input_text ("max_days_files_track", $config["max_days_files_track"], '', 4, 4, true, __('Days to delete old file tracking data'));
-$row[$cell] .= integria_help ("old_files_track", true);
+$row[$cell] = print_input_text ("max_days_files_track", $config["max_days_files_track"], '', 4, 4, true, __('Days to delete old file tracking data') . integria_help ("old_files_track", true));
 $cell++;
 
 $table->data[] = $row;
