@@ -1348,6 +1348,15 @@ CREATE TABLE `tworkflow_status_mapping` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tfolder_report` (
+ `id` bigint(20) unsigned NOT NULL auto_increment,
+ `nombre`  mediumtext NOT NULL,
+ `description`  text DEFAULT '',
+ `private` tinyint(1) unsigned NOT NULL DEFAULT 0,
+ `id_group` mediumint(9) NOT NULL default 0,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `treport` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `nombre`  mediumtext NOT NULL,
@@ -1358,7 +1367,7 @@ CREATE TABLE `treport` (
   `fields_to_show` longtext NOT NULL default '',
   `order_by` text NOT NULL default '',
   `group_by` text NOT NULL default '',
-   PRIMARY KEY  (`id`)
+   PRIMARY KEY  (`id`),
    FOREIGN KEY (`id_folder`) REFERENCES tfolder_report(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1372,13 +1381,4 @@ CREATE TABLE `treport_subtype` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `nombre`  mediumtext NOT NULL,
    PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `tfolder_report` (
- `id` bigint(20) unsigned NOT NULL auto_increment,
- `nombre`  mediumtext NOT NULL,
- `description`  text DEFAULT '',
- `private` tinyint(1) unsigned NOT NULL DEFAULT 0,
- `id_group` mediumint(9) NOT NULL default 0,
-  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
