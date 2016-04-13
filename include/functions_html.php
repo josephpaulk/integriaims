@@ -1408,7 +1408,7 @@ function print_autorefresh_button_ticket ($name = "autorefresh", $text = "", $re
 	
 	$html .= "<li style=''>";
 	$html .= "<a reload_enabled='0' name='$name' id='button-$name' href='javascript:' onclick='toggleAutorefresh (\"button-$name\", \"$token\", \"$form_id\")'>$text</a>";
-	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px;'>";
+	$html .= "<div id='autorefresh_combo' style='float: left; visibility: hidden; margin-right: 5px;'>";
 	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
 	$html .= "</div>";
 	$html .= "</li>";

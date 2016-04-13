@@ -91,11 +91,10 @@ function show_syntax() {
 		background-color: #FFFFEF;
 		border: 1px dashed #808080;
 		color: #000000;
-		font-size: 1em;
+		font-size: 0.8em;
 		margin: auto;
 		padding: 3px;
 		word-wrap: break-word;
-		outline: 0.4em solid #EEEEEE !important;
 	}
 	ul {
 		list-style: disc outside none;
@@ -110,7 +109,8 @@ function show_syntax() {
 		list-style: decimal outside none;
 	}
 	</style>
-	<h1>Headings</h1>
+	<h2>Syntax</h2>
+	<h4>Headings</h4>
 	Example:
 	<pre>!Heading H2
 !!Heading H3
@@ -121,7 +121,7 @@ function show_syntax() {
 	More exclamation marks you use, the smaller the heading will be (up to 5 exclamation marks). Exclamation marks has to be exactly at the beginning of the line.
 	
 	
-	<h1>Lists</h1>
+	<h4>Lists</h4>
 	<h2>Unordered list</h2>
 	<pre>* Fruit
 ** Apple
@@ -140,7 +140,7 @@ function show_syntax() {
 	<ol><li> First item </li><ol><li> First subitem </li><ol><li> First subsubitem</li></ol><li> Second subitem </li></ol></ol>
 	
 	
-	<h1>Text styles</h1>
+	<h4>Text styles</h4>
 	'''Bold''' → <b>Bold</b> (three apostrophes)<br />
 	''Italic'' → <i>Italic</i> (two apostrophes)<br />
 	'''''Bold and italic''''' → <b><i>Bold and italic</i></b> (five apostrophes)<br />
@@ -150,17 +150,17 @@ function show_syntax() {
 	x{sup}10{/sup} → x<sup>10</sup><br />
 	x{sub}i{/sub} → x<sub>i</sub><br />
 	
-	<h1>CSS styles, classes, IDs</h1>
+	<h4>CSS styles, classes, IDs</h4>
 	Since LionWiki 3.1
 	<pre>{.first.second#id color: blue; font-size: large}Styled text span with ID and two classes{/}</pre>
 	
-	<h1>Styled text span with ID and two classes</h1>
+	<h4>Styled text span with ID and two classes</h4>
 	Classes begins with dot, ID with hash sign. Everything after first space is considered to be CSS style, so there can't be any space between or inside classes and ID. Few other possibilities:
 	<pre>{. display: block;}Text{/} - neither class, nor id, just style
 {.citation}Text{/if} - just class</pre>
 	The enclosing element is &lt;span&gt;.
 	
-	<h1>Emails, links, images</h1>
+	<h4>Emails, links, images</h4>
 	Links to other pages can be created like this:<br />
 	[Main page] → Main page<br />
 	or<br />
@@ -175,7 +175,7 @@ function show_syntax() {
 	Or to use a relative path to a file on the same server but in a higher directory, you can use:<br />
 	[Interesting File In Parent Directory|./../SomeWebPage.html] → Interesting File In Parent Directory<br />
 	
-	<h2>Images</h2>
+	<h4>Images</h4>
 	Image handling was changed a lot in the 3.2 release, see older version of this page if you use older version.<br />
 	
 	If you need a way to upload images (or other files), check Upload plugin.<br />
@@ -186,27 +186,27 @@ function show_syntax() {
 	
 	More complex operations with images can be done with ImageExt plugin.<br />
 	
-	<h1>Subpages</h1>
+	<h4>Subpages</h4>
 	Subpages are useful when you need to insert some common content into multiple pages, example could be a navigational menu (by the way, we have Menu plugin.<br />
 	
 	Syntax: {include:page_to_be_included}.<br />
 	
 	You can use the same syntax to include page in template (i.e. not in page content), but in this case, whole content of this subpage must be in HTML (you can, but not have to enclose it in {html} and {/html}).<br />
 	
-	<h1>Multilingual content</h1>
+	<h4>Multilingual content</h4>
 	Let's say you have page named "Biography" in German and you would like to make French variant. Rename page Biography to Biography.de and create page named Biography.fr and insert French translation there. Then visitors whose browser identifies primary language as French will see Biography.fr. It's recommended to create a redirect from page Biography to default language variant. The obvious limitation is that page name has to stay the same in every language variant. That's not such a big problem with "Biography", but it can be worse with other names.<br />
 	
 	This is recommended way to create multilingual content, there are more ways to do it.<br />
 	
-	<h1>Redirects</h1>
+	<h4>Redirects</h4>
 	If you want to redirect from some page to other, put {redirect:page} at the very beginning of the page. It's not straightforward to edit page containing redirect because every visit will cause redirecting. The only way to edit such page is from search results (as it provides direct edit links), or possibly by manually altering URL.<br />
 	
-	<h1>Other</h1>
+	<h2>Other</h2>
 	
-	<h2>Table of contents</h2>
+	<h4>Table of contents</h4>
 	Automatically generated table of contents can be inserted with {TOC} (see demo on the right). It can be used in both pages and templates.<br />
 	
-	<h2>Characters</h2>
+	<h4>Characters</h4>
 	Some sequences of characters are automatically replaced:<br />
 	
 	Arrows : &lt;-- : ←, --&gt; : →, &lt;--&gt; : ↔<br />
@@ -226,22 +226,22 @@ if len(sys.argv) == 2:
    print "Hello",sys.argv[1]</pre>
 	We also have a plugin for syntax highlighting.<br />
 	
-	<h2>Horizontal line</h2>
+	<h4>Horizontal line</h4>
 	<hr />
 	by ----<br />
-	<h2>Suppressing wiki syntax</h2>
+	<h4>Suppressing wiki syntax</h4>
 	By using ^ character before syntax keyword or using {{something}}. If you still don't know how, take a look on wiki code of this page, there are plenty of examples. If you want to insert ^ character, you have to double it, i.e. ^^
 	
-	<h2>HTML code</h2>
+	<h4>HTML code</h4>
 	Do you want to insert youtube video to your site? Or any other HTML code? Just insert it between {html}some html code{/html}. This does not have to work if config value $NO_HTML is set to true. Note that it is serious security risk if you allow users to post HTML code in your wiki.
 	
-	<h2>HTML entities</h2>
+	<h4>HTML entities</h4>
 	HTML entities are automatically recognized and left without modification.
 	
-	<h2>Newline</h2>
+	<h4>Newline</h4>
 	LionWiki joins adjacent newlines together, if you need more than one newline, use {br}.
 	
-	<h2>Internal comments</h2>
+	<h4>Internal comments</h4>
 	You can insert internal comments not intended to be displayed using HTML-like syntax &lt;!-- text not intended to be displayed --&gt;
 	<?php
 }

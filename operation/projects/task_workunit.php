@@ -391,13 +391,8 @@ $(document).ready (function () {
 		values.push ({name: "id_workunit", value: id});
 		jQuery.post ("ajax.php",
 			values,
-			function (data, status) {
-				$(div).prev ("div.notetitle").slideUp (function () {
-					$(this).remove ();
-				});
-				$(div).slideUp (function () {
-					$(this).remove ();
-				});
+			function (status) {
+				$("#wu_"+id).remove();
 			},
 			"html");
 		return false;

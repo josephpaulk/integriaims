@@ -785,7 +785,7 @@ function show_workunit_user ($id_workunit, $full = 0, $show_multiple=true) {
 			return;
 		}
 	}
-
+echo "<div id='wu_$id_workunit'>";
 echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_workunit'>";
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
@@ -863,7 +863,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 	
 	echo "</table>";
 	echo "</div>";
-echo "</form>";
+
 
 	// Body
 	//echo "<div class='notebody'>";
@@ -923,6 +923,8 @@ echo "</form>";
 	$title .= "</a>";
 	$title .= " ".__('said on').' '. $timestamp;
 	print_container_div("dest-".$id_workunit, $title, $output, 'closed', false, false, '', '', 1, '', "margin-top:0px;");
+echo "</form>";
+echo "</div>";
 }
 
 function form_search_incident ($return = false, $filter=false) {

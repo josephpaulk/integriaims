@@ -190,11 +190,11 @@ function print_file_types_table ($return = false) {
 								WHERE id NOT IN (SELECT id_download FROM tdownload_type_file)
 									$condition
 								ORDER BY last_update DESC");
-
+	
 	if ($without_type) {
 		$without_type = $without_type[0];
 		$without_type["name"] = __('Without type');
-
+		
 		if (!$types) {
 			$types[0] = $without_type;
 		}
@@ -208,19 +208,15 @@ function print_file_types_table ($return = false) {
 			$types_aux = array();
 			for ($i = 0; $i < count($types); $i++) {
 				$types_aux[] = $types[$i];
-				if ($types[$i]["last_update"] && $types[$i+1]["last_update"]) {
-					if ($types[$i]["last_update"] > $without_type["last_update"] && $types[$i+1]["last_update"] < $without_type["last_update"]) {
-						$types_aux[] = $without_type;
-					}
-				}
 			}
+			$types_aux[] = $without_type;
 			$types = $types_aux;
 			$types_aux = null;
 		}
 	}
 
 	$table = new stdClass;
-	$table->width = '60%';
+	$table->width = '100%';
 	$table->class = 'blank';
 	$table->style = array();
 	$table->style[0] = "min-width:50%; width:50%; max-width:50%";
@@ -235,15 +231,14 @@ function print_file_types_table ($return = false) {
 	$column = 0;
 
 	foreach ($types as $type) {
-
-		$table_type = null;
+		
 		$table_type = new stdClass;
 		$table_type->width = '100%';
 		$table_type->class = 'search-table-white';
 		$table_type->style = array();
 		$table_type->style[0] = "vertical-align:top; min-width:25px; width:25px; max-width:25px";
 		$table_type->data = array();
-
+		
 		if ((int)$type["num_files"] > 0) {
 			$file_releases = get_file_releases (0, $type["id"], 10, true);
 			$fr_names = __('Last updated file releases') . ":";

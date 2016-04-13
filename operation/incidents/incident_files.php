@@ -404,7 +404,7 @@ function form_upload () {
 	});
 
 	function addListItem (progress, filename, filesize) {
-		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
 			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
 			'<div class="incident_file_form"></div></li>');
 		

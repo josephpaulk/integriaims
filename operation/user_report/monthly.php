@@ -140,7 +140,14 @@ echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$pre
 echo "<span class='calendar-month' style='font-size: 0.93em; color: #FFFFFF; padding: 3px;'>" . strtoupper(htmlentities(ucfirst($month_name))) . " $year</span>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id'><img src='images/control_fastforward_blue.png' title='" . __('Next') . "' class='calendar_arrow'></a>";
 echo "</td></tr>";
-echo "<tr><td>";
+echo "<tr><td style='background-color: #FFF;'>";
+
+echo "<div class='legend'><div style='background-color: #e3e9e9;' class='legend_box_color'></div><div class='legend_text'>".__('Not working day') . "</div></div>";
+echo "<div class='legend'><div style='background-color: #FF7BFE;' class='legend_box_color'></div><div class='legend_text'>".__('Worked Incidents') . "</div></div>";
+echo "<div class='legend'><div style='background-color: #FFFF80;' class='legend_box_color'></div><div class='legend_text'>".__('Vacation day') . "</div></div>";
+echo "<div class='legend'><div style='background-color: #98FF8B;' class='legend_box_color'></div><div class='legend_text'>".__('Worked Projects') . "</div></div>";
+echo "<div class='legend'><div style='background-color: #FFDE46;' class='legend_box_color'></div><div class='legend_text'>".__('Not Justified/Health issues') . "</div></div>";
+echo "<div class='legend'><div style='background-color: #79d8ed;' class='legend_box_color'></div><div class='legend_text'>".__('Work in home') . "</div></div>";
 
 if (give_acl($config["id_user"], 0, "PM")){
 	echo "<td colspan=3 style='text-align: center; padding-top: 5px;'>";

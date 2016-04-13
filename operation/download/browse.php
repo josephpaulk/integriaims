@@ -518,11 +518,12 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 
 				// Name
 				$data[0] = "<a title='".$row["description"]."' href='operation/common/download_file.php?type=release&id_attachment=".$row["id"]."'>";
-				$data[0] .= $row["name"]."</a>";
+				$data[0] .= $row["name"];
 				if ($row["description"] != ""){
-					$data[0] .=  " <img src='images/zoom.png'>";
+					$data[0] .=  " <img src='images/informacion.png'>";
 				}
-
+				$data[0] .= "</a>";
+				
 				// Size
 				$data[1] = format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
 

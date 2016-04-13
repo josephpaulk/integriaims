@@ -272,13 +272,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		}
 	}
 	echo "<tr>";
-	echo "<td colspan=2>";
-	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
 	
 	echo "</table>";
+	
+	if ($id == -1)
+		echo "<div class='button-form'>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true) . "</div>";
+	else
+		echo "<div class='button-form'>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</div>";
 	
 	echo "</form>";
 

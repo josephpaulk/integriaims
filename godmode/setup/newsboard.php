@@ -30,13 +30,14 @@ echo "<h2>".__('Newsboard management')."</h2>";
 $operation = get_parameter ("operation","");
 if ($operation == "create")
 	echo "<h4>".__('Create Newsboard')."</h4>";
+if ($operation == "update")
+	echo "<h4>".__('Update Newsboard')."</h4>";
 if ($operation == "" || $operation == "insert")
 	echo "<h4>".__('List Newsboard')."</h4>";
 
 // ---------------
 // CREATE newsboard
 // ---------------
-
 if ($operation == "insert") {
 	$title = (string) get_parameter ("title");
 	$content = (string) get_parameter ("content"); 
@@ -65,6 +66,39 @@ if ($operation == "insert") {
 	$operation = "";
 }
 
+// ---------------
+// UPDATE newsboard
+// ---------------
+if ($operation == "updated") {
+	$id = get_parameter ("id");
+	
+	$values = array();
+	$values['title'] = (string) get_parameter ("title");
+	$values['content'] = (string) get_parameter ("content"); 
+	$values['date'] = date('Y-m-d H:i:s', time()); //current datetime
+	$values['id_group'] = (int) get_parameter ("id_group", 0);
+	$values['expire'] = (int) get_parameter ("expire");
+	$expire_date = get_parameter ("expire_date");
+	$expire_date = date('Y-m-d', strtotime($expire_date));
+	$expire_time = get_parameter ("expire_time");
+	$values['expire_timestamp'] = "$expire_date $expire_time";
+	//$creator = $config['id_user'];
+
+	if (!$expire)
+		$values['expire_timestamp'] = "0000-00-00 00:00:00";
+	
+	
+	$where = "id = $id";
+	$result = process_sql_update ('tnewsboard', $values, $where);
+	
+	if (! $result)
+		echo '<h3 class="error">'.__('Not Updated. Nothing to updated').'</h3>';
+	else {
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>'; 
+	}
+	$operation = "";
+}
+
 
 // ---------------
 // DELETE newsboard
@@ -81,14 +115,28 @@ if ($operation == "delete") {
 }
 
 
-// CREATE new newsboard(form)
-if ($operation == "create") {
+// CREATE new newsboard(form) or Update
+if ($operation == "create" OR $operation == "update") {
+    
     $title = "";
     $content = "";
     $expire = 0;
     $date = date('Y-m-d', time() + 604800); //one week later
 	$time = date('H:i:s', time());
-  
+	$id_grupo = 0;
+	
+	if ($operation == "update") {
+		$id = get_parameter ("id");
+		$news = get_db_row_filter('tnewsboard', array('id' => $id));
+		$title = $news["title"];
+		$content = $news["content"];
+		$expire = $news["expire"];
+		$date = explode(" ",$news["expire_timestamp"]);
+		$time = $date[1];
+		$date = $date[0];
+		$id_grupo = $news['id_group'];
+	}
+	
 	$table = new StdClass();
 	$table->width = '100%';
 	$table->class = 'search-table-button';
@@ -100,22 +148,30 @@ if ($operation == "create") {
 	
 	$table->data = array ();
 	
-	$table->data[1][0] = print_input_text ('title', $title, '', 60, 100, true,
+	$table->data[0][0] = print_input_text ('title', $title, '', 60, 100, true,
 		__('Title'));
-
-	$table->data[2][0] = print_textarea ("content", 10, 1, $content, '', true, __('Contents'));
-
-	$all_groups = group_get_groups();
-	$table->data[0][0] = print_select ($all_groups, "id_group", $id_grupo, '', '', 0, true, false, false, __('Group'));
-	
-	$table->data[0][1] = print_checkbox ('expire', 1, false, true,  __('Expire'));
-	
+		
 	$table->data[0][2] = "<div style='display:inline-block;'>" . print_input_text ('expire_date', $date, '', 11, 2, true, __('Date')) . "</div>";
 	$table->data[0][2] .= "&nbsp;";
 	$table->data[0][2] .= "<div style='display:inline-block;'>" . print_input_text ('expire_time', $time, '', 7, 20, true, __('Time')) . "</div>";
-		
-	$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
-	$button .= print_input_hidden ('operation', 'insert', true);
+	
+
+	$all_groups = group_get_groups();
+	$table->data[1][0] = print_select ($all_groups, "id_group", $id_grupo, '', '', 0, true, false, false, __('Group'));
+	
+	$table->data[1][1] = print_checkbox ('expire', 1, $expire, true,  __('Expire'));
+	
+	$table->data[2][0] = print_textarea ("content", 10, 1, $content, '', true, __('Contents'));
+	
+	if ($operation == "update") {	
+		$button = print_submit_button (__('Update'), 'crt', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('operation', 'updated', true);
+		$button .= print_input_hidden ('id', $id, true);
+	}
+	else {
+		$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
+		$button .= print_input_hidden ('operation', 'insert', true);
+	}
 	
 	echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
 	print_table ($table);
@@ -143,30 +199,33 @@ if ($operation == "") {
 
 	foreach ($todos as $todo) {
 		
-		echo "<tr><td valign=top>";
+		echo "<tr><td>";
 		echo "<b>".$todo["title"]."</b>";
     
-		echo "<td valign=top>";
-		if ($todo['expire']) {
+		echo "<td>";
+		if ($todo['expire'])
 			echo __('Yes');
-		} else {
+		else
 			echo __('No');
-		}
 		
-	    echo "<td valign=top>";
-	    if ($todo["expire_timestamp"] == "0000-00-00 00:00:00"){
+	    echo "<td>";
+	    if ($todo["expire_timestamp"] == "0000-00-00 00:00:00")
 			echo __('No expiration date');
-		} else {
+		else 
 			echo $todo["expire_timestamp"];
-		}
-		echo '<td align="center" valign=top>';
-		echo '<a href="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=delete&id='.$todo["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
+		
+		echo '<td>';
+		echo '<a href="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=update&id=' . 
+				$todo["id"].'"><img src="images/editor.png"></a>';
+		echo '<a href="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=delete&id=' . 
+				$todo["id"].'" onClick="if (!confirm(\' ' . 
+					__('Are you sure?').'\')) return false;">
+					<img border=0 src="images/cross.png"></a>';
 
-        echo "<tr><td colspan=3 style='border-bottom: 1px solid #acacac'>";
-	echo clean_output ($todo["content"]);
+        echo "<tr><td colspan=4 style=''>";
+		echo print_container_div('news_'.$todo["id"], __("Content"), clean_output($todo["content"]), 'closed', true, false, '', '', 1, '', "margin:0px");
 	}
 	echo "</table>";
-
 
     echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=create">';
 	echo '<div class="button-form">';

@@ -360,17 +360,17 @@ if ($get_company_associated) {
 if ($get_user_associated) {
 	
 	$inventory_user = get_parameter('inventory_user', '');
-	$table_user->class = 'databox';
-	$table_user->width = '98%';
+	$table_user->class = 'search-table';
+	$table_user->width = '100%';
 	$table_user->data = array ();
 	
 	$params_user['input_id'] = 'text-inventory_user';
 	$params_user['input_name'] = 'inventory_user';
 	$params_user['input_value'] = $inventory_user;
 	$params_user['return'] = true;
+	$params_user['title'] = __('User');
 
-	$table_user->data[0][0] = print_label (__('User'), '','',true);
-	$table_user->data[0][1] = user_print_autocomplete_input($params_user);
+	$table_user->data[0][0] = user_print_autocomplete_input($params_user);
 	
 	print_table($table_user);
 	

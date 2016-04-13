@@ -316,7 +316,7 @@ if ($operation == "delete") {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 	
 	if (defined ('AJAX'))
-		return;
+		return $success;
 }
 
 // Edit workunit

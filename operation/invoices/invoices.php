@@ -27,6 +27,7 @@ $read = check_crm_acl ('company', 'cr');
 $write = check_crm_acl ('company', 'cw');
 $manage = check_crm_acl ('company', 'cm');
 
+
 if ($id_invoice > 0 || $id_company > 0) {
 	if ($id_company < 1 && $id_invoice > 0) {
 		$id_company = get_db_value ('id_company', 'tinvoice', 'id', $id_invoice);
@@ -49,34 +50,6 @@ if ($id_invoice > 0 || $id_company > 0) {
 	if (crm_is_invoice_locked ($invoice["id"])) {
 		include ("operation/invoices/invoice_view.php");
 		return;
-	}
-}
-
-$upload_file = get_parameter('upload_file', 0);
-
-if ($upload_file) {
-	if (isset($_POST['upfile']) && ( $_POST['upfile'] != "" )){ //if file
-		$filename= $_POST['upfile'];
-		$file_tmp = sys_get_temp_dir().'/'.$filename;
-		$size = filesize ($file_tmp);
-		$description = get_parameter ("description", "");
-
-		$sql = sprintf("INSERT INTO tattachment (id_invoice, id_usuario, filename, description, timestamp, size) VALUES (%d, '%s', '%s', '%s', '%s', %d)", $id_invoice, $config["id_user"], $filename, $description, date('Y-m-d H:i:s'), $size);
-		$id_attach = process_sql ($sql, 'insert_id');
-
-		$filename_encoded = $id_attach . "_" . $filename;
-		
-		// Copy file to directory and change name
-		$file_target = $config["homedir"]."/attachment/".$filename_encoded;
-
-		if (!(copy($file_tmp, $file_target))){
-			echo "<h3 class=error>".__("Could not be attached")."</h3>";
-		} else {
-			// Delete temporal file
-			echo "<h3 class=suc>".__("Successfully attached")."</h3>";
-			$location = $file_target;
-			unlink ($file_tmp);
-		}
 	}
 }
 
@@ -419,7 +392,8 @@ if ($id_invoice > 0){
 	$discount_before = $invoice["discount_before"];
 	$discount_concept = $invoice["discount_concept"];
 
-} else {
+}
+else {
 	
 	if ($id_company > 0) {
 		$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
@@ -483,6 +457,7 @@ if ($generate) {
 	$invoice_contract_number = get_db_value('contract_number', 'tinvoice', 'id', $id_invoice);
 }
 
+$table = new StdClass();
 $table->id = 'cost_form';
 $table->width = '100%';
 $table->class = 'search-table-button';
@@ -667,32 +642,53 @@ if ($id_invoice != -1) {
 	print_input_hidden ('bill_id_variable', $bill_id_variable);
 }
 
-if ($id_invoice != -1) { 
+if ($id_invoice != -1) {
 	echo '</div>';
 	echo '</form>';
+	echo "<h4>" . __('Files') . '</h4>';
 
-	echo '<br>';
-	echo '<ul class="ui-tabs-nav">';
-	echo '<li class="ui-tabs-selected"><span>'.__('Files').'</span></li>';
-	echo '<li class="ui-tabs-title">' . __('Files') . '</h1></li>';
-	echo '</ul>';
-	echo '<br>';
+	//~ $target_directory = 'attachment';
+	$action = "include/ajax/invoices&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&upload_file=1";				
+	//~ $into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b><input type=text name=description size=60>";
+	//~ print_input_file_progress($action,$into_form,'','sub upload');	
+	echo "<form id=\"form-invoice_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+	echo 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
+	echo 		"<table width=\"100%\">";
+	echo 			"<td width=\"45%\">";
+	echo 				__('Drop the file here');
+	echo 			"<td>";
+	echo 				__('or');
+	echo 			"<td width=\"45%\">";
+	echo 				"<a id=\"browse_button\">" . __('browse it') . "</a>";
+	echo 		"</table>";
+	echo 		"<input name=\"upfile\" type=\"file\" id=\"file-upfile\" class=\"sub file\" />";
+	echo 	"</div>";
+	echo 	"<ul></ul>";
+	echo "</form>";
 
-	$target_directory = 'attachment';
-	$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1&upload_file=1";				
-	$into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
-	print_input_file_progress($action,$into_form,'','sub upload');	
-
+	echo "<div id='file_description_table_hook' style='display:none;'>";
+	$table = new stdClass;
+	$table->width = '100%';
+	$table->id = 'invoice_file_description';
+	$table->class = 'search-table-button';
+	$table->data = array();
+	$table->data[0][0] = print_textarea ("description", 5, 40, '', '', true, __('Description'));
+	$table->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+	print_table($table);
+	echo "</div>";
 
 	// List of invoice attachments
 	$sql = "SELECT * FROM tattachment WHERE id_invoice = $id_invoice ORDER BY timestamp DESC";
 	$files = get_db_all_rows_sql ($sql);
-	$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1");
-
+	
 	if ($files !== false) {
+		$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company&id_invoice=$id_invoice&op=invoices&view_invoice=1");
 		unset ($table);
-		$table->width = "99%";
+		
+		$table = new stdClass();
+		$table->width = "100%";
 		$table->class = "listing";
+		$table->id = "invoice_files";
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
@@ -723,7 +719,8 @@ if ($id_invoice != -1) {
 		}
 		print_table ($table);
 
-	} else {
+	}
+	else {
 		echo "<h3>". __('There is no files attached for this invoice')."</h3>";
 	}
 }
@@ -749,6 +746,9 @@ echo '</div>';
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script src="include/js/jquery.fileupload.js"></script>
+<script src="include/js/jquery.iframe-transport.js"></script>
+<script src="include/js/jquery.knob.js"></script>
 
 <script type="text/javascript" src="include/js/agenda.js"></script>
 
@@ -829,6 +829,8 @@ add_validate_form_element_rules('input[name="amount5"]', rules, messages);
 
 $(document).ready (function () {
 	
+	form_upload();
+	
 	var idUser = "<?php echo $config['id_user'] ?>";
 	autoGenerateID = "<?php echo $config['invoice_auto_id'] ?>";
 	is_update = $("#text-is_update_hidden").val();
@@ -884,22 +886,22 @@ $(document).ready (function () {
 		}
 	});
 
-		var contenedor = $("#cost_form-12-0"); //ID del contenedor
-		var contenedor1 = $("#cost_form-12-1"); //ID del contenedor
-		var linkagregar = $("#agregarCampo"); //ID del Botón Agregar
-		var FieldCount = "<?php echo $contcampo; ?>";
-		var FieldCount2 = "<?php echo $contcampo2; ?>";
-		//~ var FieldCount = 2; //para el seguimiento de los campos
-		$(linkagregar).click(function (e) {
-			e.preventDefault();
-			$(contenedor).append('<input type="text" id="text-tax'+ FieldCount +'" maxlength="20" size="5" value="0" name="tax'+ FieldCount +'" /></br>');
-			rules = { number: true };
-			messages = { number: "<?php echo __('Invalid number')?>" };
-			add_validate_form_element_rules('#text-tax'+ FieldCount, rules, messages);
-			$(contenedor1).append('<input type="text" id="text-tax_name'+ FieldCount2 +'" maxlength="50" size="20" name="tax_name'+ FieldCount2 +'" /></br>');
-			FieldCount++;
-			FieldCount2++;
-		});	
+	var contenedor = $("#cost_form-12-0"); //ID del contenedor
+	var contenedor1 = $("#cost_form-12-1"); //ID del contenedor
+	var linkagregar = $("#agregarCampo"); //ID del Botón Agregar
+	var FieldCount = "<?php echo $contcampo; ?>";
+	var FieldCount2 = "<?php echo $contcampo2; ?>";
+	//~ var FieldCount = 2; //para el seguimiento de los campos
+	$(linkagregar).click(function (e) {
+		e.preventDefault();
+		$(contenedor).append('<input type="text" id="text-tax'+ FieldCount +'" maxlength="20" size="5" value="0" name="tax'+ FieldCount +'" /></br>');
+		rules = { number: true };
+		messages = { number: "<?php echo __('Invalid number')?>" };
+		add_validate_form_element_rules('#text-tax'+ FieldCount, rules, messages);
+		$(contenedor1).append('<input type="text" id="text-tax_name'+ FieldCount2 +'" maxlength="50" size="20" name="tax_name'+ FieldCount2 +'" /></br>');
+		FieldCount++;
+		FieldCount2++;
+	});	
 });
 
 function invoiceGenerateID () {
@@ -941,5 +943,203 @@ function invoiceGetID (id) {
 			$("#text-bill_id").attr('value', bill_id);
 		}
 	});
+}
+
+function form_upload () {
+	var file_list = $('#form-invoice_files ul');
+
+	$('#drop_file #browse_button').click(function() {
+		// Simulate a click on the file input button to show the file browser dialog
+		$("#file-upfile").click();
+	});
+
+	// Initialize the jQuery File Upload plugin
+	$('#form-invoice_files').fileupload({
+		
+		url: 'ajax.php?page=<?php echo $action; ?>',
+		
+		// This element will accept file drag/drop uploading
+		dropZone: $('#drop_file'),
+
+		// This function is called when a file is added to the queue;
+		// either via the browse button, or via drag/drop:
+		add: function (e, data) {
+			data.context = addListItem(0, data.files[0].name, data.files[0].size);
+
+			// Automatically upload the file once it is added to the queue
+			data.context.addClass('working');
+			var jqXHR = data.submit();
+		},
+
+		progress: function(e, data) {
+
+			// Calculate the completion percentage of the upload
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+
+			// Update the hidden input field and trigger a change
+			// so that the jQuery knob plugin knows to update the dial
+			data.context.find('input').val(progress).change();
+
+			if (progress >= 100) {
+				data.context.removeClass('working');
+				data.context.removeClass('error');
+				data.context.addClass('loading');
+			}
+		},
+
+		fail: function(e, data) {
+			// Something has gone wrong!
+			data.context.removeClass('working');
+			data.context.removeClass('loading');
+			data.context.addClass('error');
+		},
+		
+		done: function (e, data) {
+			
+			var result = JSON.parse(data.result);
+
+			if (result.status) {
+				data.context.removeClass('error');
+				data.context.removeClass('loading');
+				data.context.addClass('working');
+			
+				// FORM
+				addForm (data.context, result.id_attachment);
+				
+			} else {
+				// Something has gone wrong!
+				data.context.removeClass('working');
+				data.context.removeClass('loading');
+				data.context.addClass('error');
+				if (result.message) {
+					var info = data.context.find('i');
+					info.css('color', 'red');
+					info.html(result.message);
+				}
+			}
+		}
+
+	});
+
+	// Prevent the default action when a file is dropped on the window
+	$(document).on('drop_file dragover', function (e) {
+		e.preventDefault();
+	});
+
+	function addListItem (progress, filename, filesize) {
+		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
+			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
+			'<div class="invoice_file_form"></div></li>');
+		
+		// Append the file name and file size
+		tpl.find('p').text(filename);
+		if (filesize > 0) {
+			tpl.find('p').append('<i>' + formatFileSize(filesize) + '</i>');
+		}
+
+		// Initialize the knob plugin
+		tpl.find('input').val(0);
+		tpl.find('input').knob({
+			'draw' : function () {
+				$(this.i).val(this.cv + '%')
+			}
+		});
+
+		// Listen for clicks on the cancel icon
+		tpl.find('span').click(function() {
+
+			if (tpl.hasClass('working') || tpl.hasClass('error') || tpl.hasClass('suc')) {
+
+				if (tpl.hasClass('working') && typeof jqXHR != 'undefined') {
+					jqXHR.abort();
+				}
+
+				tpl.fadeOut();
+				tpl.slideUp(500, "swing", function() {
+					tpl.remove();
+				});
+			}
+
+		});
+		
+		// Add the HTML to the UL element
+		var item = tpl.appendTo(file_list);
+		item.find('input').val(progress).change();
+
+		return item;
+	}
+
+	function addForm (item, file_id) {
+		
+		item.find(".invoice_file_form").html($("#file_description_table_hook").html());
+
+		item.find("span").click(function(e) {
+			addFileRow(file_id);
+		});
+
+		item.find("#submit-crt_btn").click(function(e) {
+			e.preventDefault();
+			
+			$(this).hide();
+			item.find("#textarea-description").prop("disabled", true);
+			item.removeClass('working');
+			item.removeClass('error');
+			item.addClass('loading');
+
+			$.ajax({
+				type: 'POST',
+				url: 'ajax.php',
+				data: {
+					page: "include/ajax/invoices",
+					update_file_description: true,
+					id: <?php echo $id_invoice; ?>,
+					id_attachment: file_id,
+					file_description: function() { return item.find("#textarea-description").val() }
+				},
+				dataType: "json",
+				success: function (data) {
+					if (data.status) {
+						item.removeClass('loading');
+						item.addClass('suc');
+						item.find('span').click();
+					}
+					else {
+						item.find("#textarea-description").prop("disabled", false);
+						item.find("#submit-crt_btn").show();
+						item.removeClass('loading');
+						item.removeClass('suc');
+						item.addClass('error');
+						item.find("p").text(data.message);
+					}
+				}
+			});
+		});
+
+	}
+
+	function addFileRow (file_id) {
+		var no_files_message = $("#no_files_message");
+		var table_files = $("#invoice_files");
+
+		$.ajax({
+			type: 'POST',
+			url: 'ajax.php',
+			data: {
+				page: "include/ajax/invoices",
+				get_file_row: true,
+				id: <?php echo $id_invoice; ?>,
+				id_attachment: file_id
+			},
+			dataType: "html",
+			success: function (data) {
+				if (no_files_message.length > 0) {
+					no_files_message.remove();
+					table_files.show();
+				}
+				table_files.find("tbody").append(data);
+			}
+		});
+	}
+
 }
 </script>

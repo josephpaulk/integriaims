@@ -859,7 +859,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	global $config;
 	global $enteprise_load;
 	
-	echo '<table class="search-table" style="width:99%">';
+	echo '<table class="" style="width:99%">';
 	echo '<tr><td style="width:100%" valign="top">';
 	
 	echo "<em style='float: right; padding-right: 20px;'>".__("Using tree view");
@@ -1791,11 +1791,12 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name, $manage_permi
 		echo '</form>';
 	}
 	echo '<ul class="ui-tabs-nav">';
-	echo '<li class="' . $tracking_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
-	echo '<li class="' . $contacts_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
-	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Tickets').'</span></a></li>';
-	echo '<li class="' . $relationship_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
-	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '"><span>'.__('Details').'</span></a></li>';
+	echo '<li class="' . $tracking_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '" title='.__('Tracking').'><img src="images/list_view.png"/></a></li>';
+	echo '<li class="' . $contacts_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '" title='.__('Contacts').'><img src="images/groups_small/system-users.png"/></a></li>';
+	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '" title='.__('Tickets').'><img src="images/tickets_tab.png"/></a></li>';
+	echo '<li class="' . $relationship_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '" title='.__('Relationships').'><img src="images/groups_small/chart_organisation.png"/></a></li>';
+	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '" title='.__('Details').'><img src="images/search_tab.png"/></a></li>';
+	echo '<li><a href="index.php?sec=inventory&sec2=operation/inventories/inventory" title='.__('Back to list').'><img src="images/volver_listado.png"/></a></li>';
 	echo '</ul>';
 	
 	echo '</h4>';

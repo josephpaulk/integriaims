@@ -322,7 +322,7 @@ echo "<h4>" . __("Update Integria") . "</h4>";
 			// either via the browse button, or via drag/drop:
 			add: function (e, data) {
 				$('#drop_file').slideUp();
-				var tpl = $('<li class="offline-update-item"><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+				var tpl = $('<li class="offline-update-item"><input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
 					' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
 				
 				// Append the file name and file size

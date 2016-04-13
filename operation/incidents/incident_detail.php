@@ -942,17 +942,6 @@ if ($id) {
 	echo '<li>';
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/go-previous.png", true, array("title" => __("Back to incident")))."</a>";
 	echo '</li>';
-	
-	/* Delete incident */
-	if ($has_im) {
-		echo "<li>";
-		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
-		print_input_hidden ('quick_delete', $id, false);
-		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/papelera_gris.png", true, array("title" => __("Delete"))).'</a>';
-		echo '</form>';
-		echo "</li>";
-		
-	}
 
 	//KB only appears for closed status
 	if (give_acl ($config['id_user'], $id_grupo, "KW") && ($incident["estado"] == 7)) {
@@ -966,9 +955,19 @@ if ($id) {
 	}	
 
 	echo '<li>';
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/volver_listado.png", true, array("title" => __("Back to search")))."</a>";
-	echo '</li>';		
-	
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/volver_listado.png", true, array("title" => __("Back to list")))."</a>";
+	echo '</li>';
+		
+	/* Delete incident */
+	if ($has_im) {
+		echo "<li>";
+		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
+		print_input_hidden ('quick_delete', $id, false);
+		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/papelera_gris.png", true, array("title" => __("Delete"))).'</a>';
+		echo '</form>';
+		echo "</li>";
+		
+	}
 	echo "</ul>";
 	echo "</div>";	
 
@@ -984,7 +983,8 @@ if ($id) {
     	}
     }
 
-} else {
+}
+else {
 	if (! defined ('AJAX')) {
 		echo "<h2>".__('Support')."</h2>";
 		echo "<h4>".__('Create ticket')."</h4>";
@@ -1232,6 +1232,7 @@ if ($has_im) {
 	$table_advanced->data[3][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
 	if (!$blocked_incident) {
+		$table_advanced->data[3][0] .= "&nbsp;&nbsp;<a href='javascript: parent_search_form(\"\", $id)'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 		$table_advanced->data[3][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 	}
 }
@@ -1252,7 +1253,7 @@ if ($id_task > 0){
 }
 
 
-$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses"), $blocked_incident);
+$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses") . print_help_tip(__("If you will put two or more e-mail adresses, can you put this adresses separated with comma"),true), $blocked_incident);
 if (!$blocked_incident) {
 	$table_advanced->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_contact_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 }
@@ -1531,11 +1532,11 @@ $(document).ready (function () {
 		
 	});
 	
-	/*Open parent search popup*/
+	/*Open parent search popup
 	$("#text-search_parent").focus(function () {
 		parent_search_form('', '<?php echo $id?>');
 	});
-	
+	*/
 	//Validate form
 	$("#incident_status_form").submit(function () {
 		var title = $("#text-titulo").val();
@@ -1877,7 +1878,7 @@ function form_upload () {
 
 	function addListItem (progress, filename, filesize) {
 		var tpl = $('<li>'+
-						'<input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+						'<input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
 						' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" />'+
 						'<p></p>'+
 						'<span></span>'+

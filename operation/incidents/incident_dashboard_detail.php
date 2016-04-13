@@ -618,7 +618,8 @@ if (!$pure) {
 			return;
 		}
 	}
-} else {
+}
+else {
 	
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";

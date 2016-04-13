@@ -318,7 +318,8 @@ function enableAutorefresh (id, token, form_id) {
 	button.attr('reload_enabled', 1);
 	//button.animate({ backgroundColor: "#238A1C" });
 	button.html("Disable autorefresh");
-	$("#autorefresh_combo").show( "blind", { direction: "right" }, "slow" );
+	//~ $("#autorefresh_combo").show( "blind", { direction: "right" }, "slow" );
+	$("#autorefresh_combo").css('visibility', 'visible');
 	
 	if (! seconds) {
 		setAutorefreshSeconds(token, 60);
@@ -336,7 +337,8 @@ function disableAutorefresh (id, token) {
 	button.attr('reload_enabled', 0);
 	//button.animate({ backgroundColor: "#A82323"});
 	button.html("Enable autorefresh");
-	$("#autorefresh_combo").hide( "blind", { direction: "left" }, "slow" );
+	//~ $("#autorefresh_combo").hide( "blind", { direction: "left" }, "slow" );
+	$("#autorefresh_combo").css('visibility', 'hidden');
 	
 	eraseCookie(token);
 	clearReloadTimeout(token);

@@ -165,7 +165,7 @@ $table->data[5][1] = print_select ($slas,
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Ticket SLA'));
 	
 $table->data[6][0] = print_input_text ('inventory_name', $inventory_name,'', 25, 0, true, __('Default Inventory object'), false);	
-$table->data[6][0] .= '&nbsp;&nbsp;' . "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search parent')."</a>";
+$table->data[6][0] .= '&nbsp;&nbsp;' . "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Search parent')."'><img src='images/add.png' /></a>";
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
