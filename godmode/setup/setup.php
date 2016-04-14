@@ -164,9 +164,8 @@ $table->data[1][0] = print_select ($error_log_options, "error_log",
 $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',
 	15, 30, true, __('Timezone for integria'));
 
-$table->data[2][0] = print_input_text ("api_acl", $config["api_acl"], '',
-	30, 255, true, __('List of IP with access to API') . 
-	print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true));
+$table->data[2][0] = print_textarea ("api_acl", 2, 1, $config["api_acl"], 'style="width: 218px;"', true, __('List of IP with access to API') . 
+	print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true), false);
 
 $table->data[2][1] = print_input_text ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
@@ -194,7 +193,7 @@ $days_of_week = get_days_of_week();
 $table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
 
 $table->data[5][0] = print_input_text ("url_updatemanager", $config["url_updatemanager"], '',
-	60, 255, true, __('URL update manager'));
+	35, 255, true, __('URL update manager'));
 
 $table->data[5][1] = print_input_text ("loginhash_pwd", $config["loginhash_pwd"], '',
 	30, 255, true, __('Loginhash password'));
