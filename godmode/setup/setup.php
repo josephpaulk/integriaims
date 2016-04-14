@@ -59,6 +59,7 @@ if ($update) {
 	$config["loginhash_pwd"] = get_parameter("loginhash_pwd", "");
 	$config["csv_standard_encoding"] = (int) get_parameter("csv_standard_encoding");
 	$config["enable_update_manager"] = get_parameter("enable_update_manager");
+	$config["max_direct_download"] = get_parameter("max_direct_download");
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -95,6 +96,7 @@ if ($update) {
 
 	update_config_token ("csv_standard_encoding", $config["csv_standard_encoding"]);
 	update_config_token ("enable_update_manager", $config["enable_update_manager"]);
+	update_config_token ("max_direct_download", $config["max_direct_download"]);
 	
 	if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
@@ -216,6 +218,8 @@ $table->data[7][1] .= print_help_tip (__("The Excel type may not be compatible w
 $table->data[7][1] .=  '&nbsp;&nbsp;' . __('Other') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 1, '', $csv_standard_encoding, true);
 
 $table->data[8][0] = print_checkbox ("enable_update_manager", 1, $config["enable_update_manager"], true, __('Enable update manager updates'));
+
+$table->data[8][1] = print_input_text ("max_direct_download", $config["max_direct_download"], '',10, 255, true, __('Maximum direct download size (MB)'));
 
 echo "<form name='setup' method='post'>";
 print_table ($table);

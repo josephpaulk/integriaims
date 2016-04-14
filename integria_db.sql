@@ -132,7 +132,7 @@ CREATE TABLE `tattachment` (
   `filename` varchar(255) NOT NULL default '',
   `description` text default '',
   `size` bigint(20) NOT NULL default '0',
-  `timestamp` date NOT NULL default '0000-00-00',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_invoice` bigint(20) NOT NULL default '0',
   `id_contract` mediumint(8) unsigned NOT NULL,
   `public_key` varchar(100) NULL,
@@ -221,6 +221,8 @@ CREATE TABLE `tincidencia` (
   `old_resolution` tinyint unsigned NOT NULL DEFAULT 0,
   `old_status2` tinyint unsigned NOT NULL DEFAULT 0,
   `old_resolution2` tinyint unsigned NOT NULL DEFAULT 0,
+  `extra_data3` varchar(100) NOT NULL default '',
+  `extra_data4` varchar(100) NOT NULL default '',
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),
@@ -954,11 +956,11 @@ CREATE TABLE `tincident_type_field` (
   `id_incident_type` mediumint(8) unsigned NOT NULL, 
   `label` varchar(100) NOT NULL default '', 
   `type` enum ('textarea', 'text', 'combo', 'linked', 'numeric') default 'text',
-  `combo_value` text default NULL,
+  `combo_value` LONGTEXT default NULL,
   `show_in_list` tinyint(1) unsigned NOT NULL default 0,
   `global_id` mediumint(8) unsigned,
   `parent` mediumint(8) unsigned default 0,
-  `linked_value` text default NULL,
+  `linked_value` LONGTEXT default NULL,
   `order` mediumint(8) unsigned default 0,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

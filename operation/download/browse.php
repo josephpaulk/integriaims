@@ -517,13 +517,21 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 				$data = array();
 
 				// Name
-				$data[0] = "<a title='".$row["description"]."' href='operation/common/download_file.php?type=release&id_attachment=".$row["id"]."'>";
-				$data[0] .= $row["name"];
+				$path_file_baseurl = $config["base_url"].'/'.$row['location'];
+				$path_file_homedir = $config["homedir"].'/'.$row['location'];
+				$size_bytes = filesize($path_file_homedir);
+				$size_mb = ($size_bytes / (1024*1024));
+
+				if ($size_mb < $config['max_direct_download']) {
+					$data[0] = "<a title='".$row["description"]."' href='operation/common/download_file.php?type=release&id_attachment=".$row["id"]."'>";
+				} else {
+					$data[0] = "<a title='".$row["description"]."' href='".$config["base_url"].$row['location']."' download>";
+				}
+				$data[0] .= $row["name"]."</a>";
 				if ($row["description"] != ""){
 					$data[0] .=  " <img src='images/informacion.png'>";
 				}
-				$data[0] .= "</a>";
-				
+
 				// Size
 				$data[1] = format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
 

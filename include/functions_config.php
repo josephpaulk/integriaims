@@ -303,6 +303,9 @@ function load_config() {
 	if (!isset($config["change_creator_owner"])){
 		$config["change_creator_owner"] = 1;
 	}
+	if (!isset($config["max_direct_download"])) {
+		$config["max_direct_download"] = 100;
+	}
 }
 
 function config_prepare_session() {

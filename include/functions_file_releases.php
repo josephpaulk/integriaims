@@ -150,9 +150,9 @@ function print_file_types_table ($return = false) {
 							 tdownload_type.name AS name,
 							 tdownload_type.description AS description,
 							 tdownload_type.icon AS icon
-						FROM tdownload_type 
-						WHERE 1=1 
-							$condition");
+						FROM tdownload_type, tdownload_category_group WHERE 1=1
+							$condition
+						GROUP BY tdownload_type.id");
 	
 	$types2 = process_sql("SELECT tdownload_type.id AS id,
 								tdownload_type.name AS name,
@@ -208,6 +208,11 @@ function print_file_types_table ($return = false) {
 			$types_aux = array();
 			for ($i = 0; $i < count($types); $i++) {
 				$types_aux[] = $types[$i];
+				if ($types[$i]["last_update"] && $types[$i+1]["last_update"]) {
+					if ($types[$i]["last_update"] > $without_type["last_update"] && $types[$i+1]["last_update"] < $without_type["last_update"]) {
+						$types_aux[] = $without_type;
+					}
+				}
 			}
 			$types_aux[] = $without_type;
 			$types = $types_aux;

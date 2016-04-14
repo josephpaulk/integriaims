@@ -127,6 +127,7 @@ if (defined ('AJAX')) {
 
 						// Updating the ticket
 						process_sql_update("tincidencia", array("actualizacion" => $timestamp), array("id_incidencia" => $id));
+						enterprise_hook("incidents_run_realtime_workflow_rules", array($id));
 						
 					} else {
 						unlink ($file_tmp);
