@@ -571,8 +571,10 @@ $search_text = (string) get_parameter ('search_text', '');
 
 echo '<h2>'.__('Task management').'</h2>';
 echo '<h4>'.$project['name'];
-	if (!$clean_output) {
-		$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_text=$search_text", __("Report"));
+	if (!$pure) {
+		$attr = array();
+		$attr["pure"] = 1;
+		$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project", __("Report"), '', $attr);
 		if ($html_report_image) {
 			echo "<div id='button-bar-title'>";
 				echo "<ul>";
@@ -583,6 +585,16 @@ echo '<h4>'.$project['name'];
 			echo "</div>";
 		}
 	 }
+	 else {
+		 echo "<div id='button-bar-title'>";
+		echo "<ul>";
+		echo '<li class="ui-tabs">';
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to task list")))."</a>";
+		echo '</li>';
+		echo "</ul>";
+		echo "</div>";
+	 }
+		
 echo '</h4>';
 
 $where_clause = ' 1=1 ';

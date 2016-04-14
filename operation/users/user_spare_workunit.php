@@ -417,7 +417,7 @@ if ($id_workunit) {
 		echo "<li id='tabmenu2' class='ui-tabs'><span>";
 	}
 }
-	echo "<a href='#tab2'><span>".__("Multiple WU")."</span></a>";
+	echo "<a href='#tab2' title='".__("Multiple WU")."'><img src='images/multiple_workunits_tab.png' /></a>";
 	echo "</span></li>";
 	
 //If the multiple_wu_insert option was sent single wu is disabled
@@ -426,7 +426,7 @@ if ($operation == 'multiple_wu_insert') {
 } else {
 	echo "<li id='tabmenu1' class='ui-tabs-selected'>";
 }
-echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
+echo "<a href='#tab1' title='".__("Single WU")."'><img src='images/workunit_tab.png' /></a>";
 echo "</span></li>";
 echo "</ul>";
 echo "</h4>";
