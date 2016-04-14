@@ -165,7 +165,7 @@ $table->data[5][1] = print_select ($slas,
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Ticket SLA'));
 	
 $table->data[6][0] = print_input_text ('inventory_name', $inventory_name,'', 25, 0, true, __('Default Inventory object'), false);	
-$table->data[6][0] .= '&nbsp;&nbsp;' . "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search parent')."</a>";
+$table->data[6][0] .= '&nbsp;&nbsp;' . "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search parent')."</a>";
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
@@ -194,6 +194,7 @@ echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript">
 $(document).ready (function () {
 	$("#icon").change (function () {
@@ -217,50 +218,7 @@ $(document).ready (function () {
 	
 });
 
-// Show the modal window of inventory search
-function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
-	
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
-		dataType: "html",
-		success: function(data){	
-			$("#inventory_search_window").html (data);
-			$("#inventory_search_window").show ();
-
-			$("#inventory_search_window").dialog ({
-					resizable: true,
-					draggable: true,
-					modal: true,
-					overlay: {
-						opacity: 0.5,
-						background: "black"
-					},
-					width: 920,
-					height: 850
-				});
-			$("#inventory_search_window").dialog('open');
-		}
-	});
-}
-
-function loadParams() {
-
-	search_free = $('#text-search_free').val();
-	id_object_type_search = $('#id_object_type_search').val();
-	owner_search = $('#text-owner_search').val();
-	id_manufacturer_search = $('#id_manufacturer_search').val();
-	id_contract_search = $('#id_contract_search').val();
-	search = 1;
-	
-	object_fields_search = $("select[name='object_fields_search[]']").val();
-		
-	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search);
-}
-
 function loadInventory(id_inventory) {
-	
 	$('#hidden-id_inventory').val(id_inventory);
 	$.ajax({
 		type: "POST",

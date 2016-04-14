@@ -415,7 +415,6 @@ function byte_convert ($bytes) {
 
 function pagination ($count, $url, $offset, $print_result_count=false, $aux_text='') {
 	global $config;
-	
 	$block_size = $config["block_size"];
 	
 	/* 	URL passed render links with some parameter

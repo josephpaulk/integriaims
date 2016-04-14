@@ -1272,7 +1272,7 @@ if ($create_incident) {
 		$table_advanced->data[3][2] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
 		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 } else {
@@ -1283,7 +1283,7 @@ if ($create_incident) {
 						true, false, false, __('Objects affected'), $blocked_incident);
 
 	if (!$blocked_incident) {
-		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 	}
 

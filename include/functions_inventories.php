@@ -1187,7 +1187,7 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', 
 }
 
 
-function inventories_show_list($sql_search, $sql_count, $params='', $last_update = 0) {
+function inventories_show_list($sql_search, $sql_count, $params='', $last_update = 0, $modal = 0) {
 	global $config;
 
 	$is_enterprise = false;
@@ -1198,21 +1198,15 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 	
 	$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
 
-	$params .="&mode=list";	
+	$params['mode'] = 'list';	
 
 	if (!$sql_search) {
 		$sql_search = "SELECT * FROM tinventory";
 	}
-			
-	if ($last_update) {
-		$sql_search .= " ORDER BY last_update DESC";
-	} else {
-		$sql_search .= " ORDER BY name ASC";
-	}
 
-	$clean_output = get_parameter("clean_output");
+	$pure = get_parameter("pure");
 
-	if ($clean_output) {
+	if ($pure) {
 		$block_limit = 5000;
 	} else {
 		$block_limit = $config["block_size"];
@@ -1224,9 +1218,11 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 
 	$sql_search .= " OFFSET $offset";
 
-	$inventories_aux = get_db_all_rows_sql($sql_search);
-	$count_inv = get_db_value_sql($sql_count);
+	debugPrint($sql_search, true);
 	
+	$inventories_aux = get_db_all_rows_sql($sql_search);
+	
+	$count_inv = get_db_value_sql($sql_count);
 	if ($is_enterprise) {
 		$inventories = inventory_get_user_inventories($config['id_user'], $inventories_aux);
 	} else {
@@ -1237,7 +1233,6 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
 	} else {
 		$result_check = inventories_check_same_object_type_list($inventories);
-
 		$table->id = 'inventory_list';
 		$table->class = 'listing';
 		$table->width = '100%';
@@ -1255,38 +1250,44 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		$table->head[8] = __('Receipt date');	
 		
 		if ($result_check) {
-			
 			$res_object_fields = inventories_get_all_type_field ($result_check, false, true);
-			
-			$i = 8;
+			$i = 9;
 			foreach ($res_object_fields as $key => $object_field) {
-				
 				if (isset($object_field["label"])) {
 					$table->head[$i] = $object_field['label'];
 					$i++;
 				}
 			}
-			$table->head[$i] = __('Actions');
-			if ($write_permission) {
-				$table->head[$i] = print_checkbox ('inventorycb-all', "", false, true);
+			if (!$pure) {
+				if (!$modal){
+					$table->head[$i] = __('Actions');
+					if ($write_permission) {
+						$i = $i + 1;
+						$table->head[$i] = print_checkbox ('inventorycb-all', "", false, true);
+					}
+				}
 			}
 		} else {
-			if (!$clean_output) {
-				$table->head[9] = __('Actions');
-			
-			if ($write_permission) {
-				$table->head[10] = print_checkbox ('inventorycb-all', "", false, true);
-			}
+			if (!$pure) {
+				if (!$modal){
+					$table->head[9] = __('Actions');
+					if ($write_permission) {
+						$table->head[10] = print_checkbox ('inventorycb-all', "", false, true);
+					}
+				}
 			}
 		}
 		
 		$count = $count_inv;
+		$params = json_encode($params);
 
-		$url_pag = "index.php?sec=inventory&sec2=operation/inventories/inventory".$params;
+		$params = base64_encode($params);
+
+		$url_pag = "index.php?sec=inventory&sec2=operation/inventories/inventory&params=".$params;
+		
 		$offset = get_parameter("offset");
 
-		if(!$clean_output) {
-
+		if (!$pure) {
 			pagination ($count, $url_pag, $offset);
 		}
 
@@ -1294,7 +1295,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 
 		foreach ($inventories as $key=>$inventory) {
 			$data = array();
-			if (defined ('AJAX')) {
+
+			if ($modal) {
 				$url = "javascript:loadInventory(" . $inventory['id'] . ");";
 			} else {
 				$url = 'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$inventory['id'];
@@ -1361,8 +1363,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			if ($result_check) {
 
 				$result_object_fields = inventories_get_all_type_field ($result_check, $inventory['id'], true);
-				
-				$i = 8;
+				$i = 9;
 				foreach ($result_object_fields as $k => $ob_field) {
 					if (isset($ob_field["label"])) {
 						$data[$i] = $ob_field['data'];
@@ -1370,32 +1371,35 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 					}
 				}
 				
-				if (!$clean_output) {
-					$data[$i] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
-					$data[$i] .= print_image ("images/information.png", true, array ("title" => __('Show object type fields')));
-					$data[$i] .= '</a>&nbsp;';
-					if ($write_permission) {
-						$data[$i] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+				if (!$pure) {
+					if (!$modal){
+						if ($write_permission) {
+						$data[$i] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'&params='.$params.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+						}
 					}
 				}
-				if ($write_permission) {
-					if (!$clean_output) {
-						$data[$i] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+				if (!$pure) {
+					if (!$modal){
+						if ($write_permission) {
+							$i = $i + 1;
+							$data[$i] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+						}
 					}
 				}
 
 			} else {
-				if (!$clean_output) {
-					$data[9] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
-					$data[9] .= print_image ("images/information.png", true, array ("title" => __('Show object type fields')));
-					$data[9] .= '</a>&nbsp;';
-					if ($write_permission) {
-						$data[9] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+				if (!$pure) {
+					if (!$modal){
+						if ($write_permission) {
+							$data[9] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+						}
 					}
 				}
-				if ($write_permission) {
-					if (!$clean_output) {
-						$data[10] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+				if (!$pure) {
+					if (!$modal){
+						if ($write_permission) {
+							$data[10] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+						}
 					}
 				}	
 			}
@@ -1406,92 +1410,28 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				
 				array_push ($table->data, $data);
 			
-			if (!$clean_output) {
-
-				$data_info = array();
-				
-				$table_info->width = '100%';
-				$table_info->class = 'no_border';
-				
-				$table_info->size = array ();
-				$table_info->style = array();
-				$table_info->data = array();
-				
-				$res_obj_fields = inventories_get_all_type_field ($inventory['id_object_type'], $inventory['id'], false);
-				
-				if (empty($res_obj_fields)) {
-					$table_info->data[0][0] = '<b>'.__('No data to show').'</b>';
-					$data_info['row_info'] = print_table($table_info, true);
-					$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
-					$table->rowstyle[$idx] = 'display: none;';
-				} else {
-					$j = 0;
-					$k = 0;
-					foreach ($res_obj_fields as $l => $ob_field) {
-						if (isset($ob_field['label']) && ($ob_field['label'] != "")) {
-							if ($ob_field['type'] == 'external') {
-								$table_info->align[$j] = 'left;';
-								$table_info->data[$j][$k] = '<b>'.$ob_field['label'];
-								$table_info->data[$j][$k] .= ' : '.'</b>';
-								$table_info->data[$j][$k] .= $ob_field['data'];
-								$k++;
-								if ($k % 4 == 0){
-									$j++;
-									$k = 0;
-								}
-								if (isset($ob_field['external_label']) && ($ob_field['external_label'] != '')) {
-									$label_value = get_db_value_sql("SELECT ".$ob_field['external_label']." FROM ".$ob_field['external_table_name']." WHERE ".$ob_field['external_label']." = '".$ob_field['data'] ."'" );
-
-									$table_info->align[$j] = 'left;';
-									$table_info->data[$j][$k] = '<b>'.$ob_field['external_label'];
-									$table_info->data[$j][$k] .= ' : '.'</b>';
-									$table_info->data[$j][$k] .= $label_value;
-									$k++;
-									if ($k % 4 == 0){
-										$j++;
-										$k = 0;
-									}
-								}
-							} else {
-								$table_info->align[$j] = 'left;';
-								$table_info->data[$j][$k] = '<b>'.$ob_field['label'];
-								$table_info->data[$j][$k] .= ' : '.'</b>';
-								$table_info->data[$j][$k] .= $ob_field['data'];
-								$k++;
-								if ($k % 4 == 0){
-									$j++;
-									$k = 0;
-								}
-							}
-						}
-					}
-				$data_info['row_info'] = print_table($table_info, true);
-				$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
-				$table->rowstyle[$idx] = 'display: "";';
-				}
-				
-				
-				if ($write_permission) {
-					$table->colspan[$idx]["row_info"] = 10;
-				} else {
-					$table->colspan[$idx]["row_info"] = 9;
-				}
-		
-				
-				array_push ($table->data, $data_info);
-				
-				$idx++;
-			}
 		}
-		
-		print_table($table);
-
-		if(!$clean_output) {
+		echo '<div id= "inventory_only_table">';
+			print_table($table);
+		echo '</div>';
+		if (!$pure) {
 			pagination ($count, $url_pag, $offset, true);
+			if(!$modal){
+				if ($write_permission) {	
+					echo '<div class="button-form">';
+					echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
+					echo '</div>';
+				}
+			}
 		}
 	}
 }
-
+ 
+function objects_childs ($id_item){
+	$sql = "SELECT id FROM tinventory WHERE `id_parent`=$id_item";
+	$cont_invent = get_db_all_rows_sql($sql);
+	echo $cont_invent;
+}
 
 /*
  * IMPORT INVENTORIES FROM CSV. 

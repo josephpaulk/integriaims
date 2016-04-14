@@ -109,10 +109,10 @@ function enviar(data, element_name, id_object_type_field, data_name) {
 	$("#external_table_window").dialog('close');
 } 
 
+//function to pass the clicked parameter in the modal to the input
 function loadInventory(id_inventory) {
 	
 	$('#hidden-id_parent').val(id_inventory);
-	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -390,6 +390,7 @@ function show_fields() {
 	});
 }
 
+//Send modal parameters that need inventory
 function loadParams() {
 	
 	search_free = $('#text-search_free').val();
@@ -400,7 +401,7 @@ function loadParams() {
 	inventory_status_search = $('#inventory_status_search').val();
 	id_company_search = $('#id_company').val();
 	associated_user_search = $('#text-associated_user_search').val();
-	
+
 	if ($("#checkbox-last_update_search").is(":checked")) {
 		last_update_search = 1;
 	} else {
@@ -416,7 +417,7 @@ function loadParams() {
 
 }
 
-//Show custom fields
+//Show custom fields for inventory modal
 function show_type_fields() {
 
 	$("select[name='object_fields_search[]']").empty();
@@ -438,6 +439,254 @@ function show_type_fields() {
 	});
 }
 
+//This function changes and orders both custom fields as common and runs the checkbox checking if they are on
+function enable_table_order_check(pure) {
+	$("select[name='object_fields_search[]']").empty();
+	
+	id_object_type = $("#id_object_type_search").val();
+	
+	//variable result contiene los campos del tipo de objeto
+	result = $('#hidden-object_fields').val();
+	if(result == "{}" || result == ""){
+		result = "";
+	} else {
+		result = jQuery.parseJSON(result.replace(/&quot;/g, '"'));
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&select_fields=1&id_object_type=" + id_object_type,
+		dataType: "json",
+		success: function(data){
+			$("#object_fields_search_check").empty();
+			i=1;
+			jQuery.each (data, function (label, field) {
+
+				var list = $('<ul></ul>');
+				var list_file = $('<li></li>');
+				var list_file_label = $('<label></label>'). attr('for','check' + i);
+				var list_file_label_input = $('<input/>'). attr('id','check' + i).attr('type', 'checkbox').attr('name', field);
+				$("#object_fields_search_check").append(list.append(list_file.append(list_file_label.html(label).append(list_file_label_input))));
+				i++;
+				//if not selected field selected by default the first
+				if(result == ""){
+					$("#object_fields_search_check input[type=checkbox]").on("change", function(e) {
+						var id = $(this).attr("id");
+						id = id.replace('check','');
+						var col = $("#inventory_list_table table tr th:nth-child("+id+"), #inventory_list_table table tr td:nth-child("+id+")");
+						$(this).is(":checked") ? col.show() : col.hide();
+						change_object_field();
+					}).prop("checked", true).change();
+				} else {
+					//if you select any field checkbox selects all off
+					$("#object_fields_search_check input[type=checkbox]").on("change", function(e) {
+						var id = $(this).attr("id");
+						id = id.replace('check','');
+						var col = $("#inventory_list_table table tr th:nth-child("+id+"), #inventory_list_table table tr td:nth-child("+id+")");
+						$(this).is(":checked") ? col.show() : col.hide();
+						change_object_field();
+					}).change();
+				}
+			});
+			//checks that should be on
+			if(result){
+				jQuery.each(result, function (k, v) {
+					$("#object_fields_search_check input[name='"+k+"']").on("change", function(e) {
+					}).prop("checked", true).change();
+				});
+			}
+			enable_table_ajax_headers(pure);
+		}
+	});
+}
+
+//add id table is not used is implemented by whether to order
+function add_id_th_table(label, field){
+	$("#inventory_list_table table tr th").each(function(){
+		nameth = $(this).text();
+		if(nameth == label){
+			$(this).attr('id', field);
+		}
+	});
+}
+
+
+//function to sort x field
+function enable_table_ajax_headers(pure){
+	$('#inventory_list th').each(function (column) {
+		type_column = $('#hidden-sort_mode').val();
+		num_column = $('#hidden-sort_field').val();
+		if (column < 9) {
+			if(!pure){
+				if (column == num_column && type_column == 'asc'){
+					$(this).addClass('sortable sorted-asc');
+					$(this).attr("onclick","ajax_headers_sort(this);");
+
+				} else if (column == num_column && type_column == 'desc'){
+					$(this).addClass('sortable sorted-desc');
+					$(this).attr("onclick","ajax_headers_sort(this);");
+				} else {
+					$(this).addClass('sortable');
+					$(this).attr("onclick","ajax_headers_sort(this);");
+				}
+			}
+		}
+
+		// show or hide based on checkbox
+
+		// Avoid to erase actions & select boxes
+		if ($("#check"+(column+1)).val() == null){
+			return false;
+		}
+
+		asociated_checkbox = $("#check"+(column+1)).is(":checked");
+		
+		col = $("#tmp_data table tr th:nth-child("+(column+1)+"), #tmp_data table tr td:nth-child("+(column+1)+")");
+		col.hide();
+		if (!asociated_checkbox){
+			col.hide();
+		}
+		else {
+			col.show();
+		}
+
+    });
+
+    $('#inventory_list_table').html($('#tmp_data').html());
+    $('#tmp_data').html(null);
+}
+
+//changes the values ​​of the inputs to the ordering is maintained for the search
+function ajax_headers_sort(field){
+    $(field).removeClass('sortable');
+    var field_value = field.className.split(" ")[1].replace('c','');
+    if ($('#hidden-sort_mode').val() == 'asc'){
+    	$('#hidden-sort_mode').val('desc');
+    }
+    else {
+    	$('#hidden-sort_mode').val('asc');
+    }
+    $('#hidden-sort_field').val(field_value);
+    tree_search_submit();
+}
+
+//changes to tree view
+function change_view_tree(){
+	$('#hidden-mode').val('tree');
+	tree_search_submit();
+}
+
+//switch to list view
+function change_view_list(){
+	$('#hidden-mode').val('list');
+	tree_search_submit();
+}
+
+//Pure view changes	
+function change_view_pure() {
+	$('#header').hide();
+	$('#sidebar').hide();
+	$('.inventory_type_object_container').hide();
+	$('.inventory_column_container').hide();
+	$('.inventory_form_container').hide();
+	$('.view_normal_button').css('display', 'none');
+	$('.view_pure_button').css('display', 'inline');
+	pure = 1;
+	tree_search_submit(pure);
+}
+
+//Return to pure a list_view
+function change_return_view() {
+	$('#sidebar').show();
+	$('#header').show();
+	$('.inventory_type_object_container').show();
+	$('.inventory_column_container').show();
+	$('.inventory_form_container').show();
+	$('.view_normal_button').css('display', 'inline');
+	$('.view_pure_button').css('display', 'none');
+	pure = 0;
+	tree_search_submit(pure);
+}
+
+//funcion para cambiar el tipo de objeto
+function change_object_type(){
+	id_object_type = $("#id_object_type_search_check").val();
+	$("#id_object_type_search").val(id_object_type);
+	//val offset 0
+	$('#hidden-offset').val(0);
+	tree_search_submit();
+}
+
+//send checkbox on
+function change_object_field(){
+	$("#hidden-object_fields").val(JSON.stringify($('#form_object_field').serializeObject()));
+}
+
+//form search inventory
+function tree_search_submit(pure){
+	if(pure==1){
+		pure = 1;
+	} else {
+		pure = 0;
+	}
+	var id_object = $('#tree_search').serialize();
+	$("#inventory_list_table").html("<img id='inventory_loading' src='images/carga.gif' />");
+	$.ajax({	
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&pure="+ pure +"&change_table=1&" + id_object,
+		dataType: "html",
+		success: function(data){
+			mode = $('#hidden-mode').val();
+			if(mode = 'list'){
+				$("#tmp_data").empty();
+				$("#tmp_data").html(data).hide();
+				
+				//sort the table
+				enable_table_order_check(pure);
+
+				//JS for massive operations
+				$("#checkbox-inventorycb-all").change(function() {
+					$(".cb_inventory").prop('checked', $("#checkbox-inventorycb-all").prop('checked'));
+				});
+
+				$(".cb_inventory").click(function(event) {
+					event.stopPropagation();
+				});
+
+				//sort the table
+				/*
+					$("#text-search_free").keyup(function() {
+		    			tree_search_submit();
+					});
+				*/
+				
+			} else {
+				$('#tmp_data').empty();
+				$('#tmp_data').html (data);
+				$('#inventory_tree_table').show();
+			}
+		}
+	});
+}
+
+//serialize form in Json
+$.fn.serializeObject = function(){
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
 
 // Show the modal window of company associated
 function show_company_associated() {
@@ -450,7 +699,6 @@ function show_company_associated() {
 		success: function(data){	
 			$("#company_search_modal").html (data);
 			$("#company_search_modal").show ();
-
 			$("#company_search_modal").dialog ({
 					resizable: true,
 					draggable: true,
@@ -691,7 +939,6 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search, ref_tree
 
 function loadTable(type, div_id, less_branchs, id_father, sql_search, ref_tree, end, last_update) {
 	id_item = div_id;
-	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -781,4 +1028,25 @@ function delete_massive_inventory () {
 				);
 			}
 	}
+}
+
+
+/**
+ * Send formulary through AJAX instead of submit
+ */
+
+function send_form_ajax(id_form, id_response, url, operation){
+	$.ajax({
+		type: "POST",
+		url: "ajax.php?" + $(id_form).serialize()+"&"+operation,
+		data: {
+			'page': url,
+		},
+		dataType: "json",
+		statusCode: {
+			200: function(data){
+				$("#"+id_response.id).html(data.responseText);
+			}
+		}
+	});
 }

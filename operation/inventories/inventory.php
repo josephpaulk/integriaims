@@ -27,10 +27,9 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 echo '<h2>' . __('Inventory') . '</h2>';
 echo '<h4>' . __('Overview');
 
-if (!$pure) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
-	echo "<li>";
+	echo "<li class='view_normal_button'>";
 	$sql_search = 'SELECT tinventory.* FROM tinventory WHERE 1=1';
 	$filter["query"] = $sql_search;
 	serialize_in_temp($filter, $config["id_user"]);
@@ -39,33 +38,31 @@ if (!$pure) {
 	//~ $buttons .= print_report_button ("index.php?sec=inventory&sec2=operation/inventories/inventory&search=1&params=$params", __('Export to PDF')."&nbsp;");
 	echo $buttons;
 	echo "</li>";
-	echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory&pure=1'>" .
+	
+	echo "<li class='view_normal_button'>";
+	echo "<a href='#' onclick='change_view_pure()'>" .
 		print_image ("images/html_tabs.png", true, array("title" => __("Test"))) . "</a>";
 	echo "</li>";
-	echo "<li>";
-	echo "<a id='listview_form_submit' href='#'>" .
+	
+	echo "<li class='view_normal_button'>";
+	echo "<a id='listview_form_submit' href='#' onclick='change_view_list()'>" .
 		print_image ("images/list_view.png", true, array("title" => __("List view"))) .
 		"</a>";
 	echo "</li>";
-	echo "<li>";
-	echo "<a id='treeview_form_submit' href='#'>" .
+	
+	echo "<li class='view_normal_button'>";
+	echo "<a id='treeview_form_submit' href='#' onclick='change_view_tree()'>" .
 		print_image ("images/tree_view.png", true, array("title" => __("Tree view"))) .
 		"</a>";
 	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
-}
-else {
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	echo "<li>";
-		echo "<a id='' href='index.php?sec=inventory&sec2=operation/inventories/inventory'>" .
+	
+	echo "<li class='view_pure_button' style='display: none'>";
+		echo "<a href='#' onclick='change_return_view()'>" .
 		print_image ("images/flecha_volver.png", true, array("title" => __("Test"))) . "</a>";
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
-}
+
 echo '</h4>';
 
 $id = (int) get_parameter ('id');
@@ -132,10 +129,11 @@ if ($update_extras == 1){
 	
 }
 
-echo '<div class="result"></div>';
+echo '<div class="result">';
 
 require_once ('inventory_search.php');
 
+echo '</div>';
 echo '<div id="inventories-stats"></div>';
 
 ?>
@@ -144,6 +142,9 @@ echo '<div id="inventories-stats"></div>';
 <script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
+<script type="text/javascript" src="include/js/fixed-bottom-box.js"></script>
 
 <script type="text/javascript">
 

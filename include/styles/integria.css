@@ -3551,4 +3551,109 @@ ul li {
 	padding-left: 15px;
 	padding-right: 15px;
 }
+
+/*css inventories*/
+#inventory_only_table{
+	width: 100%;
+	overflow: auto;
+	width: 100%;
+    border-collapse: collapse;
+}
+
+#inventory_list_table #inventory_only_table th {
+	width: auto;
+	white-space: nowrap;
+}
+
+#inventory_list_table #inventory_only_table td {
+	width: auto;
+	white-space: nowrap;
+	line-height: 0px;
+}
+
+.inventory_form_container{
+	float: right;
+	width: 62%;
+}
+
+.inventory_column_container{
+	width: 18%;
+	float: left;
+	padding-left: 1%;
+}
+
+.inventory_form_container .divresult_inventory table{
+	border: 1px solid #dadada;
+    border-radius: 4px;
+    height: 252px !important;
+}
+
+.inventory_form_container .divresult_inventory table input[type="submit"]{
+	border-radius: 3px;
+    font-size: 13px;
+    padding-left: 0px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    width: 175px !important;
+    font-weight: 300;
+    height: 40px;
+    cursor: pointer;
+    padding: 0px;
+    float:right;
+}
+
+.inventory_type_object_container{
+	width: 18%;
+	float: left;
+}
+
+.inventory_type_object_container div.divform{
+	width: 100% !important;
+}
+
+.inventory_type_object_container div.divform .search-table select[multiple]{
+	width: 98% !important;
+	height: 196px !important;
+	margin: 0 auto;
+}
+
+.inventory_column_container div.divform{
+	width: 100% !important;
+}
+
+.div_multiselect{
+	width: 98% !important;
+	height: 195px !important;
+	overflow-y: scroll;
+	border: 1px solid #D8D8D8;
+	border-radius: 3px;
+	background-color: #fff;
+	color: #707070;  	
+}
+
+#tree_search #id_object_type_search{
+	visibility:hidden;
+}
+
+th.sortable{
+	background-image:url(../../images/block_orange.png);
+	cursor: pointer; 
+}
+
+th.sorted-desc{
+	background-image:url(../../images/arrow_down_orange.png);
+	cursor: pointer;
+}
+
+th.sorted-asc{
+	background-image:url(../../images/arrow_up_orange.png);
+	cursor: pointer;
+}
+
+img#inventory_loading{
+	display:block;
+    margin:auto;
+}
+
 /* End comments */
