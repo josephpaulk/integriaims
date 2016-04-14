@@ -48,12 +48,12 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 46),
+('current_package', 47),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 40);
+('minor_release', 41);
 
 -- Default password is 'integria'
 
