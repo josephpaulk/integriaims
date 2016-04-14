@@ -136,18 +136,23 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<b>" . __('Icon') . "</b>";
 	echo "<td class=datos>";
 	$files = list_files ('images/groups_small/', "png", 1, 0);
-print_select ($files, 'icon', $icon, '', __('None'), "");
-
+		print_select ($files, 'icon', $icon, '', __('None'), "");
+		
+	if ($icon)
+		$img = "<img src='images/groups_small/$icon' />";
+	else
+		$img = '';
+	echo "<span id='preview_image'>$img</span>";
 	echo "<tr>";
 	echo "<td class=datos2>";
 	echo "<b>" . __('Parent') . "</b>";
 	echo "<td class=datos2>";
 	combo_kb_categories ( $parent);
-	if ($id == -1)
-		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
-	else
-		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
 	echo "</table>";
+	if ($id == -1)
+		echo "<div class='button-form'>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</div>";
+	else
+		echo "<div class='button-form'>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</div>";
 	echo "</form>";
 
 }
@@ -249,4 +254,8 @@ messages = {
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 
+$('#icon').change(function(){
+	var img = $(this).val();
+	$('#preview_image').html('<img src="images/groups_small/'+img+'" />');
+});
 </script>

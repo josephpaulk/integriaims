@@ -56,11 +56,12 @@ if ($operation == "insert"){
 	$id_role = get_parameter ("role", 0);
 	$id_user = get_parameter ("user");
 	
-	// People add for TASK
 	if ($id_task != -1) {
+		// People add for TASK
 		
-		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id_user", $id_user);
-		$temp_id_user = ($temp_id_user != false) ? $temp_id_user : $id_user;
+		// Comment this line, is a serious bug.
+		//~ $temp_id_user = get_db_value ("id_user", "trole_people_task", "id_user", $id_user);
+		$temp_id_user = $id_user;
 		$temp_id_role = get_db_value('id', 'trole', 'id', $id_role);
 		
 		$filter['id_role']= $temp_id_role;
@@ -90,10 +91,10 @@ if ($operation == "insert"){
 				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
 			}
 		}
-		
-	// People add for whole PROJECT
 	}
 	else {
+		// People add for whole PROJECT
+		
 		$filter['id_role']= $id_role;
 		$filter['id_user']= $id_user;
 		$filter['id_project']= $id_project;
@@ -148,7 +149,8 @@ if ($operation == 'insert_all') {
 		$update_mode = 0;
 		$create_mode = 1;
 		$result_output = "<h3 class='error'>".__('You must select user/role')."</h3>";
-	} else {
+	}
+	else {
 	
 		foreach ($all_people as $person) {
 			$result = explode('/', $person);
@@ -245,15 +247,16 @@ if ($id_task != -1){
 
 	echo '<tr><td><h4>'.__('Add other users').'</h4>';
 	echo "<tr><td>";
-	echo __('Role');
+	echo "<label>" . __('Role') . "</label>";
+	echo "<tr><td>";
 	echo combo_roles ();
 
 	echo "<tr><td>";
-	echo __('User');
 	$params['input_id'] = 'text-user';
 	$params['input_name'] = 'user';
 	$params['return'] = false;
-	$params['return_help'] = false;
+	$params['return_help'] = true;
+	$params['title'] = __('User');
 	
 	user_print_autocomplete_input($params);
 	echo "<tr><td colspan=4>";
@@ -286,6 +289,7 @@ else {
 
 	echo "</table>";
 }
+
 echo "</div>";
 	
 // --------------------
@@ -297,17 +301,18 @@ if ($id_task != -1) {
 	
 	$sql = "SELECT COUNT(*) total FROM trole_people_task where id_task = $id_task";
 	$result = get_db_row_sql($sql);
-	if ($result["total"] > 0){
+	$assigned_role = "<table class='listing'>";
+	if ($result["total"] > 0) {
 		
 		$sql = "SELECT * FROM trole_people_task where id_task = $id_task";
 		$result = get_db_all_rows_sql($sql);
 		
-		$assigned_role .= "<td>".__('User');
-		$assigned_role .= "<td>".__('Role');
-		$assigned_role .= "<td>".__('Total work time (Hrs)');
+		$assigned_role .= "<th>".__('User');
+		$assigned_role .= "<th>".__('Role');
+		$assigned_role .= "<th>".__('Total work time (Hrs)');
 		$columns = 2;
 		if ($task_permission["manage"]) {
-			$assigned_role .= "<td>".__('Delete');
+			$assigned_role .= "<th>".__('Delete');
 			$columns = 3;
 		}
 		
@@ -328,21 +333,24 @@ if ($id_task != -1) {
 			}
 		}
 	}
+	$assigned_role .= "</table>";
 }
 else {
 	
 	$sql = "SELECT COUNT(*) total FROM trole_people_project WHERE id_project = $id_project";
 	$result = get_db_row_sql($sql);
-	if ($result["total"] > 0){
+	
+	$assigned_role = "<table class='listing'>";
+	if ($result["total"] > 0) {
 		
 		$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
 		$result = get_db_all_rows_sql($sql);
-		$assigned_role .= "<td>".__('User');
-		$assigned_role .= "<td>".__('Role');
-		$assigned_role .= "<td>".__('Total work time (Hrs)');
+		$assigned_role .= "<th>".__('User');
+		$assigned_role .= "<th>".__('Role');
+		$assigned_role .= "<th>".__('Total work time (Hrs)');
 		$columns = 2;
 		if ($project_permission["manage"]) {
-			$assigned_role .= "<td>".__('Delete');
+			$assigned_role .= "<th>".__('Delete');
 			$columns = 3;
 		}
 		
@@ -360,20 +368,19 @@ else {
 				$assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 			}
 		}
-		
 	}
+	$assigned_role .= "</table>";
 }
 
-print_container('assigned_roles', __('Assigned roles'), $assigned_role, 'open', false, '10px', '', '', $columns, 'no_border_bottom');
+print_container_div('assigned_roles', __('Assigned roles'), $assigned_role, 'open', false, '10px', '', '', $columns, 'no_border_bottom');
 
 // Role informational table
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-$roles = "<tr>";
-
-$roles .= "<td >".__('Name');
-$roles .= "<td >".__('Description');
-$roles .= "<td>".__('Cost');
+$roles = "<table class='listing'>";
+$roles .= "<tr>";
+$roles .= "<th >".__('Name');
+$roles .= "<th >".__('Description');
+$roles .= "<th>".__('Cost');
 
 $sql1='SELECT * FROM trole ORDER BY name';
 $result = process_sql($sql1);
@@ -385,8 +392,9 @@ foreach ($result as $row) {
 	$roles .= '<td >'.$row["description"];
 	$roles .= '<td>'.$row["cost"];
 }
+$roles .= "</table>";
 
-print_container('people_roles', __('Available roles'), $roles, 'closed', false, '10px', '', '', 2, 'no_border_bottom');
+print_container_div('people_roles', __('Available roles'), $roles, 'closed', false, '10px', '', '', 2, 'no_border_bottom');
 
 echo "</div>";
 

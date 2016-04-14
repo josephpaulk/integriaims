@@ -149,6 +149,7 @@ function api_create_incident ($return_type, $user, $params){
 	$priority = $params[2];
 	$id_creator = $user;
 	$id_inventory = $params[4];
+	$id_incident_type = (int) $params[5];
 	$email_copy = $params[6];
 	$owner = $params[7];
 	$id_parent = $params[8];
@@ -156,6 +157,8 @@ function api_create_incident ($return_type, $user, $params){
 	$extra_data = $params[10];
 	$resolution = $params[11];
 	$extra_data2 = $params[12];
+	$extra_data3 = $params[13];
+	$extra_data4 = $params[14];
 	$inicio = $timestamp;
 	$actualizacion = $timestamp;
 
@@ -198,21 +201,21 @@ function api_create_incident ($return_type, $user, $params){
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, 
-			resolution, email_copy, id_incident_type, extra_data, extra_data2)
+			resolution, email_copy, id_incident_type, extra_data, extra_data2, $extra_data3, $extra_data4)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-			%d, "%s", %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
+			%d, "%s", %d, "%s", "%s", "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
-			$resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2);
+			$resolution, $email_copy, $id_incident_type, $extra_data, $extra_data2, $extra_data3, $extra_data4);
 	} else {
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, estado, prioridad,
 				id_grupo, id_creator, 
-				resolution, email_copy, id_incident_type, id_parent, extra_data, extra_data2)
+				resolution, email_copy, id_incident_type, id_parent, extra_data, extra_data2, extra_data3, extra_data4)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
-				%d, "%s", %d, %d, "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
+				%d, "%s", %d, %d, "%s", "%s", "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 				$status, $priority, $group, $id_creator,
-				$resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2);
+				$resolution, $email_copy, $id_incident_type, $id_parent, $extra_data, $extra_data2, $extra_data3, $extra_data4);
 	}
 
 	if ($check_status && $check_resolution) {
@@ -475,6 +478,8 @@ function api_update_incident ($return_type, $user, $params){
 	
 	$values['extra_data'] = $params[11];
 	$values['extra_data2'] = $params[12];
+	$values['extra_data3'] = $params[13];
+	$values['extra_data4'] = $params[14];
 	$values['actualizacion'] = $timestamp;
 	if ($values['estado'] == 7) {
 		$values['cierre'] = $timestamp;
@@ -847,15 +852,15 @@ function api_attach_file ($return_type, $user, $params){
 	}
 	
 	// Insert into database
-	$filename= $params[1];
+	$filename= str_replace(" ", "_", $params[1]);
 	$filesize = $params[2];
 	$file_description = $params[3];
-	$file_content = base64_decode($params[4]);
+	$file_content = base64_decode(str_replace("&#x20;", "+", $params[4]));
 
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
-			filename, description, size)
-			VALUES (%d, "%s", "%s", "%s", %d)',
-			$id_incident, $user, $filename, $file_description, $filesize);
+			filename, description, size, timestamp)
+			VALUES (%d, "%s", "%s", "%s", %d, "%s")',
+			$id_incident, $user, $filename, $file_description, $filesize, date("Y-m-d H:i:s"));
 
 	$id_attachment = process_sql ($sql, 'insert_id');
 	$config['id_user'] = $user;
@@ -879,10 +884,10 @@ function api_attach_file ($return_type, $user, $params){
 	 
 	$file_handler = fopen($filename,"w"); 
 
-	fputs($file_handler,$file_content); 
-
-	fclose($DescriptorFichero); 
-	
+	$write = fputs($file_handler,$file_content); 
+	 
+	$close = fclose($file_handler); 
+		
 	if (! $file_handler) {
 		$result = '-1';
 		$sql = sprintf ('DELETE FROM tattachment

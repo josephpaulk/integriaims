@@ -862,7 +862,8 @@ if ($id) {
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
 
-} else {
+}
+else {
 	$create_incident = true;
 	$titulo = "";
 	$description = "";
@@ -877,7 +878,8 @@ if ($id) {
 	$epilog = "";
 	if ($config['show_creator_blank']) {
 		$id_creator = "";
-	} else {
+	}
+	else {
 		$id_creator = $config['id_user'];
 	}
 	
@@ -891,6 +893,7 @@ if ($id) {
     $blocked = 0;
 
 }
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -903,7 +906,8 @@ if (! $id) {
 		$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 		// Take first group defined for this user
 		$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
-	} else {
+	}
+	else {
 		$default_id_group = 1;
 		$number_group = 1;
 	}
@@ -938,17 +942,6 @@ if ($id) {
 	echo '<li>';
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/go-previous.png", true, array("title" => __("Back to incident")))."</a>";
 	echo '</li>';
-	
-	/* Delete incident */
-	if ($has_im) {
-		echo "<li>";
-		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
-		print_input_hidden ('quick_delete', $id, false);
-		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/papelera_gris.png", true, array("title" => __("Delete"))).'</a>';
-		echo '</form>';
-		echo "</li>";
-		
-	}
 
 	//KB only appears for closed status
 	if (give_acl ($config['id_user'], $id_grupo, "KW") && ($incident["estado"] == 7)) {
@@ -962,9 +955,19 @@ if ($id) {
 	}	
 
 	echo '<li>';
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/volver_listado.png", true, array("title" => __("Back to search")))."</a>";
-	echo '</li>';		
-	
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&serialized_filter=1'>".print_image("images/volver_listado.png", true, array("title" => __("Back to list")))."</a>";
+	echo '</li>';
+		
+	/* Delete incident */
+	if ($has_im) {
+		echo "<li>";
+		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
+		print_input_hidden ('quick_delete', $id, false);
+		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/papelera_gris.png", true, array("title" => __("Delete"))).'</a>';
+		echo '</form>';
+		echo "</li>";
+		
+	}
 	echo "</ul>";
 	echo "</div>";	
 
@@ -980,7 +983,8 @@ if ($id) {
     	}
     }
 
-} else {
+}
+else {
 	if (! defined ('AJAX')) {
 		echo "<h2>".__('Support')."</h2>";
 		echo "<h4>".__('Create ticket')."</h4>";
@@ -1021,7 +1025,7 @@ if($id_grupo==0) {
 }
 
 $types = get_incident_types (true, $config['required_ticket_type']);
-$table->data[0][1] = print_label (__('Ticket type'), '','',true);
+$table->data[0][1] = print_label (__('Ticket type') . print_help_tip (__("When changing the ticket type, it's possible for the group to change as well"), true), '','',true);
 
 //Disabled incident type if any, type changes not allowed
 if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_user'])) {
@@ -1041,7 +1045,6 @@ if ($config['required_ticket_type']) {
 }
 
 $table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
-$table->data[0][1] .= print_help_tip (__("When changing the ticket type, it's possible for the group to change as well"), true);
 
 $id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 if($id_group_type != "" && $id_group_type != "0"){
@@ -1104,7 +1107,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['input_id'] = 'text-id_creator';
 	$params_creator['input_name'] = 'id_creator';
 	$params_creator['input_value'] = $id_creator;
-	$params_creator['title'] = 'Creator';
+	$params_creator['title'] = __('Creator');
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
@@ -1112,7 +1115,8 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	//add button to display info user for creator
 	$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-} else {
+}
+else {
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
@@ -1228,6 +1232,7 @@ if ($has_im) {
 	$table_advanced->data[3][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
 	if (!$blocked_incident) {
+		$table_advanced->data[3][0] .= "&nbsp;&nbsp;<a href='javascript: parent_search_form(\"\", $id)'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 		$table_advanced->data[3][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 	}
 }
@@ -1248,7 +1253,7 @@ if ($id_task > 0){
 }
 
 
-$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses"), $blocked_incident);
+$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses") . print_help_tip(__("If you will put two or more e-mail adresses, can you put this adresses separated with comma"),true), $blocked_incident);
 if (!$blocked_incident) {
 	$table_advanced->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_contact_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 }
@@ -1527,11 +1532,11 @@ $(document).ready (function () {
 		
 	});
 	
-	/*Open parent search popup*/
+	/*Open parent search popup
 	$("#text-search_parent").focus(function () {
 		parent_search_form('', '<?php echo $id?>');
 	});
-	
+	*/
 	//Validate form
 	$("#incident_status_form").submit(function () {
 		var title = $("#text-titulo").val();
@@ -1873,7 +1878,7 @@ function form_upload () {
 
 	function addListItem (progress, filename, filesize) {
 		var tpl = $('<li>'+
-						'<input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+						'<input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
 						' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" />'+
 						'<p></p>'+
 						'<span></span>'+

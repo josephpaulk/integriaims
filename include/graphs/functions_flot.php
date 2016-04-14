@@ -29,26 +29,16 @@ function include_javascript_dependencies_flot_graph($return = false) {
 		// NOTE: jquery.flot.threshold is not te original file. Is patched to allow multiple thresholds and filled area
 		$output = '
 			<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="' . $config["public_url"] . '/include/graphs/flot/excanvas.js' . '"></script><![endif]-->
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.min.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.pie.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.crosshair.min.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.stack.min.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.selection.min.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.resize.min.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.threshold.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.axislabels.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/jquery.flot.symbol.min.js' .'"></script>
-			<script language="javascript" type="text/javascript" src="'.
-				$config["public_url"] . '/include/graphs/flot/integria.flot.js' .'"></script>';
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.min.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.pie.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.crosshair.min.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.stack.min.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.selection.min.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.resize.min.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.threshold.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.axislabels.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/jquery.flot.symbol.min.js' .'"></script>
+			<script language="javascript" type="text/javascript" src="include/graphs/flot/integria.flot.js' .'"></script>';
 		$output .= "
 			<script type='text/javascript'>
 			function pieHover(event, pos, obj) 

@@ -45,26 +45,27 @@ if ($merge) {
 	}
 }
 
-echo "<h2>".__('Newsletter address merge')."</h2>";
+echo "<h2>".__('Newsletter')."</h2>";
+echo "<h4>".__('address merge')."</h4>";
 
-$table->width = '98%';
-$table->class = 'databox';
+$table->width = '100%';
+$table->class = 'search-table';
 $table->colspan = array ();
 $table->data = array ();
 
 $table->data[0][0] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
 	'id_newsletter_source', $id_newsletter_source, '', '', '', true, false, false,__('Source'));
 	
-$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
+$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
 'id_newsletter_destination', $id_newsletter_destination, '', '', '', true, false, false,__('Destination'));
 
 
+echo '<div class="divform" style="width: '.$table->width.'">';
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/manage_address">';
-print_table ($table);
 
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Merge'), 'merge_btn', false, 'class="sub next"');
-print_input_hidden ('merge', 1);
-echo '</div>';
+$table->data[2][0] = print_submit_button (__('Merge'), 'merge_btn', false, 'class="sub next"' ,true);
+$table->data[2][0] .= print_input_hidden ('merge', 1, true);
+print_table ($table);
 echo '</form>';
+echo '</div>';
 ?>

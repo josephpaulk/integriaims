@@ -27,17 +27,19 @@ if (! dame_admin ($config["id_user"])) {
 
 // Upload file
 if (isset($_GET["upload_file"])) {
+	$file = $_FILES['upfile'];
 	
-	if (isset($_POST['upfile']) && ( $_POST['upfile'] != "" )){ //if file
-		$filename= $_POST['upfile'];
-		$file_tmp = sys_get_temp_dir().'/'.$filename;
+	if ($file["error"] === 0){ //if file
+		$filename = $file["name"];
+		$file_tmp = $file["tmp_name"];
 		$directory = get_parameter ("directory","");
 
 		// Copy file to directory and change name
 		$file_target = $config["homedir"]."/".$directory."/".$filename;
 		if (!(copy($file_tmp, $file_target))){
 			echo "<h3 class=error>".__("Could not be attached")."</h3>";
-		} else {
+		}
+		else {
 			// Delete temporal file
 			echo "<h3 class=suc>".__("Successfully attached")."</h3>";
 			$location = $file_target;
@@ -87,6 +89,7 @@ if (preg_match("/^manager/", $current_directory))
 
 echo "<div class='divform'>";
 
+echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file=1' enctype='multipart/form-data'>";
 echo "<table width='100%' class='search-table'>";
 
 echo "<tr><td class='datos'>";
@@ -98,23 +101,38 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 // Current directory
 $available_directory[$current_directory] = $current_directory;
 
-echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
 print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, '',"","");
-echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
-echo "</form>";
 
 if (is_writable($current_directory)) {
 	echo "<tr><td class='datos'>";
 	$action = 'index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file';
 	
-	$into_form = "<input type='hidden' name='directory' value='$current_directory'>";
-
-	print_input_file_progress($action,$into_form,'','sub next',false);
-
+	$into_form = "<input type='hidden' name='directory' value='$current_directory'><input type='file' name='upfile'>";
+	echo $into_form;
+	
+	//print_input_file_progress($action,$into_form,'','sub next',false);
+	echo "<tr><td class='datos'>";
+	echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
 	echo "</table>";
+	echo "</form>";
+	
+	echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&create_dir=1&directory=$current_directory'>";
+	echo "<table width='100%' class='search-table'>";
+	echo "<tr><td class='datos'>";
+	echo __("Create directory");
+	echo "<tr><td class='datos'>";
+	echo "<input type=text size=15 name='newdir'>";
+	echo "<tr><td class='datos'>";
+	echo "<input type=submit value='Make dir' class='sub next'>";
+	echo "</table>";
+	echo "</form>";
 	echo "</div>";
-} else {
+}
+else {
+	echo "<tr><td class='datos'>";
+	echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
 	echo "</table>";
+	echo "</form>";
 	echo "</div>";
 	echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
 	echo '<p>';
@@ -123,7 +141,7 @@ if (is_writable($current_directory)) {
 }
 
 echo "<div class='divresult' style=''>";
-echo "<h4 style='width: 93% !important; float:right;'>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0 title='" . __('Refresh') . "'></a></h4>";
+echo "<h4 style='width: 100% !important;'>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0 title='" . __('Refresh') . "'></a></h4>";
 // Upload form
 
 	// List files
@@ -144,7 +162,8 @@ echo "<h4 style='width: 93% !important; float:right;'>".__("Current directory").
 	
 	if (@count ($result) === 0) {
 		echo __("No files found");
-	} else {
+	}
+	else {
 		// This code divide the directories to the rest of files
 		// to show them at the top
 		$dirs = array();
@@ -163,7 +182,7 @@ echo "<h4 style='width: 93% !important; float:right;'>".__("Current directory").
 		$dirs = null;
 		$nondirs = null;
 		
-		echo "<table width='100%' class='listing' style='width: 93% !important; float:right;'>";
+		echo "<table width='100%' class='listing' style='width: 100% '>";
 		
 		$prev_dir = explode( "/", $current_directory );
 		$prev_dir_str = "";
@@ -204,20 +223,22 @@ echo "<h4 style='width: 93% !important; float:right;'>".__("Current directory").
 			$mimetype = "none";
 			if (function_exists("mime_content_tyep")) {
 				$mimetype = mime_content_type($fullfilename);
-			} else if (function_exists("finfo_open")) {
+			}
+			else if (function_exists("finfo_open")) {
 				$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
     				$mimetype = finfo_file($finfo, $fullfilename);
 				finfo_close($finfo);	
 			}
 			if (($temp != "..") AND ($temp != ".")){
 				echo "<tr><td>";
-				if (!is_dir ($current_directory.'/'.$temp)){	
+				if (!is_dir ($current_directory.'/'.$temp)) {	
 					echo "<a href='$fullfilename'>$temp</A>";
-				} else
+				}
+				else
 					echo "<a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory/$temp'>/$temp</a>";
 
 				echo "<td>";
-				if (preg_match("/image/", $mimetype)){
+				if (preg_match("/image/", $mimetype)) {
 					list($ancho, $altura, $tipo, $atr) = getimagesize($fullfilename);
 					echo $ancho." x ".$altura." px";
 				}	
@@ -256,17 +277,6 @@ echo "<h4 style='width: 93% !important; float:right;'>".__("Current directory").
 			}
 		}
 		echo "</table>";
-
-		if (is_writable($current_directory)){
-			echo "<br><br>";
-			echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&create_dir=1&directory=$current_directory'>";
-			echo __("Create directory");
-			echo "&nbsp;&nbsp;";
-			echo "<input type=text size=15 name='newdir'>";
-			echo "&nbsp;&nbsp;";
-			echo "<input type=submit value='Make dir' class='sub next'>";
-			echo "</form>";
-		}
 	}
 echo "</div>";
 

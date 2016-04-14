@@ -27,16 +27,16 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 }
 
 $id = (int) get_parameter ('id');
-$new_type = (bool) get_parameter ('new_type');
-$create_type = (bool) get_parameter ('create_type', 0);
-$update_type = (bool) get_parameter ('update_type', 0);
-$delete_type = (bool) get_parameter ('delete_type', 0);
-$sort_items = (bool) get_parameter('sort_items', 0);
+$new_type = (bool) get_parameter ('new_type', false);
+$create_type = (bool) get_parameter ('create_type', false);
+$update_type = (bool) get_parameter ('update_type', false);
+$delete_type = (bool) get_parameter ('delete_type', false);
+$sort_items = (bool) get_parameter('sort_items', false);
 
 $show_fields = false; //show fields of incident type
-$add_field = (int) get_parameter ('add_field', 0);
-$delete_field = (int) get_parameter ('delete_field', 0);
-$update_field = (int) get_parameter ('update_field', 0);
+$add_field = (bool) get_parameter ('add_field', false);
+$delete_field = (bool) get_parameter ('delete_field', false);
+$update_field = (bool) get_parameter ('update_field', false);
 
 if ($add_field) { //add field to incident type
 	
@@ -255,7 +255,7 @@ if ($update_field) { //update field to incident type
 	}
 }
 
-if ($id != 0) {
+if ($id > 0) {
 	$show_fields = true;
 }
 
@@ -328,7 +328,8 @@ if ($update_type) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Updated ticket type $id - $name");
 			$show_fields = true;
 		}
-	} else {
+	}
+	else {
 		echo '<h3 class="error">'.__('Type name empty').'</h3>';
 	}
 	
@@ -382,8 +383,8 @@ if ($sort_items) {
 					$sorted_items[] = $id_unsort;
 				}
 				
-				foreach ($ids as $id) {
-					$sorted_items[] = $id;
+				foreach ($ids as $id_order) {
+					$sorted_items[] = $id_order;
 				}
 				
 				if ($move_to != 'after') {
@@ -397,8 +398,8 @@ if ($sort_items) {
 		
 		$items = $sorted_items;	
 
-		foreach ($items as $order => $id) {
-			process_sql_update('tincident_type_field', array('order' => ($order + 1)), array('id' => $id));
+		foreach ($items as $order => $type_id) {
+			process_sql_update('tincident_type_field', array('order' => ($order + 1)), array('id' => $type_id));
 		}
 		$result_operation = true;
 	}
@@ -418,7 +419,8 @@ if ($id || $new_type) {
 		$description = "";
 		$id_group = "";
 		//$id_wizard = "";
-	} else {
+	}
+	else {
 		$type = get_db_row ('tincident_type', 'id', $id);
 		$name = $type['name'];
 		$description = $type['description'];
@@ -471,11 +473,9 @@ if ($id || $new_type) {
 
 	if ($show_fields) {
 		//FIELD MANAGEMENT
+		echo "<h4><b>" . __("Ticket fields") . "</b></h4>";
 		echo "<div class='divresult'>";
-		echo "<h4>".__("Ticket fields")."</h4>";
-		if ($id == '') {
-			$id = get_parameter('id');
-		}
+		
 		//INCIDENT FIELDS
 		$sql = "SELECT * FROM tincident_type_field WHERE id_incident_type=$id ORDER BY `order`";
 		$incident_fields = process_sql ($sql);

@@ -102,12 +102,10 @@ echo "<b>";
 echo __('Category')." </b> : ";
 echo $category;
 
-
-
-echo "<td align=right>";
-if (give_acl ($config["id_user"], 0, "KW")){
-	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
-}
+//~ echo "<td align=right>";
+//~ if (give_acl ($config["id_user"], 0, "KW")){
+	//~ echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
+//~ }
 
 echo "</table>";
 echo "</div>";

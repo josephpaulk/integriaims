@@ -97,11 +97,13 @@ $imagelist = get_logo_files ();
 $table->colspan[0][0] = 2;
 $table->data[0][0] = "<h4>".__('Invoice generation parameters')."</h4>";
 
-$table->data[1][0] = print_select ($imagelist, 'invoice_logo', $config["invoice_logo"], '', __('None'), 'none',  true, 0, true, __('Invoice header logo'));
-$table->data[1][0] .= print_help_tip (__('You can submit your own logo in "images/custom_logo" folder using the file uploader'), true);
+$table->data[1][0] = print_select ($imagelist, 'invoice_logo', 
+		$config["invoice_logo"], '', __('None'), 'none',  true, 0, 
+		true, __('Invoice header logo') . print_help_tip (__('You can submit your own logo in "images/custom_logo" folder using the file uploader'), true));
 
-$table->data[1][1] = print_input_text ('invoice_tax_name', $config["invoice_tax_name"], '', 10, 10, true, __('Invoice tax name'));
-$table->data[1][1] .= print_help_tip (__('For example: VAT'), true);
+$table->data[1][1] = print_input_text ('invoice_tax_name', 
+	$config["invoice_tax_name"], '', 10, 10, true, 
+	__('Invoice tax name') . print_help_tip (__('For example: VAT'), true));
 
 $table->colspan[3][0] = 2;
 $table->data[3][0] = print_textarea ('invoice_header', 5, 40, $config["invoice_header"], '', true, __('Invoice header'));
@@ -110,7 +112,7 @@ $table->colspan[4][0] = 2;
 $table->data[4][0] = print_textarea ('invoice_footer', 5, 40, $config["invoice_footer"], '', true, __('Invoice footer'));
 
 $table->data[5][0] = print_checkbox ("invoice_auto_id", 1, $config["invoice_auto_id"], true, __('Enable auto ID'));
-$table->data[5][1] = print_input_text ('invoice_id_pattern', $config["invoice_id_pattern"], '', 10, 20, true, __('Invoice ID pattern')).print_help_tip (__('Data not in square brackets will be fixed, while data in square brackets will be the number from which a sequence will be calculated. Example: FAC[100]'), true);
+$table->data[5][1] = print_input_text ('invoice_id_pattern', $config["invoice_id_pattern"], '', 10, 20, true, __('Invoice ID pattern') . print_help_tip (__('Data not in square brackets will be fixed, while data in square brackets will be the number from which a sequence will be calculated. Example: FAC[100]'), true));
 
 $table->colspan[7][0] = 2;
 $table->data[7][0] = "<h4>".__('Lead parameters')."</h4>";

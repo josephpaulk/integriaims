@@ -48,12 +48,12 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 46),
+('current_package', 47),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'flowers.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 40);
+('minor_release', 42);
 
 -- Default password is 'integria'
 
@@ -74,7 +74,7 @@ INSERT INTO `tlanguage` VALUES ('de','Deutch');
 INSERT INTO `tlanguage` VALUES ('pl','Polski');
 
 
-INSERT INTO `tlink` VALUES  (1,'Integria Project','http://integria.sourceforge.net'), (2,'Artica ST','http://www.artica.es'), (3, 'Report a bug', 'https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
+INSERT INTO `tlink` VALUES  (1,'Artica','http://artica.es'), (2,'Integria IMS','http://integriaims.com/'), (3, 'Forum', 'http://forums.integriaims.com/'), (4, 'Support', 'https://artica.es/integria/');
 
 INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0, "");
 

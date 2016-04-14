@@ -176,7 +176,7 @@ if (!$files) {
 
 	$table->class = "listing";
 	$table->width = "99%";
-	$table->head[0] = __("Filname");
+	$table->head[0] = __("Filename");
 	$table->head[1] = __("Timestamp");
 	$table->head[2] = __("Description");
 	$table->head[3] = __("Size");

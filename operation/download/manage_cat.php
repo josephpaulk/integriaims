@@ -124,8 +124,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo __('Icon');
 	echo "<td class=datos>";
 	$files = list_files ('images/download_category/', "png", 1, 0);
+	
+	$img = '';
+	if ($icon)
+		$img = "<img src='images/download_category/$icon' />";
 	print_select ($files, 'icon', $icon, '', __('None'), "");
-		
+		echo "<span id='preview_image'>$img</span>";
 	echo "</table>";
 	
 	echo "<div class='button-form'>";
@@ -238,5 +242,10 @@ messages = {
 	remote: "<?php echo __('This category already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
+
+$('#icon').change(function(){
+	var img = $(this).val();
+	$('#preview_image').html('<img src="images/download_category/'+img+'" />');
+});
 
 </script>

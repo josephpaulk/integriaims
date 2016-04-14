@@ -163,7 +163,8 @@ if ($id_workunit) {
 			return;
 		}
 	}
-} else {
+}
+else {
 	$id_user = $config["id_user"];
 	$wu_user = $id_user;
 	$duration = $config["pwu_defaultime"]; 
@@ -230,7 +231,8 @@ if ($operation == 'insert') {
 		mail_project (0, $config['id_user'], $id_workunit, $id_task,
 			"This is part of a multi-workunit assigment of $duration hours");
 	// backward
-	} elseif (($split) && ($duration > $config["hours_perday"])) {
+	}
+	elseif (($split) && ($duration > $config["hours_perday"])) {
 		$total_days = ceil ($duration / $config["hours_perday"]);
 		$total_days_sum = 0;
 		$hours_day = 0;
@@ -266,7 +268,8 @@ if ($operation == 'insert') {
 		}
 		mail_project (0, $config['id_user'], $id_workunit, $id_task,
 			"This is part of a multi-workunit assigment of $duration hours");
-	} else {
+	}
+	else {
 		// Single day workunit
 		$sql = sprintf ('INSERT INTO tworkunit 
 				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
@@ -296,9 +299,8 @@ if ($operation == 'insert') {
 	if ($id_workunit !== false) {
 		set_task_completion ($id_task);
 	}
-	
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Inserted PWU. Task: $id_task. Desc: $description");
-	}
+}
 
 
 if ($operation == "delete") {
@@ -314,7 +316,7 @@ if ($operation == "delete") {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 	
 	if (defined ('AJAX'))
-		return;
+		return $success;
 }
 
 // Edit workunit
@@ -415,7 +417,7 @@ if ($id_workunit) {
 		echo "<li id='tabmenu2' class='ui-tabs'><span>";
 	}
 }
-	echo "<a href='#tab2'><span>".__("Multiple WU")."</span></a>";
+	echo "<a href='#tab2' title='".__("Multiple WU")."'><img src='images/multiple_workunits_tab.png' /></a>";
 	echo "</span></li>";
 	
 //If the multiple_wu_insert option was sent single wu is disabled
@@ -424,7 +426,7 @@ if ($operation == 'multiple_wu_insert') {
 } else {
 	echo "<li id='tabmenu1' class='ui-tabs-selected'>";
 }
-echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
+echo "<a href='#tab1' title='".__("Single WU")."'><img src='images/workunit_tab.png' /></a>";
 echo "</span></li>";
 echo "</ul>";
 echo "</h4>";
@@ -510,13 +512,12 @@ $table->data[3][0] = print_checkbox ('have_cost', 1, $have_cost, true,
 $table->data[3][1] = print_checkbox ('public', 1, $public, true, __('Public'));
 
 if (! $id_workunit) {
-	$table->data[4][0] = print_checkbox ('forward', 1, false, true, __('Forward'));
-	$table->data[4][0] .= print_help_tip (__('If this checkbox is activated, propagation will be forward'),
-		true);
+	$table->data[4][0] = print_checkbox ('forward', 1, 
+		false, true, __('Forward') . print_help_tip (__('If this checkbox is activated, propagation will be forward'), true));
 	
-	$table->data[4][1] = print_checkbox ('split', 1, false, true, __('Backward'));
-	$table->data[4][1] .= print_help_tip (__('If this checkbox is activated, propagation will be backward'),
-		true);
+	$table->data[4][1] = print_checkbox ('split', 1, false, true, 
+		__('Backward')  . print_help_tip (__('If this checkbox is activated, propagation will be backward'),
+		true));
 }
 
 $table->data[5][0] = print_checkbox ('work_home', 1, $work_home, true, __('Work from home'));
@@ -555,8 +556,6 @@ echo "</div>";
 
 //If not workunit update then enable the multiple workunit option
 if (!$id_workunit) {
-	
-	
 	if ($operation == 'multiple_wu_insert') {
 		echo "<div id='tab2' class='ui-tabs-panel'>"; //Multiple WU
 		echo "<table width='100%' class='search-table-button'>";
@@ -568,7 +567,6 @@ if (!$id_workunit) {
 		foreach ($multiple_wu_report as $number => $mwur) {
 			print_single_workunit_report($mwur);
 		}
-		
 	}
 	else {
 		echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>"; //Multiple WU

@@ -174,33 +174,33 @@ else {
 
 	// Name
 
-	$table->data[0][0] = '<b>'.__('Name').' </b>';
+	$table->data[0][0] = '<b>'.__('Name').' </b><br >';
 	$table->data[0][0] .= '<input type="text" name="name" size=50 value="'.$name.'">';
-	// CC
-	//$table->colspan[6][0] = 4;
-	$table->data[0][1] .= '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b>';
-	$table->data[0][1] .= '<input type="text" name="cc" size=50 value="'.$cc.'">';
-
-	// start and end date
-	$table->data[1][0] = '<b>'.__('Start').' </b>&nbsp;';
-	$table->data[1][0] .= print_input_text ('start_date', $start_date, '', 10, 10, true);
-
-	$table->data[1][0] .= '&nbsp;&nbsp;<b>'.__('End').' </b>';
-	$table->data[1][0] .= print_input_text ('end_date', $end_date, '', 10, 10, true);
-
+	
 	$id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-	$table->data[1][1] = "<b>".__('Project manager')." </b>";
-	$table->data[1][1] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
+	$table->data[0][1] = "<b>".__('Project manager')." </b><br >";
+	$table->data[0][1] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 15, 20, false, '',
 				'', true, '','');
 
-	$table->data[1][1] .= '&nbsp;&nbsp;<b>' .  __('Project group') . "</b>";
+	$table->data[0][2] .= '<b>' .  __('Project group') . "</b><br >";
 	if (!$clean_output) {
-		$table->data[1][1] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
+		$table->data[0][2] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
 			"id_project_group", $id_project_group, "", __('None'), '0',
 			true, false, true, false);
 	} else {
-		$table->data[1][1] .= get_db_value ("name", "tproject_group", "id", $id_project_group);
+		$table->data[0][2] .= get_db_value ("name", "tproject_group", "id", $id_project_group);
 	}
+	
+	// CC
+	$table->data[1][0] .= '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b><br >';
+	$table->data[1][0] .= '<input type="text" name="cc" size=50 value="'.$cc.'">';
+
+	// start and end date
+	$table->data[1][1] = '<b>'.__('Start').' </b><br >';
+	$table->data[1][1] .= print_input_text ('start_date', $start_date, '', 10, 10, true);
+
+	$table->data[1][2] .= '<b>'.__('End').' </b><br >';
+	$table->data[1][2] .= print_input_text ('end_date', $end_date, '', 10, 10, true);
 
 	// Description
 	$table->colspan[7][0] = 4;
@@ -341,6 +341,8 @@ echo "</table>";
 		if ($avatar != "") {
 			$people_involved .= "<img src='images/avatars/".$avatar.".png' onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 		}
+		else
+			$people_involved .= "<img src='images/avatar_notyet.png' onclick='openUserInfo(\"$u\")' title='".$u."'/>";
 	}
 	$people_involved .= "</td></tr>";
 	echo "<div class='listing-border'>";

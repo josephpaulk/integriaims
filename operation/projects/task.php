@@ -48,6 +48,7 @@ if (defined ('AJAX')) {
 	
 	$id_item = get_parameter ('id_item');
 	$branches_json = get_parameter('branches_json');
+	$orden_tree = get_parameter('orden_tree');
 	$branches = json_decode ($branches_json, true);
 	$id_father = get_parameter('id_father');
 	$sql_search = base64_decode(get_parameter('sql_search', ''));
@@ -148,33 +149,32 @@ if (defined ('AJAX')) {
 		// TASKS
 		$new = true;
 		$count = 0;
-			
+		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
 		while ($task = get_db_all_row_by_steps_sql($new, $result, $sql_tasks)) {
 			$sql_count_issue = "select count(*) as num from tincidencia where id_task=".($task['id']);
 			$count_issue = process_sql ($sql_count_issue);
 			$new = false;
 			$count++;
-			echo "<table>";
-			echo "<tr>";
+			echo "<li style='margin: 0; padding: 0;'>";
+			echo "<span style='display: inline-block;'>";
 			
 			$branches_aux = $branches;
 			
-			if ($count_issue[0]['num'] != 0) {
-				$branches[] = true;
-				$img = print_image ("images/arrow_right.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
-			}
-			else {
-				
-				$sql_count_taks = "SELECT COUNT(*) num
-							FROM ttask
-							WHERE id_parent_task=".$task['id'];
-				$count_taks = process_sql ($sql_count_taks);
-				if ($count_taks[0]['num'] != 0) {
-					
-					$branches[] = true;
-					$img = print_image ("images/arrow_right.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
 				}
+			}
+			
+			if ($count < $countRows || $countWOs > 0 || $countIncidents > 0) {
+				$branches_aux[] = true;
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
+			} else {
+				$branches_aux[] = false;
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
 			}
 			
 			$task_access = get_project_access ($config["id_user"], $id_project, $task["id"], false, true);
@@ -198,6 +198,12 @@ if (defined ('AJAX')) {
 				
 				// Task name
 				$name = safe_output($task['name']);
+				//~ debugPrint("************************************",true);
+				//~ debugPrint($name,true);
+				//~ debugPrint($countRows,true);
+				//~ debugPrint($countWOs,true);
+				//~ debugPrint($countIncidents,true);
+				//~ debugPrint("************************************",true);
 				
 				if (strlen($name) > 30) {
 					$name = substr ($name, 0, 30) . "...";
@@ -252,29 +258,9 @@ if (defined ('AJAX')) {
 				// Branches
 				$branches_json = json_encode ($branches_aux);
 				
-				//Start/End Date
- 				if ($task["start"] == $task["end"]){
-					$date_start_end = date ('Y-m-d', strtotime ($task['start'])) . " / ";
-					$date_start_end .= __('Recurrence').': '.get_periodicity ($task['periodicity']);
-				} else {
-					// Start
-					$start = strtotime ($task['start']);
-					$end = strtotime ($task['end']);
-					$now = time ();
-					
-					$date_start_end = date ('Y-m-d', $start) ." / ";
-					
-					if ($task['completion'] == 100) {
-						$date_start_end .= '<span style="color: green">';
-					} else {
-						if ($now > $end)
-							$date_start_end .= '<span style="color: red">';
-						else
-							$date_start_end .= '<span>';
-					}
-					$date_start_end .= date ('Y-m-d', $end);
-					$date_start_end .= '</span>' ;
-				}
+				if ($name == 'Task1')
+					debugPrint($countRows,true);
+				$width = 250 - ($orden_tree * 15) . 'px';
 				
 				// New WO / Incident
 				$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work unit')));
@@ -282,28 +268,29 @@ if (defined ('AJAX')) {
 				$wo_icon = "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=".$task['id_project']."&id_task=".$task['id']."'>$wo_icon</a>";
 				$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
 				$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
-				echo "<table><tr>";
-				echo "<td style='width:105px;'><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+				
+				echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\",".$orden_tree.")'>";
 				echo "<script type=\"text/javascript\">
-						  $(document).ready (function () {
-							  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\");
-						  });
+						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\",".$orden_tree.");
 					  </script>";
 				echo $img;
-				echo "</a></td>";
-				echo "<td>".$priority."</td>";
-				echo "<td style='width:220px;'>".$name."</td>";
-				echo "<td style='width:100px;'>".$progress."</td>";
-				echo "<td style='width:50px;'>".$estimation."</td>";
-				echo "<td style='width:30px;'>".$people."</td>";
-				echo "<td style='width:200px;'>".$date_start_end."</td>";
-				echo "<td>".$time_used."</td>";
-				echo "<td>".__('New').": ".$launch_icons."</td>";
+				echo "</a>";
+				echo "<span style='".$background_color." padding: 4px;'>";
+				echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
+				echo "<span style='margin-left: 5px; min-width: $width; vertical-align:middle; display: inline-block;'>".$name."</span>";
+				echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
+				echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
+				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
+				echo "<span style='margin-left: 15px; min-width: 200px; display: inline-block;'>".$time_used."</span>";
+				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".__('New').": ".$launch_icons."</span>";
+				echo "</span>";
 			} else {
 				
 				// Task name
 				$name = safe_output($task['name']);
-				
+				if ($name == 'Task1')
+					debugPrint($countRows,true);
+					
 				if (strlen($name) > 60) {
 					$name = substr ($name, 0, 60) . "...";
 					$name = "<div title='".safe_output($task['name'])."'>".$name."</a>";
@@ -318,37 +305,73 @@ if (defined ('AJAX')) {
 				// Branches
 				$branches_json = json_encode ($branches_aux);
 				
-				echo "<td><a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+				echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\")'>";
 				echo "<script type=\"text/javascript\">
-						  $(document).ready (function () {
-							  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\");
-						  });
+						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\");
 					  </script>";
 				echo $img;
-				echo "</a></td>";
-				echo "<td><span title='".__('You are not assigned to this task')."></span><td>";
-				echo "<td>".$priority."</td>";
-				echo "<td>".$name."</td>";
+				echo "</a>";
+				echo "<span title='".__('You are not assigned to this task')."' style='padding: 4px;'>";
+				echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
+				echo "<span style='color: #D8D8D8; margin-left: 5px; display: inline-block;'>".$name."</span>";
+				echo "</span>";
 				
 			}
 			
-			echo "</tr>";
-		echo "<tr><td colspan = '9' hiddenDiv='1' loadDiv='0' style='display: none;' class='sublisting tree_view tree_div_".$task['id']."' id='tree_div".$task['id']."_task_".$task['id']."'></td></tr>";
-		echo "</table>";
+			echo "<div hiddenDiv='1' loadDiv='0' style='display: none; margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$id_item."_task_".$task['id']."'></div>";
+			echo "</li>";
 		}
 		
 		// WORK ORDERS
 		$new = true;
 		$count = 0;
-		echo "<table>";
 		
 		while ($wo = get_db_all_row_by_steps_sql($new, $result, $sql_wo)) {
 			
 			$new = false;
 			$count++;
+			echo "<li style='margin: 0; padding: 0;'>";
+			echo "<span style='display: inline-block;'>";
+			
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+				}
+			}
+			
+			if ($count < $countWOs || $countIncidents > 0) {
+				$img = print_image ("images/tree/leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
+			} else {
+				$img = print_image ("images/tree/last_leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
+			}
+			
+			// Background color
+			if ($wo["progress"] == 0 && $wo["end_date"] != "0000-00-00 00:00:00") {
+				if ($wo["end_date"] < date('Y-m-d H:i:s')) {
+					$background_color = "background: #fff0f0;";
+				}
+			} elseif ($wo["progress"] == 1) {
+				$background_color = "background: #f0fff0;";
+			} elseif ($wo["progress"] == 2) {
+				$background_color = "background: #f0f0ff;";
+			} else {
+				$background_color = "";
+			}
 			
 			// WO icon
-			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work Unit')));
+			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_task=" . 
+							$id_item."&id_workunit=".$wo['id']."'>" . 
+								print_image ("images/paste_plain.png", 
+									true, array ("style" => 
+									'vertical-align: middle;', 
+									"id" => "wo_icon", 
+									"title" => __('Work unit'))) . 
+						"</a>";
+			
+			// Priority
+			$priority = print_priority_flag_image ($wo['priority'], true);
 			
 			// WO name
 			$name = safe_output($wo['description']);
@@ -377,12 +400,17 @@ if (defined ('AJAX')) {
 			}
 			
 			
-			echo '<tr>';
-				//~ echo "<span style='".$background_color." padding: 4px;'>";
-				echo "<td>".$wo_icon."</td>";
-				echo "<td>".$name."</td>";
-				echo "<td>".__('Owner').": <b>".$owner."</b></td>";
-			echo '</tr>';
+			echo $img;
+			echo "<span style='".$background_color." padding: 4px;'>";
+			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
+			echo "<span style='margin-left: 4px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 5px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Owner').":</small> <b>".$owner."</b></span>";
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Time used ').":</small> <b>".$wo['duration']."</b></span>";
+			echo "</span>";
+			echo "</li>";
 		}
 		
 		// INCIDENTS
@@ -393,7 +421,23 @@ if (defined ('AJAX')) {
 			
 			$new = false;
 			$count++;
-		
+			echo "<li style='margin: 0; padding: 0;'>";
+			echo "<span style='display: inline-block;'>";
+			
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+				}
+			}
+			
+			if ($count < $countIncidents) {
+				$img = print_image ("images/tree/leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
+			} else {
+				$img = print_image ("images/tree/last_leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
+			}
+			
 			// Background color
 			if ($incident["estado"] < 3) {
 				$background_color = "background: #FFDAD3;";
@@ -429,34 +473,41 @@ if (defined ('AJAX')) {
 			// Owner
 			$owner = safe_output($incident['id_usuario']);
 			if (strlen($owner) > 10) {
-				$owner = substr ($owner, 0, 10);
+				$owner = "<div style='display: inline-block;' title='".safe_output($incident['id_usuario'])."'>".substr ($owner, 0, 10)."...</div>";
 			}
 			
 			// Submitter
 			$submitter = safe_output($incident['id_creator']);
 			if (strlen($submitter) > 10) {
-				$submitter = substr ($submitter, 0, 10);
+				$submitter = "<div style='display: inline-block;' title='".safe_output($incident['id_creator'])."'>".substr ($submitter, 0, 10)."...</div>";
 			}
 			
 			// Status
 			$status = get_db_value("name", "tincident_status", "id", $incident['estado']);
 			if (strlen($status) > 10) {
-				$status = substr ($status, 0, 10);
+				$status = "<div style='display: inline-block;' title='$status'>".substr ($status, 0, 10)."...</div>";
 			}
-			echo '<tr>';
-				
-				//~ echo "<span style='".$background_color." padding: 4px;' class='red'>";
-				echo "<td>".$incident_icon."</td>";
-				echo "<td>".$priority."</td>";
-				echo "<td>".$name."</td>";
-				echo "<td>".__('Owner').":<b>".$owner."</b></td>";
-				echo "<td>".__('Creator').":<b>".$submitter."</b></td>";
-				if ($status) {
-					echo "<td>".__('Status').":<b>".$status."</b></td>";
-				}
-			echo '</tr>';
+			
+			echo $img;
+			echo "<span style='".$background_color." padding: 4px;' class='red'>";
+			echo "<span style='vertical-align:middle; display: inline-block;'>".$incident_icon."</span>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 5px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Owner').":</small> <b>".$owner."</b></span>";
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Creator').":</small> <b>".$submitter."</b></span>";
+			if ($status) {
+				echo "<span style='margin-left: 5px; vertical-align:middle; display: inline-block;'><small>"
+					.__('Status').":</small> <b>".$status."</b></span>";
+			}
+			echo "</span>";
+			echo "</span>";
+			echo "</li>";
 		}
-		echo '</table>';
+
+		echo "</ul>";
+		
 		return;
 	}
 }
@@ -520,8 +571,10 @@ $search_text = (string) get_parameter ('search_text', '');
 
 echo '<h2>'.__('Task management').'</h2>';
 echo '<h4>'.$project['name'];
-	if (!$clean_output) {
-		$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_text=$search_text", __("Report"));
+	if (!$pure) {
+		$attr = array();
+		$attr["pure"] = 1;
+		$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project", __("Report"), '', $attr);
 		if ($html_report_image) {
 			echo "<div id='button-bar-title'>";
 				echo "<ul>";
@@ -532,6 +585,16 @@ echo '<h4>'.$project['name'];
 			echo "</div>";
 		}
 	 }
+	 else {
+		 echo "<div id='button-bar-title'>";
+		echo "<ul>";
+		echo '<li class="ui-tabs">';
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to task list")))."</a>";
+		echo '</li>';
+		echo "</ul>";
+		echo "</div>";
+	 }
+		
 echo '</h4>';
 
 $where_clause = ' 1=1 ';

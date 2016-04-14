@@ -175,7 +175,7 @@ if (isset($_GET["update2"])){
 
 
 if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
+	if (isset($_GET["create"])) {
 		
 		// CREATE form
 		if  (!give_acl($config["id_user"], 0, "KW")) {
@@ -271,18 +271,21 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "<input type=text size=60 name='attach_description' value=''>";
 		}
 	}
-	if ($id == -1)
-		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
-	else
-		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
+	
 
 	echo "</table>";
+	
+	if ($id == -1)
+		echo "<div class='button-form'>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</div>";
+	else
+		echo "<div class='button-form'>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</div>";
+
 	echo "</form>";
 
 	// Show list of attachments
 	$sql1 = "SELECT * FROM tattachment WHERE id_kb = $id ORDER BY description";
 	$result = mysql_query($sql1);
-	if (mysql_num_rows($result) > 0){
+	if (mysql_num_rows($result) > 0) {
 		echo "<h3>".__('Attachment list')."</h3>";
 		echo '<table class="databox" width="90%">';
 	 	while ($row=mysql_fetch_array($result)){
@@ -311,8 +314,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	// Show list of items
 	// =======================
 
-	echo "<h2>".__('KB Data management')."</h2><h4>".__('Defined data')."</h4>";
-
+	echo "<h2>" . __('KB Data management') . "</h2><h4>" . __('Defined data') . "</h4>";
+	
 	// Search parameter 
 	$free_text = get_parameter ("free_text", "");
 	$product = get_parameter ("product", 0);

@@ -138,10 +138,11 @@ if ($create || $id) {
 		$button .= print_input_hidden ('update_product', 1, true);
 	}
 	
-	$table->data['button'][0] = $button;
+	//$table->data['button'][0] = $button;
 	
-	echo '<form id="form-product_type" method="post">';
+	echo '<form id="form-product_type" method="post" action="index.php?sec=kb&sec2=operation/inventories/manage_prod">';
 	print_table ($table);
+	echo "<div class='button-form'>" . $button . "</div>";
 	echo "</form>";
 }
 
@@ -156,7 +157,7 @@ if (! $id && ! $create) {
 	echo "<h4>".__('List products')."</h4>";
 	
 	echo '<div class="divform">';
-	echo '<form method="post">';
+	echo '<form method="post" action="index.php?sec=kb&sec2=operation/inventories/manage_prod" >';
 	echo '<table class="search-table">';
 	echo '<tr>';
 	echo '<td>';

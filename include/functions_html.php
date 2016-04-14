@@ -288,7 +288,10 @@ function html_print_select_from_sql ($sql, $name, $selected = '',
  * $nothing_value Value when nothing is selected
  */
 
-function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false, $disabled = false, $style='') {
+function print_select ($fields, $name, $selected = '', $script = '', 
+		$nothing = 'select', $nothing_value = '0', $return = false, 
+		$multiple = 0, $sort = true, $label = false, 
+		$disabled = false, $style='') {
 
 	$output = "\n";
 	
@@ -1405,7 +1408,7 @@ function print_autorefresh_button_ticket ($name = "autorefresh", $text = "", $re
 	
 	$html .= "<li style=''>";
 	$html .= "<a reload_enabled='0' name='$name' id='button-$name' href='javascript:' onclick='toggleAutorefresh (\"button-$name\", \"$token\", \"$form_id\")'>$text</a>";
-	$html .= "<div id='autorefresh_combo' style='float: left; display: none;margin-right: 5px;'>";
+	$html .= "<div id='autorefresh_combo' style='float: left; visibility: hidden; margin-right: 5px;'>";
 	$html .= print_select ($values, $name."_time", $selected_value, "changeAutorefreshTime ('".$name."_time', '$token')", "", "", true, 0, false, false, false, "min-width: 50px;");
 	$html .= "</div>";
 	$html .= "</li>";
@@ -1567,7 +1570,7 @@ function print_company_autocomplete_input ($parameters) {
 	}
 	
 	$html = "";
-	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title)). print_help_tip (__($help_message), $return_help);
+	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title). print_help_tip (__($help_message), $return_help));
 	$html .= print_input_hidden ($input_name, $input_value, true);
 	if ($filter) {
 		$html .= print_input_hidden ("autocomplete_".$input_name."_filter", $filter, true);

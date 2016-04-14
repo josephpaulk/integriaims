@@ -79,15 +79,16 @@ function integriaFlotPie(graph_id, values, labels, nseries, width, font_size, wa
 		$(this).css('font-size', font_size+'pt');
 	});
 	
-	if (height > 200) {
-		$('#'+graph_id+' .legend>div').css('right',( ( height -100) * -1));
-		$('#'+graph_id+' .legend>table').css('right',( (height -100) * -1));
-	}
-	else {
-		$('#'+graph_id+' .legend>div').css('right',( ( height) * -1));
-		$('#'+graph_id+' .legend>table').css('right',( (height) * -1));
-	}
-	
+	//~ if (height > 150) {
+		//~ $('#'+graph_id+' .legend>div').css('right',( ( height -100) * -1));
+		//~ $('#'+graph_id+' .legend>table').css('right',( (height -100) * -1));
+	//~ }
+	//~ else {
+		//~ $('#'+graph_id+' .legend>div').css('right',( ( height) * -1));
+		//~ $('#'+graph_id+' .legend>table').css('right',( (height) * -1));
+	//~ }
+	$('#'+graph_id+' .legend>div').css('right', -100 );
+	$('#'+graph_id+' .legend>table').css('right', -100);
 	// Events
 	$('#' + graph_id).bind('plothover', pieHover);
 	$('#' + graph_id).bind('plotclick', pieClick);

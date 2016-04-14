@@ -5,7 +5,9 @@
 
 */
 
+/*
 @import url(integria_tip.css);
+*/
 @import url(calendar.css);
 @import url(fixed-bottom-box.css);
 
@@ -292,13 +294,14 @@ table.listing {
 
 table.listing th {
 	background-color: #F7F7F7;
-	font: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 	font-size: 13px;
     padding-left: 15px;
 	padding-right: 15px;
 	padding-top: 8px;
 	padding-bottom: 8px;
 	margin-left: 5px;
+	font-weight: bold;
+	color: #555;
 }
 
 table.listing .head_clickleft {
@@ -328,6 +331,10 @@ table.listing td {
 	padding-right: 0px;
 	padding-top: 8px;
 	padding-bottom: 8px;
+}
+
+table.listing td img{
+	vertical-align: middle;
 }
 
 table.listing tbody.container_div td{
@@ -556,6 +563,9 @@ input[type="text"] {
 
 input[type="file"] {
 	background: #FFF;
+	font-size: 0.5em;
+	width: 100%;
+	margin-top: 10px;
 }
 
 textarea {
@@ -2153,7 +2163,7 @@ div.divform table.search-table input[type="button"]{
 .button-form input[type="submit"],
 .button-form input[type="button"] {
 	border-radius: 3px;
-    font-size: 13px;
+    font-size: 10px;
 	padding-left: 0px;
     color: white;
     background: #FF9000;
@@ -2738,6 +2748,8 @@ p.pagination {
 .fileupload_form ul li #input-progress {
 	left: 68px;
     position: absolute;
+    font-size: 10px !important;
+    margin-left: -39px !important;
 }
 
 .fileupload_form ul li p {
@@ -2755,7 +2767,7 @@ p.pagination {
     font-weight: normal;
     font-style:normal;
     color:#7f7f7f;
-    display:block;
+	margin-left: 15px;
 }
 
 /*.fileupload_form ul li canvas {
@@ -3453,6 +3465,7 @@ ul li {
 	padding: 0px;
 	position: absolute;
 	top: 34px;
+	z-index: 999;
 }
 
 .support_submenu li,
@@ -3551,6 +3564,23 @@ ul li {
 	padding-left: 15px;
 	padding-right: 15px;
 }
+
+.legend {
+	float:left;
+	width:190px;
+}
+.legend_text {
+	float:left;
+	line-height:15px;
+	margin-left: 5px;
+}
+.legend_box_color {
+	 float:left;
+	 height:20px;
+	 width:20px;
+}
+
+/* End comments */
 
 /*css inventories*/
 #inventory_only_table{
@@ -3655,5 +3685,3 @@ img#inventory_loading{
 	display:block;
     margin:auto;
 }
-
-/* End comments */

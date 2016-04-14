@@ -7,8 +7,8 @@
  * branches_json json string with a boolean array of branches
  * id_father int use in js and ajax php, its useful when you have a two subtrees with same agent for diferent each one
  */
-/*
-function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_search) {
+
+function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_search, orden_tree) {
 	
 	// Content div
 	var div = $('#tree_div'+id_father+'_task_'+div_id);
@@ -35,7 +35,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 			type: "POST",
 			url: "ajax.php",
 			data: "page=operation/projects/task&print_subtree=1&id_project=" + id_project
-			+ "&id_item=" + div_id + "&branches_json=" + branches_json + "&sql_search=" + sql_search,
+			+ "&id_item=" + div_id + "&branches_json=" + branches_json + "&sql_search=" + sql_search + '&orden_tree=' + (orden_tree + 1),
 			success: function(msg) {
 				if (msg.length != 0) {
 					
@@ -117,7 +117,8 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 		}
 	}
 }
-*/
+
+/*
 function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_search) {
 	
 	var div = $('#tree_div'+id_father+'_task_'+div_id);
@@ -167,7 +168,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 		}
 	}
 }
-
+*/
 function get_gantt_data (id_project, show_actual, scale) {
 	show_actual = show_actual || 0;
 	scale = scale || "month";

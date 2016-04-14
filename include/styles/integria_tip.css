@@ -1,6 +1,6 @@
 a.tip, a.tip2, a.tipp {
 	cursor: help;
-	background: url(../../images/tip.png) no-repeat;
+	background: url(../../images/informacion.png) no-repeat;
 	margin-left: 3px;
 }
 
@@ -20,7 +20,7 @@ a.tip_view {
 }
 
 a.tip , a.tip2, a.tip_people, a.tip_info, a.tip_view {
-	padding: 5px 2px 5px 12px;
+	padding: 10px 2px 5px 12px;
 }
 a.tipp {
 	padding: 2px 2px 2px 12px;

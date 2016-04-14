@@ -148,7 +148,7 @@ if ($delete_group) {
 			
 			// Name
 			$data[0] = '<img src="images/project_groups_small/'.$group["icon"].'" /> ';
-			$data[0] .= '<a href=index.php?sec=projects&sec2=operation/projects/project_group_detail&id='.$group["id"]."'>".$group["name"]."</a>";
+			$data[0] .= '<a href="index.php?sec=projects&sec2=operation/projects/project_group_detail&id='.$group["id"].'">'.$group["name"]."</a>";
 			
 			$data[1] = '<a href="index.php?sec=projects&
 						sec2=operation/projects/project_group_detail&

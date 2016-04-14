@@ -47,28 +47,30 @@ if (! $task_permission["write"]) {
 	no_permission();
 }
 
-echo "<h2><img src='images/disk.png'>&nbsp;" . __('Upload file');
+echo "<h2>" . __('Upload file');
 echo "<h4>" . __('Task').": ".$task_name."</h4>";
 
 echo "<div class='divform' id='upload_control'>";
+echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile' enctype='multipart/form-data' >";
 echo "<table cellpadding=4 cellspacing=4 border=0 width='20%' class='search-table'>";
 echo "<tr>";
 echo '<td class="datos"><b>'.__('Filename') . "</b>";
 
-$action = "index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile";
+$action = "";
 
 $into_form = '';
-//~ $into_form .=  '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
+$into_form .=  '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
 $into_form .=  '<tr><td class="datos2"><b>'.__('Description').'</b><br><input type="text" name="file_description" size=47 style="width:255px !important;">';
 $into_form .=  "</td></tr>";
 $into_form .=  "";
-$into_form .=  '<tr><td style="text-align:center" class="datos2"><input type="button" id="button-upload" name="upload" value="'.__('Upload').'" class="">';
-$into_form .= "</form></table>";
-
+$into_form .=  '<tr><td style="text-align:center" class="datos2"><input type="submit" id="button-upload" name="upload" value="'.__('Upload').'" class="">';
+$into_form .= "</table>";
+echo $into_form;
+echo "</form>";
 // Important: Set id 'form-add-file' to form. It's used from ajax control
-print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-upload');
+//print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-upload');
 
-echo "</div>";
+//echo "</div>";
 echo '</div>';
 
 

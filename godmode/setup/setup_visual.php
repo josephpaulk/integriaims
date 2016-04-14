@@ -78,11 +78,14 @@ function get_logo_files () {
 
 $imagelist = get_logo_files ();
 
-$table->data[0][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', __('Default'), '',  true, 0, true, __('Site logo')) ;
-$table->data[0][0] .= print_help_tip(__('You can place your custom images into the folder') . ": images/custom_logos", true);
+$table->data[0][0] = print_select ($imagelist, 'site_logo', 
+		$config["site_logo"], '', __('Default'), '',  true, 0, true,
+		__('Site logo') . print_help_tip(__('You can place your custom images into the folder') . ": images/custom_logos", true));
 
-$table->data[1][0] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', __('Default'), '',  true, 0, true,  __('Header logo')) ;
-$table->data[1][0] .= print_help_tip(__('You can place your custom images into the folder') . ": images/custom_logos", true);
+$table->data[1][0] = print_select ($imagelist, 'header_logo', 
+		$config["header_logo"], '', __('Default'), '',  true, 0, true,
+		__('Header logo') . 
+		print_help_tip(__('You can place your custom images into the folder') . ": images/custom_logos", true));
 
 $backgrounds_list_jpg = list_files("images/backgrounds", "jpg", 1, 0);
 $backgrounds_list_gif = list_files("images/backgrounds", "gif", 1, 0);
@@ -90,8 +93,9 @@ $backgrounds_list_png = list_files("images/backgrounds", "png", 1, 0);
 $backgrounds_list = array_merge($backgrounds_list_jpg, $backgrounds_list_png);
 $backgrounds_list = array_merge($backgrounds_list, $backgrounds_list_gif);
 asort($backgrounds_list);
-$table->data[2][0] = print_select ($backgrounds_list, 'login_background', $config["login_background"], '', __('Default'), '',  true, 0, true,  __('Login background'));
-$table->data[2][0] .= print_help_tip(__('You can place your custom images into the folder') . ": images/backgrounds", true);
+$table->data[2][0] = print_select ($backgrounds_list, 'login_background',
+		$config["login_background"], '', __('Default'), '',  true, 0,
+		true,  __('Login background') . print_help_tip(__('You can place your custom images into the folder') . ": images/backgrounds", true));
 
 $table->data[3][0] = print_input_text ("block_size", $config["block_size"], '',
 	5, 5, true, __('Block size for pagination'));

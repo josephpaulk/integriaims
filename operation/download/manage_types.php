@@ -111,6 +111,7 @@ if ($op == "new" || $id > 0) {
 	$table->data[0][0] = print_input_text ('name', $name, '', 50, 200, true, __('Name'));
 	$files = list_files ('images/download_type/', "png", 1, true);
 	$table->data[0][1] = print_select ($files, 'icon', $icon, '', '', "", true, 0, false, __('Icon'));
+	$table->data[0][1] .= "<span id='preview_image'><img src='images/download_type/$icon' /></span>";
 	$table->data[1][0] = print_textarea ("description", 5, 40, $description,'', true, __('Description'));
 
 	echo "<form id='form-file_type' method='post' action='index.php?sec=download&sec2=operation/download/manage_types'>";
@@ -215,4 +216,8 @@ messages = {
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 
+$('#icon').change(function(){
+	var img = $(this).val();
+	$('#preview_image').html('<img src="images/download_type/'+img+'" />');
+});
 </script>

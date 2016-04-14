@@ -28,6 +28,7 @@ include_once ("include/functions_projects.php");
 $id_user = $config["id_user"];
 $operation = get_parameter ("operation");
 $id_project = get_parameter ("id_project", -1);
+$id_milestone = get_parameter ("id_milestone", 0);
 
 $project_access = get_project_access ($id_user, $id_project);
 
@@ -61,12 +62,33 @@ if ($operation == "create2") {
 	$timestamp = get_parameter ("timestamp");
 	$id_project = get_parameter ("id_project");
 	$sql_insert="INSERT INTO tmilestone (name, description, timestamp, id_project) VALUES ('$name','$description', '$timestamp', '$id_project') ";
-	$result=mysql_query($sql_insert);	
+	$result=mysql_query($sql_insert);
 	if (! $result)
 		echo "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
 	else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>"; 
 		$id_ms = mysql_insert_id();
+	}
+	
+	$operation = "";
+}
+// ---------------
+// UPDATE milestone
+// ---------------
+if ($operation == "update2") {
+	$name = get_parameter ("name");
+	$description = get_parameter ("description");
+	$timestamp = get_parameter ("timestamp");
+	$id_project = get_parameter ("id_project");
+	
+	$values = array("name" => $name, "description" => $description, "timestamp" => $timestamp, "id_project" => $id_project);
+	
+	
+	$result = process_sql_update("tmilestone",$values, "id = $id_milestone");
+	if (! $result)
+		echo "<h3 class='error'>".__('Error to update or nothing to update')."</h3>";
+	else {
+		echo "<h3 class='suc'>".__('Successfully update')."</h3>"; 
 	}
 	
 	$operation = "";
@@ -90,36 +112,59 @@ if ($operation == "delete") {
 // ---------------
 // CREATE new todo (form)
 // ---------------
-if ($operation == "create") {
+if ($operation == "create" || $operation == "update") {
 	echo "<h2>".__('Milestone')."</h2>";
-	echo "<h4>".__('Creation')."</h4>";
 	
+	if ($id_milestone) {
+		echo "<h4>".__('Update')."</h4>";
+		$milestone = get_db_row ("tmilestone", "id", $id_milestone);
+		$name = $milestone["name"];
+		$description = $milestone["description"];
+		$timestamp = explode(" ",$milestone["timestamp"]);
+		$timestamp = $timestamp[0];
+		$id_project = $milestone["id_project"];
+	}
+	else {
+		echo "<h4>".__('Creation')."</h4>";
+		$name = '';
+		$description = '';
+		$timestamp = date("Y-m-d");
+		$id_project = '';
+	}
 	echo '<table class="search-table-button"  width="100%">';
-	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
+	if ($id_milestone)
+		echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&id_milestone='.$id_milestone.'&operation=update2">';
+	else
+		echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
 	echo "<tr><td class='datos'><b>".__('Name') . "</b>";
-	echo "<td class='datos'><input name='name' size=40>";
+	echo "<td class='datos'><input name='name' size=40 value='$name'>";
 	
 	echo "<tr><td class='datos2'><b>".__('Timestamp') . "</b>";
 	echo "<td class='datos2'>";
-    $ahora_date = date("Y-m-d");
-	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$ahora_date'>";
+	
+	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$timestamp'>";
 
 	echo "<tr><td class='datos' valign='top'><b>".__('Description') . "</b>";
 	echo "<td class='datos'><textarea name='description' style='width:95%; height:100px'>";
-	echo "</textarea>";
-    $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
+	echo $description . "</textarea>";
+	echo "</table>";
+	
+	$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
-	    echo "<tr><td align='right' colspan=2>";
+	    echo "<div  class='button-form' >";
 
 	    echo "<input type=hidden name='id_project' value='$id_project'>";
-	    echo "<input name='crtbutton' type='submit' class='sub create' value='".__('Create')."'>";
+	    if ($id_milestone)
+			echo "<input name='crtbutton' type='submit' class='sub upd' value='" . __('Update') . "'>";
+		else
+			echo "<input name='crtbutton' type='submit' class='sub create' value='" . __('Create') . "'>";
+			
+		echo "</div>";
     }
-    else {
-		echo "<tr><td></td></tr>";
-	}
-	echo "</table>";
+    
+	
 	echo '</form>';
 }
 
@@ -129,28 +174,20 @@ if ($operation == "create") {
 if ($operation == ""){
 	echo "<h2>".__('Milestones')."</h2>";
 	echo "<h4>".__('Management')."</h4>";
+	
 	echo "<div class='divresult' >";
 	echo "<table class='listing' width=100%>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');
 	echo "<th>".__('Timestamp');
 	if ($project_access['write']) {
-		echo "<th>".__('Delete');
+		echo "<th>".__("OP");
 	}
 	$color=1;
 	$sql1="SELECT * FROM tmilestone WHERE id_project = $id_project";
 	if ($result=mysql_query($sql1))
 		while ($row=mysql_fetch_array($result)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-				$tip = "tip";
-			}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-				$tip = "tip2";
-			}
+			
 			echo "<tr><td class='$tdcolor'>";
 			echo $row["name"];
 			
@@ -163,7 +200,9 @@ if ($operation == ""){
 			// DELETE
 			if ($project_access['write']) {
 				echo '<td class="'.$tdcolor.'">';
+				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=update&id_milestone='.$row["id"].'"><img border=0 src="images/editor.png"></a>';
 				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
+				
 			}
 			
 		}

@@ -257,6 +257,7 @@ if (ip_acl_check ($ip_origin)) {
 	}
 }
 
+$minor_release_message = false;
 $custom_screen_loaded = false;
 if ($is_enterprise) {
 	$custom = get_db_value_sql('SELECT id FROM tcustom_screen WHERE home_enabled=1');
@@ -320,7 +321,8 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 		echo '<body class="login">';
 		require_once ('general/login_page.php');
 		exit;
-	} else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
+	}
+	else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
 		unset ($_GET["sec2"]);
 
 		if ($custom_screen_loaded) {
@@ -340,7 +342,8 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 
 		}
 		$minor_release_message = db_update_schema(); // MINOR RELEASES
-	} else { //login wrong
+	}
+	else { //login wrong
 		$blocked = false;
 		
 		if (!$expired_pass) {	

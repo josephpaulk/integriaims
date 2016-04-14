@@ -198,13 +198,13 @@ if ($id) {
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=projects"><span>'.__("Projects").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=projects" title="'.__("Projects").'"><img src="images/projects_tab.png"/></a></li>';
 	
 	if ($op == "files")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/files_tab.png"/></a></li>';
 	
 	/*
 	if ($op == "inventory")
@@ -218,40 +218,40 @@ if ($id) {
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices"><span>'.__("Invoices").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices" title="'.__("Invoices").'"><img src="images/invoice_dark.png"/></a></li>';
 	
 	if ($op == "leads")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=leads"><span>'.__("Leads").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=leads" title="'.__("Leads").'"><img src="images/leads_tab.png"/></a></li>';
 	
 	if ($op == "contracts")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts"><span>'.__("Contracts").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts" title="'.__("Contracts").'"><img src="images/contracts_tab.png"/></a></li>';
 	
 	if ($op == "contacts")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contacts"><span>'.__("Contacts").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contacts" title="'.__("Contacts").'"><img src="images/groups_small/system-users.png"/></a></li>';
 
 	if ($op == "activities")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities"><span>'.__("Activity").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities" title="'.__("Activity").'"><img src="images/details_tab.png"/></a></li>';
 	
 	if ($op == "")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'"><span>'.__("Company details").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'" title="'.__("Company details").'"><img src="images/list_view.png"/></a></li>';
 	
 	echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail"><span>'.__("Search").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail" title="'.__("Back to list").'"><img src="images/volver_listado.png"/></a></li>';
 		
 	echo '</ul>';
 	 
@@ -327,13 +327,15 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	if ($id > 0 && ($write_permission || $manage_permission)) {
 		$table->data[0][0] .= "&nbsp;<a href='#' onClick='javascript: show_validation_delete(\"delete_company\",".$id.",0,0);' title='".__('Delete company')."'><img src='images/cross.png'></a>";
 	}
-
-
-	$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 18, 30, $disabled_write, '',
-	array(), true, '', __('Manager'));
+	
+	$help_tip = '';
 	if (!$disabled_write) {
-		$table->data[0][1] .= print_help_tip (__("Type at least two characters to search"), true);
+		$help_tip = print_help_tip (__("Type at least two characters to search"), true);
 	}
+	
+	$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 18, 30, $disabled_write, '',
+	array(), true, '', __('Manager') . $help_tip);
+	
 	
 	$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
 	

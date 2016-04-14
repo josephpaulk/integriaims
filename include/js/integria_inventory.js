@@ -773,8 +773,8 @@ function show_user_associated() {
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 520,
-					height: 350
+					width: 300,
+					height: 150
 				});
 			$("#user_search_modal").dialog('open');
 			

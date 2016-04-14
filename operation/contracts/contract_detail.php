@@ -125,14 +125,14 @@ if ($id_contract) {
 	else
 		echo '<li class="ui-tabs">';
 
-	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id_contract.'&id_contract='.$id_contract.'&id_company='.$id_company.'&contract_number='.$contract_number.'&op=invoices"><span>'.__("Invoices").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id_contract.'&id_contract='.$id_contract.'&id_company='.$id_company.'&contract_number='.$contract_number.'&op=invoices" title="'.__("Invoices").'"><img src="images/invoice_dark.png"/></a></li>';
 	
 	if ($op == "")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
 
-	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$id_contract.'"><span>'.__("Contract management").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$id_contract.'" title="'.__("Contract management").'"><img src="images/inventory_tab.png"/></a></li>';
 	
 		
 	echo '</ul>';
@@ -477,7 +477,8 @@ elseif ($op == "") {
 			$description = "";
 			$private = 0;
 			$status = 1;
-		} else {
+		}
+		else {
 			
 			if (!$read_permission && !$write_permission && !$manage_permission) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
@@ -517,7 +518,7 @@ elseif ($op == "") {
 
 			$table->data[0][1] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
 			$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
-			$table->data[1][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);		
+			$table->data[1][1] = print_checkbox ('private', '1', $private, true, __('Private'). print_help_tip (__("Private contracts are visible only by users of the same company"), true));		
 				
 			$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 			$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
@@ -1064,7 +1065,7 @@ function form_upload () {
 
 	function addListItem (progress, filename, filesize) {
 		var tpl = $('<li>'+
-						'<input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
+						'<input type="text" id="input-progress" value="0" data-width="65" data-height="65"'+
 						' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" />'+
 						'<p></p>'+
 						'<span></span>'+

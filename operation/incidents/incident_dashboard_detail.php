@@ -618,7 +618,8 @@ if (!$pure) {
 			return;
 		}
 	}
-} else {
+}
+else {
 	
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
@@ -678,7 +679,7 @@ else {
 	}
 
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
-			'&tab=contacts#incident-operations"><img src="images/" title="'.__('Contacts').'"/></a>';
+			'&tab=contacts#incident-operations"><img src="images/groups_small/system-users.png" title="'.__('Contacts').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "inventory") {

@@ -717,16 +717,16 @@ if ($id || $new) {
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/files_tab.png"/></a></li>';
 		
 		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'"><span>'.__("Company").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'" title="'.__("Company").'"><img src="images/groups_small/house.png"/></a></li>';
 		
 		if ($op == "forward")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=forward"><span>'.__("Forward lead").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=forward" title="'.__("Forward lead").'"><img src="images/email_dark.png"/></a></li>';
 		
 		// Show mail tab only on owned leads
 		$lead_owner = get_db_value ("owner", "tlead", "id", $id);
@@ -736,29 +736,29 @@ if ($id || $new) {
 				echo '<li class="ui-tabs-selected">';
 			else
 				echo '<li class="ui-tabs">';
-			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=mail"><span>'.__("Mail reply").'</span></a></li>';
+			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=mail" title="'.__("Mail reply").'"><img src="images/email_edit.png"/></a></li>';
 		}
 		
 		if ($op == "history")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=history"><span>'.__("Tracking").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=history" title="'.__("Tracking").'"><img src="images/list_view.png"/></a></li>';
 
 		if ($op == "activity")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=activity" title="'.__("Activity").'"><img src="images/eye.png"/></a></li>';
 		
 		if ($op == "")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'"><span>'.__("Lead details").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'" title="'.__("Lead details").'"><img src="images/leads_tab.png"/></a></li>';
 
 		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search"><span>'.__("Search").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search" title="'.__("Back to list").'"><img src="images/volver_listado.png"/></a></li>';
 				
 		echo '</ul>';
 		echo '</h4>';

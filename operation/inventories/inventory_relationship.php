@@ -90,8 +90,8 @@ if ($all_links == false) {
 	$all_links = array();
 }
 
-$table->width = '99%';
-$table->class = 'search-table';
+$table->width = '100%';
+$table->class = 'listing';
 $table->data = array ();
 $table->head = array();
 $table->style = array();

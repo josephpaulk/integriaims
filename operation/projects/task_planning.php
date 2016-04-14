@@ -148,17 +148,17 @@ if ($update) {
 
 //Create a new task
 if ($create) {
-
+	
 	$tasklist = get_parameter ("tasklist");
-
+	
 	// Massive creation of tasks
 	if ($tasklist != "") {
 
 		$tasklist = safe_output ($tasklist);
 
 		$parent = (int) get_parameter ('padre');
-		$start = get_parameter ('start_date2', date ("Y-m-d"));
-		$end = get_parameter ('end_date2', date ("Y-m-d"));
+		$start = get_parameter ('start_date', date ("Y-m-d"));
+		$end = get_parameter ('end_date', date ("Y-m-d"));
 		$owner = get_parameter('dueno');
 		
 		if ($parent) {
@@ -170,7 +170,8 @@ if ($create) {
 					no_permission ();
 				}
 			}
-		} else {
+		}
+		else {
 			$project_access = get_project_access ($config["id_user"], $id_project);
 			if (!$project_access["manage"]) {
 				audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to create tasks in an unauthorized project");
@@ -179,8 +180,10 @@ if ($create) {
 		}
 		
 		$data_array = preg_split ("/\n/", $tasklist);
+		
 		foreach ($data_array as $data_item){
 			$data = trim($data_item);
+			
 			if ($data != "") {
 				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_parent_task, start, end) 
 								VALUES (%d, "%s", %d, "%s", "%s")',
@@ -199,11 +202,11 @@ if ($create) {
 									VALUES ("%s", %d, %d)', $owner, $role, $id_task);
 
 					$result2 = process_sql($sql);
-					
 					if (! $result2) {
 						echo "<h3 class='error'>".__('An error ocurred setting the permissions for the task '.$data)."</h3>";
 					}
-				} else {
+				}
+				else {
 					echo "<h3 class='error'>".__('The task '.$data.' could not be created')."</h3>";
 				}
 
@@ -292,7 +295,8 @@ echo "<table class='search-table'>";
 	
 	//Create button
 	echo "<tr><td colspan='2'>";
-		print_submit_button (__('Create'), 'create', false);
+		print_input_hidden ('create', 1);
+		print_submit_button (__('Create'), '', false);
 	echo "</td></tr>";
 echo "</table>";
 echo "</form>";

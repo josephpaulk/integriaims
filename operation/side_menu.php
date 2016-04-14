@@ -256,20 +256,20 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 					echo "<li>";
 				echo "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task'>".__('Add workunit')."</a></li>";
 
-				// Add task file
-				if ($sec2 == "operation/projects/task_attach_file")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
+				//~ // Add task file
+				//~ if ($sec2 == "operation/projects/task_attach_file")
+					//~ echo "<li id='sidesel'>";
+				//~ else
+					//~ echo "<li>";
+				//~ echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
 				
 				$operation = get_parameter ('operation', '');
-				// Add task cost
-				if ($sec2 == "operation/projects/task_cost" && $operation != "list")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task'>".__('Add cost unit')."</a></li>";
+				//~ // Add task cost
+				//~ if ($sec2 == "operation/projects/task_cost" && $operation != "list")
+					//~ echo "<li id='sidesel'>";
+				//~ else
+					//~ echo "<li>";
+				//~ echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task'>".__('Add cost unit')."</a></li>";
 
 				// Vist task costs
 				if ($sec2 == "operation/projects/task_cost" && $operation == "list")
@@ -487,7 +487,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 					echo "<li id='sidesel'>";
 				else
 					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__("Ticket Management")."</a></li>";
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__("Ticket Types")."</a></li>";
 			echo "</ul>";
 			echo "</li>";
 			
@@ -1405,22 +1405,22 @@ else
 				echo "<div style='clear:both; margin-bottom: 10px;'></div>";
 			echo '</div>';
 			// Link to workunit calendar (month)
-			echo '<a style="margin-right:10px;" href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
-			echo '<img src="images/workunit_report27.png" title="'.__('Workunit report').'" /></a>';
+			echo '<a style="margin-right:5px;" href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
+			echo '<img src="images/workunit_report27.png" title="'.__('Workunit report').'" style="width: 24px;"/></a>';
 
 			if (give_acl ($config["id_user"], 0, "IR")) {
 				echo "&nbsp;";
-				echo "<a style='margin-right:10px;'  href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
-				echo '<img src="images/tickets27.png" title="'.__('My tickets').'"></a>';
+				echo "<a style='margin-right:5px; '  href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$config['id_user']."'>";
+				echo '<img src="images/tickets27.png" title="'.__('My tickets').'" style="width: 24px;"></a>';
 			}
 			if (give_acl ($config["id_user"], 0, "PR")) {
 				// Link to Work user spare inster
-				echo '<a style="margin-right:10px;" href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
-				echo '<img src="images/workunit27.png" title="'.__('Workunit').'"></a>';
+				echo '<a style="margin-right:5px;" href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
+				echo '<img src="images/workunit27.png" title="'.__('Workunit').'"  style="width: 24px;"></a>';
 
 				// Link to User detailed graph view
-				echo '<a style="margin-right:13px;" href="index.php?sec=users&sec2=operation/user_report/report_full&user_id='.$config['id_user'].'">';
-				echo '<img src="images/fullgraphsreport27.png" title="'.__('Full graph report').'"></a>';
+				echo '<a style="margin-right:5px;" href="index.php?sec=users&sec2=operation/user_report/report_full&user_id='.$config['id_user'].'">';
+				echo '<img src="images/fullgraphsreport27.png" title="'.__('Full graph report').'"  style="width: 24px;"></a>';
 
 				// Week Workunit meter
 				$begin_week = week_start_day ();
@@ -1435,13 +1435,13 @@ else
 				$week_hours = get_db_sql ($sql);
 				$ratio = $week_hours." ".__('over')." ".$total_hours;
 				if ($week_hours < $total_hours)
-					echo '<img src="images/exclamacion27.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
+					echo '<img src="images/exclamacion27.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" style="width: 24px;"/>';
 				else
-					echo '<img src="images/ok27.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+					echo '<img src="images/ok27.png" title="'.__('Week workunit are fine').' - '.$ratio.'"  style="width: 24px;">';
 				
 				//echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
-				echo "<br>";
-				echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment'>".__( "My task assigments")."</a>";		
+				echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment'>
+							<img src='images/tareas_asignadas.png' title='".__( "My task assigments")."' style='width: 24px;' /></a>";		
 			}
 			// Div for the calendar entry
 			echo "<div class='dialog ui-dialog-content' id='agenda_entry'></div>";
