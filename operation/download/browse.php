@@ -527,11 +527,12 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 				} else {
 					$data[0] = "<a title='".$row["description"]."' href='".$config["base_url"].$row['location']."' download>";
 				}
-				$data[0] .= $row["name"]."</a>";
+				$data[0] .= $row["name"];
 				if ($row["description"] != ""){
 					$data[0] .=  " <img src='images/informacion.png'>";
 				}
-
+				$data[0] .= "</a>";
+				
 				// Size
 				$data[1] = format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
 

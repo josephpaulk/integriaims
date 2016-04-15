@@ -93,7 +93,8 @@ if ($read_permission === ENTERPRISE_NOT_HOOK) {
 	$read_permission = true;
 	$write_permission = true;
 	$manage_permission = true;
-} else {
+}
+else {
 	if (!$read_permission && $id) {
 		include ("general/noaccess.php");
 		exit;
@@ -106,7 +107,8 @@ if (!defined ('AJAX')) {
 	if (!$id) {
 		echo "<h2>".__('Create')."</h2>";
 		echo "<h4>".__('Inventory object')."</h4>";
-	} else if ($inventory_name) {
+	} 
+	elseif ($inventory_name) {
 		//**********************************************************************
 		// Tabs
 		//**********************************************************************
@@ -562,7 +564,8 @@ if ($id) {
 
 if ($id && !$inventory_name) {
         echo '<h3 class="error">'.__("The inventory object doesn't exist")."</h3>";
-} else {
+}
+else {
 
 	$table->class = 'search-table-button';
 	$table->width = '100%';

@@ -1735,7 +1735,7 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name, $manage_permi
 	echo '<li class="' . $contacts_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '" title='.__('Contacts').'><img src="images/groups_small/system-users.png"/></a></li>';
 	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '" title='.__('Tickets').'><img src="images/tickets_tab.png"/></a></li>';
 	echo '<li class="' . $relationship_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '" title='.__('Relationships').'><img src="images/groups_small/chart_organisation.png"/></a></li>';
-	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '" title='.__('Details').'><img src="images/search_tab.png"/></a></li>';
+	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '" title='.__('Details').'><img src="images/eye.png"/></a></li>';
 	echo '<li><a href="index.php?sec=inventory&sec2=operation/inventories/inventory" title='.__('Back to list').'><img src="images/volver_listado.png"/></a></li>';
 	echo '</ul>';
 	
