@@ -114,7 +114,6 @@ if ($operation == "delete") {
 // ---------------
 if ($operation == "create" || $operation == "update") {
 	echo "<h2>".__('Milestone')."</h2>";
-	
 	if ($id_milestone) {
 		echo "<h4>".__('Update')."</h4>";
 		$milestone = get_db_row ("tmilestone", "id", $id_milestone);
@@ -129,7 +128,6 @@ if ($operation == "create" || $operation == "update") {
 		$name = '';
 		$description = '';
 		$timestamp = date("Y-m-d");
-		$id_project = '';
 	}
 	echo '<table class="search-table-button"  width="100%">';
 	if ($id_milestone)

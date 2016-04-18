@@ -517,7 +517,7 @@ function enable_table_ajax_headers(pure){
 	$('#inventory_list th').each(function (column) {
 		type_column = $('#hidden-sort_mode').val();
 		num_column = $('#hidden-sort_field').val();
-		if (column < 9) {
+		if (column == 0 || column == 1 || column == 8 || column == 7) {
 			if(!pure){
 				if (column == num_column && type_column == 'asc'){
 					$(this).addClass('sortable sorted-asc');
@@ -567,6 +567,7 @@ function ajax_headers_sort(field){
     else {
     	$('#hidden-sort_mode').val('asc');
     }
+    console.log(field_value);
     $('#hidden-sort_field').val(field_value);
     tree_search_submit();
 }
@@ -655,7 +656,6 @@ function tree_search_submit(pure){
 					event.stopPropagation();
 				});
 
-				//sort the table
 				/*
 					$("#text-search_free").keyup(function() {
 		    			tree_search_submit();
