@@ -111,7 +111,6 @@ function enviar(data, element_name, id_object_type_field, data_name) {
 
 //function to pass the clicked parameter in the modal to the input
 function loadInventory(id_inventory) {
-	
 	$('#hidden-id_parent').val(id_inventory);
 	$.ajax({
 		type: "POST",
@@ -567,7 +566,6 @@ function ajax_headers_sort(field){
     else {
     	$('#hidden-sort_mode').val('asc');
     }
-    console.log(field_value);
     $('#hidden-sort_field').val(field_value);
     tree_search_submit();
 }
