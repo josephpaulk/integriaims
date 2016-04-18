@@ -248,7 +248,7 @@ if ($id) {
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'" title="'.__("Company details").'"><img src="images/list_view.png"/></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'" title="'.__("Company details").'"><img src="images/eye.png"/></a></li>';
 	
 	echo '<li class="ui-tabs">';
 	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail" title="'.__("Back to list").'"><img src="images/volver_listado.png"/></a></li>';
