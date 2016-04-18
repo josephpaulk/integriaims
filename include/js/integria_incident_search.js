@@ -1358,7 +1358,7 @@ function setParams (id_ticket) {
 	var id_resolution = $('#incident_resolution').val();
 	var id_status = $('#incident_status').val();
 	var id_user = $('#text-owner_editor').val();
-	var id_groups = $('#incident_groups').val();
+	var id_groups = $('#grupo_form').val();
 	
 	$.ajax({
 		type: "POST",

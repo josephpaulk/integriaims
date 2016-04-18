@@ -79,11 +79,11 @@ if (isset($_GET["delete_cat"])){ // if delete
 
 	// Move parent who has this product to 0
 	mysql_query("UPDATE tkb_category SET parent = 0 WHERE parent = $id");		
-	$result=mysql_query($sql_delete);
-	if (! $result)
-		echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
+	$result = mysql_query($sql_delete);
+	if ($result)
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
 	else
-		echo "<h3 class='suc'>".__('Cannot be deteled')."</h3>";
+		echo "<h3 class='error'>".__('Cannot be deteled')."</h3>";
 }
 
 
@@ -147,7 +147,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos2>";
 	echo "<b>" . __('Parent') . "</b>";
 	echo "<td class=datos2>";
-	combo_kb_categories ( $parent);
+	combo_kb_categories ( $parent, true);
 	echo "</table>";
 	if ($id == -1)
 		echo "<div class='button-form'>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</div>";
@@ -189,28 +189,28 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			}
 			echo "<tr>";
 			// Icon
-			echo "<td class='$tdcolor' valign='top' align='center'>";
+			echo "<td class='$tdcolor'>";
 			echo "<img src='images/groups_small/".$row["icon"]."' border='0'>";
 			echo "</td>";
 			// Name
-			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&
+			echo "<td class='$tdcolor><b><a href='index.php?sec=kb&
 					sec2=operation/kb/manage_cat&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
 			// Parent
-			echo "<td class='".$tdcolor."f9' align='center' valign='top'>".get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["parent"]);
+			echo "<td class='".$tdcolor."f9'>".get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["parent"]);
 
 			// Descripcion
-			echo "<td class='".$tdcolor."f9' align='left' valign='top'>";
+			echo "<td class='".$tdcolor."f9'>";
 			echo substr($row["description"],0,55);
 			if (strlen($row["description"])> 55)
 				echo "...";
 
 
 			// Items
-			echo "<td class='".$tdcolor."f9' align='center'>";
+			echo "<td class='".$tdcolor."f9'>";
 			echo get_db_sql ("SELECT COUNT(id) FROM tkb_data WHERE id_category = ".$row["id"]);
 
 			// Delete
-			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+			echo "<td class='".$tdcolor."f9'>";
 			echo "<a href='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&
 						delete_cat=".$row["id"]."' 

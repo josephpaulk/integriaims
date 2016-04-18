@@ -61,8 +61,8 @@ echo '<h4>' . __('Management');
 echo '<ul class="ui-tabs-nav">';
 
 if (!empty($id)) {
-	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id . '"><span>'.__('Object details').'</span></a></li>';
-	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id . '"><span>'.__('Fields').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id . '" title="'.__('Object details').'"><img src="images/eye.png"/></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id . '" title="'.__('Fields').'"><img src="images/fields_tab.png"/></a></li>';
 }
 echo '</ul>';
 echo '</h2>';
