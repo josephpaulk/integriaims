@@ -27,18 +27,24 @@ $search_string = safe_input(trim(safe_output($search_string)));
 
 if ($search_string == ""){
 
-    echo "<h1>";
+    echo "<h2>";
+    echo __("Global Search");
+    echo "</h2>";
+    echo "<h4>";
     echo __("Empty search string");
-    echo "</h1>";
+    echo "</h4>";
     return;
 }
 
-echo "<h1>";
+echo "<h2>";
+echo __("Global Search");
+echo "</h2>";
 
+echo "<h4>";
 echo __("Searching for");
 echo "...";
 echo "<i> '". safe_output($search_string) ."'</i>";
-echo "</h1>";
+echo "</h4>";
 
 /* 
 
@@ -69,7 +75,8 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 		echo __("Ticket management");
 		echo "</h3>";
 		
-		$table->width = '80%';
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -116,7 +123,8 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 		echo __("Project management");
 		echo "</h3>";
 		
-		$table->width = '80%';
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -153,7 +161,8 @@ if (give_acl($config["id_user"], 0, "UM")){
 		echo __("People");
 		echo "</h3>";
 		
-		$table->width = '80%';
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -195,7 +204,8 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 		echo __("Knowledge Base");
 		echo "</h3>";
 		
-		$table->width = '80%';
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -228,7 +238,8 @@ if ( check_crm_acl('company', 'cr') && $show_inventory != MENU_HIDDEN ) {
 		echo __("Contacts");
 		echo "</h3>";
 		
-		$table->width = '80%';
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -264,8 +275,9 @@ if ( check_crm_acl ('contract', 'cr') && $show_customers != MENU_HIDDEN ) {
                 echo "<h3>";
                 echo __("Contracts");
                 echo "</h3>";
-
-                $table->width = '80%';
+				
+				$table = new StdClass();
+                $table->width = '100%';
                 $table->class = 'listing';
                 $table->data = array ();
                 $table->size = array ();
@@ -304,7 +316,8 @@ if ( check_crm_acl('company', 'cr') && $show_customers != MENU_HIDDEN ){
 		echo __("Companies");
 		echo "</h3>";
 		
-		$table->width = '80%';
+		$table = new StdClass();
+		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -337,8 +350,9 @@ if ( check_crm_acl('company', 'cr') && $show_customers != MENU_HIDDEN ){
             echo "<h3>";
             echo __("Invoices");
             echo "</h3>";
-
-            $table->width = "80%";
+			
+			$table = new StdClass();
+            $table->width = "100%";
 			$table->class = "listing";
 			$table->data = array ();
 			$table->size = array ();
@@ -400,8 +414,9 @@ if ( check_crm_acl('lead', 'cr') && $show_customers != MENU_HIDDEN ){
                 echo "<h3>";
                 echo __("Leads");
                 echo "</h3>";
-
-                $table->width = '80%';
+				
+				$table = new StdClass();
+                $table->width = '100%';
                 $table->class = 'listing';
                 $table->data = array ();
                 $table->size = array ();
@@ -472,7 +487,6 @@ if (give_acl ($config['id_user'], $id_grupo, "WR")) {
 
 }
 
-echo "<br><br>";
 echo "<strong>";
 echo "-- ";
 echo __("End of search");

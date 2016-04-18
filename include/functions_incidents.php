@@ -249,12 +249,12 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	foreach ($incidents as $incident) {
 		
 		//Check external users ACLs
-		//~ $external_check = enterprise_hook("manage_external", array($incident));
-//~ 
-		//~ if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
-			//~ continue;
-		//~ } else {
-		
+		$external_check = enterprise_hook("manage_external", array($incident));
+
+		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+			continue;
+		} else {
+
 			//Normal ACL pass if IR for this group or if the user is the incident creator
 			//or if the user is the owner or if the user has workunits
 			
@@ -262,7 +262,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			
 			if (!$check_acl)
 				continue;
-		//~ }
+		}
 		
 		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
 		
