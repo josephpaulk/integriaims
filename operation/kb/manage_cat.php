@@ -193,8 +193,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			echo "<img src='images/groups_small/".$row["icon"]."' border='0'>";
 			echo "</td>";
 			// Name
-			echo "<td class='$tdcolor><b><a href='index.php?sec=kb&
-					sec2=operation/kb/manage_cat&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
+			echo "<td class='$tdcolor'><b><a href='index.php?sec=kb&sec2=operation/kb/manage_cat&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
 			// Parent
 			echo "<td class='".$tdcolor."f9'>".get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["parent"]);
 
