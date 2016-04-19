@@ -1258,8 +1258,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			}
 			if (!$pure) {
 				if (!$modal){
-					$table->head[$i] = __('Actions');
 					if ($write_permission) {
+						$table->head[$i] = __('Actions');
 						$i = $i + 1;
 						$table->head[$i] = print_checkbox ('inventorycb-all', "", false, true);
 					}
@@ -1268,8 +1268,8 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		} else {
 			if (!$pure) {
 				if (!$modal){
-					$table->head[9] = __('Actions');
 					if ($write_permission) {
+						$table->head[9] = __('Actions');
 						$table->head[10] = print_checkbox ('inventorycb-all', "", false, true);
 					}
 				}
@@ -1409,15 +1409,19 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				array_push ($table->data, $data);
 			
 		}
-		echo '<div id= "inventory_only_table">';
-			print_table($table);
-		echo '</div>';
+		if($pure){
+			echo '<div id= "inventory_only_table">';
+		}
+		print_table($table);
+		if($pure){
+			echo '</div>';
+		}
 		if (!$pure) {
 			pagination ($count, $url_pag, $offset, true);
 			if(!$modal){
 				if ($write_permission) {	
 					echo '<div class="button-form">';
-					echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
+						echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
 					echo '</div>';
 				}
 			}
