@@ -1217,8 +1217,6 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 	$offset = get_parameter("offset", 0);	
 
 	$sql_search .= " OFFSET $offset";
-
-	debugPrint($sql_search, true);
 	
 	$inventories_aux = get_db_all_rows_sql($sql_search);
 	

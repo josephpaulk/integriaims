@@ -1358,13 +1358,12 @@ function setParams (id_ticket) {
 	var id_resolution = $('#incident_resolution').val();
 	var id_status = $('#incident_status').val();
 	var id_user = $('#text-owner_editor').val();
-	var id_groups = $('#incident_groups').val();
-	var medal_option = $('#medal_option').val();
-
+	var id_groups = $('#grupo_form').val();
+	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/incidents&set_params=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority +"&id_resolution="+id_resolution+"&id_status="+id_status+"&id_user="+id_user+"&id_groups="+id_groups+"&medal_option="+medal_option,
+		data: "page=include/ajax/incidents&set_params=1&id_ticket="+ id_ticket +"&id_priority=" + id_priority +"&id_resolution="+id_resolution+"&id_status="+id_status+"&id_user="+id_user+"&id_groups="+id_groups,
 		dataType: "text",
 		async: false,
 		success: function (data) {
