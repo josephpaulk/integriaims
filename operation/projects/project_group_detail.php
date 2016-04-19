@@ -111,8 +111,7 @@ if ($delete_group) {
 		$button = print_submit_button (__('Update'), "enviar", false, '', true);
 		$button .= print_input_hidden ('update_group', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
-		$return_a = '<a href="index.php?sec=projects&sec2=operation/projects/project_group_detail" alt="'.__('Return').'">
-		<img src= "images/go_begin.png" alt="'.__('Return').'"/></a>';
+		$return_a = '<a href="index.php?sec=projects&sec2=operation/projects/project_group_detail" alt="'.__('Return').'">'.__('Return').'</a>';
 		$table->data[4][0] = $button;
 		$table->data[5][0] = $return_a;
 	} else {

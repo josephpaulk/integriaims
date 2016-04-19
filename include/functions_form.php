@@ -954,6 +954,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$left_sla = (int)get_parameter('search_left_sla', 0);
 		$right_sla = (int)get_parameter('search_right_sla', 0);
 		$show_hierarchy = (bool) get_parameter('show_hierarchy');
+		$search_medal = get_parameter('search_medals');
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -984,6 +985,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$left_sla = (int) $filter['left_sla'];
 		$right_sla = (int) $filter['right_sla'];
 		$show_hierarchy = (bool) $filter['show_hierarchy'];
+		$search_medal = (int) $filter['medals'];
 
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
@@ -1122,6 +1124,11 @@ function form_search_incident ($return = false, $filter=false) {
 	$table_advanced->data[5][2] .= "&nbsp;<div style='display: inline-block;'>" . print_input_text ('search_right_sla', $right_sla,'', 8, 0, true, __('SLA < (%)'), false) . "</div>";
 	$table_advanced->data[5][2] .= "</div>";
 
+	$medals = array();
+	$medals[1] = __('Gold medals');
+	$medals[2] = __('Black medals');
+	$table_advanced->data[5][3] = print_select ($medals, 'search_medals', $search_medal, '', __('All'), 0, true, false, false, __('Medals'));
+	
 	$table_type_fields = new StdClass();
 	$table_type_fields->width = "100%";
 	$table_type_fields->class = "search-table";

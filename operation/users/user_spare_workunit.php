@@ -402,20 +402,23 @@ else
 	echo __("New work unit");
 echo integria_help ("user_spare_workunit", true);
 echo "<ul class='ui-tabs-nav'>";
+
+echo "<li class='ui-tabs-title'>";
+echo "</li>";
 //If single workunit update multiple addition is disabled
 if ($id_workunit) {
-	echo "<li id='tabmenu2' class='ui-tabs-disabled'>";
+	echo "<li id='tabmenu2' class='ui-tabs-disabled'><span>";
 } else {
 	
 	//If the multiple_wu_insert option was sent this tab is selected
 	if ($operation == 'multiple_wu_insert') {
-		echo "<li id='tabmenu2' class='ui-tabs-selected'>";
+		echo "<li id='tabmenu2' class='ui-tabs-selected'><span>";
 	} else {
-		echo "<li id='tabmenu2' class='ui-tabs'>";
+		echo "<li id='tabmenu2' class='ui-tabs'><span>";
 	}
 }
 	echo "<a href='#tab2' title='".__("Multiple WU")."'><img src='images/multiple_workunits_tab.png' /></a>";
-	echo "</li>";
+	echo "</span></li>";
 	
 //If the multiple_wu_insert option was sent single wu is disabled
 if ($operation == 'multiple_wu_insert') {
@@ -424,7 +427,7 @@ if ($operation == 'multiple_wu_insert') {
 	echo "<li id='tabmenu1' class='ui-tabs-selected'>";
 }
 echo "<a href='#tab1' title='".__("Single WU")."'><img src='images/workunit_tab.png' /></a>";
-echo "</li>";
+echo "</span></li>";
 echo "</ul>";
 echo "</h4>";
 echo "</div>";

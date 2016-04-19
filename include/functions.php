@@ -785,7 +785,7 @@ function get_priority_name ($priority) {
 function get_periodicities () {
 	$periodicites = array ();
 	
-	//$periodicites['none'] = __('None');
+	$periodicites['none'] = __('None');
 	$periodicites['weekly'] = __('Weekly');
 	$periodicites['15days'] = __('15 days');
 	$periodicites['monthly'] = __('Monthly');

@@ -386,6 +386,28 @@ if ($set_params) {
 	$values['id_usuario'] = get_parameter ('id_user');
 	$values['id_grupo'] = get_parameter ('id_groups');
 	$values['actualizacion'] = date('Y:m:d H:i:s');
+	$medal_option = get_parameter('medal_option', 0);
+	
+	if ($medal_option) {
+		switch ($medal_option) {
+			case 1: //Add gold medal
+				$num_gold = get_db_value('gold_medals', 'tincidencia', 'id_incidencia', $id_ticket);
+				$values['gold_medals'] = $num_gold + 1;
+			break;
+			case 2: //Remove gold medal
+				$num_gold = get_db_value('gold_medals', 'tincidencia', 'id_incidencia', $id_ticket);
+				$values['gold_medals'] = $num_gold - 1;
+			break;
+			case 3: //Add black medal
+				$num_black = get_db_value('black_medals', 'tincidencia', 'id_incidencia', $id_ticket);
+				$values['black_medals'] = $num_black + 1;
+			break;
+			case 4: //Remove black medal
+				$num_black = get_db_value('black_medals', 'tincidencia', 'id_incidencia', $id_ticket);
+				$values['black_medals'] = $num_black - 1;
+			break;
+		}
+	}
 
 	$old_incident = get_incident ($id_ticket);
 	
@@ -449,6 +471,27 @@ if ($set_params) {
 			incident_tracking ($id_ticket, INCIDENT_USER_CHANGED, $values['id_usuario']);
 		}
 		audit_db ($old_incident['id_usuario'], $config["REMOTE_ADDR"], "Ticket updated", "User ".$config['id_user']." ticket updated #".$id_ticket);
+		
+		if ($medal_option) {
+			switch ($medal_option) {
+				case 1: //Add gold medal
+					incident_tracking ($id_ticket, INCIDENT_GOLD_MEDAL_ADDED, $values['id_usuario']);
+					audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Gold medal added", "Gold medal added by user ".$config['id_user']." to the ticket #".$id_ticket);
+				break;
+				case 2: //Remove gold medal
+					incident_tracking ($id_ticket, INCIDENT_GOLD_MEDAL_REMOVED, $values['id_usuario']);
+					audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Gold medal removed", "Gold medal removed by user ".$config['id_user']." to the ticket #".$id_ticket);
+				break;
+				case 3: //Add black medal
+					incident_tracking ($id_ticket, INCIDENT_BLACK_MEDAL_ADDED, $values['id_usuario']);
+					audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Black medal added", "Black medal added by user ".$config['id_user']." to the ticket #".$id_ticket);
+				break;
+				case 4: //Remove black medal
+					incident_tracking ($id_ticket, INCIDENT_BLACK_MEDAL_REMOVED, $values['id_usuario']);
+					audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Black medal removed", "Black medal removed by user ".$config['id_user']." to the ticket #".$id_ticket);
+				break;
+			}
+		}
 	}
 }
 ?>

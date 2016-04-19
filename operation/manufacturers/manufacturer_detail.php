@@ -219,8 +219,6 @@ else {
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
-	} else {
-		echo "<h3 class='error'>".__("Empty manufacturers")."</h3>";
 	}
 	echo "</div>";
 } // end of list

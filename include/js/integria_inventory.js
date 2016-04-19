@@ -111,6 +111,7 @@ function enviar(data, element_name, id_object_type_field, data_name) {
 
 //function to pass the clicked parameter in the modal to the input
 function loadInventory(id_inventory) {
+	
 	$('#hidden-id_parent').val(id_inventory);
 	$.ajax({
 		type: "POST",
@@ -516,7 +517,7 @@ function enable_table_ajax_headers(pure){
 	$('#inventory_list th').each(function (column) {
 		type_column = $('#hidden-sort_mode').val();
 		num_column = $('#hidden-sort_field').val();
-		if (column == 0 || column == 1 || column == 8 || column == 7) {
+		if (column < 9) {
 			if(!pure){
 				if (column == num_column && type_column == 'asc'){
 					$(this).addClass('sortable sorted-asc');
@@ -654,6 +655,7 @@ function tree_search_submit(pure){
 					event.stopPropagation();
 				});
 
+				//sort the table
 				/*
 					$("#text-search_free").keyup(function() {
 		    			tree_search_submit();

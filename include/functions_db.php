@@ -929,6 +929,18 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0, $user = '
 		$description = 'Removed inventory object ';
 		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
+	case INCIDENT_GOLD_MEDAL_ADDED:
+		$description = 'Added gold medal ';
+		break;
+	case INCIDENT_GOLD_MEDAL_REMOVED:
+		$description = 'Removed gold medal ';
+		break;
+	case INCIDENT_BLACK_MEDAL_ADDED:
+		$description = 'Added black medal ';
+		break;
+	case INCIDENT_BLACK_MEDAL_REMOVED:
+		$description = 'Removed black medal ';
+		break;
 	default:
 		$description = 'Unknown update';
 		break;
