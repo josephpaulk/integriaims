@@ -1409,13 +1409,11 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 				array_push ($table->data, $data);
 			
 		}
-		if($pure){
-			echo '<div id= "inventory_only_table">';
-		}
-		print_table($table);
-		if($pure){
-			echo '</div>';
-		}
+		
+		echo '<div id= "inventory_only_table">';
+			print_table($table);
+		echo '</div>';
+		
 		if (!$pure) {
 			pagination ($count, $url_pag, $offset, true);
 			if(!$modal){

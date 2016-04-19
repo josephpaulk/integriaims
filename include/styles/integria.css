@@ -3588,7 +3588,6 @@ ul li {
 #inventory_only_table{
 	width: 100%;
 	overflow: auto;
-	width: 100%;
     border-collapse: collapse;
 }
 
