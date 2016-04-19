@@ -142,6 +142,7 @@ if ($create_mode == 0){
 	echo "<h4>"	.get_db_value ("name", "tproject", "id", $id_project); 
 
 	if (!$clean_output) {
+		echo integria_help ("project_detail", true);
 		echo "<div id='button-bar-title'>";
 			echo "<ul>";
 				echo "<li>";

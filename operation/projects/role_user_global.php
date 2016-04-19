@@ -154,6 +154,7 @@ echo '<h2>'.__('Projects').'</h2>';
 echo '<h4>'.__('Global assignment');
 if ($id_user != "")
 	echo " &raquo; ".__("For user"). " ".$id_user;
+	echo integria_help ("role_user_global", true);
 echo "</h4>";
 
 // Controls

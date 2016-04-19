@@ -41,7 +41,9 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	exit;
 }
 echo '<h2>'.__('Projects').'</h2>';
-echo '<h4>'.__('Time per project graph').'</h4>';
+echo '<h4>'.__('Time per project graph');
+echo integria_help ("user_project_time", true);
+echo '</h4>';
 echo '<div class="divform">';
 	echo "<form id='form-user_project_time_graph' method='post'>";
 		echo '<table class="search-table">';

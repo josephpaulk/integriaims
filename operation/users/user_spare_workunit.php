@@ -400,7 +400,7 @@ if ($id_task) {
 }
 else
 	echo __("New work unit");
-
+echo integria_help ("user_spare_workunit", true);
 echo "<ul class='ui-tabs-nav'>";
 //If single workunit update multiple addition is disabled
 if ($id_workunit) {

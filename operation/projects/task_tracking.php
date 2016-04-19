@@ -35,6 +35,7 @@ $sql4='SELECT * FROM ttask_track WHERE id_task= '.$id_task;
 echo "<h2>".__('Task tracking')."</h2>";
 echo "<h4>";
 echo get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
+echo integria_help ("task_tracking", true);
 echo "</h4>";
 
 echo "<table class='listing' width=630>";

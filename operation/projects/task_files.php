@@ -121,13 +121,13 @@ if ($operation == "delete") {
 	$result_output = "<h3 class='suc'>".__('File deleted')."</h3>";
 }
 
-
-
 // Specific task
 if ($id_task != -1) { 
 	$sql = "SELECT * FROM tattachment WHERE id_task = $id_task";
 	echo "<h2>".__('Attached files');
-	echo "<h4>".__('Task')." - ".$task_name."</h4>";
+	echo "<h4>".__('Task')." - ".$task_name;
+	echo integria_help ("task_files", true);
+	echo "</h4>";
 	
 	echo "<div class='divform'>";
 		echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile' enctype='multipart/form-data' >";

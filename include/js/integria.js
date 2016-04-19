@@ -23,7 +23,8 @@ function winopeng (url, wid) {
 }
 
 function integria_help(help_id) {
-	open ("general/integria_help.php?id="+help_id, "integriahelp", "width=650,height=500,status=0,toolbar=0,menubar=0,scrollbars=1,location=0");
+	console.log(help_id);
+	open ("general/integria_help.php?id="+help_id, "integriahelp", "width=770,height=500,status=0,toolbar=0,menubar=0,scrollbars=1,location=0");
 }
 
 /**

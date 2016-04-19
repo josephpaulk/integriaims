@@ -30,7 +30,9 @@ if (!$task_permission["manage"]) {
 }
 echo "<h2>".__('Move task to other project')."</h2>";
 $name_task  = get_db_value ("name", "ttask", "id", $id_task);
-echo "<h4>".__('Task'). ": " . $name_task . "</h4>";
+echo "<h4>".__('Task'). ": " . $name_task;
+echo integria_help ("task_move", true); 
+echo "</h4>";
 
 //TASK MOVE Operation
 echo "<div class='divform'>";

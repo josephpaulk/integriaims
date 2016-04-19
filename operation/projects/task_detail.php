@@ -292,6 +292,7 @@ if (!$gantt_editor) {
 		echo "</ul>";
 		echo "</div>";
 	}
+	echo integria_help ("create_task", true);
 	echo '</h4>';
 }
 else {

@@ -102,7 +102,9 @@ if ($delete_project) {
 
 if ($view_disabled) {
 	echo '<h2>'.__('Projects').'</h2>';
-	echo '<h4>'.__('Archived projects').'</h4>';
+	echo '<h4>'.__('Archived projects');
+	echo integria_help ("archieved_projects", true);
+	echo '</h4>';
 }
 else {
 	echo '<h1>'.__('Project management').'</h1>';

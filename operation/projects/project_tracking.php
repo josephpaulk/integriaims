@@ -27,7 +27,9 @@ if ($project === false || ! $project_access['read']) {
 	no_permission();
 }
 
-echo '<h2>'.__('Project tracking').' </h2><h4>'.__("Project:")." ".$project['name'].'</h4>';
+echo '<h2>'.__('Project tracking').' </h2><h4>'.__("Project:")." ".$project['name'];
+echo integria_help ("project_tracking", true);
+echo '</h4>';
 
 $trackings = get_db_all_rows_field_filter ('tproject_track', 'id_project', $id);
 

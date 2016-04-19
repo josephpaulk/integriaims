@@ -572,6 +572,7 @@ $search_text = (string) get_parameter ('search_text', '');
 echo '<h2>'.__('Task management').'</h2>';
 echo '<h4>'.$project['name'];
 	if (!$pure) {
+		echo integria_help ("task", true);
 		$attr = array();
 		$attr["pure"] = 1;
 		$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project", __("Report"), '', $attr);

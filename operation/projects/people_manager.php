@@ -198,10 +198,15 @@ if ($operation == 'insert_all') {
 echo $result_output;
 
 // MAIN PROJECT PEOPLE LIST
-if ($id_task == -1)
-	echo "<h2>".__('Project people management')." </h2><h4> ".get_db_value('name', 'tproject','id',$id_project)."</h4>";
+if ($id_task == -1){
+	echo "<h2>".__('Project people management')." </h2><h4> ".get_db_value('name', 'tproject','id',$id_project);
+	echo integria_help ("people_manager", true);
+	echo "</h4>";
+}
 else
-	echo "<h2>".__('Task human resources management')." </h2><h4> ".get_db_value('name', 'ttask','id',$id_task)."</h4>";
+	echo "<h2>".__('Task human resources management')." </h2><h4> ".get_db_value('name', 'ttask','id',$id_task);
+	echo integria_help ("people_manager", true);
+	echo "</h4>";
 
 // Role / task assigment
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

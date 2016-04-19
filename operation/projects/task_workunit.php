@@ -293,6 +293,9 @@ elseif ($id_project != 0) {
 	}
 	echo '<h2>'.__('Workunit resume') . "</h2>";
 	echo '<h4>' . $project_name.' - ' . __('All tasks');
+	if (!$pure){
+		echo integria_help ("task_workunit", true);
+	}
 	
 	echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
 	if ($pure == 1)

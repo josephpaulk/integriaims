@@ -219,7 +219,9 @@ if ($create) {
 $project_name =  get_db_value ("name", "tproject", "id", $id_project);
 
 echo '<h2>'.__('Project management').'</h2>';
-echo "<h4>".__("Task planning")." &raquo; $project_name </h4>";
+echo "<h4>".__("Task planning")." &raquo; $project_name";
+echo integria_help ("task_planning", true);
+echo "</h4>";
 
 //Calculate task summary stats!
 

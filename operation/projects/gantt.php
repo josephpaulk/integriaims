@@ -46,6 +46,7 @@ if ($id_project != -1 && !$project_access['read']) {
 echo "<h2>".__('Gantt graph'). "</h2><h4>" . __("Project:") . " " .$project_name;
 
 if (!$clean_output) {
+	echo integria_help ("gantt", true);
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";

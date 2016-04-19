@@ -44,7 +44,9 @@ if (! $project_access["read"]) {
 }
 
 echo '<h2>'.__('Project management').'</h2>';
-echo "<h4>".__('Time graph')."</h4>";
+echo "<h4>".__('Time graph');
+echo integria_help ("projects_timegraph", true);
+echo "</h4>";
 
 if ($id_project) {
 echo "<div class='divform'>";	
