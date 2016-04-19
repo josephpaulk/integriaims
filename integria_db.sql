@@ -223,6 +223,8 @@ CREATE TABLE `tincidencia` (
   `old_resolution2` tinyint unsigned NOT NULL DEFAULT 0,
   `extra_data3` varchar(100) NOT NULL default '',
   `extra_data4` varchar(100) NOT NULL default '',
+  `black_medals` int(10) NOT NULL default 0,
+  `gold_medals` int(10) NOT NULL default 0,
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),

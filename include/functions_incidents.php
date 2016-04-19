@@ -78,6 +78,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$filters["left_sla"] = isset ($filters['left_sla']) ? $filters['left_sla'] : 0;
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
+	$filters["medals"] = isset ($filters['medals']) ? $filters['medals'] : 0;
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -198,6 +199,15 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			break;
 		}
 	}
+	
+	if ($filters['medals']) {
+		if ($filters['medals'] == 1) {
+			$medals_filter = " AND gold_medals <> 0";
+		} else if ($filters['medals'] == 2) {
+			$medals_filter = " AND black_medals <> 0";
+		}
+	}
+
 	//Use config block size if no other was given
 	if ($limit) {
 		if (!isset($filters["limit"])) {
@@ -227,15 +237,16 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 		OR id_incidencia = %d
 		OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
 		%s
+		%s
 		ORDER BY %s actualizacion DESC',
 		$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-		$filters['string'],$filters['string'],$filters['string'],$filters['string'], $sla_filter, $order_by);
+		$filters['string'],$filters['string'],$filters['string'],$filters['string'], $sla_filter, $medals_filter, $order_by);
 
 	if (!$count && isset($filters["limit"]) && $filters["limit"] > 0) {
 		$sql_limit = sprintf (' LIMIT %d OFFSET %d', $filters["limit"], $filters["offset"]);
 		$sql .= $sql_limit;
 	}
-	
+
 	$incidents = get_db_all_rows_sql ($sql);
 
 	if ($incidents === false) {
@@ -2551,7 +2562,16 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '</td>';
 				$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 
-				echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';
+				$gold = "";
+				$black = "";
+				if ($incident['gold_medals']) {
+					$gold = print_image('images/insignia_dorada.png', true)."(".$incident['gold_medals'].")";
+				}
+				if ($incident['black_medals']) {
+					$black = print_image('images/insignia_gris.png', true)."(".$incident['black_medals'].")";
+				}
+				
+				echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>'.$gold.$black.'</td>';
 
 				// priority
 				echo '<td>';

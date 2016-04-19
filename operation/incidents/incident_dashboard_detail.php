@@ -212,6 +212,12 @@ $incident_adv_details .= $obj_table;
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
 $incident_adv_details .= "</tr>";
+if (($incident['gold_medals']) || ($incident['black_medals'])) {
+	$incident_adv_details .= "<tr>";
+	$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/insignia_naranja.png', true)."</td>";
+	$incident_adv_details .= "<td>".__("Medals").":</td><td>".print_image('images/insignia_dorada.png', true)."(".$incident['gold_medals'].")".print_image('images/insignia_gris.png', true)."(".$incident['black_medals'].")"."</td>";
+	$incident_adv_details .= "</tr>";
+}
 $incident_adv_details .= $email_table;
 //$incident_adv_details .= "</table>";
 
@@ -407,12 +413,28 @@ if ($config['enabled_ticket_editor']) {
 			
 			$ticket_editor .= "<tr><td>";
 			$ticket_editor .= print_select ($groups, "grupo_form", $id_grupo, '', '', 0, true, false, false, __('Group'), $blocked_incident);
-			$ticket_editor .= "</td><td valign=bottom>";
-			//~ $img = print_image("images/refresh.png", true, array("title" => __("Update")));
-			//~ $ticket_editor .= "<a onfocus='JavaScript: this.blur()' href='javascript: setParams($id);'>" . $img ."</a>";
-			$ticket_editor .= "<input type='button' name='update' value='".__("Update")."' class='sub upd' onClick='setParams($id);' />";
 			$ticket_editor .= "</td>";
 			
+			$qa_profile = give_acl ($config['id_user'], $id_grupo, "QA");
+		
+			if ($qa_profile) {
+				$ticket_editor .= "<td>";
+				$qa_options = array('1'=>__('Add gold medal'),
+									'2'=>__('Remove gold medal'),
+									'3'=>__('Add black medal'),
+									'4'=>__('Remove black medal'));
+
+				$ticket_editor .= print_select ($qa_options, "medal_option", $medal_option, '', 'Select', 0, true, false, false, __('Medals'), $blocked_incident);
+				$ticket_editor .= "</td>";
+			}
+			
+			$ticket_editor .= "</tr>";
+			
+			$ticket_editor .= "<tr><td>";
+			$ticket_editor .= "";
+			$ticket_editor .= "</td><td align=right>";
+			$ticket_editor .= "<input type='button' name='update' value='".__("Update")."' class='sub upd' onClick='setParams($id);' />";
+			$ticket_editor .= "</td>";
 			$ticket_editor .= "</tr>";
 
 			//$ticket_editor .= "</table>";

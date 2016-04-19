@@ -112,6 +112,7 @@ echo "<th>".__('User ID');
 echo "<th>".__('Fullname');
 echo "<th>".__('Company');
 echo "<th>".__('Reports');
+echo "<th>".__('Medals');
 echo "<th>".__('Total hours for this month');
 echo "<th>".__('Avg. Scoring');
 
@@ -211,6 +212,21 @@ foreach ($values as $key => $value){
 		echo "&nbsp;&nbsp;";
 		echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=$nombre'><img src='images/paste_plain.png' title='".__("Workorders")."' border=0></a></center></td>";
 		*/
+		echo "</td>";
+		
+		// Medals
+		echo "<td>";
+		$gold_medals = get_db_sql ("SELECT SUM(gold_medals) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND gold_medals > 0 ");
+		$black_medals = get_db_sql ("SELECT SUM(black_medals) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND black_medals > 0 ");
+		$result = "";
+		if ($gold_medals) {
+			$result = "<img src='images/insignia_dorada.png' title='".__("Gold medals")."' border=0>"."(".$gold_medals.")";
+		}
+		if ($black_medals) {
+			$result .= "<img src='images/insignia_gris.png' title='".__("Black medals")."' border=0>"."(".$black_medals.")";
+		}
+		echo $result;
+		echo "</td>";
 		
 		// Total hours this month
 		echo "<td  >";
