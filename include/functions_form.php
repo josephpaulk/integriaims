@@ -1190,7 +1190,7 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	//$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" id="show_advanced_search" href="javascript:show_ad_search();">'.__('Advanced search').'></a></div>';
 	$table->colspan['row_advanced'][0] = 5;
-	$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_form', __('Advanced search'), print_table($table_advanced, true), 'closed', true, true);
+	$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_search', __('Advanced search'), print_table($table_advanced, true), 'closed', true, true);
 	
 	//Store serialize filter
 	serialize_in_temp($filter, $config["id_user"]);
