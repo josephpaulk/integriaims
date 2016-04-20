@@ -89,7 +89,7 @@ if (preg_match("/^manager/", $current_directory))
 
 echo "<div class='divform'>";
 
-echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file=1' enctype='multipart/form-data'>";
+echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr'>";
 echo "<table width='100%' class='search-table'>";
 
 echo "<tr><td class='datos'>";
@@ -102,17 +102,26 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 $available_directory[$current_directory] = $current_directory;
 
 print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, '',"","");
+echo "<tr><td class='datos'>";
+echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
+echo "</table>";
+echo "</form>";
 
 if (is_writable($current_directory)) {
+	
+	echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file=1' enctype='multipart/form-data'>";
+	echo "<table width='100%' class='search-table'>";
 	echo "<tr><td class='datos'>";
+	
 	$action = 'index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file';
 	
+	echo "<tr><td class='datos'>";
 	$into_form = "<input type='hidden' name='directory' value='$current_directory'><input type='file' name='upfile'>";
 	echo $into_form;
 	
 	//print_input_file_progress($action,$into_form,'','sub next',false);
 	echo "<tr><td class='datos'>";
-	echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Go")."'>";
+	echo "<input type=submit class='sub next' style='margin-top:12px;' value='".__("Upload")."'>";
 	echo "</table>";
 	echo "</form>";
 	

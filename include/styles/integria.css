@@ -566,6 +566,8 @@ input[type="file"] {
 	font-size: 0.5em;
 	width: 100%;
 	margin-top: 10px;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
 }
 
 textarea {

@@ -54,9 +54,9 @@ if (defined ('AJAX')) {
 			if (!preg_match($invalid_extensions, $extension)) {
 				// Insert into database
                 $filename_real = safe_output ( $filename ); // Avoid problems with blank spaces
-                $file_temp = sys_get_temp_dir()."/$filename_real";
+                $file_temp = $_FILES["upfile"]['tmp_name'];;
                 $file_new = str_replace (" ", "_", $filename_real);
-                $filesize = filesize($file_temp); // In bytes
+                $filesize = $_FILES["upfile"]["size"]; // In bytes
 
                 $sql = sprintf ('INSERT INTO tattachment (id_contact, id_usuario,
                                 filename, description, size)
@@ -101,11 +101,12 @@ if (defined ('AJAX')) {
 	$get_file_row = (bool) get_parameter("get_file_row");
 	if ($get_file_row) {
 		$id_file = (int) get_parameter("id_attachment");
-		$file = get_incident_file($id, $id_file);
+		
+		$file = get_db_row_filter ('tattachment', array('id_contact' => $id, 'id_attachment' => $id_file));
 
 		$html = "";
 		if ($file) {
-			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=incident";
+			$link = "operation/common/download_file.php?id_attachment=".$file["id_attachment"]."&type=contact";
 			$real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
 
 			$html .= "<tr>";
@@ -116,7 +117,7 @@ if (defined ('AJAX')) {
 			$html .= "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
 
 			$html .= "<td valign=top class=f9>". $file["description"];
-			$html .= "<td valign=top>". $file["id_usuario"];
+			//$html .= "<td valign=top>". $file["id_usuario"];
 			$html .= "<td valign=top>". byte_convert ($file['size']);
 
 			// Delete attachment

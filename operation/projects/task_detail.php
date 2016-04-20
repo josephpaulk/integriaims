@@ -269,6 +269,11 @@ echo $result_output;
 // Show forms
 // ********************************************************************************************************
 
+if ($id_task)
+	$task_name = get_db_value ('name', 'ttask', 'id', $id_task);
+else
+	$task_name = '';
+
 if (!$gantt_editor) {
 	if ($operation == "create") {
 		echo '<h2>'.__('Task management') . "<h4>".__("Create task");

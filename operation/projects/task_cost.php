@@ -69,15 +69,16 @@ if ($operation == "delete"){
 
 if ($operation == "add"){
 	
-	$filename = $_FILES["upfile"];
+	$file = $_FILES["upfile"];
+	$filename = $file["name"];
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
 	$amount = (float) get_parameter ("amount", 0);
 	$user_id = $config["id_user"];
 
-	if ($filename["error"] === 0){
-		$file_temp = $filename["tmp_name"];
-		$filesize = $filename["size"];
+	if ($file["error"] === 0){
+		$file_temp = $file["tmp_name"];
+		$filesize = $file["size"];
 		
 		// Creating the attach
 		$sql = sprintf ('INSERT INTO tattachment (id_usuario, filename, description, size) VALUES ("%s", "%s", "%s", "%s")',

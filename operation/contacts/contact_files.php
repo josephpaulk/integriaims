@@ -140,7 +140,7 @@ echo '<div id="upload_result"></div>';
 echo "<strong>".__("File formats supported")."</strong>";
 echo print_help_tip (__("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"), true);
 
-echo "<form id=\"form-incident_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
+echo "<form id=\"form-contact_files\" class=\"fileupload_form\" method=\"post\" enctype=\"multipart/form-data\">";
 echo 	"<div id=\"drop_file\" style=\"padding:0px 0px;\">";
 echo 		"<table width=\"100%\">";
 echo 			"<td width=\"45%\">";
@@ -158,7 +158,7 @@ echo "</form>";
 echo "<div id='file_description_table_hook' style='display:none;'>";
 $table = new stdClass;
 $table->width = '100%';
-$table->id = 'incident_file_description';
+$table->id = 'contact_file_description';
 $table->class = 'search-table-button';
 $table->data = array();
 $table->data[0][0] = print_textarea ("file_description", 5, 40, '', '', true, __('Description'));
@@ -172,10 +172,12 @@ echo "<h3>".__('Files')."</h3>";
 
 if (!$files) {
 	echo '<h3 class="error">'.__("This contact doesn't have any file associated").'</h3>';
-} else {
+}
+else {
 
 	$table->class = "listing";
-	$table->width = "99%";
+	$table->width = "100%";
+	$table->id = "contact_files";
 	$table->head[0] = __("Filename");
 	$table->head[1] = __("Timestamp");
 	$table->head[2] = __("Description");
@@ -224,7 +226,7 @@ $(document).ready (function () {
 });
 
 function form_upload () {
-	var file_list = $('#form-incident_files ul');
+	var file_list = $('#form-contact_files ul');
 
 	$('#drop_file #browse_button').click(function() {
 		// Simulate a click on the file input button to show the file browser dialog
@@ -232,7 +234,7 @@ function form_upload () {
 	});
 
 	// Initialize the jQuery File Upload plugin
-	$('#form-incident_files').fileupload({
+	$('#form-contact_files').fileupload({
 		
 		url: 'ajax.php?page=operation/contacts/contact_detail&upload_file=true&id=<?php echo $id; ?>',
 		
@@ -307,7 +309,7 @@ function form_upload () {
 	function addListItem (progress, filename, filesize) {
 		var tpl = $('<li><input type="text" id="input-progress" value="0" data-width="55" data-height="55"'+
 			' data-fgColor="#FF9933" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span>'+
-			'<div class="incident_file_form"></div></li>');
+			'<div class="contact_files_form"></div></li>');
 		
 		// Append the file name and file size
 		tpl.find('p').text(filename);
@@ -349,7 +351,7 @@ function form_upload () {
 
 	function addForm (item, file_id) {
 		
-		item.find(".incident_file_form").html($("#file_description_table_hook").html());
+		item.find(".contact_files_form").html($("#file_description_table_hook").html());
 
 		item.find("span").click(function(e) {
 			addFileRow(file_id);
@@ -402,7 +404,7 @@ function form_upload () {
 
 	function addFileRow (file_id) {
 		var no_files_message = $("#no_files_message");
-		var table_files = $("#table-incident_files");
+		var table_files = $("#contact_files");
 
 		$.ajax({
 			type: 'POST',

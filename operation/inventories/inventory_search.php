@@ -278,6 +278,9 @@ if ($params != ''){
 	if($params['last_update'] != ''){
 		$last_update = $params['last_update'];
 	}
+	if($params['offset'] != ''){
+		$offset = $params['offset'];
+	}
 	if($params['inventory_status'] != ''){
 		$inventory_status = $params['inventory_status'];
 	}
@@ -296,32 +299,37 @@ if ($params != ''){
 	if($params['sort_mode'] != ''){
 		$sort_mode = $params['sort_mode'];
 	}
-	if($params['sort_field'] != ''){
-		$sort_field = $params['sort_field'];
+	if($params['sort_field_num'] != ''){
+		$sort_field_num = $params['sort_field_num'];
 	}
 	if($params['id_object_type_search'] != ''){
 		$id_object_type = $params['id_object_type_search'];
 	}
+	if($params['parent_name'] != ''){
+		$parent_name = $params['parent_name'];
+	}		
 } else {
 	$inventory_status = (string)get_parameter('inventory_status', '0');
 	$id_company = (int)get_parameter('id_company', 0);
 	$associated_user = (string)get_parameter('associated_user', "");
 	$mode = (string)get_parameter('mode', "list");
+	$object_fields = (string)get_parameter('object_fields', '');
+	$id_object_type = (int)get_parameter('id_object_type_search', 1);
 	$search = (int)get_parameter('search', 0);
 	$search_free = (string)get_parameter ('search_free', '');
 	$owner = (string)get_parameter('owner', '');
 	$id_manufacturer = get_parameter ('id_manufacturer', 0);
 	$id_contract = (int)get_parameter ('id_contract', 0);
 	$last_update = get_parameter ('last_update');
+	$parent_name = get_parameter ('parent_name', 'None');
+
 	//sort table
 	$sort_mode = (string)get_parameter('sort_mode', 'asc');
 	$sort_field_num = (int)get_parameter('sort_field', 1);
-	$object_fields = (string)get_parameter('object_fields', '');
-	$id_object_type = (int)get_parameter('id_object_type_search', 1);
 }
 
 if($object_fields != ""){
-	//$object_fields = str_replace ('&quot;' ,  '"' , $object_fields);
+	$object_fields_string = str_replace ('&quot;' ,  '"' , $object_fields);
 }
 
 /*
@@ -334,13 +342,8 @@ switch ($sort_field_num) {
 	case 0: $sort_field = "id";break;
 	case 1: $sort_field = "name";break;
 	case 2: $sort_field = "owner";break;
-	case 3: $sort_field = "id";break;
-	case 4: $sort_field = "id";break;
-	case 5: $sort_field = "id";break;
-	case 6: $sort_field = "id";break;
-	case 7: $sort_field = "id";break;
+	case 7: $sort_field = "status";break;
 	case 8: $sort_field = "receipt_date";break;
-	
 	default:
 		$sort_field = "name";
 		break;
@@ -355,14 +358,13 @@ if ($search) {
 	$params = array();
 	$params['search'] = 1;
 	$params['object_fields'] = $object_fields;
-	$params['search_free'] = $search_free;
+	//$params['search_free'] = $search_free;
 	//If object type and fields were selected an there is a free search string.
 	//Then we search for this text in the object field data.
 	if ($id_object_type != 0 && !empty($object_fields) && $search_free != '') {
-		
 		$string_fields_object_types == '';
 		$string_fields_types == '';
-		$object_fields_array = json_decode($object_fields, true);
+		$object_fields_array = json_decode($object_fields_string, true);
 		
 		foreach ($object_fields_array as $k=>$f) {
 			if (is_numeric($k)){
@@ -371,54 +373,44 @@ if ($search) {
 				} else {
 					$string_fields_object_types .= ",$k ";
 				}
-			} else {
-				if($string_fields_types == ''){
-					$string_fields_types = "tinventory.$k LIKE '%$search_free%' ";
-				} else {
-					$string_fields_types .= "OR tinventory.$k LIKE '%$search_free%' ";
-				}
 			}
 		}		
-		
-		$params['object_fields'] = $object_fields;
 		$params['search_free']= $search_free;
-
 		//Compound sub select
-		$sql_search = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data WHERE tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
-		if($string_fields_object_types){
-			$sql_search .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";
-		}					
-		$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
-		$sql_search .= "AND ($string_fields_types)";
 
-		$sql_search_count = "SELECT COUNT(tinventory.id)
-							FROM tinventory, tobject_type, tobject_field_data WHERE 
-							tinventory.id_object_type = tobject_type.id AND
-							 `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
-		if($string_fields_object_types){
-			$sql_search_count .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";
+		if ($string_fields_object_types){
+			$sql_search = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data WHERE 
+							`tinventory`.`id_object_type` = `tobject_type`.`id` AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+			$sql_search .= " AND ((`tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";		
+			$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%')";
+			$sql_search .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";
+
+			$sql_search_count = "SELECT COUNT(`tinventory`.`id`) FROM tinventory, tobject_type, tobject_field_data WHERE 
+								`tinventory`.`id_object_type` = `tobject_type`.`id` AND
+								 `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+			$sql_search_count .= " AND ((`tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";		
+			$sql_search_count .= "AND tobject_field_data.`data` LIKE '%$search_free%')";
+			$sql_search_count .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";
+
+			$sql_search_obj_type = "SELECT DISTINCT(`tobject_type`.`id`), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE
+									`tinventory.id_object_type` = `tobject_type`.`id` AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
+			$sql_search_obj_type .= " AND ((`tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";
+			$sql_search_obj_type .= "AND tobject_field_data.`data` LIKE '%$search_free%')";
+			$sql_search_obj_type .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";	
+		} else {
+			$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%')";
+			$sql_search_count .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%')";
 		}
-		$sql_search_count .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
-		$sql_search_count .= "AND ($string_fields_types)";
 
-		$sql_search_obj_type = "SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE 
-								tinventory.id_object_type = tobject_type.id AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
-
-		if($string_fields_object_types){
-			$sql_search_obj_type .= " AND `tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";
-		}
-		$sql_search_obj_type .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
-		$sql_search_obj_type .= "AND ($string_fields_types)";						
-		
 	} else { //búsqueda solo en nombre y descripción de inventario
 		if ($search_free != '') {
-			$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
-			$sql_search_count .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
-			
+			$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%')";
+			$sql_search_count .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%')";
+
 			$params['search_free'] = $search_free;
 		}
 	}
-	
+
 	if ($id_object_type) {
 		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
 		$sql_search_count .= " AND tinventory.id_object_type = $id_object_type";
@@ -456,12 +448,21 @@ if ($search) {
 		$sql_search_count .= " AND tinventory.id IN (SELECT id_inventory FROM tinventory_acl WHERE `type`='user' AND id_reference='$associated_user')";
 		$params['associated_user'] = $associated_user;
 	}
+	if ($parent_name != 'None') {
+		$sql_parent_name = "select id from tinventory where name ='". $parent_name."';";
+		$id_parent_name = get_db_sql($sql_parent_name);
+
+		$sql_search .= " AND tinventory.id_parent =" . $id_parent_name;
+		$sql_search_count .=  " AND tinventory.id_parent =" . $id_parent_name;
+		$params['parent_name'] = $parent_name;
+
+	}
 	if ($mode == 'list'){
-		$sql_search .= " order by $sort_field $sort_mode ";
-		$params['sort_field'] = $sort_field;
+		$sql_search .= " group by tinventory.id order by $sort_field $sort_mode ";
+		$params['sort_field_num'] = $sort_field_num;
 		$params['sort_mode'] = $sort_mode;
 	}
-} 
+}
 
 
 if (!$pure) {
@@ -470,8 +471,9 @@ if (!$pure) {
 		$form2 .= '<form>';
 			$form2 .= '<table class="search-table"><tr><td>';
 				$objects_type = get_object_types ();
+				$objects_type[0] = __('All');
 				$form2 .= print_label (__('Object type'), '','',true);
-				$form2 .= print_select($objects_type, 'id_object_type_search_check', $id_object_type, 'change_object_type();', __('All'), '', true, 4, true, false, false, '');
+				$form2 .= print_select($objects_type, 'id_object_type_search_check', $id_object_type, 'change_object_type();', '', '', true, 4, false, false, false, '');
 			$form2 .= '</td></tr></table>';
 		$form2 .= '</form>';
 	$form2 .= '</div>';
@@ -540,17 +542,21 @@ if (!$pure) {
 		
 		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, '', '', '', true, false, false, __('Status'));
 
+		//Parent name
+		$table_search->data[2][1] =  print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','', '', '')", "class='inventory_obj_search' style='width:210px;'", true, false,  __('Parent object'));
+		$table_search->data[2][1] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
+		$table_search->data[2][1] .= print_input_hidden ('id_parent', $id_parent, true);
+
 		//check
-		$table_search->data[2][1] = print_checkbox_extended ('last_update', 1, $last_update,
+		$table_search->data[2][2] = print_checkbox_extended ('last_update', 1, $last_update,
 		false, '', '', true, __('Last updated'));
 
 		//hidden select to perform the search
 		$objects_type = get_object_types ();
-		$table_search->data[2][2] = print_select($objects_type, 'id_object_type_search', $id_object_type, '', 'Select', '', true, 0, true, false, false, '');
+		$table_search->data[2][2] .= print_select($objects_type, 'id_object_type_search', $id_object_type, '', 'Select', '', true, 0, true, false, false, '');
 
 		$table_search->data[3][0] = print_input_hidden ('sort_field', $sort_field_num, true, false, 'sort_field');
 		$table_search->data[3][1] = print_input_hidden	('sort_mode', $sort_mode, true, false, 'sort_mode');
-		
 		$table_search->data[3][1] .= print_input_hidden	('object_fields', $object_fields, true, false, 'object_fields');
 		$table_search->data[3][1] .= print_input_hidden	('offset', $offset, true, false, 'offset');
 		
@@ -603,14 +609,9 @@ switch ($mode) {
 			}
 		echo '</div>';
 		
-		
 }
 
-/*
-echo '<div id="sql_search_hidden" style="display:none;">';
-	print_input_text('sql_search_hidden', $sql_search);
-echo '</div>';
-*/
+echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>";
 
 ?>
 
@@ -645,15 +646,6 @@ $(document).ready (function () {
 	////cambia el offset a 0
 	$('#id_object_type_search_check').change(function(){
 		$("#hidden-offset").val(0);
-	});
-
-	//JS for massive operations
-	$("#checkbox-inventorycb-all").change(function() {
-		$(".cb_inventory").prop('checked', $("#checkbox-inventorycb-all").prop('checked'));
-	});
-
-	$(".pagination span a").click(function(){
-		tree_search_submit();
 	});
 	
 	tree_search_submit();

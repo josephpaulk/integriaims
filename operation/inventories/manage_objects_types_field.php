@@ -77,9 +77,9 @@ echo '<h4>' . __('Object types management');
 echo '<ul class="ui-tabs-nav">';
 	
 if (!empty($id_object_type)) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '"><span>'.__('Object details').'</span></a></li>';
-	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '"><span>'.__('Fields').'</span></a></li>';
-	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_field&action=update&id_object_type_field=' . $id_object_type_field . '&id= ' . $id_object_type . '"><span>'.__('Field management').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '" title="'.__('Object details').'"><img src="images/eye.png" /></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '" title="'.__('Fields').'"><img src="images/fields_tab.png" /></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_field&action=update&id_object_type_field=' . $id_object_type_field . '&id= ' . $id_object_type . '" title="'.__('Field management').'"><img src="images/manage_fields_tab.png" /></a></li>';
 }
 echo '</ul>';
 echo "</h4>";

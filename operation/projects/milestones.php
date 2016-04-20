@@ -129,7 +129,7 @@ if ($operation == "create" || $operation == "update") {
 		$name = '';
 		$description = '';
 		$timestamp = date("Y-m-d");
-		$id_project = '';
+		//$id_project = '';
 	}
 	echo '<table class="search-table-button"  width="100%">';
 	if ($id_milestone)

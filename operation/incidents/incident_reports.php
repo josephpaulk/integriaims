@@ -64,9 +64,9 @@ if (isset($search)) {
 	
 	
 	echo "<h4>".__('Report results');
-	echo '<a href="index.php?sec=reporting&amp;sec2=operation/reporting/incidents_html
-			&amp;custom_search='.$id_search.'&amp;show_stats='.$show_stats.'&amp;show_list='.$show_list.'&amp;clean_output=1&amp;pdf_output=1">
-			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
+	//~ echo '<a href="index.php?sec=reporting&amp;sec2=operation/reporting/incidents_html
+			//~ &amp;custom_search='.$id_search.'&amp;show_stats='.$show_stats.'&amp;show_list='.$show_list.'&amp;clean_output=1&amp;pdf_output=1">
+			//~ <img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
 	echo "</h4>";
 	
 	$custom_search = get_custom_search ($id_search, 'incidents');

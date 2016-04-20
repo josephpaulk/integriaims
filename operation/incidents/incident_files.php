@@ -71,7 +71,7 @@ if (defined ('AJAX')) {
 				$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
 				$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 				$file_tmp = $_FILES["upfile"]['tmp_name'];
-				$filesize = filesize($file_tmp); // In bytes
+				$filesize = $_FILES["upfile"]["size"]; // In bytes
 
 				$values = array(
 						"id_incidencia" => $id,
