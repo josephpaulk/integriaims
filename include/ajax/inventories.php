@@ -402,11 +402,11 @@ if ($get_inventory_search) {
 	$table_search->width = '98%';
 	$table_search->data = array ();
 	
-	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
+	$table_search->data[0][0] = print_input_text ('search_free_modal', $search_free, '', 40, 128, true, __('Search'));
 	
 	$objects_type = get_object_types ();
 	$table_search->data[0][1] = print_label (__('Object type'), '','',true);
-	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type_search, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
+	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search_modal', $id_object_type_search, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
 	
 	$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
 	
@@ -431,17 +431,17 @@ if ($get_inventory_search) {
 	$contracts = get_contracts ();
 	$manufacturers = get_manufacturers ();
 	
-	$table_search->data[1][1] = print_select ($contracts, 'id_contract_search', $id_contract,
+	$table_search->data[1][1] = print_select ($contracts, 'id_contract_search_modal', $id_contract,
 		'', __('None'), 0, true, false, false, __('Contract'), '', 'width: 200px;');
-	$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer_search',
+	$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer_search_modal',
 		$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'), '','width: 200px;');
 	
-	$table_search->data[1][3] = print_checkbox_extended ('last_update_search', 1, $last_update,
+	$table_search->data[1][3] = print_checkbox_extended ('last_update_search_modal', 1, $last_update,
 		false, '', '', true, __('Last updated'));
 	
 	$all_inventory_status = inventories_get_inventory_status ();
 	array_unshift($all_inventory_status, __("All"));
-	$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status_search', $inventory_status, '', '', '', true, false, false, __('Status'));
+	$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status_search_modal', $inventory_status, '', '', '', true, false, false, __('Status'));
 	
 	$params_associated['input_id'] = 'text-associated_user_search';
 	$params_associated['input_name'] = 'associated_user_search';
@@ -452,12 +452,12 @@ if ($get_inventory_search) {
 	
 	$companies = get_companies();
 	$companies[0] = __("All");
-	$table_search->data[2][2] = print_select ($companies, 'id_company', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 200px;');
+	$table_search->data[2][2] = print_select ($companies, 'id_company_modal', $id_company,'', '', 0, true, false, false, __('Associated company'), '', 'width: 200px;');
 	
 	$table_search->data[3][0] = "&nbsp;";
 	$table_search->colspan[3][0] = 4;
 	$buttons = '<div style="width:'.$table_search->width.'" class="action-buttons button">';
-	$buttons .= "<input type='button' class='sub next' onClick='javascript: loadParams(\"$search_free\");' value='".__("Search")."''>";
+	$buttons .= "<input type='button' class='sub next' onClick='javascript: loadParams(\"$search_free\");' value='".__("Search")."'>";
 	$buttons .= '</div>';
 	$table_search->data[4][0] = $buttons;
 	$table_search->colspan[4][0] = 4;
