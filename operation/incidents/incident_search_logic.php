@@ -108,7 +108,7 @@ if (get_parameter ('id_myticket') == 1){
 	echo "<h4>" .__('Ticket search');
 }
 
-
+echo integria_help ("incident_search", true);
 echo "<div id='button-bar-title' style='margin-right: 12px;'>";
 echo "<ul>";
 print_autorefresh_button_ticket();

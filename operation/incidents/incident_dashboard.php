@@ -25,7 +25,9 @@ if (!empty($first_start)) {
 }
 
 echo "<h2>" . __("Support") . "</h2>";
-echo "<h4>" . __("Tickets overview") . "</h4>";
+echo "<h4>" . __("Tickets overview");
+echo integria_help ("incident_dashboard", true);
+echo "</h4>";
 
 /* Users affected by the incident */
 $table = new StdClass();

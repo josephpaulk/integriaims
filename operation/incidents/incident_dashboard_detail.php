@@ -598,6 +598,7 @@ echo '<h2>'.__('Tickets').' #'.$incident["id_incidencia"].'</h2><h4>'.ui_print_t
 
 
 if (!$pure) {
+	echo integria_help ("incident_dashboard_detail", true);
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 
