@@ -3539,11 +3539,23 @@ ul li {
 	overflow-y: hidden;
 }
 .folders{
-	padding: 10px 0px 10px 10px;
 	border-bottom:1px solid #E0E0E0;
-	min-height: 20px;
-	text-align:left;
+	min-height: 40px;
+	text-align:left !important;
 	background: #F7F7F7;
+}
+.title_folder{
+	text-align:left;
+	line-height: 35px;
+}
+.images_option{
+	line-height: 35px;
+}
+#folder_name{
+	padding-left: 10px;
+}
+#button-update_folder{
+	text-align: center !important;
 }
 .folders_select {
 	background: #FF9000;

@@ -1357,7 +1357,8 @@ CREATE TABLE `tfolder_report` (
  `nombre`  mediumtext NOT NULL,
  `description`  text DEFAULT '',
  `private` tinyint(1) unsigned NOT NULL DEFAULT 0,
- `id_group` mediumint(9) NOT NULL default 0,
+ `id_group` varchar(60) NOT NULL default "1",
+ `id_user` varchar(60) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1366,7 +1367,7 @@ CREATE TABLE `treport` (
   `nombre`  mediumtext NOT NULL,
   `type` tinyint unsigned NOT NULL DEFAULT 0,
   `subtype` tinyint unsigned NOT NULL DEFAULT 0,
-  `id_group` mediumint(9) NOT NULL default 0,
+  `id_group` varchar(60) NOT NULL default "1",
   `id_folder` bigint(20) unsigned default 0,
   `fields_to_show` longtext NOT NULL default '',
   `order_by` text NOT NULL default '',
