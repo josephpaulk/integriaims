@@ -190,6 +190,7 @@ INSERT INTO tlead_progress (id,name) VALUES
 UPDATE tlead_progress SET `id`=0 WHERE `id`=1;
 
 INSERT INTO `treport_type` VALUES (1,'List');
-INSERT INTO `treport_type` VALUES (2,'Graphic');
+INSERT INTO `treport_type` VALUES (2,'Graphics');
+INSERT INTO `treport_type` VALUES (2,'List & Graphics');
 INSERT INTO `treport_subtype` VALUES (1,'Tickets');
 

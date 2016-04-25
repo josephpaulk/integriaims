@@ -393,16 +393,16 @@ function show_fields() {
 //Send modal parameters that need inventory
 function loadParams() {
 	
-	search_free = $('#text-search_free').val();
-	id_object_type_search = $('#id_object_type_search').val();
+	search_free = $('#text-search_free_modal').val();
+	id_object_type_search = $('#id_object_type_search_modal').val();
 	owner_search = $('#text-owner_search').val();
-	id_manufacturer_search = $('#id_manufacturer_search').val();
-	id_contract_search = $('#id_contract_search').val();
-	inventory_status_search = $('#inventory_status_search').val();
-	id_company_search = $('#id_company').val();
+	id_manufacturer_search = $('#id_manufacturer_search_modal').val();
+	id_contract_search = $('#id_contract_search_modal').val();
+	inventory_status_search = $('#inventory_status_search_modal').val();
+	id_company_search = $('#id_company_modal').val();
 	associated_user_search = $('#text-associated_user_search').val();
 
-	if ($("#checkbox-last_update_search").is(":checked")) {
+	if ($("#checkbox-last_update_search_modal").is(":checked")) {
 		last_update_search = 1;
 	} else {
 		last_update_search = 0;

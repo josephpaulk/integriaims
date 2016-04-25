@@ -925,7 +925,10 @@ if ($id) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Ticket').' #'.$id.'</h2><h4>'.ui_print_truncate_text($incident['titulo'],50)."&nbsp;&nbsp;".'<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/world.png", true, array("title" => __("Link to ticket"))).'</a>';
+	echo __('Ticket').' #'.$id.'</h2><h4>'.ui_print_truncate_text($incident['titulo'],50);
+	echo integria_help ("create_tickets", true);
+	echo "&nbsp;&nbsp;".'<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">';
+	echo print_image("images/world.png", true, array("title" => __("Link to ticket"))).'</a>';
 	
     if (give_acl($config["id_user"], 0, "IM")){
         if ($incident["score"] > 0){
@@ -984,7 +987,9 @@ if ($id) {
 else {
 	if (! defined ('AJAX')) {
 		echo "<h2>".__('Support')."</h2>";
-		echo "<h4>".__('Create ticket')."</h4>";
+		echo "<h4>".__('Create ticket');
+		echo integria_help ("create_tickets", true);
+		echo "</h4>";
 	}
 }
 

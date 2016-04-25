@@ -341,8 +341,15 @@ function print_select ($fields, $name, $selected = '', $script = '',
 			}
 			
 			$output .= '   <option value="'. $value .'"';
-			if (safe_output($value) == safe_output($selected)) {
-				$output .= ' selected';
+			if (is_array($selected)) {
+				if (in_array($value,$selected)) {
+					$output .= ' selected';
+				}
+			}
+			else {
+				if (safe_output($value) == safe_output($selected)) {
+					$output .= ' selected';
+				}
 			}
 			if ($optlabel === '') {
 				$output .= '>'. $value ."</option>\n";

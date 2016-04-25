@@ -28,7 +28,9 @@ $search = (string) get_parameter('search');
 
 		
 echo "<h2>" .__('Support')."</h2>";
-echo "<h4>" .__('Ticket reports')."</h4>";
+echo "<h4>" .__('Ticket reports');
+echo integria_help ("incident_report", true);
+echo "</h4>";
 
 $table_search = new stdClass;
 $table_search->width = '100%';
