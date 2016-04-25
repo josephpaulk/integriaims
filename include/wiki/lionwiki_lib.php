@@ -999,12 +999,16 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 			$ret .= "<div class=\"par-div\" id=\"par-$h_id\"><h$excl id=\"$hash\">$m[2]";
 
 			if ($is_enterprise) {
-				if (wiki_get_write_acl ($config['id_user'], $page)) { 
-					$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
+				if (!get_standalone_user($config['id_user'])) {
+					if (wiki_get_write_acl ($config['id_user'], $page)) { 
+						$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
+					}
 				}
 			} else {
-				if (is_writable($PG_DIR . $page . '.txt')) {
-					$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
+				if (!get_standalone_user($config['id_user'])) {
+					if (is_writable($PG_DIR . $page . '.txt')) {
+						$ret .= "<span class=\"par-edit\">(<a href=\"$self" . "action=edit&amp;page=".u($page)."&amp;par=$h_id\">$T_EDIT</a>)</span>";
+					}
 				}
 			}
 	

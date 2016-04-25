@@ -471,7 +471,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		echo "</ul>";
 			
 		// Incident type and SLA management only PM
-		if (give_acl ($config['id_user'], 0, "IM")) {
+		if (give_acl ($config['id_user'], 0, "IM") && (get_standalone_user($config["id_user"]) == false)) {
 			
 			if ($sec2 == "operation/incidents/type_detail")
 				echo "<li id='sideseltipo_ticket' class='sideselcolor'>";
@@ -1260,7 +1260,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 				$is_enterprise = true;
 			}
 			
-			if (!give_acl ($config['id_user'], $id_grupo, "WW")) {
+			if (!give_acl ($config['id_user'], $id_grupo, "WW") || (get_standalone_user($config["id_user"]))) {
 
 				//~ $conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
 					//~ <li>{plugin:UPLOAD}</li>
@@ -1272,7 +1272,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 					<li>{SYNTAX}</li>
 					{plugin:SIDEMENU}';
 			}
-			elseif (!give_acl ($config['id_user'], $id_grupo, "WM")) {
+			elseif (!give_acl ($config['id_user'], $id_grupo, "WM") || (get_standalone_user($config["id_user"]))) {
 
 				$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
 					<li>{plugin:UPLOAD}</li>

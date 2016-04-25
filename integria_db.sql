@@ -38,6 +38,7 @@ CREATE TABLE `tusuario` (
   `num_employee` varchar(125) NOT NULL default '',
   `enable_login` tinyint(1) NOT NULL default '1',
   `location` tinytext NOT NULL DEFAULT '',
+  `disabled_login_by_license` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -785,6 +786,7 @@ CREATE TABLE  `tprofile` (
   `frw` tinyint(1) NOT NULL default '0',
   `frm` tinyint(1) NOT NULL default '0',
   `si` tinyint(1) NOT NULL default '0',
+  `qa` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

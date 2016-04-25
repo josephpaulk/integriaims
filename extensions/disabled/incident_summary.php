@@ -34,9 +34,9 @@ function check_incident_access ($id) {
 	if (isset($incident)) {
 		//Incident creators must see their incidents
 		$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-		$external_check = enterprise_hook("manage_external", array($incident));
+		$standalone_check = enterprise_hook("manage_standalone", array($incident));
 
-		if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
+		if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check)) {
 
 			// Doesn't have access to this page
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);

@@ -36,9 +36,9 @@ $incident = get_db_row ('tincidencia', 'id_incidencia', $id);
 
 //user with IR and incident creator see the information
 $check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-$external_check = enterprise_hook("manage_external", array($incident));
+$standalone_check = enterprise_hook("manage_standalone", array($incident));
 
-if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
+if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check)) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to ticket #".$id);
 	include ("general/noaccess.php");
 	exit;

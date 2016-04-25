@@ -107,40 +107,10 @@ if ($update) {
 		update_config_token ("first_login", $config["first_login"]);
 		update_config_token ("mins_fail_pass", $config["mins_fail_pass"]);
 		update_config_token ("number_attempts", $config["number_attempts"]);
-	}
-	
-	# Update of Integria license 
-	$update_manager_installed = get_db_value('value', 'tconfig', 'token', 'update_manager_installed');
-
-	if ($update_manager_installed == 1) {
-		$license_info_key = get_parameter('license_info_key', '');
-		if (empty($license_info_key)) {
-			$license_info_key = 'INTEGRIA-FREE';
-		}
-		
-		$sql_update = "UPDATE tconfig SET `value`='$license_info_key'
-			WHERE `token`='license'";
-		$update_manage_settings_result = process_sql($sql_update);
-		$config["license"] = $license_info_key;
-
-		$config["url_updatemanager"] = get_parameter ("url_updatemanager", $config["url_updatemanager"]);
-        	update_config_token ("url_updatemanager", $config["url_updatemanager"]);
-
-	} else {
-		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('update_manager_installed', '1');";
-		process_sql  ($sql_insert);
-		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('license', 'INTEGRIA-FREE');";
-                process_sql  ($sql_insert);
-		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('current_package', '0');";
-                process_sql  ($sql_insert);
-		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php');";
-                process_sql  ($sql_insert);	
-	}
-	
+	}	
 }
 // Render SYSTEM language code, not current language.
-$table = new StdClass();
-$table->width = '100%';
+$table->width = '99%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
@@ -186,39 +156,34 @@ $table->data[3][1] = print_select ($newsletter_options,
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
 
-$table->data[4][0] = __('License information');
-$table->data[4][0] = print_input_text ('license_info_key', $config['license'], '', 40, 255, true, __('License key'));
-$table->data[4][0] .= "&nbsp;<a id='dialog_license_info' title='".__("License Info")."' href='javascript: show_license_info(\"" . $config["expiry_day"] . "\", \"" . $config["expiry_month"] . "\",\"" . $config["expiry_year"] . "\",\"" . $config["max_users"] . "\")'>".print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
-$table->data[4][0] .= '<div id="dialog_show_license" style="display:none"></div>';	
-
 $days_of_week = get_days_of_week();
-$table->data[4][1] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
+$table->data[4][0] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
 
-$table->data[5][0] = print_input_text ("url_updatemanager", $config["url_updatemanager"], '',
+$table->data[4][1] = print_input_text ("url_updatemanager", $config["url_updatemanager"], '',
 	35, 255, true, __('URL update manager'));
 
-$table->data[5][1] = print_input_text ("loginhash_pwd", $config["loginhash_pwd"], '',
+$table->data[5][0] = print_input_text ("loginhash_pwd", $config["loginhash_pwd"], '',
 	30, 255, true, __('Loginhash password'));
 
-$table->data[6][0] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
+$table->data[5][1] = print_checkbox ("access_protocol", 1, $config["access_protocol"], true, __('Enable HTTPS access'));
 
-$table->data[6][1] = print_input_text ("access_port", $config["access_port"], '',
+$table->data[6][0] = print_input_text ("access_port", $config["access_port"], '',
 	10, 255, true, __('Access port') . 
 	print_help_tip (__("Leave blank to use default port (80)"), true));
 
-$table->data[7][0] = print_input_text ("access_public", $config["access_public"],
+$table->data[6][1] = print_input_text ("access_public", $config["access_public"],
 	'', 30, 50, true, __('Public access to server') . 
 	print_help_tip (__("Public IP or name for the server, for example (23.45.67.3 or mydomain.com)"), true));
 
 $csv_standard_encoding = !isset($config['csv_standard_encoding']) ? false : (bool) $config['csv_standard_encoding'];
-$table->data[7][1] = print_label(__('CSV encoding type'), '', '', true);
-$table->data[7][1] .=  __('Excel') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 0, '', $csv_standard_encoding, true);
-$table->data[7][1] .= print_help_tip (__("The Excel type may not be compatible with other applications"), true);
-$table->data[7][1] .=  '&nbsp;&nbsp;' . __('Other') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 1, '', $csv_standard_encoding, true);
+$table->data[7][0] = print_label(__('CSV encoding type'), '', '', true);
+$table->data[7][0] .=  __('Excel') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 0, '', $csv_standard_encoding, true);
+$table->data[7][0] .= print_help_tip (__("The Excel type may not be compatible with other applications"), true);
+$table->data[7][0] .=  '&nbsp;&nbsp;' . __('Other') . '&nbsp;' . print_radio_button ('csv_standard_encoding', 1, '', $csv_standard_encoding, true);
 
-$table->data[8][0] = print_checkbox ("enable_update_manager", 1, $config["enable_update_manager"], true, __('Enable update manager updates'));
+$table->data[7][1] = print_checkbox ("enable_update_manager", 1, $config["enable_update_manager"], true, __('Enable update manager updates'));
 
-$table->data[8][1] = print_input_text ("max_direct_download", $config["max_direct_download"], '',10, 255, true, __('Maximum direct download size (MB)'));
+$table->data[8][0] = print_input_text ("max_direct_download", $config["max_direct_download"], '',10, 255, true, __('Maximum direct download size (MB)'));
 
 echo "<form name='setup' method='post'>";
 print_table ($table);

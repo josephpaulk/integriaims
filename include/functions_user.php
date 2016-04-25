@@ -72,8 +72,19 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 	global $config;
 
 	enterprise_include ('include/functions_license.php', true);
+	
+	$is_manager_profile = enterprise_hook('license_check_manager_profile',array($profile));
+	if ($is_manager_profile == ENTERPRISE_NOT_HOOK) {
+		$users_check = true;
+	} else {
+		if ($is_manager_profile) {
+			$users_check = enterprise_hook('license_check_manager_users_num');
+		} else {
+			$users_check = enterprise_hook('license_check_regular_users_num');
+		}
+	}
 
-	while (!feof($file_handle) && (($users_check = enterprise_hook('license_check_users_num')) === true || $users_check === ENTERPRISE_NOT_HOOK)) {
+	while (!feof($file_handle) && ($users_check === true)) {
 		$line = fgets($file_handle);
 		
 		preg_match_all('/(.*),/',$line,$matches);
@@ -145,7 +156,7 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 	return;
 }
 
-function user_is_external ($id_user) {
+function user_is_standalone ($id_user) {
 	$nivel = get_db_value('nivel', 'tusuario', 'id_usuario', $id_user);
 	
 	if ($nivel == -1) {
@@ -307,6 +318,7 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 	if ($filter == 0){
 		echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
 		echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
+		echo '<th title="'.__('Enabled login').'">'.__('Enabled login');
 	}
 	echo '<th>'.__('User ID');
 	echo '<th>'.__('Name');
@@ -333,14 +345,15 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 		$avatar = $rowdup["avatar"];
 
 		if ($rowdup["nivel"] == 0)
-			$nivel = "<img src='images/group.png' title='".__("Standard user")."'>";
+			$nivel = "<img src='images/group.png' title='".__("Grouped user")."'>";
 		elseif ($rowdup["nivel"] == 1)
 			$nivel = "<img src='images/integria_mini_logo.png' title='".__("Administrator")."'>";
 		else
-			$nivel = "<img src='images/user_gray.png' title='".__("External user")."'>";
+			$nivel = "<img src='images/user_gray.png' title='".__("Standalone user")."'>";
 
 		$disabled = $rowdup["disabled"];	
-		$id_company = $rowdup["id_company"];	
+		$id_company = $rowdup["id_company"];
+		$enabled_login = $rowdup["enable_login"];	
 		
 		echo "<tr>";
 		if ($filter == 0){
@@ -350,6 +363,12 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 			echo "<td>";
 			if ($disabled == 1){
 				echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'> ";
+			}
+			echo "<td>";
+			if ($enabled_login == 1){
+				echo "<img src='images/accept.png' title='".__("Enabled login")."'> ";
+			} else {
+				echo "<img src='images/fail.png' title='".__("Disabled login")."'> ";
 			}
 		}
 		echo "<td>";

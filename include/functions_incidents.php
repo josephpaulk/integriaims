@@ -260,9 +260,9 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	foreach ($incidents as $incident) {
 		
 		//Check external users ACLs
-		$external_check = enterprise_hook("manage_external", array($incident));
+		$standalone_check = enterprise_hook("manage_standalone", array($incident));
 
-		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+		if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 			continue;
 		} else {
 
@@ -450,9 +450,9 @@ function get_incidents ($filter = array(), $only_names = false) {
 	
 	foreach ($all_incidents as $incident) {
 		//Check external users ACLs
-		$external_check = enterprise_hook("manage_external", array($incident));
+		$standalone_check = enterprise_hook("manage_standalone", array($incident));
 
-		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+		if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 			continue;
 		} else {
 		
@@ -3109,9 +3109,9 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 			foreach ($incidents as $incident) {
 				
 				//Check external users ACLs
-				$external_check = enterprise_hook("manage_external", array($incident));
+				$standalone_check = enterprise_hook("manage_standalone", array($incident));
 
-				if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+				if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 					continue;
 				} else {
 				
@@ -3702,7 +3702,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	}
 	else {
 		arsort($creator_assigned_data);
-		$submitter_label .= pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
+		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 
 	// TOP X scoring users
@@ -3740,7 +3740,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	}
 	else {
 		arsort($user_assigned_data);
-		$user_assigned_label .= pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
+		$user_assigned_label .= "<br/>".pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 
 	}
 	
@@ -3887,7 +3887,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$priority_aux = $priority_aux;
 
 	$container_title = __("Tickets by priority");
-    $container_priority_incidents = print_container_div('container_priority_incidents', $container_title, $priority_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
+    $container_priority_incidents = print_container('container_priority_incidents', $container_title, $priority_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
     
 	if ($oldest_incident) {
 		
@@ -4085,11 +4085,9 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 		echo $container_top5_incidents;
 		echo $container_openclose_incidents;
 		echo "</div>";
-		//echo '<br><br><br>';
 		
 		//~ // Fifth row
 		echo $container_ticket_oc;
-		//echo '<br><br><br><br><br><br><br><br><br><br><br><br>';
 
 		//~ // Sixth row
 		echo $container_ticket_activity;

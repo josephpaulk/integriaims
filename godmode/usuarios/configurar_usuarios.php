@@ -28,6 +28,12 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 	exit;
 }
 
+$is_enterprise = false;
+
+if (file_exists ("enterprise/load_enterprise.php")) {
+	$is_enterprise = true;
+}
+
 // Init. vars
 $comentarios = "";
 $direccion = "";
@@ -53,8 +59,9 @@ if ($user_fields === false) {
 }
 
 if (isset($_GET["borrar_grupo"])) {
-	$grupo = get_parameter ('borrar_grupo');
-	enterprise_hook ('delete_group');
+	$id_user_profile = get_parameter ('borrar_grupo');
+	$id_user = safe_output(get_parameter ("update_user", ""));
+	enterprise_hook('license_delete_user_profile', array ($id_user, $id_user_profile));
 }
 
 $action = get_parameter("action", "edit");
@@ -94,16 +101,29 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 	}
 }
 
-
 ///////////////////////////////
 // UPDATE USER
 ///////////////////////////////
 if ($action == 'update')  {
 	$enable_login = get_parameter("enable_login");
+	$user_to_update = get_parameter ("update_user");
 	
 	enterprise_include ('include/functions_license.php', true);
 
-	$users_check = enterprise_hook('license_check_users_num');
+	$users_check = true;
+	if ($enable_login) {
+		$old_enable_login = get_db_value_filter('enable_login', 'tusuario', array('id_usuario'=>$user_to_update));
+		if ($old_enable_login) {
+			$users_check = true;
+		} else {
+			$is_manager = enterprise_hook('license_check_manager_user',array($user_to_update));
+			if ($is_manager) {
+				$users_check = enterprise_hook('license_check_manager_users_num');
+			} else {
+				$users_check = enterprise_hook('license_check_regular_users_num');
+			}
+		}
+	}
 
 	if ($users_check === true || $users_check === ENTERPRISE_NOT_HOOK || !$enable_login) {
 		if (isset ($_POST["pass1"])) {
@@ -165,14 +185,33 @@ if ($action == 'update')  {
 
 				// Add group / to profile
 				// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-				if (isset($_POST["grupo"])) {
-					if ($_POST["grupo"] <> "") {
-						$grupo = $_POST["grupo"];
-						$perfil = $_POST["perfil"];
-						$id_usuario_edit = $_SESSION["id_usuario"];
-						$res = enterprise_hook('associate_userprofile');
-						if($res === false) {
-							echo "<h3 class='error'>".__('There was a problem assigning user profile')."</h3>";
+				if ($is_enterprise) {
+					if (isset($_POST["grupo"])) {
+						if ($_POST["grupo"] <> "") {
+							$grupo = $_POST["grupo"];
+							$perfil = $_POST["perfil"];
+							$id_usuario_edit = $_SESSION["id_usuario"];
+							$is_manager = enterprise_hook('license_check_manager_user',array($user_to_update));
+
+							if (!$is_manager) {
+								$is_manager_profile = enterprise_hook('license_check_manager_profile', array($perfil));
+								if ($is_manager_profile) {
+									$users_check = enterprise_hook('license_check_manager_users_num');
+								} else {
+									$users_check = true;
+								}
+							} else {
+								$users_check = true;
+							}
+							
+							if ($users_check || !$enable_login) {
+								$res = enterprise_hook('associate_userprofile');
+								if($res === false) {
+									echo "<h3 class='error'>".__('There was a problem assigning user profile')."</h3>";
+								}
+							} else {
+								echo "<h3 class='error'>".__('There was a problem assigning user profile. The number of users has reached the license limit')."</h3>";
+							}	
 						}
 					}
 				}
@@ -210,7 +249,8 @@ if ($action == 'update')  {
 			echo "<h3 class='error'>".__('There was a problem updating user')."</h3>";
 		}
 	} else {
-		echo "<h3 class='error'>".__('The number of users has reached the license limit')."</h3>";
+		$enable_login = 0;
+		echo "<h3 class='error'>".__('The number of users has reached the license limit. You can update users without enable login')."</h3>";
 	}
 } 
 
@@ -223,76 +263,77 @@ if ($action == 'create'){
 
 	enterprise_include ('include/functions_license.php', true);
 
-	$users_check = enterprise_hook('license_check_users_num');
-
-	if ($users_check === true || $users_check === ENTERPRISE_NOT_HOOK || !$enable_login) {
-
-		// Get data from POST
-		$nombre = strtolower(get_parameter ("nombre"));
-		$password = get_parameter ("pass1");
-		$password2 = get_parameter ("pass2");
-		$nombre_real = get_parameter ("nombre_real");
-		$lang = get_parameter ("lang");
-		if ($password <> $password2){
-			echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
-		}
-		$direccion = rtrim(get_parameter ("direccion"));
-		$telefono = get_parameter ("telefono");
-		$id_company = get_parameter ("id_company");
-		$comentarios = get_parameter ("comentarios");
-		if (isset($_POST["nivel"])) {
-			$nivel = get_parameter ("nivel",0);
-		}
-		$password = md5($password);
-		$avatar = get_parameter ("avatar");
-		$avatar = substr($avatar, 0, strlen($avatar)-4);
-		$disabled = get_parameter ("disabled");
-			
-		$ahora = date("Y-m-d H:i:s");
-		$num_employee = get_parameter("num_employee");
-		$location = get_parameter ("location", "");
-		$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company', $enable_login, '$location')";
-
-		$resq1 = process_sql($sql_insert);
-		
-		if (! $resq1)
-			echo "<h3 class='error'>".__('Could not be created')."</h3>";
-		else {
-
-			//Insert custom fields
-			foreach ($user_fields as $u) {
-
-				$custom_value = get_parameter("custom_".$u["id"]);
-				
-				$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
-							$custom_value, $nombre, $u["id"]);
-
-				$res = process_sql($sql);
-
-				if ($res === false) {
-					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
-				}
-			}	
-
-
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		}
-
-		$update_user = $nombre;
-		$modo ="edicion";
-
+	if ($is_enterprise) {
+		$users_check = enterprise_hook('license_check_regular_users_num');
 	} else {
-		$_GET["alta"] = 1;
-		unset($_GET["nuevo_usuario"]);
-		unset($_GET["update_user"]);
-		echo "<h3 class='error'>".__('The number of users has reached the license limit')."</h3>";
+		$users_check = true;
+	}
+	
+	if (!$users_check) {
+		$enable_login = 0;
 	}
 
+	// Get data from POST
+	$nombre = strtolower(get_parameter ("nombre"));
+	$password = get_parameter ("pass1");
+	$password2 = get_parameter ("pass2");
+	$nombre_real = get_parameter ("nombre_real");
+	$lang = get_parameter ("lang");
+	if ($password <> $password2){
+		echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
+	}
+	$direccion = rtrim(get_parameter ("direccion"));
+	$telefono = get_parameter ("telefono");
+	$id_company = get_parameter ("id_company");
+	$comentarios = get_parameter ("comentarios");
+	if (isset($_POST["nivel"])) {
+		$nivel = get_parameter ("nivel",0);
+	}
+	$password = md5($password);
+	$avatar = get_parameter ("avatar");
+	$avatar = substr($avatar, 0, strlen($avatar)-4);
+	$disabled = get_parameter ("disabled");
+		
+	$ahora = date("Y-m-d H:i:s");
+	$num_employee = get_parameter("num_employee");
+	$location = get_parameter ("location", "");
+	$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company', $enable_login, '$location')";
+
+	$resq1 = process_sql($sql_insert);
+	
+	if (! $resq1)
+		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+	else {
+
+		//Insert custom fields
+		foreach ($user_fields as $u) {
+
+			$custom_value = get_parameter("custom_".$u["id"]);
+			
+			$sql = sprintf('INSERT INTO tuser_field_data (`data`, `id_user`,`id_user_field`) VALUES ("%s", "%s", %d)',
+						$custom_value, $nombre, $u["id"]);
+
+			$res = process_sql($sql);
+
+			if ($res === false) {
+				echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+			}
+		}	
+
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+	}
+
+	$update_user = $nombre;
+	$modo ="edicion";
+
+	if (!$users_check) {
+		echo "<h3 class='error'>".__('User has been created disabled. The number of users has reached the license limit')."</h3>";
+	}
 }
 
 if (isset($_GET["alta"])){
 	if ($_GET["alta"]==1){
-		echo '<h2>'.__('Create user').'</h2>';
+		echo '<h1>'.__('Create user').'</h1>';
 	}
 }
 
@@ -410,31 +451,31 @@ print_company_autocomplete_input($params);
 <tr><td class="datos"><?php echo __('Location') ?>
 <td class="datos" colspan=2><input type="text" name="location" value="<?php echo $location ?>">
 
-<tr><td class="datos2"><?php echo __('Global profile') ?>
+<tr><td class="datos2"><?php echo __('User mode') ?>
 
 <td class="datos2" colspan=2>
 <?php if ($nivel == 1){
-	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked>';
+	echo __('Super administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked>';
 	echo "&nbsp;&nbsp;";
-	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0">';
+	echo __('Grouped user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0">';
 	echo "&nbsp;&nbsp;";
-	echo __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
+	echo __('Standalone user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
 	
 } elseif ($nivel == 0) {
-	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1">';
+	echo __('Super administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1">';
 	echo "&nbsp;&nbsp;";
-	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked>';
+	echo __('Grouped user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked>';
 	echo "&nbsp;&nbsp;";
-	echo __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
+	echo __('Standalone user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
 } else {
-	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1">';
+	echo __('Super administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1">';
 	echo "&nbsp;&nbsp;";
-	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0">';
+	echo __('Grouped user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0">';
 	echo "&nbsp;&nbsp;";
-	echo __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1" checked>';
+	echo __('Standalone user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1" checked>';
 }
 
-print_help_tip (__("External users cannot work inside a group, will show only it's own data. Standard users works with the ACL system, and administrators have full access to everything", false));
+print_help_tip (__("Standalone users cannot work inside a group, will show only it's own data. Grouped users works with the ACL system, and super administrators have full access to everything", false));
 
 echo "<tr>";
 echo "<td>";

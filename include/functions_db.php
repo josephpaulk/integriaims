@@ -648,15 +648,15 @@ function dame_admin ($id) {
 }
 
 // ---------------------------------------------------------------
-// Returns true is provided user is external
+// Returns true is provided user is standalone
 // ---------------------------------------------------------------
 
-function get_external_user ($id) {
-	$nivel = get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
-	if ($nivel == -1)
-		return true;
-	return false;
-}
+//~ function get_external_user ($id) {
+	//~ $nivel = get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
+	//~ if ($nivel == -1)
+		//~ return true;
+	//~ return false;
+//~ }
 
 
 // --------------------------------------------------------------- 
@@ -928,18 +928,6 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0, $user = '
 	case INCIDENT_INVENTORY_REMOVED:
 		$description = 'Removed inventory object ';
 		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
-		break;
-	case INCIDENT_GOLD_MEDAL_ADDED:
-		$description = 'Added gold medal ';
-		break;
-	case INCIDENT_GOLD_MEDAL_REMOVED:
-		$description = 'Removed gold medal ';
-		break;
-	case INCIDENT_BLACK_MEDAL_ADDED:
-		$description = 'Added black medal ';
-		break;
-	case INCIDENT_BLACK_MEDAL_REMOVED:
-		$description = 'Removed black medal ';
 		break;
 	default:
 		$description = 'Unknown update';
@@ -1412,7 +1400,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 	
-	// External user only can see himself
+	// Standalone user only can see himself
 	if ($level == -1){
 		$values[$id_user] = get_db_sql ("SELECT nombre_real FROM tusuario WHERE id_usuario = '$id_user'");
 		return $values;
@@ -2779,14 +2767,14 @@ function check_company_acl ($id_user, $id_company, $flag) {
 	if (dame_admin($id_user)) {
 		return true;
 	}
-	$external = get_external_user ($id_user);
-	$return = enterprise_hook ('check_company_acl_extra', array ($id_user, $id_company, $flag, $external));
+	$standalone = get_standalone_user ($id_user);
+	$return = enterprise_hook ('check_company_acl_extra', array ($id_user, $id_company, $flag, $standalone));
 		
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
-	if ($external) {
+	if ($standalone) {
 		$company = get_user_company ($id_user, false);
-		// External users only can see the company which belongs
+		// standalone users only can see the company which belongs
 		if ($company['id'] != $id_company)
 			return false;
 	}
@@ -2833,7 +2821,7 @@ function get_filter_by_company_accessibility ($id_user) {
 	global $config;
 	
 	$company = get_user_company ($id_user, false);
-	if (get_external_user ($id_user))
+	if (get_standalone_user ($id_user))
 		return "IN (".$company['id'].")";
 	$return = enterprise_hook ('get_filter_by_company_accessibility_extra', array($company['id']));
 	if ($return !== ENTERPRISE_NOT_HOOK && !dame_admin($id_user))
@@ -2995,6 +2983,17 @@ function get_resolution_name ($id_resolution) {
 
 function get_status_name ($id_status) {
 	return get_db_value('name', 'tincident_status', 'id', $id_status);
+}
+
+// ---------------------------------------------------------------
+// Returns true is provided user is standalone
+// ---------------------------------------------------------------
+
+function get_standalone_user ($id) {
+	$nivel = get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
+	if ($nivel == -1)
+		return true;
+	return false;
 }
 
 ?>

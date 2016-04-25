@@ -24,9 +24,9 @@ $incident = get_db_row ('tincidencia', 'id_incidencia', $id);
 
 //user with IR and incident creator see the information
 $check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-$external_check = enterprise_hook("manage_external", array($incident));
+$standalone_check = enterprise_hook("manage_standalone", array($incident));
 
-if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
+if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check)) {
  	// Doesn't have access to this page
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
 		'Trying to access files of ticket #'.$id." '".$titulo."'");
@@ -36,6 +36,12 @@ if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== 
 	} else {
 		return;
 	}
+}
+
+$is_enterprise = false;
+
+if ($check_acl != ENTERPRISE_NOT_HOOK) {
+	$is_enterprise = true;
 }
 
 if (!$id) {
@@ -71,7 +77,7 @@ if (defined ('AJAX')) {
 				$filename = str_replace (" ", "_", $filename); // Replace conflictive characters
 				$filename = filter_var($filename, FILTER_SANITIZE_URL); // Replace conflictive characters
 				$file_tmp = $_FILES["upfile"]['tmp_name'];
-				$filesize = $_FILES["upfile"]["size"]; // In bytes
+				$filesize = filesize($file_tmp); // In bytes
 
 				$values = array(
 						"id_incidencia" => $id,
@@ -79,7 +85,7 @@ if (defined ('AJAX')) {
 						"filename" => $filename,
 						"description" => __('No description available'),
 						"size" => $filesize,
-						"timestamp" => date("Y-m-d")
+						"timestamp" => date("Y-m-d H:i:s")
 					);
 				$id_attachment = process_sql_insert("tattachment", $values);
 

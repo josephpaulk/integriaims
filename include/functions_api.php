@@ -119,25 +119,12 @@ function api_create_incident ($return_type, $user, $params){
 	// $id is the user who create the incident
 	
 	$group = $params[1];
-	$id_incident_type = (int) $params[5];
-	
+
 	if (! give_acl ($user, $group, "IW")){
 		audit_db ($user,  $_SERVER['REMOTE_ADDR'],
 			"ACL Forbidden from API",
 			"User ".$user." try to create ticket");
 		exit;
-	}
-	
-	//check if group belong id_incident_type 
-	if($id_incident_type){
-		$group_groups = get_db_value ('id_group', 'tincident_type', 'id', $id_incident_type);
-		$name_group = get_db_value ('nombre', 'tgrupo', 'id_grupo', $group);
-		if($group_groups){
-			$array_group_groups = explode(', ', $group_groups);
-			if(!in_array($name_group, $array_group_groups)){
-				exit;
-			}
-		}
 	}
 
 	$timestamp = print_mysql_timestamp();
@@ -463,19 +450,6 @@ function api_update_incident ($return_type, $user, $params){
 	}
 
 	$values['id_incident_type'] = $params[10];
-	
-	//check if group belong id_incident_type 
-	if($id_incident_type){
-		$group_groups = get_db_value ('id_group', 'tincident_type', 'id', $params[10]);
-		$name_group = get_db_value ('nombre', 'tgrupo', 'id_grupo', $params[4]);
-		if($group_groups){
-			$array_group_groups = explode(', ', $group_groups);
-			if(!in_array($name_group, $array_group_groups)){
-				exit;
-			}
-		}
-	}
-	
 	$values['extra_data'] = $params[11];
 	$values['extra_data2'] = $params[12];
 	$values['extra_data3'] = $params[13];
@@ -856,7 +830,7 @@ function api_attach_file ($return_type, $user, $params){
 	$filesize = $params[2];
 	$file_description = $params[3];
 	$file_content = base64_decode(str_replace("&#x20;", "+", $params[4]));
-
+	
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 			filename, description, size, timestamp)
 			VALUES (%d, "%s", "%s", "%s", %d, "%s")',
@@ -884,8 +858,8 @@ function api_attach_file ($return_type, $user, $params){
 	 
 	$file_handler = fopen($filename,"w"); 
 
-	$write = fputs($file_handler,$file_content); 
-	 
+	fputs($file_handler,$file_content); 
+
 	$close = fclose($file_handler); 
 		
 	if (! $file_handler) {

@@ -355,7 +355,7 @@ if ($check_incident) {
 	if ($incident !== false && (give_acl ($config['id_user'], $id_grupo, "IR")
 		|| ($incident["id_creator"] == $config["id_user"]))){
 	
-		if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"]))
+		if ((get_standalone_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"]))
 			echo 0;
 		else
 			echo 1;
@@ -372,7 +372,7 @@ if (isset($incident)) {
 
 	if ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) {
 	 	// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket  (External user) ".$id);
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket  (Standalone user) ".$id);
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -862,8 +862,7 @@ if ($id) {
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
 
-}
-else {
+} else {
 	$create_incident = true;
 	$titulo = "";
 	$description = "";
@@ -878,8 +877,7 @@ else {
 	$epilog = "";
 	if ($config['show_creator_blank']) {
 		$id_creator = "";
-	}
-	else {
+	} else {
 		$id_creator = $config['id_user'];
 	}
 	
@@ -906,8 +904,7 @@ if (! $id) {
 		$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 		// Take first group defined for this user
 		$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
-	}
-	else {
+	} else {
 		$default_id_group = 1;
 		$number_group = 1;
 	}
@@ -1100,7 +1097,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 
 	$disabled_creator = false;
 	
-	if (!$config["change_creator_owner"] || $blocked_incident) {
+	if (!$config["change_creator_owner"] || $blocked_incident || get_standalone_user($config['id_user'])) {
 		$disabled_creator = true;
 	}
 	
@@ -1111,12 +1108,13 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
-	$params_creator['attributes'] = 'style="width:210px;"';
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
-	//add button to display info user for creator
-	$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-}
-else {
+	
+	if (!$disabled_creator) {
+		//add button to display info user for creator
+		$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	}
+} else {
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
@@ -1136,7 +1134,7 @@ if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
 	$disabled_creator = false;
 	
-	if (!$config["change_creator_owner"] || $blocked_incident) {
+	if (!$config["change_creator_owner"] || $blocked_incident || get_standalone_user($config['id_user'])) {
 		$disabled_creator = true;
 	}
 	
@@ -1148,10 +1146,12 @@ if ($has_im) {
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	$params_assigned['disabled'] = $disabled_creator;
-	$params_assigned['attributes'] = 'style="width:210px;"';
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
-	//add button to display info user for owner
-	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 1);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	
+	if (!$disabled_creator) {
+		//add button to display info user for owner
+		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 1);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	}
 } else {
 	$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
 	$table->data[2][1] .= print_label (__('Owner'), 'id_user', '', true,

@@ -5,7 +5,7 @@ require_once ('include/functions_db.php');
 
 function print_setup_tabs($selected_tab, $is_enterprise) {
 	$setup_class = $visual_class = $password_class = $incidents_class = $mail_class = 
-	$mailtemplates_class = $visibility_class = $inventory_class = $auth_class = $crm_class = $maintenance_class = "";
+	$mailtemplates_class = $visibility_class = $inventory_class = $auth_class = $crm_class = $maintenance_class = $license_class = "";
 	
 	switch ($selected_tab) {
 		case 'setup':
@@ -56,6 +56,10 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 			$project_class = 'button-bar-selected';
 			$title = (__('Project management'));
 			break;
+		case 'license':
+			$license_class = 'button-bar-selected';
+			$title = (__('License'));
+			break;
 	}
 	echo "<h2>" . __("Configuration Integria") . "</h2>";
 	echo "<h4>" . $title;
@@ -77,6 +81,7 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 	echo '<li class="' . $crm_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/invoice_dark.png"  title="'.__('CRM setup').'"></span></a></li>';
 	echo '<li class="' . $maintenance_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_maintenance"><span><img src="images/trash.png"  title="'.__('Old data maintenance').'"></span></a></li>';
 	echo '<li class="' . $project_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_project"><span><img src="images/star_dark.png"  title="'.__('Project management').'"></span></a></li>';
+	echo '<li class="' . $license_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_license"><span><img src="images/license.png"  title="'.__('License').'"></span></a></li>';
 	echo '</ul>';
 
 	echo '</div>';

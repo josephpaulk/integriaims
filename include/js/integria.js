@@ -391,12 +391,12 @@ function eraseCookie(name) {
 }
 
 // Show the modal window of license info
-function show_license_info(expiry_day, expiry_month, expiry_year, max_users) {
+function show_license_info(expiry_day, expiry_month, expiry_year, max_manager_users, max_regular_users) {
 
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/license&get_license_info=1&expiry_day="+expiry_day+"&expiry_month="+expiry_month+"&expiry_year="+expiry_year+"&max_users="+max_users,
+		data: "page=include/ajax/license&get_license_info=1&expiry_day="+expiry_day+"&expiry_month="+expiry_month+"&expiry_year="+expiry_year+"&max_manager_users="+max_manager_users+"&max_regular_users="+max_regular_users,
 		dataType: "html",
 		success: function(data){	
 			$("#dialog_show_license").html (data);
@@ -479,7 +479,7 @@ $(document).ready(function() {
 		var arrow = $('#' + $(this).attr('id') + ' th.img_arrow' + ' img').attr('src');
 		var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');
 		var new_arrow = '';
-		console.log(arrow);
+
 		if($('#' + $(this).attr('id') + '_div').css('display') == 'none') {
 			new_arrow = arrow.replace(/_down/gi, "_right");
 			$('#' + $(this).attr('id')+ ' th.img_arrow' + ' img').attr('class', 'arrow_right');

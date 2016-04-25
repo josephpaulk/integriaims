@@ -19,7 +19,7 @@ if (!isset($config["id_user"]))
 echo "<ul>";
 
 // Projects
-if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
+if (give_acl($config["id_user"], 0, "PR") && ($show_projects != MENU_HIDDEN) && (get_standalone_user($config["id_user"]) == false)){
     // Project
     if ($sec == "projects")
 	    echo "<li id='current' class='project'>";
@@ -109,7 +109,7 @@ if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl) {
 }
 
 // Inventory
-if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_inventory != MENU_HIDDEN) {
+if (give_acl($config["id_user"], 0, "VR") && (get_standalone_user($config["id_user"]) == false) && $show_inventory != MENU_HIDDEN) {
     if ($sec == "inventory" )
 	    echo "<li id='current' class='inventory'>";
     else
@@ -117,20 +117,10 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     echo "<div>|</div>";
     echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
-/*
-if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_reports != MENU_HIDDEN) {
-    // REPORTS
-    if ($sec == "reports" )
-	    echo "<li id='current' class='reports'>";
-    else
-	    echo "<li class='reports'>";
-    echo "<div>|</div>";
-    echo "<a href='index.php?sec=reports&sec2=enterprise/operation/reporting/folder'>".__('Reports')."</a></li>";
-}
-*/
+
 // Customers
 
-if ((give_acl($config["id_user"], 0, "CR") || (give_acl($config["id_user"], 0, "CN"))) && (get_external_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {
+if ((give_acl($config["id_user"], 0, "CR") || (give_acl($config["id_user"], 0, "CN"))) && (get_standalone_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {
     if ($sec == "customers" )
 	    echo "<li id='current' class='customer'>";
     else

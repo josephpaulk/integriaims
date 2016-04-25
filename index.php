@@ -109,6 +109,7 @@ $is_enterprise = false;
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
 	require_once ("enterprise/load_enterprise.php");
+	require_once ("enterprise/include/functions_license.php");
 	$is_enterprise = true;
 }
 
@@ -321,29 +322,47 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 		echo '<body class="login">';
 		require_once ('general/login_page.php');
 		exit;
-	}
-	else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
-		unset ($_GET["sec2"]);
-
-		if ($custom_screen_loaded) {
-			$sec2 = 'enterprise/operation/custom_screens/custom_screens';
-		} else {
-			$_GET["sec"] = "general/home";
+	} else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
+		
+		$check_managers = license_check_manager_users_num ();
+		$check_regulars = license_check_regular_users_num ();
+		$license_fail = false;	
+		if (!$check_managers || !$check_regulars) {
+			$license_fail = true;
+			license_block_users();
+		} 
+		if ($is_admin) {
+			$license_fail = false;
 		}
-		logon_db ($nick_in_db, $_SERVER['REMOTE_ADDR']);
-		$_SESSION['id_usuario'] = $nick_in_db;
-		$config['id_user'] = $nick_in_db;
-		if ($sec2 == '') {
+			
+		if (!$license_fail) {
+			unset ($_GET["sec2"]);
+
 			if ($custom_screen_loaded) {
 				$sec2 = 'enterprise/operation/custom_screens/custom_screens';
 			} else {
-				$sec2 = 'general/home';
+				$_GET["sec"] = "general/home";
 			}
+			logon_db ($nick_in_db, $_SERVER['REMOTE_ADDR']);
+			$_SESSION['id_usuario'] = $nick_in_db;
+			$config['id_user'] = $nick_in_db;
+			if ($sec2 == '') {
+				if ($custom_screen_loaded) {
+					$sec2 = 'enterprise/operation/custom_screens/custom_screens';
+				} else {
+					$sec2 = 'general/home';
+				}
 
-		}
-		$minor_release_message = db_update_schema(); // MINOR RELEASES
-	}
-	else { //login wrong
+			}
+			$minor_release_message = db_update_schema(); // MINOR RELEASES
+
+		} else {
+			echo '<body class="login">';
+				require_once ('general/login_page.php');
+				exit;
+		}	
+
+	} else { //login wrong
 		$blocked = false;
 		
 		if (!$expired_pass) {	
@@ -429,7 +448,6 @@ load_menu_visibility();
 	"Create contact" : "<?php echo __('Create contact')?>",
 	"Search parent inventory" : "<?php echo __('Search parent inventory')?>"
 };
-
 </script>
 
 <?php
@@ -458,58 +476,54 @@ echo '<body>';
 $session_id = session_id();
 session_write_close ();
 
-$id_menu = "main";
 // Special pages, which doesn't use sidemenu
-if (($sec2 == "") OR ($sec2 == "general/home") OR
-		($_POST['login'] == 1 AND $custom_screen_loaded) OR
-		($sec2 == 'enterprise/operation/custom_screens/custom_screens') OR
-			($pure == true)) {
+if (($sec2 == "") OR ($sec2 == "general/home") OR ($_POST['login'] == 1 AND $custom_screen_loaded) OR ($sec2 == 'enterprise/operation/custom_screens/custom_screens')) {
 	$not_show_menu = 1;
-	$id_menu = "main_pure";
 }
 
 // Clean output (for reporting or raw output
 if ($clean_output == 0) {
 ?>
 	<div id="wrap">
-		<?php
-		if (!$pure) {
-			echo '<div id="header">';
-				 require ("general/header.php"); 
-			echo "</div>";
-		}
-		?>
-		<!--
-		<div id="menu">
-		<?php require ("operation/main_menu.php"); ?>
+		<div id="header">
+			<?php require ("general/header.php"); ?>
 		</div>
-		-->
-		
 
-			<!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
-			<!-- DO NOT USE CSS HERE -->
+	<!--
+	<div id="menu">
+	<?php require ("operation/main_menu.php"); ?>
+	</div>
+	-->
+	
 
-		<div width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px'>
-			
-			<?php
-			// Avoid render left menu for some special places (like home).
-			if ($not_show_menu == 0){
-					echo '<div id="sidebar">';
-						require ("operation/side_menu.php"); 
-						if (give_acl ($config["id_user"], 0, "AR"))
-							require ("operation/tool_menu.php");
-					echo '</div>';
-			}
-			?>
-				
-			<div id="<?php echo $id_menu; ?>">
-				<?php			
+        <!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
+        <!-- DO NOT USE CSS HERE -->
+
+        <table width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px'>
+	<tr>
+
+	<?php
+
+        // Avoid render left menu for some special places (like home).
+        if ($not_show_menu == 0){
+			echo '<td valign=top style="width: 150px;">';
+			echo '<div id="sidebar">';
+			require ("operation/side_menu.php"); 
+			if (give_acl ($config["id_user"], 0, "AR"))
+				require ("operation/tool_menu.php");
+			echo '</div></td>';
+		}
+	?>
+	
+        <td valign=top>
+			<div id="main">
+			<?php			
 				// Open a dialog if the database schema update has returned messages
 				if ($minor_release_message) {
 					echo "<div class= 'dialog ui-dialog-content' title='".__("Minor release update")."' id='mr_dialog'>$minor_release_message</div>";
-						echo "<script type='text/javascript'>";
-							echo "$(document).ready (function () {";
-								echo "$('#mr_dialog').dialog ({
+					echo "<script type='text/javascript'>";
+					echo "	$(document).ready (function () {";
+					echo "		$('#mr_dialog').dialog ({
 									resizable: true,
 									draggable: true,
 									modal: true,
@@ -520,16 +534,16 @@ if ($clean_output == 0) {
 									width: 400,
 									height: 150
 								});";
-								echo "$('#mr_dialog').dialog('open');";
-						echo "	});";
+					echo "		$('#mr_dialog').dialog('open');";
+					echo "	});";
 					echo "</script>";
 				}
-
+				
 				if (get_parameter ('login', 0) !== 0) {
 					// Display news dialog
 					include_once("general/news_dialog.php");
 				}
-
+				
 				// Page loader / selector
 				if ($sec2 != "") {
 					if (file_exists ($sec2.".php")) {
@@ -563,9 +577,10 @@ if ($clean_output == 0) {
 						require ("general/home.php");
 					}
 				}
-				?>
+			?>
 			</div>
-		</div>
+
+		</td></tr></table>
 	<!-- wrap ends here -->
 	</div>
 
