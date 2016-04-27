@@ -194,3 +194,4 @@ INSERT INTO `treport_type` VALUES (2,'Graphics');
 INSERT INTO `treport_type` VALUES (2,'List & Graphics');
 INSERT INTO `treport_subtype` VALUES (1,'Tickets');
 
+INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0),('people',1,0);

@@ -662,8 +662,6 @@ if ($action == "insert" && !$id) {
 	$old_resolution = $resolution;
 	
 	
-	// If user is not provided, is the currently logged user or user group by default
-	//~ $usuario = get_parameter ("id_user", $config['id_user']);
 	$usuario = get_parameter('id_user', '');
 	
 	if ($usuario == '') {
@@ -773,7 +771,6 @@ if ($action == "insert" && !$id) {
 					
 					$values_insert['id_incident'] = $id;
 					$values_insert['data'] = get_parameter (base64_encode($label['label']));
-					//~ $values_insert['data'] = str_replace('&#x0d;&#x0a;', "",get_parameter (base64_encode($label['label'])));
 					$values_insert['id_incident_field'] = $id_incident_field;
 					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
 					process_sql_insert('tincident_field_data', $values_insert);
@@ -811,7 +808,8 @@ if ($action == "insert" && !$id) {
 
 			// If the ticket creation is successful, redirect the page to the ticket dashboard detail of the new ticket
 			echo "<script type=\"text/javascript\">";
-			echo	"document.location.search= \"?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id\"";
+			//~ echo	"document.location.search= \"?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id\"";
+			echo	"document.location.search= \"?sec=incidents&sec2=operation/incidents/incident_search\"";
 			echo "</script>";
 			exit;
 			
@@ -1511,6 +1509,11 @@ $(document).ready (function () {
 		var incident_groups = show_incident_groups_fields(id_incident_type);
 		var obj = jQuery.parseJSON(incident_groups);
 		
+		jQuery.each (obj, function (id, value) {
+			value_aux = value.replace(/&nbsp;/g, '\u00a0');
+			obj[id] = value_aux;
+		});
+
 		$("#grupo_form option").remove();
 		for (var id in obj){
 			$("#grupo_form").append(new Option(obj[id], id));
