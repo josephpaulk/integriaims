@@ -116,7 +116,9 @@ if ($operation == "create" || $operation == "update") {
 	echo "<h2>".__('Milestone')."</h2>";
 	
 	if ($id_milestone) {
-		echo "<h4>".__('Update')."</h4>";
+		echo "<h4>".__('Update');
+		echo integria_help ("milestones", true);
+		echo "</h4>";
 		$milestone = get_db_row ("tmilestone", "id", $id_milestone);
 		$name = $milestone["name"];
 		$description = $milestone["description"];
@@ -125,7 +127,9 @@ if ($operation == "create" || $operation == "update") {
 		$id_project = $milestone["id_project"];
 	}
 	else {
-		echo "<h4>".__('Creation')."</h4>";
+		echo "<h4>".__('Creation');
+		echo integria_help ("milestones", true);
+		echo "</h4>";
 		$name = '';
 		$description = '';
 		$timestamp = date("Y-m-d");
@@ -173,7 +177,9 @@ if ($operation == "create" || $operation == "update") {
 // -------------------------
 if ($operation == ""){
 	echo "<h2>".__('Milestones')."</h2>";
-	echo "<h4>".__('Management')."</h4>";
+	echo "<h4>".__('Management');
+	echo integria_help ("milestones", true);
+	echo "</h4>";
 	
 	echo "<div class='divresult' >";
 	echo "<table class='listing' width=100%>";

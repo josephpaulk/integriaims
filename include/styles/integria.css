@@ -647,6 +647,7 @@ select.pagesize {
 
 input[type="image"] {
 	border: none;
+	vertical-align: middle;
 }
 
 input[type="submit"], input[type="button"] {
