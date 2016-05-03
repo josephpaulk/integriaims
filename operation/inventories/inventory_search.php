@@ -268,7 +268,6 @@ return;
 	$offset = (int)get_parameter('offset', $params_array['offset']);	
 	$params['offset'] = $offset;
 
-	$last_update = get_parameter ('last_update');
 
 	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
 
@@ -527,13 +526,20 @@ return;
 	}
 
 	if ($mode == 'list'){
-		$sql_search .= " order by $sort_field $sort_mode ";
-		$sql_search_pagination .= " group by i.id order by $sort_field $sort_mode ";
+		$last_update = (int)get_parameter('last_update', 0);
+		if(!$last_update){
+			$sql_search .= " order by $sort_field $sort_mode ";
+			$sql_search_pagination .= " group by i.id order by $sort_field $sort_mode ";
+		} else {
+			$sql_search .= " order by i.last_update";
+			$sql_search_pagination .= " group by i.id order by i.last_update desc ";
+		}
 		$sql_search_count .=  " group by i.id";
 		$params['mode'] = $mode;
 		$params['sort_field_num'] = $sort_field_num;
 		$params['sort_mode'] = $sort_mode;
 		$params['count_object_custom_fields'] =$count_object_custom_fields;
+		$params['last_update'] = $last_update;
 	}
 
 if (!$pure) {
@@ -647,7 +653,9 @@ if (!$pure) {
 		$table_search->size[1] = "35%";
 		
 		//find
-		$table_search->data[0][0] = print_input_text ('search_free', $params['search_free'], '', 25, 128, true, __('Search'));
+		//
+		$table_search->data[0][0] = print_input_text ('search_free', $params['search_free'], '', 25, 128, true, __('Search'). print_help_tip (__("
+Search by id, name, status, description and custom fields"), true));
 		
 		//associate company
 		$companies = get_companies();
@@ -734,7 +742,7 @@ switch ($mode) {
 		echo '</div>';
 		break;
 	case 'list':
-		echo '<div style="display: none;" id="tmp_data"></div>';
+		echo '<div id="tmp_data"></div>';
 		echo '<div class = "inventory_list_table" id = "inventory_list_table">';
 			echo '<div id= "inventory_only_table">';
 				inventories_show_list2($sql_search, $sql_search_count, $params, $last_update, 0, $count_object_custom_fields, $sql_search_pagination);
@@ -742,7 +750,7 @@ switch ($mode) {
 		echo '</div>';
 		break;
 	default:
-		echo '<div style="display: none;" id="tmp_data"></div>';
+		echo '<div id="tmp_data"></div>';
 		echo '<div class = "inventory_list_table" id = "invetory_list_table">';
 			echo '<div id= "inventory_only_table">';
 				inventories_show_list2($sql_search, $sql_search_count, $params, $last_update, 0, $count_object_custom_fields, $sql_search_pagination);

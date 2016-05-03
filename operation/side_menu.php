@@ -543,7 +543,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".__('Create inventory object')."</a></li>";
 	}
 	
-	if ($sec2 == "operation/inventories/inventory") {
+	if ($sec2 == "operation/inventories/inventory" || "operation/inventories/inventory_detail") {
 		echo '<li>';
 		echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';
 		//echo '<form id="goto-inventory-form">';

@@ -552,6 +552,7 @@ function tree_search_submit(pure){
 	}
 	
 	var id_object = $('#tree_search').serialize();
+
 	$("#inventory_list_table").html("<img id='inventory_loading' src='images/carga.gif' />");
 	$("#inventory_tree_table").html("<img id='inventory_loading' src='images/carga.gif' />");
 	$.ajax({	
@@ -598,76 +599,21 @@ function tree_search_submit(pure){
 	});
 }
 
+//function delete one elements from inventory
 function delete_object_inventory (id_inventory) {	
 	$.ajax({
-	    type: 'POST',
-	    url: 'index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete=' + id_inventory,
-	    success: function(){
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&quick_delete=1&id_inventory=" + id_inventory,
+		dataType: "html",
+	    success: function(data){
         	tree_search_submit();
-        	//message
+        	$("#tmp_data").html(data);
+    		$("#tmp_data").css('margin-bottom', '30px');
+    		$("#tmp_data").show('fast').delay(3000).hide('fast');
     	}
 	});
 }
-
-/*
-function send_params_inventory(id_inventory) {
-	search_free = $('#text-search_free').val();
-	id_company = $('#id_company').val();
-	owner = $('#text-owner').val();
-	id_contract = $('#id_contract').val();
-	id_manufacturer = $('#id_manufacturer').val();
-	associated_user = $('#text-associated_user').val();
-	inventory_status = $('#inventory_status').val();
-	parent_name = $('#text-parent_name').val();
-	id_object_type_search = $('#id_object_type_search').val();
-	sort_field = $('#hidden-sort_field').val();
-	sort_mode = $('#hidden-sort_mode').val();
-	mode = $('#hidden-mode').val();
-
-	$.ajax({
-	    type: 'POST',
-	    url: 'index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete=' + id_inventory,
-	    data: { 
-	        offset: 0,
-			//search: 1,
-			search_free: search_free,
-			last_update: '',
-			//object_fields: 
-			id_object_type_search: id_object_type_search,
-			owner: owner,
-			id_manufacturer: id_manufacturer,
-			id_contract: id_contract,
-			inventory_status: inventory_status,
-			id_company: id_company,
-			associated_user: associated_user,
-			parent_name: parent_name,
-			sort_mode: sort_mode,
-			sort_field: sort_field,
-			mode: mode
-	    },
-	    success: function(){
-        	tree_search_submit();
-    	}
-	});
-}
-*/
-
-//serialize form in Json
-$.fn.serializeObject = function(){
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-};
 
 // Show the modal window of company associated
 function show_company_associated() {

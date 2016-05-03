@@ -65,11 +65,13 @@ if (get_parameter("quick_delete")) {
 	if (give_acl ($config['id_user'], 0, "VW")) {
 		borrar_objeto ($id_inv);
 		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		$pr = 1;
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "Object deleted","User ".$config['id_user']." deleted object #".$id_inv);
 	} else {
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete object");
 		echo "<h3 class='error'>".__('There was a problem deleting object')."</h3>";
 		no_permission();
+		$pr = 2;
 	}
 	
 	$massive_number_loop = get_parameter ('massive_number_loop', -1);	
@@ -321,6 +323,19 @@ $(document).ready (function () {
 			);
 		}
 	);
+	/*
+	pr = <?php echo $pr ?>;
+	if (pr == 1){
+		//var h3_suc_content = <?php echo __('Successfully deleted'); ?>;
+		
+	}
+
+	if (pr == 2){
+		//var h3_suc_content = <?php echo __('Successfully deleted'); ?>;
+		var h3_suc = $('<h3></h3>').addClass('suc');
+		$('#inventory_list_table').append(h3_suc);
+	} 
+	*/
 });
 
 </script>
