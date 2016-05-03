@@ -372,16 +372,17 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	$condition = get_filter_by_kb_product_accessibility();
 	
 	$count = get_db_sql("SELECT COUNT(id) FROM tkb_data $condition $sql_filter");
-	pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
 	
 	$sql1 = "SELECT * FROM tkb_data $condition $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
 	$result = process_sql($sql1);
 
 	$color = 0;
 	echo "<div class='divresult'>";
+	
 	$result=db_process_sql($sql1);
 	if ($result){
-				
+		pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
+		
 		echo '<table width="100%" class="listing">';
 
 		echo "<th>".__('Title')."</th>";

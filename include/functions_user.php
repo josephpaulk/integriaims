@@ -309,11 +309,11 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 
 	$count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
 	
-	pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=".$search_text."&disabled_user=".$disabled_user."&level=".$level."&group=".$group, $offset, true);
-
 	$sql1 = "$query1 LIMIT $offset, ". $size_page;
 	
 	echo "<div class='divresult'>";
+	pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=".$search_text."&disabled_user=".$disabled_user."&level=".$level."&group=".$group, $offset, true);
+
 	echo '<table width="100%" class="listing">';
 	if ($filter == 0){
 		echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
@@ -414,4 +414,24 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 	echo "</table>";
 	echo "</div>";
 }
+
+// Check if a user can manage a group when group is all
+// This function dont check acls of the group, only if the 
+// user is admin or pandora manager and the group is all
+function users_can_manage_group_all($id_group = 1, $access = "IR") {
+	global $config;
+	
+	if ($id_group != 1) {
+		return true;
+	}
+	
+	$is_admin = get_admin_user($config['id_user']);
+	
+	if (give_acl ($config['id_user'], 1, $access) || $is_admin) {
+		return true;
+	}
+	
+	return false;
+}
+
 ?>

@@ -617,7 +617,7 @@ if (!$pure) {
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/icono_files.png", true, array("title" => __('Files'))).'</a>';
 	echo '</li>';
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&pure=1">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Statistics'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&pure=1&tab=tracking#incident-operations">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Statistics'))).'</a>';
 	echo '</li>';
 
 	$tab_extensions = get_tab_extensions($sec2, "indicent-details-view");
