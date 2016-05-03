@@ -21,3 +21,45 @@ ALTER TABLE `tprofile` ADD `rw` tinyint(1) NOT NULL default '0';
 ALTER TABLE `tprofile` ADD `rm` tinyint(1) NOT NULL default '0';
 
 UPDATE `tconfig` SET `value` = '5.0' WHERE `token` = 'db_scheme_version';
+
+CREATE TABLE `tfolder_report` (
+ `id` bigint(20) unsigned NOT NULL auto_increment,
+ `nombre`  mediumtext NOT NULL,
+ `description`  text DEFAULT '',
+ `private` tinyint(1) unsigned NOT NULL DEFAULT 0,
+ `id_group` varchar(60) NOT NULL default "1",
+ `id_user` varchar(60) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treport` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre`  mediumtext NOT NULL,
+  `type` tinyint unsigned NOT NULL DEFAULT 0,
+  `subtype` tinyint unsigned NOT NULL DEFAULT 0,
+  `id_group` varchar(60) NOT NULL default "1",
+  `id_folder` bigint(20) unsigned default 0,
+  `fields_to_show` longtext NOT NULL default '',
+  `order_by` text NOT NULL default '',
+  `group_by` text NOT NULL default '',
+  `where_clause` text NOT NULL default '',
+   PRIMARY KEY  (`id`),
+   FOREIGN KEY (`id_folder`) REFERENCES tfolder_report(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treport_type` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre`  mediumtext NOT NULL,
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `treport_subtype` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `nombre`  mediumtext NOT NULL,
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `treport_type` VALUES (1,'List');
+INSERT INTO `treport_type` VALUES (2,'Graphics');
+INSERT INTO `treport_type` VALUES (2,'List & Graphics');
+INSERT INTO `treport_subtype` VALUES (1,'Tickets');
