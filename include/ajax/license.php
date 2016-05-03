@@ -19,14 +19,16 @@ $get_license_info = get_parameter('get_license_info', 0);
 
 if ($get_license_info) {
 
-$expiry_day = get_parameter('expiry_day');
-$expiry_month = get_parameter('expiry_month');
-$expiry_year = get_parameter('expiry_year');
-$max_users = get_parameter('max_users');
-$config['expiry_day'] = $expiry_day;
-$config['expiry_month'] = $expiry_month;
-$config['expiry_year'] = $expiry_year;
-$config['max_users'] = $max_users;
+	$expiry_day = get_parameter('expiry_day');
+	$expiry_month = get_parameter('expiry_month');
+	$expiry_year = get_parameter('expiry_year');
+	$max_manager_users = get_parameter('max_manager_users');
+	$max_regular_users = get_parameter('max_regular_users');
+	$config['expiry_day'] = $expiry_day;
+	$config['expiry_month'] = $expiry_month;
+	$config['expiry_year'] = $expiry_year;
+	$config['max_manager_users'] = $max_manager_users;
+	$config['max_regular_users'] = $max_regular_users;
 
 	enterprise_include('include/functions_license.php');
 	
