@@ -55,9 +55,9 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	// if for active li project
 	if (($sec2 == "operation/projects/project_overview" && $id_project < 0) || ($sec2 == "operation/projects/user_project_timegraph") || 
 	($sec2 == "operation/projects/project_detail" && $id_project < 0) || ($sec2 == "operation/projects/role_user_global"))
-		echo "<li id='sideselproject' class='sideselcolor'>";
+		echo "<li title='".__('Projects')."' data-status='closed' id='sideselproject' class='sideselcolor'>";
 	else
-		echo "<li id='proyectos'>";
+		echo "<li title='".__('Projects')."' data-status='closed' id='proyectos'>";
 	//echo "<a   title='".__('Projects')."'href='index.php?sec=projects&sec2=operation/projects/project_overview'>1</a>";
 		
 		echo "<ul>";
@@ -111,9 +111,9 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		if (($sec2 == "operation/projects/project_detail" && $id_project > 0) || ($sec2 == "operation/projects/task_planning" && $id_project > 0) || ($sec2 == "operation/projects/project_timegraph") || ($sec2 == "operation/projects/project_tracking") || 
 		($sec2 == "operation/projects/task") || ($sec2 == "operation/projects/task_detail" && $id_task < 0) || ($sec2 == "operation/projects/gantt") || ($sec2 == "operation/projects/milestones") ||($sec2 == "operation/projects/people_manager" && $id_task < 0) ||
 		($sec2 == "operation/projects/task_workunit" && $id_task < 0) || ($sec2 == "operation/projects/task_files" && $id_task < 0))
-			echo "<li id='sideselgestionproyectos' class='sideselcolor'>";
+			echo "<li title='".__('Project Management')."' data-status='closed' id='sideselgestionproyectos' class='sideselcolor'>";
 		else
-			echo "<li id='gestionproyectos'>";
+			echo "<li title='".__('Project Management')."' data-status='closed' id='gestionproyectos'>";
 		//echo "<a   title='".__('Project Management')."' href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>1</a>";
 		
 		echo "<ul>";
@@ -226,9 +226,9 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		if ($sec2 == "operation/projects/task_detail" || ($sec2 == "operation/projects/task_tracking") || ($sec2 == "operation/users/user_spare_workunit") || ($sec2 == "operation/users/user_spare_workunit") || 
 		($sec2 == "operation/projects/task_attach_file") || ($sec2 == "operation/projects/task_cost" && $operation != "list") || ($sec2 == "operation/projects/task_cost" && $operation == "list") || ($sec2 == "operation/projects/people_manager" && $id_task > 0) || 
 		($sec2 == "operation/projects/task_emailreport") || ($sec2 == "operation/projects/task_move") || ($sec2 == "operation/projects/task_workunit" && $id_task > 0) || ($sec2 == "operation/projects/task_incidents") || ($sec2 == "operation/projects/task_files"  && $id_task > 0))
-			echo "<li id='sideseldetallestareas' class='sideselcolor'>";
+			echo "<li title='".__('Task')."' data-status='closed' id='sideseldetallestareas' class='sideselcolor'>";
 		else
-			echo "<li id='detallestareas'>";
+			echo "<li title='".__('Task')."' data-status='closed' id='detallestareas'>";
 		//echo "<a title='".__('Task').": $task_title' href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>1</a>";
 	
 			echo "<ul>";
@@ -348,9 +348,9 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projects == MENU_FULL) {
 			  
 	if ($sec2=="operation/projects/project_group_detail")
-		echo "<li id='sideselgrupos' class='sideselcolor'>";
+		echo "<li title='".__('Projects groups')."' data-status='closed' id='sideselgrupos' class='sideselcolor'>";
 	else
-		echo "<li id='grupos'>";
+		echo "<li title='".__('Projects groups')."' data-status='closed' id='grupos'>";
 		
 		echo "<ul>";
             echo "<li><h1>".__('Projects groups')."</h1></li>";
@@ -408,9 +408,9 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 	
 	if (($sec2 == "operation/incidents/incident_dashboard") || ($sec2 == "operation/incidents/incident") || ($sec2 == "operation/incidents/incident_search") || 
 	($sec2 == "operation/incidents/incident_detail") || ($sec2 == "operation/incidents/incident_reports") || ($sec2 == "operation/incidents/incident_dashboard_detail"))
-		echo "<li id='sideselticket' class='sideselcolor'>";
+		echo "<li title='".__('Incidents')."' data-status='closed' id='sideselticket' class='sideselcolor'>";
 	else
-		echo "<li id='ticket'>";
+		echo "<li title='".__('Incidents')."' data-status='closed' id='ticket'>";
 	//echo "<a title='".__('Incidents')."' href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>1</a>";
 		
 		echo "<ul>";
@@ -462,7 +462,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 					echo "<li id='sidesel'>";
 				else
 					echo "<li>";
-				echo '<a href="" onclick="return false">'.__('Ticket #').'&nbsp;</a>';
+				echo '<a href="" >'.__('Ticket #').'&nbsp;</a>';
 				echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
 				print_input_text ('id', $id_incident ? $id_incident : '', '', 4, 10);
 				echo '</form>';
@@ -474,9 +474,9 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		if (give_acl ($config['id_user'], 0, "IM") && (get_standalone_user($config["id_user"]) == false)) {
 			
 			if ($sec2 == "operation/incidents/type_detail")
-				echo "<li id='sideseltipo_ticket' class='sideselcolor'>";
+				echo "<li title='".__('Tickets')."' data-status='closed' id='sideseltipo_ticket' class='sideselcolor'>";
 			else
-				echo "<li id='tipo_ticket'>";
+				echo "<li title='".__('Tickets')."' data-status='closed' id='tipo_ticket'>";
 			//echo "<a   title='".__('Ticket Types')."' href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>1</a></li>";
 			echo "<ul>";
 				echo "<li><h1>".__('Tickets')."</h1></li>";
@@ -491,9 +491,9 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			
 			// SLA Management
 			if ($sec2 == "operation/slas/sla_detail")
-				echo "<li id='sideselsla' class='sideselcolor'>";
+				echo "<li title='".__('SLA')."' data-status='closed' id='sideselsla' class='sideselcolor'>";
 			else
-				echo "<li id='sla'>";
+				echo "<li title='".__('SLA')."' data-status='closed' id='sla'>";
 				
 			echo "<ul>";
 				echo "<li><h1>".__('SLA')."</h1></li>";
@@ -519,9 +519,9 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	$id_inventory = (int) get_parameter ('id');
 	
 	if (($sec2 == "operation/inventories/inventory") || ($sec2 == "operation/inventories/inventory_detail") || ($sec2 == "operation/inventories/inventory"))
-		echo "<li id='sideselinventario' class='sideselcolor'>";
+		echo "<li title='".__('Inventory')."' data-status='closed' id='sideselinventario' class='sideselcolor'>";
 	else
-		echo "<li id='inventario'>";
+		echo "<li title='".__('Inventory')."' data-status='closed' id='inventario'>";
 	//echo "<a title='".__('Inventory')."' href='index.php?sec=inventory&sec2=operation/inventories/inventory'>1</a>";
     echo "<ul>";
 		echo "<li><h1>".__('Inventory')."</h1></li>";
@@ -543,15 +543,14 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".__('Create inventory object')."</a></li>";
 	}
 	
-	if ($sec2 == "operation/inventories/inventory") {
-		echo '<li>';
-		echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';
-		//echo '<form id="goto-inventory-form">';
-		echo "<form action='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id_inventory&check_inventory=1' method='post'>";
-		print_input_text ('id', $id_inventory ? $id_inventory : '', '', 3, 10);
-		echo '</form>';
-		echo '</li>';
-	}
+	echo '<li>';
+	echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';
+	//echo '<form id="goto-inventory-form">';
+	echo "<form action='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id_inventory&check_inventory=1' method='post'>";
+	print_input_text ('id', $id_inventory ? $id_inventory : '', '', 3, 10);
+	echo '</form>';
+	echo '</li>';
+	
 	echo "</ul>";
 //~ Revisar
 	//~ // Dynamic inventory sub options menu
@@ -577,9 +576,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 	($sec2 == "operation/contracts/contract_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) || (($sec2=="operation/contacts/contact_detail") && !$new_contact) || 
 	($sec2 == "operation/contacts/contact_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) || (($sec2=="operation/leads/lead") AND !$new_lead) || 
 	($sec2 == "operation/leads/lead" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))))
-		echo "<li id='sideselclientes' class='sideselcolor'>";
+		echo "<li title='".__('Customers')."' data-status='closed' id='sideselclientes' class='sideselcolor'>";
 	else
-		echo "<li id='clientes'>";
+		echo "<li title='".__('Customers')."' data-status='closed' id='clientes'>";
 	//echo "<a   title='".__('Customers')."' href='index.php?sec=customers&sec2=operation/companies/company_detail'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Customers')."</h1></li>";
@@ -687,9 +686,9 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 if ($sec == "customers" && give_acl ($config["id_user"], 0, "CM") && $show_customers != MENU_HIDDEN) {
 	
 	if ($sec2=="operation/leads/template_manager")
-		echo "<li id='sideseltemplates' class='sideselcolor'>";
+		echo "<li title='".__('CRM Templates')."' data-status='closed' id='sideseltemplates' class='sideselcolor'>";
 	else
-		echo "<li id='templates'>";
+		echo "<li title='".__('CRM Templates')."' data-status='closed' id='templates'>";
 		//echo "<a   title='".__('CRM Templates')."' href='index.php?sec=customers&sec2=operation/leads/template_manager'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('CRM Templates')."</h1></li>";
@@ -710,9 +709,9 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 
 	if ((($sec2=="operation/newsletter/newsletter_definition") AND (!isset($_GET["create"]))) || (($sec2=="operation/newsletter/issue_definition") AND (!isset($_GET["create"]))) ||
 	(($sec2=="operation/newsletter/address_definition") AND (!isset($_GET["create"]))) || (($sec2=="operation/newsletter/queue_manager") AND (!isset($_GET["create"]))))
-		echo "<li id='sideselnewsletter' class='sideselcolor'>";
+		echo "<li title='".__('Newsletter')."' data-status='closed' id='sideselnewsletter' class='sideselcolor'>";
 	else
-		echo "<li id='newsletter'>";
+		echo "<li title='".__('Newsletter')."' data-status='closed' id='newsletter'>";
 		//echo "<a   title='".__('Newsletter')."' href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Newsletter')."</h1></li>";
@@ -764,9 +763,9 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 //Print campaign menu
 if (($sec == "customers") && (give_acl ($config["id_user"], 0, "VM")) && ($show_customers != MENU_HIDDEN)) {
 	if ($sec2=="operation/campaign/campaign")
-		echo "<li id='sideselcampana' class='sideselcolor'>";
+		echo "<li title='".__('Campaign')."' data-status='closed' id='sideselcampana' class='sideselcolor'>";
 	else
-		echo "<li id='campana'>";
+		echo "<li title='".__('Campaign')."' data-status='closed' id='campana'>";
 		//echo "<a   title='".__('Campaign')."' href='index.php?sec=customers&sec2=operation/campaign/campaign'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Campaign')."</h1></li>";
@@ -783,9 +782,9 @@ if (($sec == "customers") && (give_acl ($config["id_user"], 0, "VM")) && ($show_
 // MANUFACTURER
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
 	if ($sec2=="operation/manufacturers/manufacturer_detail")
-		echo "<li id='sideselfabricantes' class='sideselcolor'>";
+		echo "<li title='".__('Manufacturers')."' data-status='closed' id='sideselfabricantes' class='sideselcolor'>";
 	else
-		echo "<li id='fabricantes'>";
+		echo "<li title='".__('Manufacturers')."' data-status='closed' id='fabricantes'>";
 		//echo "<a title='".__('Manufacturers')."' href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Manufacturers')."</h1></li>";
@@ -802,9 +801,9 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inven
 // Product types
 if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_inventory != MENU_HIDDEN) {
 	if (($sec2=="operation/inventories/manage_objects") || ($sec2=="operation/inventories/inventory_import_objects"))
-		echo "<li id='sideselobjetos_inventario' class='sideselcolor'>";
+		echo "<li title='".__('Inventory objects')."' id='sideselobjetos_inventario' class='sideselcolor'>";
 	else
-		echo "<li id='objetos_inventario'>";
+		echo "<li title='".__('Inventory objects')."' id='objetos_inventario'>";
 	//echo "<a title='".__('Inventory objects')."' href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Inventory objects')."</h1></li>";
@@ -831,9 +830,9 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_H
 	
 	if (($sec2 == "operation/kb/browse") || (($sec2 == "operation/kb/browse") AND (isset($_GET["create"]))) || ($sec2 == "operation/kb/manage_cat") ||
 	($sec2 == "operation/inventories/manage_prod") || ($sec2 == "operation/kb/manage_perms"))
-		echo "<li id='sideselknowledge_base' class='sideselcolor'>";
+		echo "<li title='".__('Knowledge Base')."' data-status='closed' id='sideselknowledge_base' class='sideselcolor'>";
 	else
-		echo "<li id='knowledge_base'>";
+		echo "<li title='".__('Knowledge Base')."' data-status='closed' id='knowledge_base'>";
 	//echo "<a title='".__('Knowledge Base')."' href='index.php?sec=kb&sec2=operation/kb/browse'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Knowledge Base')."</h1></li>";
@@ -882,9 +881,9 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "FRR") && $show_file_
 	
 	if (($sec2 == "operation/download/browse" AND !isset($_GET["create"])) || (($sec2 == "operation/download/browse") AND (isset($_GET["create"]))) ||
 	($sec2 == "operation/download/manage_types") || ($sec2 == "operation/download/manage_cat") || ($sec2 == "operation/download/manage_perms"))
-		echo "<li id='sideseldownloads' class='sideselcolor'>";
+		echo "<li title='".__('File releases')."' data-status='closed' id='sideseldownloads' class='sideselcolor'>";
 	else
-		echo "<li id='downloads'>";
+		echo "<li title='".__('File releases')."' data-status='closed' id='downloads'>";
 	//echo "<a title='".__('File releases')."' href='index.php?sec=download&sec2=operation/download/browse&show_types=1'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('File releases')."</h1></li>";
@@ -935,9 +934,9 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	if (($sec2 == "godmode/setup/setup") || ($sec2 == "godmode/setup/update_manager") || ($sec2 == "godmode/setup/offline_update") || ($sec2 == "godmode/setup/filemgr") ||
 	($sec2 == "godmode/setup/newsboard") || ($sec2 == "godmode/setup/dbmanager") || ($sec2 == "godmode/setup/links") || ($sec2 == "godmode/setup/event") || ($sec2 == "godmode/setup/audit") ||
 	($sec2 == "godmode/setup/logviewer") || ($sec2 == "enterprise/godmode/setup/translate_string") || ($sec2 == "enterprise/godmode/setup/custom_screens_editor") || ($sec2 == "godmode/setup/setup_tags"))
-		echo "<li id='sideselgestion' class='sideselcolor'>";
+		echo "<li title='".__('Setup')."' data-status='closed' id='sideselgestion' class='sideselcolor'>";
 	else
-		echo "<li id='gestion'>";
+		echo "<li title='".__('Setup')."' data-status='closed' id='gestion'>";
 	//echo "<a   title='".__('Setup')."' href='index.php?sec=godmode&sec2=godmode/setup/setup'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Setup')."</h1></li>";
@@ -1048,9 +1047,9 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 	
 	if (($sec2 == "operation/users/user_edit") || ($sec2 == "operation/users/user_spare_workunit") || 
 	($sec2 == "operation/user_report/monthly") || ($sec2 == "operation/users/user_task_assigment"))
-		echo "<li id='sideselmyself' class='sideselcolor'>";
+		echo "<li title='".__('Myself')."' data-status='closed' id='sideselmyself' class='sideselcolor'>";
 	else
-		echo "<li id='myself'>";
+		echo "<li title='".__('Myself')."' data-status='closed' id='myself'>";
 	//echo "<a   title='".__('Myself')."' href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Myself')."</h1></li>";
@@ -1103,9 +1102,9 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		if (($sec2 == "operation/user_report/report_full") || ($sec2 == "operation/user_report/report_monthly") || ($sec2 == "operation/user_report/report_annual") || 
 		($sec2 == "operation/user_report/holidays_calendar") || ($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail") ||
 		($sec2 == "enterprise/operation/user/schedule_reports"))
-			echo "<li id='sideselinformes' class='sideselcolor'>";
+			echo "<li title='".__('People reporting')."' data-status='closed' id='sideselinformes' class='sideselcolor'>";
 		else	
-			echo "<li id='informes'>";
+			echo "<li title='".__('People reporting')."' data-status='closed' id='informes'>";
 		//echo "<a title='".__('People reporting')."'href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 			echo "<ul>";
 				echo "<li><h1>".__('People reporting')."</h1></li>";		
@@ -1151,9 +1150,9 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 	else {
 		
 		if (($sec2 == "operation/inventories/inventory_reports" || $sec2 == "operation/inventories/inventory_reports_detail") || ($sec2 == "enterprise/operation/user/schedule_reports"))
-			echo "<li id='sideselinformes' class='sideselcolor'>";
+			echo "<li title='".__('People reporting')."' data-status='closed' id='sideselinformes' class='sideselcolor'>";
 		else	
-			echo "<li id='informes'>";
+			echo "<li title='".__('People reporting')."' data-status='closed' id='informes'>";
 		//echo "<a title='".__('People reporting')."'href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 			echo "<ul>";
 				echo "<li><h1>".__('People reporting')."</h1></li>";
@@ -1177,9 +1176,9 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			if (($sec2 == "godmode/usuarios/lista_usuarios") || ($sec2 == "godmode/usuarios/lista_usuarios") || ($sec2 == "godmode/usuarios/user_field_list") ||
 			($sec2 == "godmode/usuarios/import_from_csv") || ($sec2 == "godmode/usuarios/role_manager") || ($sec2 == "godmode/grupos/lista_grupos") ||
 			($sec2 == "enterprise/godmode/usuarios/menu_visibility_manager") || ($sec2 == "enterprise/godmode/usuarios/profile_list"))
-				echo "<li id='sideselmanage' class='sideselcolor'>";
+				echo "<li title='".__('People management')."' data-status='closed' id='sideselmanage' class='sideselcolor'>";
 			else
-				echo "<li id='manage'>";
+				echo "<li title='".__('People management')."' data-status='closed' id='manage'>";
 			//echo "<a   title='".__('People management')."' href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>1</a>";
 				echo "<ul>";
 					echo "<li><h1>".__('People management')."</h1></li>";
@@ -1241,9 +1240,9 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 	
 	if (($sec2 == "operation/wiki/wiki"))
-		echo "<li id='sideselwiki' class='sideselcolor'>";
+		echo "<li title='".__('Wiki')."' data-status='closed' id='sideselwiki' class='sideselcolor'>";
 	else		
-		echo "<li id='wiki'>";
+		echo "<li title='".__('Wiki')."' data-status='closed' id='wiki'>";
 	//echo "<a   title='".__('Wiki')."' href='index.php?sec=users&sec2=operation/user_report/report_monthly'>1</a>";
 		echo "<ul>";
 		
@@ -1330,9 +1329,9 @@ if (give_acl ($config['id_user'], $id_grupo, "AR")) {
 $month = get_parameter ("month", date ('n'));
 $year = get_parameter ("year", date ('y'));
 if (($sec2 == "operation/agenda/agenda"))
-	echo "<li id='sideselcalendario' class='sideselcolor'>";
+	echo "<li title='".__('Schedule')."' data-status='closed' id='sideselcalendario' class='sideselcolor'>";
 else
-	echo "<li id='calendario'>";
+	echo "<li title='".__('Schedule')."' data-status='closed' id='calendario'>";
 	//echo "<a title='".__('Calendar')."' href='index.php?sec=agenda&sec2=operation/agenda/agenda'>1</a>";
 	echo "<ul>";
 		echo "<li><h1>".__('Calendar')."</h1></li>";
@@ -1378,9 +1377,9 @@ $working_month = get_parameter ("working_month", $now_month);
 $working_year = get_parameter ("working_year", $now_year);
 
 if (($sec2 == "operation/users/user_edit"))
-	echo "<li id='sideselinfo_usuario' class='sideselcolor'>";
+	echo "<li title='".__('User info')."' data-status='closed' id='sideselinfo_usuario' class='sideselcolor'>";
 else
-	echo "<li id='info_usuario'>";
+	echo "<li title='".__('User info')."' data-status='closed' id='info_usuario'>";
 	//echo "<a title='".__('User Info')."'href='index.php?sec=agenda&sec2=operation/users/user_edit'>1</a>";
 	echo "<ul>";
 		echo "<li><h1>".__('User Info')."</h1></li>";

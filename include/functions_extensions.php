@@ -293,9 +293,9 @@ function extensions_print_side_menu_subsection ($sec, $sec2) {
 			$show_subsection = $show_incidents != MENU_HIDDEN;
 			break;
 		case "inventory":
-			$show_reports = $show_reports != MENU_HIDDEN;
-		case "reports":
 			$show_subsection = $show_inventory != MENU_HIDDEN;
+		case "reports":
+			$show_subsection = $show_reports != MENU_HIDDEN;
 			break;
 		case "customers":
 			$show_subsection = $show_customers != MENU_HIDDEN;

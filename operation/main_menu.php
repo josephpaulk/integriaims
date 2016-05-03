@@ -118,6 +118,9 @@ if (give_acl($config["id_user"], 0, "VR") && (get_standalone_user($config["id_us
     echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
 
+enterprise_include("include/functions_reporting.php", true);
+enterprise_hook("enterprise_main_menu_reports", array($show_reports, $sec));
+
 // Customers
 
 if ((give_acl($config["id_user"], 0, "CR") || (give_acl($config["id_user"], 0, "CN"))) && (get_standalone_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {
@@ -232,15 +235,27 @@ $(document).ready (function () {
 	
 	$('.custom_submenu').hover(custom_screen_tab_show, custom_screen_tab_hide);
 	
-	$('#menu_slide li').click(function() {
-		if (last_id != false) {
-			$("#"+last_id+" ul").hide();
-		}
-		var id = $(this).attr('id');
+	$('#menu_slide').click(function(element) {
 		
-		$("#"+id+" ul").show();
-		last_id = id;
+		
+		var id = element.target.id;
+		var status = $("#"+id).data("status");
+		if (status == 'closed') {
+			if (last_id != false) {
+				$("#"+last_id+" ul").hide();
+				$("#"+last_id).data("status", "closed");
+			}
+			
+			$("#"+id+" ul").show();
+			$("#"+id).data("status", "open");
+			last_id = id;
+		}
+		if (status == 'open') {
+			$("#"+id+" ul").hide();
+			$("#"+id).data("status", "closed");
+		}
 	});
+	
 	
 	$('div#main').click(function() {
 		

@@ -67,7 +67,7 @@ if ($get_company_search) {
 	
 	$table->data[1][3] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 	
-	$table->data['button'][0] = "<input type='button' class='sub search' onClick='javascript: loadParamsCompany(\".$search_text.\");' value='".__("Search")."''>";
+	$table->data['button'][0] = "<input type='button' class='sub search' onClick='javascript: loadParamsCompany(\".$search_text.\");' value='".__("Search")."'>";
 	$table->colspan['button'][0] = 4;
 	
 	echo '<form id="form-company_search" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';

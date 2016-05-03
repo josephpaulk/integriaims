@@ -1516,6 +1516,46 @@ function get_last_date_control ($last_date = 0, $id = 'last_date_search', $label
 
 }
 
+function get_last_date_control_div ($last_date = 0, $id = 'last_date_search', $label = '', $start_date = '', 
+		$start_date_name = 'start_date_search', $start_date_label = '',
+		$end_date = '', $end_date_name = 'end_date_search', 
+		$end_date_label = '', $id_div = 'start_end_dates') {
+
+	if ($label == '') {
+		$label = __('Date');
+	}
+	if ($start_date_label == '') {
+		$start_date_label = __('Start date');
+	}
+	if ($end_date_label == '') {
+		$end_date_label = __('End date');
+	}
+
+	$script = "javascript:
+		if ($('#$id').val() > 0) {
+			$('#$id_div').slideUp();
+		} else {
+			$('#$id_div').slideDown();
+		}
+	;";
+
+	$hidden = "";
+	if ($last_date > 0) {
+		$hidden = "style='display: none;'";
+	}
+
+	$html  = print_select (get_last_dates(), $id, $last_date, $script, '', '', true, 0, false, $label);
+	$html .= "<br>";
+	$html .= "<div id='$id_div' $hidden>";
+	$html .= 	"<div id='$start_date_name' style='display: inline-block;'>" . print_input_text ($start_date_name, $start_date, "", 8, 100, true, $start_date_label) . "</div>";
+	$html .= 	"&nbsp;";
+	$html .= 	"<div id='$end_date_name' style='display: inline-block;'>" . print_input_text ($end_date_name, $end_date, "", 8, 100, true, $end_date_label) . "</div>";
+	$html .= "</div>";
+
+	return $html;
+
+}
+
 
 function print_company_autocomplete_input ($parameters) {
 	

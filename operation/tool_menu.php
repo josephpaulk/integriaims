@@ -16,7 +16,7 @@
 // Sponsors / Banner
 echo "<nav id='menu_nav'>";
 	echo "<ul id='menu_slide'>";
-		echo "<li id='enlaces'>";
+		echo "<li title='".__('Links')."' data-status='closed' id='enlaces'>";
 			//echo "<a title='".__('Links')."'href='#'>1</a>";
 			echo "<ul>";
 				echo "<li><h1>".__('Links')."</h1></li>";

@@ -1094,7 +1094,7 @@ function form_search_incident ($return = false, $filter=false) {
 			
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
 	$table_advanced->data[2][2] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:195px;'", true, '', __('Inventory'));
-	$table_advanced->data[2][2] .= "<a href='javascript: (\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
+	$table_advanced->data[2][2] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
 	$table_advanced->data[2][2] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
 	$table_advanced->data[2][3] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
@@ -1234,8 +1234,9 @@ function form_search_users ($return = false, $filter=false) {
 		$group = (int) $filter['group'];
 	}
 
+	$table = new StdClass();
 	$table->id = "table-user_search";
-	$table->width = "99%";
+	$table->width = "100%";
 	$table->class = "search-table";
 	$table->size = array ();
 	$table->style = array ();
@@ -1246,19 +1247,20 @@ function form_search_users ($return = false, $filter=false) {
 	$user_status = array();
 	$user_status[0] = __('Enabled');
 	$user_status[1] = __('Disabled');
-	$table->data[0][1] = print_select ($user_status, 'disabled_user', $disabled_user, '', __('Any'), -1, true, 0, false, __('User status'));
+	$table->data[1][0] = print_select ($user_status, 'disabled_user', $disabled_user, '', __('Any'), -1, true, 0, false, __('User status'));
 
 	$global_profile = array();
 	$global_profile[-1] = __('Standalone');
 	$global_profile[0] = __('Grouped');
 	$global_profile[1] = __('Administrator');
-	$table->data[0][2] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	
 	$group_name = get_user_groups();
 	$group_name[-1] = __('Groupless');
+	$table->data[3][0] = print_select ($group_name, 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
 	
-	$table->data[0][3] = print_select ($group_name, 'group', $group, '', __('Any'), 0, true, 0, false, __('Group'));
-	
-	$table->data[0][4] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->colspan[2][0] = 4;
+	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form name="bskd" method=post id="saved-user-form" action="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios">';
 		$output .= print_table ($table, true);

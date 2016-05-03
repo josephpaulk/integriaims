@@ -59,7 +59,7 @@ echo "<div style='width:100%' class='divform'>";
 	echo "</form>";
 echo "</div>";
 
-user_search_result($filter=0, $ajax, $size_page=$config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
+user_search_result($filter_form, $ajax, $config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
 ?>
 
 <script type="text/javascript" src="include/js/integria_users.js"></script>

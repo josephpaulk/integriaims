@@ -860,7 +860,8 @@ if ($id) {
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
 
-} else {
+}
+else {
 	$create_incident = true;
 	$titulo = "";
 	$description = "";
@@ -875,7 +876,8 @@ if ($id) {
 	$epilog = "";
 	if ($config['show_creator_blank']) {
 		$id_creator = "";
-	} else {
+	}
+	else {
 		$id_creator = $config['id_user'];
 	}
 	
@@ -902,7 +904,8 @@ if (! $id) {
 		$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 		// Take first group defined for this user
 		$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
-	} else {
+	}
+	else {
 		$default_id_group = 1;
 		$number_group = 1;
 	}
@@ -1111,6 +1114,7 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$params_creator['return'] = true;
 	$params_creator['return_help'] = true;
 	$params_creator['disabled'] = $disabled_creator;
+	$params_creator['attributes'] = 'style="width:210px;"';
 	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	
 	if (!$disabled_creator) {
@@ -1149,6 +1153,7 @@ if ($has_im) {
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	$params_assigned['disabled'] = $disabled_creator;
+	$params_assigned['attributes'] = 'style="width:210px;"';
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 	
 	if (!$disabled_creator) {
@@ -1245,7 +1250,7 @@ if ($id_parent)
 	$table_advanced->data[3][0] .= '&nbsp;<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 // Task
-$table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), false, true, false, '', false, $blocked_incident);
+$table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task").print_help_tip (__("Task of proyect relation with this ticket"), true), false, true, false, '', false, $blocked_incident);
 
 if ($id_task > 0){
 	$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank'
@@ -1278,7 +1283,7 @@ if ($create_incident) {
 		}
 		
 		$table_advanced->data[3][2] = print_select ($inventories, 'incident_inventories', NULL,
-						'', '', '', true, false, false, __('Objects affected'));
+						'', '', '', true, false, false, __('Objects inventory affected'));
 
 		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
@@ -1288,7 +1293,7 @@ if ($create_incident) {
 	
 	$table_advanced->data[3][2] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
-						true, false, false, __('Objects affected'), $blocked_incident);
+						true, false, false, __('Objects inventory affected'), $blocked_incident);
 
 	if (!$blocked_incident) {
 		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";

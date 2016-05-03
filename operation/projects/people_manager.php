@@ -203,11 +203,11 @@ if ($id_task == -1){
 	echo integria_help ("people_manager", true);
 	echo "</h4>";
 }
-else
+else {
 	echo "<h2>".__('Task human resources management')." </h2><h4> ".get_db_value('name', 'ttask','id',$id_task);
 	echo integria_help ("people_manager", true);
 	echo "</h4>";
-
+}
 // Role / task assigment
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Only project owner or Project ADMIN could modify

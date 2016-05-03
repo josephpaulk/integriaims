@@ -1315,8 +1315,6 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 		$sql_search_pagination .= " LIMIT ".$block_limit;
 	}
 
-	
-	
 	$sql_search_pagination .= " OFFSET $offset";
 	
 	
@@ -1345,7 +1343,6 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 		$i++;
 	}
 
-	debugPrint($inventories_aux_pagination, true);
 	//deleted label and data 
 	unset($header['label'], $header['data'], $header['']);
 
@@ -1800,7 +1797,6 @@ function objects_childs ($id_item){
  * IMPORT INVENTORIES FROM CSV. 
  */
 function inventories_load_file ($objects_file) {
-	debugPrint($objects_file, true);
 	$file_handle = fopen($objects_file, "r");
 	global $config;
 		

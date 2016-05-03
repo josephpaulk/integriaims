@@ -2436,16 +2436,16 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	echo __('Ticket');
 	echo "</th>";
 	echo "<th>";
-	echo __('Group')."<br><i>".__('Company')."</i>";
+	echo __('Group')."/<i>".__('Company')."</i>";
 	echo "</th>";
 	echo "<th>";
-	echo __('Status')."<br><i>".__('Resolution')."</i>";
+	echo __('Status')."/<i>".__('Resolution')."</i>";
 	echo "</th>";
 	echo "<th style='width: 90px;'>";
 	echo __('Priority') . $priority_order_image;
 	echo "</th>";
 	echo "<th style='width: 120px;'>";
-	echo __('Updated')."<br><i>".__('Started')."</i>";
+	echo __('Updated')."/<i>".__('Started')."</i>";
 	echo "</th>";
 
 	if ($config["show_creator_incident"] == 1)
@@ -2526,7 +2526,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				} else {
 					echo '<strong>'.$incident['titulo'].'</strong><br>';
 				}
-				echo "<span style='font-size:11px;font-style:italic'>";
+				echo "<span>";
 				echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
 				$sql = sprintf("SELECT *
 								FROM tincident_type_field
@@ -2556,7 +2556,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 					$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
 					if($id_creator_company != 0) {
 						$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
-						echo "<br><span style='font-size:11px;font-style:italic'>$company_name</span>";
+						echo " / <span>$company_name</span>";
 					}
 				}
 				echo '</td>';
@@ -2571,7 +2571,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 					$black = print_image('images/insignia_gris.png', true)."(".$incident['black_medals'].")";
 				}
 				
-				echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>'.$gold.$black.'</td>';
+				echo '<td><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>'.$gold.$black.'</td>';
 
 				// priority
 				echo '<td>';
@@ -2583,15 +2583,15 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 
 				echo '</td>';
 				
-				echo '<td style="font-size:11px;">'.human_time_comparation ($incident["actualizacion"]);
+				echo '<td>'.human_time_comparation ($incident["actualizacion"]);
 			
 				// Show only if it's different
 				if ($incident["inicio"] != $incident["actualizacion"]){
-					echo "<br><em>[". human_time_comparation ($incident["inicio"]);
-					echo "]</em>";
+					echo " / <br /> [". human_time_comparation ($incident["inicio"]);
+					echo "]";
 				}
-				echo "<br>";
-				echo '<span style="font-size:9px;">';
+				//echo "<br>";
+				echo '<span>';
 				
 				if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
 						$updated_by = get_db_value('nombre_real', 'tusuario', 'id_usuario', $last_wu["id_user"]);
@@ -2603,7 +2603,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '</td>';
 				
 				if ($config["show_creator_incident"] == 1){	
-					echo "<td class='f9'>";
+					echo "<td>";
 					if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
 						$incident_creator = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_creator"]);
 					} else {
@@ -2616,7 +2616,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				}
 				
 				if ($config["show_owner_incident"] == 1){	
-					echo "<td class='f9'>";
+					echo "<td>";
 					if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
 						$incident_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_usuario"]);
 					} else {
@@ -3702,7 +3702,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	}
 	else {
 		arsort($creator_assigned_data);
-		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
+		$submitter_label .= pie3d_graph ($config['flash_charts'], $creator_assigned_data , 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 	}
 
 	// TOP X scoring users
@@ -3740,7 +3740,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	}
 	else {
 		arsort($user_assigned_data);
-		$user_assigned_label .= "<br/>".pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
+		$user_assigned_label .= pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $ttl);
 
 	}
 	
@@ -3887,7 +3887,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$priority_aux = $priority_aux;
 
 	$container_title = __("Tickets by priority");
-    $container_priority_incidents = print_container('container_priority_incidents', $container_title, $priority_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
+    $container_priority_incidents = print_container_div('container_priority_incidents', $container_title, $priority_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
     
 	if ($oldest_incident) {
 		

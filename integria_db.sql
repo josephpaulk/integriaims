@@ -787,6 +787,9 @@ CREATE TABLE  `tprofile` (
   `frm` tinyint(1) NOT NULL default '0',
   `si` tinyint(1) NOT NULL default '0',
   `qa` tinyint(1) NOT NULL default '0',
+  `rr` tinyint(1) NOT NULL default '0',
+  `rw` tinyint(1) NOT NULL default '0',
+  `rm` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1374,6 +1377,7 @@ CREATE TABLE `treport` (
   `fields_to_show` longtext NOT NULL default '',
   `order_by` text NOT NULL default '',
   `group_by` text NOT NULL default '',
+  `where_clause` text NOT NULL default '',
    PRIMARY KEY  (`id`),
    FOREIGN KEY (`id_folder`) REFERENCES tfolder_report(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

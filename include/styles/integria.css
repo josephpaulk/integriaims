@@ -294,11 +294,11 @@ table.listing {
 
 table.listing th {
 	background-color: #F7F7F7;
-	font-size: 13px;
+	font-size: 12px;
     padding-left: 15px;
 	padding-right: 15px;
-	padding-top: 8px;
-	padding-bottom: 8px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	margin-left: 5px;
 	font-weight: bold;
 	color: #555;
@@ -647,6 +647,7 @@ select.pagesize {
 
 input[type="image"] {
 	border: none;
+	vertical-align: middle;
 }
 
 input[type="submit"], input[type="button"] {
@@ -888,7 +889,7 @@ input#global_search {
 
 /* main column */
 #main {
-	width: 93%;
+	width: 92%;
 	padding-left: 6px;
 	min-height: 800px;
 	float: left;

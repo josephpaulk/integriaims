@@ -28,7 +28,8 @@ $printTable = get_parameter('printTable', 0);
 $printTableMoreInfo = get_parameter('printTableMoreInfo', 0);
 $get_item_info = (bool) get_parameter('get_item_info', 0);
 $form_inventory = (bool) get_parameter('form_inventory', 0);
-	
+$quick_delete = (bool) get_parameter('quick_delete', 0);
+
 if ($select_fields) {
 	$id_object_type = get_parameter('id_object_type');
 	
@@ -45,6 +46,21 @@ if ($select_fields) {
 	}
 
 	echo json_encode($object_fields);
+	return;
+}
+
+if ($quick_delete) {
+	$id_inv = get_parameter('id_inventory');
+	if (give_acl ($config['id_user'], 0, "VW")) {
+		borrar_objeto ($id_inv);
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		audit_db($config["id_user"], $config["REMOTE_ADDR"], "Object deleted","User ".$config['id_user']." deleted object #".$id_inv);
+	} else {
+		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete object");
+		echo "<h3 class='error'>".__('There was a problem deleting object')."</h3>";
+		no_permission();
+	}
+	
 	return;
 }
 
@@ -80,7 +96,6 @@ if ($change_table) {
 	$offset = (int)get_parameter('offset', 0);
 	$params['offset'] = $offset;	
 	$search_free = (string)get_parameter ('search_free', '');
-	$last_update = get_parameter ('last_update');
 
 	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
 
@@ -126,7 +141,7 @@ if ($change_table) {
 		}
 		if($tr){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
-			$sql_search_pagination = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
+			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 			$sql_search_count = 'SELECT i.id FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 		} else {
 			$sql_search = 'SELECT '.$pr.' FROM tinventory i WHERE 1=1';
@@ -180,17 +195,21 @@ if ($change_table) {
 				$sql_search_obj_type .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";
 				*/	
 			} else {
-				$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
-				$sql_search_pagination .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
-				$sql_search_count .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+				if($search_free){
+					$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+					$sql_search_pagination .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+					$sql_search_count .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+				}
 			}
 		
 		} else { //búsqueda solo en nombre y descripción de inventario
-			$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
-			$sql_search_pagination .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
-			$sql_search_count .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+			if($search_free){
+				$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+				$sql_search_pagination .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+				$sql_search_count .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
 
-			$params['search_free'] = $search_free;
+				$params['search_free'] = $search_free;
+			}
 		}
 	}
 	//propietario
@@ -261,6 +280,8 @@ if ($change_table) {
 	}
 
 	//sort table
+	
+	$last_update = (int)get_parameter('last_update', 0);
 	$sort_mode = (string)get_parameter('sort_mode', 'asc');
 	$sort_field_num = (int)get_parameter('sort_field', 1);
 	switch ($sort_field_num) {
@@ -276,15 +297,21 @@ if ($change_table) {
 	//mode list or tree
 	$mode = (string)get_parameter('mode', "list");
 	if ($mode == 'list'){
-		$sql_search .= " order by $sort_field $sort_mode ";
-		$sql_search_pagination .= " group by i.id order by $sort_field $sort_mode ";
+		if(!$last_update){
+			$sql_search .= " order by $sort_field $sort_mode ";
+			$sql_search_pagination .= " group by i.id order by $sort_field $sort_mode ";
+		} else {
+			$sql_search .= " order by i.last_update desc";
+			$sql_search_pagination .= " group by i.id order by i.last_update desc ";
+		}
+		
 		$sql_search_count .=  " group by i.id";
 		$params['mode'] = $mode;
 		$params['sort_field_num'] = $sort_field_num;
 		$params['sort_mode'] = $sort_mode;
 		$params['count_object_custom_fields'] =$count_object_custom_fields;
+		$params['last_update'] = $last_update;
 	}
-
 	if($mode == 'list'){
 		inventories_show_list2($sql_search, $sql_search_count, $params, $last_update, 0, $count_object_custom_fields, $sql_search_pagination);
 	} else {
