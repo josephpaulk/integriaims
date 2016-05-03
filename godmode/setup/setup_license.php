@@ -93,9 +93,9 @@ print_table ($table);
 
 echo "<div class='button-form'>";
 	print_input_hidden ('unblock_users', 1);
-	print_submit_button (__('Enable login'), 'upd_button', false, 'class="sub upd"');
+	print_submit_button (__('Enable users login'), 'upd_button', false, 'class="sub upd"');
 	print_input_hidden ('update', 1);
-	print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
+	print_submit_button (__('Update license'), 'upd_button', false, 'class="sub upd"');
 echo "</div>";
 	
 echo '</form>';
