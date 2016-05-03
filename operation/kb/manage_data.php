@@ -211,13 +211,31 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		}
 	}
 
-	echo "<h2>".__('KB Data management')."</h2>";	
+	echo "<h2>".__('KB Data management')."</h2>";
+	
 	if ($id == -1){
-		echo "<h4>".__('Create a new KB item')."</a></h4>";
+		echo "<h4>".__('Create a new KB item')."</a>";
+			echo "<div id='button-bar-title'>";
+			echo "<ul>";
+			echo '<li>';
+			echo '<a href="index.php?sec=kb&sec2=operation/kb/browse">'.print_image("images/go-previous.png", true, array("title" => __("Back to list")))."</a>";
+			echo '</li>';
+		echo "</h4>";
 		echo "<form id='form-kb_item' name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&create2'>";
 	}
 	else {
-		echo "<h4>".__('Update existing KB item')."</h4>";
+		echo "<h4>".__('Update existing KB item');
+			echo "<div id='button-bar-title'>";
+			echo "<ul>";
+			echo '<li>';
+			echo '<a href="index.php?sec=kb&sec2=operation/kb/browse_data&view='.$id.'">'.print_image("images/go-previous.png", true, array("title" => __("Back")))."</a>";
+			echo '</li>';
+			echo '<li>';
+			echo '<a href="index.php?sec=kb&sec2=operation/kb/browse">'.print_image("images/volver_listado.png", true, array("title" => __("Back to list")))."</a>";
+			echo '</li>';
+			echo "</ul>";
+			echo "</div>";
+		echo "</h4>";
 		echo "<form id='form-kb_item' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
 		echo "<input id='id_kb_item' type=hidden name=id value='$id'>";
 	}

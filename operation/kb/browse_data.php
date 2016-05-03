@@ -68,6 +68,14 @@ if ($edit_perm){
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/application_edit.png'></a>";
 }
+
+
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo '<li>';
+	echo '<a href="index.php?sec=kb&sec2=operation/kb/browse">'.print_image("images/go-previous.png", true, array("title" => __("Back to list")))."</a>";
+	echo '</li>';
+	
 echo '</h4>';
 
 $avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $kb_data['id_user']);

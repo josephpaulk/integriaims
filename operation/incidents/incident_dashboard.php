@@ -90,30 +90,38 @@ $search_by_group = "";
 // Remove group All for this filter
 unset($groups[1]);
 
+$no_groups = true;
 $count = 0;
 foreach ($groups as $key => $grp) {
 
-	$incidents = get_incidents("id_grupo = $key AND estado <> 7", true);	
+	$incidents = get_incidents("id_grupo = $key AND estado <> 7", true);
+	
+	if ($incidents) {
+		if ($count % 2 == 0) {
+			$search_by_group .= "<tr>";
+		}
+			
+		$search_by_group .= "<td>";
+		$search_by_group .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
+		$search_by_group .= $grp." (".count($incidents).")";
+		$search_by_group .= "</a>";
+		$search_by_group .= "</td>";
+			
+		if ($count % 2 != 0) {
+			$search_by_group .= "</tr>";
+		}
+		
+		$count++;
+		$no_groups = false;
+	}	
+}
 
-	if (!$incidents) {
-		continue;
-	}
-	
-	if ($count % 2 == 0) {
-		$search_by_group .= "<tr>";
-	}
-		
+if ($no_groups) {
+	$search_by_group .= "<tr>";
 	$search_by_group .= "<td>";
-	$search_by_group .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
-	$search_by_group .= $grp." (".count($incidents).")";
-	$search_by_group .= "</a>";
+	$search_by_group .= "<em>".__("There aren't groups")."</em>";
 	$search_by_group .= "</td>";
-		
-	if ($count % 2 != 0) {
-		$search_by_group .= "</tr>";
-	}
-	
-	$count++;
+	$search_by_group .= "</tr>";
 }
 
 $left_side = print_container('incident_search_by_group', __('Search by group'), $search_by_group, 'open', true, '20px', '', 'no_border', 1, 'less_widht');

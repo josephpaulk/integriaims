@@ -375,12 +375,13 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
 	
 	$sql1 = "SELECT * FROM tkb_data $condition $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
-	
+	$result = process_sql($sql1);
+
 	$color = 0;
 	echo "<div class='divresult'>";
-	if ($result=mysql_query($sql1)){
-		
-		
+	$result=db_process_sql($sql1);
+	if ($result){
+				
 		echo '<table width="100%" class="listing">';
 
 		echo "<th>".__('Title')."</th>";
@@ -393,7 +394,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			echo "<th>".__('Action')."</th>";
 		}
 		
-		while ($row=mysql_fetch_array($result)){
+		foreach ($result as $key=>$row) {
 			echo "<tr>";
 			// Name
 			echo "<td valign='top'><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],220)."</a></td>";
@@ -428,7 +429,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "</table>";
 	} else {
 		$downloads = array();
-		echo "<h3 class='error'>".__('No items found')."</h3>"; 
+		echo "<h3 class='error'>".__('No items found')."</h3>";
 	}
 	echo "</div>";
 }
