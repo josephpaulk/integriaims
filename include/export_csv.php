@@ -182,14 +182,27 @@ if ($export_csv_leads) {
 if ($export_csv_inventory) {
 	
 	$filter = unserialize_in_temp($config["id_user"]);
-	$where_clause = $filter["query"];
+	
+	$inventories_aux = get_db_all_rows_sql(safe_output($filter["query"]));
+	$inventories_aux_pagination = get_db_all_rows_sql(safe_output($filter["query_pag"]));
 
-	$rows = get_db_all_rows_sql(clean_output($where_clause));
-
+	$i=0;
+	foreach ($inventories_aux_pagination as $key => $value) {
+		unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
+		foreach ($inventories_aux as $k => $v) {
+			if($value['id'] == $v['id']){
+				$inventories_aux_pagination[$i][safe_output($v['label'])] = safe_output($v['data']);
+			}
+		}
+		$i++;
+	}
+	
+	$filename = clean_output ('inventory_export').'-'.date ("YmdHi");	
+	$rows = $inventories_aux_pagination;
 	if ($rows === false)
 		return;	
-
-	$filename = clean_output ('inventory_export').'-'.date ("YmdHi");	
+/*
+	
 
 	$aux_rows = array();
 
@@ -255,6 +268,7 @@ if ($export_csv_inventory) {
 	}
 
 	$rows = $aux_rows;
+	*/
 }
 
 if ($export_csv_audit) {
@@ -296,11 +310,11 @@ $csv_lines = array();
 
 $search = array();
 // Delete \r !!!
-$search[] = "&#x0d;";
-$search[] = "\r";
+//$search[] = "&#x0d;";
+//$search[] = "\r";
 // Delete \n !!!
-$search[] = "&#x0a;";
-$search[] = "\n";
+//$search[] = "&#x0a;";
+//$search[] = "\n";
 // Delete " !!!
 $search[] = '"';
 // Delete ' !!!
@@ -330,7 +344,6 @@ foreach ($rows as $row) {
 	}
 }
 $max_rows_prepare = $max_rows;
-
 
 foreach ($rows as $row) {
 	//head
