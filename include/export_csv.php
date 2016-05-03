@@ -182,7 +182,6 @@ if ($export_csv_leads) {
 if ($export_csv_inventory) {
 	
 	$filter = unserialize_in_temp($config["id_user"]);
-	
 	$inventories_aux = get_db_all_rows_sql(safe_output($filter["query"]));
 	$inventories_aux_pagination = get_db_all_rows_sql(safe_output($filter["query_pag"]));
 

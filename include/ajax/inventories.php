@@ -50,7 +50,6 @@ if ($select_fields) {
 }
 
 if ($quick_delete) {
-	debugPrint('entra', true);
 	$id_inv = get_parameter('id_inventory');
 	if (give_acl ($config['id_user'], 0, "VW")) {
 		borrar_objeto ($id_inv);
@@ -142,7 +141,7 @@ if ($change_table) {
 		}
 		if($tr){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
-			$sql_search_pagination = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
+			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 			$sql_search_count = 'SELECT i.id FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 		} else {
 			$sql_search = 'SELECT '.$pr.' FROM tinventory i WHERE 1=1';
@@ -196,9 +195,11 @@ if ($change_table) {
 				$sql_search_obj_type .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";
 				*/	
 			} else {
-				$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
-				$sql_search_pagination .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
-				$sql_search_count .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+				if($search_free){
+					$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+					$sql_search_pagination .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+					$sql_search_count .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
+				}
 			}
 		
 		} else { //búsqueda solo en nombre y descripción de inventario

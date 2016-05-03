@@ -323,19 +323,6 @@ $(document).ready (function () {
 			);
 		}
 	);
-	/*
-	pr = <?php echo $pr ?>;
-	if (pr == 1){
-		//var h3_suc_content = <?php echo __('Successfully deleted'); ?>;
-		
-	}
-
-	if (pr == 2){
-		//var h3_suc_content = <?php echo __('Successfully deleted'); ?>;
-		var h3_suc = $('<h3></h3>').addClass('suc');
-		$('#inventory_list_table').append(h3_suc);
-	} 
-	*/
 });
 
 </script>

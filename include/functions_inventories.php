@@ -1315,8 +1315,6 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 		$sql_search_pagination .= " LIMIT ".$block_limit;
 	}
 
-	
-	
 	$sql_search_pagination .= " OFFSET $offset";
 	
 	
