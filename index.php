@@ -98,7 +98,7 @@ require_once ('include/auth/mysql.php');
 require_once ('include/functions_db.mysql.php');
 require_once ('include/functions_api.php');
 
-include_once("include/functions_update_manager.php");
+include_once ("include/functions_update_manager.php");
 
 if ($buffer_html) {
 	$config["flash_charts"] = 0;
@@ -324,8 +324,8 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 		exit;
 	} else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
 		
-		$check_managers = license_check_manager_users_num ();
-		$check_regulars = license_check_regular_users_num ();
+		$check_managers = enterprise_hook('license_check_manager_users_num');
+		$check_regulars = enterprise_hook('license_check_regular_users_num ');
 		$license_fail = false;	
 		if (!$check_managers || !$check_regulars) {
 			$license_fail = true;

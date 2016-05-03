@@ -3600,16 +3600,15 @@ ul li {
 #inventory_only_table{
 	width: 100%;
 	overflow: auto;
-	width: 100%;
     border-collapse: collapse;
 }
 
-#inventory_list_table #inventory_only_table th {
+#inventory_only_table th {
 	width: auto;
 	white-space: nowrap;
 }
 
-#inventory_list_table #inventory_only_table td {
+#inventory_only_table td {
 	width: auto;
 	white-space: nowrap;
 	line-height: 0px;
@@ -3676,10 +3675,6 @@ ul li {
 	color: #707070;  	
 }
 
-#tree_search #id_object_type_search{
-	visibility:hidden;
-}
-
 th.sortable{
 	background-image:url(../../images/block_orange.png);
 	cursor: pointer; 
@@ -3698,4 +3693,8 @@ th.sorted-asc{
 img#inventory_loading{
 	display:block;
     margin:auto;
+}
+
+#object_fields_select_all{
+	margin-left:30%;
 }

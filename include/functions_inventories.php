@@ -747,7 +747,6 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory=false, $
 	
 	$all_fields = array();
 	foreach ($fields as $id=>$field) {
-		
 		if ($only_selected) {
 			if($field['show_list']) {
 				foreach ($field as $key=>$f) {
@@ -858,7 +857,6 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update = 0) {
 	global $config;
 	global $enteprise_load;
-	
 	echo '<table class="" style="width:99%">';
 	echo '<tr><td style="width:100%" valign="top">';
 	
@@ -1186,6 +1184,373 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', 
 	return count($cont);
 }
 
+function form_inventory ($params){
+	//field label object types
+	$select_label_object = '<div class = "divform" id = "pr">';
+		$select_label_object .= '<table class="search-table"><tr><td>';
+			$select_label_object .= print_label (__('Object fields').'<span id="object_fields_select_all"><a href="javascript: select_all_object_field()" >'.__('Select all').'</a><span>', '','',true);
+			$select_label_object .= '<div id = "object_fields_search_check" class="div_multiselect" >';
+			//checkbox id
+			if ($params['object_fields'][0]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[0]" checked value="id" id="id"><label for="id">'.__('ID').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[0]" value="id" id="id"><label for="id">'.__('ID').'</label>';
+			}
+
+			//checkbox name
+			if ($params['object_fields'][1]){	
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[1]" checked value="name" id="name"><label for="name">'.__('Name').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[1]" value="name" id="name"><label for="name">'.__('Name').'</label>';
+			}
+
+			//checkbox owner
+			if ($params['object_fields'][2]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[2]" checked value="owner" id="owner"><label for="owner">'.__('Owner').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[2]" value="owner" id="owner"><label for="owner">'.__('Owner').'</label>';
+			}
+
+			//checkbox id_parent
+			if ($params['object_fields'][3]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[3]" checked value="id_parent" id="id_parent"><label for="id_parent">'.__('Parent object').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[3]" value="id_parent" id="id_parent"><label for="id_parent">'.__('Parent object').'</label>';
+			}
+
+			//checkbox id_object_type
+			if ($params['object_fields'][4]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[4]" checked value="id_object_type" id="id_object_type"><label for="id_object_type">'.__('Object type').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[4]" value="id_object_type" id="id_object_type"><label for="id_object_type">'.__('Object type').'</label>';
+			}
+
+			//checkbox manufacturer
+			if ($params['object_fields'][5]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[5]" checked value="id_manufacturer" id="id_manufacturer"><label for="id_manufacturer">'.__('Manufacturer').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[5]" value="id_manufacturer" id="id_manufacturer"><label for="id_manufacturer">'.__('Manufacturer').'</label>';
+			}
+
+			//checkbox id_contract
+			if ($params['object_fields'][6]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[6]" checked value="id_contract" id="id_contract"><label for="id_contract">'.__('Contract').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[6]" value="id_contract" id="id_contract"><label for="id_contract">'.__('Contract').'</label>';
+			}
+
+			//checkbox status
+			if ($params['object_fields'][7]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[7]" checked value="status" id="status"><label for="status">'.__('Status').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[7]" value="status" id="status"><label for="status">'.__('Status').'</label>';
+			}
+
+			//checkbox status
+			if ($params['object_fields'][8]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[8]" checked value="receipt_date" id="receipt_date"><label for="receipt_date">'.__('Receipt date').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[8]" value="receipt_date" id="receipt_date"><label for="receipt_date">'.__('Receipt date').'</label>';
+
+			}
+
+			//checkbox custom fields
+			if ($params['object_fields_custom']){
+				$i=9;
+				foreach ($params['object_fields_custom'] as $object) {
+					if($params['object_fields'][$i]){
+						$select_label_object .= '<input name="object_fields['.$i.']" checked class="checkbox_object_field" value="'.$object['id'].'" type="checkbox" id="'.$object['id'].'">';
+					} else {
+						$select_label_object .= '<input name="object_fields['.$i.']" class="checkbox_object_field" value="'.$object['id'].'" type="checkbox" id="'.$object['id'].'">';
+					}	
+					$select_label_object .= '<label for="'.$object['id'].'">'.$object['label'].'</label>';
+					$i++;
+				}
+			}
+			$select_label_object .=		'</div>';
+		$select_label_object .= '</td></tr></table>';
+	$select_label_object .= '</div>';
+	echo $select_label_object;
+}
+
+
+
+function inventories_show_list2($sql_search, $sql_count, $params='', $last_update = 0, $modal = 0, $count_object_custom_fields = 1, $sql_search_pagination) {
+	global $config;
+
+	$is_enterprise = false;
+	if (file_exists ("enterprise/include/functions_inventory.php")) {
+		require_once ("enterprise/include/functions_inventory.php");
+		$is_enterprise = true;
+	}
+	
+	$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
+
+	//csv querys
+	$filter["query"] = $sql_search;
+	$filter["query_pag"] = $sql_search_pagination;
+	serialize_in_temp($filter, $config["id_user"]);
+
+	$params['mode'] = 'list';	
+
+	if (!$sql_search) {
+		$sql_search = "SELECT * FROM tinventory";
+	}
+
+	$pure = get_parameter("pure");
+
+	if ($pure) {
+		$block_limit = 5000;
+	} else {
+		$block_limit = $config["block_size"];
+	}
+	
+	$offset = get_parameter("offset", 0);	
+	if ($count_object_custom_fields == 0){
+		$sql_search .= " LIMIT ".$block_limit;
+		$sql_search .= " OFFSET $offset";
+		$sql_search_pagination .= " LIMIT ".$block_limit;
+	} else {
+		//$sql_search .= " LIMIT ".($block_limit * $count_object_custom_fields);
+		$sql_search_pagination .= " LIMIT ".$block_limit;
+	}
+
+	
+	
+	$sql_search_pagination .= " OFFSET $offset";
+	
+	
+	$config['mysql_result_type'] = MYSQL_ASSOC;	
+	
+	$count_inv_d= get_db_all_rows_sql($sql_count);
+	$count_inv = count($count_inv_d);
+	
+	$inventories_aux = get_db_all_rows_sql($sql_search);
+	
+	$inventories_aux_pagination = get_db_all_rows_sql($sql_search_pagination);
+	
+	$i=0;
+	$header=array();
+	foreach ($inventories_aux_pagination[0] as $key => $value) {
+		$header[$key] =1;
+	}
+	foreach ($inventories_aux_pagination as $key => $value) {
+		unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
+		foreach ($inventories_aux as $k => $v) {
+			$header[$v['label']] =1;
+			if($value['id'] == $v['id']){
+				$inventories_aux_pagination[$i][$v['label']] = $v['data'];
+			}
+		}
+		$i++;
+	}
+
+	debugPrint($inventories_aux_pagination, true);
+	//deleted label and data 
+	unset($header['label'], $header['data'], $header['']);
+
+	if ($is_enterprise) {
+		$inventories = inventory_get_user_inventories($config['id_user'], $inventories_aux_pagination);
+	} else {
+		$inventories = $inventories_aux_pagination;
+	}
+
+	//print table
+	if (count($header) == 0) {
+		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
+	} else {
+
+		$table->id = 'inventory_list';
+		$table->class = 'listing';
+		$table->width = '100%';
+		$table->data = array ();
+		$table->head = array ();
+		$table->colspan = array();
+		
+		//thead
+		$i=9;
+		foreach ($header as $key=>$inventory) {
+			switch ($key) {
+				case 'id': $table->head[0] = __('Id');break;
+				case 'name': $table->head[1] = __('Name');break;
+				case 'owner': $table->head[2] = __('Owner');break;
+				case 'id_parent': $table->head[3] = __("Parent object");break;
+				case 'id_object_type': $table->head[4] = __('Object type');break;
+				case 'id_manufacturer': $table->head[5] = __('Manufacturer');break;
+				case 'id_contract': $table->head[6] = __('Contract');break;
+				case 'status': $table->head[7] = __('Status');break;
+				case 'receipt_date': $table->head[8] = __('Receipt date');break;
+				default: 
+					$table->head[$i] = $key;
+					$i++;
+					break;
+			}
+		}
+		
+		//thead icon delete and checkbox delete all
+		if (!$pure) {
+			if (!$modal){
+				$table->head[$i] = __('Actions');
+				if ($write_permission) {
+					$i = $i + 1;
+					$table->head[$i] = print_checkbox ('inventorycb-all', "", false, true);
+				}
+			}
+		}
+
+		//tbody
+		$idx = 0;
+		foreach ($inventories as $key=>$inventory) {
+			$i=9;
+			foreach ($header as $k=>$headervalue) {
+				if ($modal) {
+					$url = "javascript:loadInventory(" . $inventory['id'] . ");";
+				} else {
+					$url = 'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$inventory['id'];
+				} 
+				switch ($k) {
+					case 'id': 
+						$data[0] = "<a href=".$url.">".$inventory['id']."</a>";
+						break;
+					
+					case 'name': 
+						$data[1] = "<a href=".$url.">".$inventory['name'].'</a>';
+						break;
+
+					case 'owner':
+						if ($inventory['owner'] != '')
+							$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $inventory['owner']); 
+						else 
+							$name_owner = '--';
+						$data[2] = "<a href=".'index.php?sec=users&sec2=operation/users/user_edit&id='.$inventory['owner'].">".$name_owner.'</a>';
+						break;
+					
+					case 'id_parent': 
+						if ($inventory['id_parent'] != 0) {
+							$name_parent = get_db_value('name', 'tinventory', 'id', $inventory['id_parent']);
+							$data[3] = "<a href=".'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$inventory['id_parent'].">".$name_parent.'</a>';
+						} else {
+							$name_parent = '--';
+							$data[3] = $name_parent;
+						}
+						break;
+					
+					case 'id_object_type': 
+						if ($inventory['id_object_type'] != 0) {
+							$name_object = get_db_value('name', 'tobject_type', 'id', $inventory['id_object_type']);
+							$data[4] = "<a href=".'index.php?sec=inventory&sec2=operation/inventories/manage_objects&id='.$inventory['id_object_type'].">".$name_object.'</a>';
+						} else { 
+							$name_object = '--';
+							$data[4] = $name_object;
+						}
+						break;
+					
+					case 'id_manufacturer': 
+						if ($inventory['id_manufacturer'] != 0) {
+							$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $inventory['id_manufacturer']);
+							$data[5] = "<a href=".'index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&id='.$inventory['id_manufacturer'].">".$name_manufacturer.'</a>';
+						} else { 
+							$name_manufacturer = '--';
+							$data[5] = $name_manufacturer;
+						}
+						break;
+					
+					case 'id_contract': 
+						if ($inventory['id_contract'] != 0) {
+							$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
+							$data[6] = "<a href=".'index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$inventory['id_contract'].">".$name_contract.'</a>';
+						} else { 
+							$name_contract = '--';
+							$data[6] = $name_contract;
+						}
+						break;
+					
+					case 'status': 
+						if ($inventory['status'] != "") {
+							$data[7] = $inventory['status'];
+						} else { 
+							$status_none = '--';
+							$data[7] = $status_none;
+						}
+						break;
+					case 'receipt_date': 
+						if ($inventory['receipt_date'] != "") {
+							$data[8] = $inventory['receipt_date'];
+						} else { 
+							$receipt_date = '--';
+							$data[8] = $receipt_date;
+						}
+						break;
+					default: 
+						if ($inventory[$k] != "") {
+							$data[$i] = $inventory[$k];
+							$i++;
+						} else { 
+							$inventory_null = '--';
+							$data[$i] = $inventory_null;
+							$i++;
+						}
+						break;
+				}
+			}
+
+			//tbody icon delete and checkbox delete all
+			if (!$pure) {
+				if (!$modal){
+					if ($write_permission) {
+					//$data[$i] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete='.$inventory["id"].'&params='.$params.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+					$data[$i] = '<a href="javascript: delete_object_inventory('.$inventory["id"].')" onClick="if (!confirm(\''.__('Are you sure delete inventory object ').$inventory["id"].'?\')) return false;"><img src="images/cross.png"></a>';
+					}
+				}
+			}
+			if (!$pure) {
+				if (!$modal){
+					if ($write_permission) {
+						$i = $i + 1;
+						$data[$i] = print_checkbox_extended ('inventorycb-'.$inventory['id'], $inventory['id'], false, '', '', 'class="cb_inventory"', true);
+					}
+				}
+			}
+
+			$table->rowclass[$idx] = 'inventory_info_' . $inventory["id"];
+			$idx++;	
+			array_push ($table->data, $data);
+		}
+		
+		echo '<div id= "inventory_only_table">';
+
+			$count = $count_inv;
+			
+			$params = json_encode($params);
+
+			$params = base64_encode($params);
+
+			$url_pag = "index.php?sec=inventory&sec2=operation/inventories/inventory&params=".$params;
+			
+			$offset = get_parameter("offset");
+
+			if(!$pure){
+				pagination ($count, $url_pag, $offset);
+			}
+
+			print_table($table);
+
+			if(!$pure){
+				pagination ($count, $url_pag, $offset, true);
+			}
+
+		echo '</div>';
+		if (!$pure) {
+			if(!$modal){
+				if ($write_permission) {	
+					echo '<div class="button-form">';
+						echo print_button(__('Delete All'), '', false, 'javascript: delete_massive_inventory()', 'class="sub"', true);
+					echo '</div>';
+				}
+			}
+		}
+	}
+}
 
 function inventories_show_list($sql_search, $sql_count, $params='', $last_update = 0, $modal = 0) {
 	global $config;
@@ -1435,6 +1800,7 @@ function objects_childs ($id_item){
  * IMPORT INVENTORIES FROM CSV. 
  */
 function inventories_load_file ($objects_file) {
+	debugPrint($objects_file, true);
 	$file_handle = fopen($objects_file, "r");
 	global $config;
 		
@@ -1654,7 +2020,7 @@ function inventories_get_inventory_status () {
 	$inventory_status['new'] = __('New');
 	$inventory_status['inuse'] = __('In use');
 	$inventory_status['unused'] = __('Unused');
-	$inventory_status['issued'] = __('Removed');
+	$inventory_status['issued'] = __('Issued');
 	
 	return $inventory_status;
 }

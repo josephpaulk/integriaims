@@ -1473,5 +1473,12 @@ function is_ajax () {
 	else
 		return false;
 }
+//
+function to_traslate(){
+	__('inuse');
+	__('new');
+	__('unused');
+	__('issued');
+}
 
 ?>

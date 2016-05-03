@@ -422,7 +422,7 @@ function show_type_fields() {
 
 	$("select[name='object_fields_search[]']").empty();
 	
-	id_object_type = $("#id_object_type_search").val();
+	id_object_type = $("#id_object_type_search_modal").val();
 
 	$.ajax({
 		type: "POST",
@@ -439,91 +439,19 @@ function show_type_fields() {
 	});
 }
 
-//This function changes and orders both custom fields as common and runs the checkbox checking if they are on
-function enable_table_order_check(pure) {
-	$("select[name='object_fields_search[]']").empty();
-	
-	id_object_type = $("#id_object_type_search").val();
-	
-	//variable result contiene los campos del tipo de objeto
-	result = $('#hidden-object_fields').val();
-	if(result == "{}" || result == ""){
-		result = "";
-	} else {
-		result = jQuery.parseJSON(result.replace(/&quot;/g, '"'));
-	}
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/inventories&select_fields=1&id_object_type=" + id_object_type,
-		dataType: "json",
-		success: function(data){
-			$("#object_fields_search_check").empty();
-			i=1;
-			jQuery.each (data, function (label, field) {
-
-				var list = $('<ul></ul>');
-				var list_file = $('<li></li>');
-				var list_file_label = $('<label></label>'). attr('for','check' + i);
-				var list_file_label_input = $('<input/>'). attr('id','check' + i).attr('type', 'checkbox').attr('name', field);
-				$("#object_fields_search_check").append(list.append(list_file.append(list_file_label.html(label).append(list_file_label_input))));
-				i++;
-				//if not selected field selected by default the first
-				if(result == ""){
-					$("#object_fields_search_check input[type=checkbox]").on("change", function(e) {
-						var id = $(this).attr("id");
-						id = id.replace('check','');
-						var col = $("#inventory_list_table table tr th:nth-child("+id+"), #inventory_list_table table tr td:nth-child("+id+")");
-						$(this).is(":checked") ? col.show() : col.hide();
-						change_object_field();
-					}).prop("checked", true).change();
-				} else {
-					//if you select any field checkbox selects all off
-					$("#object_fields_search_check input[type=checkbox]").on("change", function(e) {
-						var id = $(this).attr("id");
-						id = id.replace('check','');
-						var col = $("#inventory_list_table table tr th:nth-child("+id+"), #inventory_list_table table tr td:nth-child("+id+")");
-						$(this).is(":checked") ? col.show() : col.hide();
-						change_object_field();
-					}).change();
-				}
-			});
-			//checks that should be on
-			if(result){
-				jQuery.each(result, function (k, v) {
-					$("#object_fields_search_check input[name='"+k+"']").on("change", function(e) {
-					}).prop("checked", true).change();
-				});
-			}
-			enable_table_ajax_headers(pure);
-		}
-	});
-}
-
-//add id table is not used is implemented by whether to order
-function add_id_th_table(label, field){
-	$("#inventory_list_table table tr th").each(function(){
-		nameth = $(this).text();
-		if(nameth == label){
-			$(this).attr('id', field);
-		}
-	});
-}
-
-
 //function to sort x field
 function enable_table_ajax_headers(pure){
 	$('#inventory_list th').each(function (column) {
 		type_column = $('#hidden-sort_mode').val();
 		num_column = $('#hidden-sort_field').val();
-		if (column == 0 || column == 1 || column == 8 || column == 7) {
+		field_value = this.className.split(" ")[1].replace('c','');
+		if (field_value == 0 || field_value == 1 || field_value == 8 || field_value == 7) {
 			if(!pure){
-				if (column == num_column && type_column == 'asc'){
+				if (field_value == num_column && type_column == 'asc'){
 					$(this).addClass('sortable sorted-asc');
 					$(this).attr("onclick","ajax_headers_sort(this);");
 
-				} else if (column == num_column && type_column == 'desc'){
+				} else if (field_value == num_column && type_column == 'desc'){
 					$(this).addClass('sortable sorted-desc');
 					$(this).attr("onclick","ajax_headers_sort(this);");
 				} else {
@@ -532,29 +460,7 @@ function enable_table_ajax_headers(pure){
 				}
 			}
 		}
-
-		// show or hide based on checkbox
-
-		// Avoid to erase actions & select boxes
-		if ($("#check"+(column+1)).val() == null){
-			return false;
-		}
-
-		asociated_checkbox = $("#check"+(column+1)).is(":checked");
-		
-		col = $("#tmp_data table tr th:nth-child("+(column+1)+"), #tmp_data table tr td:nth-child("+(column+1)+")");
-		col.hide();
-		if (!asociated_checkbox){
-			col.hide();
-		}
-		else {
-			col.show();
-		}
-
     });
-
-    $('#inventory_list_table').html($('#tmp_data').html());
-    $('#tmp_data').html(null);
 }
 
 //changes the values ​​of the inputs to the ordering is maintained for the search
@@ -574,6 +480,7 @@ function ajax_headers_sort(field){
 //changes to tree view
 function change_view_tree(){
 	$('#hidden-mode').val('tree');
+	
 	tree_search_submit();
 }
 
@@ -609,18 +516,31 @@ function change_return_view() {
 	tree_search_submit(pure);
 }
 
-//funcion para cambiar el tipo de objeto
+//function to change the object type
 function change_object_type(){
-	id_object_type = $("#id_object_type_search_check").val();
-	$("#id_object_type_search").val(id_object_type);
-	//val offset 0
 	$('#hidden-offset').val(0);
+	pr = $(".checkbox_object_field").removeAttr('checked');
+	inventory_form();
 	tree_search_submit();
 }
 
-//send checkbox on
-function change_object_field(){
-	$("#hidden-object_fields").val(JSON.stringify($('#form_object_field').serializeObject()));
+// function change checkbox
+function inventory_form(){
+	id_object_type = $("#id_object_type_search").val();
+	$.ajax({	
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&form_inventory=1&id_object_type=" + id_object_type,
+		dataType: "html",
+		success: function(data){
+			$("#pr").html(data);
+		}
+	});
+}
+
+//function select all chackbox object fields
+function select_all_object_field(){
+	 $(".checkbox_object_field").attr('checked', true);
 }
 
 //form search inventory
@@ -630,8 +550,10 @@ function tree_search_submit(pure){
 	} else {
 		pure = 0;
 	}
+	
 	var id_object = $('#tree_search').serialize();
 	$("#inventory_list_table").html("<img id='inventory_loading' src='images/carga.gif' />");
+	$("#inventory_tree_table").html("<img id='inventory_loading' src='images/carga.gif' />");
 	$.ajax({	
 		type: "POST",
 		url: "ajax.php",
@@ -640,11 +562,14 @@ function tree_search_submit(pure){
 		success: function(data){
 			mode = $('#hidden-mode').val();
 			if(mode = 'list'){
-				$("#tmp_data").empty();
-				$("#tmp_data").html(data).hide();
-				
+				$("#inventory_list_table").html(data);
+				if(pure == 1){
+					$('.inventory_type_object_container').hide();
+					$('.inventory_column_container').hide();
+					$('.inventory_form_container').hide();
+				}
 				//sort the table
-				enable_table_order_check(pure);
+				enable_table_ajax_headers(pure);
 
 				//JS for massive operations
 				$("#checkbox-inventorycb-all").change(function() {
@@ -655,21 +580,77 @@ function tree_search_submit(pure){
 					event.stopPropagation();
 				});
 
-				//sort the table
-				/*
-					$("#text-search_free").keyup(function() {
-		    			tree_search_submit();
-					});
-				*/
+				//outocomplete name owner and associated user
+				var idUser = "<?php echo $config['id_user']; ?>";
+				bindAutocomplete ("#text-owner", idUser);
+				bindAutocomplete ("#text-associated_user", idUser);
+
+				// Form validation
+				trim_element_on_submit('#text-search_free');
+				if ($("#tree_search").length > 0) {
+					validate_user ("#tree_search", "#text-owner", "<?php echo __('Invalid user')?>");
+				}
 				
 			} else {
-				$('#tmp_data').empty();
-				$('#tmp_data').html (data);
 				$('#inventory_tree_table').show();
 			}
 		}
 	});
 }
+
+function delete_object_inventory (id_inventory) {	
+	$.ajax({
+	    type: 'POST',
+	    url: 'index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete=' + id_inventory,
+	    success: function(){
+        	tree_search_submit();
+        	//message
+    	}
+	});
+}
+
+/*
+function send_params_inventory(id_inventory) {
+	search_free = $('#text-search_free').val();
+	id_company = $('#id_company').val();
+	owner = $('#text-owner').val();
+	id_contract = $('#id_contract').val();
+	id_manufacturer = $('#id_manufacturer').val();
+	associated_user = $('#text-associated_user').val();
+	inventory_status = $('#inventory_status').val();
+	parent_name = $('#text-parent_name').val();
+	id_object_type_search = $('#id_object_type_search').val();
+	sort_field = $('#hidden-sort_field').val();
+	sort_mode = $('#hidden-sort_mode').val();
+	mode = $('#hidden-mode').val();
+
+	$.ajax({
+	    type: 'POST',
+	    url: 'index.php?sec=inventory&sec2=operation/inventories/inventory&quick_delete=' + id_inventory,
+	    data: { 
+	        offset: 0,
+			//search: 1,
+			search_free: search_free,
+			last_update: '',
+			//object_fields: 
+			id_object_type_search: id_object_type_search,
+			owner: owner,
+			id_manufacturer: id_manufacturer,
+			id_contract: id_contract,
+			inventory_status: inventory_status,
+			id_company: id_company,
+			associated_user: associated_user,
+			parent_name: parent_name,
+			sort_mode: sort_mode,
+			sort_field: sort_field,
+			mode: mode
+	    },
+	    success: function(){
+        	tree_search_submit();
+    	}
+	});
+}
+*/
 
 //serialize form in Json
 $.fn.serializeObject = function(){
@@ -1012,7 +993,7 @@ function delete_massive_inventory () {
 				values.push ({name: "quick_delete",
 							value: checked_ids[i]});
 				values.push ({name: "massive_number_loop",
-						value: i});
+							value: i});
 				jQuery.get ("ajax.php",
 					values,
 					function (data, status) {
@@ -1021,7 +1002,7 @@ function delete_massive_inventory () {
 							// This takes the user to the top of the page
 							//window.location.href="index.php?sec=inventory&sec2=operation/inventories/inventory";
 							// This takes the user to the same place before reload
-							location.reload();
+							tree_search_submit();
 						}
 					},
 					"json"
