@@ -100,7 +100,7 @@ if ($upload_avatar) {
 		}
 		
 	}
-	$update_user = false;
+	$update_user = ($update_user === true ) ? $update_user : false;
 }
 
 // Get user ID to modify data of current user.
