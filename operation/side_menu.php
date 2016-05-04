@@ -435,7 +435,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('Search tickets')."</a></li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
 
 			if (give_acl ($config['id_user'], 0, "IW")) {
 				// Incident creation
@@ -454,20 +454,16 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 					echo "<li>";
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports' id='link_incident_report'>".__('Reports')."</a></li>";
 			}
-
-			if ($sec2 == "operation/incidents/incident" || $sec2 == "operation/incidents/incident_dashboard"
-				|| $sec2 == "operation/incidents/incident_search" || $sec2 == "operation/incidents/incident_dashboard_detail") {
-					
-				if ($sec2 == "operation/incidents/incident_dashboard_detail")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo '<a href="" >'.__('Ticket #').'&nbsp;</a>';
-				echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
-				print_input_text ('id', $id_incident ? $id_incident : '', '', 4, 10);
-				echo '</form>';
-				echo '</li>';
-			}
+			
+			if ($sec2 == "operation/incidents/incident_dashboard_detail")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo '<a href="" >'.__('Ticket #').'&nbsp;</a>';
+			echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
+			print_input_text ('id', $id_incident ? $id_incident : '', '', 4, 10);
+			echo '</form>';
+			echo '</li>';
 		echo "</ul>";
 			
 		// Incident type and SLA management only PM
