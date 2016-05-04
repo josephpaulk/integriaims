@@ -409,7 +409,9 @@ if ($sort_items) {
 }
 
 echo '<h2>'.__('Support').'</h2>';
-echo '<h4>'.__('Ticket types').'</h4>';
+echo '<h4>'.__('Ticket types');
+echo integria_help ("type_detail", true);
+echo '</h4>';
 
 // FORM (Update / Create)
 if ($id || $new_type) {

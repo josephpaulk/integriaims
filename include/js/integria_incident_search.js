@@ -991,9 +991,8 @@ $.ajax({
 		}
 	});	
 }
-//add
-function incident_show_groups_search (filter) {
-	
+
+function incident_show_groups_search (filter) {	
 $.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -1099,13 +1098,19 @@ function loadContactEmail(email) {
 
 	$("#contact_search_window").dialog("close");
 }
-//add
+
 function loadgroups() {
-	var multipleValues = $("#destiny").val() || [];
-	$("#text-id_group").val(multipleValues.join( ", " ));
+	selText = '';
+	$("#destiny option:selected").each(function () {
+	   var $this = $(this);
+	   if ($this.length) {
+	    selText = selText + $this.text() + ', ';
+	   }
+	});
+	$("#text-id_group").val(selText);
 	$("#group_search_window").dialog("close");
 }
-//add
+
 function clean_groups_field () {
 	$("#text-id_group").attr("value", "");	
 }

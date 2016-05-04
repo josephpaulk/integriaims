@@ -3504,6 +3504,9 @@ ul li {
 .div_right_ui{
 	float: right;
 }
+.div_right_ui #destiny{
+	white-space: pre;
+}
 .div_middle_ui{
 	float: left;
 	width: 10%;
