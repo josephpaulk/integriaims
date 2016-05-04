@@ -797,9 +797,9 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inven
 // Product types
 if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_inventory != MENU_HIDDEN) {
 	if (($sec2=="operation/inventories/manage_objects") || ($sec2=="operation/inventories/inventory_import_objects"))
-		echo "<li title='".__('Inventory objects')."' id='sideselobjetos_inventario' class='sideselcolor'>";
+		echo "<li title='".__('Inventory objects')."' id='sideselobjetos_inventario' data-status='closed' class='sideselcolor'>";
 	else
-		echo "<li title='".__('Inventory objects')."' id='objetos_inventario'>";
+		echo "<li title='".__('Inventory objects')."' data-status='closed' id='objetos_inventario'>";
 	//echo "<a title='".__('Inventory objects')."' href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>1</a>";
 		echo "<ul>";
 			echo "<li><h1>".__('Inventory objects')."</h1></li>";

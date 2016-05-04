@@ -236,8 +236,6 @@ $(document).ready (function () {
 	$('.custom_submenu').hover(custom_screen_tab_show, custom_screen_tab_hide);
 	
 	$('#menu_slide').click(function(element) {
-		
-		
 		var id = element.target.id;
 		var status = $("#"+id).data("status");
 		if (status == 'closed') {
@@ -256,6 +254,25 @@ $(document).ready (function () {
 		}
 	});
 	
+	$('#menu_slide2').click(function(element) {
+		
+		var id = element.target.id;
+		var status = $("#"+id).data("status");
+		if (status == 'closed') {
+			if (last_id != false) {
+				$("#"+last_id+" ul").hide();
+				$("#"+last_id).data("status", "closed");
+			}
+			
+			$("#"+id+" ul").show();
+			$("#"+id).data("status", "open");
+			last_id = id;
+		}
+		if (status == 'open') {
+			$("#"+id+" ul").hide();
+			$("#"+id).data("status", "closed");
+		}
+	});
 	
 	$('div#main').click(function() {
 		
