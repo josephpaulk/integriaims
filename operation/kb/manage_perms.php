@@ -65,18 +65,10 @@ if (isset($_GET["delete"])){ // if modified any parameter
 }
 
 // CREATE form
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id_group = 0;
-		$name = "";
-		$id = -1;
-	} else {
-		$id = get_parameter ("update",-1);
-		$row = get_db_row ("tkb_product", "id", $id);
-		$name = $row["name"];
-		$icon = $row["icon"];
-		$id_group = $row["id_group"];
-	}
+
+	$id_group = 0;
+	$name = "";
+	$id = -1;
 
 	echo "<h2>".__('KB data product access management')."</h2>";
 	echo "<h4>".__('Create a new product access')."</h4>";
@@ -96,26 +88,15 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos2>";
 	echo "<b>" . __('Group') . "</b>";
 	combo_groups_visible_for_me ($config["id_user"], 'id_group', 1, 'KR', $id_group, false, 0 );
-	if ($id == -1)
 		echo "<tr><td>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
-	else
-		echo "<tr><td>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
 	echo "</table>";
 	echo "</form>";
 	echo "</div>";
 
-}
 
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('KB data product access management')."</h2><h4>".__('Assigned products / group')."</h4>";
-	
-	echo '<div class="divform">';
-	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_perms&create=1'>";
-	echo "<table class='search-table'><tr><td>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	echo "</table></form></div>";
 	
 	$sql1='SELECT tkb_product.name as product, tgrupo.nombre as grupo, tkb_product_group.id_product, tkb_product_group.id_group 
 		FROM tkb_product_group, tkb_product, tgrupo 
