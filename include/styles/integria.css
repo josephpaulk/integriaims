@@ -1208,6 +1208,16 @@ td.datosf9i, td.datos2f9i {
 	vertical-align: middle;
 }
 
+#tree_search .error {
+    color: #FF3333;
+    background: url(../../images/icono_error.png) no-repeat 0% 50%;
+    padding: 15px 0px 15px 35px;
+    clear: both;
+    margin: 0px;
+    /* margin-bottom: 10px; */
+    vertical-align: middle;
+}
+
 .suc {
 	color: #5a8629;
 	background: url(../../images/icono_exito.png) no-repeat 1% 50%;

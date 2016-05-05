@@ -6,5 +6,8 @@
 	<?php print_image("images/help/Ticket_type_1.png", false, false); ?>
 </p>
 <p>
-	A continuación, vemos un ejemplo de creación de <b>tipo combo:</b>
+	A continuación, vemos un ejemplo de creación de tickets en el cual seleccionamos el el nombre del tipo, el o los nombres de los grupos a los que pertenecerá dicho tipo de ticket, asi como una breve descripcion.
+</p>
+<p>
+	
 </p>

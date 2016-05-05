@@ -413,10 +413,13 @@ function byte_convert ($bytes) {
 	return sprintf ('%.2f '.$symbol[$exp], $converted_value );
 }
 
-function pagination ($count, $url, $offset, $print_result_count=false, $aux_text='') {
+function pagination ($count, $url, $offset, $print_result_count=false, $aux_text='',$block_size = 0) {
 	global $config;
-	$block_size = $config["block_size"];
-	
+	if($block_size == 0){
+		$block_size = $config["block_size"];
+	} else {
+		$block_size = $block_size;
+	}
 	/* 	URL passed render links with some parameter
 			&offset - Offset records passed to next page
 	  		&counter - Number of items to be blocked

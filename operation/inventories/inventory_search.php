@@ -265,9 +265,8 @@ return;
 	}
 	
 	
-	$offset = (int)get_parameter('offset', $params_array['offset']);	
-	$params['offset'] = $offset;
-
+	//$offset = (int)get_parameter('offset', $params_array['offset']);	
+	//$params['offset'] = $offset;
 
 	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
 
@@ -323,11 +322,11 @@ return;
 		if($tr){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
-			$sql_search_count = 'SELECT i.id FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
+			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 		} else {
 			$sql_search = 'SELECT '.$pr.' FROM tinventory i WHERE 1=1';
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i WHERE 1=1';
-			$sql_search_count = 'SELECT i.id FROM tinventory i WHERE 1=1';
+			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i WHERE 1=1';
 		}
 		
 		if ($id_object_type != -1) {
@@ -398,7 +397,7 @@ return;
 			}
 		}
 	}
-	//propietario
+	//owner
 	if($params_array['owner'] != ''){
 		$owner = $params_array['owner'];
 	} else {
@@ -409,6 +408,14 @@ return;
 		$sql_search_pagination .= " AND i.owner = '$owner'";
 		$sql_search_count .= " AND i.owner = '$owner'";
 		$params['owner'] = $owner;
+	}
+
+	//block size
+	if($params_array['block_size'] != ''){
+		$block_size = $params_array['block_size'];
+	}
+	else {
+		$block_size = (int)get_parameter('block_size', $config['block_size']);
 	}
 
 	//manufacturer
@@ -544,6 +551,7 @@ return;
 		$params['sort_mode'] = $sort_mode;
 		$params['count_object_custom_fields'] =$count_object_custom_fields;
 		$params['last_update'] = $last_update;
+		$params['block_size'] = $block_size;
 	}
 
 if (!$pure) {
@@ -558,7 +566,7 @@ if (!$pure) {
 			$select_object .= '</td></tr></table>';
 		$select_object .= '</div>';
 		
-		print_container_div("inventory_type_object",__("Select type object"),$select_object, 'open', false, false);
+		print_container_div("inventory_type_object",__("Select type object").print_help_tip (__("Select ALL to see all objects"), true),$select_object, 'open', false, false);
 
 		//field label object types
 		$select_label_object = '<div class = "divform" id = "pr">';
@@ -658,8 +666,7 @@ if (!$pure) {
 		
 		//find
 		//
-		$table_search->data[0][0] = print_input_text ('search_free', $params['search_free'], '', 25, 128, true, __('Search'). print_help_tip (__("
-Search by id, name, status, description and custom fields"), true));
+		$table_search->data[0][0] = print_input_text ('search_free', $params['search_free'], '', 25, 128, true, __('Search'). print_help_tip (__("Search by id, name, status, description and custom fields"), true));
 		
 		//associate company
 		$companies = get_companies();
@@ -709,8 +716,12 @@ Search by id, name, status, description and custom fields"), true));
 		$table_search->data[2][2] = print_checkbox_extended ('last_update', 1, $params['last_update'],
 		false, '', '', true, __('Last updated'));
 
+		//input pagination size
+		$table_search->data[3][0] = '<label id="label-text-block_size" for="text-block_size">'.__('Block size for pagination').print_help_tip (__("Selects the paging block. By default it's set in the general options and limited to 2-1000"), true).'</label>';
+		$table_search->data[3][0] .= '<input type="number" required pattern="^[2-100]" name="block_size" id="text-block_size" value="'.$params['block_size'].'" size="2" min="2" max="1000">';
+
 		//order column table hidden
-		$table_search->data[3][0] = print_input_hidden ('sort_field', $params['sort_field_num'], true, false, 'sort_field');
+		$table_search->data[3][0] .= print_input_hidden ('sort_field', $params['sort_field_num'], true, false, 'sort_field');
 		$table_search->data[3][0] .= print_input_hidden	('sort_mode', $params['sort_mode'], true, false, 'sort_mode');
 		
 		//offset pagination hidden
@@ -723,6 +734,7 @@ Search by id, name, status, description and custom fields"), true));
 		$filter["query"] = $sql_search;
 		$filter["query_pag"] = $sql_search_pagination;
 		serialize_in_temp($filter, $config["id_user"]);
+		
 		//tree_search_submit()
 		$table_search->data[3][1] .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
 
@@ -742,14 +754,14 @@ $page = (int)get_parameter('page', 1);
 switch ($mode) {
 	case 'tree':
 		echo '<div class = "inventory_tree_table" id = "inventory_tree_table">';
-			inventories_print_tree($sql_search, $sql_search_obj_type, $last_update);
+			inventories_print_tree($sql_search_pagination, $sql_search_obj_type, $last_update);
 		echo '</div>';
 		break;
 	case 'list':
 		echo '<div id="tmp_data"></div>';
 		echo '<div class = "inventory_list_table" id = "inventory_list_table">';
 			echo '<div id= "inventory_only_table">';
-				inventories_show_list2($sql_search, $sql_search_count, $params, $last_update, 0, $count_object_custom_fields, $sql_search_pagination);
+				inventories_show_list2($sql_search, $sql_search_count, $params, $block_size, 0, $count_object_custom_fields, $sql_search_pagination);
 			echo '</div>';
 		echo '</div>';
 		break;
@@ -757,7 +769,7 @@ switch ($mode) {
 		echo '<div id="tmp_data"></div>';
 		echo '<div class = "inventory_list_table" id = "invetory_list_table">';
 			echo '<div id= "inventory_only_table">';
-				inventories_show_list2($sql_search, $sql_search_count, $params, $last_update, 0, $count_object_custom_fields, $sql_search_pagination);
+				inventories_show_list2($sql_search, $sql_search_count, $params, $block_size, 0, $count_object_custom_fields, $sql_search_pagination);
 			echo '</div>';
 		echo '</div>';
 		
@@ -794,15 +806,6 @@ $(document).ready (function () {
 
 	//order colums table
 	enable_table_ajax_headers();
-	/*
-	////cambia el offset a 0
-	$('#id_object_type_search').change(function(){
-		$("#hidden-offset").val(0);
-	});
-	*/
-
-	
-	//tree_search_submit();
 });
 
 </script>
