@@ -93,17 +93,23 @@ if ($change_table) {
 	$sql_search = '';
 	$sql_search_pagination = '';
 
-	$offset = (int)get_parameter('offset', 0);
-	$params['offset'] = $offset;	
+
 	$search_free = (string)get_parameter ('search_free', '');
 
 	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
 
 	$params = array();
+	//offset
+	//$offset = (int)get_parameter('offset', 0);
+	//$params['offset'] = $offset;
+
+	//block size
+	$block_size = (int)get_parameter('block_size', $config['block_size']);
+	$params['block_size'] = $block_size;
 
 	//id del objeto
-		$id_object_type = (int)get_parameter('id_object_type_search', 1);
-		$params['id_object_type_search'] = $id_object_type;
+	$id_object_type = (int)get_parameter('id_object_type_search', 1);
+	$params['id_object_type_search'] = $id_object_type;
 
 	//este campo es mortal
 	$object_fields_default = array();
@@ -142,11 +148,11 @@ if ($change_table) {
 		if($tr){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
-			$sql_search_count = 'SELECT i.id FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
+			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 		} else {
 			$sql_search = 'SELECT '.$pr.' FROM tinventory i WHERE 1=1';
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i WHERE 1=1';
-			$sql_search_count = 'SELECT i.id FROM tinventory i WHERE 1=1';
+			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i WHERE 1=1';
 		}
 		
 
@@ -313,9 +319,9 @@ if ($change_table) {
 		$params['last_update'] = $last_update;
 	}
 	if($mode == 'list'){
-		inventories_show_list2($sql_search, $sql_search_count, $params, $last_update, 0, $count_object_custom_fields, $sql_search_pagination);
+		inventories_show_list2($sql_search, $sql_search_count, $params, $block_size, 0, $count_object_custom_fields, $sql_search_pagination);
 	} else {
-		inventories_print_tree($sql_search, $sql_search_obj_type, $last_update);
+		inventories_print_tree($sql_search_count, $sql_search_obj_type, $last_update);
 	}
 	return;
 }

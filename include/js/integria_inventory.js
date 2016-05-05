@@ -543,60 +543,72 @@ function select_all_object_field(){
 	 $(".checkbox_object_field").attr('checked', true);
 }
 
+//validate form block size
+function checkForm() {
+	var block_size = $('#text-block_size').val();
+	if(block_size < 2 || block_size > 1000 || block_size == "" || isNaN(block_size)){		
+		return false;
+	} 
+	return true;
+}
+
 //form search inventory
 function tree_search_submit(pure){
-	if(pure==1){
-		pure = 1;
-	} else {
-		pure = 0;
-	}
-	
-	var id_object = $('#tree_search').serialize();
-
-	$("#inventory_list_table").html("<img id='inventory_loading' src='images/carga.gif' />");
-	$("#inventory_tree_table").html("<img id='inventory_loading' src='images/carga.gif' />");
-	$.ajax({	
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/inventories&pure="+ pure +"&change_table=1&" + id_object,
-		dataType: "html",
-		success: function(data){
-			mode = $('#hidden-mode').val();
-			if(mode = 'list'){
-				$("#inventory_list_table").html(data);
-				if(pure == 1){
-					$('.inventory_type_object_container').hide();
-					$('.inventory_column_container').hide();
-					$('.inventory_form_container').hide();
-				}
-				//sort the table
-				enable_table_ajax_headers(pure);
-
-				//JS for massive operations
-				$("#checkbox-inventorycb-all").change(function() {
-					$(".cb_inventory").prop('checked', $("#checkbox-inventorycb-all").prop('checked'));
-				});
-
-				$(".cb_inventory").click(function(event) {
-					event.stopPropagation();
-				});
-
-				//outocomplete name owner and associated user
-				var idUser = "<?php echo $config['id_user']; ?>";
-				bindAutocomplete ("#text-owner", idUser);
-				bindAutocomplete ("#text-associated_user", idUser);
-
-				// Form validation
-				trim_element_on_submit('#text-search_free');
-				if ($("#tree_search").length > 0) {
-					validate_user ("#tree_search", "#text-owner", "<?php echo __('Invalid user')?>");
-				}
-				
-			} else {
-				$('#inventory_tree_table').show();
-			}
+	var validate = checkForm();
+	if(validate){
+		if(pure==1){
+			pure = 1;
+		} else {
+			pure = 0;
 		}
-	});
+		
+		var id_object = $('#tree_search').serialize();
+
+		$("#inventory_list_table").html("<img id='inventory_loading' src='images/carga.gif' />");
+		$("#inventory_tree_table").html("<img id='inventory_loading' src='images/carga.gif' />");
+		$.ajax({	
+			type: "POST",
+			url: "ajax.php",
+			data: "page=include/ajax/inventories&pure="+ pure +"&change_table=1&" + id_object,
+			dataType: "html",
+			success: function(data){
+				mode = $('#hidden-mode').val();
+				if(mode = 'list'){
+					$("#inventory_list_table").html(data);
+					if(pure == 1){
+						$('.inventory_type_object_container').hide();
+						$('.inventory_column_container').hide();
+						$('.inventory_form_container').hide();
+					}
+					//sort the table
+					enable_table_ajax_headers(pure);
+
+					//JS for massive operations
+					$("#checkbox-inventorycb-all").change(function() {
+						$(".cb_inventory").prop('checked', $("#checkbox-inventorycb-all").prop('checked'));
+					});
+
+					$(".cb_inventory").click(function(event) {
+						event.stopPropagation();
+					});
+
+					//outocomplete name owner and associated user
+					var idUser = "<?php echo $config['id_user']; ?>";
+					bindAutocomplete ("#text-owner", idUser);
+					bindAutocomplete ("#text-associated_user", idUser);
+
+					// Form validation
+					trim_element_on_submit('#text-search_free');
+					if ($("#tree_search").length > 0) {
+						validate_user ("#tree_search", "#text-owner", "<?php echo __('Invalid user')?>");
+					}
+
+				} else {
+					$('#inventory_tree_table').show();
+				}
+			}
+		});
+	}
 }
 
 //function delete one elements from inventory

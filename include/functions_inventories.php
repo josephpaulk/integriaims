@@ -857,6 +857,7 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update = 0) {
 	global $config;
 	global $enteprise_load;
+	$config['mysql_result_type'] = MYSQL_ASSOC;	
 	echo '<table class="" style="width:99%">';
 	echo '<tr><td style="width:100%" valign="top">';
 	
@@ -869,7 +870,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	} else {
 		$object_types = get_db_all_rows_sql($sql_search_obj_type);
 	}
-
+	
 	$sql_search = base64_encode($sql_search);
 
 	if (empty($object_types)) {
@@ -884,7 +885,6 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 				$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
 			}
 		$elements_type[$key]['id'] = $type['id'];
-
 	}
 
 	$elements_type[$key+1]['name'] = __('No object type');
@@ -913,7 +913,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 
 		array_push($aux_elems, $elem);
 	}
-
+	
 	$elements_type = $aux_elems;
 
 	$i = 0;
@@ -921,7 +921,7 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	$end = 0;
 
 	$margin_left_ref = 23;
-
+	
 	foreach ($elements_type as $element) {
 
 		$lessBranchs = 0;
@@ -977,7 +977,6 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 		}
 	
 		$id_div = "object_types_".$element['id'];
-
 		echo "<li style='margin: 0px 0px 0px 0px;'>
 			<a style='vertical-align: middle;' onfocus='JavaScript: this.blur()' href='javascript: loadSubTree(\"object_types\", \"" . $element['id'] . "\", " . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\", \"" . $i .  "\", \"" . $end . "\", \"" . $last_update . "\")'>" .
 			$img . "&nbsp;" . $element["img"] ."&nbsp;" . safe_output($element['name'])."</a>"."&nbsp;&nbsp;"."($total_stock:$new_stock:$unused_stock:$min_stock)".print_help_tip(__("Total").':'.__("New").':'.__("Unused").':'.__("Min. stock"), true);
@@ -1275,7 +1274,7 @@ function form_inventory ($params){
 
 
 
-function inventories_show_list2($sql_search, $sql_count, $params='', $last_update = 0, $modal = 0, $count_object_custom_fields = 1, $sql_search_pagination) {
+function inventories_show_list2($sql_search, $sql_count, $params='', $block_size, $modal = 0, $count_object_custom_fields = 1, $sql_search_pagination) {
 	global $config;
 
 	$is_enterprise = false;
@@ -1298,11 +1297,10 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 	}
 
 	$pure = get_parameter("pure");
-
 	if ($pure) {
 		$block_limit = 5000;
 	} else {
-		$block_limit = $config["block_size"];
+		$block_limit = $block_size;
 	}
 	
 	$offset = get_parameter("offset", 0);	
@@ -1311,12 +1309,10 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 		$sql_search .= " OFFSET $offset";
 		$sql_search_pagination .= " LIMIT ".$block_limit;
 	} else {
-		//$sql_search .= " LIMIT ".($block_limit * $count_object_custom_fields);
 		$sql_search_pagination .= " LIMIT ".$block_limit;
 	}
 
 	$sql_search_pagination .= " OFFSET $offset";
-	
 	
 	$config['mysql_result_type'] = MYSQL_ASSOC;	
 	
@@ -1517,9 +1513,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 		echo '<div id= "inventory_only_table">';
 
 			$count = $count_inv;
-			
 			$params = json_encode($params);
-
 			$params = base64_encode($params);
 
 			$url_pag = "index.php?sec=inventory&sec2=operation/inventories/inventory&params=".$params;
@@ -1527,13 +1521,13 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $last_updat
 			$offset = get_parameter("offset");
 
 			if(!$pure){
-				pagination ($count, $url_pag, $offset);
+				pagination ($count, $url_pag, $offset, false, '', $block_size);
 			}
 
 			print_table($table);
 
 			if(!$pure){
-				pagination ($count, $url_pag, $offset, true);
+				pagination ($count, $url_pag, $offset, true, '', $block_size);
 			}
 
 		echo '</div>';

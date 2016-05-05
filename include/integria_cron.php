@@ -733,7 +733,8 @@ function run_mail_queue () {
 					$status = 0;
 				}
 				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-				integria_logwrite (sprintf("SMTP error sending to %s (%s)"), implode(',', $toArray), $e);
+				//integria_logwrite (sprintf("SMTP error sending to %s (%s)"), implode(',', $toArray), $e);
+				integria_logwrite (sprintf("SMTP error sending to %s (%s)", implode(',', $toArray), $e));
 			}
 		}
 	}
