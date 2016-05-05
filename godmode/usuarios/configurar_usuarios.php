@@ -107,20 +107,30 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 if ($action == 'update')  {
 	$enable_login = get_parameter("enable_login");
 	$user_to_update = get_parameter ("update_user");
+	$nivel = get_parameter ("nivel",0);
 	
 	enterprise_include ('include/functions_license.php', true);
-
+	
 	$users_check = true;
 	if ($enable_login) {
 		$old_enable_login = get_db_value_filter('enable_login', 'tusuario', array('id_usuario'=>$user_to_update));
-		if ($old_enable_login) {
-			$users_check = true;
-		} else {
-			$is_manager = enterprise_hook('license_check_manager_user',array($user_to_update));
-			if ($is_manager) {
+		$old_nivel = get_db_value_filter('nivel', 'tusuario', array('id_usuario'=>$user_to_update));
+		if ($old_nivel != $nivel) {
+			if ($nivel) {
 				$users_check = enterprise_hook('license_check_manager_users_num');
 			} else {
 				$users_check = enterprise_hook('license_check_regular_users_num');
+			}
+		} else {
+			if ($old_enable_login) {
+				$users_check = true;
+			} else {
+				$is_manager = enterprise_hook('license_check_manager_user',array($user_to_update));
+				if ($is_manager) {
+					$users_check = enterprise_hook('license_check_manager_users_num');
+				} else {
+					$users_check = enterprise_hook('license_check_regular_users_num');
+				}
 			}
 		}
 	}
@@ -137,6 +147,7 @@ if ($action == 'update')  {
 			$id_company = get_parameter ("id_company");
 			$num_employee = get_parameter ("num_employee");
 			$location = get_parameter ("location", "");
+			$nivel = get_parameter ("nivel",0);
 			
 			//chech if exists num employee
 			$already_exists = false;
@@ -164,9 +175,6 @@ if ($action == 'update')  {
 				echo "<h3 class='error'>".__('Number employee already exists.')."</h3>";
 			}
 			else {
-				if (isset($_POST["nivel"])) {
-					$nivel = get_parameter ("nivel");
-				}
 				$direccion = trim (ascii_output(get_parameter ("direccion")));
 				$telefono = get_parameter ("telefono");
 				$comentarios = get_parameter ("comentarios");
@@ -260,11 +268,16 @@ if ($action == 'update')  {
 if ($action == 'create'){
 	
 	$enable_login = get_parameter("enable_login");
+	$nivel = get_parameter ("nivel",0);
 
 	enterprise_include ('include/functions_license.php', true);
 
 	if ($is_enterprise) {
-		$users_check = enterprise_hook('license_check_regular_users_num');
+		if ($nivel == 1) {
+			$users_check = enterprise_hook('license_check_manager_users_num');
+		} else {
+			$users_check = enterprise_hook('license_check_regular_users_num');
+		}
 	} else {
 		$users_check = true;
 	}
@@ -286,9 +299,6 @@ if ($action == 'create'){
 	$telefono = get_parameter ("telefono");
 	$id_company = get_parameter ("id_company");
 	$comentarios = get_parameter ("comentarios");
-	if (isset($_POST["nivel"])) {
-		$nivel = get_parameter ("nivel",0);
-	}
 	$password = md5($password);
 	$avatar = get_parameter ("avatar");
 	$avatar = substr($avatar, 0, strlen($avatar)-4);
