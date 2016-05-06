@@ -2057,27 +2057,32 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name, $manage_permi
 		case 'details':
 			$details_class = 'ui-tabs-selected';
 			$title = strtoupper(__('Inventory object details'));
+			$help = integria_help ("inventory_detail", true);
 			break;
 		case 'tracking':
 			$tracking_class = 'ui-tabs-selected';
 			$title = strtoupper(__('Tracking'));
+			$help = integria_help ("inventory_tracking", true);
 			break;
 		case 'contacts':
 			$contacts_class = 'ui-tabs-selected';
 			$title = strtoupper(__('Contacts'));
+			$help = integria_help ("inventory_contacts", true);
 			break;
 		case 'incidents':
 			$incidents_class = 'ui-tabs-selected';
 			$title = strtoupper(__('Tickets'));
+			$help = integria_help ("inventory_incidents", true);
 			break;
 		case 'relationships':
 			$relationship_class = 'ui-tabs-selected';
 			$title = strtoupper(__('Relationships'));
+			$help = integria_help ("inventory_relationship", true);
 			break;
 	}
 	
 	$title2 = sprintf(__('Inventory object #%s: %s'), $id, $inventory_name);
-	echo '<h2>' . $title . '</h2><h4>'.$title2;
+	echo '<h2>' . $title . '</h2><h4>' . $title2 . $help;
 	if ($manage_permission) {
 		echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
 		print_input_hidden ('quick_delete', $id);

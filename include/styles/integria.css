@@ -3712,3 +3712,7 @@ img#inventory_loading{
 #object_fields_select_all{
 	margin-left:30%;
 }
+
+#right:hover, #left:hover, #up_field:hover, #down_field:hover, #right_order:hover, #left_order:hover, #asc_order:hover, #desc_order:hover {
+	cursor: pointer;
+};

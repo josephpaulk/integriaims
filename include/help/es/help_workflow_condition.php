@@ -1,39 +1,29 @@
-<h1>Condiciones de reglas de flujo de trabajo</h1>
-
+<h1>Condiciones de una regla de workflow</h1>
 <p>
-En general las reglas de workflow se dispararán UNA SOLA vez, de forma que si establece una regla para cambiar por ejemplo, el usuario asignado a la incidencia cuando una incidencia tenga más de 30 dias de vida, y el usuario asignado es X, pero luego manualmente alguien vuelve a poner ese usuario X, la regla NO se volverá a disparar. La única excepción de este comportamiento es cuando la condición es el tiempo de actualización.
-
+	Si pinchamos sobre la pestaña de Condiciones, accedemos al listado donde definiremos en que casos aplicaremos la regla, en nuestro ejemplo tenemos una condición ya definida. Podemos tener una o varias condiciones por regla. En el caso de que tengamos varias condiciones, con que se cumpla una, la regla se activará y ejecutará la acción o acciones programadas. Las condiciones están compuestas por un conjunto de filtros o subcondiciones, los cuales se describen a continuación:
+	<ul>
+		<li><b>Condición:</b> como se aplicarán al resto de los campos de los filtros dentro de la definición de la Condición (coincidan todos los campos, alguno o ninguno).</li>
+		<li><b>Propietario:</b> responsable del ticket.</li>
+		<li><b>Prioridad:</b> Una superior no engloba a las inferiores.</li>
+		<li><b>Fecha de actualización:</b> Tiempo desde que el ticket fue actualizado por última vez.</li>
+		<li><b>Texto a buscar en el título o descripción del incidente:</b> Busca una cadena dentro de la WU; el título o la descripción.</li>
+		<li><b>Tarea:</b> Tarea asociada al ticket.</li>
+		<li><b>Tipo de ticket:</b> Seleccionando el tipo de ticket, los campos personalizados aparecerán y podemos hacer uso de ellos para añadirlos al conjunto de filtros de esta Condición.</li>
+		<li><b>Grupo</b> del ticket.</li>
+		<li><b>Estado</b> del ticket.</li>
+		<li><b>Fecha de creación:</b> Tiempo transcurrido desde la creación.</li>
+		<li><b>SLA:</b> si el SLA fue disparada o no.</li>
+		<li><b>Resolución</b> del ticket.</li>
+		<li><b>Cumplimiento SLA (%):</b> porcentaje de cumplimiento del SLA del ticket.</li>
+	</ul>
 </p>
 <p>
-
-Si establece una regla para que salte cuando el ticket lleva más de X tiempo sin actualizar, se creará automáticamente una acción por defecto para “actualizar el ticket”. Esto hará que no salte continuamente la condición. Pasado ese X tiempo, el sistema podrá ejecutar de nuevo la misma regla de Workflow. Esta es la excepción, ya que para ninguna otra condición (Prioridad, Propietaro, Estado, Creacion ó Grupo), se podrá volver a ejecutar una regla.
-
+	<?php print_image("images/help/ticket41.png", false); ?>
 </p>
 <p>
-Caso típico de uso para este tipo de condición:
-<br>
-<br>
-Necesita enviar un email de aviso a un coordinador, cuando una incidencia de prioridad muy alta y de un grupo determinado lleva más de 5 días sin actualizaciones. 
-<br>
-<br>
-Simplemente tiene que rellenar en la condición “Match all fields”, el grupo específico y la prioriad muy alta, solo para incidencias asignadas. En “Time Update” escogeremos un mes.
-</p>
-
-<p>
-<?php print_image("images/help/workflow_conditions.png", false); ?>
-</p>
-
-<p>
-Al añadir la acción de enviar un mail, se creará automáticamente la accion de actualizar el ticket, que dejaremos tal cual, para actualizar el ticket y evitar que siga saltando la regla. 
-</p>
-
-<p>
-<?php print_image("images/help/workflow_actions.png", false, false); ?>
+	En esta condición de ejemplo hemos definido las características que debe cumplir el ticket. El grupo debe ser Soporte, la prioridad debe ser Media y el estado Asignado. El campo condición elegido es Coincidir todos los campos porque queremos que se cumplan todas. Si quisiéramos que se cumpliera alguna, el campo condición seleccionado sería Coincidir algún campo y si queremos que no se cumpla ninguna, el valor debe ser No hubo coincidencia.
 </p>
 <p>
-<?php print_image("images/help/workflow_actions2.png", false, false); ?>
-</p>
-<p>
-Al pasar una semana, si no se ha actualizado la incidencia, volverá a saltar la regla y asi de forma indefinida.
+	<?php print_image("images/help/ticket42.png", false, false); ?>
 </p>
 

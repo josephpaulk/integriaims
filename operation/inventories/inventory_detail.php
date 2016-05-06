@@ -106,7 +106,9 @@ $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 if (!defined ('AJAX')) {
 	if (!$id) {
 		echo "<h2>".__('Create')."</h2>";
-		echo "<h4>".__('Inventory object')."</h4>";
+		echo "<h4>".__('Inventory object');
+		echo integria_help ("inventory_detail", true);
+		echo "</h4>";
 	} 
 	elseif ($inventory_name) {
 		//**********************************************************************
