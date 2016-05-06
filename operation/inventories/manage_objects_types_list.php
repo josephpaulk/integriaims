@@ -55,7 +55,9 @@ $external_label = "";
 echo '<div id="tabs">';
 echo '<h2>' . strtoupper(__('Inventory')) . '</h2>';
 echo '<h4>' . strtoupper(__('Field list'));
+echo integria_help ("manage_objects", true);
 /* Tabs list */
+
 echo '<ul class="ui-tabs-nav">';
 if (!empty($id_object_type)) {
 	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '" title="'.__('Object details').'"><img src="images/eye.png"/></a></li>';
@@ -191,7 +193,9 @@ if ($objects_type_fields !== false) {
 	}
 	print_table ($table);
 } else {
-	echo "<h4>".__('No objects types fields')."</h4>";
+	echo "<h4>".__('No objects types fields');
+	echo integria_help ("manage_objects", true);
+	echo "</h4>";
 }
 echo'</div>';
 

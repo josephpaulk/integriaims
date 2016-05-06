@@ -20,8 +20,9 @@ check_login ();
 include_once('include/functions_inventories.php');
 
 echo "<h2>".__('Inventory')."</h2>";
-echo "<h4>".__('Import objects from CSV')."</h4>";
-
+echo "<h4>".__('Import objects from CSV');
+echo integria_help ("inventory_import_objects", true);
+echo "</h4>";
 
 $upload_file = (int) get_parameter('upload_file');
 $id_object_type = get_parameter('id_object_type');

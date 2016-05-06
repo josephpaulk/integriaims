@@ -73,6 +73,7 @@ switch ($action) {
 echo '<div id="tabs">';
 echo '<h2>' . __('Inventory') . '</h2>';
 echo '<h4>' . __('Object types management');
+echo integria_help ("manage_objects", true);
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
 	
