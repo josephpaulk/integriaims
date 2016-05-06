@@ -170,6 +170,7 @@ if ($search_contract_number != "") {
 
 echo "<h2>" . __('Invoice') . "</h2>";
 echo "<h4>" . __('Invoice listing');
+	echo integria_help ("invoice_detail", true);
 	echo "<div id='button-bar-title'>";
 		echo "<ul>";
 			echo "<li>";

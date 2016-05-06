@@ -431,12 +431,13 @@ else {
 echo "<h2>" . __('Invoices');
 if ($id_invoice == "-1") {
 	echo "<h4>" . __('Add new invoice');
+	echo integria_help ("invoice_detail", true);
 }
 else {
 	$is_update = true;
 	
 	echo "<h4>" . __('Update invoice'). " ".$invoice["bill_id"];;
-
+	echo integria_help ("invoice_detail", true);
 	echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 				&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1&language='.$language.'">
 				<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';

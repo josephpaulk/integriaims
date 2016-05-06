@@ -195,7 +195,7 @@ if ($export_csv_inventory) {
 		}
 		$i++;
 	}
-	
+
 	$filename = clean_output ('inventory_export').'-'.date ("YmdHi");	
 	$rows = $inventories_aux_pagination;
 	if ($rows === false)

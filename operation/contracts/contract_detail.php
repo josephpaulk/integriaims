@@ -118,6 +118,7 @@ if ($id_contract) {
 		default:
 			echo __('Update Contract');
 	}
+	echo integria_help ("contract_detail", true);
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	
 	if ($op == "invoices")
@@ -462,7 +463,9 @@ elseif ($op == "") {
 	if ($id || $new_contract) {
 		if ($new_contract) {
 			echo "<h2>".__('Contract Management')."</h2>";
-			echo '<h4>' . __('New contract') ."</h4>";
+			echo '<h4>' . __('New contract');
+			echo integria_help ("contract_detail", true);
+			echo "</h4>";
 			if (!$section_write_permission && !$section_manage_permission) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
 				require ("general/noaccess.php");
@@ -724,6 +727,7 @@ elseif ($op == "") {
 		
 		echo "<h2>".__('Contracts')."</h2>";
 		echo "<h4>".__('List of contracts');
+			echo integria_help ("contract_detail", true);
 			echo "<div id='button-bar-title'>";
 				echo "<ul>";
 					echo "<li>";

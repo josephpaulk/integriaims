@@ -155,8 +155,12 @@ $op = get_parameter("op", "details");
 
 if ($id == 0) {
 	echo "<h2>".__('Contact management')."</h2>";
-	if (!$new_contact)
-		echo "<h4>".__('List of Contact')."</h4>";
+	if (!$new_contact){
+		echo "<h4>".__('List of Contact');
+		echo integria_help ("contact_detail", true);
+		echo "</h4>";
+	}
+	
 }
 
 if ($id != 0) {
@@ -185,7 +189,7 @@ if ($id != 0) {
 	echo '</h2>';
 	$contact = get_db_row ('tcompany_contact', 'id', $id);
 	echo '<h4>' . sprintf(__('Contact: %s'), $contact['fullname']);
-	
+	echo integria_help ("contact_detail", true);
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	if ($op == "files")
 		echo '<li class="ui-tabs-selected">';

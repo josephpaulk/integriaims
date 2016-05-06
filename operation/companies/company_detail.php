@@ -192,7 +192,7 @@ if ($id) {
 	
 	$company = get_db_row ('tcompany', 'id', $id);
 	echo '<h4>' . sprintf(__('Company: %s'), $company['name']);
-	
+	echo integria_help ("company_detail", true);
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	if ($op == "projects")
 		echo '<li class="ui-tabs-selected">';
@@ -282,7 +282,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	if($new_company) {
 		echo "<h2>".__('Companies')."</h2>";
-		echo "<h4>".__('New company')."</h4>";
+		echo "<h4>".__('New company');
+		echo integria_help ("company_detail", true);
+		echo "</h4>";
 	}
 
 	if (!$new_company && $op == "") { 
@@ -982,6 +984,7 @@ if ((!$id) AND ($new_company == 0)){
 	
 	echo "<h2>".__('Company management') . "</h2>";
 	echo "<h4>".__('List Company');
+		echo integria_help ("company_detail", true);
 		echo "<div id='button-bar-title'>";
 			echo "<ul>";
 				echo "<li>";
