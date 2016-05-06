@@ -1352,7 +1352,8 @@ CREATE TABLE `tworkflow_status_mapping` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `origin_id` int(10) unsigned NOT NULL,
   `destination_id` int(10) unsigned NOT NULL,
-  `resolution_id` int(10) unsigned NOT NULL,
+  `resolution_destination_id` int(10) unsigned NOT NULL,
+  `resolution_origin_id` int(10) unsigned NOT NULL,
   `initial` int default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

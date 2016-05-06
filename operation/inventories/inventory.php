@@ -26,7 +26,7 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 
 echo '<h2>' . __('Inventory') . '</h2>';
 echo '<h4>' . __('Overview');
-
+	echo integria_help ("inventory", true);
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	
