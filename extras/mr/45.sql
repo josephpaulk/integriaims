@@ -17,4 +17,4 @@
 -- Table tmenu_visibility
 -- ---------------------------------------------------------------------
 
-INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0),('people',1,0);
+INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0);
