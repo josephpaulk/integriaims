@@ -19,4 +19,4 @@
 UPDATE `tlink` SET `name` = 'Artica',`link` = 'http://artica.es' WHERE `id_link` = 1;
 UPDATE `tlink` SET `name` = 'Integria IMS',`link` = 'http://integriaims.com/' WHERE `id_link` = 2;
 UPDATE `tlink` SET `name` = 'Forum', `link` = 'http://forums.integriaims.com/' WHERE `id_link` = 3;
-INSERT INTO `tlink` VALUES (4, 'Support', 'https://artica.es/integria/');
+INSERT INTO `tlink` (`name`,`link`) VALUES ('Support', 'https://artica.es/integria/');
