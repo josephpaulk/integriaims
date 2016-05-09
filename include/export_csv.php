@@ -180,94 +180,26 @@ if ($export_csv_leads) {
 }
 
 if ($export_csv_inventory) {
-	
 	$filter = unserialize_in_temp($config["id_user"]);
 	$inventories_aux = get_db_all_rows_sql(safe_output($filter["query"]));
-	$inventories_aux_pagination = get_db_all_rows_sql(safe_output($filter["query_pag"]));
-
 	$i=0;
-	foreach ($inventories_aux_pagination as $key => $value) {
-		unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
-		foreach ($inventories_aux as $k => $v) {
-			if($value['id'] == $v['id']){
-				$inventories_aux_pagination[$i][safe_output($v['label'])] = safe_output($v['data']);
+	foreach ($inventories_aux as $k => $v) {
+		$j = 0;
+		while ($v['id'] == $inventories_aux[$i + $j]['id']){
+			$inventories_aux[$i][safe_output($inventories_aux[$i + $j]['label'])] = safe_output($inventories_aux[$i + $j]['data']);
+			unset($inventories_aux[$i]['label'], $inventories_aux[$i]['data']);
+			if($j != 0){
+				unset($inventories_aux[$i + $j]);
 			}
+			$j++;
 		}
 		$i++;
 	}
 
-	$filename = clean_output ('inventory_export').'-'.date ("YmdHi");	
-	$rows = $inventories_aux_pagination;
+	$filename = clean_output ('inventory_export').'-'.date ("YmdHi");
+	$rows = $inventories_aux;
 	if ($rows === false)
 		return;	
-/*
-	
-
-	$aux_rows = array();
-
-	//Add additional information to raw csv
-	foreach ($rows as $r) {
-		$aux = array();
-
-		$aux["id"] = $r["id"];
-		$aux["name"] = $r["name"];
-
-		$aux["id_object_type"] = $r["id_object_type"];
-		$aux["object_type_name"] = "";
-		
-		if ($aux["id_object_type"]) {
-			$aux["object_type_name"] = get_db_value("name", "tobject_type", "id", $r["id_object_type"]);
-			$sql = "SELECT * FROM tobject_type_field WHERE id_object_type=".$aux["id_object_type"];
-
-			$all_fields = get_db_all_rows_sql($sql);
-
-			if ($all_fields == false) {
-				$all_fields = array();
-			}
-	
-			foreach ($all_fields as $key=>$field) {
-				$sql = "SELECT data FROM tobject_field_data WHERE id_object_type_field=".$field['id']. " AND id_inventory=".$aux["id"];
-				$data = get_db_value_sql($sql);
-				$aux[safe_output($field['label'])] = $data;
-			}
-		}
-
-		$aux["description"] = $r["description"];
-
-		$aux["id_contract"] = $r["id_contract"];
-		$aux["contract_name"] = "";
-
-		if ($aux["id_contract"]) {
-			$aux["contract_name"] = get_db_value("name", "tcontract", "id", $r["id_contract"]);
-		}
-
-		$aux["id_manufacturer"] = $r["id_manufacturer"];
-		$aux["manufacturer_name"] = "";
-
-		if ($aux["id_manufacturer"]) {
-			$aux["manufacturer_name"] = get_db_value("name", "tmanufacturer", "id", $r["id_manufacturer"]);
-		}
-
-		$aux["id_parent"] = $r["id_parent"];
-		$aux["parent_name"] = "";
-
-		if ($aux["id_parent"]) {
-			$aux["parent_name"] = get_db_value("name", "tinventory", "id", $r["id_parent"]);
-		}
-
-		$aux["owner"] = $r["owner"];
-		$aux["public"] = $r["public"];
-		$aux["show_list"] = $r["show_list"];
-		$aux["last_update"] = $r["last_update"];
-		$aux["status"] = $r["status"];
-		$aux["receipt_date"] = $r["receipt_date"];
-		$aux["issue_date"] = $r["issue_date"];
-
-		array_push($aux_rows, $aux);
-	}
-
-	$rows = $aux_rows;
-	*/
 }
 
 if ($export_csv_audit) {
