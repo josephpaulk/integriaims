@@ -573,7 +573,7 @@ else {
 
 					echo "<b>#".$incident["id_incidencia"]."</b>";
 					echo "<td><b>";
-					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident["id"]."'>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"]."'>";
 
 					echo $incident["title"] . "</a><br></b><i>";
 
