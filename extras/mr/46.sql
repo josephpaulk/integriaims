@@ -59,7 +59,7 @@ CREATE TABLE `treport_subtype` (
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `treport_type` VALUES (1,'List');
-INSERT INTO `treport_type` VALUES (2,'Graphics');
-INSERT INTO `treport_type` VALUES (3,'List & Graphics');
-INSERT INTO `treport_subtype` VALUES (1,'Tickets');
+INSERT INTO `treport_type` (`nombre`) VALUES ('List');
+INSERT INTO `treport_type` (`nombre`) VALUES ('Graphics');
+INSERT INTO `treport_type` (`nombre`) VALUES ('List & Graphics');
+INSERT INTO `treport_subtype` (`nombre`) VALUES ('Tickets');

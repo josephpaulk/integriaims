@@ -189,9 +189,9 @@ INSERT INTO tlead_progress (id,name) VALUES
 
 UPDATE tlead_progress SET `id`=0 WHERE `id`=1;
 
-INSERT INTO `treport_type` VALUES (1,'List');
-INSERT INTO `treport_type` VALUES (2,'Graphics');
-INSERT INTO `treport_type` VALUES (2,'List & Graphics');
-INSERT INTO `treport_subtype` VALUES (1,'Tickets');
+INSERT INTO `treport_type` (`nombre`) VALUES ('List');
+INSERT INTO `treport_type` (`nombre`) VALUES ('Graphics');
+INSERT INTO `treport_type` (`nombre`) VALUES ('List & Graphics');
+INSERT INTO `treport_subtype` (`nombre`) VALUES ('Tickets');
 
 INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0),('people',1,0);
