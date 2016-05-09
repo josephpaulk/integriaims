@@ -232,24 +232,25 @@ foreach($project_groups as $group) {
 	$projects = $aux_projects;
 	
 	$nprojects = count($projects);
-
+	if ($nprojects > 0 ) {
 		$info_general .= "<tr>";
-			//$info_general .= "<td class='no_border size_min'></td>";
-			$info_general .= "<td style='width: 30%'><b>".__('Name')."</b></td>";
-			$info_general .= "<td style='width: 15%'><b>".__('Manager')."</b></td>";
-			$info_general .= "<td style='width: 15%'><b>".__('Completion')."</b></td>";
-			$info_general .= "<td style='width: 15%'><b>".__('Last update')."</b></td>";
-			if ($view_disabled == 0) {
-				$info_general .= "<td><b>".__('Archive')."</b></td>";
-			} elseif ($project['disabled'] && $project_permission['manage']) {
-				$info_general .= "<td><b>".__('Delete/Unarchive')."</b></td>";
-			}
-			//$info_general .= "<td class='no_border size_max'></td>";
+		//$info_general .= "<td class='no_border size_min'></td>";
+		$info_general .= "<td style='width: 30%'><b>".__('Name')."</b></td>";
+		$info_general .= "<td style='width: 15%'><b>".__('Manager')."</b></td>";
+		$info_general .= "<td style='width: 15%'><b>".__('Completion')."</b></td>";
+		$info_general .= "<td style='width: 15%'><b>".__('Last update')."</b></td>";
+		if ($view_disabled == 0) {
+			$info_general .= "<td><b>".__('Archive')."</b></td>";
+		}
+		elseif ($project['disabled'] && $project_permission['manage']) {
+			$info_general .= "<td><b>".__('Delete/Unarchive')."</b></td>";
+		}
+		//$info_general .= "<td class='no_border size_max'></td>";
 		$info_general .= "</tr>";	
 
 		// Projects inside
 		foreach($projects as $project) {
-		$info_general .= "<tr>";
+			$info_general .= "<tr>";
 			//$info_general .= "<td class='no_border size_min'></td>";
 			// Project name
 			$info_general .= "<td><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$project["id"]."'>".$project["name"]."</a></td>";
@@ -260,7 +261,8 @@ foreach($project_groups as $group) {
 			// Completion
 			if ($project["start"] == $project["end"]) {
 				$info_general .= '<td>'.__('Unlimited');
-			} else {
+			}
+			else {
 				$completion = format_numeric (calculate_project_progress ($project['id']));
 				$info_general .= "<td>";
 				$info_general .= progress_bar($completion, 90, 20);
@@ -286,7 +288,8 @@ foreach($project_groups as $group) {
 				if ($view_disabled == 0) {
 					$info_general .= '<td><a href="index.php?sec=projects&sec2=operation/projects/project_overview&disable_project=1&id='.$project['id'].'" 
 						onClick="if (!confirm(\''.__('Are you sure project archive?').'\')) return false;"><img src="images/icons/icono_archivar.png" /></a></td>';
-				} elseif ($project['disabled'] && $project_permission['manage']) {
+				}
+				elseif ($project['disabled'] && $project_permission['manage']) {
 					$info_general .= '<td><a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure delete project?').'\')) return false;">
 						<img src="images/cross.png" /></a></td>';
@@ -295,7 +298,7 @@ foreach($project_groups as $group) {
 				}
 			}
 			//$info_general .= "<td class='no_border'></td>";
-		$info_general .= "</tr>";
+			$info_general .= "</tr>";
 			
 		}
 		if($nprojects == 0) {
@@ -308,8 +311,9 @@ foreach($project_groups as $group) {
 			$info_general .= "<td class='no_border'></td>";	
 			$info_general .= "</tr>";
 		}
-	$title = "<img src='images/project_groups_small/" . $group["icon"] . "' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
-	print_container('info_projects_'.$group["id"], $title, $info_general, $apertura, false, '10px', '', '', 6, 'no_border_bottom'); 
+		$title = "<img src='images/project_groups_small/" . $group["icon"] . "' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
+		print_container('info_projects_'.$group["id"], $title, $info_general, $apertura, false, '10px', '', '', 6, 'no_border_bottom');
+	}
 }
 echo "</div>";
 ?>
