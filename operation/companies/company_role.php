@@ -27,7 +27,9 @@ if (!$section_manage_permission) {
 }
 
 echo "<h2>".__('Customers')."</h2>";
-echo "<h4>".__('Company role management')."</h4>";
+echo "<h4>".__('Company role management');
+echo integria_help ("company_detail", true);
+echo "</h4>";
 
 $id = (int) get_parameter ('id');
 

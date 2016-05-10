@@ -72,7 +72,7 @@ echo "<h2>".__('Leads') . "</h2>";
 echo "<h4>".__('Lead search statistics');
 
 if (!$clean_output) {
-
+	echo integria_help ("lead", true);
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
