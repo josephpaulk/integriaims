@@ -63,6 +63,7 @@ if ((!$new && !$id && ($tab != "statistics")) && ($tab != "pipeline") || $delete
 	echo "<div id='lead-search-content'>";
 	echo "<h2>" . _("Leads") . "</h2>";
 	echo "<h4>".$title;
+	echo integria_help ("lead", true);
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	

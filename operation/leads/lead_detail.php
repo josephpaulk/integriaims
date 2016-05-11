@@ -711,7 +711,7 @@ if ($id || $new) {
 		
 		$name = get_db_value ('fullname', 'tlead', 'id', $id);
 		echo '<h4>' . sprintf(__('Lead #%s: %s'), $id, $name);
-		
+		echo integria_help ("lead", true);
 		echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 		if ($op == "files")
 			echo '<li class="ui-tabs-selected">';
@@ -800,7 +800,9 @@ if ($id || $new) {
 		
 		if ($id == 0) {
 			echo "<h2>".__('Leads management')."</h2>";
-			echo "<h4>".__('Create lead')."</h4>";
+			echo "<h4>".__('Create lead');
+			echo integria_help ("lead", true);
+			echo "</h4>";
 		}
 
 		$campaigns = crm_get_campaigns_combo_list();

@@ -3437,7 +3437,6 @@ table.no_border td {
 	margin-bottom: 10px;
 }
 .container h2 img{
-	margin-right: 10px;
 	float: right;
 	margin-top: -4px;
 	vertical-align: middle;
@@ -3715,4 +3714,8 @@ img#inventory_loading{
 
 #right:hover, #left:hover, #up_field:hover, #down_field:hover, #right_order:hover, #left_order:hover, #asc_order:hover, #desc_order:hover {
 	cursor: pointer;
-};
+}
+
+.form_result{
+	height: 105px;
+}

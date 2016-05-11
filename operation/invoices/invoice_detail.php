@@ -224,7 +224,7 @@ if ($clean_output == 0){
 	$invoice_status_ar['paid'] = __("Paid");
 	$invoice_status_ar['canceled'] = __("Canceled");
 	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
-	
+	$form .= '<div class="form_result">';
 	$form .= "<div class='divform'>";
 		$form .= "<div class='button-form'>";
 			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
@@ -234,7 +234,7 @@ if ($clean_output == 0){
 	$form .= "<div class='divresult'>";
 		$form .= print_table($table,true);
 	$form .= '</div>';
-	
+	$form .= '</div>';
 	$form .= '</form>';
 	
 	print_container_div("companys_form",__("Invoices form search"),$form, 'closed', false, false);
@@ -450,9 +450,7 @@ function validate_contract_form() {
 		
 		var error_textbox = document.getElementById("error_text");
 		
-		
 		if (val == null) {
-			console.log("paso");
 			error_msg = "<?php echo __("Company no selected")?>";
 			pulsate("#id_company");
 		} else if (name == "") {

@@ -61,7 +61,7 @@ if (!empty($tags)) {
 
 echo "<h2>". __('Leads') . "</h2>";
 echo "<h4>". __('Lead pipeline');
-
+echo integria_help ("lead", true);
 echo "<div id='button-bar-title'>";
 	echo "<ul>";
 		// Filter button

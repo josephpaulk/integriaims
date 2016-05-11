@@ -323,60 +323,65 @@ elseif ($op == "") {
 		$status = (int) get_parameter ('status', 1);
 		$upfiles = (string) get_parameter('upfiles');
 		
-		$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
-			date_end, id_company, private, status)
-			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
-			$name, $contract_number, $description, $date_begin, $date_end,
-			$id_company, $private, $status);
+		$bill_id_exists = get_db_value('contract_number', 'tcontract', 'contract_number', $contract_number);
+		if (!$bill_id_exists) {
+			$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
+				date_end, id_company, private, status)
+				VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
+				$name, $contract_number, $description, $date_begin, $date_end,
+				$id_company, $private, $status);
 
-		$id = process_sql ($sql, 'insert_id');
-		if ($id === false)
-			echo '<h3 class="error">'.__('Could not be created').'</h3>';
-		else {
-			//update last activity
-			$datetime =  date ("Y-m-d H:i:s");
-			$comments = __("Created contract by ".$config['id_user']);
-			$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
-			process_sql ($sql_add);
-			$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
-			$result_activity = process_sql ($sql_activity);
-			
-			// ATTACH A FILE IF IS PROVIDED
-			$upfiles = json_decode(safe_output($upfiles), true);
-
-			if (!empty($upfiles)) {
-				foreach ($upfiles as $file) {
-					if (is_array($file)) {
-						if ($file['description']) {
-							$file_description = $file['description'];
-						} else {
-							$file_description = __('No description available');
-						}
-						$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
-						
-						$file_tmp = sys_get_temp_dir().'/'.$file["name"];
-						$size = filesize ($file_tmp);
-						$filename_encoded = $file_result . "_" . $file["name"];
-					
-						// Copy file to directory and change name
-						$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+			$id = process_sql ($sql, 'insert_id');
+			if ($id === false)
+				echo '<h3 class="error">'.__('Could not be created').'</h3>';
+			else {
+				//update last activity
+				$datetime =  date ("Y-m-d H:i:s");
+				$comments = __("Created contract by ".$config['id_user']);
+				$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+				process_sql ($sql_add);
+				$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+				$result_activity = process_sql ($sql_activity);
 				
-						if (!(copy($file_tmp, $file_target))){
-							echo "<h3 class=error>".__("Could not be attached")."</h3>";
-						} else {
-							// Delete temporal file
-							echo "<h3 class=suc>".__("Successfully attached")."</h3>";
-							$location = $file_target;
-							unlink ($file_tmp);
+				// ATTACH A FILE IF IS PROVIDED
+				$upfiles = json_decode(safe_output($upfiles), true);
+
+				if (!empty($upfiles)) {
+					foreach ($upfiles as $file) {
+						if (is_array($file)) {
+							if ($file['description']) {
+								$file_description = $file['description'];
+							} else {
+								$file_description = __('No description available');
+							}
+							$file_result = crm_attach_contract_file ($id, $file["location"], $file_description, $file["name"]);
+							
+							$file_tmp = sys_get_temp_dir().'/'.$file["name"];
+							$size = filesize ($file_tmp);
+							$filename_encoded = $file_result . "_" . $file["name"];
+						
+							// Copy file to directory and change name
+							$file_target = $config["homedir"]."/attachment/".$filename_encoded;
+					
+							if (!(copy($file_tmp, $file_target))){
+								echo "<h3 class=error>".__("Could not be attached")."</h3>";
+							} else {
+								// Delete temporal file
+								echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+								$location = $file_target;
+								unlink ($file_tmp);
+							}
 						}
 					}
 				}
-			}
 
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
-		}
-		$id = 0;
+				echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+				audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
+			}
+		} else {
+			echo "<h3 class='error'>".__("This contract number already exists")."</h3>";
+		}	
+	$id = 0;
 	}
 
 	// UPDATE
@@ -560,7 +565,7 @@ elseif ($op == "") {
 			$table_description->class = 'search-table-button';
 			$table_description->data = array();
 			$table_description->data[0][0] = print_textarea ("file_description", 3, 40, '', '', true, __('Description'));
-			$table_description->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+			//$table_description->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
 			$html .= "<div id='contract_file_description_table_hook' style='display:none;'>";
 			$html .= print_table($table_description, true);
 			$html .= "</div>";
@@ -743,6 +748,8 @@ elseif ($op == "") {
 		
 		$form = '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 		
+		$form .= '<div class="form_result">';
+		
 		$form .= "<div class='divresult'>";
 		$form .= "<table width=100% class='search-table-button'>";
 		$form .= "<tr>";
@@ -797,6 +804,8 @@ elseif ($op == "") {
 				$form .= print_submit_button (__('Search'), 
 					"search_btn", false, 'class="sub search"', true);
 			$form .= "</div>";
+		$form .= "</div>";
+		
 		$form .= "</div>";
 		
 		$form .= '</form>';

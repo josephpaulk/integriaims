@@ -97,13 +97,13 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Label'));
 $types = object_get_types();
-$table->data[1][0] = print_select ($types, 'type', $type, '', '', "", true, false, false, __('Types')) . print_help_tip(__('Field type to be filled later, if you choose "Combo" you have to select the values bellow. If you select "External" then you have to fill external table name and reference field.'), true);
+$table->data[1][0] = print_select ($types, 'type', $type, '', '', "", true, false, false, __('Types'). print_help_tip(__('Field type to be filled later, if you choose "Combo" you have to select the values bellow. If you select "External" then you have to fill external table name and reference field.'), true));
 $table->data[2][0] = print_textarea ('combo_value', 4, 10, $combo_value, '', true, __('Combo values').print_help_tip(__('If Type selected is "Combo" you have to fill this text with the select values separated by commas. E.g.: foo1,foo2'), true));
 $table->data[3][0] = print_input_text ('external_table_name', $external_table_name, '', 45, 100, true, __('External table name'));
 $table->data[4][0] = print_input_text ('external_reference_field', $external_reference_field, '', 45, 100, true, __('Reference field of the outer table'));
 $table->data[5][0] = print_input_text ('external_label', $external_label, '', 45, 100, true, __('Field to be displayed'));
 $table->data[6][0] = print_input_text ('parent_table_name', $parent_table_name, '', 45, 100, true, __('Parent table name'));
-$table->data[7][0] = print_input_text ('parent_reference_field', $parent_reference_field, '', 45, 100, true, __('Reference field of the parent table'));
+$table->data[7][0] = print_input_text ('parent_reference_field', $parent_reference_field, '', 45, 100, true, __('Reference field of the parent table'). print_help_tip(__('When created, the chart name and ID field for it must be detailed. In case of it being related with another chart, the name of the fathering chart and the name of the field where the ID value for said fathering chart can be found, will also need to be specified.'), true));
 $table->data[8][0] = '<label>' . __('Unique') . print_help_tip(__('With this value checked the values in this field will be unique for all the inventory objects that use this field.'), true) . '</label>';
 $table->data[9][0] = print_checkbox ('unique', 1, $unique, __('Unique'));
 $table->data[10][0] = '<label>' . __('Inherit') . print_help_tip(__('With this value checked this field will inherit the values of owner, users and companies of the parent inventory object (at creation time).'), true) . '</label>';

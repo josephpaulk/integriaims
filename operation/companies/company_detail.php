@@ -1029,24 +1029,25 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 	$table->data[1][3] = print_input_text ('search_min_billing', $search_min_billing, '', 15, 20, true, __('Min. billing'));
-
-	$form = '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
-		
-	$form .= "<div class='divform' >";
-		$form .= "<div class='button-form'>";
-			// Input hidden for ORDER
-			$form .= print_input_hidden ('order_by_activity', $order_by_activity,true);
-			$form .= print_input_hidden ('order_by_company', $order_by_company,true);
-			$form .= print_input_hidden ('order_by_billing', $order_by_billing,true);
-			$form .=  print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	
+	$form .= '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+	$form .= '<div class="form_result">';
+		$form .= "<div class='divform' >";
+			$form .= "<div class='button-form'>";
+				// Input hidden for ORDER
+				$form .= print_input_hidden ('order_by_activity', $order_by_activity,true);
+				$form .= print_input_hidden ('order_by_company', $order_by_company,true);
+				$form .= print_input_hidden ('order_by_billing', $order_by_billing,true);
+				$form .=  print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+			$form .= "</div>";
 		$form .= "</div>";
-	$form .= "</div>";
 	
-	$form .= "<div class='divresult' >";
-		$form .= print_table ($table,true);
-	$form .= "</div>";
-	
+		$form .= "<div class='divresult' >";
+			$form .= print_table ($table,true);
+		$form .= "</div>";
+	$form .= '</div>';
 	$form .= '</form>';
+	
 	
 	print_container_div("companys_form",__("Companies form search"),$form, 'closed', false, false);
 	

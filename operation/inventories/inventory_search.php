@@ -736,7 +736,7 @@ if (!$pure) {
 		serialize_in_temp($filter, $config["id_user"]);
 		
 		//tree_search_submit()
-		$table_search->data[3][1] .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\')', 'class="sub csv"', true);
+		$table_search->data[3][1] .= print_button(__('Export to CSV'), '', false, 'tree_search_submit(); window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\');', 'class="sub csv"', true);
 
 		//button
 		$table_search->data[3][2] .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
