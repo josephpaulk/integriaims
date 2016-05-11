@@ -3715,7 +3715,9 @@ img#inventory_loading{
 #right:hover, #left:hover, #up_field:hover, #down_field:hover, #right_order:hover, #left_order:hover, #asc_order:hover, #desc_order:hover {
 	cursor: pointer;
 }
-
 .form_result{
 	height: 105px;
+}
+.clear_both{
+	clear: both;
 }

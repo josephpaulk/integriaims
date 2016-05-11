@@ -160,66 +160,56 @@ $objects = get_inventories_in_incident($id);
 
 if ($objects) {
 	$objects = implode(", ", $objects);
-	$obj_table = "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
-	$obj_table .= "<td>".__("Objects affected").":</td>";
-	$obj_table .= "</tr>";
-	$obj_table .= "<tr>";
-	$obj_table .= "<td class='advanced_details_icons'></td><td align='right'><b>".$objects."</b></td>";
-	$obj_table .= "</tr>";
 }
 else {
 	$objects = __("None");
-	$obj_table = "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
-	$obj_table .= "<td>".__("There is no objects affected")."</td>";
 }
-
 
 $emails = $incident["email_copy"];
 
-$email_table ="";
-
-if ($emails) {
-	
-	$email_table = "<tr>";
-	$email_table .= "<td colspan='2' align='right'>".$emails."</td>";
-	$email_table .= "</tr>";
-	
-}
-
-//$incident_adv_details .= "<table class='advanced_details_table alternate'>";
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/editor.png', true)."</td>";
 $incident_adv_details .= "<td>".__("Editor").":</td><td><b>".$editor."</b></td>";
 $incident_adv_details .= "</tr>";
+
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/group.png', true)."</td>";
 $incident_adv_details .= "<td>".__("Creator group").":</td><td><b>".$creator_group."</b></td>";
 $incident_adv_details .= "</tr>";
+
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/incident.png', true)."</td>";
 $incident_adv_details .= "<td>".__("Parent ticket").":</td><td><b>".$parent."</b></td>";
 $incident_adv_details .= "</tr>";
+
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/task.png', true)."</td>";
 $incident_adv_details .= "<td>".__("Task").":</td><td><b>".$task."</b></td>";
 $incident_adv_details .= "</tr>";
+
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/sla.png', true)."</td>";
 $incident_adv_details .= "<td>".__("SLA disabled").":</td><td><b>".$sla."</b></td>";
 $incident_adv_details .= "</tr>";
+
 $incident_adv_details .= "<tr>";
-$incident_adv_details .= $obj_table;
-$incident_adv_details .= "<tr>";
-$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
+$incident_adv_details .= "<td>".__("Objects affected").":</td><td><b>".$objects."</b></td>";
 $incident_adv_details .= "</tr>";
+
+if ($emails) {
+	$incident_adv_details .= "<tr>";
+	$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
+	$incident_adv_details .= "<td>".__("Email").":</td><td><b>".$emails."</b></td>";
+	$incident_adv_details .= "</tr>";
+}
+
 if (($incident['gold_medals']) || ($incident['black_medals'])) {
 	$incident_adv_details .= "<tr>";
 	$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/insignia_naranja.png', true)."</td>";
 	$incident_adv_details .= "<td>".__("Medals").":</td><td>".print_image('images/insignia_dorada.png', true)."(".$incident['gold_medals'].")".print_image('images/insignia_gris.png', true)."(".$incident['black_medals'].")"."</td>";
 	$incident_adv_details .= "</tr>";
 }
-$incident_adv_details .= $email_table;
-//$incident_adv_details .= "</table>";
 
 $left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details, 'open', true, true, '', 'no_border', 5, 'less_widht');
 

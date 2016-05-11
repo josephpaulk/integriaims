@@ -2376,7 +2376,9 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$filter["limit"] = $limit_aux;
 
 		$url = "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params;
-		$incidents = print_array_pagination($incidents, $url, $offset);
+		echo "<div class='clear_both'>";
+			$incidents = print_array_pagination($incidents, $url, $offset);
+		echo "</div>";
 	}
 	$statuses = get_indicent_status ();
 	$resolutions = get_incident_resolutions ();
