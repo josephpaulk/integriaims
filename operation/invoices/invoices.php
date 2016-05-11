@@ -26,7 +26,7 @@ $operation_invoices = get_parameter ("operation_invoices");
 $read = check_crm_acl ('company', 'cr');
 $write = check_crm_acl ('company', 'cw');
 $manage = check_crm_acl ('company', 'cm');
-
+$check_table_hidden = 0;
 
 if ($id_invoice > 0 || $id_company > 0) {
 	if ($id_company < 1 && $id_invoice > 0) {
@@ -63,140 +63,6 @@ if ($deletef != ""){
 		$filename = $config["homedir"]."/attachment/". $file["id_attachment"]. "_" . $file["filename"];
 		unlink ($filename);
 		echo "<h3 class=suc>".__("Successfully deleted")."</h3>";
-	}
-}
-
-
-if ($operation_invoices == "add_invoice"){
-	
-	$filename = get_parameter ('upfile', false);
-	$bill_id = get_parameter ("bill_id", "");
-	$reference = get_parameter ("reference", "");
-	$description = get_parameter ("description", "");
-	$concept = array();
-	$concept[0] = get_parameter ("concept1", "");
-	$concept[1] = get_parameter ("concept2", "");
-	$concept[2] = get_parameter ("concept3", "");
-	$concept[3] = get_parameter ("concept4", "");
-	$concept[4] = get_parameter ("concept5", "");
-	$amount = array();
-	$amount[0] = (float) get_parameter ("amount1", 0);
-	$amount[1] = (float) get_parameter ("amount2", 0);
-	$amount[2] = (float) get_parameter ("amount3", 0);
-	$amount[3] = (float) get_parameter ("amount4", 0);
-	$amount[4] = (float) get_parameter ("amount5", 0);
-	$user_id = $config["id_user"];
-	$invoice_create_date = get_parameter ("invoice_create_date");
-	$invoice_payment_date = get_parameter ("invoice_payment_date");
-	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
-	//~ tax
-	$taxarray = array();
-	$cont = 1;
-	foreach ( $_POST as $key => $campo) {
-		if ($key === 'tax'.$cont){
-			$taxarray[$key] = get_parameter ($key, 0.00);
-			$cont++;
-		 }
-	}
-	$taxencode = json_encode($taxarray);
-	$tax = json_decode($taxencode,true);
-		
-	$irpf = get_parameter ("irpf", 0.00);
-	$concept_irpf = get_parameter ("concept_irpf");
-	//~ tax_name 
-	$tax_name_array = array();
-	$cont = 1;
-	foreach ( $_POST as $key => $campo) {
-		if ($key === 'tax_name'.$cont){
-			$tax_name_array[$key] = get_parameter ($key, 0.00);
-			$cont++;
-		 }
-	}
-	$tax_name_encode = json_encode($tax_name_array);
-	$tax_name = json_decode($tax_name_encode,true);
-	
-	$currency = get_parameter ("currency", "EUR");
-	$invoice_status = get_parameter ("invoice_status", 'pending');
-	$invoice_type = get_parameter ("invoice_type", "Submitted");
-	$create_calendar_event = get_parameter('calendar_event');
-	$language = get_parameter('id_language', $config['language_code']);
-	$internal_note = get_parameter ("internal_note", "");
-	$invoice_contract_number = get_parameter('invoice_contract_number');
-	$discount_before = get_parameter ("discount_before", 0.00);
-	$discount_concept = get_parameter ("discount_concept", "");
-	
-	if ($invoice_type == "Received") {
-		$bill_id_variable = 0;
-	} else {
-		$bill_id_variable = get_parameter('bill_id_variable', 0);
-	}
-	$bill_id_pattern = $config['invoice_id_pattern'];
-	
-	if ($filename != ""){
-		$file_temp = sys_get_temp_dir()."/$filename";
-		$filesize = filesize($file_temp);
-		
-		// Creating the attach
-		$sql = sprintf ('INSERT INTO tattachment (id_usuario, filename, description, size) VALUES ("%s", "%s", "%s", "%s")',
-				$user_id, $filename, $description, $filesize);
-		$id_attachment = process_sql ($sql, 'insert_id');
-		
-		// Copy file to directory and change name
-		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
-			
-		if (! copy($file_temp, $file_target)) {
-			$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
-			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
-			process_sql ($sql);
-		} else {
-			// Delete temporal file
-			unlink ($file_temp);
-		}
-	} else {
-		$id_attachment = 0;
-	}
-	
-	// Creating the cost record
-	$sql = sprintf ("INSERT INTO tinvoice (description, id_user, id_company,
-	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, irpf, concept_irpf, currency, status,
-	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s','%s', '%s',
-	'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
-	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, json_encode($taxarray), $irpf, $concept_irpf,$currency,
-	$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-	$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, json_encode($tax_name_array));
-	
-	$id_invoice = process_sql ($sql, 'insert_id');
-	if ($id_invoice !== false) {
-		if ($create_calendar_event) { 
-			$now = date('Y-m-d H:i:s');
-			$time = substr($now, 11, 18);
-			$title = __('Reminder: Invoice ').$bill_id.__(' payment date'); 
-
-			$sql_event ="INSERT INTO tagenda (public, alarm, timestamp, id_user,
-				title, duration, description)
-				VALUES (0, '1440', '$invoice_payment_date $time', '".$config['id_user']."', '$title',
-				0, '')";
-
-			$result = process_sql ($sql_event);
-
-		}
-		
-		$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice created", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
-		
-		//update last activity
-		$datetime =  date ("Y-m-d H:i:s");
-		$comments = __("Invoice created by ".$config['id_user']);
-		$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
-		process_sql ($sql_add);
-		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
-		$result_activity = process_sql ($sql_activity);
-			
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-		
-	} else {
-		echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
 	}
 }
 
@@ -342,6 +208,144 @@ if ($operation_invoices == "update_invoice"){
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
 		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';
+	}
+}
+
+if ($operation_invoices == "add_invoice"){
+	
+	$filename = get_parameter ('upfile', false);
+	$bill_id = get_parameter ("bill_id", "");
+	$reference = get_parameter ("reference", "");
+	$description = get_parameter ("description", "");
+	$concept = array();
+	$concept[0] = get_parameter ("concept1", "");
+	$concept[1] = get_parameter ("concept2", "");
+	$concept[2] = get_parameter ("concept3", "");
+	$concept[3] = get_parameter ("concept4", "");
+	$concept[4] = get_parameter ("concept5", "");
+	$amount = array();
+	$amount[0] = (float) get_parameter ("amount1", 0);
+	$amount[1] = (float) get_parameter ("amount2", 0);
+	$amount[2] = (float) get_parameter ("amount3", 0);
+	$amount[3] = (float) get_parameter ("amount4", 0);
+	$amount[4] = (float) get_parameter ("amount5", 0);
+	$user_id = $config["id_user"];
+	$invoice_create_date = get_parameter ("invoice_create_date");
+	$invoice_payment_date = get_parameter ("invoice_payment_date");
+	$invoice_expiration_date = get_parameter ("invoice_expiration_date");
+	//~ tax
+	$taxarray = array();
+	$cont = 1;
+	foreach ( $_POST as $key => $campo) {
+		if ($key === 'tax'.$cont){
+			$taxarray[$key] = get_parameter ($key, 0.00);
+			$cont++;
+		 }
+	}
+	$taxencode = json_encode($taxarray);
+	$tax = json_decode($taxencode,true);
+		
+	$irpf = get_parameter ("irpf", 0.00);
+	$concept_irpf = get_parameter ("concept_irpf");
+	//~ tax_name 
+	$tax_name_array = array();
+	$cont = 1;
+	foreach ( $_POST as $key => $campo) {
+		if ($key === 'tax_name'.$cont){
+			$tax_name_array[$key] = get_parameter ($key, 0.00);
+			$cont++;
+		 }
+	}
+	$tax_name_encode = json_encode($tax_name_array);
+	$tax_name = json_decode($tax_name_encode,true);
+	
+	$currency = get_parameter ("currency", "EUR");
+	$invoice_status = get_parameter ("invoice_status", 'pending');
+	$invoice_type = get_parameter ("invoice_type", "Submitted");
+	$create_calendar_event = get_parameter('calendar_event');
+	$language = get_parameter('id_language', $config['language_code']);
+	$internal_note = get_parameter ("internal_note", "");
+	$invoice_contract_number = get_parameter('invoice_contract_number');
+	$discount_before = get_parameter ("discount_before", 0.00);
+	$discount_concept = get_parameter ("discount_concept", "");
+	
+	if ($invoice_type == "Received") {
+		$bill_id_variable = 0;
+	} else {
+		$bill_id_variable = get_parameter('bill_id_variable', 0);
+	}
+	$bill_id_pattern = $config['invoice_id_pattern'];
+	
+	if ($filename != ""){
+		$file_temp = sys_get_temp_dir()."/$filename";
+		$filesize = filesize($file_temp);
+		
+		// Creating the attach
+		$sql = sprintf ('INSERT INTO tattachment (id_usuario, filename, description, size) VALUES ("%s", "%s", "%s", "%s")',
+				$user_id, $filename, $description, $filesize);
+		$id_attachment = process_sql ($sql, 'insert_id');
+		
+		// Copy file to directory and change name
+		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+			
+		if (! copy($file_temp, $file_target)) {
+			$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
+			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
+			process_sql ($sql);
+		} else {
+			// Delete temporal file
+			unlink ($file_temp);
+		}
+	} else {
+		$id_attachment = 0;
+	}
+	
+	$bill_id_exists = get_db_value('bill_id', 'tinvoice', 'bill_id', $bill_id);
+	if (!$bill_id_exists) {
+		// Creating the cost record
+		$sql = sprintf ("INSERT INTO tinvoice (description, id_user, id_company,
+		bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, irpf, concept_irpf, currency, status,
+		concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
+		amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s','%s', '%s',
+		'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
+		$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, json_encode($taxarray), $irpf, $concept_irpf,$currency,
+		$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
+		$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, json_encode($tax_name_array));
+		
+		$id_invoice = process_sql ($sql, 'insert_id');
+		if ($id_invoice !== false) {
+			if ($create_calendar_event) { 
+				$now = date('Y-m-d H:i:s');
+				$time = substr($now, 11, 18);
+				$title = __('Reminder: Invoice ').$bill_id.__(' payment date'); 
+
+				$sql_event ="INSERT INTO tagenda (public, alarm, timestamp, id_user,
+					title, duration, description)
+					VALUES (0, '1440', '$invoice_payment_date $time', '".$config['id_user']."', '$title',
+					0, '')";
+
+				$result = process_sql ($sql_event);
+
+			}
+			
+			$company_name = get_db_value('name', 'tcompany', 'id', $id_company);
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Invoice created", "Invoice Bill ID: ".$bill_id.", Company: $company_name");
+			
+			//update last activity
+			$datetime =  date ("Y-m-d H:i:s");
+			$comments = __("Invoice created by ".$config['id_user']);
+			$sql_add = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id_company, $config["id_user"], $datetime, $comments);
+			process_sql ($sql_add);
+			$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
+			$result_activity = process_sql ($sql_activity);
+				
+			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+			$operation_invoices = "update_invoice";
+		} else {
+			echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
+		}
+	} else {
+		echo '<h3 class="error">'.__('This bill ID already exists').'</h3>';
 	}
 }
 
@@ -625,27 +629,26 @@ $table->data[16][0] = print_textarea ('description', 5, 40, $description, '', tr
 $table->colspan[17][0] = 2;
 $table->data[17][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
 
-echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
-action="index.php?sec=customers&sec2=operation/companies/company_detail
-&view_invoice=1&op=invoices&id_invoice='.$id_invoice.'">';
-
-print_table ($table);
-
-echo '<div class="button-form" style="width:'.$table->width.';">';
-if ($id_invoice != -1) {
-	print_submit_button (__('Update'), 'button-upd', false, 'class="sub upd"');
-	print_input_hidden ('id', $id);
-	print_input_hidden ('operation_invoices', "update_invoice");
-	print_input_hidden ('bill_id_variable', $bill_id_variable);	
-} else {
-	print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
-	print_input_hidden ('operation_invoices', "add_invoice");
-	print_input_hidden ('bill_id_variable', $bill_id_variable);
-}
-
-if ($id_invoice != -1) {
+echo '<form id="form-invoice" method="post" enctype="multipart/form-data" action="index.php?sec=customers&sec2=operation/companies/company_detail
+&view_invoice=1&op=invoices">';
+	print_table ($table);
+	echo '<div class="button-form" style="width:'.$table->width.';">';
+	if ($id_invoice != -1) {
+		print_submit_button (__('Update'), 'button-upd', false, 'class="sub upd"');
+		print_input_hidden ('id', $id);
+		print_input_hidden ('operation_invoices', "update_invoice");
+		print_input_hidden ('id_invoice', $id_invoice);
+		print_input_hidden ('bill_id_variable', $bill_id_variable);	
+	} else {
+		print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
+		print_input_hidden ('operation_invoices', "add_invoice");
+		print_input_hidden ('id_invoice', $id_invoice);
+		print_input_hidden ('bill_id_variable', $bill_id_variable);
+	}
 	echo '</div>';
-	echo '</form>';
+echo '</form>';
+if ($id_invoice != -1) {
+	
 	echo "<h4>" . __('Files') . '</h4>';
 
 	//~ $target_directory = 'attachment';
@@ -722,7 +725,21 @@ if ($id_invoice != -1) {
 
 	}
 	else {
-		echo "<h3>". __('There is no files attached for this invoice')."</h3>";
+		$check_table_hidden = 1;
+		$table = new stdClass();
+		$table->width = "100%";
+		$table->class = "listing";
+		$table->id = "invoice_files";
+		
+		$table->head = array ();
+		$table->head[0] = __('Filename');
+		$table->head[1] = __('Description');
+		$table->head[2] = __('Size');
+		$table->head[3] = __('Date');
+		$table->head[4] = __('Ops.');
+
+		print_table ($table);
+		echo "<h3 id='no_files_invoices' >". __('There is no files attached for this invoice')."</h3>";
 	}
 }
 
@@ -829,7 +846,10 @@ add_validate_form_element_rules('input[name="amount5"]', rules, messages);
 
 
 $(document).ready (function () {
-	
+	if (<?php echo $check_table_hidden ?> == 1) {
+		$('#invoice_files').css('display', 'none');
+	}
+
 	form_upload();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
@@ -1121,7 +1141,7 @@ function form_upload () {
 	function addFileRow (file_id) {
 		var no_files_message = $("#no_files_message");
 		var table_files = $("#invoice_files");
-
+		var check_table_hidden = <?php echo $check_table_hidden ?>;
 		$.ajax({
 			type: 'POST',
 			url: 'ajax.php',
@@ -1136,6 +1156,10 @@ function form_upload () {
 				if (no_files_message.length > 0) {
 					no_files_message.remove();
 					table_files.show();
+				}
+				if (check_table_hidden){
+					$('#no_files_invoices').remove();
+					$('#invoice_files').css('display', '');
 				}
 				table_files.find("tbody").append(data);
 			}
