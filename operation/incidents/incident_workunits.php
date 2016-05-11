@@ -85,9 +85,6 @@ if ($insert_workunit) {
 	process_sql ($sql);
 
 	$workunit_id = create_workunit ($id_incident, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
-	if ($is_enterprise) {
-		incidents_run_realtime_workflow_rules ($id_incident);
-	}
 	
 	if (is_ajax()) {
 		// Clean the output
@@ -109,11 +106,19 @@ if ($insert_workunit) {
 				}
 			}
 		}
+		
+		if ($is_enterprise) {
+			incidents_run_realtime_workflow_rules ($id_incident);
+		}
 		return;
 	}
 	else {
 		$result_msg = '<h3 class="suc">'.__('Comment added successfully').'</h3>';
 		echo $result_msg;
+	}
+	
+	if ($is_enterprise) {
+		incidents_run_realtime_workflow_rules ($id_incident);
 	}
 }
 

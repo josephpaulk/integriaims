@@ -688,6 +688,14 @@ function api_create_incident_workunit ($return_type, $user, $params){
 	$values['public'] = $params[4];
 	$values['id_profile'] = $params[5];
 	
+	//Check if workunit exists
+	$exists = get_db_value_sql("SELECT t1.id from tworkunit t1, tworkunit_incident t2 WHERE id_incident=".$id_incident." AND description ='".$values['description']."' AND t1.id=t2.id_workunit");
+	if ($exists) {
+		$result = '0';
+		echo $result;
+		return;
+	}
+		
 	$id_workunit = process_sql_insert ('tworkunit', $values);
 
 	$result = process_sql_insert('tworkunit_incident', array('id_incident' => $id_incident, 'id_workunit' => $id_workunit));
@@ -830,6 +838,14 @@ function api_attach_file ($return_type, $user, $params){
 	$filesize = $params[2];
 	$file_description = $params[3];
 	$file_content = base64_decode(str_replace("&#x20;", "+", $params[4]));
+	
+	//Check if file exists
+	$exists = get_db_value_sql("SELECT id_attachment FROM tattachment WHERE id_incidencia=".$id_incident." AND filename='".$filename."'");
+	if ($exists) {
+		$result = '0';
+		echo $result;
+		return;
+	}
 	
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 			filename, description, size, timestamp)

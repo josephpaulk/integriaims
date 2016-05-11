@@ -20,6 +20,7 @@ check_login ();
 
 require_once ('include/functions_incidents.php');
 require_once ('include/functions_user.php');
+require_once ('include/functions_workunits.php');
 
 if (defined ('AJAX')) {
 	
@@ -785,11 +786,6 @@ if ($action == "insert" && !$id) {
 				mail_incident ($id, $usuario, "", 0, 1);
 			}
 			
-			// EXECUTE WORKFLOW RULES AT REALTIME
-			if ($is_enterprise) {
-				incidents_run_realtime_workflow_rules ($id);
-			}
-			
 			// ATTACH A FILE IF IS PROVIDED
 			$upfiles = json_decode(safe_output($upfiles), true);
 			if (!empty($upfiles)) {
@@ -806,6 +802,11 @@ if ($action == "insert" && !$id) {
 				}
 			}
 
+			// EXECUTE WORKFLOW RULES AT REALTIME
+			if ($is_enterprise) {
+				incidents_run_realtime_workflow_rules ($id);
+			}
+			
 			// If the ticket creation is successful, redirect the page to the ticket dashboard detail of the new ticket
 			echo "<script type=\"text/javascript\">";
 			//~ echo	"document.location.search= \"?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id\"";

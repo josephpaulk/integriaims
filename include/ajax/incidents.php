@@ -16,6 +16,7 @@
 global $config;
 
 include_once("include/functions_incidents.php");
+require_once ("enterprise/include/functions_incidents.php");
 
 
 $get_incidents_search = get_parameter('get_incidents_search', 0);
@@ -492,6 +493,8 @@ if ($set_params) {
 				break;
 			}
 		}
+		
+		enterprise_hook("incidents_run_realtime_workflow_rules", array($id_ticket));
 	}
 }
 ?>
