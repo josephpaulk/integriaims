@@ -708,7 +708,6 @@ form.searchform input.button {
 	padding:0px;
 	border:0px;
 	width:100%;
-
 }
 
 /* header */
@@ -726,7 +725,8 @@ form.searchform input.button {
 	color: #CCC;
 	text-transform: lowercase;
 	/* change the values of top and Left to adjust the position of the logo*/
-	top: 0; left: 5px;
+	top: 0;
+	left: 5px;
 }
 #header h2#slogan {
 	position: absolute;
@@ -735,7 +735,8 @@ form.searchform input.button {
 	text-transform: none;
 	color: #FFF;
 	/* change the values of top and Left to adjust the position of the slogan*/
-	top: 4px; left:65px;
+	top: 4px;
+	left: 65px;
 }
 
 #header #logo_container {
@@ -747,7 +748,8 @@ form.searchform input.button {
 
 #header #logo_container img {
 	max-height: 50px;
-	padding-top: 10px;
+	max-width: 310px;
+	vertical-align: middle;
 }
 
 .header_icons {
