@@ -455,10 +455,9 @@ echo "<div class='divresult'>";
 	$budget .= '<td>'.__('Project costs').'</td><td>';
 	
 	// Task distribution
-	$task_distribution = '<tr><td colspan="2" style="text-align:center">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</td></tr>';
-	
+	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl). "</div>";
 	// Workload distribution
-	$workload_distribution = '<tr><td colspan="2" style="text-align:center">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</td></tr>';
+	$workload_distribution =  '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl). "</div>";
 	
 	// Project activity graph
 	$project_activity = project_activity_graph ($id_project, 750, 300, true, 1, 50, true);
@@ -518,10 +517,10 @@ echo "<div class='divresult'>";
 	//Print containers
 	echo print_container('project_labour', __('Labour'), $labour);
 	echo "<div class='divhalf divhalf-left divhalf-border'>";
-		echo print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
+		echo print_container_div('container_pie_graphs project_workload_distribution', __('Workload distribution'), $workload_distribution);
 	echo "</div>";
 	echo "<div class='divhalf divhalf-right divhalf-border'>";
-		echo print_container('project_task_distribution', __('Task distribution'), $task_distribution);
+		echo print_container_div('container_pie_graphs project_task_distribution', __('Task distribution'), $task_distribution);
 	echo "</div>";
 	if ($project_activity) {
 		echo print_container('project_activity', __('Project activity'), $project_activity, 'closed');

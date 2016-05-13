@@ -2955,9 +2955,7 @@ div.users_per_lead_container,
 div.top_10_sales_container,
 div.new_leads_container ,
 div.project_labour_report_container,
-div.project_task_distribution_report_container,
 div.project_budget_report_container,
-div.project_workload_distribution_report_container,
 div.companies_invoiced_container,
 div.currency_invoiced_container {
 	width:30%;
@@ -3436,6 +3434,12 @@ table.no_border td {
 	padding: 13px;
 	margin-bottom: 10px;
 }
+
+.divhalf .container h2 {
+	margin-bottom: 0px;
+	width: 95%;
+}
+
 .container h2 img{
 	float: right;
 	margin-top: -4px;
@@ -3729,7 +3733,14 @@ img#inventory_loading{
     display: inline-block !important;
     height: 200px !important;
 }
+	/*Exception for project detail*/
+.divhalf .container_pie_graphs .pie_frame {
+    border: 1px solid #dadada !important;
+    border-top: 0px !important;
+    height: 210px !important;
+}
 
+	
 .container_pie_graphs .pie_frame:before {
     content: '' !important;
     display: block !important;
@@ -3742,6 +3753,15 @@ img#inventory_loading{
     bottom:0 !important; /* vertical center */
     left:0 !important;
     right:0 !important;
+}
+	/*Exception for project detail*/
+.divhalf .container_pie_graphs .pie_frame .graph{
+	  padding-top: 20px !important;
+}
+
+/*Exception for project detail*/
+.divhalf .container_pie_graphs .pie_frame .graph .overlay{
+	  top: 20px !important;
 }
 
 .container_pie_graphs .pie_frame .graph .legend > table {
@@ -3763,3 +3783,4 @@ img#inventory_loading{
 	float: left;
 	width: 40% !important;
 } 
+

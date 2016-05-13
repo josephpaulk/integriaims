@@ -256,9 +256,6 @@ if ($id_project) {
 	}
 	$people_involved .= "</div>";
 	
-	// Task distribution
-	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
-	
 	// Budget
 
 	$budget .= "<tr>";
@@ -334,10 +331,10 @@ if ($id_project) {
 	$budget .= "</td></tr>";
 	
 	// Task distribution
-	$task_distribution = '<tr><td colspan="2">'. graph_workunit_project (350, 150, $id_project, $graph_ttl) .'</td></tr>';
+	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
 	
 	// Workload distribution
-	$workload_distribution = '<tr><td colspan="2">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</td></tr>';
+	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div>';
 	
 	// Task detail
 	$tasks_report = '';
@@ -579,10 +576,10 @@ if ($id_project) {
 			echo print_container('project_budget_report', __('Budget'), $budget, 'no', true, true, "container_simple_title", "container_simple_div");
 		echo "</div>";
 		echo "<div class='divhalf divhalf-left divhalf-border'>";	
-			echo print_container('project_task_distribution_report', __('Task distribution'), $task_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
+			echo print_container_div('container_pie_graphs project_task_distribution_report', __('Task distribution'), $task_distribution, 'no');
 		echo "</div>";
 		echo "<div class='divhalf divhalf-right divhalf-border'>";	
-			echo print_container('project_workload_distribution_report', __('Workload distribution'), $workload_distribution, 'no', true, true, "container_simple_title", "container_simple_div");
+			echo print_container_div('container_pie_graphs project_workload_distribution_report', __('Workload distribution'), $workload_distribution, 'no');
 		echo "</div>";
 		// Project activity graph
 		$project_activity = project_activity_graph ($id_project, 750, 250, true, $graph_ttl, 50, true);
