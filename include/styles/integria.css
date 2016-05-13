@@ -2982,12 +2982,6 @@ div.container_adaptor_na_graphic2 {
 	margin-bottom: 74px;		
 }
 
-div.container_adaptor_graphic {
-	width:300px; 
-	text-align: center; 
-
-}
-
 h2.container_simple_title {
 	padding-left: 0px;
 }
@@ -3727,3 +3721,45 @@ img#inventory_loading{
 .clear_both{
 	clear: both;
 }
+
+/*Css for graph incidents reports*/
+.container_pie_graphs .pie_frame {
+    width: 100% !important;
+    position: relative !important;
+    display: inline-block !important;
+    height: 200px !important;
+}
+
+.container_pie_graphs .pie_frame:before {
+    content: '' !important;
+    display: block !important;
+    padding-top: 50% !important;
+}
+
+.container_pie_graphs .pie_frame .graph{
+    position: absolute !important;
+    top:0 !important;
+    bottom:0 !important; /* vertical center */
+    left:0 !important;
+    right:0 !important;
+}
+
+.container_pie_graphs .pie_frame .graph .legend > table {
+	width: 40% !important;
+	top: 0px !important;
+	right: 0px !important;
+	float:left;
+}
+
+.container_pie_graphs .pie_frame .graph .legend > div {
+	width: 40% !important;
+	top: 0px !important;
+	right: 0px !important;
+	height: 210px !important;
+	float:left;
+}
+
+.container_pie_graphs .pie_frame .graph .legend {
+	float: left;
+	width: 40% !important;
+} 
