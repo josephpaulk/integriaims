@@ -31,6 +31,7 @@ $get_task_statistics = (int) get_parameter('get_task_statistics');
 $get_task_completion_hours = (int) get_parameter('get_task_completion_hours');
 $check_link = (int) get_parameter("check_link");
 $get_calculator = (int) get_parameter("get_calculator");
+$get_workunits_task = (int) get_parameter('get_workunits_task', 0);
 
 function fix_date ($date, $default='') {
 	$date_array = preg_split ('/[\-\s]/', $date);
@@ -536,4 +537,126 @@ if ($get_calculator) {
 	
 	exit;
 }
+
+if($get_workunits_task){
+	global $config;
+
+	$id_task = get_parameter('id_task');
+	$offset = get_parameter("offset");
+	$block_size = $config['block_size'];
+	// Get all the workunits
+	$sql_count = sprintf('SELECT count(final.id_user) FROM ( SELECT tw1.id_user,tw1.timestamp,tw1.duration,tw1.description,NULL AS id_incidencia,
+															NULL AS titulo,NULL AS estado
+															FROM tworkunit tw1
+															INNER JOIN tworkunit_task twt
+															ON tw1.id = twt.id_workunit
+															AND twt.id_task = %d
+					UNION
+						SELECT tw2.id_user,tw2.timestamp,tw2.duration,tw2.description,twin.id_incidencia,twin.titulo,twin.estado FROM tworkunit tw2
+								INNER JOIN (SELECT twi.id_workunit,ti.id_incidencia,ti.titulo,tis.name AS estado
+											FROM tworkunit_incident twi
+											INNER JOIN tincidencia ti
+											ON twi.id_incident = ti.id_incidencia
+											AND ti.id_task = %d
+											INNER JOIN tincident_status tis
+											ON ti.estado = tis.id
+											) twin
+						ON tw2.id = twin.id_workunit
+						) final
+				ORDER BY final.id_user, final.timestamp',
+				$id_task, $id_task);
+
+	$sql = sprintf('SELECT final.id_user AS id_user,
+					DATE(final.timestamp) AS date,
+					final.duration AS duration,
+					final.description AS content,
+					final.id_incidencia AS ticket_id,
+					final.titulo AS ticket_title,
+					final.estado AS ticket_status
+				FROM (
+					SELECT tw1.id_user,
+						tw1.timestamp,
+						tw1.duration,
+						tw1.description,
+						NULL AS id_incidencia,
+						NULL AS titulo,
+						NULL AS estado
+					FROM tworkunit tw1
+					INNER JOIN tworkunit_task twt
+						ON tw1.id = twt.id_workunit
+							AND twt.id_task = %d
+					
+					UNION
+					
+					SELECT tw2.id_user,
+						tw2.timestamp,
+						tw2.duration,
+						tw2.description,
+						twin.id_incidencia,
+						twin.titulo,
+						twin.estado
+					FROM tworkunit tw2
+					INNER JOIN (
+						SELECT twi.id_workunit,
+							ti.id_incidencia,
+							ti.titulo,
+							tis.name AS estado
+						FROM tworkunit_incident twi
+						INNER JOIN tincidencia ti
+							ON twi.id_incident = ti.id_incidencia
+								AND ti.id_task = %d
+						INNER JOIN tincident_status tis
+							ON ti.estado = tis.id
+					) twin
+						ON tw2.id = twin.id_workunit
+				) final
+				ORDER BY final.id_user, final.timestamp limit %d offset %d',
+				$id_task, $id_task, $block_size, $offset);
+	
+	$all_wu = get_db_all_rows_sql($sql);
+	$count = get_db_value_sql($sql_count);
+	
+	if (!empty($all_wu)) {
+		$table_wu = new StdClass();
+		$table_wu->class = 'listing';
+		$table_wu->head = array();
+		$table_wu->head['person'] = __('Person');
+		$table_wu->head['date'] = __('Date');
+		$table_wu->head['duration'] = __('Duration ('.__('In hours').')');
+		$table_wu->head['ticket_id'] = __('Ticket id');
+		$table_wu->head['ticket_title'] = __('Ticket title');
+		$table_wu->head['ticket_status'] = __('Ticket status');
+		if (!$pdf_output)
+			$table_wu->head['content'] = __('Content');
+		$table_wu->data = array();
+		
+		foreach ($all_wu as $wu) {
+			// Add the values to the row
+			$row = array();
+			$row['id_user'] = $wu['id_user'];
+			$row['date'] = $wu['date'];
+			$row['duration'] = (float)$wu['duration'];
+			
+			$row['ticket_id'] = $wu['ticket_id'] ? '#'.$wu['ticket_id'] : '';
+			$row['ticket_title'] = $wu['ticket_title'];
+			$row['ticket_status'] = $wu['ticket_status'];
+			
+			if (!$pdf_output) {
+				$row['content'] = sprintf(
+						'<div class="tooltip_title" title="%s">%s</div>',
+						$wu['content'],
+						print_image ("images/note.png", true)
+					);
+			}
+			$table_wu->data[] = $row;
+		}
+
+		echo pagination ($count, $url_pag, $offset);
+		echo '<div class = "get_workunits_task">';
+			echo print_table ($table_wu);
+		echo '<div>';
+		echo pagination ($count, $url_pag, $offset, true);
+	}
+}
+
 ?>

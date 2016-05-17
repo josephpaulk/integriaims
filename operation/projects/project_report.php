@@ -511,59 +511,13 @@ if ($id_project) {
 			$all_wu = get_db_all_rows_sql($sql);
 			
 			if (!empty($all_wu)) {
-				$table_wu = new StdClass();
-				$table_wu->class = 'listing';
-				$table_wu->head = array();
-				$table_wu->head['person'] = __('Person');
-				$table_wu->head['date'] = __('Date');
-				$table_wu->head['duration'] = __('Duration ('.__('In hours').')');
-				$table_wu->head['ticket_id'] = __('Ticket id');
-				$table_wu->head['ticket_title'] = __('Ticket title');
-				$table_wu->head['ticket_status'] = __('Ticket status');
-				if (!$pdf_output)
-					$table_wu->head['content'] = __('Content');
-				$table_wu->data = array();
-				
-				foreach ($all_wu as $wu) {
-					// Add the values to the row
-					$row = array();
-					$row['id_user'] = $wu['id_user'];
-					$row['date'] = $wu['date'];
-					$row['duration'] = (float)$wu['duration'];
-					
-					$row['ticket_id'] = $wu['ticket_id'] ? '#'.$wu['ticket_id'] : '';
-					$row['ticket_title'] = $wu['ticket_title'];
-					$row['ticket_status'] = $wu['ticket_status'];
-					
-					if (!$pdf_output) {
-						$row['content'] = sprintf(
-								'<div class="tooltip_title" title="%s">%s</div>',
-								$wu['content'],
-								print_image ("images/note.png", true)
-							);
-					}
-					$table_wu->data[] = $row;
-				}
-				
-				$tabla_wu = print_table($table_wu, true);
-				
-				$table_task->data["workunit_".$task['id']][0] =	print_container_div("workunits_".$task['id'], __('Workunit of this task'),
-						$tabla_wu, 'closed', true, false, '', '', 1, '', 'margin-top:0px;');
-				$table_task->colspan["workunit_".$task['id']][0] = 2;
-				
+				$img_link_tabla_wu = "<span class='img_h2_toggle'><a href='javascript: workunits_task(".$task['id'].")'>" . print_image('images/note.png', true, array('title' => __("Workunit of this task"), 'class' => "wu_image")) . "</a></span>";
 				$tabla_taks = print_table($table_task, true);
 				
-				$tasks_report .= '<tr><td>' . print_container_div("taks_".$task['id'],
-							__('Task').": ".$task['name'], $tabla_taks,
-							'closed', true, false, '', '', 1, '', 
-								'margin-bottom:0px;') . '</td></tr>';
+				$tasks_report .= '<tr><td>' . print_container_div("taks_".$task['id'], __('Task').": ".$task['name']. $img_link_tabla_wu, $tabla_taks, 'closed', true, false, '', '', 1, '', 'margin-bottom:0px;') . '</td></tr>';
 			}
 			else {
-				//$tasks_report .= '<tr><td colspan = "2"><div class = "divborderinside">'.print_table($table_task, true).'</div></td></tr>';
-				$tasks_report .= '<tr><td>' .print_container_div("task_".$task['id'],
-							__('Task').": ".$task['name'], 
-						print_table($table_task, true), 'closed', 
-						true, false, '', '', 1, '', '') .'</td></tr>';
+				$tasks_report .= '<tr><td>' .print_container_div("task_".$task['id'], __('Task').": ".$task['name'], print_table($table_task, true), 'closed', true, false, '', '', 1, '', '') .'</td></tr>';
 			}
 		}
 	}
@@ -591,11 +545,14 @@ if ($id_project) {
 	echo '<div class="divresult">';
 		echo print_container('project_tasks_report', __('Project tasks'), $tasks_report, 'no', true, true, "container_simple_title", "container_simple_div");
 	echo '</div>';
+
+	echo "<div class= 'dialog ui-dialog-content' title='".__("Workunit of this task")."' id='workunits_task_window'></div>";
 }
 
 ?>
 
 <?php if (!$pdf_output): ?>
+<script type="text/javascript" src="include/js/integria_projects.js"></script>
 <script type="text/javascript">
 	$(function() {
 		// Init the tooltip

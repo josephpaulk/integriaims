@@ -3445,6 +3445,12 @@ table.no_border td {
 	margin-top: -4px;
 	vertical-align: middle;
 }
+.container h2 img.wu_image{
+	float:none;
+}
+.img_h2_toggle{
+	margin-left: 10px;
+}
 
 .legendColorBox, .legendLabel {
 	border: 0px none !important;
@@ -3750,7 +3756,7 @@ img#inventory_loading{
 .container_pie_graphs .pie_frame .graph{
     position: absolute !important;
     top:0 !important;
-    bottom:0 !important; /* vertical center */
+    bottom:0 !important;
     left:0 !important;
     right:0 !important;
 }
@@ -3784,3 +3790,13 @@ img#inventory_loading{
 	width: 40% !important;
 } 
 
+/*css for report project WU*/
+.get_workunits_task{
+	width: 100%;
+	overflow: auto;
+    border-collapse: collapse;
+}
+.get_workunits_task .listing td,
+.get_workunits_task .listing th{
+	white-space: nowrap;
+}

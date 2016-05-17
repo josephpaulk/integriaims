@@ -7,7 +7,7 @@ function toggleDiv (div, animate) {
 		item.slideToggle();
 	}
 	else {
-		var class_img = $("#"+id+" img").attr("class");
+		var class_img = $("#"+id+"_arrow").attr("class");
 		if (class_img == 'arrow_down')
 			$("#"+id+" #"+id+"_arrow").addClass('arrow_right').removeClass('arrow_down').attr("src",'images/arrow_right.png');
 		else
