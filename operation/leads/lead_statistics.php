@@ -47,10 +47,11 @@ $owner = (string) get_parameter ("owner_search");
 $show_100 = (int) get_parameter ("show_100_search");
 $id_language = (string) get_parameter ("id_language", "");
 $est_sale = (int) get_parameter ("est_sale_search", 0);
-$clean_output = (int) get_parameter ("clean_output");
-$pdf_output = (int) get_parameter ("pdf_output");
+//$clean_output = (int) get_parameter ("clean_output");
+//$pdf_output = (int) get_parameter ("pdf_output");
 $report_name = get_parameter("report_name");
 $show_not_owned = (int) get_parameter ("show_not_owned_search");
+$pure = (bool) get_parameter('pure',0);
 
 $tags = get_parameter('tags', array());
 
@@ -71,22 +72,24 @@ if (!empty($tags)) {
 echo "<h2>".__('Leads') . "</h2>";
 echo "<h4>".__('Lead search statistics');
 
-if (!$clean_output) {
+if (!$pure) {
 	echo integria_help ("lead", true);
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	echo "<li>";
-	echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
-	echo "</li>";
-	echo "<li>";
-	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=statistics&$params&clean_output=1&pdf_output=1&report_name=$report_name'>" .
-		print_image ("images/page_white_acrobat.png", true, array("title" => __("PDF report"))) .
-		"</a>";
-	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
-
 }
+	echo "<div id='button-bar-title'>";
+		echo "<ul>";
+		echo "<li>";
+		if(!$pure){
+			echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a></li>";
+		} else {
+			echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/chart_bar_dark.png", true, array("title" => __("")))."</a></li>";
+		}
+		if(!$pure){
+			echo "<li><a href='index.php?sec=customers&sec2=operation/leads/lead&tab=statistics&pure=1'>".print_image ("images/html_tabs.png", true, array("title" => __("HTML")))."</a></li>";
+		} else {
+			echo "<li><a href='index.php?sec=customers&sec2=operation/leads/lead&tab=statistics&pure=0'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+		}
+		echo "</ul>";
+	echo "</div>";
 
 echo "</h4>";
 
@@ -221,8 +224,8 @@ if ($leads_funnel != false) {
 	$leads_funnel_content = __('No data to show');
 }
 
-$leads_country_content = '<div class="pie_frame">' . $leads_funnel_content . '</div>';
-echo print_container_div('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
+$leads_country_content_funnel = '<div class="pie_frame">' . $leads_funnel_content . '</div>';
+
 
 
 //CONVERSION RATE
@@ -289,7 +292,6 @@ if (!$clean_output) {
 	$container_title .= "&nbsp;".print_help_tip(__("Conversion ratio is calculated using closed leads (keep in mind that closed leads don't appear in search by default)"),true);
 }
 
-echo print_container_div('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //COUNTRIES
 $leads_country = crm_get_total_leads_country($where_clause);
@@ -307,7 +309,6 @@ if ($leads_country != false) {
 
 $leads_country_content = '<div class="pie_frame">' . $leads_country_content . '</div>';
 
-echo print_container_div('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
 //USERS
 $leads_user = crm_get_total_leads_user($where_clause);
@@ -325,7 +326,7 @@ if ($leads_user !== false) {
 
 $leads_user_content = '<div class="pie_frame">' . $leads_user_content . '</div>';
 
-echo print_container_div('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, true, "container_simple_title", "container_simple_div");
+
 
 //TOP 10 ESTIMATED SALES
 $where_clause_top10 = $where_clause." AND progress < 100";
@@ -341,7 +342,7 @@ if ($leads_sales != false) {
 	$leads_sales_content = '<div class="pie_frame">' . __('No data to show') . '</div>';
 }
 
-echo print_container_div('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, true, "container_simple_title", "container_simple_div");
+
 
 //NEW LEADS
 $leads_creation = crm_get_total_leads_creation($where_clause);
@@ -369,6 +370,16 @@ if ($leads_creation !== false) {
 
 $leads_creation_content = '<div class="pie_frame"><br>' . $leads_creation_content . '</div>';
 
-echo print_container_div('new_leads', __('New leads'), $leads_creation_content, 'no', true, true, "container_simple_title", "container_simple_div");
 
+echo "<div style='clear: both;'>";
+	echo print_container_div('funnel', __('Leads Funnel'), $leads_country_content_funnel, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container_div('conversion_rate', $container_title, $leads_conversion_rate, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container_div('container_pie_graphs leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, true, "container_simple_title", "container_simple_div");
+echo "</div>";
+
+echo "<div style='clear: both;'>";
+	echo print_container_div('container_pie_graphs users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container_div('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container_div('new_leads', __('New leads'), $leads_creation_content, 'no', true, true, "container_simple_title", "container_simple_div");
+echo "</div>";
 ?>

@@ -49,15 +49,21 @@ $search_min_billing = (float) get_parameter("search_min_billing");
 $order_by_activity = (string) get_parameter ("order_by_activity");
 $order_by_company = (string) get_parameter ("order_by_company");
 $order_by_billing = (string) get_parameter ("order_by_billing");
+$pure = (bool) get_parameter('pure',0);
 
 echo "<div id='incident-search-content'>";
 echo "<h2>".__('Companies') . "</h2>";
 echo "<h4>".__('Search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
-echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/companies/company_detail&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_manager=$search_manager&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
-echo "</li>";
+	if(!$pure){
+		echo "<li><a id='search_form_submit' href='index.php?sec=customers&sec2=operation/companies/company_detail&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_manager=$search_manager&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&search_min_billing=$search_min_billing&order_by_activity=$order_by_activity&order_by_company=$order_by_company&order_by_billing=$order_by_billing'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a></li>";
+	} 
+	if(!$pure){
+		echo "<li><a href='index.php?sec=customers&sec2=operation/companies/company_statistics&pure=1'>".print_image ("images/html_tabs.png", true, array("title" => __("HTML")))."</a></li>";
+	} else {
+		echo "<li><a href='index.php?sec=customers&sec2=operation/companies/company_statistics&pure=0'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+	}
 echo "</ul>";
 echo "</div>";
 echo "</h4>";
@@ -98,15 +104,7 @@ if ($search_min_billing != "") {
 	$having .= "HAVING `billing` >= $search_min_billing";
 }
 
-$table = new StdClass();
-$table->class = 'search-table';
-$table->width = '100%';
-$table->data = array();
-$table->style = array();
-$table->colspan = array();
-$table->valign = array();
-$table->valign[0] = "top";
-$table->valign[1] = "top";
+
 
 //COUNTRIES
 $companies_country = crm_get_total_country($where_clause);
@@ -125,7 +123,7 @@ if ($companies_country != false) {
 
 $companies_country_content = '<div class="pie_frame">' . $companies_country_content . '</div>';
 
-$table->data[0][0] = print_container_div('companies_per_county', __('Companies per country'), $companies_country_content, 'no', true, '10px');
+
 
 // MANAGERS
 if ($read && $enterprise) {
@@ -143,8 +141,6 @@ if ($manager_companies != false) {
 }
 
 $companies_per_manager = '<div class="pie_frame">' . $companies_per_manager . '</div>';
-
-$table->data[0][1] = print_container_div('companies_per_manager', __('Companies per manager'), $companies_per_manager, 'no', true, '10px');
 
 //USERS
 $companies_user = crm_get_total_user($where_clause);
@@ -175,7 +171,7 @@ if ($companies_user != false) {
 
 $companies_user_content = '<div class="pie_frame">' . $companies_user_content . '</div>';
 
-$table->data[1][0] = print_container_div('companies_per_user', __('Users per company'), $companies_user_content, 'no', true, '10px');
+
 
 //INVOICING VOLUME
 $companies_invoincing = crm_get_total_invoiced($where_clause);
@@ -187,14 +183,14 @@ if ($read && $enterprise) {
 $companies_invoincing = crm_get_total_invoiced_graph($companies_invoincing);
 
 if ($companies_invoincing != false) {
-	$companies_invoincing_volume = pie3d_graph ($config['flash_charts'], $companies_invoincing, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$companies_invoincing_volume = pie3d_graph ($config['flash_charts'], $companies_invoincing, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 } else {
 	$companies_invoincing_volume = __('No data to show');
 }
 
 $companies_invoincing_volume = '<div class="pie_frame">' . $companies_invoincing_volume . '</div>';
 
-$table->data[1][1] = print_container_div('invoicing_volume', __('Invoicing volume'), $companies_invoincing_volume, 'no', true, '10px');
+
 
 //TOP 10 ACTIVITY
 $companies_activity = crm_get_total_activity($where_clause);
@@ -209,7 +205,7 @@ if ($companies_activity != false) {
 	$companies_activity_content = '<div>' . __('No data to show') . '</div>';
 }
 
-$table->data[2][0] = print_container_div('top_10_activity', __('Top 10 activity'), $companies_activity_content, 'no', true, '10px');
+
 
 //MANAGERS INVOICING VOLUME
 if ($read && $enterprise) {
@@ -228,7 +224,7 @@ if ($managers_invoicing != false) {
 
 $managers_invoicing_volume = '<div class="pie_frame">' . $managers_invoicing_volume . '</div>';
 
-$table->data[2][1] = print_container_div('managers_invoicing_volume', __('Managers invoicing volume'), $managers_invoicing_volume, 'no', true, '10px');
+
 
 //TOP 10 INVOICING
 $companies_invoincing = crm_get_total_invoiced($where_clause);
@@ -243,7 +239,7 @@ if ($companies_invoincing != false) {
 	$companies_invoincing_content = '<div>' . __('No data to show') . '</div>';
 }
 
-$table->data[3][0] = print_container_div('top_10_invoicing', __('Top 10 invoicing'), $companies_invoincing_content, 'no', true, '10px');
+
 
 //TOP 10 MANAGERS INVOICING
 if ($read && $enterprise) {
@@ -258,8 +254,20 @@ if ($managers_invoicing != false) {
 	$managers_invoicing_content = '<div>' . __('No data to show') . '</div>';
 }
 
-$table->data[3][1] = print_container_div('top_10_managers_invoicing', __('Top 10 managers invoicing'), $managers_invoicing_content, 'no', true, '10px');
 
-print_table($table);
 
+echo "<div style='clear: both;'>";
+	echo print_container_div('container_pie_graphs companies_per_county', __('Companies per country'), $companies_country_content, 'no', true, '10px');
+	echo print_container_div('container_pie_graphs companies_per_manager', __('Companies per manager'), $companies_per_manager, 'no', true, '10px');
+	echo print_container_div('container_pie_graphs companies_per_user', __('Users per company'), $companies_user_content, 'no', true, '10px');
+echo "</div>";
+echo "<div style='clear: both;'>";
+	echo print_container_div('container_pie_graphs invoicing_volume', __('Invoicing volume'), $companies_invoincing_volume, 'no', true, '10px');
+	echo print_container_div('container_pie_graphs managers_invoicing_volume', __('Managers invoicing volume'), $managers_invoicing_volume, 'no', true, '10px');
+echo "</div>";
+echo "<div style='clear: both;'>";
+	echo print_container_div('top_10_activity', __('Top 10 activity'), $companies_activity_content, 'no', true, '10px');
+	echo print_container_div('top_10_invoicing', __('Top 10 invoicing'), $companies_invoincing_content, 'no', true, '10px');
+	echo print_container_div('top_10_managers_invoicing', __('Top 10 managers invoicing'), $managers_invoicing_content, 'no', true, '10px');
+echo "</div>";
 ?>

@@ -35,8 +35,8 @@ $id_project_group = 0;
 $action = (string) get_parameter ('action');
 $pure = (bool) get_parameter ('pure',0);
 $id_project = (int) get_parameter ('id_project');
-
 $create_project = (bool) get_parameter ('create_project');
+$schedule_reports = (bool) get_parameter ('schedule_reports', 0);
 
 
 $graph_ttl = 1;
@@ -554,6 +554,13 @@ if ($id_project) {
 <?php if (!$pdf_output): ?>
 <script type="text/javascript" src="include/js/integria_projects.js"></script>
 <script type="text/javascript">
+	$(document).ready (function () {
+		var schedule_reports = <?php echo $schedule_reports ?>;
+		if (schedule_reports) {
+			print_schedule();
+		}
+	});
+
 	$(function() {
 		// Init the tooltip
 		$('div.tooltip_title').tooltip({
@@ -563,5 +570,13 @@ if ($id_project) {
 			}
 		});
 	});
+
+	function print_schedule() {
+		if (window.print){
+			window.print();
+		}
+	}
+
 </script>
+
 <?php endif; ?>

@@ -25,11 +25,21 @@ $show_list = (bool) get_parameter('show_list', 0);
 $show_stats = (bool) get_parameter('show_stats', 0);
 $id_search = (int) get_parameter('saved_searches');
 $search = (string) get_parameter('search');
+$pure = (bool) get_parameter('pure',0);
 
 		
 echo "<h2>" .__('Support')."</h2>";
 echo "<h4>" .__('Ticket reports');
-echo integria_help ("incident_report", true);
+	if(!$pure){
+		echo integria_help ("incident_report", true);
+	}
+	echo "<div id='button-bar-title'><ul>";
+		if(!$pure){
+			echo "<li><a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports&saved_searches=$id_search&show_stats=$show_stats&show_list=$show_list&pure=1'>".print_image ("images/html_tabs.png", true, array("title" => __("HTML")))."</a></li>";
+		} else {
+			echo "<li><a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports&saved_searches=$id_search&show_stats=$show_stats&show_list=$show_list&pure=0'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+		}
+	echo "</ul></div>";
 echo "</h4>";
 
 $table_search = new stdClass;
@@ -54,23 +64,19 @@ $table_search->data[2][0] = print_checkbox_extended ('show_stats', 1, $show_stat
 
 $table_search->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 $table_search->colspan[4][0] = 4;
-
-echo "<div class= 'divform'>";
-	echo '<form method="post">';
-	print_table ($table_search);
-	echo '</form>';
-echo '</div>';
-
-echo "<div class='divresult'>";
-if (isset($search)) {
-	
-	
-	echo "<h4>".__('Report results');
-	//~ echo '<a href="index.php?sec=reporting&amp;sec2=operation/reporting/incidents_html
-			//~ &amp;custom_search='.$id_search.'&amp;show_stats='.$show_stats.'&amp;show_list='.$show_list.'&amp;clean_output=1&amp;pdf_output=1">
-			//~ <img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
-	echo "</h4>";
-	
+if(!$pure){
+	echo "<div class= 'divform'>";
+		echo '<form method="post">';
+		print_table ($table_search);
+		echo '</form>';
+	echo '</div>';
+}
+if($pure){
+	echo "<div class='divresult' style='width: 98%;'>";
+} else {
+	echo "<div class='divresult'>";
+}
+if (isset($search)) {	
 	$custom_search = get_custom_search ($id_search, 'incidents');
 
 	if ($custom_search) {		
@@ -79,7 +85,7 @@ if (isset($search)) {
 			$filter = unserialize($custom_search["form_values"]);
 			$filter_form = $filter;
 			
-			echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $custom_search["name"]).'</h3>';
+			//echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $custom_search["name"]).'</h3>';
 		}
 		else {
 			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $custom_search["name"]).'</h3>';	
@@ -91,79 +97,75 @@ if (isset($search)) {
 	
 	include("incident_statistics.php");
 	
-	if (($show_list)) {
-		
-		$statuses = get_indicent_status ();
-		$resolutions = get_incident_resolutions ();
-		
-		$table = new StdClass();
-		$table->class = 'listing';
-		$table->width = "100%";
-		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
-		$table->head = array ();
-		$table->head[0] = __('ID');
-		$table->head[1] = __('SLA');
-		$table->head[2] = __('% SLA');
-		$table->head[3] = __('Ticket');
-		$table->head[4] = __('Group')."<br><em>".__("Company")."</em>";
-		$table->head[5] = __('Status')."<br /><em>".__('Resolution')."</em>";
-		$table->head[6] = __('Priority');
-		$table->head[7] = __('Updated')."<br /><em>".__('Started')."</em>";
-		$table->head[8] = __('Responsible');
-		$table->data = array ();
-		
+	if ($show_list) {
+		$filter['first_date'] = (string) get_parameter ('search_first_date', '');
+ 		$filter['last_date'] = (string) get_parameter ('search_last_date', '');
 		$filter['limit'] = 0;
 		$incidents = filter_incidents ($filter);
 		unset($filter['limit']);
 
-		if ($incidents === false) {
-			$table->colspan[0][0] = 9;
-			$table->data[0][0] = __('Nothing was found');
-			$incidents = array ();
-		}
+		$statuses = get_indicent_status ();
+		$resolutions = get_incident_resolutions ();
+		if ($incidents) {
+			$table = new StdClass();
+			$table->class = 'listing';
+			$table->width = "100%";
+			$table->style = array ();
+			$table->style[0] = 'font-weight: bold';
+			$table->head = array ();
+			$table->head[0] = __('ID');
+			$table->head[1] = __('SLA');
+			$table->head[2] = __('% SLA');
+			$table->head[3] = __('Ticket');
+			$table->head[4] = __('Group')."<br><em>".__("Company")."</em>";
+			$table->head[5] = __('Status')."<br /><em>".__('Resolution')."</em>";
+			$table->head[6] = __('Priority');
+			$table->head[7] = __('Updated')."<br /><em>".__('Started')."</em>";
+			$table->head[8] = __('Responsible');
+			$table->data = array ();
+		
+			foreach ($incidents as $incident) {
+				$data = array ();
+				
+				$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
+				
+				$data[0] = '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
+				$data[1] = '';
+				if ($incident["affected_sla_id"] != 0)
+					$data[1] = '<img src="images/exclamation.png" />';
 
-		foreach ($incidents as $incident) {
-			$data = array ();
-			
-			$link = "index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident["id_incidencia"];
-			
-			$data[0] = '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
-			$data[1] = '';
-			if ($incident["affected_sla_id"] != 0)
-				$data[1] = '<img src="images/exclamation.png" />';
-
-			if ($incident["affected_sla_id"] != 0)
-			$data[2] = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
-			else
-			$data[2] = "";
-				$data[3] = '<a href="'.$config["base_url"].'/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
-					$incident['titulo'].'</a>';
-				$data[4] = get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
-					
-				if ($config["show_creator_incident"] == 1){	
-					$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
-					if($id_creator_company != 0) {
-						$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
-						$data[4].= "<br><span style='font-style:italic'>$company_name</span>";
+				if ($incident["affected_sla_id"] != 0)
+				$data[2] = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
+				else
+				$data[2] = "";
+					$data[3] = '<a href="'.$config["base_url"].'/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.
+						$incident['titulo'].'</a>';
+					$data[4] = get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
+						
+					if ($config["show_creator_incident"] == 1){	
+						$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
+						if($id_creator_company != 0) {
+							$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
+							$data[4].= "<br><span style='font-style:italic'>$company_name</span>";
+						}
 					}
-				}
-			
-			$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
-			
-			$data[5] = '<strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>';
-			$data[6] = print_priority_flag_image ($incident['prioridad'], true);
-			$data[7] = human_time_comparation ($incident["actualizacion"]);
-			$data[7] .= '<br /><em>';
-			$data[7] .=  human_time_comparation ($incident["inicio"]);
-			$data[7] .= '</em>';
-			
-			$data[8] = $incident['id_usuario'];
-			
-			array_push ($table->data, $data);
-		}
+				
+				$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
+				
+				$data[5] = '<strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em>';
+				$data[6] = print_priority_flag_image ($incident['prioridad'], true);
+				$data[7] = human_time_comparation ($incident["actualizacion"]);
+				$data[7] .= '<br /><em>';
+				$data[7] .=  human_time_comparation ($incident["inicio"]);
+				$data[7] .= '</em>';
+				
+				$data[8] = $incident['id_usuario'];
+				
+				array_push ($table->data, $data);
+			}
 
-		print_table ($table);
+			print_table ($table);
+		}
 	}
 }
 echo "</div>";
