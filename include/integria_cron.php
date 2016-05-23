@@ -639,7 +639,8 @@ function run_mail_queue () {
 			// Use internal mail() function
 			$headers   = array();
 			$headers[] = "MIME-Version: 1.0";
-			$headers[] = "Content-type: text/plain; charset=utf-8";
+			//~ $headers[] = "Content-type: text/plain; charset=utf-8";
+			$headers[] = "Content-type: text/html; charset=utf-8";
 
 			$headers = array_merge($headers, $extra_headers);
 
@@ -997,17 +998,29 @@ function delete_old_incidents () {
 			}
 			
 			// tworkunit
-			$sql_delete = "DELETE FROM tworkunit
-						   WHERE id = ANY(SELECT id_workunit
-										  FROM tworkunit_incident
-										  WHERE id_incident = ".$incident["id_incidencia"].")";
-			$res = process_sql ($sql_delete);
-			
+			$workunits =  get_db_all_rows_sql ("SELECT * FROM tworkunit WHERE id IN (SELECT id_workunit FROM tworkunit_incident WHERE id_incident = ".$incident["id_incidencia"].")");
+			if ($workunits === false) {
+				$workunits = array();
+			}
+			foreach ($workunits as $workunit) {
+				$sql_delete = "DELETE FROM tworkunit WHERE id = ".$workunit["id"];
+				$res = process_sql ($sql_delete);
+			}
+				
 			if ($res === false) {
 				$error = true;
 			}
-			
+	
 			// tattachment
+			$attachments =  get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia = ".$incident["id_incidencia"]);
+			if ($attachments === false) {
+				$attachments = array();
+			}
+
+			foreach ($attachments as $attachment) {
+				unlink ($config["homedir"].'attachment/'.$attachment['id_attachment'].'_'.$attachment['filename']);
+			}
+
 			$sql_delete = "DELETE FROM tattachment
 						   WHERE id_incidencia = ".$incident["id_incidencia"];
 			$res = process_sql ($sql_delete);

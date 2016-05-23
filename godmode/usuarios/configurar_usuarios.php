@@ -147,7 +147,10 @@ if ($action == 'update')  {
 			$id_company = get_parameter ("id_company");
 			$num_employee = get_parameter ("num_employee");
 			$location = get_parameter ("location", "");
-			$nivel = get_parameter ("nivel",0);
+			$nivel = get_parameter ("nivel",0);		
+			if ($nivel == 1) {
+				$enable_login = 1;
+			}
 			
 			//chech if exists num employee
 			$already_exists = false;

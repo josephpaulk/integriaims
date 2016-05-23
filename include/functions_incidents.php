@@ -1495,6 +1495,26 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	case 0: // Incident update
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
+		
+		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
+		if ($attached_files === false) {
+			$attached_files = array();
+		}
+		foreach ($attached_files as $file) {
+			$file_name = $file['id_attachment'].'_'.$file['filename'];
+			$access_public = get_db_value("value","tconfig","token","access_public");
+			$access_protocol = get_db_value("value","tconfig","token","access_protocol");
+			if ($access_protocol) {
+				$protocol = "https://";
+			} else {
+				$protocol = "http://";
+			}
+	
+			$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
+			$text .= '<img src="'.$path_file.'" alt="'.$file['filename'].'" />';
+			$text .= '<br>';
+		}
+
 		break;
 	case 1: // Incident creation
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
@@ -1503,6 +1523,26 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	case 2: // New attach
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_attach.tpl", $MACROS);
+		
+		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
+		if ($attached_files === false) {
+			$attached_files = array();
+		}
+		foreach ($attached_files as $file) {
+			$file_name = $file['id_attachment'].'_'.$file['filename'];
+			$access_public = get_db_value("value","tconfig","token","access_public");
+			$access_protocol = get_db_value("value","tconfig","token","access_protocol");
+			if ($access_protocol) {
+				$protocol = "https://";
+			} else {
+				$protocol = "http://";
+			}
+			
+			$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
+			$text .= '<img src="'.$path_file.'" alt="'.$file['filename'].'" />';
+			$text .= '<br>';
+		}
+
 		break;
 	case 3: // Incident deleted 
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
