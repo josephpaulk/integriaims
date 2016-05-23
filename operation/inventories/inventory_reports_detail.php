@@ -133,16 +133,16 @@ if ($render_html == 1){
 		return;
 	
 	//count $row chunk
-	$row_chunk_cont = count(array_chunk($rows[0], 5));
+	$row_chunk_cont = count(array_chunk($rows[0], 10));
 	
 	//keys $row chunk
-	$row_chunk_keys = array_chunk(array_keys($rows[0]), 5);
+	$row_chunk_keys = array_chunk(array_keys($rows[0]), 10);
 		
 	$table = array();
 	for($i=0; $i < $row_chunk_cont; $i++){
 		$table[$i][] = $row_chunk_keys[$i];
 		foreach ($rows as $row) {
-			$row_chunk = array_chunk($row, 5);
+			$row_chunk = array_chunk($row, 10);
 			$table[$i][] = $row_chunk[$i];
 		}
 	}

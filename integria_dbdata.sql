@@ -51,7 +51,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('current_package', 48),
 ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
 ('license', 'INTEGRIA-FREE'),
-('login_background', 'flowers.jpg'),
+('login_background', 'paisaje.jpg'),
 ('inventory_default_owner', 'admin'),
 ('minor_release', 46);
 

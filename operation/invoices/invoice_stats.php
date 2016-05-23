@@ -43,29 +43,23 @@ if (!$read) {
 	exit;
 }
 
-echo "<h1>".__('Invoice statistics');
-
-if (!$pdf_report) {
-
+echo "<h2>".__('Invoices')."</h2>";
+echo "<h4>".__('Invoice statistics');
 	echo "<div id='button-bar-title'>";
 		echo "<ul>";
-		echo "<li>";
-		echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail".$search_params."'>" .
-			print_image ("images/go-previous.png", true, array("title" => __("Back to project editor"))) .
-			"</a>";
-		echo "</li>";
-		$report_image = print_report_image ("index.php?sec=customers&sec2=operation/invoices/invoice_stats&report_name=".__("Invoice Statistics report").$search_params, __("PDF report"));
-		if ($report_image) {
-			echo "<li>";
-			echo $report_image;
-			echo "</li>";
+		if(!$pure){
+			echo "<li><a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail".$search_params."'>" . print_image ("images/go-previous.png", true, array("title" => __("Back to project editor"))) . "</a></li>";
+		} 
+		if(!$pure){
+			echo "<li><a href='index.php?sec=customers&sec2=operation/invoices/invoice_stats&pure=1'>".print_image ("images/html_tabs.png", true, array("title" => __("HTML")))."</a></li>";
+		} else {
+			echo "<li><a href='index.php?sec=customers&sec2=operation/invoices/invoice_stats&pure=0'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
 		}
+		
+		
 		echo "</ul>";
 	echo "</div>";
-
-}
-
-echo "</h1>";
+echo "</h4>";
 
 $where_clause = " 1 = 1 ";
 
@@ -176,19 +170,19 @@ $currency_table = print_table($table, true);
 
 switch ($search_invoice_type) {
 	case 'Submitted':
-		$container_title = __("Submitted billing history");
+		$container_title_history = __("Submitted billing history");
 		break;
 	case 'Received':
-		$container_title = __("Received billing history");
+		$container_title_history = __("Received billing history");
 		break;
 	default:
-		$container_title = __(" Submitted billing history");
+		$container_title_history = __(" Submitted billing history");
 		break;
 }
 
-$invoicing_graph = stacked_area_graph($config["flash_charts"], $inv_data_currency, 650, 250, null, $legend, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl, $config["base_url"]);
+$invoicing_graph = stacked_area_graph($config["flash_charts"], $inv_data_currency, 1050, 350, null, $legend, '', '', '', '', '' ,'' ,'' ,'', $graph_ttl, $config["base_url"]);
 $container_invoicing_graph = '<div class="pie_frame">' .$invoicing_graph."</div>";
-echo print_container('history_invoiced', $container_title, $container_invoicing_graph, 'no', true, true, "container_simple_title", "container_simple_div");
+
 
 //Transform data for companies invoiced graph
 $comp_invoiced_data = array();
@@ -202,36 +196,41 @@ foreach ($inv_data_company as $comp => $val) {
 	$comp_name = $comp_name." (".$val_aux.")";
 	$comp_invoiced_data[$comp_name] = $val;
 }
-
+//container_title_company
 switch ($search_invoice_type) {
 	case 'Submitted':
-		$container_title = __("Submitted billing per company");
+		$container_title_company = __("Submitted billing per company");
 		break;
 	case 'Received':
-		$container_title = __("Received billing per company");
+		$container_title_company = __("Received billing per company");
 		break;
 	default:
-		$container_title = ("Submitted billing per company");
+		$container_title_company = ("Submitted billing per company");
 		break;
 }
 
-$companies_invoiced_graph = pie3d_graph ($config["flash_charts"], $comp_invoiced_data, 400, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $graph_ttl);
+$companies_invoiced_graph = pie3d_graph ($config["flash_charts"], $comp_invoiced_data, 300, 150, __('others'), $config["base_url"], "", $config['font'], $config['fontsize'], $graph_ttl);
 $companies_invoiced_graph = '<div class="pie_frame">' .$companies_invoiced_graph."</div>";
-echo print_container('companies_invoiced', $container_title, $companies_invoiced_graph, 'no', true, true, "container_simple_title", "container_simple_div");
 
+//container_title_currency
 switch ($search_invoice_type) {
 	case 'Submitted':
-		$container_title = __("Submitted billing per currency");
+		$container_title_currency = __("Submitted billing per currency");
 		break;
 	case 'Received':
-		$container_title = __("Received billing per currency");
+		$container_title_currency = __("Received billing per currency");
 		break;
 	default:
-		$container_title = __("Submitted billing per currency");
+		$container_title_currency = __("Submitted billing per currency");
 		break;
 }
+echo "<div style='clear: both;'>";
+	echo print_container_div('history_invoiced', $container_title_history, $container_invoicing_graph, 'no', true, true, "container_simple_title", "container_simple_div");
+echo "</div>";
 
-echo print_container('currency_invoiced', $container_title, $currency_table, 'no', true, true, "container_simple_title", "container_simple_div");
-
+echo "<div style='clear: both;'>";
+	echo print_container_div('container_pie_graphs companies_invoiced', $container_title_company, $companies_invoiced_graph, 'no', true, true, "container_simple_title", "container_simple_div");
+	echo print_container_div('currency_invoiced', $container_title_currency, $currency_table, 'no', true, true, "container_simple_title", "container_simple_div");
+echo "</div>";
 ?>
 

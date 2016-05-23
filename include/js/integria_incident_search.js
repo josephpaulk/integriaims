@@ -1283,7 +1283,7 @@ function change_type_fields_table() {
 		data: "page=operation/incidents/incident_search_logic&get_type_fields_table=1&id_incident_type="+$("#search_id_incident_type").val(),
 		dataType: "html",
 		success: function(data) {
-			$("#table_type_fields").html (data);
+			$("#table2-6").html (data);
 		}
 	});
 }

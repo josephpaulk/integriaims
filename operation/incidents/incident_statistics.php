@@ -50,7 +50,7 @@ print_input_hidden ('pdf_output', 1);
 echo '</form>';
 
 if ($incidents == false) {
-	echo __('Nothing was found');
+	echo '<h3 class="error">' . __('Nothing was found') . '</h3>';
 
 } else {
 	$simple_mode = true;

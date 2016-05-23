@@ -1440,12 +1440,12 @@ function print_report_image ($href, $title = "PDF report", $id = "", $attr = "")
 		return "";
 }
 
-function print_html_report_image ($href, $title = "HTML report", $id = "", $attr = "") {
+function print_html_report_image ($href, $title = "HTML report", $id = "", $attr = "", $pure = 0) {
 	global $config;
 
 	enterprise_include ('include/functions_reporting_pdf.php', true);
 
-	$return = enterprise_hook ('print_html_report_image_extra', array($href, $title, $id, $attr));
+	$return = enterprise_hook ('print_html_report_image_extra', array($href, $title, $id, $attr, $pure));
 	
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;

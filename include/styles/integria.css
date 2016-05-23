@@ -28,6 +28,7 @@ body {
 
 body.login {
 	background: url(../../images/greyback.gif);
+	background-size: 100% !important;
 }
 
 /* Necessary for firefox */
@@ -563,7 +564,7 @@ input[type="text"] {
 
 input[type="file"] {
 	background: #FFF;
-	font-size: 0.5em;
+	font-size: 0.9em;
 	width: 100%;
 	margin-top: 10px;
 	padding-left: 0px !important;
@@ -708,7 +709,6 @@ form.searchform input.button {
 	padding:0px;
 	border:0px;
 	width:100%;
-
 }
 
 /* header */
@@ -726,7 +726,8 @@ form.searchform input.button {
 	color: #CCC;
 	text-transform: lowercase;
 	/* change the values of top and Left to adjust the position of the logo*/
-	top: 0; left: 5px;
+	top: 0;
+	left: 5px;
 }
 #header h2#slogan {
 	position: absolute;
@@ -735,7 +736,8 @@ form.searchform input.button {
 	text-transform: none;
 	color: #FFF;
 	/* change the values of top and Left to adjust the position of the slogan*/
-	top: 4px; left:65px;
+	top: 4px;
+	left: 65px;
 }
 
 #header #logo_container {
@@ -747,7 +749,8 @@ form.searchform input.button {
 
 #header #logo_container img {
 	max-height: 50px;
-	padding-top: 10px;
+	max-width: 310px;
+	vertical-align: middle;
 }
 
 .header_icons {
@@ -1915,7 +1918,7 @@ div#login {
 	padding: 0px;
 	padding-top: 20px;
 	padding-bottom: 20px;
-
+	box-shadow: 3px 4px 12px #B99480;
 }
 
 #login_form_data_fail {
@@ -2180,7 +2183,7 @@ div.divform table.search-table input[type="button"]{
 .button-form input[type="submit"],
 .button-form input[type="button"] {
 	border-radius: 3px;
-    font-size: 10px;
+    font-size: 13px;
 	padding-left: 0px;
     color: white;
     background: #FF9000;
@@ -2933,7 +2936,13 @@ div.container_topincident_submitter_container,
 div.container_user_assigned_container,
 div.container_incidents_group_container,
 div.container_incident_creator_group_container,
-div.container_top5_scoring_container {
+div.container_top5_scoring_container,
+div.companies_per_county_container,
+div.companies_per_manager_container,
+div.companies_per_user_container,
+div.top_10_activity_container,
+div.top_10_invoicing_container,
+div.top_10_managers_invoicing_container {
 	width: 32%;
 	float: left;
 }
@@ -2953,17 +2962,17 @@ div.users_per_lead_container,
 div.top_10_sales_container,
 div.new_leads_container ,
 div.project_labour_report_container,
-div.project_task_distribution_report_container,
-div.project_budget_report_container,
-div.project_workload_distribution_report_container,
-div.companies_invoiced_container,
-div.currency_invoiced_container {
+div.project_budget_report_container {
 	width:30%;
 	float: left;
 }
 
 div.container_status_incidents_container,
-div.container_priority_incidents_container {
+div.container_priority_incidents_container,
+div.invoicing_volume_container,
+div.managers_invoicing_volume_container,
+div.companies_invoiced_container,
+div.currency_invoiced_container {
 	width:48%;
 	float: left;
 }
@@ -2978,12 +2987,6 @@ container_adaptor_na_graphic2 {
 div.container_adaptor_na_graphic2 {
 	margin-top: 75px;
 	margin-bottom: 74px;		
-}
-
-div.container_adaptor_graphic {
-	width:300px; 
-	text-align: center; 
-
 }
 
 h2.container_simple_title {
@@ -3440,10 +3443,22 @@ table.no_border td {
 	padding: 13px;
 	margin-bottom: 10px;
 }
+
+.divhalf .container h2 {
+	margin-bottom: 0px;
+	width: 95%;
+}
+
 .container h2 img{
 	float: right;
 	margin-top: -4px;
 	vertical-align: middle;
+}
+.container h2 img.wu_image{
+	float:none;
+}
+.img_h2_toggle{
+	margin-left: 10px;
 }
 
 .legendColorBox, .legendLabel {
@@ -3724,4 +3739,87 @@ img#inventory_loading{
 }
 .clear_both{
 	clear: both;
+}
+
+/*Css for graph incidents reports*/
+.container_pie_graphs .pie_frame {
+    width: 100% !important;
+    position: relative !important;
+    display: inline-block !important;
+    height: 200px !important;
+}
+	/*Exception for project detail*/
+.divhalf .container_pie_graphs .pie_frame {
+    border: 1px solid #dadada !important;
+    border-top: 0px !important;
+    height: 210px !important;
+}
+
+	
+.container_pie_graphs .pie_frame:before {
+    content: '' !important;
+    display: block !important;
+    padding-top: 50% !important;
+}
+
+.container_pie_graphs .pie_frame .graph{
+    position: absolute !important;
+    top:0 !important;
+    bottom:0 !important;
+    left:0 !important;
+    right:0 !important;
+   	margin-top: 20px !important;
+	margin-left: 20px !important;
+}
+
+	/*Exception for project detail*/
+.divhalf .container_pie_graphs .pie_frame .graph{
+	margin-top: 20px !important;
+	margin-left: 20px !important;
+}
+
+.container_pie_graphs .pie_frame .graph .legend > table {
+	width: 50% !important;
+	top: -20px !important;
+	right: -15px !important;
+	float:left;
+}
+.container_pie_graphs .pie_frame .graph .legend > table tr td{
+	line-height: 22px !important;
+	font-size: 9px !important;
+}
+.container_pie_graphs .pie_frame .graph .legend > table tr td.legendColorBox{
+	width: 10% !important;
+}
+.container_pie_graphs .pie_frame .graph .legend > table tr td.legendLabel{
+	width: 90% !important;
+}
+.container_pie_graphs .pie_frame .graph .legend > div {
+	width: 50% !important;
+	top: -20px !important;
+	right: -15px !important;
+	height: 210px !important;
+	float:left;
+}
+
+.container_pie_graphs .pie_frame .graph .legend {
+	float: left;
+	width: 40% !important;
+} 
+
+/*css for report project WU*/
+.get_workunits_task{
+	width: 100%;
+	overflow: auto;
+    border-collapse: collapse;
+}
+.get_workunits_task .listing td,
+.get_workunits_task .listing th{
+	white-space: nowrap;
+}
+
+/*css for lead reports*/
+#new_leads_div .pie_frame .graph{
+	width: 320px !important;
+	margin-left: 45px !important;
 }

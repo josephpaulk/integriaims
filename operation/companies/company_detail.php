@@ -503,26 +503,115 @@ elseif ($op == "activities") {
 
 // CONTRACT LISTING
 elseif ($op == "contracts") {
-	
 	if ($write_permission || $manage_permission) {
-		echo '<div class="divform">';
-		echo '<table class="search-table">';
-		echo '<tr>';
-		echo '<td>';
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new_contract', 1);
-		echo '</form>';
-		echo '</td>';
-		echo '</tr>';
-		echo '</table>';
-		echo '</div>';
+
+		$search_text = (string) get_parameter ('search_text');
+		$search_company_role = (int) get_parameter ('search_company_role');
+		$search_date_end = get_parameter ('search_date_end');
+		$search_date_begin = get_parameter ('search_date_begin');
+		$search_date_begin_beginning = get_parameter ('search_date_begin_beginning');
+		$search_date_end_beginning = get_parameter ('search_date_end_beginning');
+		$search_status = (int) get_parameter ('search_status', 1);
+		$search_expire_days = (int) get_parameter ('search_expire_days');
+
+		$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning&search_status=$search_status&search_expire_days=$search_expire_days";
+		
+		//$where_clause = "WHERE 1=1";
+		$where_clause = "WHERE id_company=".$id;
+		if ($search_text != "") {
+			$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
+				name LIKE "%%%s%%" OR 
+				contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
+		}
+		
+		if ($search_company_role) {
+			$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
+		}
+		
+		if ($search_date_end != "") {
+			$where_clause .= sprintf (' AND date_end <= "%s"', $search_date_end);
+		}
+		
+		if ($search_date_begin != "") {
+			$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
+		}
+			
+		if ($search_date_end_beginning != "") {
+			$where_clause .= sprintf (' AND date_begin <= "%s"', $search_date_end_beginning);
+		}
+		
+		if ($search_date_begin_beginning != "") {
+			$where_clause .= sprintf (' AND date_begin >= "%s"', $search_date_begin_beginning);
+		}
+		
+		if ($search_status >= 0) {
+			$where_clause .= sprintf (' AND status = %d', $search_status);
+		}
+		
+		if ($search_expire_days > 0) {
+			// Comment $today_date to show contracts that expired yet
+			$today_date = date ("Y/m/d");
+			$expire_date = date ("Y/m/d", strtotime ("now") + $search_expire_days * 86400);
+			$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
+		}
+
+
+		$form = '<form action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts" method="post">';
+		$form .= '<div class="divform">';
+		$form .= "<table width=100% class='search-table'>";
+		
+		$form .= "<tr><td colspan=2>";
+		$form .= print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+		$form .= print_select (get_company_roles(), 'search_company_role',
+			$search_company_role, '', __('All'), 0, true, false, false, __('Company roles'));	
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+		$form .= print_select (get_contract_status(), 'search_status',
+			$search_status, '', __('Any'), -1, true, false, false, __('Status'));	
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+		$form .= print_select (get_contract_expire_days(), 'search_expire_days',
+			$search_expire_days, '', __('None'), 0, true, false, false, __('Out of date'));	
+		$form .= "</td></tr>";
+
+		$form .= "<tr><td>";
+		$form .= print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Begining From') .
+			"<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+		$form .= print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Begining To').
+			"<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+		$form .= print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending From')."<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+		$form .= print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To'). "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>");
+		$form .= "</td></tr>";
+		
+		$form .= "<tr><td>";
+			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		$form .= "</td></tr>";
+
+		$form .= "</table>";
+		$form .= "</div>";
+		$form .= '</form>';
+
+		echo $form;
 	}
+
 	//$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 	//$contracts = crm_get_user_contracts($config['id_user'], $contracts);
-	$where_clause = "WHERE id_company=$id";
-	$contracts = crm_get_all_contracts ($where_clause, 'name');
 	
+	$contracts = crm_get_all_contracts ($where_clause, 'name');
 	
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 	
@@ -566,6 +655,17 @@ elseif ($op == "contracts") {
 		print_table ($table);
 		if ($write_permission || $manage_permission)
 			echo '</div>';
+	}
+
+	if ($write_permission || $manage_permission) {
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
+			echo '<div class="divform">';
+				echo '<table class="search-table"><tr><td>';
+					print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+					print_input_hidden ('new_contract', 1);
+				echo '</td></tr></table>';
+			echo '</div>';
+		echo '</form>';
 	}
 }
 

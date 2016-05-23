@@ -792,3 +792,50 @@ function show_calculation (mode) {
 		}
 	});
 }
+
+function workunits_task(id_task, filter) {
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: 'page=include/ajax/projects&get_workunits_task=1&id_task='+id_task+filter,
+		dataType: "html",
+		success: function(data){	
+			$("#workunits_task_window").html (data);
+			$("#workunits_task_window").show ();
+			$("#workunits_task_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 1024,
+					height: 768
+				});
+			$("#workunits_task_window").dialog('open');
+			
+			$(function() {
+				// Init the tooltip
+				$('div.tooltip_title').tooltip({
+					track: true,
+					open: function (event, ui) {
+						ui.tooltip.css('max-width', '800px');
+					}
+				});
+			});
+			
+			$("a[id^='page']").click(function(e) {
+
+				e.preventDefault();
+				var id = $(this).attr("id");
+						
+				offset = id.substr(5,id.length);
+				var filter = "&offset="+offset;
+				
+				workunits_task(id_task, filter);
+			});
+
+		}
+	});
+}

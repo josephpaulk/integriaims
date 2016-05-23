@@ -38,8 +38,7 @@ if (isset($_SESSION['id_usuario'])) {
 		$language_info = 'en';
 	}
 	
-	echo '<a target="_new" href="general/license/integria_info_'.$language_info.'.html">'.
-	__('Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>').'</a><br>';
+	echo '<a target="_new" href="general/license/integria_info_'.$language_info.'.html">';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];
 	} else {
