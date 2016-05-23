@@ -299,6 +299,8 @@ function print_select ($fields, $name, $selected = '', $script = '',
 		$output .= print_label ($label, $name, 'select', true);
 	}
 	
+	$id = preg_replace('/[^a-z0-9\:\;\-\_]/i', '', $name);
+	
 	$attributes = ($script) ? 'onchange="'. $script .'"' : '';
 	if ($multiple) {
 		$attributes .= ' multiple="yes" size="'.$multiple.'" ';
@@ -312,9 +314,9 @@ function print_select ($fields, $name, $selected = '', $script = '',
 	}
 
 	if ($style == "")
-		$output .= '<select style="width: 218px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+		$output .= '<select style="width: 218px" ' . $disabledText . ' id="'.$id.'" name="'.$name.'" '.$attributes.">\n";
 	else
-		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$id.'" name="'.$name.'" '.$attributes.">\n";
 
 	if ($nothing != '') {
 		$output .= '   <option value="'.$nothing_value.'"';

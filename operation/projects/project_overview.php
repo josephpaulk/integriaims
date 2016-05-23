@@ -163,8 +163,10 @@ $sql = "SELECT * FROM tproject_group";
 $datos = get_db_all_rows_sql($sql);
 $select = array();
 
-foreach ($datos as $data) {
-	$select[$data["id"]] = $data["name"];
+if ($datos) {
+	foreach ($datos as $data) {
+		$select[$data["id"]] = $data["name"];
+	}
 }
 
 $select[0] = __("Without group");
