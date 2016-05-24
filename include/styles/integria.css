@@ -556,7 +556,7 @@ input {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
-input[type="text"] {
+input[type="text"],  input[type="number"],  input[type="date"] {
 	height: 20px;
     background-color: #FFF;
     color: #707070;
@@ -3616,9 +3616,8 @@ ul li {
 	width:190px;
 }
 .legend_text {
-	float:left;
 	line-height:15px;
-	margin-left: 5px;
+	margin-left: 30px;
 }
 .legend_box_color {
 	 float:left;
@@ -3823,3 +3822,17 @@ img#inventory_loading{
 	width: 320px !important;
 	margin-left: 45px !important;
 }
+
+/*Css for company_detail*/
+#form-company_detail .search-table-button {
+	table-layout: fixed;
+}
+
+#form-company_detail .search-table-button tr td input{
+	width: 80% !important;
+}
+
+#form-company_detail .search-table-button tr td select{
+	width: 82% !important;
+}
+

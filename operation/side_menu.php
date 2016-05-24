@@ -588,14 +588,20 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 			echo "<li>";
 		echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
 		
-		if ($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if (($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) ||
+		 	($sec2 == "operation/companies/company_custom_fields" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM")))){
 			if ($new_company)
 				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
 				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a></li>";
+			if ($sec2 == "operation/companies/company_custom_fields" && (give_acl ($config["id_user"], 0, "CW")))
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
+			else
+				echo "<li style='margin-left: 15px;'>";
+			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_custom_fields'>".__('Company custom fields')."</a></li>";
 		}
-
+		
 		// Company roles
 		if (give_acl ($config["id_user"], 0, "CM")) {
 			if (($sec2=="operation/companies/company_role") && (!isset($_GET["create"])))

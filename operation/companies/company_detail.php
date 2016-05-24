@@ -21,6 +21,91 @@ check_login ();
 require_once('include/functions_crm.php');
 include_once('include/functions_user.php');
 
+if (defined ('AJAX')) {
+	
+	global $config;
+
+	$get_data_child = (bool) get_parameter('get_data_child', 0);
+	
+ 	if ($get_data_child) {
+
+		$id_field = get_parameter('id_field', 0);
+		if ($id_field) {
+			$label_field = get_db_value_sql("SELECT label FROM tcompany_field WHERE id=".$id_field);
+		} else {
+			$label_field = get_parameter('label_field');
+		}
+
+		$label_field_enco = get_parameter('label_field_enco',0);
+		if ($label_field_enco) {
+			$label_field_enco = str_replace("&quot;","",$label_field_enco);
+			$label_field = base64_decode($label_field_enco);
+		}
+
+		$id_parent = get_parameter('id_parent');
+		$value_parent = get_parameter('value_parent');
+		$value_parent = safe_input(safe_output(base64_decode($value_parent)));
+
+		$sql = "SELECT linked_value FROM tcompany_field WHERE parent=".$id_parent."
+			AND label='".$label_field."'";
+		$field_data = get_db_value_sql($sql);
+
+		$result = false;
+		if ($field_data != "") {
+			$data = explode(',', $field_data);
+			foreach ($data as $item) {
+				if ($value_parent == 'any') {
+
+					$pos_pipe = strpos($item,'|')+1;
+					$len_item = strlen($item);
+					$value_aux = substr($item, $pos_pipe, $len_item);
+					$result[$value_aux] = $value_aux;
+					
+				} else {
+					$pattern = "/^".$value_parent."\|/";
+					if (preg_match($pattern, $item)) {
+						$value_aux = preg_replace($pattern, "",$item);
+						$result[$value_aux] = $value_aux;
+					}
+				}
+			}
+		}
+
+		$sql_id = "SELECT id FROM tcompany_field WHERE parent=".$id_parent."
+					AND label='".$label_field."'";
+		$result['id'] = get_db_value_sql($sql_id);
+		$result['label'] = $label_field;
+		$result['label_enco'] = base64_encode($label_field);
+				
+		$sql_labels = "SELECT label, id FROM tcompany_field WHERE parent=".$result['id'];
+
+		$label_childs = get_db_all_rows_sql($sql_labels);
+
+		if ($label_childs != false) {
+			$i = 0;
+			foreach($label_childs as $label) {
+				if ($i == 0) {
+					$result['label_childs'] = $label['label'];
+					$result['id_childs'] = $label['id'];
+					$result['label_childs_enco'] = base64_encode($label['label']);
+				} else { 
+					$result['label_childs'] .= ','.$label['label'];
+					$result['id_childs'] .= ','.$label['id'];
+					$result['label_childs_enco'] .= ','.base64_encode($label['label']);
+				}
+				$i++;
+			}
+		} else {
+			$result['label_childs'] = '';
+			$result['label_childs_enco'] = '';
+		}
+
+		echo json_encode($result);
+		return;
+	}
+
+}
+
 $id = (int) get_parameter ('id');
 $id_invoice = (int) get_parameter('id_invoice');
 
@@ -53,6 +138,7 @@ $delete_company = (bool) get_parameter ('delete_company');
 $delete_invoice = get_parameter ('delete_invoice', 0);
 $lock_invoice = get_parameter ('lock_invoice', 0);
 $offset = get_parameter ('offset', 0);
+$company_fields = get_db_all_rows_sql ("SELECT * FROM tcompany_field");
 
 // Create OR Update
 // ----------------
@@ -69,7 +155,7 @@ if (($create_company) OR ($update_company)) {
 	$manager = (string) get_parameter ("manager");
 	$id_parent = (int) get_parameter ("id_parent", 0);
 
-
+	
 	if ($create_company){
 		
 		if (!$section_write_permission && !$section_manage_permission) {
@@ -86,9 +172,24 @@ if (($create_company) OR ($update_company)) {
 		if ($id === false)
 			echo "<h3 class='error'>".__('Could not be created')."</h3>";
 		else {
+			
+			foreach ($company_fields as $u) {
+
+				$custom_value = get_parameter("custom_".$u["id"]);
+				
+				$sql = sprintf('INSERT INTO tcompany_field_data (`data`, `id_company`,`id_company_field`) VALUES ("%s", "%s", %d)',
+							$custom_value, $id, $u["id"]);
+
+				$res = process_sql($sql);
+
+				if ($res === false) {
+					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+				}
+			}
 			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Created company $name");
 		}
+
 	} else {
 
 		// Update company
@@ -114,9 +215,34 @@ if (($create_company) OR ($update_company)) {
 		if ($result === false)
 			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 		else {
+	
+			//Add custom fields
+			foreach ($company_fields as $u) {
+
+				$custom_value = get_parameter("custom_".$u["id"]);
+				
+				$sql = sprintf('SELECT data FROM tcompany_field_data WHERE id_company = "%s" AND id_company_field = %d',
+								$id, $u["id"]);
+				
+				$current_data = process_sql($sql);
+				
+				if ($current_data) {
+					$sql = sprintf('UPDATE tcompany_field_data SET data = "%s" WHERE id_company = "%s" AND id_company_field = %d',
+							$custom_value, $id, $u["id"]);
+				} else {
+					$sql = sprintf('INSERT INTO tcompany_field_data (`data`, `id_company`,`id_company_field`) VALUES ("%s", "%s", %d)',
+							$custom_value, $id, $u["id"]);
+				}
+
+				$res = process_sql($sql);
+
+				if ($res === false) {
+					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+				}
+			}
+
 			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Updated company $name");
-			
 		}
 	}
 }
@@ -267,7 +393,9 @@ if ($id) {
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$disabled_write = false;
-	
+	$company_fields = get_db_all_rows_sql ("SELECT * FROM tcompany_field");
+
+
 	if ($new_company) {
 		if (!$section_write_permission && !$section_manage_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a company");
@@ -320,8 +448,6 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[4][0] = 2;
-	$table->colspan[5][0] = 2;
 
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'), $disabled_write);
 	
@@ -341,22 +467,105 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 18, 0, true, "", "", true, false,  __('Parent company'));
-	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
-	$table->data[1][0] .= "&nbsp;<a href='javascript:show_company_search(\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Add parent')."'><img src='images/zoom.png'></a>";
-	$table->data[1][0] .= "&nbsp;<a href='javascript:clearParent();' title='".__('Clear parent')."'><img src='images/cross.png'></a>";
+	$table->data[0][2] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 18, 0, true, "", "", true, false,  __('Parent company'));
+	$table->data[0][2] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table->data[0][2] .= "&nbsp;<a href='javascript:show_company_search(\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Add parent')."'><img src='images/zoom.png'></a>";
+	$table->data[0][2] .= "&nbsp;<a href='javascript:clearParent();' title='".__('Clear parent')."'><img src='images/cross.png'></a>";
 	
-	$table->data[1][1] = print_input_text ("last_update", $last_update, "", 18, 100, true, __('Last update'), $disabled_write);
+	$table->data[1][0] = print_input_text ("last_update", $last_update, "", 18, 100, true, __('Last update'), $disabled_write);
 	
-	$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 18, 100, true, __('Fiscal ID'), $disabled_write);
-	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
+	$table->data[1][1] = print_input_text ("fiscal_id", $fiscal_id, "", 18, 100, true, __('Fiscal ID'), $disabled_write);
+	$table->data[1][2] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'), $disabled_write);
 
-	$table->data[3][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'), $disabled_write);
-	$table->data[3][1] = print_input_text ("country", $country, "", 18, 100, true, __('Country'), $disabled_write);
+	$table->data[2][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'), $disabled_write);
+	$table->data[2][1] = print_input_text ("country", $country, "", 18, 100, true, __('Country'), $disabled_write);
+	
+	$column=3;
+	$row=0;
 
-	$table->data[4][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'), $disabled_write);
-	$table->data[5][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'), $disabled_write);
+	if($company_fields){
+		foreach ($company_fields as $comp) {
+			$data = get_parameter('custom_'.$comp["id"]);
+		
+		switch ($comp["type"]) {
+			case "text": 
+				$table->data[$column][$row] = print_input_text ("custom_".$comp["id"], $data, "", 18, 100, true, $comp["label"], $disabled_write);
+				break;
+			
+			case "combo":
+				$aux = split(",", $comp["combo_value"]);
+				
+				$options = array();
+
+				foreach ($aux as $a) {
+					$options[$a] = $a;
+				}
+
+				$table->data[$column][$row] = print_select ($options, 'custom_'.$comp["id"], $data, '', '', '0', true, false, false, $comp["label"]);
+				break;
+
+			case "linked";
+				$linked_values = explode(",", $comp['linked_value']);
+				$values = array();
+				foreach ($linked_values as $value) {
+					$value_without_parent =  preg_replace("/^.*\|/","", $value);
+					$values[$value_without_parent] = $value_without_parent;
+					$has_childs = get_db_all_rows_sql("SELECT * FROM tcompany_field WHERE parent=".$comp['id']);
+					if ($has_childs) {
+						$i = 0;
+						foreach ($has_childs as $child) {
+							if ($i == 0) 
+								$childs = $child['id'];
+							else 
+								$childs .= ','.$child['id'];
+							$i++;
+						}
+						$childs = "'".$childs."'";
+						$script = 'javascript:change_linked_type_fields_table_company('.$childs.','.$comp['id'].');';
+					} else {
+						$script = '';
+					}
+				}
+				$table->data[$column][$row] = print_select ($values, 'custom_'.$comp['id'], $data, $script, __('Any'), '', true, false, false, $comp['label']);
+				break;
+
+			case "numeric";
+				$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 1, 1000000, '', true, $comp["label"], $disabled_write);
+				break;
+
+			case "date";
+				$table->data[$column][$row] = print_input_date ('custom_'.$comp["id"], $data, '', '', '', true, $comp["label"], $disabled_write);
+				break;
+
+			case "textarea":
+				if($column != 0){
+					$column++;
+				}
+				$table->colspan[$column][0] = 3;
+				$table->data[$column][0] = print_textarea ('custom_'.$comp["id"], 3, 1, $data, '', true, $comp["label"], $disabled_write);
+				$column++;
+				$row = -1;
+				break;
+		}
+			
+			if($row < 2){
+				$row++;
+			} else {
+				$row=0;
+				$column++;
+			}
+		}
+		if ($row != 2){
+			$column++;
+		}
+	}
+	$column++;
+	$table->colspan[$column][0] = 3;
+	$table->data[$column][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'), $disabled_write);
+	$column++;
+	$table->colspan[$column][0] = 3;
+	$table->data[$column][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'), $disabled_write);
 	
 	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
@@ -1264,6 +1473,7 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_d
 	
 add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
 add_datepicker ("#text-last_update");
+add_datepicker ("input[type=date]");
 
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();

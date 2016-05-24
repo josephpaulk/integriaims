@@ -825,6 +825,46 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
 	echo $output;
 }
 
+function print_input_number ($name, $value = '', $min =0, $max =1000000, $attributes = '', $return = false, $label = false, $disabled = false) {
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'number', true);
+	}
+	
+	if ($disabled) {
+		$disabledText = 'disabled';
+	} else {
+		$disabledText = '';
+	}
+	
+	$output .= '<input type="number" min="'.$min.'" max = "'.$max.'" value='.$value.'  id="number-'.$name.'" name="'.$name.'" '.$attributes.'" '.$disabledText.'>';
+
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function print_input_date ($name, $value = '', $min ='', $max ='', $attributes = '', $return = false, $label = false, $disabled = false) {
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'date', true);
+	}
+	
+	if ($disabled) {
+		$disabledText = 'disabled';
+	} else {
+		$disabledText = '';
+	}
+	
+	$output .= '<input type="date" min="'.$min.'" max = "'.$max.'" value='.$value.'  id="date-'.$name.'" name="'.$name.'" '.$attributes.'" '.$disabledText.'>';
+
+	if ($return)
+		return $output;
+	echo $output;
+}
+
 /**
  * Print a nicely formatted table. Code taken from moodle.
  *
