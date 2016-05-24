@@ -486,68 +486,79 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 
 	if($company_fields){
 		foreach ($company_fields as $comp) {
-			$data = get_parameter('custom_'.$comp["id"]);
-		
-		switch ($comp["type"]) {
-			case "text": 
-				$table->data[$column][$row] = print_input_text ("custom_".$comp["id"], $data, "", 18, 100, true, $comp["label"], $disabled_write);
-				break;
 			
-			case "combo":
-				$aux = split(",", $comp["combo_value"]);
+			$data = get_parameter('custom_'.$comp["id"]);
+			
+			if(!$data){
+				$sql_data = sprintf('SELECT data FROM tcompany_field_data WHERE id_company = "%s" AND id_company_field = %d', $id, $comp["id"]);
 				
-				$options = array();
-
-				foreach ($aux as $a) {
-					$options[$a] = $a;
+				$result = process_sql($sql_data);
+				
+				if($result) {
+					$data = safe_output($result[0]["data"]);
 				}
+			}
+		
+			switch ($comp["type"]) {
+				case "text": 
+					$table->data[$column][$row] = print_input_text ("custom_".$comp["id"], $data, "", 18, 100, true, $comp["label"], $disabled_write);
+					break;
+				
+				case "combo":
+					$aux = split(",", $comp["combo_value"]);
+					
+					$options = array();
 
-				$table->data[$column][$row] = print_select ($options, 'custom_'.$comp["id"], $data, '', '', '0', true, false, false, $comp["label"]);
-				break;
-
-			case "linked";
-				$linked_values = explode(",", $comp['linked_value']);
-				$values = array();
-				foreach ($linked_values as $value) {
-					$value_without_parent =  preg_replace("/^.*\|/","", $value);
-					$values[$value_without_parent] = $value_without_parent;
-					$has_childs = get_db_all_rows_sql("SELECT * FROM tcompany_field WHERE parent=".$comp['id']);
-					if ($has_childs) {
-						$i = 0;
-						foreach ($has_childs as $child) {
-							if ($i == 0) 
-								$childs = $child['id'];
-							else 
-								$childs .= ','.$child['id'];
-							$i++;
-						}
-						$childs = "'".$childs."'";
-						$script = 'javascript:change_linked_type_fields_table_company('.$childs.','.$comp['id'].');';
-					} else {
-						$script = '';
+					foreach ($aux as $a) {
+						$options[$a] = $a;
 					}
-				}
-				$table->data[$column][$row] = print_select ($values, 'custom_'.$comp['id'], $data, $script, __('Any'), '', true, false, false, $comp['label']);
-				break;
 
-			case "numeric";
-				$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 1, 1000000, '', true, $comp["label"], $disabled_write);
-				break;
+					$table->data[$column][$row] = print_select ($options, 'custom_'.$comp["id"], $data, '', '', '0', true, false, false, $comp["label"]);
+					break;
 
-			case "date";
-				$table->data[$column][$row] = print_input_date ('custom_'.$comp["id"], $data, '', '', '', true, $comp["label"], $disabled_write);
-				break;
+				case "linked";
+					$linked_values = explode(",", $comp['linked_value']);
+					$values = array();
+					foreach ($linked_values as $value) {
+						$value_without_parent =  preg_replace("/^.*\|/","", $value);
+						$values[$value_without_parent] = $value_without_parent;
+						$has_childs = get_db_all_rows_sql("SELECT * FROM tcompany_field WHERE parent=".$comp['id']);
+						if ($has_childs) {
+							$i = 0;
+							foreach ($has_childs as $child) {
+								if ($i == 0) 
+									$childs = $child['id'];
+								else 
+									$childs .= ','.$child['id'];
+								$i++;
+							}
+							$childs = "'".$childs."'";
+							$script = 'javascript:change_linked_type_fields_table_company('.$childs.','.$comp['id'].');';
+						} else {
+							$script = '';
+						}
+					}
+					$table->data[$column][$row] = print_select ($values, 'custom_'.$comp['id'], $data, $script, __('Any'), '', true, false, false, $comp['label']);
+					break;
 
-			case "textarea":
-				if($column != 0){
+				case "numeric";
+					$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 1, 1000000, '', true, $comp["label"], $disabled_write);
+					break;
+
+				case "date";
+					$table->data[$column][$row] = print_input_date ('custom_'.$comp["id"], $data, '', '', '', true, $comp["label"], $disabled_write);
+					break;
+
+				case "textarea":
+					if($column != 0){
+						$column++;
+					}
+					$table->colspan[$column][0] = 3;
+					$table->data[$column][0] = print_textarea ('custom_'.$comp["id"], 3, 1, $data, '', true, $comp["label"], $disabled_write);
 					$column++;
-				}
-				$table->colspan[$column][0] = 3;
-				$table->data[$column][0] = print_textarea ('custom_'.$comp["id"], 3, 1, $data, '', true, $comp["label"], $disabled_write);
-				$column++;
-				$row = -1;
-				break;
-		}
+					$row = -1;
+					break;
+			}
 			
 			if($row < 2){
 				$row++;
