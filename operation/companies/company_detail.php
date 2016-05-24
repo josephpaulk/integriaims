@@ -974,7 +974,7 @@ elseif ($op == "invoices") {
 			
 			$locked_id_user = crm_get_invoice_locked_id_user ($id_invoice);
 			// Show an only readable invoice
-			echo "<h3>". __("Invoice #"). $id_invoice;
+			echo "<h3 class=error>". __("Bloqued Invoice #"). $id_invoice;
 			echo ' ('.__('Locked by ').$locked_id_user.')';
 			echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 					&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1">
