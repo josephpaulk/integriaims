@@ -31,6 +31,7 @@ if (defined ('AJAX')) {
 		$table_type_fields->width = "100%";
 		$table_type_fields->class = "search-table";
 		$table_type_fields->data = array();
+		$table_type_fields->colspan = array();
 		
 		$type_fields = incidents_get_type_fields ($id_incident_type);
 		
@@ -38,56 +39,74 @@ if (defined ('AJAX')) {
 		$row = 0;
 		if ($type_fields) {
 			foreach ($type_fields as $key => $type_field) {
-
-				if ($type_field['type'] == "text" || $type_field['type'] == "textarea" || $type_field['type'] == "numeric") {
-					if ($type_field['type'] == "numeric") {
-						$type = 'number';
-					} else {
-						$type = false;
-					}
-					$input = print_input_text ('search_type_field_'.$type_field['id'], '', '', 30, 30, true, $type_field['label'], false, $type);
-				} else if ($type_field['type'] == "combo") {
-					$combo_values = explode(",", $type_field['combo_value']);
-					$values = array();
-					foreach ($combo_values as $value) {
-						$values[$value] = $value;
-					}
-					$input = print_select ($values, 'search_type_field_'.$type_field['id'], '', '', __('Any'), '', true, false, false, $type_field['label']);
-				}
-				else if (($type_field['type'] == "linked")) {
+				switch ($type_field['type']) {
+					case "text": 
+						$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+						break;
 					
-					$linked_values = explode(",", $type_field['linked_value']);
-					$values = array();
-					foreach ($linked_values as $value) {
-						$value_without_parent =  preg_replace("/^.*\|/","", $value);
-						$values[$value_without_parent] = $value_without_parent;						
-						$has_childs = get_db_all_rows_sql("SELECT * FROM tincident_type_field WHERE parent=".$type_field['id']);
-						if ($has_childs) {
-							$i = 0;
-							foreach ($has_childs as $child) {
-								if ($i == 0) 
-									$childs = $child['id'];
-								else 
-									$childs .= ','.$child['id'];
-								$i++;
-							}
-							$childs = "'".$childs."'";
-
-							$script = 'javascript:change_linked_type_fields_table('.$childs.','.$type_field['id'].');';
-
-						} else {
-							$script = '';
+					case "combo":
+						$combo_values = explode(",", $type_field['combo_value']);
+						$values = array();
+						foreach ($combo_values as $value) {
+							$values[$value] = $value;
 						}
-					}
+						$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, '', __('Any'), '', true, false, false, $type_field['label']);
+						break;
 
-					$input = print_select ($values, 'search_type_field_'.$type_field['id'], '', $script, __('Any'), '', true, false, false, $type_field['label']);
-				}
+					case "linked":
+						$linked_values = explode(",", $type_field['linked_value']);
+						$values = array();
+						foreach ($linked_values as $value) {
+							$value_without_parent =  preg_replace("/^.*\|/","", $value);
+							$values[$value_without_parent] = $value_without_parent;
+							
+							$has_childs = get_db_all_rows_sql("SELECT * FROM tincident_type_field WHERE parent=".$type_field['id']);
+							if ($has_childs) {
+								$i = 0;
+								foreach ($has_childs as $child) {
+									if ($i == 0) 
+										$childs = $child['id'];
+									else 
+										$childs .= ','.$child['id'];
+									$i++;
+								}
+								$childs = "'".$childs."'";
+								$script = 'javascript:change_linked_type_fields_table('.$childs.','.$type_field['id'].');';
+							} else {
+								$script = '';
+							}
+						}
+						$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, $script, __('Any'), '', true, false, false, $type_field['label']);
+						break;
 
-				$table_type_fields->data[$row][$column] = $input;
-				if ($column >= 3) {
-					$column = 0;
+					case "numeric":
+						$input = print_input_number ('search_type_field_'.$type_field['id'], $data, 1, 1000000, '', true, $type_field['label']);
+						break;
+
+					case "date":
+						$input = print_input_date ('search_type_field_'.$type_field['id'], $data, '', '', '', true, $type_field['label']);
+						break;
+
+					case "textarea":
+						if($row != 0){
+							$column++;
+							$row=0;
+						}
+						$table_type_fields->colspan[$column][0] = 4;
+						$input = print_textarea ('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+						$textarea=1; 
+						break;
+				}				
+				
+				$table_type_fields->data[$column][$row] = $input;
+				if ($textarea){
+					$column++;
+					$row = 0;
+					$textarea = 0;
+				}else if ($row < 3) {
 					$row++;
 				} else {
+					$row=0;
 					$column++;
 				}
 			}

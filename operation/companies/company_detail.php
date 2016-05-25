@@ -1005,27 +1005,129 @@ elseif ($op == "invoices") {
 	// Operation_invoice changes inside the previous include
 
 	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
-		
-		$parent_company = get_db_value ('id_parent', 'tcompany', 'id', $id);
-		if ((!$parent_company) && ($parent_company != '')) {
-			$invoices = crm_get_all_invoices ("id_company = $id OR id_company = $parent_company");
-		} else {
-			$invoices = crm_get_all_invoices ("id_company = $id");
-		}
 		if ($section_write_permission || $section_manage_permission) {
+
+			// Invoice listing
+			$search_text = (string) get_parameter ('search_text');
+			$search_invoice_status = (string) get_parameter ('search_invoice_status');
+			$search_last_date = (int) get_parameter ('search_last_date');
+			$search_date_begin = get_parameter ('search_date_begin');
+			$search_date_end = get_parameter ('search_date_end');
+			$search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
+			$search_company_role = (int) get_parameter ('search_company_role');
+			$search_company_manager = (string) get_parameter ('search_company_manager');
+			$search_contract_number = (string) get_parameter ('search_contract_number');
+
+			$order_by = get_parameter ('order_by', '');
+
+			$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role&search_company_manager=$search_company_manager";
+			
+			$where_clause = "";
+			
+			$parent_company = get_db_value ('id_parent', 'tcompany', 'id', $id);
+			if ((!$parent_company) && ($parent_company != '')) {
+				$where_clause = "(id_company = $id OR id_company = $parent_company) ";
+			} else {
+				$where_clause = "id_company = $id ";
+			}
+
+			if ($search_text != "") {
+				$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
+					bill_id LIKE "%%%s%%" OR 
+					description LIKE "%%%s%%")', $search_text, $search_text, $search_text);
+			}
+			if ($search_invoice_status != "") {
+				if ($search_invoice_status == "active") {
+					$where_clause .= ' AND status <> "canceled"';
+				} else {
+					$where_clause .= sprintf (' AND status = "%s"', $search_invoice_status);
+				}
+			}
+
+			// last_date is in days
+			if ($search_last_date) {
+				$last_date_seconds = $search_last_date * 24 * 60 * 60;
+				$search_date_begin = date('Y-m-d H:i:s', time() - $last_date_seconds);
+				//$search_date_end = date('Y-m-d H:i:s');
+				$search_date_end = "";
+			}
+
+			if ($search_date_begin != "") {
+				$where_clause .= sprintf (' AND invoice_create_date >= "%s"', $search_date_begin);
+			}
+			if ($search_date_end != "") {
+				$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
+			}
+			if ($search_invoice_type != "") {
+				$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
+			}
+			if ($search_company_role > 0) {
+				$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
+			}
+			if ($search_company_manager != "") {
+				$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE manager = "%s")', $search_company_manager);
+			}
+			if ($search_contract_number != "") {
+				$where_clause .= sprintf (' AND contract_number = "%s"', $search_contract_number);
+			}
+
+			$form = '<form method="post">';
+
+			$table = new stdClass();
+			$table->id = 'invoices_table';
+			$table->width = '100%';
+			$table->class = 'search-table';
+			$table->size = array();
+			$table->style = array();
+			$table->style[1] = 'vertical-align:top;';
+			$table->colspan[2][0] = 4;
+			$table->rowspan[0][1] = 2;
+			$table->data = array();
+
+			$table->data[0][0] = print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
+
+			$table->data[1][0] = get_last_date_control ($search_last_date, 'search_last_date', __('Date'), $search_date_begin, 'search_date_begin', __('From'), $search_date_end, 'search_date_end', __('To'));
+
+			$sql = 'SELECT id, name FROM tcompany_role ORDER BY name';
+			$table->data[2][0] = print_select_from_sql ($sql, 'search_company_role', $search_company_role, '', __('Any'), 0, true, false, false, __('Company Role'));
+			
+			$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
+			$table->data[3][0] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
+			$table->data[4][0] = print_input_text_extended ('search_company_manager', $search_company_manager, 'text-search_company_manager', '', 20, 50, false, '', array(), true, '', __("Manager"). print_help_tip (__("Type at least two characters to search"), true) );
+
+			$table->data[5][0] = print_input_text ("search_contract_number", $search_contract_number, "", 20, 100, true, __('Contract number'));
+
+			$invoice_status_ar = array();
+			$invoice_status_ar['active'] = __("Active");
+			$invoice_status_ar['pending'] = __("Pending");
+			$invoice_status_ar['paid'] = __("Paid");
+			$invoice_status_ar['canceled'] = __("Canceled");
+			$table->data[6][0] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
+				
+			$table->data[7][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+				
+		
+				$form .= print_table($table,true);
+			
+			
+			$form .= '</form>';
+
 			echo '<div class="divform">';
-			echo '<table class="search-table">';
-			echo '<tr>';
-			echo '<td>';
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
-				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-				print_input_hidden ('new_invoice', 1);
-			echo '</form>';
-			echo '</td>';
-			echo '</tr>';
-			echo '</table>';
+				
+				echo $form;
+				
+				echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
+					echo '<table class="search-table"><tr><td>';
+						print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+						print_input_hidden ('new_invoice', 1);
+					echo '</td></tr></table>';
+				echo '</form>';
+				
 			echo '</div>';
 		}
+	
+		$invoices = crm_get_all_invoices ($where_clause, $order_by);
+		
 		if ($invoices !== false) {
 			
 			$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
@@ -1112,6 +1214,11 @@ elseif ($op == "invoices") {
 			print_table ($table);
 			if ($write_permission || $manage_permission)
 				echo '</div>';	
+		} 
+		else {
+			echo '<div class="divresult">';
+				echo "<h3 class='error'>".__('empty search invoices')."</h3>";
+			echo '</div>';
 		}
 	} 
 }

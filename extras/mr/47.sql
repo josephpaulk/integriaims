@@ -42,3 +42,9 @@ CREATE TABLE `tcompany_field_data` (
     FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
           ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ---------------------------------------------------------------------
+-- Add type date
+-- ---------------------------------------------------------------------
+
+ALTER TABLE tincident_type_field MODIFY `type` enum('text', 'textarea', 'combo', 'linked', 'numeric', 'date') DEFAULT 'text';

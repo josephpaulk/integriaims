@@ -54,7 +54,6 @@ a:hover {
 	color: #505050;
 	text-decoration: underline;
 }
-
 div.no-hover a:hover{
 	text-decoration: none;
 }
@@ -2176,6 +2175,22 @@ div.divform table.search-table input[type="button"]{
     cursor: pointer;
     padding: 0px;
 }
+
+div.divresult-button table.search-table input[type="submit"] {
+	border-radius: 3px;
+    font-size: 13px;
+	padding-left: 0px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    width: 175px !important;
+    font-weight: 300;
+    height: 40px;
+    cursor: pointer;
+    padding: 0px;
+    float: right;
+}
+
 .button-form{
 	text-align: right;
 }
@@ -3836,3 +3851,8 @@ img#inventory_loading{
 	width: 82% !important;
 }
 
+
+.custom_field_form_container{
+	width: 82%;
+    float: right;
+}
