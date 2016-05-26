@@ -3599,7 +3599,9 @@ ul li {
 	line-height: 35px;
 }
 #folder_name{
-	padding-left: 10px;
+	padding-left: 6px;
+	font-size: 12px;
+	width: 69%;
 }
 #button-update_folder{
 	text-align: center !important;
@@ -3609,6 +3611,7 @@ ul li {
 }
 .images_option{
 	margin-right: 3px;
+	margin-top: 10px;
 }
 #list_folders:hover{
 	overflow-y: scroll;
@@ -3631,8 +3634,9 @@ ul li {
 	width:190px;
 }
 .legend_text {
+	float:left;
 	line-height:15px;
-	margin-left: 30px;
+	margin-left: 5px;
 }
 .legend_box_color {
 	 float:left;
