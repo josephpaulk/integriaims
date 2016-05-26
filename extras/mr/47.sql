@@ -48,3 +48,9 @@ CREATE TABLE `tcompany_field_data` (
 -- ---------------------------------------------------------------------
 
 ALTER TABLE tincident_type_field MODIFY `type` enum('text', 'textarea', 'combo', 'linked', 'numeric', 'date') DEFAULT 'text';
+
+-- ---------------------------------------------------------------------
+-- change type text
+-- ---------------------------------------------------------------------
+
+ALTER TABLE `tincident_type` MODIFY `id_group` text NOT NULL default '';

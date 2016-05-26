@@ -699,7 +699,7 @@ else {
 	$table2->data = array ();
 	
 	$table2->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
-	$table2->data[1][0] = print_input_text ('id_group', $id_group,"", 40, 100, true, __("Groups") . "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>", false, false, true);
+	$table2->data[1][0] = print_input_text ('id_group', $id_group,"", 40, 1000, true, __("Groups") . "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>", false, false, true);
 	
 	$table2->data[2][0] = print_textarea ('description', 10, 1, $description, '', true, __('Description'));
 	
