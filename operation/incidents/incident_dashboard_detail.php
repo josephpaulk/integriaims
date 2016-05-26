@@ -231,7 +231,7 @@ if ($incident["id_incident_type"]) {
 			$incident_custom_fields .= "<td>";
 				$incident_custom_fields .= "<table>";
 				$incident_custom_fields .= "<tr>";
-				$incident_custom_fields .= "<td><b>".$f["label"].":</b></td><td>".$f["data"]."</td>";
+				$incident_custom_fields .= "<td><b>".$f["label"].":</b></td><td>".safe_output($f["data"])."</td>";
 				$incident_custom_fields .= "</tr>";
 				$incident_custom_fields .= "</table>";
 			$incident_custom_fields .= "</td>";

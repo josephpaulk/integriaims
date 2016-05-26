@@ -516,7 +516,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 					$table->data[$column][$row] = print_select ($options, 'custom_'.$comp["id"], $data, '', '', '0', true, false, false, $comp["label"]);
 					break;
 
-				case "linked";
+				case "linked":
 					$linked_values = explode(",", $comp['linked_value']);
 					$values = array();
 					foreach ($linked_values as $value) {
@@ -541,11 +541,11 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 					$table->data[$column][$row] = print_select ($values, 'custom_'.$comp['id'], $data, $script, __('Any'), '', true, false, false, $comp['label']);
 					break;
 
-				case "numeric";
+				case "numeric":
 					$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 1, 1000000, '', true, $comp["label"], $disabled_write);
 					break;
 
-				case "date";
+				case "date":
 					$table->data[$column][$row] = print_input_date ('custom_'.$comp["id"], $data, '', '', '', true, $comp["label"], $disabled_write);
 					break;
 
