@@ -42,7 +42,7 @@ if (defined ('AJAX')) {
 				
 				$path = $_FILES['upfile']['tmp_name'];
 				// The package files will be saved in [user temp dir]/integria_oum/package_name
-				$destination = sys_get_temp_dir()."/integria_oum/".$_FILES['upfile']['name'];
+				$destination = $config['attachment_store'] . "/tmp/integria_oum/" . $_FILES['upfile']['name'];
 				// files.txt will have the names of every file of the package
 				if (file_exists($destination."/files.txt")) {
 					unlink($destination."/files.txt");
@@ -123,6 +123,7 @@ if (defined ('AJAX')) {
 			}
 		}
 		
+		$package = clean_output($package);
 		// All files extracted
 		$files_total = $package."/files.txt";
 		// Files copied
