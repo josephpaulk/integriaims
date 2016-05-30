@@ -198,6 +198,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	} else {
 		$id = get_parameter ("update",-1);
 		$row = get_db_row ("tkb_data", "id", $id);
+		debugPrint($row);
 		$data = $row["data"];
 		$title = $row["title"];
 		$id_product = $row["id_product"];
@@ -265,7 +266,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<b>" . __('Product') . "</b>";
 	echo "<td class=datos2>";
 	//combo_kb_products ($id_product);
-	combo_product_types($product, 0);
+	combo_product_types($id_product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos>";
