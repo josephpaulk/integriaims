@@ -198,7 +198,6 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	} else {
 		$id = get_parameter ("update",-1);
 		$row = get_db_row ("tkb_data", "id", $id);
-		debugPrint($row);
 		$data = $row["data"];
 		$title = $row["title"];
 		$id_product = $row["id_product"];
