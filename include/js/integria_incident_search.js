@@ -754,6 +754,20 @@ function show_incident_type_fields(numRow) {
 					}
 					
 				}
+
+				if ((value['type'] == "date")) {
+
+					element=document.createElement('input');
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='date';
+					element.size=40;
+					if (value['blocked'] != 0) {
+						element.disabled=true;
+					}
+					
+				}
 				
 				lbl.appendChild(element);
 
@@ -1276,14 +1290,16 @@ function show_ad_search() {
 }
 
 // Change the type fields table
-function change_type_fields_table() {
+function change_type_fields_table(title) {
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
 		data: "page=operation/incidents/incident_search_logic&get_type_fields_table=1&id_incident_type="+$("#search_id_incident_type").val(),
 		dataType: "html",
 		success: function(data) {
-			$("#table2-6").html (data);
+			$("#table_type_fields").append('<h3>'+title+'</h3>');
+			$("#table_type_fields").append(data);
+			add_datepicker ("input[type=date]");
 		}
 	});
 }

@@ -178,3 +178,41 @@ function show_validation_delete (mode, id, id_company, offset, search_params) {
 		}
 	});
 }
+
+function change_linked_type_fields_table_company(childs_id, id_parent) {
+	if (isNaN(childs_id)) {
+		fields = childs_id.split(',');
+	} else {
+		childs_id = childs_id.toString();
+		fields = childs_id.split(',');
+	}
+
+	value_parent = $("#custom_"+id_parent).val();
+	value_parent = btoa(value_parent);
+
+	if (value_parent == "") {
+		value_parent = btoa("any");
+	}
+	jQuery.each (fields, function (id, val) {
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: "page=operation/companies/company_detail&get_data_child=1&id_field=" + val +"&id_parent=" +id_parent+"&value_parent="+value_parent,
+			dataType: "json",
+			success: function(data){
+				$("#custom_"+val).empty();
+				$("#custom_"+val).append($("<option>").val('').html("Any"));
+				
+				jQuery.each (data, function (id_item, value) {
+					if ((id_item != 'label_childs') && (id_item != 'id') && (id_item != 'label')&& (id_item != 'id_childs') && (id_item != 'label_childs_enco') && (id_item != 'label_enco')) {
+						$("#custom_"+val).append($("<option>").val(value).html(value));
+					} else if ((id_item == 'id_childs') && ( value != '')) {
+						parent = data['id'];
+						change_linked_type_fields_table_company(value, parent);
+					}
+				});	
+			}
+		});
+			
+	});
+}

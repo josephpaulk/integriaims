@@ -1448,8 +1448,9 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Warning")."' id='ticke
 <script type="text/javascript" src="include/js/jquery.knob.js"></script>
 
 <script  type="text/javascript">
-
+//datepicker
 add_datepicker("#text-creation_date");
+
 
 $(document).ready (function () {
 
@@ -1486,6 +1487,7 @@ $(document).ready (function () {
 		
 		$.data(this, 'current', $(this).val());
 		show_incident_type_fields();
+		add_datepicker ("input[type=date]");
 	});
 	
 	// Link to the task
@@ -1680,6 +1682,7 @@ $(document).ready (function () {
 	
 	if ($("#id_incident_type").val() != "0") {
 		show_incident_type_fields();
+		add_datepicker ("input[type=date]");
 	}
 			
 	var idUser = "<?php echo $config['id_user'] ?>";

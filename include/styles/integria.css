@@ -54,7 +54,6 @@ a:hover {
 	color: #505050;
 	text-decoration: underline;
 }
-
 div.no-hover a:hover{
 	text-decoration: none;
 }
@@ -556,7 +555,7 @@ input {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
-input[type="text"] {
+input[type="text"],  input[type="number"],  input[type="date"] {
 	height: 20px;
     background-color: #FFF;
     color: #707070;
@@ -2176,6 +2175,22 @@ div.divform table.search-table input[type="button"]{
     cursor: pointer;
     padding: 0px;
 }
+
+div.divresult-button table.search-table input[type="submit"] {
+	border-radius: 3px;
+    font-size: 13px;
+	padding-left: 0px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    width: 175px !important;
+    font-weight: 300;
+    height: 40px;
+    cursor: pointer;
+    padding: 0px;
+    float: right;
+}
+
 .button-form{
 	text-align: right;
 }
@@ -3584,7 +3599,9 @@ ul li {
 	line-height: 35px;
 }
 #folder_name{
-	padding-left: 10px;
+	padding-left: 6px;
+	font-size: 12px;
+	width: 69%;
 }
 #button-update_folder{
 	text-align: center !important;
@@ -3594,6 +3611,7 @@ ul li {
 }
 .images_option{
 	margin-right: 3px;
+	margin-top: 10px;
 }
 #list_folders:hover{
 	overflow-y: scroll;
@@ -3822,4 +3840,23 @@ img#inventory_loading{
 #new_leads_div .pie_frame .graph{
 	width: 320px !important;
 	margin-left: 45px !important;
+}
+
+/*Css for company_detail*/
+#form-company_detail .search-table-button {
+	table-layout: fixed;
+}
+
+#form-company_detail .search-table-button tr td input{
+	width: 80% !important;
+}
+
+#form-company_detail .search-table-button tr td select{
+	width: 82% !important;
+}
+
+
+.custom_field_form_container{
+	width: 82%;
+    float: right;
 }

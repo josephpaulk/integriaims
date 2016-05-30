@@ -246,6 +246,23 @@ $(document).ready (function () {
 			
 			$("#"+id+" ul").show();
 			$("#"+id).data("status", "open");
+			
+			//autofocus tickets
+			if(id=='sideselticket'){
+				$("#text-id").focus();
+			}
+			else if (id=='ticket'){
+				$("#text-id").focus();
+			}
+			
+			//autofocus inventory 
+			if(id=='sideselinventario'){
+				$("#text-id").focus();
+			}
+			else if (id=='inventario'){
+				$("#text-id").focus();
+			}
+
 			last_id = id;
 		}
 		if (status == 'open') {

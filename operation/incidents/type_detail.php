@@ -33,10 +33,12 @@ $update_type = (bool) get_parameter ('update_type', false);
 $delete_type = (bool) get_parameter ('delete_type', false);
 $sort_items = (bool) get_parameter('sort_items', false);
 
-$show_fields = false; //show fields of incident type
+$show_fields = (int) get_parameter('show_fields', 0);
 $add_field = (bool) get_parameter ('add_field', false);
 $delete_field = (bool) get_parameter ('delete_field', false);
 $update_field = (bool) get_parameter ('update_field', false);
+$upd = (bool) get_parameter ('upd', false);
+$autofocus = (int) get_parameter ('autofocus', 0);
 
 if ($add_field) { //add field to incident type
 	
@@ -152,7 +154,7 @@ if ($delete_field) {
 	}
 }
 
-if ($update_field) { //update field to incident type
+if ($update_field && $upd) { //update field to incident type
 	$id_field = (int)get_parameter ('id_field');
 	// The item should be updated to global
 	$new_global = (bool) get_parameter("global");
@@ -255,9 +257,7 @@ if ($update_field) { //update field to incident type
 	}
 }
 
-if ($id > 0) {
-	$show_fields = true;
-}
+
 
 // CREATE
 if ($create_type) {
@@ -273,7 +273,7 @@ if ($create_type) {
 		if ($id === false) {
 			echo '<h3 class="error">'.__('Could not be created').'</h3>';
 		} else {
-			$show_fields = true;
+			//$show_fields = true;
 			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Created ticket type $id - ".$values['name']);
 		}
@@ -326,7 +326,7 @@ if ($update_type) {
 		else {
 			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Updated ticket type $id - $name");
-			$show_fields = true;
+			//$show_fields = true;
 		}
 	}
 	else {
@@ -411,10 +411,273 @@ if ($sort_items) {
 echo '<h2>'.__('Support').'</h2>';
 echo '<h4>'.__('Ticket types');
 echo integria_help ("type_detail", true);
+echo "<div id='button-bar-title'><ul>";
+	if ($show_fields) {
+		echo "<li><a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+	}
+echo "</ul></div>";
 echo '</h4>';
 
 // FORM (Update / Create)
-if ($id || $new_type) {
+if ($show_fields) {
+
+	$id_incident_type = (int) get_parameter ('id');
+	$add_field = (int) get_parameter('add_field');
+	$update_field = (int) get_parameter('update_field');
+	$id_field = (int) get_parameter('id_field');
+
+	$label = '';
+	$type = 'text';
+	$combo_value = '';
+	$linked_value = '';
+	$parent = '';
+	$show_in_list = false;
+	$global_field = false;
+	$add_linked_value = '';
+
+	if ($id_field) {
+		$filter = array('id' => $id_field);
+		$field_data = get_db_row_filter('tincident_type_field', $filter);
+		
+		if (!empty($field_data)) {
+			$label = $field_data['label'];
+			$type = $field_data['type'];
+			$combo_value = $field_data['combo_value'];
+			$show_in_list = (bool) $field_data['show_in_list'];
+			$parent = $field_data['parent'];
+			$linked_value = $field_data['linked_value'];
+			$global_field = $field_data['global_id'];
+		}
+	}
+
+	//table create/update field of ticket
+	$table->width = "100%";
+	$table->class = "search-table";
+	$table->data = array();
+
+	// Field name
+	$table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'), $global_field);
+
+	// Type
+	$types = array(
+			'text' =>__('Text'),
+			'textarea' => __('Textarea'),
+			'combo' => __('Combo'),
+			'linked' =>__('Linked'),
+			'numeric' =>__('Numeric'),
+			'date' =>__('Date')
+		);
+	$table->data[1][0] = print_select ($types, 'type', $type, '', '', '', true, 0, false, __("Type"), $global_field);
+
+	// Show in the ticket list
+	$table->data[2][0] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in the tickets list'), $global_field);
+
+	// Global field
+	$table->data[3][0] = print_checkbox ('global', 1, $global_field, true, __('Global field'), $global_field);
+
+	// Combo value
+	$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value'). print_help_tip (__("Set values separated by comma"), true), $global_field);
+	
+	// Add values
+	if ($global_field) {
+		$table->data['id_combo_value'][0] = print_input_text ('add_combo_value', $add_combo_value, '', 45, 0, true, __('Add values').print_help_tip (__("Set values separated by comma"), true));
+	}
+
+	// Linked values
+	$sql = "SELECT id, label FROM tincident_type_field	
+			WHERE id_incident_type = $id_incident_type AND type = 'linked'";
+	$parents_result = get_db_all_rows_sql($sql);
+
+	if ($parents_result == false) {
+		$parents_result = array();
+	}
+	$parents = array();
+	foreach ($parents_result as $result) {
+		$parents[$result['id']] = $result['label']; 
+	}
+
+	$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true, 0, true, __("Parent"), $global_field);
+	$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true), $global_field);
+
+	if ($global_field) {
+		//$table->data['id_linked_value'][1] = "";
+		$table->data['id_linked_value'][0] = print_textarea ('add_linked_value', 15, 1, $add_linked_value, '', true, __('Add values').integria_help ("linked_values", true));
+	}
+
+	// Buttons
+	if (!$update_field) {
+		$button = print_input_hidden('add_field', 1, true);
+		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+	} else {
+		if (((!$global_field) && (($type != 'linked') || ($type != 'combo'))) || (($global_field) && (($type == 'linked') || ($type == 'combo')))) {
+			$button = print_input_hidden('update_field', 1, true);
+			$button .= print_input_hidden('add_field', 0, true);
+			$button .= print_input_hidden('upd', 1, true);
+			$button .= print_input_hidden('id_field', $id_field, true);
+			$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		}
+	}
+	
+	$table->data['button'][0] = $button;
+
+	echo "<div class='divform'>";
+	if (!$update_field) {
+	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$id_incident_type.'&add_field=1">';
+	} else {
+		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$id_incident_type.'&update_field=1">';
+	}
+	print_table ($table);
+	echo '</form>';
+	echo "</div>";
+	
+	//table create types tyckets
+	echo "<div class='divresult divresult-button'>";
+		$table_sort = new StdClass();
+		$table_sort->class = 'search-table';
+		$table_sort->width = '100%';
+		$table_sort->size = array();
+		$table_sort->size[0] = '25%';
+		$table_sort->size[1] = '25%';
+		$table_sort->size[2] = '25%';
+		$table_sort->size[3] = '25%';
+		
+		$table_sort->data[0][0] = "<b>".__('Sort selected items from position: '). "</b>";
+		$table_sort->data[0][1] =  print_select (array('before' => __('Move before to'), 'after' => __('Move after to')), 'move_to', '', '', '', '0', true);
+		$table_sort->data[0][2] = print_input_text_extended('position_to_sort', 1,'text-position_to_sort', '', 26, 10, false, "only_numbers('position_to_sort');", '', true);
+		$table_sort->data[0][2] .= print_input_hidden('ids_items_to_sort', '', true);
+		$table_sort->data[0][3] = print_submit_button(__('Sort'), 'sort_submit', false, 'class="sub upd"', true);
+
+		echo "<form action='index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&sort_items=1&id=" . $id . "'
+			method='post' onsubmit='return added_ids_sorted_items_to_hidden_input();'>";
+		print_table($table_sort);
+		echo "</form>";
+	echo '</div>';
+
+	//FIELD MANAGEMENT
+	echo "<div class='divresult'>";
+	
+	//INCIDENT FIELDS
+	$sql = "SELECT * FROM tincident_type_field WHERE id_incident_type=$id ORDER BY `order`";
+	$incident_fields = process_sql ($sql);
+	if ($incident_fields === false) {
+		$incident_fields = array ();
+	}
+
+	//ALL FIELDS
+	$all_fields = array();
+	foreach ($incident_fields as $field) {
+		$all_fields[$field['id']] = $field['label'];
+	}
+	
+	$table = new StdClass();
+	$table->width = '100%';
+	$table->class = 'listing';
+	$table->data = array ();
+	$table->head = array();
+	$table->style = array();
+	
+
+	$table->head[0] = __("Name field");
+	$table->head[1] = __("Type");
+	$table->head[2] = __("Parent");
+	$table->head[3] = __("Value");
+	$table->head[4] = __("List");
+	$table->head[5] = __("Action");
+	$table->head[6] = __("Sort");
+
+	$data = array();
+
+	if (!empty($incident_fields)) {
+		foreach ($incident_fields as $field) {
+			$url_delete = "index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&delete_field=1&id=$id&id_field=".$field['id'];
+			$url_update = "index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&autofocus=1&update_field=1&id=$id&id_field=".$field['id'];
+			if ($field['label'] == '') {
+				$data[0] = '';
+			} else {
+				$data[0] = '<a href="'.$url_update.'">'.$field["label"].'</a>';
+			}
+			
+			if ($field_type = '') {
+				$data[1] = '';
+			} else {
+				$data[1] = $field["type"];
+			}
+			$sql = "SELECT label FROM tincident_type_field WHERE type = 'linked' AND id =".$field["parent"];
+			$parent = get_db_sql($sql);
+			if ($field_type = '') {
+				$data[2] = '';
+			} else {
+				$data[2] = $parent;
+			}
+			
+			if ($field["type"] == "combo") {
+				$data[3] = ui_print_truncate_text($field["combo_value"], 40);
+			} else if ($field["type"] == "linked") {
+				$data[3] =  ui_print_truncate_text($field["linked_value"], 40);
+			}
+			else {
+				$data[3] = "";
+			}
+			
+			if ($field["show_in_list"]) {
+				$data[4] = __('Yes');
+			} else {
+				$data[4] = __('No');
+			}
+			
+			$data[5] = "";
+			
+			if (!$field["global_id"]) {
+				if (get_admin_user ($config['id_user'])) {
+					$data[5] = "<a
+					href='" . $url_update . "'>
+					<img src='images/update_icon.png' title='".__('Update')."' border=0 /></a>";
+				}
+			} else {
+				$data[5] = "<a
+					href='" . $url_update . "'>
+					<img src='images/eye.png' border=0 /></a>";
+			}
+		
+			if (get_admin_user ($config['id_user'])) {
+				$data[5] .= "<a
+				onclick=\"if (!confirm('" . __('Are you sure delete field?') . "')) return false;\" href='" . $url_delete . "'>
+				<img src='images/cross.png' title='".__('Delete')."' border=0 /></a>";
+			}	
+		
+			$data[6] = print_checkbox_extended ('sorted_items[]', $field['id'], false, false, '', '', true);
+			
+			array_push ($table->data, $data);
+		}
+		print_table($table);
+	} 
+	else {
+		echo "<h4>".__("No fields")."</h4>";
+	}
+	
+	echo '</div>';
+	
+//LISTADO GENERAL	
+}
+else {
+	$search_text = (string) get_parameter ('search_text');
+	
+	$where_clause = '';
+	if ($search_text != "") {
+		$where_clause .= sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
+	}
+
+	//table search ticket-types
+	$table->width = '100%';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = __('Search');
+	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 20, 100, true);
+	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+
+	//table create and update ticket
 	if ($new_type) {
 		$id = 0;
 		$name = "";
@@ -430,212 +693,38 @@ if ($id || $new_type) {
 		//$id_wizard = $type['id_wizard'];
 	}
 	
-	$table = new StdClass();
-	$table->width = "100%";
-	$table->class = "search-table-button";
-	$table->data = array ();
-	$table->colspan = array ();
-	$table->colspan[1][0] = 2;
-	$table->colspan[2][0] = 2;
+	$table2 = new StdClass();
+	$table2->width = "100%";
+	$table2->class = "search-table";
+	$table2->data = array ();
 	
-	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
-	$table->data[0][1] = print_input_text ('id_group', $id_group,"", 40, 100, true, __("Groups"), false, false, true);
-	$table->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-	$table->data[0][1] .= "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	$table2->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
+	$table2->data[1][0] = print_input_text ('id_group', $id_group,"", 40, 100, true, __("Groups") . "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>", false, false, true);
 	
-	/*
-		$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
-			'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
-		$table->data[1][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
-			'id_group', $id_group, '', 'Select', 0, true, false, false, __('Group'));
-	*/
+	$table2->data[2][0] = print_textarea ('description', 10, 1, $description, '', true, __('Description'));
 	
-	$table->data[1][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
-	
-	echo '<form id="form-type_detail" method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
-	print_table ($table);
-	
-		echo '<div class="button-form" style="width:100%;">';
-			unset($table->data);
-			$table->width = '100%';
-			$table->class = "button-form";
-			if ($id) {
-				$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-				$button .= print_input_hidden ('update_type', 1, true);
-				$button .= print_input_hidden ('id', $id, true);
-			} else {
-				$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
-				$button .= print_input_hidden ('create_type', 1, true);
-			}
-			$table->data[2][0] = $button;
-			print_table ($table);
-		echo '</div>';
-	echo '</form>';
-	unset($table);
-
-	if ($show_fields) {
-		//FIELD MANAGEMENT
-		echo "<h4><b>" . __("Ticket fields") . "</b></h4>";
-		echo "<div class='divresult'>";
-		
-		//INCIDENT FIELDS
-		$sql = "SELECT * FROM tincident_type_field WHERE id_incident_type=$id ORDER BY `order`";
-		$incident_fields = process_sql ($sql);
-		if ($incident_fields === false) {
-			$incident_fields = array ();
-		}
-
-		//ALL FIELDS
-		$all_fields = array();
-		foreach ($incident_fields as $field) {
-			$all_fields[$field['id']] = $field['label'];
-		}
-		
-		$table = new StdClass();
-		$table->width = '100%';
-		$table->class = 'listing';
-		$table->data = array ();
-		$table->head = array();
-		$table->style = array();
-		$table->size = array ();
-		$table->size[0] = '30%';
-		$table->size[1] = '20%';
-		$table->size[2] = '30%';
-
-		$table->head[0] = __("Name field");
-		$table->head[1] = __("Type");
-		$table->head[2] = __("Value");
-		$table->head[3] = __("List");
-		$table->head[4] = __("Action");
-		$table->head[5] = __("Sort");
-
-		$data = array();
-
-		if (!empty($incident_fields)) {
-			foreach ($incident_fields as $field) {
-				$url_delete = "index.php?sec=incidents&sec2=operation/incidents/type_detail&delete_field=1&id=$id&id_field=".$field['id'];
-				$url_update = "index.php?sec=incidents&sec2=operation/incidents/incident_type_field&update_field=1&id=$id&id_field=".$field['id'];
-				
-				if ($field['label'] == '') {
-					$data[0] = '';
-				} else {
-					$data[0] = $field["label"];
-				}
-				
-				if ($field_type = '') {
-					$data[1] = '';
-				} else {
-					$data[1] = $field["type"];
-				}
-				
-				if ($field["type"] == "combo") {
-					$data[2] = ui_print_truncate_text($field["combo_value"], 40);
-				} else if ($field["type"] == "linked") {
-					$data[2] =  ui_print_truncate_text($field["linked_value"], 40);
-				}
-				else {
-					$data[2] = "";
-				}
-				
-				if ($field["show_in_list"]) {
-					$data[3] = __('Yes');
-				} else {
-					$data[3] = __('No');
-				}
-				
-				$data[4] = "";
-				
-				if (!$field["global_id"]) {
-					if (get_admin_user ($config['id_user'])) {
-						$data[4] = "<a
-						href='" . $url_update . "'>
-						<img src='images/wrench.png' border=0 /></a>";
-					}
-				} else {
-					$data[4] = "<a
-						href='" . $url_update . "'>
-						<img src='images/eye.png' border=0 /></a>";
-				}
-			
-				if (get_admin_user ($config['id_user'])) {
-					$data[4] .= "<a
-					onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
-					<img src='images/cross.png' border=0 /></a>";
-				}	
-			
-				$data[5] = print_checkbox_extended ('sorted_items[]', $field['id'], false, false, '', '', true);
-				
-				array_push ($table->data, $data);
-			}
-			print_table($table);
-		} 
-		else {
-			echo "<h4>".__("No fields")."</h4>";
-		}
-		
-		echo '</div>';
-		echo "<div class='divform'>";
-			
-			
-			$table_sort = new StdClass();
-			$table_sort->class = 'search-table';
-			$table_sort->width = '100%';
-			$table_sort->colspan[0][0] = 3;
-			$table_sort->size = array();
-			$table_sort->size[0] = '25%';
-			$table_sort->size[1] = '25%';
-			$table_sort->size[2] = '25%';
-			$table_sort->size[3] = '25%';
-
-			$table_sort->data[0][0] = "<b>". __("Sort items") . "</b>";
-
-			$table_sort->data[1][0] = __('Sort selected items from position: ');
-			$table_sort->data[2][0] =  print_select (array('before' => __('Move before to'), 'after' => __('Move after to')), 'move_to', '', '', '', '0', true);
-			$table_sort->data[3][0] = print_input_text_extended('position_to_sort', 1,'text-position_to_sort', '', 3, 10, false, "only_numbers('position_to_sort');", '', true);
-			$table_sort->data[4][0] .= print_input_hidden('ids_items_to_sort', '', true);
-			$table_sort->data[5][0] = print_submit_button(__('Sort'), 'sort_submit', false, 'class="sub upd"', true);
-
-			echo "<form action='index.php?sec=incidents&sec2=operation/incidents/type_detail&sort_items=1&id=" . $id . "'
-				method='post' onsubmit='return added_ids_sorted_items_to_hidden_input();'>";
-			print_table($table_sort);
-			echo "</form>";
-			echo "<form id='form-add_field' name='dataedit' method='post' action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id."'>";
-				unset($table_sort->data);
-				$table_sort->data[0][0] = print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', true);
-				print_table($table_sort);
-			echo "</form>";
-		echo '</div>';
+	//button update/create type tickets
+	if ($id) {
+		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_type', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} else {
+		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+		$button .= print_input_hidden ('create_type', 1, true);
 	}
-//LISTADO GENERAL	
-}
-else {
-	$search_text = (string) get_parameter ('search_text');
-	
-	$where_clause = '';
-	if ($search_text != "") {
-		$where_clause .= sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
-	}
+	$table2->data[3][0] = $button;
 
-	$table->width = '100%';
-	$table->class = 'search-table';
-	$table->style = array ();
-	$table->style[0] = 'font-weight: bold;';
-	$table->data = array ();
-	$table->data[0][0] = __('Search');
-	$table->data[0][0] .= print_input_text ("search_text", $search_text, "", 20, 100, true);
-	$table->data[1][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
-	
+	//print tables
 	echo '<div class="divform">';
 		echo '<form method="post">';
 			print_table ($table);
 		echo '</form>';
-		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
-			unset($table->data);
-			$table->data[0][0] = print_submit_button (__('Create type'), 'new_btn', false, 'class="sub next"',true);
-			$table->data[0][0] .= print_input_hidden ('new_type', 1);
-			print_table ($table);
+
+		echo '<form id="form-type_detail" method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
+			print_table ($table2);
 		echo '</form>';
 	echo '</div>';
+
 
 	$sql = "SELECT * FROM tincident_type $where_clause ORDER BY name";
 	$types = get_db_all_rows_sql ($sql);
@@ -646,32 +735,31 @@ else {
 		$table->width = '100%';
 		$table->class = 'listing';
 		$table->data = array ();
-		$table->size = array ();
-		$table->size[2] = '40px';
-		$table->align = array ();
-		$table->align[2] = 'center';
-		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
 		$table->head[0] = __('Name');
-		$table->head[1] = __('Description');
+		$table->head[1] = __('Groups');
+		$table->head[2] = __('Description');
+
 		if (get_admin_user ($config['id_user'])) {
-			$table->head[2] = __('Delete');
+			$table->head[3] = __('Actions');
 		}
 		
 		foreach ($types as $type) {
 			$data = array ();
 			
-			$data[0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.
-				$type['id'].'">'.$type['name'].'</a>';
-			$data[1] = $type['description'];
+			$data[0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$type['id'].'">'.$type['name'].'</a>';
+			if($type['id_group']){
+				$data[1] = ui_print_truncate_text($type['id_group'], 60);
+			} else {
+				$data[1] = '';
+			}
+			
+			$data[2] = $type['description'];
 			
 			if (get_admin_user ($config['id_user'])) {
-				$data[2] = '<a href="index.php?sec=incidents&
-							sec2=operation/incidents/type_detail&
-							delete_type=1&id='.$type['id'].'"
-							onClick="if (!confirm(\''.__('Are you sure?').'\'))
-							return false;">
-							<img src="images/cross.png"></a>';
+
+				$data[3] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$type['id'].'"><img src="images/wrench.png" title="'.__('Add fields').'"/></a>';			
+				$data[3] .= '&nbsp;&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&autofocus=1&id='. $type['id'].'"><img src="images/update_icon.png" title="'.__('Update').'"></a>';
+				$data[3] .= '&nbsp;&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&delete_type=1&id='.$type['id'].'" onClick="if (!confirm(\''.__('Are you sure delete tyckets type?').'\'))return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 			}
 			array_push ($table->data, $data);
 		}
@@ -681,6 +769,7 @@ else {
 	}
 }
 	echo "<div class= 'dialog ui-dialog-content' title='".__("Groups")."' id='group_search_window'></div>";
+
 ?>
 
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
@@ -691,6 +780,7 @@ else {
 trim_element_on_submit('#text-search_text');
 // Form: #form-type_detail
 trim_element_on_submit('#text-name');
+
 validate_form("#form-type_detail");
 var rules, messages;
 // Rules: #text-name
@@ -712,6 +802,44 @@ messages = {
 	remote: "<?php echo __('This name already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
+
+//change linked and combo fields
+// Form validation
+	trim_element_on_submit('#text-label');
+	trim_element_on_submit('#text-combo_value');
+
+$("#type").change (function () {
+	var type_val = $("#type").val();
+	switch (type_val) {
+		case "combo":
+			$("#table1-id_combo_value-0").show();
+			$("#table1-id_linked_value-0").hide();
+			$("#table1-id_parent_value-0").hide();
+		break;
+		case "linked":
+			$("#table1-id_linked_value-0").show();
+			$("#table1-id_parent_value-0").show();
+			$("#table1-id_combo_value-0").hide();
+		break;
+		default:
+			$("#table1-id_combo_value-0").hide();
+			$("#table1-id_linked_value-0").hide();
+			$("#table1-id_parent_value-0").hide();
+		break;
+	}
+}).change();
+
+//autofocus
+var autofocus = <?php echo $autofocus ?>;
+var show_fields = <?php echo $show_fields ?>;
+if(autofocus){
+	if (show_fields) {
+		$("#text-label").focus();
+	}
+	else {
+		$("#text-name").focus();
+	}
+}
 
 function added_ids_sorted_items_to_hidden_input() {
 	var ids = '';

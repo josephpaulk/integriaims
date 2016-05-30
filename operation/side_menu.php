@@ -461,7 +461,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<li>";
 			echo '<a href="" >'.__('Ticket #').'&nbsp;</a>';
 			echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
-			print_input_text ('id', $id_incident ? $id_incident : '', '', 4, 10);
+			print_input_text ('id', '', '', 4, 10);
 			echo '</form>';
 			echo '</li>';
 		echo "</ul>";
@@ -588,14 +588,20 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 			echo "<li>";
 		echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
 		
-		if ($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) {
+		if (($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) ||
+		 	($sec2 == "operation/companies/company_custom_fields" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM")))){
 			if ($new_company)
 				echo "<li id='sidesel' style='margin-left: 15px;'>";
 			else
 				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a></li>";
+			if ($sec2 == "operation/companies/company_custom_fields" && (give_acl ($config["id_user"], 0, "CW")))
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
+			else
+				echo "<li style='margin-left: 15px;'>";
+			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_custom_fields'>".__('Company custom fields')."</a></li>";
 		}
-
+		
 		// Company roles
 		if (give_acl ($config["id_user"], 0, "CM")) {
 			if (($sec2=="operation/companies/company_role") && (!isset($_GET["create"])))

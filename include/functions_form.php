@@ -454,7 +454,7 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false, $script = '', $no_change=false, $disabled) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false, $script = '', $no_change=false, $disabled = false) {
 	$output = '';
 	$values = array ();
 	
@@ -1105,7 +1105,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$table_advanced->data[4][0] = print_select (get_companies (), 'search_id_company', $id_company, '', __('All'), 0, true, false, false, __('Company'));
 			
 	$table_advanced->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
-		$search_id_incident_type, 'javascript:change_type_fields_table();', __('All'), 0, true, false, false, __('Ticket type'));
+		$search_id_incident_type, 'javascript:change_type_fields_table(\''.__('Custom field').'\');', __('All'), 0, true, false, false, __('Ticket type'));
 		
 	$table_advanced->data[4][3] = print_checkbox_extended ('search_group_by_project', 1, $group_by_project, false, '', '', true, __('Group by project/task'));
 
@@ -1140,41 +1140,57 @@ function form_search_incident ($return = false, $filter=false) {
 	if ($type_fields) {
 		foreach ($type_fields as $key => $type_field) {
 			$data = $search_type_field[$type_field['id']];
-
-			if ($type_field['type'] == "text" || $type_field['type'] == "textarea") {
-				$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
-			} else if ($type_field['type'] == "combo") {
-				$combo_values = explode(",", $type_field['combo_value']);
-				$values = array();
-				foreach ($combo_values as $value) {
-					$values[$value] = $value;
-				}
-				$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, '', __('Any'), '', true, false, false, $type_field['label']);
-			}
-			else if (($type_field['type'] == "linked")) {
-				$linked_values = explode(",", $type_field['linked_value']);
-				$values = array();
-				foreach ($linked_values as $value) {
-					$value_without_parent =  preg_replace("/^.*\|/","", $value);
-					$values[$value_without_parent] = $value_without_parent;
-					
-					$has_childs = get_db_all_rows_sql("SELECT * FROM tincident_type_field WHERE parent=".$type_field['id']);
-					if ($has_childs) {
-						$i = 0;
-						foreach ($has_childs as $child) {
-							if ($i == 0) 
-								$childs = $child['id'];
-							else 
-								$childs .= ','.$child['id'];
-							$i++;
-						}
-						$childs = "'".$childs."'";
-						$script = 'javascript:change_linked_type_fields_table('.$childs.','.$type_field['id'].');';
-					} else {
-						$script = '';
+			switch ($type_field['type']) {
+				case "text": 
+					$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+					break;
+				
+				case "combo":
+					$combo_values = explode(",", $type_field['combo_value']);
+					$values = array();
+					foreach ($combo_values as $value) {
+						$values[$value] = $value;
 					}
-				}
-				$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, $script, __('Any'), '', true, false, false, $type_field['label']);
+					$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, '', __('Any'), '', true, false, false, $type_field['label']);
+					break;
+
+				case "linked":
+					$linked_values = explode(",", $type_field['linked_value']);
+					$values = array();
+					foreach ($linked_values as $value) {
+						$value_without_parent =  preg_replace("/^.*\|/","", $value);
+						$values[$value_without_parent] = $value_without_parent;
+						
+						$has_childs = get_db_all_rows_sql("SELECT * FROM tincident_type_field WHERE parent=".$type_field['id']);
+						if ($has_childs) {
+							$i = 0;
+							foreach ($has_childs as $child) {
+								if ($i == 0) 
+									$childs = $child['id'];
+								else 
+									$childs .= ','.$child['id'];
+								$i++;
+							}
+							$childs = "'".$childs."'";
+							$script = 'javascript:change_linked_type_fields_table('.$childs.','.$type_field['id'].');';
+						} else {
+							$script = '';
+						}
+					}
+					$input = print_select ($values, 'search_type_field_'.$type_field['id'], $data, $script, __('Any'), '', true, false, false, $type_field['label']);
+					break;
+
+				case "numeric":
+					$input = print_input_number ('search_type_field_'.$type_field['id'], $data, 1, 1000000, '', true, $type_field['label']);
+					break;
+
+				case "date":
+					$input = print_input_date('search_type_field_'.$type_field['id'], $data, '', '', '', true, $type_field['label']);
+					break;
+
+				case "textarea":
+					$input = print_input_text('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+					break;
 			}
 
 			$table_type_fields->data[$row][$column] = $input;
@@ -1186,7 +1202,7 @@ function form_search_incident ($return = false, $filter=false) {
 			}
 		}
 	}
-	
+	$table_advanced->colspan[6][0] = 4;
 	if ($table_type_fields->data) {
 		$table_type_fields_html = print_table($table_type_fields, true);
 	}

@@ -299,6 +299,8 @@ function print_select ($fields, $name, $selected = '', $script = '',
 		$output .= print_label ($label, $name, 'select', true);
 	}
 	
+	$id = preg_replace('/[^a-z0-9\:\;\-\_]/i', '', $name);
+	
 	$attributes = ($script) ? 'onchange="'. $script .'"' : '';
 	if ($multiple) {
 		$attributes .= ' multiple="yes" size="'.$multiple.'" ';
@@ -312,9 +314,9 @@ function print_select ($fields, $name, $selected = '', $script = '',
 	}
 
 	if ($style == "")
-		$output .= '<select style="width: 218px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+		$output .= '<select style="width: 218px" ' . $disabledText . ' id="'.$id.'" name="'.$name.'" '.$attributes.">\n";
 	else
-		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$id.'" name="'.$name.'" '.$attributes.">\n";
 
 	if ($nothing != '') {
 		$output .= '   <option value="'.$nothing_value.'"';
@@ -414,7 +416,7 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
  * @param string Alternative HTML string.
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false, $label = false, $type = false, $readonly = false) {
+function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false, $label = false, $type = false, $readonly = false, $autofocus = false) {
 	if (!$type) {
 		$type = $password ? 'password' : 'text';
 	}
@@ -450,6 +452,9 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	if ($readonly)
 		$output .= ' readonly';
 	
+	if ($autofocus)
+		$output .= ' autofocus';
+
 	if (is_array($attributes)) {
 		foreach ($attributes as $name => $value) {
 			$output .= ' ' . $name . '="' . $value . '"';
@@ -694,8 +699,8 @@ function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength 
  * @param int Maximum length allowed (optional).
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false, $disabled = false, $type = false, $readonly = false) {
-	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, $disabled, '', '', true, false, $label, $type, $readonly);
+function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false, $disabled = false, $type = false, $readonly = false, $autofocus = false) {
+	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, $disabled, '', '', true, false, $label, $type, $readonly, $autofocus);
 
 	if ($return)
 		return $output;
@@ -817,6 +822,46 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
 	$output .= '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.'" '.$disabledText.'>';
 	$output .= $value;
 	$output .= '</textarea>';
+
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function print_input_number ($name, $value = '', $min =0, $max =1000000, $attributes = '', $return = false, $label = false, $disabled = false) {
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'number', true);
+	}
+	
+	if ($disabled) {
+		$disabledText = 'disabled';
+	} else {
+		$disabledText = '';
+	}
+	
+	$output .= '<input type="number" min="'.$min.'" max = "'.$max.'" value='.$value.'  id="number-'.$name.'" name="'.$name.'" '.$attributes.'" '.$disabledText.'>';
+
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function print_input_date ($name, $value = '', $min ='', $max ='', $attributes = '', $return = false, $label = false, $disabled = false) {
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'date', true);
+	}
+	
+	if ($disabled) {
+		$disabledText = 'disabled';
+	} else {
+		$disabledText = '';
+	}
+	
+	$output .= '<input type="date" min="'.$min.'" max = "'.$max.'" value='.$value.'  id="date-'.$name.'" name="'.$name.'" '.$attributes.'" '.$disabledText.'>';
 
 	if ($return)
 		return $output;
