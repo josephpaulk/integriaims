@@ -43,8 +43,7 @@ CREATE TABLE `treport` (
   `order_by` text NOT NULL default '',
   `group_by` text NOT NULL default '',
   `where_clause` text NOT NULL default '',
-   PRIMARY KEY  (`id`),
-   FOREIGN KEY (`id_folder`) REFERENCES tfolder_report(`id`)
+   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `treport_type` (
