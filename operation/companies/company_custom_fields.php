@@ -143,6 +143,66 @@ if ($company_fields === false) {
 	$company_fields = array ();
 }
 
+$id_field = get_parameter ('id_field');
+if ($id_field) {
+	$field_data = get_db_row_filter('tcompany_field', array('id' => $id_field));
+	$label = $field_data['label'];
+	$type = $field_data['type'];
+	$combo_value = $field_data['combo_value'];
+	$parent = $field_data['parent'];
+	$linked_value = $field_data['linked_value'];
+}
+
+$table = new StdClass();
+$table->width = "100%";
+$table->class = "search-table";
+$table->data = array ();
+
+$table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
+$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' => __('Linked'), 'numeric' => __('Numeric'), 'date' => __('Date'));
+$table->data[1][0] = print_label (__("Type"), "label-id", 'text', true);
+$table->data[1][0] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
+
+//combo values
+$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value').print_help_tip (__("Set values separated by comma"), true));
+
+// Linked values
+$sql = "SELECT id, label FROM tcompany_field WHERE type = 'linked'";
+$parents_result = get_db_all_rows_sql($sql);
+
+if ($parents_result == false) {
+	$parents_result = array();
+}
+
+$parents = array();
+foreach ($parents_result as $result) {
+	$parents[$result['id']] = $result['label']; 
+}
+
+$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true, 0, true, __("Parent"));
+$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true));
+
+if (!$id_field) {
+	$button = print_input_hidden('add_field', 1, true);
+	$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+} else {
+	$button = print_input_hidden('update_field', 1, true);
+	$button .= print_input_hidden('add_field', 0, true);
+	$button .= print_input_hidden('id_field', $id_field, true);
+	$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+	$button .= '<a href="index.php?sec=customers&sec2=operation/companies/company_custom_fields" alt="'.__('Return').'">
+		<img src= "images/go_begin.png" alt="'.__('Return').'"/></a>';
+}
+
+$table->data['button'][0] = $button;
+$table->colspan['button'][0] = 3;
+
+echo "<div class='divform'>";
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_custom_fields">';
+		print_table ($table);
+	echo '</form>';
+echo '</div>';
+
 $table = new StdClass();
 $table->width = '100%';
 $table->class = 'listing';
@@ -205,65 +265,6 @@ if (!empty($company_fields)) {
 }
 echo "</div>";
 
-$id_field = get_parameter ('id_field');
-if ($id_field) {
-	$field_data = get_db_row_filter('tcompany_field', array('id' => $id_field));
-	$label = $field_data['label'];
-	$type = $field_data['type'];
-	$combo_value = $field_data['combo_value'];
-	$parent = $field_data['parent'];
-	$linked_value = $field_data['linked_value'];
-}
-
-$table = new StdClass();
-$table->width = "100%";
-$table->class = "search-table";
-$table->data = array ();
-
-$table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
-$types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' => __('Linked'), 'numeric' => __('Numeric'), 'date' => __('Date'));
-$table->data[1][0] = print_label (__("Type"), "label-id", 'text', true);
-$table->data[1][0] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
-
-//combo values
-$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value').print_help_tip (__("Set values separated by comma"), true));
-
-// Linked values
-$sql = "SELECT id, label FROM tcompany_field WHERE type = 'linked'";
-$parents_result = get_db_all_rows_sql($sql);
-
-if ($parents_result == false) {
-	$parents_result = array();
-}
-
-$parents = array();
-foreach ($parents_result as $result) {
-	$parents[$result['id']] = $result['label']; 
-}
-
-$table->data['id_parent_value'][0] = print_select ($parents, 'parent', $parent, '', __('Select parent'), '0', true, 0, true, __("Parent"));
-$table->data['id_linked_value'][0] = print_textarea ('linked_value', 15, 1, $linked_value, '', true, __('Linked value').integria_help ("linked_values", true));
-
-if (!$id_field) {
-	$button = print_input_hidden('add_field', 1, true);
-	$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
-} else {
-	$button = print_input_hidden('update_field', 1, true);
-	$button .= print_input_hidden('add_field', 0, true);
-	$button .= print_input_hidden('id_field', $id_field, true);
-	$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-	$button .= '<a href="index.php?sec=customers&sec2=operation/companies/company_custom_fields" alt="'.__('Return').'">
-		<img src= "images/go_begin.png" alt="'.__('Return').'"/></a>';
-}
-
-$table->data['button'][0] = $button;
-$table->colspan['button'][0] = 3;
-
-echo "<div class='divform'>";
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_custom_fields">';
-		print_table ($table);
-	echo '</form>';
-echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
@@ -274,19 +275,19 @@ $("#type").change (function () {
 	var type_val = $("#type").val();
 	switch (type_val) {
 		case "combo":
-			$("#table2-id_combo_value-0").show();
-			$("#table2-id_linked_value-0").hide();
-			$("#table2-id_parent_value-0").hide();
+			$("#table1-id_combo_value-0").show();
+			$("#table1-id_linked_value-0").hide();
+			$("#table1-id_parent_value-0").hide();
 		break;
 		case "linked":
-			$("#table2-id_linked_value-0").show();
-			$("#table2-id_parent_value-0").show();
-			$("#table2-id_combo_value-0").hide();
+			$("#table1-id_linked_value-0").show();
+			$("#table1-id_parent_value-0").show();
+			$("#table1-id_combo_value-0").hide();
 		break;
 		default:
-			$("#table2-id_combo_value-0").hide();
-			$("#table2-id_linked_value-0").hide();
-			$("#table2-id_parent_value-0").hide();
+			$("#table1-id_combo_value-0").hide();
+			$("#table1-id_linked_value-0").hide();
+			$("#table1-id_parent_value-0").hide();
 		break;
 	}
 }).change();
