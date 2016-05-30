@@ -103,7 +103,9 @@ if(empty($values) && $search == '') {
 $offset = get_parameter('offset', 0);
 echo "<div class='divresult'>";
 echo "<table class='blank'><tr><td>";
-	pagination (count($values), "index.php?sec=users&sec2=operation/user_report/report_monthly", $offset);
+	$count_values= count($values);
+	$url = "index.php?sec=users&sec2=operation/user_report/report_monthly&search=".$search;
+	pagination ($count_values, $url, $offset, true);
 echo "</td></tr></table>";
 
 echo '<table width="100%" class="listing">';
