@@ -78,6 +78,8 @@ if ($form_inventory) {
 		$object_fields_default[6] = 'id_contract';
 		$object_fields_default[7] = 'status';
 		$object_fields_default[8] = 'receipt_date';
+		$object_fields_default[9] = 'issue_date';
+
 	$object_fields = get_parameter('object_fields', $object_fields_default);
 
 	$sql_object_fields_custom = 'select label, id from tobject_type_field where show_list=1 and id_object_type='.$id_object_type;
@@ -123,6 +125,7 @@ if ($change_table) {
 		$object_fields_default[6] = 'id_contract';
 		$object_fields_default[7] = 'status';
 		$object_fields_default[8] = 'receipt_date';
+		$object_fields_default[9] = 'issue_date';
 
 	$object_fields = get_parameter('object_fields', $object_fields_default);
 	if ($object_fields) {
@@ -130,7 +133,7 @@ if ($change_table) {
 		
 		$count_object_custom_fields = 0;
 		foreach ($object_fields as $key => $value) {
-			if ($key < 9){
+			if ($key < 10){
 				if (!$pr){
 					$pr = ' i.'.$value;
 				} else {
@@ -148,6 +151,7 @@ if ($change_table) {
 		}
 		if($tr){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
+			
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 		} else {

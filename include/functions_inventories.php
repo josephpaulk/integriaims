@@ -1253,9 +1253,17 @@ function form_inventory ($params){
 
 			}
 
+			//checkbox status
+			if ($params['object_fields'][9]){
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[9]" checked value="issue_date" id="issue_date"><label for="issue_date">'.__('Issue date').'</label>';
+			} else {
+				$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[9]" value="issue_date" id="issue_date"><label for="issue_date">'.__('Issue date').'</label>';
+
+			}
+
 			//checkbox custom fields
 			if ($params['object_fields_custom']){
-				$i=9;
+				$i=10;
 				foreach ($params['object_fields_custom'] as $object) {
 					if($params['object_fields'][$i]){
 						$select_label_object .= '<input name="object_fields['.$i.']" checked class="checkbox_object_field" value="'.$object['id'].'" type="checkbox" id="'.$object['id'].'">';
@@ -1347,7 +1355,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 	} else {
 		$inventories = $inventories_aux_pagination;
 	}
-
+	
 	//print table
 	if (count($header) == 0) {
 		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
@@ -1361,7 +1369,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 		$table->colspan = array();
 		
 		//thead
-		$i=9;
+		$i=10;
 		foreach ($header as $key=>$inventory) {
 			switch ($key) {
 				case 'id': $table->head[0] = __('Id');break;
@@ -1373,6 +1381,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 				case 'id_contract': $table->head[6] = __('Contract');break;
 				case 'status': $table->head[7] = __('Status');break;
 				case 'receipt_date': $table->head[8] = __('Receipt date');break;
+				case 'issue_date': $table->head[9] = __('Issue date');break;
 				default: 
 					$table->head[$i] = $key;
 					$i++;
@@ -1394,7 +1403,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 		//tbody
 		$idx = 0;
 		foreach ($inventories as $key=>$inventory) {
-			$i=9;
+			$i=10;
 			foreach ($header as $k=>$headervalue) {
 				if ($modal) {
 					$url = "javascript:loadInventory(" . $inventory['id'] . ");";
@@ -1472,6 +1481,14 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 						} else { 
 							$receipt_date = '--';
 							$data[8] = $receipt_date;
+						}
+						break;
+					case 'issue_date': 
+						if ($inventory['issue_date'] != "0000-00-00") {
+							$data[9] = $inventory['issue_date'];
+						} else { 
+							$issue_date = '--';
+							$data[9] = $issue_date;
 						}
 						break;
 					default: 
