@@ -322,7 +322,7 @@ function get_inventory_contacts ($id_inventory, $only_names = false) {
 
 	//Get all users associated to the inventory object
 
-	$inv_users = enterprise_hook('inventory_get_users', array($id_inventory, false));	
+	$inv_users = inventory_get_users($id_inventory, false);	
 
 	if ($inv_users === ENTERPRISE_NOT_HOOK) {
 		$inv_users = array();
@@ -343,7 +343,7 @@ function get_inventory_contacts ($id_inventory, $only_names = false) {
         	$all_contacts[$contact["id"]] = $contact;
 	}
 
-	$inv_companies = enterprise_hook('inventory_get_companies', array($id_inventory, false));
+	$inv_companies = inventory_get_companies ($id_inventory, false);
 	
 	if ($inv_companies === ENTERPRISE_NOT_HOOK) {
 		$inv_companies = array();
@@ -2230,5 +2230,151 @@ function inventories_get_info($id_item, $id_father) {
 	}
 	
 	return $result;
+}
+
+/**
+ * Update affected companies in an inventory.
+ *
+ * @param int inventory id to update.
+ * @param array List of affected companies ids.
+ */
+function inventory_update_companies ($id_inventory, $companies, $update = false) {
+	error_reporting (0);
+	$where_clause = '';
+	
+	if (empty ($companies)) {
+		$companies = array (0);
+	}
+	
+	if ($update) {
+		$sql = sprintf ("DELETE FROM tinventory_acl
+			WHERE id_inventory = %d AND type='company'",
+			$id_inventory);
+		
+		$res = process_sql ($sql);
+		
+		if ($res !== false && $res > 0) {
+			$updated = true;
+		}
+		
+	}
+	
+	$type = 'company';
+	
+	foreach ($companies as $id_company) {
+		if($id_company != ''){
+			$value = array();
+			$value['id_inventory'] = $id_inventory;
+			$value['id_reference'] = $id_company;
+			$value['type'] = $type;
+		$tmp = process_sql_insert('tinventory_acl', $value);
+		}		
+	}
+	
+	if ($update && $updated === true) {
+		inventory_tracking($id_inventory, INVENTORY_COMPANIES_UPDATED);
+	} else if (!empty($companies) && $companies != array(0)) {
+		inventory_tracking($id_inventory, INVENTORY_COMPANIES_CREATED);
+	}
+}
+
+/**
+ * Update affected users in an inventory.
+ *
+ * @param int inventory id to update.
+ * @param array List of affected users ids.
+ * @param update = false to create and update = true to update
+ */
+function inventory_update_users ($id_inventory, $users, $update = false) {
+	error_reporting (0);
+	$where_clause = '';
+	
+	if (empty ($users)) {
+		$users = array (0);
+	}
+	if ($update) {
+		
+		$sql = sprintf ("DELETE FROM tinventory_acl WHERE id_inventory = %d AND type='user'", $id_inventory);
+		$res = process_sql ($sql);
+
+		if ($res !== false && $res > 0) {
+			$updated = true;
+		}
+	}
+	
+	$type = 'user';
+	
+	foreach ($users as $key=>$id_user) {
+		if($id_user != ''){
+			$value = array();
+			$value['id_inventory'] = $id_inventory;
+			$value['id_reference'] = $id_user;
+			$value['type'] = $type;
+			$tmp = process_sql_insert('tinventory_acl', $value);
+		}
+	}
+	
+	if ($update && $updated === true) {
+		inventory_tracking($id_inventory, INVENTORY_USERS_UPDATED);
+	} else if (!empty($users) && $users != array(0)) {
+		inventory_tracking($id_inventory, INVENTORY_USERS_CREATED);
+	}
+}
+
+function inventory_get_companies ($id_inventory, $only_names = true) {
+	
+	$sql = sprintf ("SELECT tcompany.* FROM tcompany, tinventory_acl
+			WHERE tcompany.id = tinventory_acl.id_reference
+			AND tinventory_acl.type = 'company'
+			AND tinventory_acl.id_inventory = %d", $id_inventory);		
+			
+	$all_companies = get_db_all_rows_sql ($sql);
+	if ($all_companies == false)
+		return array ();
+	
+	global $config;
+	$companies = array ();
+	foreach ($all_companies as $company) {
+		array_push ($companies, $company);
+	}
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($companies as $company) {
+			$result[$company['id']] = $company['name'];
+		}
+		return $result;
+	}
+	return $companies;
+}
+
+function inventory_get_users ($id_inventory, $only_names = true) {
+	
+	$sql = sprintf ("SELECT tusuario.* FROM tusuario, tinventory_acl
+			WHERE tusuario.id_usuario = tinventory_acl.id_reference
+			AND tinventory_acl.type = 'user'
+			AND tinventory_acl.id_inventory = %d", $id_inventory);
+				
+	$all_users = get_db_all_rows_sql ($sql);
+	
+	if ($all_users == false)
+		return array ();
+	
+	global $config;
+	$users = array ();
+	foreach ($all_users as $user) {
+		array_push ($users, $user);
+	}
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($users as $user) {
+			$result[$user['id_usuario']] = $user['nombre_real'];
+		}
+		
+		return $result;
+	}
+	
+	return $users;
 }
 ?>
