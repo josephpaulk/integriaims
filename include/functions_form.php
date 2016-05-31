@@ -1269,7 +1269,7 @@ function form_search_users ($return = false, $filter=false) {
 	$global_profile[-1] = __('Standalone');
 	$global_profile[0] = __('Grouped');
 	$global_profile[1] = __('Administrator');
-	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('User mode'));
 	
 	$group_name = get_user_groups();
 	$group_name[-1] = __('Groupless');

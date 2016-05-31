@@ -134,7 +134,7 @@ $left_side = print_container('incident_details', __('Details'), $incident_detail
 $incident_description = clean_output_breaks($incident["descripcion"]);
 
 $incident_table = "<tr>";
-$incident_table .= "<td>".$incident_description."</td>";
+$incident_table .= "<td colspan=6>".$incident_description."</td>";
 $incident_table .= "</tr>";
 
 $left_side .= print_container('incident_description', __('Description'), $incident_table, 'open', true, true, '', '', 5, 'less_widht');
