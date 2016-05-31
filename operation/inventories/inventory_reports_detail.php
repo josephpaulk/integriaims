@@ -95,6 +95,17 @@ $render = get_parameter ("render",0);
 $render_html = get_parameter ("render_html",0);
 
 if ($render == 1){
+
+	$search = array();
+	
+	$search[] = "&#x0d;";
+	$search[] = "\r";
+	$search[] = "&#x0a;";
+	$search[] = "\n";
+	$search[] = '"';
+	$search[] = "'";
+	$search[] = ";";
+
 	$report = get_db_row ('tinventory_reports', 'id', $id);
 	if ($report === false)
 		return;
@@ -102,20 +113,23 @@ if ($render == 1){
 	$filename = clean_output ($report['name']).'-'.date ("YmdHi");
 
 	ob_end_clean();
-
+	$config['mysql_result_type'] = MYSQL_ASSOC;
 	// We'll be outputting a CSV
 	header ('Content-Type: text/csv; charset=UTF-8');
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-	$config['mysql_result_type'] = MYSQL_ASSOC;
+
+	
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
 	if ($rows === false)
 		return;
 	// Header
-	echo safe_output (implode (',', array_keys ($rows[0])))."\n";
+	echo safe_output (implode (',', array_keys (str_replace($search, " ", $rows[0]))))."\n";
 	
 	// Item / data
 	foreach ($rows as $row) {
-		echo safe_output (implode (',', $row))."\n";
+		$k = safe_output(implode(',', $row));
+		$k = str_replace($search, "", $k);
+		echo mb_convert_encoding($k, 'UTF-8'). "\n";
 	}
     exit;
 }
