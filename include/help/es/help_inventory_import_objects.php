@@ -3,7 +3,7 @@
 	Existe la opción de importar datos de inventario desde un fichero CSV. Para ello, se carga el fichero con una línea por inventario y los valores separados por comas. El orden debe ser el siguiente:
 </p>
 <p>
-	ID, Tipo de objeto, Propietario, Nombre, Público, Descripción, Contrato, ID Fabricante, ID Padre, Compañía asociada1;…;Compañía asociadaN,UsuarioAsociado1;;UsuarioAsociadoN,Estado,Campo1 del tipo de objeto,…,CampoN del tipo de objeto
+	ID tipo de objeto, Propietario, Nombre, Público, Descripción, Contrato, ID Fabricante, ID Padre, Compañía asociada1;…;Compañía asociadaN,UsuarioAsociado1;;UsuarioAsociadoN,Estado,Campo1 del tipo de objeto,…,CampoN del tipo de objeto
 </p>
 <p>
 	Los estados que puede tomar un inventario son:
