@@ -716,8 +716,9 @@ if (!$pure) {
 		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $params['inventory_status'], '', '', '', true, false, false, __('Status'));
 
 		//Parent name
-		$table_search->data[2][1] =  print_input_text_extended ("parent_name", $params['parent_name'], "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','', '', '')", "class='inventory_obj_search' style='width:210px;'", true, false,  __('Parent object'));
-		$table_search->data[2][1] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
+		$table_search->data[2][1] =  print_input_text_extended ("parent_name", $params['parent_name'], "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:165px !important;'", true, false,  __('Parent object'), false, true);
+		$table_search->data[2][1] .= "&nbsp;&nbsp;" . print_image("images/add.png", true, array("onclick" => "show_inventory_search('','','','','','','','','','', '', '')", "style" => "cursor: pointer"));	
+		$table_search->data[2][1] .= "&nbsp;&nbsp;" . print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 		//$table_search->data[2][1] .= print_input_hidden ('id_parent', $id_parent, true);
 
 		//check

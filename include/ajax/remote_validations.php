@@ -54,6 +54,7 @@ $search_existing_user_email = (bool) get_parameter ('search_existing_user_email'
 $search_existing_role = (bool) get_parameter ('search_existing_role');
 $search_existing_group = (bool) get_parameter ('search_existing_group');
 $search_duplicate_name = (bool) get_parameter ('search_duplicate_name');
+$search_input_number = (bool) get_parameter ('search_input_number');
 
 if ($search_existing_project) {
 	require_once ('include/functions_db.php');
@@ -178,7 +179,18 @@ if ($search_existing_project) {
 	// Does not exist
 	echo json_encode(true);
 	return;
-	
+
+} elseif ($search_input_number){
+	$input_number = get_parameter ('input_number');
+		if(is_numeric($input_number)) {
+			echo json_encode(true);
+			return;
+		} else {
+			echo json_encode(false);
+			return;
+		}
+
+
 } elseif ($search_existing_incident_type) {
 	require_once ('include/functions_db.php');
 	$incident_type_name = get_parameter ('type_name');

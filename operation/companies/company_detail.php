@@ -542,7 +542,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 					break;
 
 				case "numeric":
-					$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 1, 1000000, '', true, $comp["label"], $disabled_write);
+					if($data == '') 
+						$data = 0;
+					$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 0, 1000000, '', true, $comp["label"], $disabled_write);
 					break;
 
 				case "date":
@@ -1586,6 +1588,8 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_d
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_crm.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript" >
 	
@@ -1606,7 +1610,9 @@ $(document).ready (function () {
 	trim_element_on_submit('#text-search_text');
 	trim_element_on_submit('#text-name');
 	trim_element_on_submit('#text-fiscal_id');
+	trim_element_on_submit('input[type=number]');
 	validate_form("#form-company_detail");
+	
 	// id_user
 	if ($("#company_stats_form").length > 0) {
 		validate_user ("#company_stats_form", "#text-user", "<?php echo __('Invalid user')?>");
@@ -1615,6 +1621,25 @@ $(document).ready (function () {
 	}
 	
 	var rules, messages;
+	
+	//Rules: input type number
+	rules = {
+		required: true,
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_input_number: 1,
+				input_number: function() { return $('input[type = number]').val() }
+			}
+		}
+	};
+	messages = {
+		required: "<?php echo __('Please enter numbers')?>"
+	};
+	add_validate_form_element_rules('input[type = number]', rules, messages);
+
 	// Rules: #text-name
 	rules = {
 		required: true,

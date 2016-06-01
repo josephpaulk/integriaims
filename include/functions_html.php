@@ -841,7 +841,7 @@ function print_input_number ($name, $value = '', $min =0, $max =1000000, $attrib
 		$disabledText = '';
 	}
 	
-	$output .= '<input type="number" min="'.$min.'" max = "'.$max.'" value='.$value.'  id="number-'.$name.'" name="'.$name.'" '.$attributes.'" '.$disabledText.'>';
+	$output .= '<input type="number" min="'.$min.'" max = "'.$max.'" value="'.$value.'"  id="number-'.$name.'" name="'.$name.'" '.$attributes.'" '.$disabledText.'>';
 
 	if ($return)
 		return $output;

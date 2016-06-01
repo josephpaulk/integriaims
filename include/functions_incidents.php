@@ -2469,12 +2469,12 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		}
 		if ($order_by["prioridad"] != "") {
 			if ($order_by["prioridad"] == "DESC") {
-				$priority_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"prioridad\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
+				$priority_order_image = "<a href='javascript:changeIncidentOrder(\"prioridad\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
 			} else {
-				$priority_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"prioridad\", \"\")'><img src='images/arrow_up_orange.png'></a>";
+				$priority_order_image = "<a href='javascript:changeIncidentOrder(\"prioridad\", \"\")'><img src='images/arrow_up_orange.png'></a>";
 			}
 		} else {
-			$priority_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"prioridad\", \"DESC\")'><img src='images/block_orange.png'></a>";
+			$priority_order_image = "<a href='javascript:changeIncidentOrder(\"prioridad\", \"DESC\")'><img src='images/block_orange.png'></a>";
 		}
 	} else {
 		$id_order_image = "";
@@ -2484,6 +2484,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	// ----------------------------------------
 	// Here we print the result of the search
 	// ----------------------------------------
+	echo '<div class = "incident_table">';
 	echo '<table width="100%" cellpadding="0" cellspacing="0" border="0px" class="listing" id="incident_search_result_table">';
 
 	echo '<thead>';
@@ -2506,16 +2507,16 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	echo __('Ticket');
 	echo "</th>";
 	echo "<th>";
-	echo __('Group')."/<i>".__('Company')."</i>";
+	echo __('Group')."/<br /><i>".__('Company')."</i>";
 	echo "</th>";
 	echo "<th>";
-	echo __('Status')."/<i>".__('Resolution')."</i>";
+	echo __('Status')."/<br /><i>".__('Resolution')."</i>";
 	echo "</th>";
-	echo "<th style='width: 90px;'>";
-	echo __('Priority') . $priority_order_image;
+	echo "<th>";
+	echo __('Prior') . $priority_order_image;
 	echo "</th>";
-	echo "<th style='width: 120px;'>";
-	echo __('Updated')."/<i>".__('Started')."</i>";
+	echo "<th>";
+	echo __('Updated')."/<br /><i>".__('Started')."</i>";
 	echo "</th>";
 
 	if ($config["show_creator_incident"] == 1)
@@ -2568,14 +2569,14 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				
 				echo '<td>';
 				if (!$report_mode) {
-							echo '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
+					echo '<strong><a href="'.$link.'">#'.$incident['id_incidencia'].'</a></strong></td>';
 				} else {
 					echo '<strong>'.'#'.$incident['id_incidencia'].'</strong></td>';
 				}
 				
 				// SLA Fired ?? 
 				if ($incident["affected_sla_id"] != 0)
-					echo '<td width="25"><img src="images/exclamation.png" /></td>';
+					echo '<td><img src="images/exclamation.png" /></td>';
 				else
 					echo '<td></td>';
 				
@@ -2592,15 +2593,13 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '<td>';
 
 				if (!$report_mode) {							
-					echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
+					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text($incident['titulo'], 50).'</a></strong><br>';
 				} else {
 					echo '<strong>'.$incident['titulo'].'</strong><br>';
 				}
 				echo "<span>";
 				echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
-				$sql = sprintf("SELECT *
-								FROM tincident_type_field
-								WHERE id_incident_type = %d", $incident["id_incident_type"]);
+				$sql = sprintf("SELECT * FROM tincident_type_field WHERE id_incident_type = %d", $incident["id_incident_type"]);
 				$config['mysql_result_type'] = MYSQL_ASSOC;
 				$type_fields = get_db_all_rows_sql($sql);
 				
@@ -2618,7 +2617,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 						}
 					}
 				}
-				echo "&nbsp;$type_fields_values_text";
+				echo "$type_fields_values_text";
 				
 				echo '</span></td>';
 				echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
@@ -2626,7 +2625,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 					$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
 					if($id_creator_company != 0) {
 						$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
-						echo " / <span>$company_name</span>";
+						echo " /<br/> <span>$company_name</span>";
 					}
 				}
 				echo '</td>';
@@ -2662,7 +2661,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				}
 				//echo "<br>";
 				echo '<span style="display:inline-table;">';
-				
+				/*
 				if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
 					$updated_by = get_db_value('nombre_real', 'tusuario', 'id_usuario', $last_wu["id_user"]);
 				}
@@ -2670,6 +2669,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 					$updated_by = $last_wu["id_user"];
 				}
 				echo "&nbsp;$updated_by";
+				*/
 				echo "</span>";
 				echo '</td>';
 				
@@ -2703,6 +2703,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	}
 	echo "</tbody>";
 	echo "</table>";
+	echo "</div>";
 	if (!$report_mode) {
 		pagination($count, $url, $offset, false, $aux_text);
 	}

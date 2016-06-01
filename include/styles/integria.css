@@ -3860,3 +3860,47 @@ img#inventory_loading{
 	width: 82%;
     float: right;
 }
+
+/*css for table search incidents*/
+.divresult_incidents{
+	margin-bottom: 20px; 
+}
+.divresult_incidents table td{
+	width: 25% !important;
+}
+.divresult_incidents input,
+.divresult_incidents select{
+	width: 80% !important;
+}
+
+.divresult_incidents input[type = "checkbox"]{
+	width: 10% !important;
+}
+
+.divresult_incidents input[type = "button"],
+.divresult_incidents input[type = "submit"]{
+	width: 22% !important;
+    height: 35px;
+    float: right;
+    margin-right: 2%;
+    border-radius: 3px;
+    font-size: 13px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 0px;
+}
+
+.incident_table table tr td {
+	padding-top:4px;
+	padding-bottom: 4px; 
+}
+.incident_table table tr th {
+	padding-top:0px;
+	padding-bottom: 0px; 
+}
+.incident_table table tr th a {
+	padding-left: 3px;
+}
