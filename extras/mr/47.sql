@@ -48,3 +48,9 @@ CREATE TABLE `tcompany_field_data` (
 -- ---------------------------------------------------------------------
 
 ALTER TABLE tincident_type_field MODIFY `type` enum('text', 'textarea', 'combo', 'linked', 'numeric', 'date') DEFAULT 'text';
+
+-- ---------------------------------------------------------------------
+-- tpending_mail
+-- ---------------------------------------------------------------------
+
+ALTER TABLE tpending_mail ADD COLUMN `image_list` text DEFAULT NULL;
