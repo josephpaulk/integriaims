@@ -653,7 +653,7 @@ function render_priority ($pri) {
 }
 
 
-function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "", $from = "", $remove_header_footer =0, $cc="", $extra_headers="") {
+function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "", $from = "", $remove_header_footer =0, $cc="", $extra_headers="", $images = false) {
 	global $config;
 	
 	if ($to == '')
@@ -696,7 +696,8 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 			'attachment_list' => $attachments,
 			'from' => $from,
 			'cc' => $cc,
-			'extra_headers' => $extra_headers
+			'extra_headers' => $extra_headers,
+			'image_list' => $images
 		);
 	process_sql_insert('tpending_mail', $values);
 }

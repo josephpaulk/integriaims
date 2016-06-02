@@ -1495,7 +1495,10 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
 		break;
 	case 0: // Incident update
-		$text = "<html><body>";
+		
+		$attachments = "";
+		$images = "";
+		
 		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
 		
@@ -1503,58 +1506,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		if ($attached_files === false) {
 			$attached_files = array();
 		}
-		foreach ($attached_files as $file) {
-			$file_name = $file['id_attachment'].'_'.$file['filename'];
-			$access_public = get_db_value("value","tconfig","token","access_public");
-			$access_protocol = get_db_value("value","tconfig","token","access_protocol");
-			if ($access_protocol) {
-				$protocol = "https://";
-			} else {
-				$protocol = "http://";
-			}
-	
-			$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
-			$text .= '<img src="'.$path_file.'" alt="'.$file['filename'].'" />';
-			$text .= '<br>';
-		}
-		$text .= "</body></html>";
-		
-		break;
-	case 1: // Incident creation
-		$text = "<html><body>";
-		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
-		
-		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
-		if ($attached_files === false) {
-			$attached_files = array();
-		}
-		foreach ($attached_files as $file) {
-			$file_name = $file['id_attachment'].'_'.$file['filename'];
-			$access_public = get_db_value("value","tconfig","token","access_public");
-			$access_protocol = get_db_value("value","tconfig","token","access_protocol");
-			if ($access_protocol) {
-				$protocol = "https://";
-			} else {
-				$protocol = "http://";
-			}
-	
-			$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
-			$text .= '<img src="'.$path_file.'" alt="'.$file['filename'].'" />';
-			$text .= '<br>';
-		}
-		$text .= "</body></html>";
-		
-		break;
-	case 2: // New attach
-		$text = "<html><body>";
-		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_attach.tpl", $MACROS);
-		
-		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
-		if ($attached_files === false) {
-			$attached_files = array();
-		}
+		$i = 0;
+		$j=0;
 		foreach ($attached_files as $file) {
 			$file_name = $file['id_attachment'].'_'.$file['filename'];
 			$access_public = get_db_value("value","tconfig","token","access_public");
@@ -1565,12 +1518,128 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
-			$text .= '<img src="'.$path_file.'" alt="'.$file['filename'].'" />';
-			$text .= '<br>';
+			$ext = substr($file['filename'], -3, 3);
+			
+			if ($ext == "jpg" || $ext == "png") {
+				
+				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
+				
+				if ($j == 0) {
+					$images = $path_file;
+				} else {
+					$images .= ','.$path_file;
+				}
+				$j++;
+			} else {
+				
+				$path_file = $config['homedir']."attachment/".$file_name;
+			
+				if ($i == 0) {
+					$attachments = $path_file;
+				} else {
+					$attachments .= ','.$path_file;
+				}
+				$i++;
+			}
 		}
-		$text .= "</body></html>";
 		
+		break;
+	case 1: // Incident creation
+		$attachments = "";
+		$images = "";
+		
+		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
+		
+		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
+		if ($attached_files === false) {
+			$attached_files = array();
+		}
+		$i = 0;
+		$j=0;
+		foreach ($attached_files as $file) {
+			$file_name = $file['id_attachment'].'_'.$file['filename'];
+			$access_public = get_db_value("value","tconfig","token","access_public");
+			$access_protocol = get_db_value("value","tconfig","token","access_protocol");
+			if ($access_protocol) {
+				$protocol = "https://";
+			} else {
+				$protocol = "http://";
+			}
+			
+			$ext = substr($file['filename'], -3, 3);
+			
+			if ($ext == "jpg" || $ext == "png") {
+				
+				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
+				
+				if ($j == 0) {
+					$images = $path_file;
+				} else {
+					$images .= ','.$path_file;
+				}
+				$j++;
+			} else {
+				
+				$path_file = $config['homedir']."attachment/".$file_name;
+			
+				if ($i == 0) {
+					$attachments = $path_file;
+				} else {
+					$attachments .= ','.$path_file;
+				}
+				$i++;
+			}
+		}
+		
+		break;
+	case 2: // New attach
+		$attachments = "";
+		$images = "";
+
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_attach.tpl", $MACROS);
+		
+		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
+		if ($attached_files === false) {
+			$attached_files = array();
+		}
+		$i = 0;
+		$j=0;
+		foreach ($attached_files as $file) {
+			$file_name = $file['id_attachment'].'_'.$file['filename'];
+			$access_public = get_db_value("value","tconfig","token","access_public");
+			$access_protocol = get_db_value("value","tconfig","token","access_protocol");
+			if ($access_protocol) {
+				$protocol = "https://";
+			} else {
+				$protocol = "http://";
+			}
+			
+			$ext = substr($file['filename'], -3, 3);
+			
+			if ($ext == "jpg" || $ext == "png") {
+				
+				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
+				
+				if ($j == 0) {
+					$images = $path_file;
+				} else {
+					$images .= ','.$path_file;
+				}
+				$j++;
+			} else {
+				$path_file = $config['homedir']."attachment/".$file_name;
+			
+				if ($i == 0) {
+					$attachments = $path_file;
+				} else {
+					$attachments .= ','.$path_file;
+				}
+				$i++;
+			}
+		}
+	
 		break;
 	case 3: // Incident deleted 
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
@@ -1592,24 +1661,24 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$msg_code = "TicketID#$id_inc";
 		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
 		$msg_code .= "/" . $row["id_usuario"];
-		integria_sendmail ($email_owner, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process");
+		integria_sendmail ($email_owner, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 		
 		//creator
 		if ($email_owner != $email_creator) {
 			$msg_code = "TicketID#$id_inc";
 			$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
 			$msg_code .= "/".$row["id_creator"];
-			integria_sendmail ($email_creator, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
 		}
 		
 		// Send emails to the people in the group added
 		if($forced_email != 0){
 			$email_default = get_user_email ($user_defect_group);
-			integria_sendmail ($email_default, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
 			if($email_group){
 				$email_g = explode(',',$email_group);
 				foreach ($email_g as $k){
-					integria_sendmail ($k, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");	
+					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);	
 				}
 			}
 		}
@@ -1620,7 +1689,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			if ($email_copy != ""){
 				$emails = explode (",",$email_copy);
 				foreach ($emails as $em){
-					integria_sendmail ($em, $subject, $text, false, "", $email_from, 0, "", "X-Integria: no_process");
+					integria_sendmail ($em, $subject, $text, false, "", $email_from, 0, "", "X-Integria: no_process", $images);
 				}
 			}
 	}
@@ -1634,7 +1703,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 					$msg_code = "TicketID#$id_inc";
 					$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
 					$msg_code .= "/". $row[1];
-					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
 				}
 			}
 		}
@@ -1645,7 +1714,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			if ($contats)
 			foreach ($contacts as $contact) {
 				$contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
-				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process");
+				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
 			}
 		}
 	}

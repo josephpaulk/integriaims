@@ -635,12 +635,11 @@ function run_mail_queue () {
 		}		
 
 		if ($config["smtp_host"] == "") {
-			
+		
 			// Use internal mail() function
 			$headers   = array();
-			$headers[] = "MIME-Version: 1.0";
-			//~ $headers[] = "Content-type: text/plain; charset=utf-8";
-			$headers[] = "Content-type: text/html; charset=utf-8";
+			$headers[] = "MIME-Version: 1.0\r\n";
+			$headers[] = "Content-Type: text/html; charset=utf-8\r\n";
 
 			$headers = array_merge($headers, $extra_headers);
 
@@ -699,7 +698,16 @@ function run_mail_queue () {
 				}
 				
 				$message->setTo($to);
-				$message->setBody($email['body'], 'text/plain', 'utf-8');
+
+				if ($email["image_list"] != "") {
+					$images = explode ( ",", $email["image_list"]);
+					$body_images = "";
+					foreach ($images as $image) {
+							$body_images .= '<br><img src="' . $message->embed(Swift_Image::fromPath("$image")) .'"/>';
+					}
+				}
+
+				$message->setBody('<html><body>'.$email['body'].$body_images.'</body></html>', 'text/html', 'utf-8');
 				
 				if ($email["attachment_list"] != "") {
 					$attachments = explode ( ",", $email["attachment_list"]);
@@ -708,7 +716,7 @@ function run_mail_queue () {
 							$message->attach(Swift_Attachment::fromPath($attachment));
 				}
 
-				$message->setContentType("text/plain");
+				$message->setContentType("text/html");
 
 				$headers = $message->getHeaders();
 
@@ -716,7 +724,7 @@ function run_mail_queue () {
 					$aux_header = explode(":", $eh);
 					$headers->addTextHeader($aux_header[0], $aux_header[1]);
 				}
-				
+		
 				//Check if the email was sent at least once
 				if ($mailer->send($message) >= 1)
 					process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
