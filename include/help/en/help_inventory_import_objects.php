@@ -3,7 +3,7 @@
 	There is an option to import inventory data from a CSV file. For this, the file is uploaded with a line per inventory and values separated by commas. The order must be the following:
 </p>
 <p>
-	ID, Item type, Owner, Name, Viewers, Description, Contract, Manufacturer ID, Parent ID, Related company 1;…;Related company N;RelatedUser1;RelatedUserN,Status,Field1 for item type,…,FieldN for item type.
+	ID Item type, Owner, Name, Viewers, Description, Contract, Manufacturer ID, Parent ID, Related company 1;…;Related company N;RelatedUser1;RelatedUserN,Status,Field1 for item type,…,FieldN for item type.
 </p>
 <p>
 	Statuses an inventory can adopt are:

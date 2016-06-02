@@ -114,7 +114,7 @@ switch ($option) {
 //echo "</div>";
 
 ?>
-
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script>
 
 //Configure some actions to send forms stats

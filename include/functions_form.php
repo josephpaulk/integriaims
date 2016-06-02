@@ -1002,43 +1002,23 @@ function form_search_incident ($return = false, $filter=false) {
 	$table = new stdclass;
 	$table->width = "100%";
 	$table->class = "search-table-button";
-	$table->cellspacing = 2;
-	$table->cellpadding = 2;
 	$table->data = array ();
-	$table->size = array ();
-	$table->style = array ();
-	$table->style[0] = 'width: 35%';
-	$table->style[1] = 'width: 25%';
-	$table->style[2] = 'width: 25%;';
-	$table->style[3] = 'width: 25%';
-	$table->rowstyle = array ();
-	//~ $table->rowstyle[1] = 'display: none';
-	//~ $table->rowstyle[2] = 'display: none';
-	//~ $table->rowstyle[3] = 'display: none';
-	//~ $table->rowstyle[4] = 'display: none';
-	//~ $table->rowstyle[5] = 'display: none';
-	$table->rowstyle[6] = 'text-align: right';
-	$table->colspan = array ();
-	$table->colspan[0][0] = 2;
-	$table->colspan[6][0] = 4;
-	$table->colspan[7][1] = 3;
-	$table->rowspan = array ();
-	$table->rowspan[2][2] = 2;
 	
+	
+	//Search
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
 		'', 30, 100, true, __('Search string'));
 	
+	//Status
 	$available_status = get_indicent_status();
 	$available_status[-10] = __("Not closed");
+	$table->data[0][1] = print_select ($available_status,'search_status', $status,'', __('Any'), 0, true, false, true,__('Status'));
 	
-	$table->data[0][1] = print_select ($available_status,
-			'search_status', $status,
-			'', __('Any'), 0, true, false, true,
-			__('Status'));
-	
+	//Groups
 	$groups = users_get_groups_for_select ($config['id_user'], "IW", true, true);
 	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
+	//Check Box
 	$table->data[0][3] = print_checkbox_extended ('search_show_hierarchy', 1, $show_hierarchy, false, '', '', true, __('Show hierarchy'));
 	
 	$table_advanced = new stdclass;
@@ -1093,9 +1073,13 @@ function form_search_incident ($return = false, $filter=false) {
 			'', __('Any'), -1, true, false, false, __('Resolution'), false);
 			
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
-	$table_advanced->data[2][2] = print_input_text_extended ('inventory_name', $name,'', '', 20, 0, false, '', "style='width:195px;'", true, '', __('Inventory'));
-	$table_advanced->data[2][2] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
-	$table_advanced->data[2][2] .= print_input_hidden ('id_inventory', $id_inventory, true);
+	
+	//Parent name
+	$table_advanced->data[2][2] =  print_input_text_extended ("parent_name", $name, "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:165px !important;'", true, false,  __('Parent object'), false, true);
+	$table_advanced->data[2][2] .= "&nbsp;&nbsp;" . print_image("images/add.png", true, array("onclick" => "show_inventory_search('','','','','','','','','','', '', '')", "style" => "cursor: pointer"));	
+	$table_advanced->data[2][2] .= "&nbsp;&nbsp;" . print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));
+
+	$table_advanced->data[2][2] .= print_input_hidden ('id_parent', $id_inventory, true);
 	
 	$table_advanced->data[2][3] = get_last_date_control ($date_from, 'search_from_date', __('Date'), $date_start, 'search_first_date', __('Created from'), $date_end, 'search_last_date', __('Created to'));
 	$table_advanced->rowspan[2][3] = 2;
@@ -1208,20 +1192,20 @@ function form_search_incident ($return = false, $filter=false) {
 	}
 
 	$table_advanced->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
-	
-	//$table->data[7][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" id="show_advanced_search" href="javascript:show_ad_search();">'.__('Advanced search').'></a></div>';
+
 	$table->colspan['row_advanced'][0] = 5;
 	$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_search', __('Advanced search'), print_table($table_advanced, true), 'closed', true, true);
 	
 	//Store serialize filter
 	serialize_in_temp($filter, $config["id_user"]);
-	
-	
+	$table->colspan['button'][0] = 2;
+	$table->colspan['button'][2] = 2;
+	$table->data['button'][0] = '</br>';
+	$table->data['button'][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data['button'][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub"', true);
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
-	$output .= "<div class='divform'><table class='search-table'><tr><td>" . print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
-	$output .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub"', true) . "</td></tr></table></div>";
-	$output .= '<div class="divresult">' . print_table ($table, true);
-	$output .= '</form></div>';
+	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
+	$output .= '</form>';
 		
 	echo "<div class= 'dialog ui-dialog-content' id='search_inventory_window'></div>";
 	
@@ -1269,7 +1253,7 @@ function form_search_users ($return = false, $filter=false) {
 	$global_profile[-1] = __('Standalone');
 	$global_profile[0] = __('Grouped');
 	$global_profile[1] = __('Administrator');
-	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('Global profile'));
+	$table->data[2][0] = print_select ($global_profile, 'level', $level, '', __('Any'), -10, true, 0, false, __('User mode'));
 	
 	$group_name = get_user_groups();
 	$group_name[-1] = __('Groupless');

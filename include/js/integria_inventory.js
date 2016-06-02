@@ -627,10 +627,9 @@ function delete_object_inventory (id_inventory) {
 	});
 }
 
-// Show the modal window of company associated
-function show_company_associated() {
-
-	$.ajax({
+//add diferents company
+function show_company_associated (filter) {	
+$.ajax({
 		type: "POST",
 		url: "ajax.php",
 		data: "page=include/ajax/inventories&get_company_associated=1",
@@ -646,13 +645,80 @@ function show_company_associated() {
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 520,
+					width: 535,
 					height: 350
 				});
 			$("#company_search_modal").dialog('open');
+			
+			$("#company_search_modal").ready (function () {
+				$('.pass').click(function() { return !$('#origin option:selected').remove().appendTo('#destiny').attr('selected', 'selected'); });  
+				$('.remove').click(function() { return !$('#destiny option:selected').remove().appendTo('#origin').attr('selected', false);});
+				$('.remove').click(function() { return $('#destiny option').attr('selected', 'selected');});
+				$('.passall').click(function() { $('#origin option').each(function() { $(this).remove().appendTo('#destiny').attr('selected', 'selected'); }); });
+				$('.removeall').click(function() { $('#destiny option').each(function() { $(this).remove().appendTo('#origin'); }); });
+				$('.submit').click(function() { $('#destiny').attr('selected', 'selected'); });	
+			});
 		}
-	});
+	});	
 }
+
+//copy diferents company in field
+function load_company_groups() {
+	selText = {};
+	selId = '';
+	$i=0;
+	$("#destiny option:selected").each(function () {
+	   	var $this = $(this);
+	   	if ($this.length) {
+	   		selId = selId + $this.val() + ', ';
+	    	selText[$this.val()] = $this.text();
+	   		$i++;
+	   	}
+	});
+	$("#inventory_companies option").remove();
+	if(!selId){
+		$('#inventory_companies').append($('<option>', {
+	    	value: 0,
+	    	text: 'None'
+		}))
+	} else {
+		$.each(selText, function(key, value){
+			$('#inventory_companies').append($('<option>', {
+	    		value: key,
+	    		text: value
+			}))
+		});
+	}
+	$("#hidden-companies").val(selId);
+	$("#company_search_modal").dialog("close");
+}
+
+//remove text diferents company field
+function clean_company_groups () {
+	var selId='';
+	//option selected
+	s= $("#inventory_companies").prop ("selectedIndex");
+	//value option selected
+	selected_id = $("#inventory_companies").children (":eq("+s+")").attr ("value");
+	//delete option selected
+	$("#inventory_companies").children (":eq("+s+")").remove ();
+	//chnge ids for option
+	$("#inventory_companies option").each(function () {
+	   	var $this = $(this);
+	   	if ($this.length) {
+	   		selId = selId + $this.val() + ', ';
+	   	}
+	});	
+	//if there is not option
+	if(!selId){ 
+		$('#inventory_companies').append($('<option>', {
+	    	value: 0,
+	    	text: 'None'
+		}));
+	}
+	$("#hidden-companies").attr("value", selId);
+}
+
 
 function cleanParentInventory() {
 	$("#text-parent_name").val(__("None"));
@@ -677,24 +743,8 @@ function loadCompany() {
 	});
 }
 
-function removeCompany() {
-
-	s= $("#inventory_companies").prop ("selectedIndex");
-
-	selected_id = $("#inventory_companies").children (":eq("+s+")").attr ("value");
-
-	$("#inventory_companies").children (":eq("+s+")").remove ();
-	$(".selected-companies").each (function () {
-		if (this.value == selected_id)
-			$(this).remove();
-	});
-	
-	$('input[name^="companies"][value="'+selected_id+'"]').remove();
-}
-
 // Show the modal window of company associated
 function show_user_associated() {
-
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -712,50 +762,77 @@ function show_user_associated() {
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 300,
-					height: 150
+					width: 535,
+					height: 350
 				});
 			$("#user_search_modal").dialog('open');
 			
-			var idUser = "<?php echo $config['id_user'] ?>";
-		
-			bindAutocomplete ("#text-inventory_user", idUser);
+			$("#user_search_modal").ready (function () {
+				$('.pass').click(function() { return !$('#origin_users option:selected').remove().appendTo('#destiny_users').attr('selected', 'selected'); });  
+				$('.remove').click(function() { return !$('#destiny_users option:selected').remove().appendTo('#origin_users').attr('selected', false);});
+				$('.remove').click(function() { return $('#destiny_users option').attr('selected', 'selected');});
+				$('.passall').click(function() { $('#origin_users option').each(function() { $(this).remove().appendTo('#destiny_users').attr('selected', 'selected'); }); });
+				$('.removeall').click(function() { $('#destiny_users option').each(function() { $(this).remove().appendTo('#origin_users'); }); });
+				$('.submit').click(function() { $('#destiny_users').attr('selected', 'selected'); });	
+			});
 		}
 	});
 }
 
-function loadUser() {
-
-	id_user = $('#text-inventory_user').val();
-
-	$('#inventory_status_form').append ($('<input type="hidden" value="'+id_user+'" class="selected-users" name="users[]" />'));
-
-	$("#user_search_modal").dialog('close');
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=operation/inventories/inventory_detail&get_user_name=1&id_user="+ id_user,
-		dataType: "json",
-		success: function (name) {
-			$('#inventory_users').append($('<option></option>').html(name).attr("value", id_user));
-		}
+function load_users_groups() {
+	selText = {};
+	selId = '';
+	$i=0;
+	$("#destiny_users option:selected").each(function () {
+	   	var $this = $(this);
+	   	if ($this.length) {
+	   		selId = selId + $this.val() + ', ';
+	    	selText[$this.val()] = $this.text();
+	   		$i++;
+	   	}
 	});
+	$("#inventory_users option").remove();
+	if(!selId){
+		$('#inventory_users').append($('<option>', {
+	    	value: 0,
+	    	text: 'None'
+		}))
+	} else {
+		$.each(selText, function(key, value){
+			$('#inventory_users').append($('<option>', {
+	    		value: key,
+	    		text: value
+			}))
+		});
+	}
+	$("#hidden-users").val(selId);
+	$("#user_search_modal").dialog("close");
 }
 
-function removeUser() {
+function clean_users_groups() {
 
+	var selId='';
+	//option selected
 	s= $("#inventory_users").prop ("selectedIndex");
-
+	//value option selected
 	selected_id = $("#inventory_users").children (":eq("+s+")").attr ("value");
-
+	//delete option selected
 	$("#inventory_users").children (":eq("+s+")").remove ();
-	$(".selected-users").each (function () {
-		if (this.value == selected_id)
-			$(this).remove();
-	});
-
-	$('input[name^="users"][value="'+selected_id+'"]').remove();
+	//chnge ids for option
+	$("#inventory_users option").each(function () {
+	   	var $this = $(this);
+	   	if ($this.length) {
+	   		selId = selId + $this.val() + ', ';
+	   	}
+	});	
+	//if there is not option
+	if(!selId){ 
+		$('#inventory_users').append($('<option>', {
+	    	value: 0,
+	    	text: 'None'
+		}));
+	}
+	$("#hidden-users").attr("value", selId);
 }
 
 function removeExternal(id) {
@@ -988,4 +1065,27 @@ function send_form_ajax(id_form, id_response, url, operation){
 			}
 		}
 	});
+}
+
+function onchange_owner_company(){
+	console.log('vamos');
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&change_owner=1&id_name="+ id_name,
+		dataType: "json",
+		success: function (name_company) {
+			if(name_company[0]){
+				$("#hidden-companies").val(name_company[0]["id"]);
+				$("#inventory_companies option").empty();
+				$("#inventory_companies option").val(name_company[0]["id"]);
+				$("#inventory_companies option").append(name_company[0]["name"]);
+			} else {
+				$("#inventory_companies option").empty();
+				$("#inventory_companies option").val(0);
+				$("#inventory_companies option").append('None');
+				$("#hidden-companies").empty();
+			} 
+		}
+	});	
 }

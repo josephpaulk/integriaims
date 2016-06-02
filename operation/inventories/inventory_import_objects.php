@@ -50,10 +50,8 @@ $table->data[1][0] .= '<input type="submit" class="sub upload" value="' . __('Up
 
 echo "<div class='divform' >";
 echo '<form enctype="multipart/form-data" action="index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects" method="POST">';
-print_input_hidden ('upload_file', 1);
-print_table ($table);
-
-
+	print_input_hidden ('upload_file', 1);
+	print_table ($table);
 echo '</form>';
 echo "</div>"
 ?>

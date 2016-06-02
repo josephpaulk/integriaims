@@ -284,6 +284,7 @@ return;
 			$object_fields_default[6] = 'id_contract';
 			$object_fields_default[7] = 'status';
 			$object_fields_default[8] = 'receipt_date';
+			$object_fields_default[9] = 'issue_date';
 		$object_fields = get_parameter('object_fields', $object_fields_default);
 	}
 
@@ -303,7 +304,7 @@ return;
 			$count_object_custom_fields = 0;
 		}
 		foreach ($object_fields as $key => $value) {
-			if ($key < 9){
+			if ($key < 10){
 				if (!$pr){
 					$pr = ' i.'.$value;
 				} else {
@@ -637,9 +638,17 @@ if (!$pure) {
 
 				}
 
+				//checkbox status
+				if ($params['object_fields'][9]){
+					$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[9]" checked value="issue_date" id="issue_date"><label for="issue_date">'.__('Issue date').'</label>';
+				} else {
+					$select_label_object .= '<input type="checkbox" class="checkbox_object_field" name="object_fields[9]" value="issue_date" id="issue_date"><label for="issue_date">'.__('Issue date').'</label>';
+
+				}
+
 				//checkbox custom fields
 				if ($params['object_fields_custom']){
-					$i=9;
+					$i=10;
 					foreach ($params['object_fields_custom'] as $object) {
 						if($params['object_fields'][$i]){
 							$select_label_object .= '<input name="object_fields['.$i.']" checked class="checkbox_object_field" value="'.$object['id'].'" type="checkbox" id="'.$object['id'].'">';
@@ -665,7 +674,6 @@ if (!$pure) {
 		$table_search->size[1] = "35%";
 		
 		//find
-		//
 		$table_search->data[0][0] = print_input_text ('search_free', $params['search_free'], '', 25, 128, true, __('Search'). print_help_tip (__("Search by id, name, status, description and custom fields"), true));
 		
 		//associate company
@@ -708,8 +716,9 @@ if (!$pure) {
 		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $params['inventory_status'], '', '', '', true, false, false, __('Status'));
 
 		//Parent name
-		$table_search->data[2][1] =  print_input_text_extended ("parent_name", $params['parent_name'], "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','', '', '')", "class='inventory_obj_search' style='width:210px;'", true, false,  __('Parent object'));
-		$table_search->data[2][1] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
+		$table_search->data[2][1] =  print_input_text_extended ("parent_name", $params['parent_name'], "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:165px !important;'", true, false,  __('Parent object'), false, true);
+		$table_search->data[2][1] .= "&nbsp;&nbsp;" . print_image("images/add.png", true, array("onclick" => "show_inventory_search('','','','','','','','','','', '', '')", "style" => "cursor: pointer"));	
+		$table_search->data[2][1] .= "&nbsp;&nbsp;" . print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 		//$table_search->data[2][1] .= print_input_hidden ('id_parent', $id_parent, true);
 
 		//check

@@ -484,7 +484,6 @@ function process_massive_updates () {
 						value: assigned_user});
 			}
 			if(groups != -1) {
-				console.log(groups);
 				values.push ({name: "grupo_form",
 						value: groups});
 			}
@@ -1086,7 +1085,6 @@ $.ajax({
 }
 
 function loadContactUser(name, clickin) {
-		console.log(clickin);
 		if (clickin == 0){
 			var content = $("#text-id_creator").val();
 			content = name;
@@ -1297,8 +1295,11 @@ function change_type_fields_table(title) {
 		data: "page=operation/incidents/incident_search_logic&get_type_fields_table=1&id_incident_type="+$("#search_id_incident_type").val(),
 		dataType: "html",
 		success: function(data) {
-			$("#table_type_fields").append('<h3>'+title+'</h3>');
-			$("#table_type_fields").append(data);
+			$("#table_type_fields").empty();
+			if(data){
+				$("#table_type_fields").append('<h3>'+title+'</h3>');
+				$("#table_type_fields").append(data);
+			}
 			add_datepicker ("input[type=date]");
 		}
 	});

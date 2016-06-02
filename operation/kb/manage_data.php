@@ -265,7 +265,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<b>" . __('Product') . "</b>";
 	echo "<td class=datos2>";
 	//combo_kb_products ($id_product);
-	combo_product_types($product, 0);
+	combo_product_types($id_product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos>";

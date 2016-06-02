@@ -29,6 +29,7 @@ $printTableMoreInfo = get_parameter('printTableMoreInfo', 0);
 $get_item_info = (bool) get_parameter('get_item_info', 0);
 $form_inventory = (bool) get_parameter('form_inventory', 0);
 $quick_delete = (bool) get_parameter('quick_delete', 0);
+$change_owner = (bool) get_parameter('change_owner', 0);
 
 if ($select_fields) {
 	$id_object_type = get_parameter('id_object_type');
@@ -77,6 +78,8 @@ if ($form_inventory) {
 		$object_fields_default[6] = 'id_contract';
 		$object_fields_default[7] = 'status';
 		$object_fields_default[8] = 'receipt_date';
+		$object_fields_default[9] = 'issue_date';
+
 	$object_fields = get_parameter('object_fields', $object_fields_default);
 
 	$sql_object_fields_custom = 'select label, id from tobject_type_field where show_list=1 and id_object_type='.$id_object_type;
@@ -122,6 +125,7 @@ if ($change_table) {
 		$object_fields_default[6] = 'id_contract';
 		$object_fields_default[7] = 'status';
 		$object_fields_default[8] = 'receipt_date';
+		$object_fields_default[9] = 'issue_date';
 
 	$object_fields = get_parameter('object_fields', $object_fields_default);
 	if ($object_fields) {
@@ -129,7 +133,7 @@ if ($change_table) {
 		
 		$count_object_custom_fields = 0;
 		foreach ($object_fields as $key => $value) {
-			if ($key < 9){
+			if ($key < 10){
 				if (!$pr){
 					$pr = ' i.'.$value;
 				} else {
@@ -147,6 +151,7 @@ if ($change_table) {
 		}
 		if($tr){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
+			
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 		} else {
@@ -585,46 +590,44 @@ if ($get_inventory_search) {
 }
 
 if ($get_company_associated) {
-	
-	$table_company->class = 'databox';
-	$table_company->width = '98%';
-	$table_company->data = array ();
-	
 	$companies = get_companies();
-	$table_company->data[0][0] = print_label (__('Company'), '','',true);
-	$table_company->data[0][1] = print_select ($companies, 'id_company', '',
-		'', '', 0, true, false, false, '', '', 'width: 200px;');
-	
-	print_table($table_company);
-	
-	echo '<div style="width:'.$table_company->width.'" class="action-buttons button">';
-		echo "<a href='javascript: loadCompany();'>".__('Add')."<img src='images/go.png' /></a>";
+
+	echo '<div class="div_ui div_left_ui">';
+		echo print_select ($companies, "origin", '', '', '', 0, true, true, false);
 	echo '</div>';
-	
+	echo '<div class="div_middle_ui">';
+		echo '<a class="pass left"><img src="images/flecha_dcha.png"/></a><br/>';
+		echo '<a class="passall left"><img src="images/go_finish.png"/></a><br/>';
+		echo '<a class="remove right"><img src="images/flecha_izqda.png"/></a><br/>';
+		echo '<a class="removeall right"><img src="images/go_begin.png"/></a>';
+	echo '</div>';
+	echo '<div class="div_ui div_right_ui">';
+		echo '<select name="destiny" id="destiny" multiple="multiple"></select>';
+	echo '</div>';	
+	echo '<p class="button_send_groups"><input type="button" value='.__('Submit').' onclick="load_company_groups()" /></p>';
+	echo '</form>';
+
 	return;
 }
 
 if ($get_user_associated) {
-	
-	$inventory_user = get_parameter('inventory_user', '');
-	$table_user->class = 'search-table';
-	$table_user->width = '100%';
-	$table_user->data = array ();
-	
-	$params_user['input_id'] = 'text-inventory_user';
-	$params_user['input_name'] = 'inventory_user';
-	$params_user['input_value'] = $inventory_user;
-	$params_user['return'] = true;
-	$params_user['title'] = __('User');
 
-	$table_user->data[0][0] = user_print_autocomplete_input($params_user);
-	
-	print_table($table_user);
-	
-	echo '<div style="width:'.$table_user->width.'" class="action-buttons button">';
-	echo "<a href='javascript: loadUser();'>".__('Add')."<img src='images/go.png' /></a>";
+	$name = get_user_visible_users($config['id_user']);
+	echo '<div class="div_ui div_left_ui">';
+		echo print_select ($name, "origin_users", '', '', '', 0, true, true, false);
 	echo '</div>';
-	
+	echo '<div class="div_middle_ui">';
+		echo '<a class="pass left"><img src="images/flecha_dcha.png"/></a><br/>';
+		echo '<a class="passall left"><img src="images/go_finish.png"/></a><br/>';
+		echo '<a class="remove right"><img src="images/flecha_izqda.png"/></a><br/>';
+		echo '<a class="removeall right"><img src="images/go_begin.png"/></a>';
+	echo '</div>';
+	echo '<div class="div_ui div_right_ui">';
+		echo '<select name="destiny" id="destiny_users" multiple="multiple"></select>';
+	echo '</div>';	
+	echo '<p class="button_send_groups"><input type="button" value='.__('Submit').' onclick="load_users_groups()" /></p>';
+	echo '</form>';
+
 	return;
 }
 
@@ -664,4 +667,16 @@ if ($printTableMoreInfo) {
 	}
 	
 }
+
+if ($change_owner){
+	$config['mysql_result_type'] = MYSQL_ASSOC;
+	$id_name = get_parameter('id_name');
+	$sql = "SELECT com.id, com.name FROM tcompany com, tusuario usr WHERE usr.id_company = com.id AND id_usuario='" . $id_name ."';";
+	debugPrint($sql, true);
+	$name_company = get_db_all_rows_sql($sql);
+	$name_company = json_encode($name_company, true);
+	echo safe_output($name_company);
+	return;
+}
+
 ?>

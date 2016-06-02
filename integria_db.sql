@@ -164,7 +164,7 @@ CREATE TABLE `tincident_type` (
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   `id_wizard` mediumint(8) unsigned NULL,
-  `id_group` varchar(250) NOT NULL default '',
+  `id_group` text NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

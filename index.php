@@ -508,7 +508,7 @@ if ($clean_output == 0) {
 			<!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
 			<!-- DO NOT USE CSS HERE -->
 
-		<div width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px'>
+		<div width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px; min-width: 1024px; '>
 			
 			<?php
 			// Avoid render left menu for some special places (like home).

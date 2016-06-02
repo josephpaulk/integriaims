@@ -373,18 +373,20 @@ if ($update) {
 		inventory_tracking($id,INVENTORY_PARENT_UPDATED, $aditional_data);
 	}
 	
-	$inventory_companies = get_parameter("companies");
+	$inventory_companies = get_parameter("inventory_companies");
 	$result_hook = enterprise_hook ('inventory_get_user_inventories', array (get_parameter ('companies', $inventory_companies), true));
 	
 	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
-		$inventory_users = get_parameter("users");		
-		// Update users in inventory 
-		enterprise_hook ('inventory_update_users', array ($id, get_parameter ('users', $inventory_users), true));
+		// Update users in inventory
+		$users = get_parameter ('users');
+		$users = explode(", ", safe_output($users));	 
+		inventory_update_users ($id, $users, true);
 	}
 
 	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
-		$inventory_companies = get_parameter("companies");
-		enterprise_hook ('inventory_update_companies', array($id, $inventory_companies, true));
+		$companies = get_parameter ('companies');
+		$companies = explode(", ", safe_output($companies));
+		inventory_update_companies($id, $companies, true);
 	}	
 
 	if ($result !== false) {
@@ -507,13 +509,17 @@ if ($create) {
 			
 			inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
 		}
+		//company tinventory_ACL
+		$companies = get_parameter ('companies');
+		$companies = explode(", ", safe_output($companies));
+		$result_companies = inventory_update_companies ($id, $companies);
 		
-		$result_companies = enterprise_hook ('inventory_update_companies', array ($id, get_parameter ('companies')));
-		$result_users = enterprise_hook ('inventory_update_users', array ($id, get_parameter ('users')));
+		//users tynventory_ACL
+		$users = get_parameter ('users');
+		$users = explode(", ", safe_output($users));
+		$result_users = inventory_update_users ($id, $users);
 
-		
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
-
 		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
 
 	} else {
@@ -608,8 +614,9 @@ else {
 	
 		$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
-		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','', '', '')", "class='inventory_obj_search' style='width:210px;'", true, false,  __('Parent object'));
-		$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
+		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:210px;'", true, false,  __('Parent object'), false, true);
+		$table->data[1][0] .= "&nbsp;&nbsp;" . print_image("images/add.png", true, array("onclick" => "show_inventory_search('','','','','','','','','','', '', '')", "style" => "cursor: pointer"));
+		$table->data[1][0] .= "&nbsp;&nbsp;" . print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 		$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
 	} else {
@@ -644,42 +651,44 @@ else {
 	$table->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, 'show_issue_date();', '', '', true, false, false, __('Status'));
 
 
-	$companies = array();
-	$users = array();
+	$companies[0] = "none";
+	$users[0] = "none";
 
 	if ($id) {
-		$companies = enterprise_hook ('inventory_get_companies', array ($id));
-		
-		$users = enterprise_hook ('inventory_get_users', array ($id));
+		$companies = inventory_get_companies ($id);
+		$count_companies = count($companies);
+		if($count_companies == 0){
+			$companies[0] = __('None');
+		}
+		$users = inventory_get_users ($id);
+		$count_users = count($users);
+		if($count_users == 0){
+			$users[0] = __('None');
+		}
+	}
+	
+	$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,'', '', '', true, false, false, __('Associated companies'));
+	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: clean_company_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	
+	if($companies){
+		foreach ($companies as $key => $value) {
+			$company_id .= $key . ', ';
+		}
 	}
 
-	if ($write_permission || !$id) {
-		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
-								'', '', '', true, false, false, __('Associated companies'));
-		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: removeCompany();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-
-		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
-								'', '', '', true, false, false, __('Associated users'));
-		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: removeUser();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-
-		foreach ($companies as $company_id => $company_name) {
-			$table->data[2][1] .= print_input_hidden ("companies[]",
-								$company_id, true, 'selected-companies');
+	$table->data[2][1] .= print_input_hidden ("companies",$company_id, true, 'selected-companies');
+	
+	$table->data[2][2] = print_select ($users, 'inventory_users', NULL,'', '', '', true, false, false, __('Associated users'));
+	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: clean_users_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	
+	if($users){
+		foreach ($users as $key => $value) {
+			$user_id .= $key . ', ';
 		}
-
-		foreach ($users as $user_id => $user_name) {
-			$table->data[2][2] .= print_input_hidden ("users[]",
-								$user_id, true, 'selected-users');
-		}
-	} else {
-		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
-								'', '', '', true, false, false, __('Associated companies'));
-								
-		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
-								'', '', '', true, false, false, __('Associated users'));
 	}
+	$table->data[2][2] .= print_input_hidden ("users",$user_id, true, 'selected-users');
 	
 	$objects_type = get_object_types ();
 
@@ -811,6 +820,13 @@ $(document).ready (function () {
 		$("#delete_inventory_form").submit();
 	});
 
+});
+
+//Onchange
+$("#text-owner").change(function() {
+	id_name = $("#text-owner").val();
+	console.log(id_name);
+	onchange_owner_company();
 });
 
 // Form validation
