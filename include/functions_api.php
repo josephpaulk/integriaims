@@ -117,7 +117,6 @@ function api_create_incident ($return_type, $user, $params){
 	$config['id_user'] = $user;
 
 	// $id is the user who create the incident
-	
 	$group = $params[1];
 
 	if (! give_acl ($user, $group, "IW")){
@@ -177,10 +176,7 @@ function api_create_incident ($return_type, $user, $params){
 		}
 	} else {
 		$check_resolution = true;
-		$enterprise = enterprise_hook("incidents_check_allowed_resolution", array($resolution, $status, 0, true));
-		if ($enterprise != ENTERPRISE_NOT_HOOK) {
-			$resolution = 0;
-		}
+		$resolution = 0;
 	}
 	
 	if($id_parent == 0) {
@@ -188,7 +184,7 @@ function api_create_incident ($return_type, $user, $params){
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, 
-			resolution, email_copy, id_incident_type, extra_data, extra_data2, $extra_data3, $extra_data4)
+			resolution, email_copy, id_incident_type, extra_data, extra_data2, extra_data3, extra_data4)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
 			%d, "%s", %d, "%s", "%s", "%s", "%s")', $timestamp, $timestamp, $title, $description, $owner,
 			$status, $priority, $group, $id_creator,
