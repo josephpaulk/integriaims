@@ -47,9 +47,9 @@ CREATE TABLE `tcompany_field_data` (
 -- Add type date
 -- ---------------------------------------------------------------------
 
-ALTER TABLE tincident_type_field MODIFY `type` enum('text', 'textarea', 'combo', 'linked', 'numeric', 'date') DEFAULT 'text';
+ALTER TABLE `tincident_type_field` MODIFY `type` enum('text', 'textarea', 'combo', 'linked', 'numeric', 'date') DEFAULT 'text';
 
-- ---------------------------------------------------------------------
+-- ---------------------------------------------------------------------
 -- change type text
 -- ---------------------------------------------------------------------
 
@@ -60,4 +60,10 @@ ALTER TABLE `tincident_type` MODIFY `id_group` text NOT NULL default '';
 -- tpending_mail
 -- ---------------------------------------------------------------------
 
-ALTER TABLE tpending_mail ADD COLUMN `image_list` text DEFAULT NULL;
+ALTER TABLE `tpending_mail` ADD COLUMN `image_list` text DEFAULT NULL;
+
+-- ---------------------------------------------------------------------
+-- tconfig
+-- ---------------------------------------------------------------------
+
+UPDATE tconfig SET `value`='Please do not respond directly this email, has been automatically created by Integria (http://integriaims.com).\n\nThanks for your time and have a nice day\n\n' WHERE `token`='FOOTER_EMAIL';
