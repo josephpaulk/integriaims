@@ -310,7 +310,8 @@ if ($action == 'create'){
 	$ahora = date("Y-m-d H:i:s");
 	$num_employee = get_parameter("num_employee");
 	$location = get_parameter ("location", "");
-	$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company', $enable_login, '$location')";
+	//~ $sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company', $enable_login, '$location')";
+	$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, enable_login, location, disabled_login_by_license) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company', $enable_login, '$location', 0)";
 
 	$resq1 = process_sql($sql_insert);
 	
