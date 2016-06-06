@@ -307,11 +307,12 @@ if (defined ('AJAX')) {
 	if ($set_ticket_groups) {
 		$id_incident_type = (int)get_parameter('id_incident_type');
 		$option_any = (int)get_parameter('option_any');
-		$id_group_type = get_db_value("id_group", "tincident_type", "id", $id_incident_type);
+		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 		if($id_group_type != "" && $id_group_type != "0"){
 			$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-			$groups_selected = explode(',&#x20;', $id_group_type);
-			$groups = array_intersect($groups_all, $groups_selected);
+			$id_group_type = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", $id_group_type);
+			$groups_selected = explode(', ', $id_group_type);
+			$groups = array_intersect(safe_output($groups_all), $groups_selected);
 			if($option_any){
 				$groups[0] = __('Any');
 			}

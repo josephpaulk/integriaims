@@ -101,7 +101,7 @@ if ($get_incident_name) {
 }
 
 if ($get_group_search) {
-	
+	$filter = get_parameter("filter");
 	//Get group if was not defined
 	if($id_grupo==0) {
 		$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
@@ -115,8 +115,20 @@ if ($get_group_search) {
 		$id_grupo_incident = $id_grupo;
 	}
 
-	$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'nombre'));
-	
+
+	if($filter){
+		$groups_selected_prepare = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", safe_output($filter));
+		$groups_selected_prepare = explode(", ", $groups_selected_prepare);
+		
+		$groups_prepare = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'nombre'));
+		
+		$groups = array_diff($groups_prepare, $groups_selected_prepare);
+		$groups_selected = array_intersect($groups_prepare, $groups_selected_prepare);
+		
+	} else {
+		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'nombre'));
+	}
+
 	echo '<div class="div_ui div_left_ui">';
 		echo print_select ($groups, "origin", $id_grupo_incident, '', '', 0, true, true, false);
 	echo '</div>';
@@ -127,7 +139,7 @@ if ($get_group_search) {
 		echo '<a class="removeall right"><img src="images/go_begin.png"/></a>';
 	echo '</div>';
 	echo '<div class="div_ui div_right_ui">';
-		echo '<select name="destiny" id="destiny" multiple="multiple"></select>';
+		echo print_select ($groups_selected, "destiny", '', '', '', 0, true, true, false, false, false, '', true);
 	echo '</div>';	
 	echo '<p class="button_send_groups"><input type="button" value='.__('Submit').' onclick="loadgroups()" /></p>';
 	echo '</form>';

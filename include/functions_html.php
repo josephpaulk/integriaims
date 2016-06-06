@@ -291,7 +291,7 @@ function html_print_select_from_sql ($sql, $name, $selected = '',
 function print_select ($fields, $name, $selected = '', $script = '', 
 		$nothing = 'select', $nothing_value = '0', $return = false, 
 		$multiple = 0, $sort = true, $label = false, 
-		$disabled = false, $style='') {
+		$disabled = false, $style='', $selected_all = false) {
 
 	$output = "\n";
 	
@@ -343,7 +343,9 @@ function print_select ($fields, $name, $selected = '', $script = '',
 			}
 			
 			$output .= '   <option value="'. $value .'"';
-			if (is_array($selected)) {
+			if ($selected_all){
+				$output .= ' selected';
+			}else if (is_array($selected)) {
 				if (in_array($value,$selected)) {
 					$output .= ' selected';
 				}

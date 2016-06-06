@@ -1009,7 +1009,7 @@ function incident_show_groups_search (filter) {
 $.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/incidents&get_group_search=1&ajax=1&"+filter,
+		data: "page=include/ajax/incidents&get_group_search=1&ajax=1&filter="+filter,
 		dataType: "html",
 		success: function(data){	
 			$("#group_search_window").html (data);
