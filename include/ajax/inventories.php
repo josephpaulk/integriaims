@@ -590,8 +590,19 @@ if ($get_inventory_search) {
 }
 
 if ($get_company_associated) {
-	$companies = get_companies();
-
+	$filter = get_parameter("filter");
+	if($filter){
+	
+		$companies_prepare = get_companies();
+		$companies_selected_prepare = explode(",", $filter);
+		
+		$companies = array_diff($companies_prepare, $companies_selected_prepare);
+		$companies_selected = array_intersect($companies_prepare, $companies_selected_prepare);	
+	
+	} else {
+		$companies = get_companies();
+	}
+	
 	echo '<div class="div_ui div_left_ui">';
 		echo print_select ($companies, "origin", '', '', '', 0, true, true, false);
 	echo '</div>';
@@ -602,7 +613,7 @@ if ($get_company_associated) {
 		echo '<a class="removeall right"><img src="images/go_begin.png"/></a>';
 	echo '</div>';
 	echo '<div class="div_ui div_right_ui">';
-		echo '<select name="destiny" id="destiny" multiple="multiple"></select>';
+		echo print_select ($companies_selected, "destiny", '', '', '', 0, true, true, false, false, false, '', true);
 	echo '</div>';	
 	echo '<p class="button_send_groups"><input type="button" value='.__('Submit').' onclick="load_company_groups()" /></p>';
 	echo '</form>';
@@ -611,8 +622,19 @@ if ($get_company_associated) {
 }
 
 if ($get_user_associated) {
+	$filter = get_parameter("filter");
+	if($filter){
+		
+		$name_prepare = get_user_visible_users($config['id_user']);
+		$name_selected_prepare = explode(",", $filter);
+		debugPrint($name_selected_prepare);
+		$name = array_diff($name_prepare, $name_selected_prepare);
+		$name_selected = array_intersect($name_prepare, $name_selected_prepare);
 
-	$name = get_user_visible_users($config['id_user']);
+	} else {
+		$name = get_user_visible_users($config['id_user']);
+	}
+
 	echo '<div class="div_ui div_left_ui">';
 		echo print_select ($name, "origin_users", '', '', '', 0, true, true, false);
 	echo '</div>';
@@ -623,7 +645,7 @@ if ($get_user_associated) {
 		echo '<a class="removeall right"><img src="images/go_begin.png"/></a>';
 	echo '</div>';
 	echo '<div class="div_ui div_right_ui">';
-		echo '<select name="destiny" id="destiny_users" multiple="multiple"></select>';
+		echo print_select ($name_selected, "destiny", '', '', '', 0, true, true, false, false, false, '', true, "destiny_users");
 	echo '</div>';	
 	echo '<p class="button_send_groups"><input type="button" value='.__('Submit').' onclick="load_users_groups()" /></p>';
 	echo '</form>';

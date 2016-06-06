@@ -632,7 +632,7 @@ function show_company_associated (filter) {
 $.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_company_associated=1",
+		data: "page=include/ajax/inventories&get_company_associated=1&filter=" + filter,
 		dataType: "html",
 		success: function(data){	
 			$("#company_search_modal").html (data);
@@ -744,11 +744,11 @@ function loadCompany() {
 }
 
 // Show the modal window of company associated
-function show_user_associated() {
+function show_user_associated(filter) {
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_user_associated=1",
+		data: "page=include/ajax/inventories&get_user_associated=1&filter=" + filter,
 		dataType: "html",
 		success: function(data){	
 			$("#user_search_modal").html (data);

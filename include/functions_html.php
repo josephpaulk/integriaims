@@ -291,7 +291,7 @@ function html_print_select_from_sql ($sql, $name, $selected = '',
 function print_select ($fields, $name, $selected = '', $script = '', 
 		$nothing = 'select', $nothing_value = '0', $return = false, 
 		$multiple = 0, $sort = true, $label = false, 
-		$disabled = false, $style='', $selected_all = false) {
+		$disabled = false, $style='', $selected_all = false, $id_new= false) {
 
 	$output = "\n";
 	
@@ -299,7 +299,11 @@ function print_select ($fields, $name, $selected = '', $script = '',
 		$output .= print_label ($label, $name, 'select', true);
 	}
 	
-	$id = preg_replace('/[^a-z0-9\:\;\-\_]/i', '', $name);
+	if($id_new){
+		$id = $id_new;
+	} else {
+		$id = preg_replace('/[^a-z0-9\:\;\-\_]/i', '', $name);
+	}
 	
 	$attributes = ($script) ? 'onchange="'. $script .'"' : '';
 	if ($multiple) {

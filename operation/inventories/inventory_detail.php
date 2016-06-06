@@ -666,28 +666,31 @@ else {
 			$users[0] = __('None');
 		}
 	}
-	
-	$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,'', '', '', true, false, false, __('Associated companies'));
-	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: clean_company_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-	
+
 	if($companies){
 		foreach ($companies as $key => $value) {
 			$company_id .= $key . ', ';
+			$company_name .= $value . ',';
 		}
 	}
 
-	$table->data[2][1] .= print_input_hidden ("companies",$company_id, true, 'selected-companies');
-	
-	$table->data[2][2] = print_select ($users, 'inventory_users', NULL,'', '', '', true, false, false, __('Associated users'));
-	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
-	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: clean_users_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
-	
 	if($users){
 		foreach ($users as $key => $value) {
 			$user_id .= $key . ', ';
+			$user_name .= $key . ',';
 		}
 	}
+	
+	$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,'', '', '', true, false, false, __('Associated companies'));
+	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated(\"$company_name\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: clean_company_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	
+	$table->data[2][1] .= print_input_hidden ("companies",$company_id, true, 'selected-companies');
+	
+	$table->data[2][2] = print_select ($users, 'inventory_users', NULL,'', '', '', true, false, false, __('Associated users'));
+	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"$user_name\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: clean_users_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	
 	$table->data[2][2] .= print_input_hidden ("users",$user_id, true, 'selected-users');
 	
 	$objects_type = get_object_types ();
