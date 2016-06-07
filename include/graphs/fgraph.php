@@ -39,13 +39,12 @@ ob_start ();
 if (!empty($graph_type)) {
 	include_once($homeurl . 'include/functions.php');
 	include_once($homeurl . 'include/functions_html.php');
-	
 	include_once($homeurl . 'include/graphs/functions_fsgraph.php');
 	include_once($homeurl . 'include/graphs/functions_gd.php');
 	include_once($homeurl . 'include/graphs/functions_utils.php');
+	include_once($homeurl . 'include/graphs/functions_flot.php');
 }
 
-include_once($homeurl . 'include/graphs/functions_flot.php');
 // Clean the output buffer and turn off output buffering
 ob_end_clean ();
 
