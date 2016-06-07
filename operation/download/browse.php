@@ -200,7 +200,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$name = get_parameter ("name","");
 	// Location should not be changed never.
 	$description = get_parameter ("description","");
-	$id_category = get_parameter ("id_category","");
+	$id_category = get_parameter ("id_category", 0);
 	$id_type = get_parameter ("id_type", 0);
 	$public = (int) get_parameter ("public",0);
 	$external_id = (string) get_parameter ("external_id", "");
@@ -211,6 +211,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 	$sql_update ="UPDATE tdownload
 	SET public = $public, external_id = '$external_id', name = '$name', description = '$description', id_category = $id_category WHERE id = $id";
+
 	$result=mysql_query($sql_update);
 
 	if (! $result)
@@ -298,6 +299,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		}
 		
 		$row = get_db_row ("tdownload", "id", $id);
+		
 		$name = $row["name"];
 		$description =$row["description"];
 		$location = $row["location"];
@@ -386,7 +388,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	$table->colspan[3][0] = 3;
 
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Name'));
-	$table->data[0][1] = print_input_text ('external_id', $external_id, '', 60, 100, true, __('External ID'));
+	$table->data[0][1] = print_input_text ('external_id', $external_id, '', 60, 100, true, __('External ID'), true);
 	$table->data[1][0] = print_checkbox ("public", 1, $public, true, __('Public link'));
 	$table->data[1][1] = combo_download_categories ($id_category, 0, __('Main category'), true);
 	$table->data[1][2] = print_select (get_file_types(true, true), 'id_type', $id_type, '', '', 0, true, 0, false, __('Main type'));
@@ -537,7 +539,13 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 				$data[1] = format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
 
 				// Category
-				$data[2] = "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
+				$img = get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]);
+				if ($img) {
+					$data[2] = "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
+				}
+				else {
+					$data[2] = "";
+				}
 				
 				// Type
 				$row["id_type"] = get_db_value("id_type", "tdownload_type_file", "id_download", $row["id"]);
