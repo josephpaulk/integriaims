@@ -165,7 +165,7 @@ h6 { font-size: 0.5em !important; }
 	text-transform: none;
 }
 
-p, h1, h2, h3 {
+h1, h2, h3 {
 	margin: 30px 15px 0px 0px;
 }
 h4, h5{
@@ -771,9 +771,10 @@ form.searchform input.button {
 	float: left;
 	height: 50px;
 	position: absolute;
+	padding-top: 16px;
 }
 .header_search form {
-	padding-top: 16px;
+	
 }
 .header_search_icon {
 	width: 20%;
