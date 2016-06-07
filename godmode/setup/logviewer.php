@@ -23,7 +23,7 @@ if (give_acl($config["id_user"], 0, "FM")==0) {
     exit;
 }
 
-$file_name = $config["homedir"]."/integria.log";
+$file_name = $config["homedir"]."integria.log";
 
 
 $delete = get_parameter ("delete", 0);
@@ -37,11 +37,17 @@ echo "<h2>" . __("Error log") . "</h2>";
 echo "<h4>" . __("View file") . "</h4>";
 
 if (!file_exists($file_name)){
-	echo "<h2 class='error'>".__("Cannot find file"). "(".$file_name.")</h2>";
-}  else {
-
+	echo "<h2 class='error'>".__("Log file is empty "). "(".$file_name.")</h2>";
+}
+else {
 	$filesize = filesize($file_name);
-	$offset = ceil(($filesize / 4 ) * 3); // read only from the 3/4 part of file
+	
+	if ($filesize < 4000) { // If size is less than 4000, shows all the log file
+		$offset = ceil($filesize / 4);
+	}
+	else {
+		$offset = ceil(($filesize / 4 ) * 3); // Read only from the 3/4 part of file
+	}
 	$data = file_get_contents ($file_name, NULL, NULL, $offset);
 
 	echo "<div class='under_tabs_info'>$file_name ".__("Reading from byte"). " " .$offset ."</div><br>";
