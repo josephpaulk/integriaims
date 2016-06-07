@@ -248,9 +248,9 @@ if (!empty($company_fields)) {
 
 		//Only combo or linked
 		if ($field["type"] == "combo") {
-			$data[3] = $field["combo_value"];
+			$data[3] = ui_print_truncate_text($field["combo_value"], 60);
 		} else if ($field["type"] == "linked") {
-			$data[3] = $field["linked_value"];
+			$data[3] = ui_print_truncate_text($field["linked_value"], 60);
  		} else{
 			$data[3] = "";
 		}

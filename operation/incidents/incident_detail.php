@@ -303,7 +303,7 @@ if (defined ('AJAX')) {
 
 		return;
 	}
-	//add
+	
 	if ($set_ticket_groups) {
 		$id_incident_type = (int)get_parameter('id_incident_type');
 		$option_any = (int)get_parameter('option_any');
@@ -322,7 +322,14 @@ if (defined ('AJAX')) {
 				$groups[0] = __('Any');
 			}
 		}
-		echo json_encode($groups);
+		$groups_renamed = array();
+		$i=0;
+		foreach ($groups as $key => $value) {
+			$groups_renamed[$i][0] = $key;
+			$groups_renamed[$i][1] = $value;
+			$i++;
+		}
+		echo json_encode($groups_renamed);
 		return;
 	}
 }
@@ -1513,20 +1520,17 @@ $(document).ready (function () {
 		incident_limit("#submit-accion", id_user_ticket, id_group);
 	}
 
+	//order groups for select
 	$("#id_incident_type").change (function () {
 		var id_incident_type = $("#id_incident_type").val();
-		var incident_groups = show_incident_groups_fields(id_incident_type);
-		var obj = jQuery.parseJSON(incident_groups);
-		
-		jQuery.each (obj, function (id, value) {
-			value_aux = value.replace(/&nbsp;/g, '\u00a0');
-			obj[id] = value_aux;
+		show_incident_groups_fields(id_incident_type, null, function (err, incident_groups) {
+			var obj = incident_groups;
+			$("#grupo_form option").remove();
+			$.each (obj, function (id, value) {
+				value_aux = value[1].replace(/&nbsp;/g, '\u00a0');
+				$("#grupo_form").append(new Option(value_aux, value[0]));
+			});
 		});
-
-		$("#grupo_form option").remove();
-		for (var id in obj){
-			$("#grupo_form").append(new Option(obj[id], id));
-		}
 	});
 	
 	$("#grupo_form").change (function () {

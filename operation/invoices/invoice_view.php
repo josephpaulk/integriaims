@@ -52,6 +52,10 @@ $header_logo = "images/".$config["invoice_logo"];
 $header_text = $config["invoice_header"];
 $footer_text= $config["invoice_footer"];
 
+if($invoice['rates']){
+	$add_currency_change = $invoice['rates'] * $amount;
+	$total_currency_change = $invoice['rates'] * $total;
+}
 // The template of the invoice view can be changed here
 include ("invoice_template.php");
 

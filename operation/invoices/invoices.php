@@ -104,6 +104,8 @@ if ($operation_invoices == "update_invoice"){
 	$irpf = get_parameter ("irpf", 0.00);
 	$concept_irpf = get_parameter ("concept_irpf");
 	$currency = get_parameter ("currency", "EUR");
+	$currency_change = get_parameter("currency_change", _('None'));
+	$rates = get_parameter("rates", 0);
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
 	$language = get_parameter('id_language', $config['language_code']);
@@ -156,6 +158,8 @@ if ($operation_invoices == "update_invoice"){
 	$values['irpf'] = $irpf;
 	$values['concept_irpf'] = $concept_irpf;
 	$values['currency'] = $currency;
+	$values['currency_change'] = $currency_change;
+	$values['rates'] = $rates;
 
 	$values['invoice_create_date'] = $invoice_create_date;
 	$values['invoice_payment_date'] = $invoice_payment_date;
@@ -260,6 +264,8 @@ if ($operation_invoices == "add_invoice"){
 	$tax_name = json_decode($tax_name_encode,true);
 	
 	$currency = get_parameter ("currency", "EUR");
+	$currency_change = get_parameter ("currency_change", __('None'));
+	$rates = get_parameter("rates", 0);
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	$invoice_type = get_parameter ("invoice_type", "Submitted");
 	$create_calendar_event = get_parameter('calendar_event');
@@ -306,11 +312,11 @@ if ($operation_invoices == "add_invoice"){
 		$sql = sprintf ("INSERT INTO tinvoice (description, id_user, id_company,
 		bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, irpf, concept_irpf, currency, status,
 		concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-		amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s','%s', '%s',
-		'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
+		amount4, amount5, reference, invoice_type, id_language, internal_note, invoice_expiration_date, bill_id_pattern, bill_id_variable, contract_number, discount_before, discount_concept, tax_name, currency_change, rates) VALUES ('%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%s','%s', '%s',
+		'%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $description, $user_id, $id_company,
 		$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, json_encode($taxarray), $irpf, $concept_irpf,$currency,
 		$invoice_status, $concept[0], $concept[1], $concept[2], $concept[3], $concept[4], $amount[0], $amount[1],
-		$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, json_encode($tax_name_array));
+		$amount[2], $amount[3], $amount[4], $reference, $invoice_type, $language, $internal_note, $invoice_expiration_date, $bill_id_pattern, $bill_id_variable, $invoice_contract_number, $discount_before, $discount_concept, json_encode($tax_name_array), $currency_change, $rates);
 		
 		$id_invoice = process_sql ($sql, 'insert_id');
 		if ($id_invoice !== false) {
@@ -381,6 +387,8 @@ if ($id_invoice > 0){
 	$irpf = $invoice["irpf"];
 	$concept_irpf = $invoice["concept_irpf"];
 	$currency = $invoice["currency"];
+	$currency_change = $invoice["currency_change"];
+	$rates = $invoice["rates"]; 
 	$invoice_status = $invoice["status"];
 	$invoice_type = $invoice['invoice_type'];
 	$language = $invoice['id_language'];
@@ -422,6 +430,8 @@ else {
 	$irpf = 0;
 	$concept_irpf = "";
 	$currency = "EUR";
+	$currency_change = __('None');
+	$rates = 0;
 	$invoice_status = "pending";
 	$invoice_type = "Submitted";
 	$language = $config['language_code'];
@@ -467,7 +477,6 @@ $table->id = 'cost_form';
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
-$table->size = array ();
 $table->data = array ();
 
 if ($id_company > 0) {
@@ -480,6 +489,7 @@ if ($id_company > 0) {
 	}
 
 	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
+	$table->colspan[0][0] = 2;
 	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 50, 100, true, __('Company'), true);
 	$table->data[0][0] .= "<input type=hidden name='id' value='$id_company'>";
 } else {
@@ -489,29 +499,31 @@ if ($id_company > 0) {
 	$params['title'] = __('Company');
 	$params['return'] = true;
 	$params['input_value'] = get_parameter('company_id');
+	$table->colspan[0][0] = 2;
 	$table->data[0][0] = print_company_autocomplete_input($params);
 }
 
 $invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
-$table->data[0][1] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'));
+$table->data[0][2] = print_select ($invoice_types, 'invoice_type', $invoice_type, '','', 0, true, false, false, __('Type'));
 
-$table->data[1][0] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
-$table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
+$table->data[0][3] = print_input_text ('reference', $reference, '', 25, 100, true, __('Reference'));
+$table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
 if ($bill_id == ""){ // let's show the latest Invoice ID generated in the system
 	$last_invoice_generated = get_db_sql ("SELECT bill_id FROM tinvoice ORDER by invoice_create_date DESC LIMIT 1");
-	$table->data[1][1] .= "<div id='last_id'><span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span></div>";
+	$table->data[1][0] .= "<div id='last_id'><span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span></div>";
 }
 
 $invoice_status_ar = array();
 $invoice_status_ar['pending']= __("Pending");
 $invoice_status_ar['paid']= __("Paid");
 $invoice_status_ar['canceled']= __("Canceled");
-$table->data[2][0] = print_select ($invoice_status_ar, 'invoice_status',
+$table->data[1][1] = print_select ($invoice_status_ar, 'invoice_status',
 	$invoice_status, '','', 0, true, false, false, __('Invoice status'));
 
-$table->data[2][1] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
-$table->data[3][0] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
+$table->data[1][2] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
+$table->data[1][3] = print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
+$table->data[2][0] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
 
 if ($id_invoice != -1) {
 	$disabled = true;
@@ -519,68 +531,74 @@ if ($id_invoice != -1) {
 	$disabled = false;
 }
 
-$table->data[3][0] .= print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
+$table->data[2][1] = print_input_text ('invoice_expiration_date', $invoice_expiration_date, '', 15, 50, true,__('Invoice expiration date'));
 
-$table->data[3][1] = print_input_text ('invoice_expiration_date', $invoice_expiration_date, '', 15, 50, true,__('Invoice expiration date'));
-
-$table->data[4][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
+$table->data[2][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
 	$language, '', '', '', true, false, false, __('Language'));
 	
-$table->data[4][1] = print_input_text ('invoice_contract_number', $invoice_contract_number, '', 15, 50, true,__('Contract number'));
+$table->data[2][3] = print_input_text ('invoice_contract_number', $invoice_contract_number, '', 15, 50, true,__('Contract number'));
 
-$table->data[5][0] = "<h4>".__('Concept')."</h4>";
-$table->data[5][1] = "<h4>".__('Amount')."</h4>";
-$table->data[6][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
-$table->data[6][1] = print_input_text ('amount1', $amount[0], '', 18, 20, true);
-$table->data[7][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
-$table->data[7][1] = print_input_text ('amount2', $amount[1], '', 18, 20, true);
-$table->data[8][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
-$table->data[8][1] = print_input_text ('amount3', $amount[2], '', 18, 20, true);
-$table->data[9][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
-$table->data[9][1] = print_input_text ('amount4', $amount[3], '', 18, 20, true);
-$table->data[10][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
-$table->data[10][1] = print_input_text ('amount5', $amount[4], '', 18, 20, true);
-$table->data[11][0] = print_input_text ('discount_before', $discount_before, '', 5, 20, true, __('Discount before taxes (%)'));
-$table->data[11][1] = print_input_text ('discount_concept', $discount_concept, '', 20, 50, true, __('Concept discount'));
+$table->data[3][0] = print_input_text ('currency', $currency, '', 5, 30, true, __('Currency'));
+$table->data[3][1] = print_input_text_extended ('currency_change', $currency_change, 'text-currency_change', false, 5, 30, false, '', "oninput='change_currency_title()'", true, false, __('Equivalent currency'));
+$table->data[3][2] = print_input_text_extended ('rates', $rates, 'text-rates', false, 5, 30, false, '', "oninput='calculate_rate_all()'",true, false, __('Rates'));
 
-$contcampo = 1;	
-if (is_numeric($tax)){
-	$table->data[12][0] = print_input_text ('tax1', $tax, '', 5, 20, true, __('Taxes (%)'));
-	$table->data[12][0] .= '</br>';
-	$contcampo++;
-}else{
-	foreach ( $tax as $key => $campo) { 
-		if ($key === 'tax1'){
-			$table->data[12][0] = print_input_text ('tax'.$contcampo, $campo, '', 5, 20, true, __('Taxes (%)'));
-			$table->data[12][0] .= '</br>';
-		}else{
-			if ($campo != 0){
-				$table->data[12][0] .= print_input_text ('tax'.$contcampo, $campo, '', 5, 20, true,'');
-				$table->data[12][0] .= '</br>';
-			}else{
-				$contcampo--;
-			}
-		}
-		$contcampo++;
-	}
-}
+$table->colspan[4][0] = 2;
+$table->data[4][0] = "<br/><h4>".__('Concept')."</h4>";
+$table->data[4][2] = "<br/><h4>".__('Amount')."</h4>";
+$table->data[4][3] = "<br/><h4 id='currency_change_title' >". $currency_change ."</h4>";
+
+$table->colspan[5][0] = 2;
+$rate1 = $amount[0] * $rates;
+$table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
+$table->data[5][2] = print_input_text_extended ('amount1', $amount[0], 'text-amount1', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount1\", \"text-rate1\");'",true);
+$table->data[5][3] = print_input_text ('rate1', $rate1, '', 18, 20, true);
+
+$table->colspan[6][0] = 2;
+$rate2 = $amount[1] * $rates;
+$table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
+$table->data[6][2] = print_input_text_extended ('amount2', $amount[1], 'text-amount2', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount2\", \"text-rate2\")'",true);
+$table->data[6][3] = print_input_text ('rate2', $rate2, '', 18, 20, true);
+
+$table->colspan[7][0] = 2;
+$rate3 = $amount[2] * $rates;
+$table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
+$table->data[7][2] = print_input_text_extended ('amount3', $amount[2], 'text-amount3', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount3\", \"text-rate3\")'",true);
+$table->data[7][3] = print_input_text ('rate3', $rate3, '', 18, 20, true);
+
+$table->colspan[8][0] = 2;
+$rate4 = $amount[3] * $rates;
+$table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
+$table->data[8][2] = print_input_text_extended ('amount4', $amount[3], 'text-amount4', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount4\", \"text-rate4\")'",true);
+$table->data[8][3] = print_input_text ('rate4', $rate4, '', 18, 20, true);
+
+$table->colspan[9][0] = 2;
+$rate5 = $amount[4] * $rates;
+$table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
+$table->data[9][2] = print_input_text_extended ('amount5', $amount[4], 'text-amount5', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount5\", \"text-rate5\")'",true);
+$table->data[9][3] = print_input_text ('rate5', $rate5, '', 18, 20, true);
+
+$table->colspan[10][0] = 2;
+$table->data[10][0] = '<br/>' . print_input_text ('discount_concept', $discount_concept, '', 60, 50, true, __('Concept discount'));
+$table->colspan[10][2] = 2;
+$table->data[10][2] = '<br/>' . print_input_text ('discount_before', $discount_before, '', 5, 20, true, __('Discount before taxes (%)'));
 
 $contcampo2 = 1;
 if (is_string($tax_name)){
-	$table->data[12][1] = print_input_text ('tax_name1', $tax_name, '', 20, 50, true, __('Concept tax'));
-	$table->data[12][1] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
-	$table->data[12][1] .= '</br>';
+	$table->colspan[11][0] = 2;
+	$table->data[11][0] = print_input_text ('tax_name1', $tax_name, '', 60, 50, true, __('Concept tax'));
+	$table->data[11][0] .= '</br>';
 	$contcampo2++;
 }else{
 	foreach ( $tax_name as $key => $campo) { 
 		if ($key === 'tax_name1'){
-			$table->data[12][1] = print_input_text ('tax_name'.$contcampo2, $campo, '', 20, 50, true, __('Concept tax'));
-			$table->data[12][1] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
-			$table->data[12][1] .= '</br>';
+			$table->colspan[11][0] = 2;
+			$table->data[11][0] = print_input_text ('tax_name'.$contcampo2, $campo, '', 60, 50, true, __('Concept tax'));
+			$table->data[11][0] .= '</br>';
 		}else{
 			if ($campo != ""){
-				$table->data[12][1] .= print_input_text ('tax_name'.$contcampo2, $campo, '', 20, 50, true,'');
-				$table->data[12][1] .= '</br>';
+				$table->colspan[11][0] = 2;
+				$table->data[11][0] .= print_input_text ('tax_name'.$contcampo2, $campo, '', 60, 50, true,'');
+				$table->data[11][0] .= '</br>';
 			}else{
 				$contcampo2--;
 			}
@@ -589,9 +607,38 @@ if (is_string($tax_name)){
 	}
 }
 
-$table->data[13][0] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('Retention (%)'));
-$table->data[13][1] = print_input_text ('concept_irpf', $concept_irpf, '', 20, 50, true, __('Concept Retention'));
-$table->data[14][0] = print_input_text ('currency', $currency, '', 5, 3, true, __('Currency'));
+$contcampo = 1;	
+if (is_numeric($tax)){
+	$table->colspan[11][2] = 2;
+	$table->data[11][2] = print_input_text ('tax1', $tax, '', 5, 20, true, __('Taxes (%)'));
+	$table->data[11][2] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
+	$table->data[11][2] .= '</br>';
+	$contcampo++;
+}else{
+	foreach ( $tax as $key => $campo) { 
+		if ($key === 'tax1'){
+			$table->colspan[11][2] = 2;
+			$table->data[11][2] = print_input_text ('tax'.$contcampo, $campo, '', 5, 20, true, __('Taxes (%)'));
+			$table->data[11][2] .= "<a href='#' id='agregarCampo'><img src='images/input_create.png' /></a>";
+			$table->data[11][2] .= '</br>';
+		}else{
+			if ($campo != 0){
+				$table->colspan[11][2] = 2;
+				$table->data[11][2] .= print_input_text ('tax'.$contcampo, $campo, '', 5, 20, true,'');
+				$table->data[11][2] .= '</br>';
+			}else{
+				$contcampo--;
+			}
+		}
+		$contcampo++;
+	}
+}
+
+
+$table->colspan[12][0] = 2;
+$table->data[12][0] = print_input_text ('concept_irpf', $concept_irpf, '', 60, 50, true, __('Concept Retention'));
+$table->colspan[12][2] = 2;
+$table->data[12][2] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('Retention (%)'));
 
 echo '<div id="msg_ok_hidden" style="display:none;">';
 	echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
@@ -618,16 +665,18 @@ if ($id_invoice != -1) {
 	//~ Se aplica sobre el descuento el irpf
 	$irpf_amount = $total_before * ($irpf/100);
 	$total = round($total_before + $tax_amount - $irpf_amount, 2);
-	$table->data[15][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
-	$table->data[15][1] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	$table->colspan[13][0] = 2;
+	$table->data[13][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	$table->colspan[13][2] = 2;
+	$table->data[13][2] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
 }
 
 
-$table->colspan[16][0] = 2;
-$table->data[16][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+$table->colspan[14][0] = 4;
+$table->data[14][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
 
-$table->colspan[17][0] = 2;
-$table->data[17][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
+$table->colspan[15][0] = 4;
+$table->data[15][0] = print_textarea ('internal_note', 5, 40, $internal_note, '', true, __('Internal note'));
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data" action="index.php?sec=customers&sec2=operation/companies/company_detail
 &view_invoice=1&op=invoices">';
@@ -819,6 +868,10 @@ while (cont <= taxlength){
 	add_validate_form_element_rules('#text-tax'+ cont, rules, messages);
 	cont++;
 }
+// Rules: #text-rates
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('#text-rates', rules, messages);
 // Rules: #text-irpf
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
@@ -843,6 +896,26 @@ add_validate_form_element_rules('input[name="amount4"]', rules, messages);
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
 add_validate_form_element_rules('input[name="amount5"]', rules, messages);
+// Rules: input[name="rate1"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="rate1"]', rules, messages);
+// Rules: input[name="rate2"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="rate2"]', rules, messages);
+// Rules: input[name="rate3"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="rate3"]', rules, messages);
+// Rules: input[name="rate4"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="amount4"]', rules, messages);
+// Rules: input[name="rate5"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="rate5"]', rules, messages);
 
 
 $(document).ready (function () {
@@ -907,19 +980,19 @@ $(document).ready (function () {
 		}
 	});
 
-	var contenedor = $("#cost_form-12-0"); //ID del contenedor
-	var contenedor1 = $("#cost_form-12-1"); //ID del contenedor
+	var contenedor = $("#cost_form-11-0"); //ID del contenedor
+	var contenedor1 = $("#cost_form-11-2"); //ID del contenedor
 	var linkagregar = $("#agregarCampo"); //ID del Botón Agregar
 	var FieldCount = "<?php echo $contcampo; ?>";
 	var FieldCount2 = "<?php echo $contcampo2; ?>";
 	//~ var FieldCount = 2; //para el seguimiento de los campos
 	$(linkagregar).click(function (e) {
 		e.preventDefault();
-		$(contenedor).append('<input type="text" id="text-tax'+ FieldCount +'" maxlength="20" size="5" value="0" name="tax'+ FieldCount +'" /></br>');
+		$(contenedor1).append('<input type="text" id="text-tax'+ FieldCount +'" maxlength="20" size="5" value="0" name="tax'+ FieldCount +'" /></br>');
 		rules = { number: true };
 		messages = { number: "<?php echo __('Invalid number')?>" };
 		add_validate_form_element_rules('#text-tax'+ FieldCount, rules, messages);
-		$(contenedor1).append('<input type="text" id="text-tax_name'+ FieldCount2 +'" maxlength="50" size="20" name="tax_name'+ FieldCount2 +'" /></br>');
+		$(contenedor).append('<input type="text" id="text-tax_name'+ FieldCount2 +'" maxlength="50" size="20" name="tax_name'+ FieldCount2 +'" /></br>');
 		FieldCount++;
 		FieldCount2++;
 	});	
@@ -949,7 +1022,6 @@ function invoiceGenerateID () {
 }
 
 function invoiceGetID (id) {
-
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -962,6 +1034,41 @@ function invoiceGetID (id) {
 		async: true,
 		success: function (bill_id) {
 			$("#text-bill_id").attr('value', bill_id);
+		}
+	});
+}
+
+function change_currency_title() {
+	var value = $('#text-currency_change').val();
+	if(value){
+		$('#currency_change_title').empty(value);
+		$('#currency_change_title').append(value);	
+	} else {
+		$('#currency_change_title').empty(value);
+		$('#currency_change_title').append('none');
+	}
+}
+
+function calculate_rate(id_input, id_result) {
+	var rate     = $('#text-rates').val(); 
+	var amount1  = $('#'+ id_input).val();
+	var result1  = rate * amount1;
+	$('#'+ id_result).val(result1);	
+}
+
+function calculate_rate_all() {
+	var rate   = $('#text-rates').val();
+	var amount = {};
+		amount[0] = $('#text-amount1').val();
+		amount[1] = $('#text-amount2').val();
+		amount[2] = $('#text-amount3').val();
+		amount[3] = $('#text-amount4').val();
+		amount[4] = $('#text-amount5').val();
+	
+	$.each(amount, function(key, value) {
+		if (value){
+			key++;
+			$('#text-rate'+ key).val(value * rate);	
 		}
 	});
 }
@@ -1165,6 +1272,5 @@ function form_upload () {
 			}
 		});
 	}
-
 }
 </script>

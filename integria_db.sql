@@ -514,6 +514,8 @@ CREATE TABLE `tinvoice` (
   `discount_before` float(11,2) NOT NULL DEFAULT '0.0',
   `discount_concept` varchar(100) NOT NULL default '',
   `tax_name` mediumtext NOT NULL default '',
+  `rates` float(11,2) NOT NULL DEFAULT 0.0,
+  `currency_change` VARCHAR(15) NOT NULL DEFAULT 'None',
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   KEY `tcost_idx_2` (`id_company`)

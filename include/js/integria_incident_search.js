@@ -560,19 +560,20 @@ function update_linked_fields(label_childs, id_parent, value_parent) {
 	});
 }
 
-function show_incident_groups_fields(id_incident_type, option_any) {
+function show_incident_groups_fields(id_incident_type, option_any, callback) {
 	var result;
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
 		data: "page=operation/incidents/incident_detail&set_ticket_groups=1&id_incident_type="+ id_incident_type +'&option_any='+option_any,
-		dataType: "text",
-		async: false, //Important if not you cannot handle responseText!
-		success: function(data){	
-			result = data;
+		dataType: "json",
+		success: function(data){
+			callback(null, data);
+		},
+		fail: function(xhr, errorMessage, error){	
+			callback(error);
 		}
 	});
-	return result;
 }
 function show_incident_type_fields(numRow) {
 

@@ -3903,5 +3903,27 @@ img#inventory_loading{
 	padding-bottom: 0px; 
 }
 .incident_table table tr th a {
-	padding-left: 3px;
+	padding-left: 5px;
+}
+
+
+/*css for table create invoice*/
+#form-invoice table input {
+	width: 80%;
+}
+
+#form-invoice input[type = "checkbox"]{
+	width: 5% !important;
+}
+
+#form-invoice table select {
+	width: 82% !important;
+}
+
+#form-invoice table tr td{
+	width: 25%;
+	white-space: nowrap;
+}
+#form-invoice table tr td a {
+	padding-left: 1%; 
 }
