@@ -103,7 +103,7 @@
 					</td>
 					<?php if($invoice['rates'] != 0.00){ ?>
 						<td style="text-align:right; font-size:14px; color:black;">
-							<?php echo $invoice['currency_change'] ?>
+							<?php echo __('Amount') ?>
 						</td>
 					<?php } ?>
 				</tr>
