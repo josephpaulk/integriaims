@@ -424,20 +424,23 @@ if ($quick_delete) {
 		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			borrar_incidencia($id_inc);
 
-			echo "<h3 class='suc'>".__('Ticket successfully deleted')."</h3>";
+			$result_msg = __('Ticket successfully deleted');
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Ticket deleted","User ".$config['id_user']." deleted ticket #".$id_inc);
 		} else {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete ticket");
-			echo "<h3 class='error'>".__('There was a problem deleting ticket')."</h3>";
+			$result_msg = __('There was a problem deleting ticket');
 			no_permission();
 		}
 	}
 	
-	$massive_number_loop = get_parameter ('massive_number_loop', -1);	
+	$return_values = array();
+	$return_values['result'] = $result_msg;
+	$massive_number_loop = get_parameter ('massive_number_loop', -1);
+	$return_values['massive_number_loop'] = $massive_number_loop;
 	// AJAX (Massive operations)
-	if ($massive_number_loop > -1) {
+	if ($return_values['massive_number_loop'] > -1) {
 		ob_clean();
-		echo json_encode($massive_number_loop);
+		echo json_encode($return_values);
 		return;
 	}
 }

@@ -1220,28 +1220,32 @@ function delete_massive_tickets () {
 	}
 	else {
 		for(var i=0;i<checked_ids.length;i++){
-				values = Array ();
-				values.push ({name: "page",
-							value: "operation/incidents/incident_detail"});
-				values.push ({name: "quick_delete",
-							value: checked_ids[i]});
-				values.push ({name: "massive_number_loop",
-						value: i});
-				jQuery.get ("ajax.php",
-					values,
-					function (data, status) {
-						
-						// We refresh the interface in the last loop
-						if(data >= (checked_ids.length - 1)) {
-							// This takes the user to the top of the page
-							//window.location.href="index.php?sec=incidents&sec2=operation/incidents/incident_search";
-							// This takes the user to the same place before reload
-							location.reload();
-						}
-					},
-					"json"
-				);
-			}
+			values = Array ();
+			values.push ({name: "page",
+						value: "operation/incidents/incident_detail"});
+			values.push ({name: "quick_delete",
+						value: checked_ids[i]});
+			values.push ({name: "massive_number_loop",
+					value: i});
+			jQuery.get ("ajax.php",
+				values,
+				function (data, status) {
+					
+					// We refresh the interface in the last loop
+					if(data['massive_number_loop'] >= (checked_ids.length - 1)) {
+						// This takes the user to the top of the page
+						//window.location.href="index.php?sec=incidents&sec2=operation/incidents/incident_search";
+						// This takes the user to the same place before reload
+						location.reload();
+						writeMessageDelete(data['result']);
+					}
+				},
+				"json"
+			);
+		}
+		function writeMessageDelete (msg) {
+			alert(msg);
+		}
 	}
 }
 
