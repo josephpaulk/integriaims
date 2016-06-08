@@ -99,11 +99,27 @@ if (isset($_GET["update2"])){ // if modified any parameter
 		require ("general/noaccess.php");
 		exit;
 	}
-
-	$sql_update ="UPDATE tkb_data
-	SET title = '$title', data = '$data', id_language = '$id_language', timestamp = '$timestamp', id_user = '$id_user',
-	id_category = $id_category, id_product = $id_product 
-	WHERE id = $id";
+	
+	if ($id_product == "") {
+		if ($id_category == "") {
+			$sql_update ="UPDATE tkb_data
+			SET title = '$title', data = '$data', id_language = '$id_language', timestamp = '$timestamp', id_user = '$id_user' 
+			WHERE id = $id";
+		}
+		else {
+			$sql_update ="UPDATE tkb_data
+			SET title = '$title', data = '$data', id_language = '$id_language', timestamp = '$timestamp', id_user = '$id_user',
+			id_category = $id_category 
+			WHERE id = $id";
+		}
+	}
+	else {
+		$sql_update ="UPDATE tkb_data
+		SET title = '$title', data = '$data', id_language = '$id_language', timestamp = '$timestamp', id_user = '$id_user',
+		id_product = $id_product 
+		WHERE id = $id";
+	}
+	
 	$result=mysql_query($sql_update);
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
