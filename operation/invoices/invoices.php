@@ -1052,12 +1052,13 @@ function change_currency_title() {
 function calculate_rate(id_input, id_result) {
 	var rate     = $('#text-rates').val(); 
 	var amount1  = $('#'+ id_input).val();
-	var result1  = rate * amount1;
+	var result1  = Math.round((rate * amount1) * 100)/100;
 	$('#'+ id_result).val(result1);	
 }
 
 function calculate_rate_all() {
 	var rate   = $('#text-rates').val();
+	var result = "";
 	var amount = {};
 		amount[0] = $('#text-amount1').val();
 		amount[1] = $('#text-amount2').val();
@@ -1068,7 +1069,8 @@ function calculate_rate_all() {
 	$.each(amount, function(key, value) {
 		if (value){
 			key++;
-			$('#text-rate'+ key).val(value * rate);	
+			result = Math.round((value * rate) * 100)/100;
+			$('#text-rate'+ key).val(result);	
 		}
 	});
 }
