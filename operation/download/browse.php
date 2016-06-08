@@ -446,12 +446,12 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		$table->colspan[1][0] = 3;
 
 		$table->data[0][0] = print_input_text ('free_text', $free_text, '', 40, 100, true, __('Search'));
-		$table->data[1][1] = combo_download_categories ($id_category, true, true, true);
+		$table->data[1][1] = combo_download_categories ($category, true, true, true);
 		$table->data[2][2] = print_select (get_file_types(true), 'id_type', $id_type, '', __('Any'), 0, true, 0, false, __('Type'));
 		$table->data[3][0] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
 		echo "<div class='divform'>";
-		echo '<form method="post" action="index.php?sec=download&sec2=operation/download/browse">';
+		echo '<form method="post" action="index.php?sec=download&sec2=operation/download/browse&id_type=' . $id_type . '&id_category=' . $category . '">';
 		echo print_table($table, true);
 		echo "</form>";
 		echo "</div>";
@@ -465,8 +465,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		if ($free_text != "")
 			$sql_filter .= " AND name LIKE '%$free_text%' OR description LIKE '%$free_text%'";
 		
-		if ($id_category > 0)
-			$sql_filter .= " AND id_category = $id_category ";
+		if ($category > 0)
+			$sql_filter .= " AND id_category = $category ";
 
 		if ($id_type > 0)
 			$sql_filter .= " AND id IN (SELECT id_download FROM tdownload_type_file WHERE id_type = $id_type) ";
@@ -576,7 +576,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 					$data[7] = "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
 					$data[7] .= "&nbsp;&nbsp;";
 					// Delete
-					$data[7] .= "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+					$data[7] .= "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=" . $row["id"] . "&id_type=" . $row["id_type"] . "' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
 				}
 
 				array_push ($table->data, $data);
