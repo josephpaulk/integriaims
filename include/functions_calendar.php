@@ -531,52 +531,6 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			$weekday   = 0; #start a new week
 			$calendar .= "</tr>\n<tr>";
 		}
-
-		// Show SUM workunits for that day (GREEN) - standard wu
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
-		$normal = 0;
-		$res=mysql_query($sqlquery);
-		if ($row=mysql_fetch_array($res)){
-			$workhours_a = $row[0];
-			if ($workhours_a > 0){
-				$normal = 1;
-            }
-		}
-
-		// Show SUM workunits for that day (YELLOW) - holidays
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND  timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
-
-		$res=mysql_query($sqlquery);
-		if ($row=mysql_fetch_array($res)){
-			$workhours_b = $row[0];
-			if ($workhours_b > 0){
-				$normal = 2;
-            }
-		}
-
-		// Show SUM workunits for that day (MAGENTA) - incident wu
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE id_user = '$id_user' AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND  timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
-
-		$res=mysql_query($sqlquery);
-		if ($row=mysql_fetch_array($res)){
-			$workhours_c = $row[0];
-			if ($workhours_c > 0){
-				$normal = 3;
-            }
-		}
-		
-		// Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
-
-		$res=mysql_query($sqlquery);
-
-		
-		if ($row=mysql_fetch_array($res)){
-			$workhours_d = $row[0];
-			if ($workhours_d > 0){
-				$normal = 4;
-            }
-		}
 		
 		// Show SUM workunits for that day (BLUE) - work from home
 		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' AND tworkunit.work_home=1";
@@ -587,6 +541,56 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			if ($workhours_e > 0){
 				$normal = 5;
             }
+			else {
+				// Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
+				$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+				$res=mysql_query($sqlquery);
+
+				
+				if ($row=mysql_fetch_array($res)){
+					$workhours_d = $row[0];
+					if ($workhours_d > 0){
+						$normal = 4;
+		            }
+					else {
+						// Show SUM workunits for that day (MAGENTA) - incident wu
+						$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE id_user = '$id_user' AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND  timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+						$res=mysql_query($sqlquery);
+						if ($row=mysql_fetch_array($res)){
+							$workhours_c = $row[0];
+							if ($workhours_c > 0){
+								$normal = 3;
+							}
+							else {
+								// Show SUM workunits for that day (YELLOW) - holidays
+								$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND  timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+								$res=mysql_query($sqlquery);
+								if ($row=mysql_fetch_array($res)){
+									$workhours_b = $row[0];
+									if ($workhours_b > 0){
+										$normal = 2;
+						            }
+									else {
+										// Show SUM workunits for that day (GREEN) - standard wu
+										$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+										$normal = 0;
+										$res=mysql_query($sqlquery);
+										if ($row=mysql_fetch_array($res)){
+											$workhours_a = $row[0];
+											if ($workhours_a > 0){
+												$normal = 1;
+								            }
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";

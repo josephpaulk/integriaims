@@ -163,6 +163,13 @@ echo "</table></form>";
 
 echo "</td></tr>";
 echo "<tr>";
+
+$calendars = array();
+for ($ax = 1; $ax < 13; $ax++){
+	$calendars[] = generate_small_work_calendar ($year, $ax, $days_f, 3, $config["first_day_week"], "en", $id_user_show);
+}
+
+$index = 0;
 for ($ax = 1; $ax < 13; $ax++){
 	if (fmod($ax-1,4) == 0)
 		echo "<tr>";
@@ -180,14 +187,15 @@ for ($ax = 1; $ax < 13; $ax++){
 	
 	if ($locked_hours == "")
 		$locked_hours = 0;	
-
-		
+	
 	echo __("Total") . " : " . $work_hours;
 	echo " - ";
 	echo __("Locked"). " : " . $locked_hours;        
-
-	echo generate_small_work_calendar ($year, $ax, $days_f, 3, $config["first_day_week"], "en", $id_user_show);	
+	
+	echo $calendars[$index];
+	$index++;
 }
+
 echo "</table>";
 
 ?>
@@ -212,4 +220,3 @@ bindAutocomplete ("#text-id_user", idUser);
 // #text-id_user
 validate_user ("#form-report_annual", "#text-id_user", "<?php echo __('Invalid user')?>");
 </script>
-
