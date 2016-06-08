@@ -93,7 +93,7 @@ if (defined ('AJAX')) {
 							$row=0;
 						}
 						$table_type_fields->colspan[$column][0] = 4;
-						$input = print_textarea ('search_type_field_'.$type_field['id'], $data, '', 30, 30, true, $type_field['label']);
+						$input = print_textarea ('search_type_field_'.$type_field['id'], 5, 5, $data, '', true, $type_field['label']);
 						$textarea=1; 
 						break;
 				}				
