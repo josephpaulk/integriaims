@@ -287,7 +287,7 @@ $table->style = array ();
 $table->data[0][0] = combo_incident_status (-1, 0, 0, true, true);
 $table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __('Select'), -1, true, 0, true, __('Priority'), false, 'min-width: 70px;');
 $table->data[0][2] = combo_incident_resolution ($resolution, false, true, true);
-$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true, false, true, __('Assigned user'));
+$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true, false, true, __('Owner'));
 
 //Task
 $table->data[1][0] = combo_task_user (0, $config["id_user"], 0, 0, true);

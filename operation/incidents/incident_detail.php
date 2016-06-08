@@ -600,15 +600,15 @@ if ($action == 'update') {
 	/* Update inventory objects in incident */
 	update_incident_inventories ($id, get_parameter ('inventories', $incident_inventories));
 	
-	if ($result === false)
-		$result_msg = "<h3 class='error'>".__('There was a problem updating ticket')."</h3>";
+	if (!$result)
+		$result_msg = __('There was a problem updating ticket/s');
 	else {
-		$result_msg = "<h3 class='suc'>".__('Ticket successfully updated')."</h3>";
+		$result_msg = __('Ticket/s successfully updated');
 		if ($is_enterprise) {
 			incidents_run_realtime_workflow_rules ($id);
 		}
 	}
-
+	
 	// Email notify to all people involved in this incident
 	// Email in list email-copy
 	if ($email_copy != "") { 
@@ -635,11 +635,14 @@ if ($action == 'update') {
 			create_workunit ($id, $wu_text, $config['id_user'], 0, 0, "", 1, 0);
 		}
 	}
+	$return_values = array();
+	$return_values['result'] = $result_msg;
+	$return_values['massive_number_loop'] = $massive_number_loop;
 	
 	// AJAX (Massive operations)
-	if ($massive_number_loop > -1) {
+	if ($return_values['massive_number_loop'] > -1) {
 		ob_clean();
-		echo json_encode($massive_number_loop);
+		echo json_encode($return_values);
 		return;
 	}
 	
