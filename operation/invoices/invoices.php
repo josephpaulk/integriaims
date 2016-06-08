@@ -548,31 +548,31 @@ $table->data[4][2] = "<br/><h4>".__('Amount')."</h4>";
 $table->data[4][3] = "<br/><h4 id='currency_change_title' >". $currency_change ."</h4>";
 
 $table->colspan[5][0] = 2;
-$rate1 = $amount[0] * $rates;
+$rate1 = sprintf("%.2f", $amount[0] * $rates);
 $table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
 $table->data[5][2] = print_input_text_extended ('amount1', $amount[0], 'text-amount1', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount1\", \"text-rate1\");'",true);
 $table->data[5][3] = print_input_text ('rate1', $rate1, '', 18, 20, true);
 
 $table->colspan[6][0] = 2;
-$rate2 = $amount[1] * $rates;
+$rate2 = sprintf("%.2f", $amount[1] * $rates);
 $table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
 $table->data[6][2] = print_input_text_extended ('amount2', $amount[1], 'text-amount2', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount2\", \"text-rate2\")'",true);
 $table->data[6][3] = print_input_text ('rate2', $rate2, '', 18, 20, true);
 
 $table->colspan[7][0] = 2;
-$rate3 = $amount[2] * $rates;
+$rate3 = sprintf("%.2f", $amount[2] * $rates);
 $table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
 $table->data[7][2] = print_input_text_extended ('amount3', $amount[2], 'text-amount3', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount3\", \"text-rate3\")'",true);
 $table->data[7][3] = print_input_text ('rate3', $rate3, '', 18, 20, true);
 
 $table->colspan[8][0] = 2;
-$rate4 = $amount[3] * $rates;
+$rate4 = sprintf("%.2f", $amount[3] * $rates);
 $table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
 $table->data[8][2] = print_input_text_extended ('amount4', $amount[3], 'text-amount4', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount4\", \"text-rate4\")'",true);
 $table->data[8][3] = print_input_text ('rate4', $rate4, '', 18, 20, true);
 
 $table->colspan[9][0] = 2;
-$rate5 = $amount[4] * $rates;
+$rate5 = sprintf("%.2f", $amount[4] * $rates);
 $table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
 $table->data[9][2] = print_input_text_extended ('amount5', $amount[4], 'text-amount5', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount5\", \"text-rate5\")'",true);
 $table->data[9][3] = print_input_text ('rate5', $rate5, '', 18, 20, true);

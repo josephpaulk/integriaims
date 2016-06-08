@@ -16,5 +16,5 @@
 -- add fields currency_change and rates (07/06/2016)
 -- ---------------------------------------------------------------------
 
-ALTER TABLE `tinvoice` ADD `rates` float(11,2) NOT NULL DEFAULT 0.0;
+ALTER TABLE `tinvoice` ADD `rates` float(11,10) NOT NULL DEFAULT 0.0;
 ALTER TABLE `tinvoice` ADD `currency_change` VARCHAR(15) NOT NULL DEFAULT 'None';
