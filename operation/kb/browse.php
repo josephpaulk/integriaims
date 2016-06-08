@@ -403,13 +403,23 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			// Category
 			echo "<td class=f9>";
 			$category_name = get_db_sql ("SELECT name FROM tkb_category  WHERE id = ".$row["id_category"]);
-			echo "<img title='$category_name' src='images/groups_small/".get_db_sql ("SELECT icon FROM tkb_category WHERE id = ".$row["id_category"]). "'>";
-
+			$category_img = get_db_sql ("SELECT icon FROM tkb_category WHERE id = ".$row["id_category"]);
+			if (!$category_img) {
+				echo "";
+			}
+			else {
+				echo "<img title='$category_name' src='images/groups_small/". $category_img . "'>";
+			}
 			// Product
 			echo "<td class=f9>";
 			$product_name = get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
-			echo "<img title='$product_name' src='images/products/". get_db_sql ("SELECT icon FROM tkb_product WHERE id = ".$row["id_product"]). "'>";
-
+			$product_img = get_db_sql ("SELECT icon FROM tkb_product WHERE id = ".$row["id_product"]);
+			if (!$product_img) {
+				echo "";
+			}
+			else {
+				echo "<img title='$product_name' src='images/products/". $product_img . "'>";
+			}
 			// Language
 			echo "<td class=f9>";
 			echo $row["id_language"];
