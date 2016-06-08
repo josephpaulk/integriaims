@@ -941,7 +941,7 @@ $(document).ready (function () {
 			$("#text-bill_id").prop('readonly', true);
 		}
 		
-		$("#last_id").css('display', 'none');
+		//$("#last_id").css('display', 'none');
 	} 
 	
 	if (<?php echo json_encode((int)$id_company) ?> <= 0) {
