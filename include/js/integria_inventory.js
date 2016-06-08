@@ -25,13 +25,13 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 				});
 			$("#inventory_search_window").dialog('open');
 			
-			$("a[class^='page']").click(function(e) {
+			$("a[class^='modal_page']").click(function(e) {
 
 				e.preventDefault();
 
 				var id = $(this).attr("class");
 								
-				offset = id.substr(5,id.length);
+				offset = id.substr(11,id.length);
 
 				show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, last_update_search, offset, inventory_status_search, id_company_search, associated_user_search);
 			});
@@ -1068,7 +1068,6 @@ function send_form_ajax(id_form, id_response, url, operation){
 }
 
 function onchange_owner_company(){
-	console.log('vamos');
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",

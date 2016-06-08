@@ -677,7 +677,7 @@ else {
 	if($users){
 		foreach ($users as $key => $value) {
 			$user_id .= $key . ', ';
-			$user_name .= $key . ',';
+			$user_name .= $value . ',';
 		}
 	}
 	
@@ -686,7 +686,6 @@ else {
 	$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: clean_company_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 	
 	$table->data[2][1] .= print_input_hidden ("companies",$company_id, true, 'selected-companies');
-	
 	$table->data[2][2] = print_select ($users, 'inventory_users', NULL,'', '', '', true, false, false, __('Associated users'));
 	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"$user_name\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 	$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: clean_users_groups();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";

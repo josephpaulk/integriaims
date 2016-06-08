@@ -2294,9 +2294,7 @@ table.databox_color_without_line tr:last-child td {
 	vertical-align: middle;
 }
 input.inventory_obj_search {
-	background-image: url("../../images/zoom.png");
-	background-repeat: no-repeat;
-	background-position: 97% 50%;
+	cursor:not-allowed;
 }
 
 input.ui-autocomplete-input {

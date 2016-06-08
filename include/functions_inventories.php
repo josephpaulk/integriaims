@@ -1659,7 +1659,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 		$offset = get_parameter("offset");
 
 		if (!$pure) {
-			pagination ($count, $url_pag, $offset);
+			pagination ($count, $url_pag, $offset, false, '', 0, true);
 		}
 
 		$idx = 0;
@@ -1786,7 +1786,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			print_table($table);
 		echo '</div>';
 		if (!$pure) {
-			pagination ($count, $url_pag, $offset, true);
+			pagination ($count, $url_pag, $offset, true, '', 0, true);
 			if(!$modal){
 				if ($write_permission) {	
 					echo '<div class="button-form">';

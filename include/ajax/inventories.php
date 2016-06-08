@@ -591,7 +591,7 @@ if ($get_inventory_search) {
 
 if ($get_company_associated) {
 	$filter = get_parameter("filter");
-	if($filter){
+	if($filter != 'none,'){
 	
 		$companies_prepare = get_companies();
 		$companies_selected_prepare = explode(",", $filter);
@@ -623,14 +623,14 @@ if ($get_company_associated) {
 
 if ($get_user_associated) {
 	$filter = get_parameter("filter");
-	if($filter){
-		
+	
+	if($filter != 'none,'){
 		$name_prepare = get_user_visible_users($config['id_user']);
 		$name_selected_prepare = explode(",", $filter);
-		debugPrint($name_selected_prepare);
+		
 		$name = array_diff($name_prepare, $name_selected_prepare);
-		$name_selected = array_intersect($name_prepare, $name_selected_prepare);
 
+		$name_selected = array_intersect($name_prepare, $name_selected_prepare);
 	} else {
 		$name = get_user_visible_users($config['id_user']);
 	}
@@ -694,7 +694,6 @@ if ($change_owner){
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 	$id_name = get_parameter('id_name');
 	$sql = "SELECT com.id, com.name FROM tcompany com, tusuario usr WHERE usr.id_company = com.id AND id_usuario='" . $id_name ."';";
-	debugPrint($sql, true);
 	$name_company = get_db_all_rows_sql($sql);
 	$name_company = json_encode($name_company, true);
 	echo safe_output($name_company);
