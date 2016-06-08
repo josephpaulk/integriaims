@@ -1052,7 +1052,7 @@ function change_currency_title() {
 function calculate_rate(id_input, id_result) {
 	var rate     = $('#text-rates').val(); 
 	var amount1  = $('#'+ id_input).val();
-	var result1  = Math.round((rate * amount1) * 100)/100;
+	var result1  = (rate * amount1).toFixed(2);
 	$('#'+ id_result).val(result1);	
 }
 
@@ -1069,7 +1069,7 @@ function calculate_rate_all() {
 	$.each(amount, function(key, value) {
 		if (value){
 			key++;
-			result = Math.round((value * rate) * 100)/100;
+			result = (value * rate).toFixed(2);
 			$('#text-rate'+ key).val(result);	
 		}
 	});
