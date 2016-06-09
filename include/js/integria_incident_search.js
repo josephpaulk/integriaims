@@ -1070,7 +1070,7 @@ $.ajax({
 			//JS to catch incident search submit request
 			$("#saved-user-form").submit(function (){
 				var filter = $("#saved-user-form").formSerialize();
-				incident_show_user_search(filter);
+				incident_show_user_search(filter, clickin);
 				return false;
 			});
 						
@@ -1082,7 +1082,7 @@ $.ajax({
 				
 				var filter = $("#saved-user-form").formSerialize();
 				filter = filter+"&offset="+offset;
-				incident_show_user_search(filter);
+				incident_show_user_search(filter, clickin);
 			});			
 		}
 	});	
