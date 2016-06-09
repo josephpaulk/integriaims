@@ -44,7 +44,6 @@ if (($user_id != $config["id_user"]) AND (!give_acl ($config["id_user"], 0, "IM"
 $now = date ('Y-m-d');
 $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 months")));
 $end_date = get_parameter ('end_date', $now);
-$user_id = get_parameter ('user_id', "");
 $wu_reporter = get_parameter ('wu_reporter', "");
 
 // Compatibility with older links
@@ -123,7 +122,8 @@ if ($user_id != "") {
 
 if ($clean_output == 0){
 	// link full screen
-	$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("Full screen"));
+	
+	$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("Full screen"), "", "", 1);
 	if ($html_report_image) {
 		echo "&nbsp;&nbsp;" . $html_report_image;
 	}
@@ -133,6 +133,8 @@ if ($clean_output == 0){
 	if ($report_image) {
 		echo "&nbsp;&nbsp;" . $report_image;
 	}
+	
+	echo "<a style='float:right;' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to full report")))."</a>";
 }
 
 echo  "</h4>";
