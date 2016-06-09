@@ -80,7 +80,7 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 
 echo "<div class='divresult'>";
 echo "<table  class='listing' width=100%>";
-echo "<th>".__('Pri');
+echo "<th>".__('Priority');
 echo "<th>".__('Project');
 echo "<th>".__('Task');
 echo "<th>".__('Progress');
@@ -90,37 +90,41 @@ echo "<th>".__('Operation');
 
 $result=mysql_query($sql);
 
-while ($row=mysql_fetch_array($result)){
-	echo "<tr>";
-	echo "<td>".print_priority_flag_image ($row['priority'], true);
-	echo "<td>".$row[2];
-	$id_proj = $row[4];
-	$id_task = $row[5];
-	echo "<td><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_proj&id_task=$id_task&operation=view'>".$row[1]."</a>";
+if (mysql_fetch_array($result)) {
+	while ($row=mysql_fetch_array($result)){
+		echo "<tr>";
+		echo "<td>".print_priority_flag_image ($row['priority'], true);
+		echo "<td>".$row[2];
+		$id_proj = $row[4];
+		$id_task = $row[5];
+		echo "<td><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_proj&id_task=$id_task&operation=view'>".$row[1]."</a>";
 
-	echo "<td >";
-	echo progress_bar($row[3], 70, 20);
+		echo "<td >";
+		echo progress_bar($row[3], 70, 20);
 
-	echo "<td align=center>".get_task_workunit_hours_user ($row[0], $id_user);
-	
-	echo "<td class='f9'>";
-	$time1 = get_db_sql ("SELECT timestamp
-		FROM tworkunit_task, tworkunit
-		WHERE tworkunit.id_user = '$id_user'
-		AND tworkunit_task.id_task = ".$row[0].
-		' AND tworkunit.id = tworkunit_task.id_workunit
-		ORDER BY timestamp DESC LIMIT 1');
-	echo substr($time1, 0, 10);
-	echo "<td>";
+		echo "<td align=center>".get_task_workunit_hours_user ($row[0], $id_user);
+		
+		echo "<td class='f9'>";
+		$time1 = get_db_sql ("SELECT timestamp
+			FROM tworkunit_task, tworkunit
+			WHERE tworkunit.id_user = '$id_user'
+			AND tworkunit_task.id_task = ".$row[0].
+			' AND tworkunit.id = tworkunit_task.id_workunit
+			ORDER BY timestamp DESC LIMIT 1');
+		echo substr($time1, 0, 10);
+		echo "<td>";
 
-	if (give_acl ($config["id_user"], 0, "PM")) {
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment&op=fin&id_task=$id_task&id_user=$id_user'><img src='images/upd.png' title='".__("Finish this task")."'></a>";
-		echo "&nbsp;&nbsp;";
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment&op=deas&id_task=$id_task&id_user=$id_user'><img src='images/delete.png' title='".__("Deassign this task")."'></a>";
+		if (give_acl ($config["id_user"], 0, "PM")) {
+			echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment&op=fin&id_task=$id_task&id_user=$id_user'><img src='images/upd.png' title='".__("Finish this task")."'></a>";
+			echo "&nbsp;&nbsp;";
+			echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment&op=deas&id_task=$id_task&id_user=$id_user'><img src='images/delete.png' title='".__("Deassign this task")."'></a>";
+		}
 	}
-
 }
 echo "</table>";
+if (!mysql_fetch_array($result)) {
+	echo "<h2 class='error'>" . __("Empty") . "</h2>";
+}
 echo "</div>";
 
 ?>
@@ -138,4 +142,3 @@ if ($("#form-user_task_assignment").length > 0) {
 	validate_user ("#form-user_task_assignment", "#text-id_user", "<?php echo __('Invalid user')?>");
 }
 </script>
-
