@@ -22,6 +22,7 @@ echo '<h2>'.__('Custom reports').'</h2>';
 echo '<h4>'.__('List of reports').'</h4>';
 
 $delete = (bool) get_parameter ('delete_report');
+$pure = get_parameter ("pure", 0);
 
 if ($delete) {
 	$id = (int) get_parameter ('id');
@@ -74,7 +75,7 @@ if ($reports === false) {
 			$data[0] .= $report['name'];
 		}
 		
-		$data[1] = print_html_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("HTML report"));
+		$data[1] = print_html_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("HTML report"), "", "", 1);
 		$data[2] = print_report_image ("index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&id=".$report['id'], __("PDF report"));
 		$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.png'></a>";
 		

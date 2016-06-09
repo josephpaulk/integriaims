@@ -23,6 +23,7 @@ $name = (string) get_parameter ('name');
 $sql = (string) get_parameter ('sql');
 $id_group = get_parameter('id_group', 0);
 $id = (int) get_parameter ('id');
+$pure = get_parameter ("pure", 0);
 
 if ($id) {
 	$report = get_db_row ('tinventory_reports', 'id', $id);
@@ -139,7 +140,12 @@ if ($render_html == 1){
 	if ($report === false)
 		return;
 	
-	echo "<h1>".__('Custom report')." &raquo; ".$report['name']."</h1>";
+	echo "<h2>".__('Custom report')."</h2>";
+	echo "<h4>".$report['name'];
+		echo "<div id='button-bar-title'><ul>";
+			echo "<li><a href='index.php?sec=projects&sec2=operation/inventories/inventory_reports'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to Report")))."</a></li>";
+		echo "</ul></div>";
+	echo "</h4>";
 
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
@@ -182,11 +188,19 @@ if ($render_html == 1){
 }
 
 echo "<h2>".__('Inventory reports')."</h2>";
-if ($id)
-	echo "<h4>".__('Update')."</h4>";
-else
-	echo "<h4>".__('Create')."</h4>";
-
+if ($id) {
+	echo "<h4>".__('Update');
+		echo "<div id='button-bar-title'><ul>";
+			echo "<li><a href='index.php?sec=projects&sec2=operation/inventories/inventory_reports'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to Report")))."</a></li>";
+		echo "</ul></div>";
+	echo "</h4>";
+ } else {
+	echo "<h4>".__('Create');
+		echo "<div id='button-bar-title'><ul>";
+			echo "<li><a href='index.php?sec=projects&sec2=operation/inventories/inventory_reports'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to Report")))."</a></li>";
+		echo "</ul></div>";
+	echo "</h4>";
+}
 echo $result_msg;
 
 $table->width = '100%';
