@@ -31,8 +31,18 @@ function process_massive_operation (operation) {
 		
 		jQuery.get ("ajax.php", values, function (data, status) {
 				//alert(data + " " + __("rows affected"));
+				if (data !== false) {
+					var msg = "Successfully deleted"
+				}
+				else {
+					var msg = "Error in delete user";
+				}
 				location.reload();
+				alerta(msg);
 			}, "json"
 		);
+	}
+	function alerta (msg) {
+		alert(msg);
 	}
 }
