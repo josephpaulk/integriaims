@@ -55,7 +55,6 @@ function add_validate_form_element_rules(element, rule, message) {
 // @type: Type of the rule (required, minlength, etc.).
 // @message: Message to show.
 function add_validate_form_element_message(element, message) {
-
 	$(document).ready( function() {
 		if ( $(element).length > 0 ) {
 			$(element).rules("add", { messages: message });

@@ -161,11 +161,15 @@ $table = new StdClass();
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
-$table->rowspan[0][2] = 4;
+$table->rowspan[0][3] = 4;
+$table->rowspan[0][2] = 3;
 $table->colspan = array ();
-$table->colspan[5][0] = 3;
+$table->colspan[5][0] = 5;
 $table->size = array ();
-$table->size[2] = '100px';
+$table->size[0] = '30%';
+$table->size[1] = '30%';
+$table->size[2] = '20%';
+$table->size[3] = '15%';
 $table->data = array ();
 
 $table->data[0][0] = print_label (__('User ID'), '', '', true, $id_user);
@@ -175,28 +179,23 @@ if ($has_permission) {
 	$table->data[0][1] = print_label (__('Real name'), '', '', true, $real_name);
 }
 $avatar_help_tip = print_help_tip (__('The avatar should be PNG type and its height or width can not exceed the 150px'), true, 'tip" style="padding-top:0px;');
-$table->data[0][2] = print_label (__('Avatar'). $avatar_help_tip, '', '', true) ;
+$table->data[0][2] = print_label (__('Image'). $avatar_help_tip, '', '', true) ;
+$table->data[0][2] .= "<br><br>";
+$files = list_files ('images/avatars/', "png", 1, 0, "small");
 $table->data[0][2] .= "<div id='avatar_box' mode='select'>";
 $table->data[0][2] .= "<div id='avatar_select'>";
-$files = list_files ('images/avatars/', "png", 1, 0, "small");
-if($avatar){
-	$avatar = $avatar.".png";
-	$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
-} else {
-	$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/avatar_notyet.png">';	
-}
 $table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 5px; margin-bottom: 5px;');
 if ($has_permission) {
 	$table->data[0][2] .= "<div style='text-align:center;'>";
-	$table->data[0][2] .= print_button (__('Upload new avatar'), 'upload_avatar', false, 'change_avatar_mode();', 'class="sub next"', true);
+	$table->data[0][2] .= print_button (__('Upload new avatar'), 'upload_avatar', false, 'change_avatar_mode();', 'class="sub next" style="float: left;"', true);
 	$table->data[0][2] .= "</div>";
 }
 $table->data[0][2] .= "</div>";
 if ($has_permission) {
-	$table->data[0][2] .= "<div id='avatar_upload' style='display:none;'>";
+	$table->data[0][2] .= "<div id='avatar_upload' style='display:none; float: left;'>";
 	$table->data[0][2] .= "<form id='form-avatar_upload' method='post' action='index.php?sec=users&amp;sec2=operation/users/user_edit' enctype='multipart/form-data'>
 								<div style='text-align: center;'>
-									<input id='file-upfile' type='file' accept='image/png' name='upfile' class='file sub' style='margin: 5px;'>
+									<input id='file-upfile' type='file' accept='image/png' name='upfile' class='file sub' style='margin: 5px; width: 80%;'>
 									<input id='submit-upload_avatar' type='submit' value='".__('Upload')."' class='sub upload'>
 									<input id='hidden-upload_avatar' type='hidden' name='upload_avatar' value='true'>
 									<input type='button' class='sub next' value='".__('Cancel')."' onclick='change_avatar_mode();'>
@@ -204,7 +203,13 @@ if ($has_permission) {
 							</form>";
 	$table->data[0][2] .= "</div>";
 }
-$table->data[0][2] .= "</div>";
+if($avatar){
+	$avatar = $avatar.".png";
+	$table->data[0][3] = '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
+} else {
+	$table->data[0][3] = '<img id="avatar-preview" src="images/avatars/avatar_notyet.png">';	
+}
+$table->data[0][3] .= "</div>";
 
 $company_name = get_db_value('name','tcompany','id',$id_company);
 $table->data[1][0] = "<b>".__('Company')."</b><br>$company_name";
@@ -363,9 +368,5 @@ messages = {
 	remote: "<?php echo __('This email already exists')?>"
 };
 add_validate_form_element_rules('#text-email', rules, messages);
-// Rules: #password-password_confirmation
-rules = { equalTo: '#password-password' };
-messages = { equalTo: "<?php echo __('Passwords don\'t match')?>" };
-add_validate_form_element_rules('#password-password_confirmation', rules, messages);
 
 </script>
