@@ -242,6 +242,10 @@ function load_config() {
 		$config["smtp_queue_retries"] = 10;
 	}
 
+	if (!isset ($config["url_updatemanager"])) {
+		$config["url_updatemanager"] = "";
+	}
+
 	if (!isset ($config["access_protocol"])) {
 		$config["access_protocol"] = false;
 	}

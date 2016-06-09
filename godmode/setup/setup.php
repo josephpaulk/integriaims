@@ -53,6 +53,7 @@ if ($update) {
 	$config["max_file_size"] = get_parameter ("max_file_size", 1);
 	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
 	$config["first_day_week"] = get_parameter ("first_day_week", 0);
+	$config["url_updatemanager"] = get_parameter ("url_updatemanager", "");
 	$config["access_protocol"] = get_parameter("access_protocol");
 	$config["access_port"] = get_parameter("access_port", "");
 	$config["access_public"] = get_parameter ("access_public", $_SERVER["SERVER_NAME"]);
@@ -89,7 +90,8 @@ if ($update) {
 	update_config_token ("first_day_week", $config["first_day_week"]);
 	
 	update_config_token ("access_protocol", $config["access_protocol"]);
-	update_config_token ("access_port", $config["access_port"]);	
+	update_config_token ("access_port", $config["access_port"]);
+	update_config_token ("url_updatemanager", $config["url_updatemanager"]);
 	update_config_token ("access_public", $config["access_public"]);
 
 	update_config_token ("loginhash_pwd", $config["loginhash_pwd"]);
