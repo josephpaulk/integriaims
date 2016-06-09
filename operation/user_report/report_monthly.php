@@ -121,142 +121,148 @@ echo "<th>".__('Avg. Scoring');
 $min = $offset;
 $max = $offset+$config['block_size']-1;
 $i = 0;
-foreach ($values as $key => $value){
 
-	if($i < $min || $i > $max) {
-		$i++;
-		continue;
-	}
-	$i++;
+if (!empty($values)) {
+	foreach ($values as $key => $value){
 
-	$row0 = get_db_row ("tusuario", "id_usuario", $key);
-	if ($row0){
-		$nombre = $row0["id_usuario"];
-		$avatar = $row0["avatar"];
-
-				// Get total hours for this month
-		$sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
-		if ($res = mysql_query($sql)) {	
-			$row=mysql_fetch_array($res);
+		if($i < $min || $i > $max) {
+			$i++;
+			continue;
 		}
-			
-		echo "<tr><td>";
-			
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$nombre' class='tip'>&nbsp;<span>";
-		$usuario = get_db_row ("tusuario", "id_usuario", $nombre);
-		echo "<b>".$usuario["nombre_real"] . "</b><br>";
-		echo "<i>".$usuario["comentarios"] . "</i><br>";
+		$i++;
 
-		// TODO - Move this to enterprise code.
+		$row0 = get_db_row ("tusuario", "id_usuario", $key);
+		if ($row0){
+			$nombre = $row0["id_usuario"];
+			$avatar = $row0["avatar"];
 
-		if ($config["enteprise"] == 1){
-			echo "<font size=1px>";
-			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-			$result1=mysql_query($sql1);
-		
-			if (mysql_num_rows($result1)){
-				while ($row1=mysql_fetch_array($result1)){
-					echo dame_perfil($row1["id_perfil"])."/ ";
-					echo dame_grupo($row1["id_grupo"])."<br>";
+					// Get total hours for this month
+			$sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
+			if ($res = mysql_query($sql)) {	
+				$row=mysql_fetch_array($res);
+			}
+				
+			echo "<tr><td>";
+				
+			echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$nombre' class='tip'>&nbsp;<span>";
+			$usuario = get_db_row ("tusuario", "id_usuario", $nombre);
+			echo "<b>".$usuario["nombre_real"] . "</b><br>";
+			echo "<i>".$usuario["comentarios"] . "</i><br>";
+
+			// TODO - Move this to enterprise code.
+
+			if ($config["enteprise"] == 1){
+				echo "<font size=1px>";
+				$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+				$result1=mysql_query($sql1);
+			
+				if (mysql_num_rows($result1)){
+					while ($row1=mysql_fetch_array($result1)){
+						echo dame_perfil($row1["id_perfil"])."/ ";
+						echo dame_grupo($row1["id_grupo"])."<br>";
+					}
+				}
+				else { 
+					echo __('This user doesn\'t have any assigned profile/group'); 
 				}
 			}
-			else { 
-				echo __('This user doesn\'t have any assigned profile/group'); 
+
+			echo "</font></span></a>";
+			echo "</td>";
+			echo "<td>";
+
+			if (give_acl ($config["id_user"], 0, "UM")){
+				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=$nombre'>";
 			}
-		}
 
-		echo "</font></span></a>";
-		echo "</td>";
-		echo "<td>";
+			if (strlen(safe_output($nombre)) > 21)
+				echo "".ucfirst(substr(safe_output($nombre),0,21))."..</b>";
+			else
+				echo ucfirst($nombre)."</b>";
 
-		if (give_acl ($config["id_user"], 0, "UM")){
-			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=$nombre'>";
-		}
+			if (give_acl ($config["id_user"], 0, "IM")){
+				echo "</a>";
+			}
+			
+			echo "<td style=''>".$usuario["nombre_real"]."</td>";
 
-		if (strlen(safe_output($nombre)) > 21)
-			echo "".ucfirst(substr(safe_output($nombre),0,21))."..</b>";
-		else
-			echo ucfirst($nombre)."</b>";
+			
+			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $usuario['id_company']);
+			
+			echo "<td style=''>".$company_name."</td>";
 
-		if (give_acl ($config["id_user"], 0, "IM")){
+			echo "<td>";
+
+			// Full report			
+			echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full&only_projects=1&wu_reporter=$nombre'>";
+			echo "<img title='".__("Full report")."' src='images/page_white_stack.png'>";
 			echo "</a>";
+			
+			// Workunit report (detailed)
+			echo "&nbsp;&nbsp;";
+			echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
+			echo "<img border=0 title='".__("Workunit report")."' src='images/page_white_text.png'></A>";
+
+			// Clock to calendar montly report for X user
+			echo "&nbsp;&nbsp;";
+			echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' title='".__("Montly calendar report")."' border=0></a>";
+
+			// Graph stats montly report for X user
+			echo "&nbsp;&nbsp;";
+			echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center>";
+			
+			/*
+			// WO report for X user
+			echo "&nbsp;&nbsp;";
+			echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=$nombre'><img src='images/paste_plain.png' title='".__("Workorders")."' border=0></a></center></td>";
+			*/
+			echo "</td>";
+			
+			// Medals
+			echo "<td>";
+			$gold_medals = get_db_sql ("SELECT SUM(gold_medals) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND gold_medals > 0 ");
+			$black_medals = get_db_sql ("SELECT SUM(black_medals) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND black_medals > 0 ");
+			$result = "";
+			if ($gold_medals) {
+				$result = "<img src='images/insignia_dorada.png' title='".__("Gold medals")."' border=0>"."(".$gold_medals.")";
+			}
+			if ($black_medals) {
+				$result .= "<img src='images/insignia_gris.png' title='".__("Black medals")."' border=0>"."(".$black_medals.")";
+			}
+			echo $result;
+			echo "</td>";
+			
+			// Total hours this month
+			echo "<td  >";
+			echo $row[0];
+			
+			// Total charged hours this month
+			/*
+					echo "<td  >";
+					$tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
+					if ($tempsum != "")
+						echo $tempsum. " hr";
+					else
+						echo "--";
+			*/
+
+				// Average incident scoring
+			echo "<td>";
+			$tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
+
+
+			if ($tempsum != "")
+				echo format_numeric($tempsum). "/10";
+			else
+				echo "--";
 		}
-		
-		echo "<td style=''>".$usuario["nombre_real"]."</td>";
-
-		
-		$company_name = (string) get_db_value ('name', 'tcompany', 'id', $usuario['id_company']);
-		
-		echo "<td style=''>".$company_name."</td>";
-
-		echo "<td>";
-
-		// Full report			
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full&only_projects=1&wu_reporter=$nombre'>";
-		echo "<img title='".__("Full report")."' src='images/page_white_stack.png'>";
-		echo "</a>";
-		
-		// Workunit report (detailed)
-		echo "&nbsp;&nbsp;";
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
-		echo "<img border=0 title='".__("Workunit report")."' src='images/page_white_text.png'></A>";
-
-		// Clock to calendar montly report for X user
-		echo "&nbsp;&nbsp;";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' title='".__("Montly calendar report")."' border=0></a>";
-
-		// Graph stats montly report for X user
-		echo "&nbsp;&nbsp;";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center>";
-		
-		/*
-		// WO report for X user
-		echo "&nbsp;&nbsp;";
-		echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=$nombre'><img src='images/paste_plain.png' title='".__("Workorders")."' border=0></a></center></td>";
-		*/
-		echo "</td>";
-		
-		// Medals
-		echo "<td>";
-		$gold_medals = get_db_sql ("SELECT SUM(gold_medals) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND gold_medals > 0 ");
-		$black_medals = get_db_sql ("SELECT SUM(black_medals) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND black_medals > 0 ");
-		$result = "";
-		if ($gold_medals) {
-			$result = "<img src='images/insignia_dorada.png' title='".__("Gold medals")."' border=0>"."(".$gold_medals.")";
-		}
-		if ($black_medals) {
-			$result .= "<img src='images/insignia_gris.png' title='".__("Black medals")."' border=0>"."(".$black_medals.")";
-		}
-		echo $result;
-		echo "</td>";
-		
-		// Total hours this month
-		echo "<td  >";
-		echo $row[0];
-		
-		// Total charged hours this month
-		/*
-				echo "<td  >";
-				$tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
-				if ($tempsum != "")
-					echo $tempsum. " hr";
-				else
-					echo "--";
-		*/
-
-			// Average incident scoring
-		echo "<td>";
-		$tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
-
-
-		if ($tempsum != "")
-			echo format_numeric($tempsum). "/10";
-		else
-			echo "--";
 	}
 }
 
 echo "</table>";
+if (empty($values)) {
+	echo "<h2 class='error'>" . __("No reports") . "</h2>";
+}
 echo "</div>";
 ?>
 

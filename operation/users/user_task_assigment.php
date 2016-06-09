@@ -123,7 +123,7 @@ if (mysql_fetch_array($result)) {
 }
 echo "</table>";
 if (!mysql_fetch_array($result)) {
-	echo "<h2 class='error'>" . __("Empty") . "</h2>";
+	echo "<h2 class='error'>" . __("No tasks") . "</h2>";
 }
 echo "</div>";
 
