@@ -197,7 +197,6 @@ $groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/gru
 
 print_groups_table ($groups);
 
-
 ?>
 
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
