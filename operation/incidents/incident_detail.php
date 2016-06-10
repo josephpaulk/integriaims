@@ -305,11 +305,18 @@ if (defined ('AJAX')) {
 	}
 	
 	if ($set_ticket_groups) {
+		$id_grupo = get_parameter('id_grupo');
 		$id_incident_type = (int)get_parameter('id_incident_type');
 		$option_any = (int)get_parameter('option_any');
 		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 		if($id_group_type != "" && $id_group_type != "0"){
-			$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			if(give_acl ($config['id_user'], $id_grupo, "SI")){
+				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
+			}
+			else{
+				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			}
+			//$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
 			$id_group_type = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", $id_group_type);
 			$groups_selected = explode(', ', $id_group_type);
 			$groups = array_intersect(safe_output($groups_all), $groups_selected);
@@ -317,7 +324,12 @@ if (defined ('AJAX')) {
 				$groups[0] = __('Any');
 			}
 		} else {
-			$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			if(give_acl ($config['id_user'], $id_grupo, "SI")){
+				$groups = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
+			}
+			else{
+				$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			}
 			if($option_any){
 				$groups[0] = __('Any');
 			}
@@ -386,7 +398,7 @@ if (isset($incident)) {
 		exit;
 	}
 }
-else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
+else if (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") ) {
 	// Doesn't have access to this page
 	
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
@@ -1010,6 +1022,7 @@ else {
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
+$table = new stdClass();
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->id = "incident-editor";
@@ -1023,7 +1036,7 @@ $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-if ($has_permission && (!$blocked_incident)) {
+if (($has_permission && (!$blocked_incident)) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!$blocked_incident))) {
 	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, '', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
@@ -1062,15 +1075,42 @@ if ($config['required_ticket_type']) {
 	$select = 'select';
 }
 
-$table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
-
+if(give_acl ($config['id_user'], $id_grupo, "IW")){
+	$table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
+} else if (give_acl ($config['id_user'], $id_grupo, "SI")){
+	$group_escalate_sql = 'select g.nombre from tusuario_perfil u, tgrupo g where g.id_grupo=u.id_grupo and u.id_usuario = "'.$config['id_user'].'"';
+	$group_escalate_p = get_db_all_rows_sql($group_escalate_sql);
+	foreach ($group_escalate_p as $v) {
+		$group_escalate .= $v['nombre']. '|';
+	}
+	$group_escalate = rtrim($group_escalate, "|");
+	$types_escalate_sql = 'select id, name from tincident_type where id_group REGEXP "'.$group_escalate.'"';
+	$types_escalate_s = get_db_all_rows_sql($types_escalate_sql);
+	$types_escalate = array();
+	foreach ($types_escalate_s as $v) {
+		$types_escalate[$v['id']] = $v['name'];
+	}
+	$table->data[0][1] .= print_select($types_escalate, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
+}
 $id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
+
 if($id_group_type != "" && $id_group_type != "0"){
-	$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+	if(give_acl ($config['id_user'], $id_grupo, "SI")){
+		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
+	}
+	else{
+		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+	}
 	$groups_selected = explode(', ', $id_group_type);
 	$groups = array_intersect($groups_all, $groups_selected);
 } else {
-	$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+	if(give_acl ($config['id_user'], $id_grupo, "SI")){
+		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
+	}
+	else{
+		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+	}
+	$groups_selected = explode(', ', $id_group_type);
 }
 
 $table->data[0][2] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group'), $blocked_incident) . "<div id='group_spinner'></div>";
@@ -1214,6 +1254,7 @@ $table->colspan[4][0] = 3;
 $table->data[4][0] = "";
 
 //////TABLA ADVANCED
+$table_advanced = new stdClass();
 $table_advanced->width = '100%';
 $table_advanced->class = 'search-table';
 $table_advanced->size = array ();
@@ -1240,7 +1281,7 @@ if ($has_im && $create_incident){
 	$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
 }
 
-if ($has_im){
+if ($has_im || give_acl ($config['id_user'], $id_grupo, "SI")){
 	$table_advanced->data[0][2] = print_checkbox ('sla_disabled', 1, $sla_disabled,	true, __('SLA disabled'), $blocked_incident);
 
 } else {
@@ -1249,7 +1290,7 @@ if ($has_im){
 
 $parent_name = $id_parent ? (__('Ticket').' #'.$id_parent) : __('None');
 
-if ($has_im) {
+if ($has_im || give_acl ($config['id_user'], $id_grupo, "SI")) {
 	
 	$table_advanced->data[3][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent ticket'), $blocked_incident);
 	$table_advanced->data[3][0] .= print_input_hidden ('id_parent', $id_parent, true);
@@ -1386,7 +1427,7 @@ if (!$create_incident){
 if ($create_incident) {
 	$button = "<div class='button-form'>";
 	$button .= print_input_hidden ('action', 'insert', true);
-	if (give_acl ($config["id_user"], 0, "IW")) {
+	if ((give_acl ($config["id_user"], 0, "IW")) || (give_acl ($config['id_user'], $id_grupo, "SI"))) {
 		$button .= print_submit_button (__('Create'), 'action2', false, 'class="sub create"', true);
 	}
 	$button .= '</div>';
@@ -1401,7 +1442,7 @@ if ($create_incident) {
 //~ $table->colspan['button'][0] = 4;
 //~ $table->data['button'][0] = $button;
 
-if ($has_permission){
+if ($has_permission || give_acl ($config['id_user'], $id_grupo, "SI")){
 	if ($create_incident) {
 		$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
 		echo '<form id="incident_status_form" method="post" enctype="multipart/form-data">';
@@ -1519,6 +1560,7 @@ $(document).ready (function () {
 	var id_incident = <?php echo $id?>;
 	var id_user = $("#text-id_user").val();
 	var id_group = $("#grupo_form").val();
+	var id_group_p = <?php echo $id_grupo?>;
 	
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
@@ -1529,13 +1571,17 @@ $(document).ready (function () {
 	//order groups for select
 	$("#id_incident_type").change (function () {
 		var id_incident_type = $("#id_incident_type").val();
-		show_incident_groups_fields(id_incident_type, null, function (err, incident_groups) {
+		show_incident_groups_fields(id_incident_type, id_group_p, null, function (err, incident_groups) {
 			var obj = incident_groups;
 			$("#grupo_form option").remove();
-			$.each (obj, function (id, value) {
-				value_aux = value[1].replace(/&nbsp;/g, '\u00a0');
-				$("#grupo_form").append(new Option(value_aux, value[0]));
-			});
+			if(obj.length > 0){
+				$.each (obj, function (id, value) {
+					value_aux = value[1].replace(/&nbsp;/g, '\u00a0');
+					$("#grupo_form").append(new Option(value_aux, value[0]));
+				});
+			} else {
+				$("#grupo_form").append(new Option('', ''));
+			}
 		});
 	});
 	

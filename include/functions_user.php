@@ -239,6 +239,7 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 	}
 	
 	$user_groups = get_user_groups ($id_user, $privilege, $returnAllGroup, $returnAllColumns);
+	/*
 	$user_groups_flag_si = get_user_groups ($id_user, "SI", $returnAllGroup, $returnAllColumns);
 
 	if (!empty($user_groups_flag_si)) {
@@ -246,7 +247,7 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 			array_push ($user_groups, $group_flag);
 		}
 	}
-
+	*/
 	if ($id_groups !== null) {
 		$childrens = groups_get_childrens($id_groups);
 		foreach ($childrens as $child) {
@@ -260,7 +261,8 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 	}
 	else {
 		// First group it's needed to retrieve its parent group
-		$first_group = reset(array_slice($user_groups, 0, 1));
+		$repair = array_slice($user_groups, 0, 1);
+		$first_group = reset($repair);
 		$parent_group = $first_group['parent'];
 		
 		$user_groups_tree = groups_get_groups_tree_recursive($user_groups, $parent_group);

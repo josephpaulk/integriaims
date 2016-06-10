@@ -2527,7 +2527,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$order_by = $filter['order_by'];
 	}
 	if (!$report_mode) {
-		if ($order_by["id_incidencia"] != "") {
+		if ((!isset($order_by["id_incidencia"])) || ($order_by["id_incidencia"] != "")) {
 			if ($order_by["id_incidencia"] == "DESC") {
 				$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
 			} else {
@@ -2536,7 +2536,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		} else {
 			$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"DESC\")'><img src='images/block_orange.png'></a>";
 		}
-		if ($order_by["prioridad"] != "") {
+		if ((!isset($order_by["id_prioridad"])) || ($order_by["id_prioridad"] != "")) {
 			if ($order_by["prioridad"] == "DESC") {
 				$priority_order_image = "<a href='javascript:changeIncidentOrder(\"prioridad\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
 			} else {

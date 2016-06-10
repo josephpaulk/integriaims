@@ -403,7 +403,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 */
 
 // INCIDENTS
-if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN) {
+if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN || $sec == "incidents" && give_acl ($config['id_user'], 0, "SI") && $show_incidents != MENU_HIDDEN) {
 	$id_incident = get_parameter ('id');
 	
 	if (($sec2 == "operation/incidents/incident_dashboard") || ($sec2 == "operation/incidents/incident") || ($sec2 == "operation/incidents/incident_search") || 
@@ -416,28 +416,29 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		echo "<ul>";
 			echo "<li><h1>".__('Incidents')."</h1></li>";
 
-			// Incident overview
-			if ($sec2 == "operation/incidents/incident_dashboard")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
-			$search_id_user = (bool) get_parameter ('search_id_user', false);
-			//~ My Tickets
-			if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
-			
-			//~ Search Tickets
-			if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
-
-			if (give_acl ($config['id_user'], 0, "IW")) {
+			if (give_acl ($config['id_user'], 0, "IR")) {
+				// Incident overview
+				if ($sec2 == "operation/incidents/incident_dashboard")
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
+				$search_id_user = (bool) get_parameter ('search_id_user', false);
+				//~ My Tickets
+				if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
+				
+				//~ Search Tickets
+				if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
+			}
+			if (give_acl ($config['id_user'], 0, "IW") || give_acl ($config['id_user'], 0, "SI")) {
 				// Incident creation
 				if ($sec2 == "operation/incidents/incident_detail")
 					echo "<li id='sidesel'>";
@@ -454,16 +455,17 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 					echo "<li>";
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports' id='link_incident_report'>".__('Reports')."</a></li>";
 			}
-			
-			if ($sec2 == "operation/incidents/incident_dashboard_detail")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo '<a href="" >'.__('Ticket #').'&nbsp;</a>';
-			echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
-			print_input_text ('id', '', '', 4, 10);
-			echo '</form>';
-			echo '</li>';
+			if (give_acl ($config['id_user'], 0, "IR")) {
+				if ($sec2 == "operation/incidents/incident_dashboard_detail")
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo '<a href="" >'.__('Ticket #').'&nbsp;</a>';
+				echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
+				print_input_text ('id', '', '', 4, 10);
+				echo '</form>';
+				echo '</li>';
+			}
 		echo "</ul>";
 			
 		// Incident type and SLA management only PM

@@ -30,20 +30,25 @@ if (give_acl($config["id_user"], 0, "PR") && ($show_projects != MENU_HIDDEN) && 
 }
 
 // Support submenus ACLs
-$incidents_acl = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
-$kb_acl = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
-$download_acl = give_acl($config["id_user"], 0, "FRR");
+$incidents_acl    = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
+$escalate_acl     = give_acl($config["id_user"], 0, "SI") && $show_incidents != MENU_HIDDEN;
+$kb_acl           = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
+$download_acl     = give_acl($config["id_user"], 0, "FRR");
 $file_sharing_acl = $download_acl;
 
-$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
+$incidents_link        = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
+$escalate_tickets_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
+$kb_link               = 'index.php?sec=kb&sec2=operation/kb/browse';
+$download_link         = 'index.php?sec=download&sec2=operation/download/browse&show_types=1';
+$file_sharing_link     = 'index.php?sec=file_sharing&sec2=operation/file_sharing/manage';
 
-$kb_link = 'index.php?sec=kb&sec2=operation/kb/browse';
-$download_link = 'index.php?sec=download&sec2=operation/download/browse&show_types=1';
-$file_sharing_link = 'index.php?sec=file_sharing&sec2=operation/file_sharing/manage';
 
 $support_link = 'javascript:';
 if ($incidents_acl) {
 	$support_link = $incidents_link;
+}
+else if ($escalate_acl) {
+	$support_link = $escalate_tickets_link;
 }
 else if ($kb_acl) {
 	$support_link = $kb_link;
@@ -56,7 +61,7 @@ else if ($file_sharing_acl) {
 }
 
 // Support
-if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl) {
+if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl || $escalate_acl) {
     // Incident
     if ($sec == "incidents" || $sec == "download" || $sec == "kb" || $sec == "file_sharing")
 	    echo "<li id='current' class='support'>";
