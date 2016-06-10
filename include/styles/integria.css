@@ -578,7 +578,8 @@ textarea {
     background-color: #FFF;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	width: 98%;
+	width: 98% !important;
+	max-width: 98%;
 }
 
 input.button {
