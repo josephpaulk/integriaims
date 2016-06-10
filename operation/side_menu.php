@@ -567,6 +567,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_customers != MENU_HIDDEN) {
 	
 	if ((($sec2=="operation/companies/company_detail") AND (!$new_company)) || ($sec2 == "operation/companies/company_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) ||
+	($sec2 == "operation/companies/company_custom_fields" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) ||
 	(($sec2=="operation/companies/company_role") && (!isset($_GET["create"]))) || (($sec2 == "operation/invoices/invoice_detail" || $sec2 == "operation/invoices/invoices") && !$new_invoice) || 
 	(($sec2 == "operation/invoices/invoice_detail" || $sec2 == "operation/invoices/invoices") && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) || (($sec2=="operation/contracts/contract_detail") && !$new_contract) ||
 	($sec2 == "operation/contracts/contract_detail" && (give_acl ($config["id_user"], 0, "CW") || give_acl ($config["id_user"], 0, "CM"))) || (($sec2=="operation/contacts/contact_detail") && !$new_contact) || 
@@ -1177,10 +1178,13 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			
 			if (($sec2 == "godmode/usuarios/lista_usuarios") || ($sec2 == "godmode/usuarios/lista_usuarios") || ($sec2 == "godmode/usuarios/user_field_list") ||
 			($sec2 == "godmode/usuarios/import_from_csv") || ($sec2 == "godmode/usuarios/role_manager") || ($sec2 == "godmode/grupos/lista_grupos") ||
-			($sec2 == "enterprise/godmode/usuarios/menu_visibility_manager") || ($sec2 == "enterprise/godmode/usuarios/profile_list"))
+			($sec2 == "enterprise/godmode/usuarios/menu_visibility_manager") || ($sec2 == "enterprise/godmode/usuarios/profile_list") ||
+			($sec2 == "godmode/usuarios/configurar_usuarios") || ($sec2 == "godmode/grupos/configurar_grupo")) {
 				echo "<li title='".__('People management')."' data-status='closed' id='sideselmanage' class='sideselcolor'>";
-			else
+			}
+			else {
 				echo "<li title='".__('People management')."' data-status='closed' id='manage'>";
+			}
 			//echo "<a   title='".__('People management')."' href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>1</a>";
 				echo "<ul>";
 					echo "<li><h1>".__('People management')."</h1></li>";
@@ -1192,7 +1196,12 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 						echo "<li>";
 					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
 					
-					echo "<li style='margin-left: 15px;'>";
+					if ($sec2 == "godmode/usuarios/configurar_usuarios") {
+						echo "<li id='sidesel' style='margin-left: 15px;'>";
+					}
+					else {
+						echo "<li style='margin-left: 15px;'>";
+					}
 					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
 					echo "</li>";
 					
@@ -1203,7 +1212,12 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 						echo "<li>";
 					echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
 					
-					echo "<li style='margin-left: 15px;'>";
+					if ($sec2 == "godmode/grupos/configurar_grupo") {
+						echo "<li id='sidesel' style='margin-left: 15px;'>";
+					}
+					else {
+						echo "<li style='margin-left: 15px;'>";
+					}
 					echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
 					
 					enterprise_include ("operation/sidemenu_user_mgmt.php");
