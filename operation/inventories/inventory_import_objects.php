@@ -37,7 +37,9 @@ if ($upload_file) {
 		}
 	}
 }
-
+if ($_FILES["file"]["error"] != 0) {
+	echo "<h2 class='error'>" . __("Error uploading file") . "</h2>";
+}
 $table->width = '99%';
 $table->class = 'search-table';
 $table->size = array ();
@@ -53,5 +55,5 @@ echo '<form enctype="multipart/form-data" action="index.php?sec=inventory&sec2=o
 	print_input_hidden ('upload_file', 1);
 	print_table ($table);
 echo '</form>';
-echo "</div>"
+echo "</div>";
 ?>
