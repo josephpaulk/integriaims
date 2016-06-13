@@ -1092,14 +1092,8 @@ function api_get_stats ($return_type, $param, $token, $user){
     else 
         $filter["id_company"]= 0;
 
-
     if (isset($param[6]))
-        $filter['id_product'] = $param[6];
-    else 
-        $filter["id_product"]= 0;
-
-    if (isset($param[7]))
-        $filter['id_inventory'] = $param[7];
+        $filter['id_inventory'] = $param[6];
     else 
         $filter["id_inventory"]= 0;
 
