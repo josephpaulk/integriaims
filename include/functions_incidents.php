@@ -3594,7 +3594,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$ttl = $pdf_output+1;
 
 	// Max graph legend string length (without the '...')
-	$max_legend_strlen = 17;
+	$max_legend_strlen = 25;
 	
 	// Necessary for flash graphs
 	include_flash_chart_script();
@@ -3663,7 +3663,6 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	
 	//Initialize groups time array
 	$groups_time = array();
-
 	foreach ($incidents as $incident) {
 		
 		$inc_stats = incidents_get_incident_stats($incident["id_incidencia"]);
@@ -3997,7 +3996,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$status_aux .= "<tr>";
 	$status_aux .= "<th><strong>".__("Status")."</strong></th>";
 	$status_aux .= "<th><strong>".__("Number")."</strong></th>";
-	$status_aux .= "<th><strong>".__("Total time")."</strong></th>";
+	$status_aux .= "<th><strong>".__("Total time (AVG)")."</strong></th>";
 	$status_aux .= "</tr>";
 	
 		foreach ($incident_status as $key => $value) {
@@ -4005,7 +4004,8 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 			$status_aux .= "<tr>";
 			$status_aux .= "<td>".$name."</td>";
 			$status_aux .= "<td>".$value."</td>";
-			$time = $incident_status_timing[$key];
+			// Arithmetical average
+			$time = $incident_status_timing[$key] / count($incidents);
 			$status_aux .= "<td>".give_human_time($time,true,true,true)."</td>";
 			$status_aux .= "</tr>";
 		}
@@ -4141,20 +4141,27 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 
 	$count = 1;
 	arsort($groups_time);
+	
+	$count_groups = 0;
 	foreach ($groups_time as $key => $value) {
-		
 		//Only show first 5
 		if ($count == 5) {
 			break;
 		}
-
 		$output .= "<tr>";
 		$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
 		$output .= "<td>".$group_name."</td>";
 		$output .= "<td>".give_human_time($value,true,true,true)."</td>";
 		$output .= "</tr>";
 		$count++;
-	}	
+		$count_groups++;
+	}
+	if (($count_groups < 5) && ($count_groups != 0)) {
+		$output .= "<tr>";
+		$output .= "<td>". __('Only have ') . $count_groups . __(' group/s with tickets') ."</td>";
+		$output .= "<td>" . " " . "</td>";
+		$output .= "</tr>";
+	}
 	
 	$output .= "</table>";
 		
@@ -4169,6 +4176,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$output .= "</tr>";
 	
 	$count = 1;
+	$count_users = 0;
 	arsort($users_time);
 	foreach ($users_time as $key => $value) {
 		
@@ -4183,7 +4191,15 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 		$output .= "<td>".give_human_time($value,true,true,true)."</td>";
 		$output .= "</tr>";
 		$count++;
-	}	
+		$count_users++;
+	}
+	if (($count_users < 5) && ($count_users != 0)) {
+		$output .= "<tr>";
+		$output .= "<td>". __('Only have ') . $count_users . __(' user/s with tickets') ."</td>";
+		$output .= "<td>" . " " . "</td>";
+		$output .= "</tr>";
+	}
+	
 	
 	$output .= "</table>";
 		
