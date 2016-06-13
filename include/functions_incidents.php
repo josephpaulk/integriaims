@@ -1668,17 +1668,17 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$msg_code = "TicketID#$id_inc";
 			$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
 			$msg_code .= "/".$row["id_creator"];
-			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 		}
 		
 		// Send emails to the people in the group added
 		if($forced_email != 0){
 			$email_default = get_user_email ($user_defect_group);
-			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			if($email_group){
 				$email_g = explode(',',$email_group);
 				foreach ($email_g as $k){
-					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);	
+					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);	
 				}
 			}
 		}
@@ -1703,7 +1703,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 					$msg_code = "TicketID#$id_inc";
 					$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
 					$msg_code .= "/". $row[1];
-					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 				}
 			}
 		}
@@ -1714,7 +1714,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			if ($contats)
 			foreach ($contacts as $contact) {
 				$contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
-				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			}
 		}
 	}

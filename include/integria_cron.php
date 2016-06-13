@@ -703,11 +703,14 @@ function run_mail_queue () {
 					$images = explode ( ",", $email["image_list"]);
 					$body_images = "";
 					foreach ($images as $image) {
-							$body_images .= '<br><img src="' . $message->embed(Swift_Image::fromPath("$image")) .'"/>';
+						if ( file_exists ( $image ) ) {
+							$embed_image = $message->embed(Swift_Image::fromPath($image));
+							$body_images .= '\n<img src="' . $embed_image .'"/>';
+						}
 					}
 				}
-
-				$message->setBody('<html><body>'.$email['body'].$body_images.'</body></html>', 'text/html', 'utf-8');
+				
+				$message->setBody('<html><body>'.$email['body'].$body_images.'</body></html>', 'text/html');
 				
 				if ($email["attachment_list"] != "") {
 					$attachments = explode ( ",", $email["attachment_list"]);
@@ -716,14 +719,14 @@ function run_mail_queue () {
 							$message->attach(Swift_Attachment::fromPath($attachment));
 				}
 
-				$message->setContentType("text/html");
+				//~ $message->setContentType("text/html");
 
-				$headers = $message->getHeaders();
+				//~ $headers = $message->getHeaders();
 
-				foreach ($extra_headers as $eh) {
-					$aux_header = explode(":", $eh);
-					$headers->addTextHeader($aux_header[0], $aux_header[1]);
-				}
+				//~ foreach ($extra_headers as $eh) {
+					//~ $aux_header = explode(":", $eh);
+					//~ $headers->addTextHeader($aux_header[0], $aux_header[1]);
+				//~ }
 		
 				//Check if the email was sent at least once
 				if ($mailer->send($message) >= 1)
