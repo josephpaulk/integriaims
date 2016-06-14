@@ -72,7 +72,7 @@ class Incident {
 		
 		// insert, update, delete, view or ""
 		$this->operation = (string) $system->getRequest('operation', "");
-		// view, files, workorders or ""
+		// view, files or ""
 		$this->tab = (string) $system->getRequest('tab', "view");
 		
 		// ACL

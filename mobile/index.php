@@ -31,8 +31,6 @@ require_once("include/user.class.php");
 require_once('operation/home.php');
 require_once('operation/workunits.php');
 require_once('operation/workunit.php');
-require_once('operation/workorders.php');
-require_once('operation/workorder.php');
 require_once('operation/incidents.php');
 require_once('operation/incident.php');
 require_once('operation/calendars.php');
@@ -75,14 +73,6 @@ switch ($action) {
 			case 'workunit':
 				$workunit = new Workunit();
 				$workunit->ajax($method);
-				break;
-			case 'workorders':
-				$workorders = new Workorders();
-				$workorders->ajax($method);
-				break;
-			case 'workorder':
-				$workorder = new Workorder();
-				$workorder->ajax($method);
 				break;
 			case 'incidents':
 				$incidents = new Incidents();
@@ -136,14 +126,6 @@ switch ($action) {
 			case 'workunit':
 				$workunit = new Workunit();
 				$workunit->show();
-				break;
-			case 'workorders':
-				$workorders = new Workorders();
-				$workorders->show();
-				break;
-			case 'workorder':
-				$workorder = new Workorder();
-				$workorder->show();
 				break;
 			case 'incidents':
 				$incidents = new Incidents();
