@@ -79,6 +79,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
 	$filters["medals"] = isset ($filters['medals']) ? $filters['medals'] : 0;
+	$filters["parent_name"] = isset ($filters['parent_name']) ? $filters['parent_name'] : '';
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -209,6 +210,11 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			$medals_filter = " AND black_medals <> 0";
 		}
 	}
+	
+	if ($filters['parent_name'] !== '') {
+		$inventory_id = get_db_all_rows_sql("SELECT id FROM tinventory WHERE name = '" . $filters['parent_name'] . "'");
+		$inventory_id = $inventory_id[0]['id'];
+	}
 
 	//Use config block size if no other was given
 	if ($limit) {
@@ -216,7 +222,12 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			$filters["limit"] = $config["block_size"];
 		}
 	}
-
+	
+	if ($inventory_id) {
+		$sql_clause .= " AND id_incidencia = (SELECT id_incident FROM tincident_inventory WHERE id_inventory = (SELECT id from tinventory 
+						WHERE name = '" . $filters['parent_name'] . "'))";
+	}
+	
 	if ($no_parents) {
 		$sql_clause .= " AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)";
 	}
