@@ -29,7 +29,7 @@ class System {
 		
 		DB::getInstance($this->getConfig('db_engine', 'mysql'));
 		
-		session_start();
+		if (!session_id()) session_start();
 		$this->session = $_SESSION;
 		session_write_close();
 	}

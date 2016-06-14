@@ -912,7 +912,7 @@ class Incident {
 			// DATES
 			$ui->contentBeginGrid();
 				$created_timestamp = strtotime($incident['inicio']);
-				$created_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+				$created_cell = "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
 					$created_cell .= "<tr>";
 						$created_cell .= "<td>".__('Created on').":</td>";
 					$created_cell .= "</tr>";
@@ -934,7 +934,7 @@ class Incident {
 				$created_cell .= "</table>";
 				$ui->contentGridAddCell($created_cell);
 				$updated_timestamp = strtotime($incident['actualizacion']);
-				$updated_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+				$updated_cell = "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
 					$updated_cell .= "<tr>";
 						$updated_cell .= "<td>".__('Updated on').":</td>";
 					$updated_cell .= "</tr>";

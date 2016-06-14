@@ -418,6 +418,7 @@ class Workunit {
 							.__('Update')."</a>\n";
 		}
 		// Delete
+		$button_delete = '';
 		if ($this->id_workunit > 0) {
 			$button_delete = "<a href='index.php?page=workunits&operation=delete_workunit&id_workunit=".$this->id_workunit."' 
 									data-role='button' data-ajax='false' data-icon='delete'>".__('Delete')."</a>\n";

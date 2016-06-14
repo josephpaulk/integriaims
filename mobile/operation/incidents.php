@@ -347,7 +347,7 @@ class Incidents {
 		// 	$filter .= "&filter_owner=".$this->filter_owner;
 		// }
 		// $paginationCG = $ui->getPaginationControgroup("incidents$filter", $this->offset, $this->getNumPages());
-		$ui->createFooter($button_new.$paginationCG);
+		$ui->createFooter($button_new);
 		$ui->showFooter();
 		$ui->showPage();
 	}

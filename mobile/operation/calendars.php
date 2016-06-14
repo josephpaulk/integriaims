@@ -183,6 +183,8 @@ class Calendars {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 
+		$html = '';
+		
 		$html .= "<a id=\"min_month_button\" href=\"javascript:\" onclick=\"loadMinMonth()\" data-role=\"button\" data-icon=\"arrow-u\" data-mini=\"true\">" . __("Previous month") . "</a><br>";
 		
 		$html .= "<div id='min_month'></div>";
