@@ -1339,7 +1339,7 @@ if ((!$id) AND ($new_company == 0)){
 	$date = false;
 	
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND ( name LIKE "%%%s%%" OR country LIKE "%%%s%%")  ', $search_text, $search_text);
+		$where_clause .= sprintf (' AND ( `name` LIKE "%%%s%%" OR `country` LIKE "%%%s%%" OR `id` LIKE "%%%s%%")  ', $search_text, $search_text, $search_text);
 	}
 
 	if ($search_role != 0){ 
@@ -1437,7 +1437,7 @@ if ((!$id) AND ($new_company == 0)){
 	$table->class = 'search-table-button';
 	$table->style = array ();
 	$table->data = array ();
-	$table->data[0][0] = print_input_text_extended ("search_text", $search_text, "", '', 15, 100, false, '', "style='width:210px;'", true, '', __('Search'));
+	$table->data[0][0] = print_input_text_extended ("search_text", $search_text, "", '', 15, 100, false, '', "style='width:210px;'", true, '', __('Search').print_help_tip (__("Search according to company ID, name and country"), true));
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
 	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 15, 100, true, __('Country'));
@@ -1478,7 +1478,7 @@ if ((!$id) AND ($new_company == 0)){
 	$form .= '</form>';
 	
 	
-	print_container_div("companys_form",__("Companies form search"),$form, 'closed', false, false);
+	print_container_div("companys_form",__("Companies form search"),$form, 'open', false, false);
 	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
 

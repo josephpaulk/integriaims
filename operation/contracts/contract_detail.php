@@ -695,8 +695,7 @@ elseif ($op == "") {
 		
 		if ($search_text != "") {
 			$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
-				name LIKE "%%%s%%" OR 
-				contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
+				name LIKE "%%%s%%" OR contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
 		}
 		
 		if ($search_company_role) {
@@ -755,7 +754,7 @@ elseif ($op == "") {
 		$form .= "<tr>";
 		
 		$form .= "<td colspan=2>";
-		$form .= print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
+		$form .= print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search') . print_help_tip (__("Search according to contracts number, name and company"), true));
 		$form .= "</td>";
 		
 		$form .= "<td>";
@@ -810,7 +809,7 @@ elseif ($op == "") {
 		
 		$form .= '</form>';
 		
-		print_container_div("contract_form",__("Contracts form search"),$form, 'closed', false, false);
+		print_container_div("contract_form",__("Contracts form search"),$form, 'open', false, false);
 		
 		$contracts = crm_get_all_contracts ($where_clause);
 		if ($contracts !== false) {
