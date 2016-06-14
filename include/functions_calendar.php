@@ -629,7 +629,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 }
 
 // Main function to show integria calendar with WU time on it
-function generate_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
+function generate_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "", $show_hours_tip = true) {
 
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
@@ -819,7 +819,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 		
         $calendar .= "<td valign='top' class='$class' style='$border; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
 
-        if ($mydiff > 1){
+        if ($mydiff > 1 && $show_hours_tip){
             $calendar .= "<a href='#' class='tip'>&nbsp;<span>";
             $calendar .= __("Task/projects"). " : ". $workhours_a . "<br>";
             $calendar .= __("Vacations"). " : ". $workhours_b . "<br>";

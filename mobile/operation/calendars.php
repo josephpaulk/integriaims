@@ -82,8 +82,7 @@ class Calendars {
 									minMonth = 12;
 									minYear -= 1;
 								}
-								console.log(minYear);
-								console.log(minMonth);
+								
 								postvars = {};
 								postvars[\"action\"] = \"ajax\";
 								postvars[\"page\"] = \"calendars\";
@@ -174,7 +173,7 @@ class Calendars {
 		list($year, $month_name) = explode(',', gmstrftime('%Y,%B', $first_of_month));
 		$html = "<h1 class='title'>" . __(strtoupper(htmlentities(ucfirst($month_name)))) . " " . $year . "</h1>";
 
-		$html .= generate_work_calendar ($year, $month, array(), 1, NULL, $system->getConfig('first_day_week'), "", $user);
+		$html .= generate_work_calendar ($year, $month, array(), 1, NULL, $system->getConfig('first_day_week'), "", $user, false);
 		
 		return $html;
 	}
