@@ -262,8 +262,8 @@ class Workunit {
 				'label' => __('Hours'),
 				'type' => 'number',
 				'step' => 'any',
-				'min' => '0.01',
-				'value' => $this->duration_workunit,
+				'min' => '0.00',
+				'value' => ($this->id_incident < 0) ? $this->duration_workunit : 0,
 				'placeholder' => __('Hours')
 				);
 			$ui->formAddInput($options);

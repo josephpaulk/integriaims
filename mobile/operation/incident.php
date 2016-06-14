@@ -205,16 +205,23 @@ class Incident {
 		// Integria can override localtime zone by a user-specified timezone.
 		$timestamp = print_mysql_timestamp();
 		
-		$sql = "INSERT INTO tincidencia
-				(inicio, actualizacion, titulo, descripcion, id_usuario,
-				estado, prioridad, id_grupo, id_creator, notify_email, id_task,
-				resolution, id_incident_type, sla_disabled, email_copy, epilog)
-				VALUES ('$timestamp', '$timestamp', '$title', '$description',
-				'$id_user_responsible', $status, $priority, $group_id, '$id_creator',
-				$email_notify, $id_task, $resolution, $id_incident_type, $sla_disabled,
-				'$email_copy', '$epilog')";
-				
-		$id_incident = process_sql ($sql, 'insert_id');
+		$values = array(
+			'inicio' => $timestamp,
+			'actualizacion' => $timestamp,
+			'titulo' => $title,
+			'descripcion' => $description,
+			'id_usuario' => $id_user_responsible,
+			'estado' => $status,
+			'prioridad' => $priority,
+			'id_grupo' => $group_id,
+			'id_creator' => $id_creator,
+			'id_task' => $id_task,
+			'resolution' => $resolution,
+			'id_incident_type' => $id_incident_type,
+			'sla_disabled' => $sla_disabled,
+			'email_copy' => $email_copy
+		);
+		$id_incident = process_sql_insert('tincidencia', $values);
 		
 		if ($id_incident !== false) {
 			
@@ -476,7 +483,7 @@ class Incident {
 			$options = array(
 					'name' => 'description_file',
 					'label' => __('File description'),
-					'value' => $this->description_file
+					'value' => ''
 					);
 			$file_inputs .= $ui->getTextarea($options);
 		$ui->contentCollapsibleAddItem($file_inputs);
@@ -562,6 +569,7 @@ class Incident {
 							.__('Update')."</a>\n";
 		}
 		// Delete
+		$button_delete = '';
 		if ($this->id_incident > 0) {
 			$button_delete = "<a href='index.php?page=incidents&operation=delete_incident&id_incident=".$this->id_incident."'
 									data-role='button' data-ajax='false' data-icon='delete'>".__('Delete')."</a>\n";
@@ -844,6 +852,7 @@ class Incident {
 			$detail = "<div style='padding-left: 2px; padding-right: 2px;'>$detail</div>";
 			
 			// DESCRIPTION
+			$description = false;
 			if ($incident['descripcion'] != "") {
 				$ui->contentBeginCollapsible(__('Description'));
 					$ui->contentCollapsibleAddItem($incident['descripcion']);
@@ -852,6 +861,7 @@ class Incident {
 			}
 			
 			// CUSTOM FIELDS
+			$custom_fields = false;
 			if ($incident['id_incident_type']) {
 				$type_name = get_db_value("name", "tincident_type", "id", $incident['id_incident_type']);
 				$fields = incidents_get_all_type_field ($incident['id_incident_type'], $incident['id_incidencia']);
@@ -1077,7 +1087,7 @@ class Incident {
 			$href = "index.php?page=incident&tab=file&id_incident=".$this->id_incident;
 		}
 		
-		session_start();
+		if (!session_id()) session_start();
 		$_SESSION["id_usuario"] = $system->getConfig('id_user');
 		session_write_close();
 
@@ -1142,18 +1152,19 @@ class Incident {
 			$options = array(
 				'type' => 'file',
 				'name' => 'file',
-				'label' => __('File')
+				'label' => __('File'),
+				'required' => 'required'
 				);
 			$ui->formAddInput($options);
 			// Description
 			$options = array(
 					'name' => 'description_file',
 					'label' => __('Description'),
-					'value' => $this->description_file
+					'value' => ''
 					);
 			$ui->formAddHtml($ui->getTextarea($options));
 			// Hidden operation (insert or update+id)
-			if ($this->id_file < 0 || !isset($this->id_file)) {
+			if (!isset($this->id_file) || $this->id_file < 0) {
 				$options = array(
 					'type' => 'hidden',
 					'name' => 'operation',
