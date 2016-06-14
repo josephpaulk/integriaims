@@ -623,7 +623,7 @@ function run_mail_queue () {
 	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail WHERE status = 0".$limit);
 	
 	if ($mails)
-	foreach ($mails as $email){
+	foreach ($mails as $email) {
 			
 		// Use local mailer if host not provided - Attach not supported !!
 		//Headers must be comma separated
@@ -634,50 +634,109 @@ function run_mail_queue () {
 			$extra_headers = array();
 		}		
 
-		if ($config["smtp_host"] == "") {
-		
-			// Use internal mail() function
-			$headers   = array();
-			$headers[] = "MIME-Version: 1.0\r\n";
-			$headers[] = "Content-Type: text/html; charset=utf-8\r\n";
-
-			$headers = array_merge($headers, $extra_headers);
-
-			if ($email["from"] == "")
-				$from = $config["mail_from"];
-			else
-				$from = $email["from"]; 
-
-			$headers[] = "From: ". $from;
-			$headers[] = "Subject: ". safe_output($email["subject"]);
+		//~ if ($config["smtp_host"] == "") {
 			
-			if ($email["cc"]) {
-				$aux_cc = implode(",",$email["cc"]);
-				$headers[] = "Cc: ".$aux_cc;
-			}
-
-			$dest_email = trim(ascii_output($email['recipient']));
-			$body = safe_output($email['body']);
-			$error = mail($dest_email, safe_output($email["subject"]), $body, implode("\r\n", $headers));
+			//~ $eol = PHP_EOL;
+			//~ $separator = md5(time());
 			
-			if (!$error) {
-				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-			} else {
-				// no errors found
-				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
-			}
-		}
-		else {
+			//~ // Use internal mail() function
+			//~ $headers   = array();
+			
+			//~ //$headers[] = "Content-Transfer-Encoding: 7bit";
+
+			//~ $headers = array_merge($headers, $extra_headers);
+
+			//~ if ($email["from"] == "")
+				//~ $from = $config["mail_from"];
+			//~ else
+				//~ $from = $email["from"]; 
+			
+			//~ $headers[] = "Message-ID: <" . uniqid() . '@integriaims>';
+			//~ $dest_email = trim(ascii_output($email['recipient']));
+			//~ $headers[] = "From: ". $from;
+			//~ $headers[] = "To: ". $dest_email;
+			//~ if ($email["cc"]) {
+				//~ $aux_cc = implode(",",$email["cc"]);
+				//~ $headers[] = "Cc: ".$aux_cc;
+			//~ }
+			
+			//~ $headers[] = "MIME-Version: 1.0";
+			//~ $headers[] = "Content-Type: multipart/alternative; boundary=\"" . $separator . "\"";
+			
+			//~ // message
+			//~ $message[] = "--" . $separator;
+			//~ $message[] = "Content-Type: text/html; charset=\"UTF-8\"";
+			//~ $message[] = "Content-Transfer-Encoding: 8bit";
+			//~ $message['html'] = '<html>'.$eol.'<body>' . $eol . safe_output($email['body']);
+			
+			//~ if ($email["image_list"] != "") {
+				//~ $images = explode ( ",", $email["image_list"]);
+				//~ $body_images = "";
+				//~ foreach ($images as $image) {
+					//~ $uniq  = uniqid("integriaims@");
+					//~ $type = pathinfo($image, PATHINFO_EXTENSION);
+					//~ $name_file = basename($image);
+					//~ $data = file_get_contents($image);
+					//~ $body_images .= $eol . '<img src="cid:' . $uniq . '" />';
+					
+					//~ $message[] = "--" . $separator;
+					//~ $message[] = "Content-Type: image/$type; name=" . $name_file;
+					//~ $message[] = "Content-Transfer-Encoding: base64";
+					//~ $message[] = "Content-Disposition: inline; filename=" . $name_file;
+					//~ $message[] = "Content-ID: <$uniq>";
+					//~ $message[] = chunk_split (base64_encode($data));
+					
+				//~ }
+				//~ $message[] = "--" . $separator . "--";
+			//~ }
+			
+			//~ $message['html'] .= $body_images . $eol . '</body>'.$eol.'</html>';
+			
+			//~ if ($email["attachment_list"] != "") {
+				//~ $attachments = explode ( ",", $email["attachment_list"]);
+				//~ foreach ($attachments as $attachment) {
+					//~ if (is_file($attachment)) {
+						//~ $type = pathinfo($attachment, PATHINFO_EXTENSION);
+						//~ $name_file = basename($attachment);
+						//~ $data = file_get_contents($attachment);
+						
+						//~ $headers[] = "--" . $separator;
+						//~ $headers[] = "Content-Type: image/$type; name=" . $name_file;
+						//~ $headers[] = "Content-Transfer-Encoding: base64";
+						//~ $headers[] = "Content-Disposition: attachment; filename=" . $name_file;
+						//~ $headers[] = chunk_split (base64_encode($data));
+					//~ }
+				//~ }
+			//~ }
+			
+			//~ $error = mail('', safe_output($email["subject"]), implode($eol, $message), implode($eol, $headers));
+			
+			//~ if (!$error) {
+				//~ process_sql ("UPDATE tpending_mail SET status =". $email['status'] . ", attempts =" . $email['retries'] . " WHERE id = ". $email["id"]);
+			//~ } else {
+				//~ // no errors found
+				//~ process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
+			//~ }
+		//~ }
+		//~ else {
 			// Use swift mailer library to connect to external SMTP
 			try {
-				// If SMTP port is not configured, abort mails directly!
-				if ($config["smtp_port"] == 0)
-					return;
 				
-				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-				$transport->setUsername($config["smtp_user"]);
-				$transport->setPassword($config["smtp_pass"]);
-				$mailer = Swift_Mailer::newInstance($transport);
+				if ($config["smtp_host"] == "") {
+					$transport = Swift_MailTransport::newInstance('/usr/sbin/sendmail -t -bv');
+					$mailer = Swift_Mailer::newInstance($transport);
+				}
+				else {
+					// If SMTP port is not configured, abort mails directly!
+					if ($config["smtp_port"] == 0)
+						return;
+					
+					$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+					$transport->setUsername($config["smtp_user"]);
+					$transport->setPassword($config["smtp_pass"]);
+					$mailer = Swift_Mailer::newInstance($transport);
+				}
+				
 				$message = Swift_Message::newInstance($email["subject"]);
 				
 				if ($email["from"] == "") {
@@ -703,22 +762,28 @@ function run_mail_queue () {
 					$images = explode ( ",", $email["image_list"]);
 					$body_images = "";
 					foreach ($images as $image) {
-						if ( file_exists ( $image ) ) {
+						$data = file_get_contents($image);
+						if ($data) {
 							$embed_image = $message->embed(Swift_Image::fromPath($image));
-							$body_images .= '\n<img src="' . $embed_image .'"/>';
+							$body_images .= '<br><img src="' . $embed_image .'"/>';
 						}
 					}
 				}
 				
 				$message->setBody('<html><body>'.$email['body'].$body_images.'</body></html>', 'text/html');
 				
+				
 				if ($email["attachment_list"] != "") {
 					$attachments = explode ( ",", $email["attachment_list"]);
-					foreach ($attachments as $attachment)
-						if (is_file($attachment))
+					foreach ($attachments as $attachment) {
+						if (is_file($attachment)) {
 							$message->attach(Swift_Attachment::fromPath($attachment));
+						}
+					}
 				}
-
+				
+				$hola = $message->getBody();
+				
 				//~ $message->setContentType("text/html");
 
 				//~ $headers = $message->getHeaders();
@@ -748,7 +813,7 @@ function run_mail_queue () {
 				//integria_logwrite (sprintf("SMTP error sending to %s (%s)"), implode(',', $toArray), $e);
 				integria_logwrite (sprintf("SMTP error sending to %s (%s)", implode(',', $toArray), $e));
 			}
-		}
+		//~ }
 	}
 }
 

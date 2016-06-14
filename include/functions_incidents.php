@@ -1529,9 +1529,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1578,9 +1578,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1627,9 +1627,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
