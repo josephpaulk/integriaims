@@ -1488,4 +1488,13 @@ function to_traslate(){
 	__('issued');
 }
 
+function check_correct_mail($mail) {
+	if (preg_match('/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+/', $mail)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 ?>
