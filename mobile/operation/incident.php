@@ -620,16 +620,7 @@ class Incident {
 				// List
 				$ui->formAddHtml("<ul id=\"ul-autocomplete_owner\" data-role=\"listview\" data-inset=\"true\"></ul>");
 				// Autocomplete binding
-				$owner_callback = "$.ajax({
-										type: \"POST\",
-										url: \"../ajax.php\",
-										data: \"page=include/ajax/incidents&set_owner=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_user=\" + $('#text-id_owner').val(),
-										dataType: \"text\",
-										success: function (data) {
-											location.reload();
-										}
-									});";
-				$ui->bindMobileAutocomplete("#text-id_owner", "#ul-autocomplete_owner", false, $owner_callback);
+				$ui->bindMobileAutocomplete("#text-id_owner", "#ul-autocomplete_owner", false);
 			}
 
 			// Priority
@@ -642,21 +633,6 @@ class Incident {
 				'selected' => $incident["prioridad"]
 				);
 			$ui->formAddSelectBox($options);
-			$ui->formAddHtml("<script type=\"text/javascript\">
-								$(document).ready(function() {
-									$('#select-priority').change( function() {
-										$.ajax({
-											type: \"POST\",
-											url: \"../ajax.php\",
-											data: \"page=include/ajax/incidents&set_priority=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_priority=\" + $(this).val(),
-											dataType: \"text\",
-											success: function (data) {
-												location.reload();
-											}
-										});
-									});
-								});
-							</script>");
 
 			if ($has_im) {
 				// Resolution
@@ -675,21 +651,6 @@ class Incident {
 					'selected' => $incident["resolution"]
 					);
 				$ui->formAddSelectBox($options);
-				$ui->formAddHtml("<script type=\"text/javascript\">
-									$(document).ready(function() {
-										$('#select-quick_resolution').change( function() {
-											$.ajax({
-												type: \"POST\",
-												url: \"../ajax.php\",
-												data: \"page=include/ajax/incidents&set_resolution=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_resolution=\" + $(this).val(),
-												dataType: \"text\",
-												success: function (data) {
-													location.reload();
-												}
-											});
-										});
-									});
-								</script>");
 			}
 
 			// Filter status
@@ -707,21 +668,6 @@ class Incident {
 				'selected' => $incident["estado"]
 				);
 			$ui->formAddSelectBox($options);
-			$ui->formAddHtml("<script type=\"text/javascript\">
-								$(document).ready(function() {
-									$('#select-quick_status').change( function() {
-										$.ajax({
-											type: \"POST\",
-											url: \"../ajax.php\",
-											data: \"page=include/ajax/incidents&set_status=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_status=\" + $(this).val(),
-											dataType: \"text\",
-											success: function (data) {
-												location.reload();
-											}
-										});
-									});
-								});
-							</script>");
 
 			// Hidden operation (update+id)
 			$options = array(
@@ -751,10 +697,42 @@ class Incident {
 				);
 			$ui->formAddInput($options);
 			
+			// Submit button
+			$options = array(
+				'text' => __('Update'),
+				'data-icon' => 'refresh'
+				);
+			$ui->formAddSubmitButton($options);
+			
+			$ui->formAddHtml("<script type=\"text/javascript\">
+								$(document).ready(function() {
+									$('form#form-quick_update_incident').submit(function (e) {
+										e.preventDefault();
+										var form = e.target;
+										$.ajax({
+											type: \"POST\",
+											url: \"../ajax.php\",
+											data: {
+												page: \"include/ajax/incidents\",
+												set_params: 1,
+												id_ticket: " . $this->id_incident . ",
+												id_user: $('#text-id_owner').val(),
+												id_priority: $('#select-priority').val(),
+												id_resolution: $('#select-quick_resolution').val(),
+												id_status: $('#select-quick_status').val(),
+											},
+											dataType: \"text\",
+											success: function (data) {
+												location.reload();
+											}
+										});
+									});
+								});
+							</script>");
+			
 			return $ui->getEndForm();
 
 		} else {
-
 			return "";
 		}
 	}
