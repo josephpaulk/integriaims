@@ -1410,9 +1410,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$type_ticket = get_db_sql ("SELECT name FROM tincident_type WHERE id = ".$row["id_incident_type"]);
 	$titulo =$row["titulo"];
-	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
+	$description = wordwrap(ascii_output($row["descripcion"]), 70, "<br />\n");
 	$prioridad = get_priority_name($row["prioridad"]);
-	$nota = wordwrap($nota, 75, "\n");
+	$nota = wordwrap(ascii_output($nota), 70, "<br />\n");
 
 	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);
@@ -1501,7 +1501,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$company_wu = " (".reset($company_wu).")";
 		}
 		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
-		$MACROS["_wu_text_"] = $nota ;
+		$MACROS["_wu_text_"] = replace_return_by_breaks($nota);
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
 		break;
