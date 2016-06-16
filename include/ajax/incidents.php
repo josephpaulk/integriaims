@@ -398,9 +398,14 @@ if ($set_params) {
 	$values['resolution'] = get_parameter ('id_resolution');
 	$values['estado'] = get_parameter ('id_status');
 	$values['id_usuario'] = get_parameter ('id_user');
-	$values['id_grupo'] = get_parameter ('id_groups');
 	$values['actualizacion'] = date('Y:m:d H:i:s');
+	
+	$id_group = get_parameter ('id_groups');
 	$medal_option = get_parameter('medal_option', 0);
+	
+	if ($id_group) {
+		$values['id_grupo'] = $id_group;
+	}
 	
 	if ($medal_option) {
 		switch ($medal_option) {
