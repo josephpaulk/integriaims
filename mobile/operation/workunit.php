@@ -33,7 +33,8 @@ class Workunit {
 		$this->id_task = $system->getRequest('id_task', false);
 		$this->id_incident = (int) $system->getRequest('id_incident', -1);
 		$this->date_workunit = (string) $system->getRequest('date_workunit', date ("Y-m-d"));
-		$this->duration_workunit = (float) $system->getRequest('duration_workunit', $system->getConfig('pwu_defaultime'));
+		$this->duration_workunit = (float) $system->getRequest('duration_workunit',
+			($this->id_incident > 0) ? 0 : $system->getConfig('pwu_defaultime'));
 		$this->description_workunit = (string) $system->getRequest('description_workunit', "");
 		// insert, update, delete, view or ""
 		$this->operation = (string) $system->getRequest('operation', "");
@@ -263,7 +264,7 @@ class Workunit {
 				'type' => 'number',
 				'step' => 'any',
 				'min' => '0.00',
-				'value' => ($this->id_incident < 0) ? $this->duration_workunit : 0,
+				'value' => $this->duration_workunit,
 				'placeholder' => __('Hours')
 				);
 			$ui->formAddInput($options);
