@@ -15,6 +15,7 @@
 
 if (!isset($config)) {
 	require_once('../include/config.php');
+	require_once ($config["homedir"].'/include/load_session.php');
 }
 
 //Singleton
@@ -72,14 +73,8 @@ class System {
 		}
 	}
 	
-	public function setSessionBase($name, $value) {
-		session_start();
-		$_SESSION[$name] = serialize($value);
-		session_write_close();
-	}
-	
-	public function setSession($name, $value) {
-		$this->session[$name] = serialize($value);
+	public function setSession($name, $value, $serialize = true) {
+		$this->session[$name] = $serialize ? serialize($value) : $value;
 		
 		session_start();
 		$_SESSION = $this->session;
