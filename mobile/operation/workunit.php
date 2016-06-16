@@ -33,7 +33,8 @@ class Workunit {
 		$this->id_task = $system->getRequest('id_task', false);
 		$this->id_incident = (int) $system->getRequest('id_incident', -1);
 		$this->date_workunit = (string) $system->getRequest('date_workunit', date ("Y-m-d"));
-		$this->duration_workunit = (float) $system->getRequest('duration_workunit', $system->getConfig('pwu_defaultime'));
+		$this->duration_workunit = (float) $system->getRequest('duration_workunit',
+			($this->id_incident > 0) ? 0 : $system->getConfig('pwu_defaultime'));
 		$this->description_workunit = (string) $system->getRequest('description_workunit', "");
 		// insert, update, delete, view or ""
 		$this->operation = (string) $system->getRequest('operation', "");
@@ -262,7 +263,7 @@ class Workunit {
 				'label' => __('Hours'),
 				'type' => 'number',
 				'step' => 'any',
-				'min' => '0.01',
+				'min' => '0.00',
 				'value' => $this->duration_workunit,
 				'placeholder' => __('Hours')
 				);
@@ -395,13 +396,18 @@ class Workunit {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
-				
 				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}
@@ -418,6 +424,7 @@ class Workunit {
 							.__('Update')."</a>\n";
 		}
 		// Delete
+		$button_delete = '';
 		if ($this->id_workunit > 0) {
 			$button_delete = "<a href='index.php?page=workunits&operation=delete_workunit&id_workunit=".$this->id_workunit."' 
 									data-role='button' data-ajax='false' data-icon='delete'>".__('Delete')."</a>\n";
@@ -439,7 +446,7 @@ class Workunit {
 													$this->description_workunit, $this->id_task,
 													$this->id_incident);
 					if ($result) {
-						$this->id_workunit = $result;
+						$this->setId($result);
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while creating the workunit')."</h2>";

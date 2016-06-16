@@ -72,7 +72,7 @@ class Incident {
 		
 		// insert, update, delete, view or ""
 		$this->operation = (string) $system->getRequest('operation', "");
-		// view, files, workorders or ""
+		// view, files or ""
 		$this->tab = (string) $system->getRequest('tab', "view");
 		
 		// ACL
@@ -205,16 +205,23 @@ class Incident {
 		// Integria can override localtime zone by a user-specified timezone.
 		$timestamp = print_mysql_timestamp();
 		
-		$sql = "INSERT INTO tincidencia
-				(inicio, actualizacion, titulo, descripcion, id_usuario,
-				estado, prioridad, id_grupo, id_creator, notify_email, id_task,
-				resolution, id_incident_type, sla_disabled, email_copy, epilog)
-				VALUES ('$timestamp', '$timestamp', '$title', '$description',
-				'$id_user_responsible', $status, $priority, $group_id, '$id_creator',
-				$email_notify, $id_task, $resolution, $id_incident_type, $sla_disabled,
-				'$email_copy', '$epilog')";
-				
-		$id_incident = process_sql ($sql, 'insert_id');
+		$values = array(
+			'inicio' => $timestamp,
+			'actualizacion' => $timestamp,
+			'titulo' => $title,
+			'descripcion' => $description,
+			'id_usuario' => $id_user_responsible,
+			'estado' => $status,
+			'prioridad' => $priority,
+			'id_grupo' => $group_id,
+			'id_creator' => $id_creator,
+			'id_task' => $id_task,
+			'resolution' => $resolution,
+			'id_incident_type' => $id_incident_type,
+			'sla_disabled' => $sla_disabled,
+			'email_copy' => $email_copy
+		);
+		$id_incident = process_sql_insert('tincidencia', $values);
 		
 		if ($id_incident !== false) {
 			
@@ -476,7 +483,7 @@ class Incident {
 			$options = array(
 					'name' => 'description_file',
 					'label' => __('File description'),
-					'value' => $this->description_file
+					'value' => ''
 					);
 			$file_inputs .= $ui->getTextarea($options);
 		$ui->contentCollapsibleAddItem($file_inputs);
@@ -562,6 +569,7 @@ class Incident {
 							.__('Update')."</a>\n";
 		}
 		// Delete
+		$button_delete = '';
 		if ($this->id_incident > 0) {
 			$button_delete = "<a href='index.php?page=incidents&operation=delete_incident&id_incident=".$this->id_incident."'
 									data-role='button' data-ajax='false' data-icon='delete'>".__('Delete')."</a>\n";
@@ -612,16 +620,7 @@ class Incident {
 				// List
 				$ui->formAddHtml("<ul id=\"ul-autocomplete_owner\" data-role=\"listview\" data-inset=\"true\"></ul>");
 				// Autocomplete binding
-				$owner_callback = "$.ajax({
-										type: \"POST\",
-										url: \"../ajax.php\",
-										data: \"page=include/ajax/incidents&set_owner=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_user=\" + $('#text-id_owner').val(),
-										dataType: \"text\",
-										success: function (data) {
-											location.reload();
-										}
-									});";
-				$ui->bindMobileAutocomplete("#text-id_owner", "#ul-autocomplete_owner", false, $owner_callback);
+				$ui->bindMobileAutocomplete("#text-id_owner", "#ul-autocomplete_owner", false);
 			}
 
 			// Priority
@@ -634,21 +633,6 @@ class Incident {
 				'selected' => $incident["prioridad"]
 				);
 			$ui->formAddSelectBox($options);
-			$ui->formAddHtml("<script type=\"text/javascript\">
-								$(document).ready(function() {
-									$('#select-priority').change( function() {
-										$.ajax({
-											type: \"POST\",
-											url: \"../ajax.php\",
-											data: \"page=include/ajax/incidents&set_priority=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_priority=\" + $(this).val(),
-											dataType: \"text\",
-											success: function (data) {
-												location.reload();
-											}
-										});
-									});
-								});
-							</script>");
 
 			if ($has_im) {
 				// Resolution
@@ -667,21 +651,6 @@ class Incident {
 					'selected' => $incident["resolution"]
 					);
 				$ui->formAddSelectBox($options);
-				$ui->formAddHtml("<script type=\"text/javascript\">
-									$(document).ready(function() {
-										$('#select-quick_resolution').change( function() {
-											$.ajax({
-												type: \"POST\",
-												url: \"../ajax.php\",
-												data: \"page=include/ajax/incidents&set_resolution=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_resolution=\" + $(this).val(),
-												dataType: \"text\",
-												success: function (data) {
-													location.reload();
-												}
-											});
-										});
-									});
-								</script>");
 			}
 
 			// Filter status
@@ -699,21 +668,6 @@ class Incident {
 				'selected' => $incident["estado"]
 				);
 			$ui->formAddSelectBox($options);
-			$ui->formAddHtml("<script type=\"text/javascript\">
-								$(document).ready(function() {
-									$('#select-quick_status').change( function() {
-										$.ajax({
-											type: \"POST\",
-											url: \"../ajax.php\",
-											data: \"page=include/ajax/incidents&set_status=1&id_ticket=\"+ " . $this->id_incident . " +\"&id_status=\" + $(this).val(),
-											dataType: \"text\",
-											success: function (data) {
-												location.reload();
-											}
-										});
-									});
-								});
-							</script>");
 
 			// Hidden operation (update+id)
 			$options = array(
@@ -743,10 +697,42 @@ class Incident {
 				);
 			$ui->formAddInput($options);
 			
+			// Submit button
+			$options = array(
+				'text' => __('Update'),
+				'data-icon' => 'refresh'
+				);
+			$ui->formAddSubmitButton($options);
+			
+			$ui->formAddHtml("<script type=\"text/javascript\">
+								$(document).ready(function() {
+									$('form#form-quick_update_incident').submit(function (e) {
+										e.preventDefault();
+										var form = e.target;
+										$.ajax({
+											type: \"POST\",
+											url: \"../ajax.php\",
+											data: {
+												page: \"include/ajax/incidents\",
+												set_params: 1,
+												id_ticket: " . $this->id_incident . ",
+												id_user: $('#text-id_owner').val(),
+												id_priority: $('#select-priority').val(),
+												id_resolution: $('#select-quick_resolution').val(),
+												id_status: $('#select-quick_status').val(),
+											},
+											dataType: \"text\",
+											success: function (data) {
+												location.reload();
+											}
+										});
+									});
+								});
+							</script>");
+			
 			return $ui->getEndForm();
 
 		} else {
-
 			return "";
 		}
 	}
@@ -844,6 +830,7 @@ class Incident {
 			$detail = "<div style='padding-left: 2px; padding-right: 2px;'>$detail</div>";
 			
 			// DESCRIPTION
+			$description = false;
 			if ($incident['descripcion'] != "") {
 				$ui->contentBeginCollapsible(__('Description'));
 					$ui->contentCollapsibleAddItem($incident['descripcion']);
@@ -852,6 +839,7 @@ class Incident {
 			}
 			
 			// CUSTOM FIELDS
+			$custom_fields = false;
 			if ($incident['id_incident_type']) {
 				$type_name = get_db_value("name", "tincident_type", "id", $incident['id_incident_type']);
 				$fields = incidents_get_all_type_field ($incident['id_incident_type'], $incident['id_incidencia']);
@@ -912,7 +900,7 @@ class Incident {
 			// DATES
 			$ui->contentBeginGrid();
 				$created_timestamp = strtotime($incident['inicio']);
-				$created_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+				$created_cell = "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
 					$created_cell .= "<tr>";
 						$created_cell .= "<td>".__('Created on').":</td>";
 					$created_cell .= "</tr>";
@@ -934,7 +922,7 @@ class Incident {
 				$created_cell .= "</table>";
 				$ui->contentGridAddCell($created_cell);
 				$updated_timestamp = strtotime($incident['actualizacion']);
-				$updated_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+				$updated_cell = "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
 					$updated_cell .= "<tr>";
 						$updated_cell .= "<td>".__('Updated on').":</td>";
 					$updated_cell .= "</tr>";
@@ -957,7 +945,7 @@ class Incident {
 				$ui->contentGridAddCell($updated_cell);
 				if ($incident["estado"] == STATUS_CLOSED) {
 					$closed_timestamp = strtotime($incident['cierre']);
-					$closed_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+					$closed_cell = "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
 						$closed_cell .= "<tr>";
 							$closed_cell .= "<td>".__('Closed on').":</td>";
 						$closed_cell .= "</tr>";
@@ -1077,7 +1065,7 @@ class Incident {
 			$href = "index.php?page=incident&tab=file&id_incident=".$this->id_incident;
 		}
 		
-		session_start();
+		if (!session_id()) session_start();
 		$_SESSION["id_usuario"] = $system->getConfig('id_user');
 		session_write_close();
 
@@ -1142,18 +1130,19 @@ class Incident {
 			$options = array(
 				'type' => 'file',
 				'name' => 'file',
-				'label' => __('File')
+				'label' => __('File'),
+				'required' => 'required'
 				);
 			$ui->formAddInput($options);
 			// Description
 			$options = array(
 					'name' => 'description_file',
 					'label' => __('Description'),
-					'value' => $this->description_file
+					'value' => ''
 					);
 			$ui->formAddHtml($ui->getTextarea($options));
 			// Hidden operation (insert or update+id)
-			if ($this->id_file < 0 || !isset($this->id_file)) {
+			if (!isset($this->id_file) || $this->id_file < 0) {
 				$options = array(
 					'type' => 'hidden',
 					'name' => 'operation',
@@ -1264,12 +1253,18 @@ class Incident {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
 				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}

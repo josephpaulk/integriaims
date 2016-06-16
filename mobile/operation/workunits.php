@@ -69,6 +69,7 @@ class Workunits {
 		
 		$id_incident = $system->getRequest('id_incident', -1);
 		
+		$filter = '';
 		if ($id_incident > 0) {
 			$filter = " AND id = ANY(SELECT id_workunit
 									 FROM tworkunit_incident
@@ -117,6 +118,7 @@ class Workunits {
 			$href = "index.php?page=workunit";
 		}
 		
+		$html = '';
 		if (! $ajax) {
 			$html = "<ul id='listview' class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
 		}
@@ -223,12 +225,18 @@ class Workunits {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
 				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}

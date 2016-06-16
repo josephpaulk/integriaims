@@ -1,7 +1,9 @@
 integria.log
 enterprise
 include/config.php
+install_renamed.php
 *.bak
+extras/mr/updated
 
 /blib/
 /.build/

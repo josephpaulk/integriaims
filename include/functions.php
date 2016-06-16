@@ -1513,4 +1513,13 @@ function check_correct_mail($mail) {
 	}
 }
 
+/**
+ * Returns a reliable base url which points to the root dir.
+ * TODO: Replace all the $config['base_url'] and $config['base_url_dir'] with this function.
+ */
+function base_url () {
+	global $config;
+	return empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
+}
+
 ?>

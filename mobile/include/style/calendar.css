@@ -203,7 +203,7 @@ table.month_calendar td b a {
 	background: #98FF8B !important;
 }
 
-.day_vacation, day_vacation * {
+.day_vacation, .day_vacation * {
 	background: #FFFF80 !important;
 }
 
@@ -218,6 +218,10 @@ table.month_calendar td b a {
 
 .day_empty, .day_empty * {
 	background: #FFFFFF !important;
+}
+
+.day_work_home, .day_work_home * {
+	background: #79D8ED !important;
 }
 
 .day_legend {
