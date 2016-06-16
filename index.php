@@ -259,6 +259,8 @@ if (ip_acl_check ($ip_origin)) {
 }
 
 $minor_release_message = false;
+$integria_free_days = 0;
+$integria_free_wel = 0;
 $custom_screen_loaded = false;
 if ($is_enterprise) {
 	$custom = get_db_value_sql('SELECT id FROM tcustom_screen WHERE home_enabled=1');
@@ -352,10 +354,20 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 				} else {
 					$sec2 = 'general/home';
 				}
-
 			}
 			$minor_release_message = db_update_schema(); // MINOR RELEASES
-
+			//compare first integria-free
+			if (isset($config['tpage_size_wel'])){
+				$integria_free_wel = 1;
+			} else {
+				$integria_free_wel = 0;
+			}
+			//compare date alert 3 days
+			if (isset($config['integria_free_days'])){
+				$integria_free_days = 1;
+			} else {
+				$integria_free_days = 0;
+			}
 		} else {
 			echo '<body class="login">';
 				require_once ('general/login_page.php');
@@ -540,6 +552,54 @@ if ($clean_output == 0) {
 									height: 150
 								});";
 								echo "$('#mr_dialog').dialog('open');";
+						echo "	});";
+					echo "</script>";
+				}
+
+				if ($integria_free_days) {
+					echo "<div class= 'dialog ui-dialog-content' title='".__("You are less than three days as premium")."' id='three_day_dialog'>";
+						echo "<b>".__('In 3 days you`ll lose the premium features from the 30 days trial. If you wish to purchase a premium license click')."</b>";
+						echo "<a href='http://integriaims.com/' target='_blank'>.__(' here').</a></br>";
+					echo "</div>";
+						echo "<script type='text/javascript'>";
+							echo "$(document).ready (function () {";
+								echo "$('#three_day_dialog').dialog ({
+									resizable: true,
+									draggable: true,
+									modal: true,
+									overlay: {
+										opacity: 0.5,
+										background: 'black'
+									},
+									width: 400,
+									height: 150
+								});";
+								echo "$('#three_day_dialog').dialog('open');";
+						echo "	});";
+					echo "</script>";
+				}
+
+				if ($integria_free_wel) {
+					echo "<div class= 'dialog ui-dialog-content' title='".__("Welcome Enterpise edition")."' id='welcome_day_dialog'>";
+						echo "<b>".__('This is your first day of the 30 days enterprise trial.')."</b>";
+						echo "<b>".__('You can compose the enterprise edition with the open source edition at our page: ')."</b>";
+						echo "<a href='http://integriaims.com/' target='_blank'><img src='images/house.png'></a></br>";
+						echo "<b>".__('if you need help: ')."</b><a href='http://docs.integriaims.com/' target='_blank'><img src='images/help.png'></a>";
+					echo "</div>";
+						echo "<script type='text/javascript'>";
+							echo "$(document).ready (function () {";
+								echo "$('#welcome_day_dialog').dialog ({
+									resizable: true,
+									draggable: true,
+									modal: true,
+									overlay: {
+										opacity: 0.5,
+										background: 'black'
+									},
+									width: 400,
+									height: 150
+								});";
+								echo "$('#welcome_day_dialog').dialog('open');";
 						echo "	});";
 					echo "</script>";
 				}
