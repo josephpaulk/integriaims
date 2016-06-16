@@ -208,7 +208,7 @@ echo '<form id="external_form" name="external_edition_form" method="post" action
 echo '</form>';
 }
 
-print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
+print_input_hidden ('base_url_homedir', base_url(), false);
 print_input_hidden ('id', $id_object_type, false);
 print_input_hidden ('key', $key, false);
 

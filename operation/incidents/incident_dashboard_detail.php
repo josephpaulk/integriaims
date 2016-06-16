@@ -779,7 +779,7 @@ else {
 }
 
 //parameter to reload page
-print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
+print_input_hidden ('base_url_homedir', base_url(), false);
 
 //div to show user info
 echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";
