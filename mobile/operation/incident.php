@@ -945,7 +945,7 @@ class Incident {
 				$ui->contentGridAddCell($updated_cell);
 				if ($incident["estado"] == STATUS_CLOSED) {
 					$closed_timestamp = strtotime($incident['cierre']);
-					$closed_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+					$closed_cell = "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
 						$closed_cell .= "<tr>";
 							$closed_cell .= "<td>".__('Closed on').":</td>";
 						$closed_cell .= "</tr>";
