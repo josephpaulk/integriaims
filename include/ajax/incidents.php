@@ -393,6 +393,7 @@ if ($check_custom_search) {
 if ($set_params) {
 
 	$id_ticket = get_parameter('id_ticket');
+	$values = array();
 	$values['prioridad'] = get_parameter ('id_priority');
 	$values['resolution'] = get_parameter ('id_resolution');
 	$values['estado'] = get_parameter ('id_status');
