@@ -254,12 +254,18 @@ class Incidents {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
-				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}

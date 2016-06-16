@@ -395,13 +395,18 @@ class Workunit {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
-				
 				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}
@@ -440,7 +445,7 @@ class Workunit {
 													$this->description_workunit, $this->id_task,
 													$this->id_incident);
 					if ($result) {
-						$this->id_workunit = $result;
+						$this->setId($result);
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while creating the workunit')."</h2>";
