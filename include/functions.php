@@ -690,20 +690,36 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	// without HTML encoding. THis is because it is not to be rendered on a browser, 
 	// it will be directly to a SMTP connection.
 	
-	$values = array(
-			'date' => $current_date,
-			'attempts' => 0,
-			'status' => 0,
+	
+	
+	
+	//New check, if exist any data with same data, doesn't insert in DB.
+	$check = array(
 			'recipient' => $to,
-			'subject' => mysql_real_escape_string($subject),
 			'body' => mysql_real_escape_string($body),
 			'attachment_list' => $attachments,
 			'from' => $from,
 			'cc' => $cc,
-			'extra_headers' => $extra_headers,
 			'image_list' => $images
 		);
-	process_sql_insert('tpending_mail', $values);
+		
+	$checked = get_db_row_filter('tpending_mail', $check, '*');
+	if (!$checked) {
+		$values = array(
+				'date' => $current_date,
+				'attempts' => 0,
+				'status' => 0,
+				'recipient' => $to,
+				'subject' => mysql_real_escape_string($subject),
+				'body' => mysql_real_escape_string($body),
+				'attachment_list' => $attachments,
+				'from' => $from,
+				'cc' => $cc,
+				'extra_headers' => $extra_headers,
+				'image_list' => $images
+			);
+		process_sql_insert('tpending_mail', $values);
+	}
 }
 
 function topi_rndcode ($length = 6) {
@@ -1486,6 +1502,15 @@ function to_traslate(){
 	__('new');
 	__('unused');
 	__('issued');
+}
+
+function check_correct_mail($mail) {
+	if (preg_match('/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+/', $mail)) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 /**

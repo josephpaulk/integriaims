@@ -584,7 +584,7 @@ $table->data[0][1] = $right_side;
 
 echo "<div id='indicent-details-view'>";
 
-echo '<h2>'.__('Tickets').' #'.$incident["id_incidencia"].'</h2><h4>'.ui_print_truncate_text($incident['titulo'], 50);
+echo '<h2>'.__('Tickets').' #'.$incident["id_incidencia"].'</h2><h4>'. $incident['titulo'];
 
 
 if (!$pure) {

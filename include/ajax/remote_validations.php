@@ -55,6 +55,7 @@ $search_existing_role = (bool) get_parameter ('search_existing_role');
 $search_existing_group = (bool) get_parameter ('search_existing_group');
 $search_duplicate_name = (bool) get_parameter ('search_duplicate_name');
 $search_input_number = (bool) get_parameter ('search_input_number');
+$check_mail = (bool) get_parameter ('check_mail');
 
 if ($search_existing_project) {
 	require_once ('include/functions_db.php');
@@ -985,6 +986,19 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 
+}
+else if ($check_mail) {
+	$mail = get_parameter('mail', '');
+	$check = check_correct_mail($mail);
+	
+	if ($check) {
+		echo json_encode(true);
+		return;
+	}
+	else {
+		echo json_encode(false);
+		return;
+	}
 }
 
 if ($search_duplicate_name) {			

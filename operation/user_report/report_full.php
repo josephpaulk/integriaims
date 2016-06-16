@@ -55,6 +55,7 @@ $id_group = get_parameter ("search_id_group", 0);
 $author = get_parameter ("author", "");
 $editor = get_parameter ("editor", "");
 $status = get_parameter ("search_status", 0);
+$render_resolution = get_parameter ("render_resolution", 0);
 
 $show_btn = get_parameter ("show_btn", "new");
 
@@ -122,19 +123,21 @@ if ($user_id != "") {
 
 if ($clean_output == 0){
 	// link full screen
-	
-	$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("Full screen"), "", "", 1);
-	if ($html_report_image) {
-		echo "&nbsp;&nbsp;" . $html_report_image;
-	}
+	if($render_resolution == 0){
+		$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&render_resolution=1&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("Full screen"), "", "", 1);
+		if ($html_report_image) {
+			echo "&nbsp;&nbsp;" . $html_report_image;
+		}
 
-	// link PDF report
-	$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("PDF report"));
-	if ($report_image) {
-		echo "&nbsp;&nbsp;" . $report_image;
+		// link PDF report
+		$report_image = print_report_image ("index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&only_projects=$only_projects", __("PDF report"));
+		if ($report_image) {
+			echo "&nbsp;&nbsp;" . $report_image;
+		}
 	}
-	
-	echo "<a style='float:right;' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to full report")))."</a>";
+	if($render_resolution == 1){
+		echo "<a style='float:right;' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to full report")))."</a>";
+	}
 }
 
 echo  "</h4>";

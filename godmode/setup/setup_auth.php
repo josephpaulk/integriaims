@@ -180,15 +180,15 @@ $(document).ready (function () {
 });
 
 $('#radiobtn0001').change (function (){
-	$('#default_remote_profile').attr('disabled', '');
-	$('#default_remote_group').attr('disabled', '');
-	$('#text-autocreate_blacklist').attr('disabled', '');
+	$('#default_remote_profile').prop('disabled', false);
+	$('#default_remote_group').prop('disabled', false);
+	$('#text-autocreate_blacklist').prop('disabled', false);
 });
 	
 $('#radiobtn0002').change (function (){
-	$('#default_remote_profile').attr('disabled', 'disabled');
-	$('#default_remote_group').attr('disabled', 'disabled');
-	$('#text-autocreate_blacklist').attr('disabled', 'disabled');
+	$('#default_remote_profile').prop('disabled', true);
+	$('#default_remote_group').prop('disabled', true);
+	$('#text-autocreate_blacklist').prop('disabled', true);
 });
 
 $('#auth_methods').change (function (){
@@ -292,16 +292,15 @@ function config_form(auth_method) {
 
 function enable_autocreate_profile () {
 	var remote_auto = $("input:radio[name=autocreate_remote_users]:checked").val();
-	
 	if (remote_auto == 0) {
-		$("#default_remote_profile").attr("disabled", true);
-		$("#default_remote_group").attr("disabled", true);
-		$("#text-autocreate_blacklist").attr("disabled", true);
+		$("#default_remote_profile").prop("disabled", true);
+		$("#default_remote_group").prop("disabled", true);
+		$("#text-autocreate_blacklist").prop("disabled", true);
 	}
 	else {
-		$("#default_remote_profile").removeAttr('disabled');
-		$("#default_remote_group").removeAttr('disabled');
-		$("#text-autocreate_blacklist").removeAttr('disabled');
+		$("#default_remote_profile").prop('disabled', false);
+		$("#default_remote_group").prop('disabled', false);
+		$("#text-autocreate_blacklist").prop('disabled', false);
 	}
 }
 </script>

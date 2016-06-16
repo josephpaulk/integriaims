@@ -265,7 +265,7 @@ if ($id == 0 && !$new_contact) {
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 20, 100, true, __('Search'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 20, 100, true, __('Search'). print_help_tip (__("Search according to contact name, phone, email and mobile"), true));
 	
 	$params = array();
 	$params['input_id'] = 'id_company';

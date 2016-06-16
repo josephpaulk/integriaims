@@ -79,6 +79,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
 	$filters["medals"] = isset ($filters['medals']) ? $filters['medals'] : 0;
+	$filters["parent_name"] = isset ($filters['parent_name']) ? $filters['parent_name'] : '';
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -209,6 +210,11 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			$medals_filter = " AND black_medals <> 0";
 		}
 	}
+	
+	if ($filters['parent_name'] !== '') {
+		$inventory_id = get_db_all_rows_sql("SELECT id FROM tinventory WHERE name = '" . $filters['parent_name'] . "'");
+		$inventory_id = $inventory_id[0]['id'];
+	}
 
 	//Use config block size if no other was given
 	if ($limit) {
@@ -216,7 +222,12 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			$filters["limit"] = $config["block_size"];
 		}
 	}
-
+	
+	if ($inventory_id) {
+		$sql_clause .= " AND id_incidencia = (SELECT id_incident FROM tincident_inventory WHERE id_inventory = (SELECT id from tinventory 
+						WHERE name = '" . $filters['parent_name'] . "'))";
+	}
+	
 	if ($no_parents) {
 		$sql_clause .= " AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)";
 	}
@@ -1399,9 +1410,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$type_ticket = get_db_sql ("SELECT name FROM tincident_type WHERE id = ".$row["id_incident_type"]);
 	$titulo =$row["titulo"];
-	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
+	$description = wordwrap(ascii_output($row["descripcion"]), 70, "<br />\n");
 	$prioridad = get_priority_name($row["prioridad"]);
-	$nota = wordwrap($nota, 75, "\n");
+	$nota = wordwrap(ascii_output($nota), 70, "<br />\n");
 
 	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);
@@ -1470,7 +1481,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_status_"] = $estado;
 	$MACROS["_resolution_"] = $resolution;
 	$MACROS["_time_used_"] = $timeused;
-	$MACROS["_incident_main_text_"] = $description;
+	$MACROS["_incident_main_text_"] = replace_return_by_breaks($description);
 	
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
@@ -1490,7 +1501,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$company_wu = " (".reset($company_wu).")";
 		}
 		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
-		$MACROS["_wu_text_"] = $nota ;
+		$MACROS["_wu_text_"] = replace_return_by_breaks($nota);
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
 		break;
@@ -1518,9 +1529,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1567,9 +1578,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1616,9 +1627,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1668,17 +1679,17 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$msg_code = "TicketID#$id_inc";
 			$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
 			$msg_code .= "/".$row["id_creator"];
-			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 		}
 		
 		// Send emails to the people in the group added
 		if($forced_email != 0){
 			$email_default = get_user_email ($user_defect_group);
-			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			if($email_group){
 				$email_g = explode(',',$email_group);
 				foreach ($email_g as $k){
-					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);	
+					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);	
 				}
 			}
 		}
@@ -1703,7 +1714,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 					$msg_code = "TicketID#$id_inc";
 					$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
 					$msg_code .= "/". $row[1];
-					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 				}
 			}
 		}
@@ -1714,7 +1725,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			if ($contats)
 			foreach ($contacts as $contact) {
 				$contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
-				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			}
 		}
 	}
@@ -2681,7 +2692,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 								if ($type_field["type"] == "textarea") {
 									$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
 								}
-								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[$field_data]</div>";
+								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[".safe_output($field_data)."]</div>";
 							}
 						}
 					}

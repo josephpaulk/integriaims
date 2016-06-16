@@ -78,7 +78,7 @@ echo "<table class='search-table' style='width:100%'>";
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'><img src='images/control_fastforward_blue.png' title='" . __('Next') . "'></a> ";
 	echo "</td>";
 	echo "<tr><td>";
-	echo "<b>" . __('Filter') . "</b><br>";
+	echo "<b>" . __('Filter') . print_help_tip (__("Search according to users ID and name"), true) . "</b><br>";
 	
 	$search = get_parameter ("search", '');
 	print_input_text ('search', $search, '', 25);
@@ -93,7 +93,6 @@ echo "</form>";
 
 echo "</div>";
 
-//$values = get_user_visible_users ($config['id_user'], "UM", true, true, false, $search);
 $values = get_user_visible_users($config['id_user'],'UM',true,true,false,$search,false);
 
 if(empty($values) && $search == '') {
@@ -136,7 +135,7 @@ if (!empty($values)) {
 			$nombre = $row0["id_usuario"];
 			$avatar = $row0["avatar"];
 
-					// Get total hours for this month
+			// Get total hours for this month
 			$sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
 			if ($res = mysql_query($sql)) {	
 				$row=mysql_fetch_array($res);

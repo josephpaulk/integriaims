@@ -368,5 +368,22 @@ messages = {
 	remote: "<?php echo __('This email already exists')?>"
 };
 add_validate_form_element_rules('#text-email', rules, messages);
+// MAIL
+rules = {
+	//required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			check_mail: 1,
+			mail: function() { return $('#text-email').val() }
+        }
+	}
+};
+messages = {
+	remote: "<?php echo __('Type a correct mail direction')?>"
+};
+add_validate_form_element_rules('#text-email', rules, messages);
 
 </script>

@@ -2367,7 +2367,7 @@ img.avatar_small {
 .custom_search {
 	text-align: center;
 	float: left;
-	height: 25px;
+	/* height: 25px; */ /* This fix the "buttons" generated in Incident dashboard when search name is a bit larger and doesn't fit on a single line */
 	font-weight: bold;
 	border-radius: 2px;
 	background: #BBBBBB;
