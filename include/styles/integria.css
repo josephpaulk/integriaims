@@ -246,9 +246,22 @@ div.divform {
 	width: 200px !important;
 }
 
+div.divform_right {
+	display: inline-block;
+	width: 18% !important;
+	height: inherit;
+	vertical-align: top;
+	padding-top: 2%;
+}
+
 div.divresult {
 	float: right;
 	width: 79%;
+}
+
+div.divresult_left {
+	display: inline-block;
+	width: 82%;
 }
 
 .divform .search-table input[type="text"] {
@@ -2194,7 +2207,7 @@ div.divresult-button table.search-table input[type="submit"] {
 }
 
 .button-form{
-	text-align: right;
+	text-align: center;
 }
 
 .button-form input[type="submit"],
@@ -3753,7 +3766,7 @@ img#inventory_loading{
 	cursor: pointer;
 }
 .form_result{
-	height: 105px;
+	height: 125px;
 }
 .clear_both{
 	clear: both;
@@ -3925,4 +3938,64 @@ img#inventory_loading{
 }
 #form-invoice table tr td a {
 	padding-left: 1%; 
+}
+
+/*css for table search invoice*/
+
+#invoices_table tr td input {
+	width: 80% !important;
+}
+
+#invoices_table tr td #last_div,
+#invoices_table tr td #expiration_div{
+	width: 86% !important;
+}
+
+#invoices_table tr td #search_date_begin,
+#invoices_table tr td #search_date_end,
+#invoices_table tr td #search_exp_begin,
+#invoices_table tr td #search_exp_end{
+	width: 50% !important;
+}
+
+#invoices_table tr td select {
+	width: 83% !important;
+}
+#invoices_table tr td{
+	width: 20%;
+	white-space: nowrap;
+}
+#text-search_company_manager{
+	height: 20px;
+}
+.divform_right .button-form{
+	margin: 0 auto;
+}
+
+/*css for table search company*/
+#company_stats_form table tr td{
+	width: 25%;
+	white-space: nowrap;
+}
+
+#company_stats_form table tr td input{
+	width: 80% !important;	
+}
+
+#company_stats_form table tr td select{
+	width: 83% !important;	
+}
+
+/*css for table search contracts*/
+#contracts_stats_form table tr td{
+	width: 20%;
+	white-space: nowrap;
+}
+
+#contracts_stats_form table tr td input{
+	width: 80% !important;	
+}
+
+#contracts_stats_form table tr td select{
+	width: 83% !important;	
 }

@@ -1209,23 +1209,22 @@ else {
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
 	
-	$form .= "<div class='divresult'>";
-	$form .= print_table ($table,true);
+	$form .= "<div class='divresult_left'>";
+		$form .= print_table ($table,true);
 	$form .= '</div>';
 	$table->data = array ();
 	
-	$form .= "<div class='divform'>";
-		$form .= "<div class='button-form' style='width:100%;'>";
-			$form .= print_button(__('Export to CSV'), '', false, 
+	$form .= "<div class='divform_right'>";
+		$form .= "<div class='button-form'><ul>";
+			$form .= '<li>' . print_button(__('Export to CSV'), '', false, 
 				'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . 
-					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
-			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
-		$form .= '</div>';
+					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true) . '</li>';
+			$form .='<li>' . print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true). '</li>';
+		$form .= '</ul></div>';
 	$form .= '</div>';
-	
 	$form .= '</form>';
 	
-	print_container_div("lead_form",__("Leads form search"),$form, 'closed', false, false);
+	print_container_div("lead_form",__("Leads form search"),$form, 'open', false, false);
 		
 	$leads = crm_get_all_leads ($where_clause);
 

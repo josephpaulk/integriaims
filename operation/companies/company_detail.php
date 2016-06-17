@@ -1015,7 +1015,7 @@ elseif ($op == "invoices") {
 			$search_last_date = (int) get_parameter ('search_last_date');
 			$search_date_begin = get_parameter ('search_date_begin');
 			$search_date_end = get_parameter ('search_date_end');
-			$search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
+			$search_invoice_type = (string) get_parameter ('search_invoice_type', 'All');
 			$search_company_role = (int) get_parameter ('search_company_role');
 			$search_company_manager = (string) get_parameter ('search_company_manager');
 			$search_contract_number = (string) get_parameter ('search_contract_number');
@@ -1060,7 +1060,7 @@ elseif ($op == "invoices") {
 			if ($search_date_end != "") {
 				$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
 			}
-			if ($search_invoice_type != "") {
+			if ($search_invoice_type != "All") {
 				$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
 			}
 			if ($search_company_role > 0) {
@@ -1093,7 +1093,7 @@ elseif ($op == "invoices") {
 			$sql = 'SELECT id, name FROM tcompany_role ORDER BY name';
 			$table->data[2][0] = print_select_from_sql ($sql, 'search_company_role', $search_company_role, '', __('Any'), 0, true, false, false, __('Company Role'));
 			
-			$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
+			$invoice_types = array('All'=>__('All'), 'Submitted'=>__('Submitted'), 'Received'=>__('Received'));
 			$table->data[3][0] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
 			$table->data[4][0] = print_input_text_extended ('search_company_manager', $search_company_manager, 'text-search_company_manager', '', 20, 50, false, '', array(), true, '', __("Manager"). print_help_tip (__("Type at least two characters to search"), true) );
 
@@ -1441,7 +1441,7 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
 	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 15, 100, true, __('Country'));
-	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '', array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '', array(), true, '', __('Manager'). print_help_tip (__("Type at least two characters to search"), true));
 	
 	// $companies_name = crm_get_companies_list("", false, "ORDER BY name", true);
 	// $table->data[1][0] = print_select ($companies_name, 'search_parent', $search_parent, '', __('Any'), 0, true, false, false, __('Parent'));
@@ -1461,7 +1461,10 @@ if ((!$id) AND ($new_company == 0)){
 	
 	$form .= '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	$form .= '<div class="form_result">';
-		$form .= "<div class='divform' >";
+		$form .= "<div class='divresult_left' >";
+			$form .= print_table ($table,true);
+		$form .= "</div>";
+		$form .= "<div class='divform_right' >";
 			$form .= "<div class='button-form'>";
 				// Input hidden for ORDER
 				$form .= print_input_hidden ('order_by_activity', $order_by_activity,true);
@@ -1469,10 +1472,6 @@ if ((!$id) AND ($new_company == 0)){
 				$form .= print_input_hidden ('order_by_billing', $order_by_billing,true);
 				$form .=  print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 			$form .= "</div>";
-		$form .= "</div>";
-	
-		$form .= "<div class='divresult' >";
-			$form .= print_table ($table,true);
 		$form .= "</div>";
 	$form .= '</div>';
 	$form .= '</form>';

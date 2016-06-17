@@ -745,11 +745,11 @@ elseif ($op == "") {
 		echo "</h4>";
 		
 		
-		$form = '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
+		$form = '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post" id="contracts_stats_form">';
 		
 		$form .= '<div class="form_result">';
 		
-		$form .= "<div class='divresult'>";
+		$form .= "<div class='divresult_left'>";
 		$form .= "<table width=100% class='search-table-button'>";
 		$form .= "<tr>";
 		
@@ -798,7 +798,7 @@ elseif ($op == "") {
 		$form .= "</table>";
 		$form .= "</div>";
 		
-		$form .= "<div class='divform'>";
+		$form .= "<div class='divform_right'>";
 			$form .= "<div class='button-form' style='width:100%;'>";
 				$form .= print_submit_button (__('Search'), 
 					"search_btn", false, 'class="sub search"', true);
