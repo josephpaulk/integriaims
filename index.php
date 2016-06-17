@@ -340,11 +340,6 @@ if (! isset ($_SESSION['id_usuario']) && isset ($_GET["loginhash"])) {
 		if (!$license_fail) {
 			unset ($_GET["sec2"]);
 
-			if ($custom_screen_loaded) {
-				$sec2 = 'enterprise/operation/custom_screens/custom_screens';
-			} else {
-				$_GET["sec"] = "general/home";
-			}
 			logon_db ($nick_in_db, $_SERVER['REMOTE_ADDR']);
 			$_SESSION['id_usuario'] = $nick_in_db;
 			$config['id_user'] = $nick_in_db;
@@ -489,14 +484,12 @@ echo '<body>';
 $session_id = session_id();
 session_write_close ();
 
-$id_menu = "main";
+$id_menu = 'main';
 // Special pages, which doesn't use sidemenu
-if (($sec2 == "") OR ($sec2 == "general/home") OR
-		($_POST['login'] == 1 AND $custom_screen_loaded) OR
-		($sec2 == 'enterprise/operation/custom_screens/custom_screens') OR
-			($pure == true)) {
+if ($pure || empty($sec2) || $sec2 === 'general/home' ||
+		$sec2 === 'enterprise/operation/custom_screens/custom_screens') {
 	$not_show_menu = 1;
-	$id_menu = "main_pure";
+	$id_menu = 'main_pure';
 }
 
 // Clean output (for reporting or raw output
