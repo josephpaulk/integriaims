@@ -195,7 +195,7 @@ if ($id != 0) {
 		echo '<li class="ui-tabs-selected">';
 	else   
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/icono_files.png"/></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/disk.png"/></a></li>';
 
 	if ($op == "inventory")
 		echo '<li class="ui-tabs-selected">';

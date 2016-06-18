@@ -762,10 +762,12 @@ function run_mail_queue () {
 					$images = explode ( ",", $email["image_list"]);
 					$body_images = "";
 					foreach ($images as $image) {
-						$data = file_get_contents($image);
-						if ($data) {
-							$embed_image = $message->embed(Swift_Image::fromPath($image));
-							$body_images .= '<br><img src="' . $embed_image .'"/>';
+						if (file_exists($image)){
+							$data = file_get_contents($image);
+							if ($data) {
+								$embed_image = $message->embed(Swift_Image::fromPath($image));
+								$body_images .= '<br><img src="' . $embed_image .'"/>';
+							}
 						}
 					}
 				}

@@ -108,9 +108,31 @@ if ($activities !== false) {
 
 			// Body
 			echo "<div class='notebody'>";
-			echo clean_output_breaks($nota);
+			//echo clean_output_breaks($nota);
+			
+			echo "<textarea>";
+			echo $nota;
+			echo "</textarea>";
 			echo "</div>";
 		}
 	}
 } 
 ?>
+
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+tinymce.init({
+        selector: 'textarea',
+        force_br_newlines : true,
+        force_p_newlines : false,
+        forced_root_block : false,
+	toolbar: false,
+	menubar: false,
+	statusbar: false,
+	height: 300,
+  	content_css: 'include/js/tinymce/integria.css',
+
+});
+
+</script>

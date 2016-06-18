@@ -139,7 +139,7 @@ $table->data[1][0] = print_select ($error_log_options, "error_log",
 $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',
 	15, 30, true, __('Timezone for integria'));
 
-$table->data[2][0] = print_textarea ("api_acl", 2, 1, $config["api_acl"], 'style="width: 218px;"', true, __('List of IP with access to API') . 
+$table->data[2][0] = print_textarea ("api_acl", 2, 1, $config["api_acl"], 'style="max-width: 280px;"', true, __('List of IP with access to API') . 
 	print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true), false);
 
 $table->data[2][1] = print_input_text ("api_password", $config["api_password"], '',

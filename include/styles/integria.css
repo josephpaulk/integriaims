@@ -15,7 +15,7 @@
 * {
 	margin: 0; padding: 0;
 	-webkit-font-smoothing: antialiased;
-	font-family: Verdana !important;
+	font-family: Verdana;
 }
 
 strong, b, .bold * {
@@ -1524,6 +1524,8 @@ h3.system {
 	width:97%; 
 	padding: 10px; 
 	border-radius: 10px;
+	font-size: 10pt;
+	color: #444;
 	-moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     -khtml-border-radius: 10px;
@@ -2921,7 +2923,7 @@ h3.update_online {
 }
 
 #box_online {
-	width: 100%;
+	width: 97%;
 	padding: 10px;
 	background-color: #e6e6e6;
 }

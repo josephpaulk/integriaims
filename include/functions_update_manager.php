@@ -20,7 +20,8 @@ define ('FREE_USER', 'INTEGRIA-FREE');
 
 function update_manager_main() {
 	global $config;
-	
+
+	echo "<div class='note_simple'>";	
 	echo "<p><b>";
 	if ($config['current_package'] == 0) 
 		echo "<h3 class='update'>".__('You do not have installed any updates of Integria IMS')."</h3>";
@@ -38,7 +39,7 @@ function update_manager_main() {
 		
 	echo "<h3 class='update_online'>" . __('Online') . "</h3>";
 	
-	echo "<div id='box_online' style='width: 100%; background: #ccc; padding: 10px;'>";
+	echo "<div id='box_online'>";
 	echo "<div class='loading' style='width:100%; text-align: center;'>";
 	print_image("images/wait.gif");
 	echo "</div>";
@@ -50,6 +51,7 @@ function update_manager_main() {
 	echo "</div>";
 	echo "<div class='content'></div>";
 	echo "<div class='progressbar' style='display: none;'><img class='progressbar_img' src='' /></div>";
+	echo "</div>";
 	echo "</div>";
 	
 	?>

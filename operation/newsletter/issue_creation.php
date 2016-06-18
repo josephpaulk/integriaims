@@ -16,8 +16,6 @@
 
 global $config;
 
-$tinymce_path = $config["base_url"] ."/include/js/tiny_mce/tiny_mce.js";
-
 check_login ();
 
 if (defined ('AJAX')) {	
@@ -27,38 +25,36 @@ if (defined ('AJAX')) {
 	echo safe_output($html);
 	return;
 }
-	
-echo '
-<!-- TinyMCE -->
-<script type="text/javascript" src="'.$tinymce_path.'"></script>
-<script type="text/javascript">
-	tinyMCE.init({
-		extended_valid_elements : "iframe[src|style|width|height|scrolling|marginwidth|marginheight|frameborder]",
-		invalid_elements : "",
-		mode : "textareas",
-		theme : "advanced",
-		height: "500",
-		plugins : "preview, print, table, searchreplace, nonbreaking, xhtmlxtras, noneditable",
-		// Theme options
-		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsize, select,|,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr",
-		theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-		theme_advanced_buttons3 : "",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_resizing : true,
-		force_p_newlines : false,
-		relative_urls : false,
-		convert_urls : false,
-		forced_root_block : "",
-		theme_advanced_statusbar_location : "bottom",
-		inline_styles : true,
-		valid_children : "+body[style]",
-		element_format : "html",
-		editor_deselector : "noselected"
-	});
-</script>
-<!-- /TinyMCE -->';
+?>
 
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+tinymce.init({
+        selector: 'textarea',
+        fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+        height: 444400,
+        forced_root_block : false,
+        plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code'
+                ],
+        menubar: true,
+        toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | table code visualblocks preview charmap',
+        content_css: 'include/js/tinymce/integria.css',
+        valid_children : "+body[style]",
+                element_format : "html",
+                editor_deselector : "noselected",
+                 inline_styles : true,
+
+
+});
+</script>
+	
+	
+
+<?php
 if (! give_acl ($config["id_user"], 0, "CN")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access newsletter management");
 	require ("general/noaccess.php");

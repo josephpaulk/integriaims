@@ -1,17 +1,1 @@
-_additional_message_
-<br>
-Task _taskname_ of project _projectname_ has been updated by user _wu_user_ and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials):
-<br>
-	_access_url_
-<br>
-============================================================ <br>
-    TASK        : _taskname_ <br>
-    DATE        : _update_timestamp_ <br>
-    REPORTED by : _wu_user_ <br>
-    TIME USED   : _time_used_ <br>
-============================================================
-<br>
-_wu_text_
-<br>
-============================================================
-<br>
+<br /><br />Se a&ntilde;adido una workunit a la tarea <strong>_taskname_</strong>&nbsp;del proyecto <strong>_projectname_</strong><br /> <br /><em>_access_url_</em> <br /> <br />------------------------------------------------------------<strong><br />PROYETO </strong>:&nbsp;_projectname_<strong><br />TAREA</strong> : _taskname_ <br /><strong>FECHA&nbsp;</strong>: _update_timestamp_ <br /><strong>REPORTADO POR</strong>&nbsp;: _wu_user_ <br /><strong>TIEMPO</strong>: _time_used_ <br />------------------------------------------------------------<br />_wu_text_ <br />------------------------------------------------------------

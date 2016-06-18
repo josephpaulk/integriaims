@@ -1,13 +1,1 @@
-Hello _fullname_
-
-Our SLA policy for incidents of group _group_, is set to have a minimum response time for new Incidents of _data1_
-
-For incident #_incident_id_ _incident_title_ this time has been overdue. 
-
-Please connect as soon as possible and update status for this incident. Otherwise, you will continue to receive this notifications.
-        
-To see more details about this incident, please use this URL:
-
-_access_url_
-
-
+<br /><br />Nuestra pol&iacute;tica de SLA para el grupo de tickets<strong> _group_</strong> esta establecidad para que tenga un <strong>tiempo m&aacute;ximo de respuesta a nuevos incidentes de _data1_ horas.&nbsp;</strong><br /><br />El tiempo para el incidente #_incident_id_ _incident_title_ se ha superado. Esto significa que el incidente est&aacute; inactivo por parte de usted o del creador. En cualquier caso, <strong>debe ser actualizado</strong> con un comentario o unidad de trabajo <strong>a la mayor brevedad de tiempo posible.</strong><br /><br />Para m&aacute;s detalles sobre esta incidencia, utilice esta URL:<br /><br /><em>_access_url_</em>

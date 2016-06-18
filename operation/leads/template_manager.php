@@ -136,7 +136,7 @@ if (($operation == "create") || ($operation == "edit")){
 	$table->data[2][1] = print_select_from_sql ($sql2, 'id_company', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
 
 	
-	$table->data[3][0] = print_textarea ('description', 20, 60, $description, '', true,
+	$table->data[3][0] = print_textarea ('description', 25, 60, $description, '', true,
 		__('Contents'));
 		
 	if ($operation == "create"){
@@ -221,9 +221,29 @@ if ($operation == "") {
 } // Fin bloque else
 
 ?>
-
+</style>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+tinymce.init({
+  selector: 'textarea',
+force_br_newlines : true,
+    force_p_newlines : false,
+    forced_root_block : false,
+  plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table contextmenu paste code'
+  ],
+  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  content_css: 'include/js/tinymce/integria.css',
+  
+});
+	
+</script>
+
 
 <script type="text/javascript">
 	

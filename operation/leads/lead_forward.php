@@ -74,22 +74,20 @@ $subject = __("Lead forward"). " [#$id] : " . $lead["company"] . " / ". $lead["c
 
 
 
-$mail = __("Hello");
-$mail .= "\n\n";
-$mail .= __("Lead details"). ":\n\n";
-$mail .= " ".__("Name") . ": ". $lead["fullname"] . "\n";
-$mail .= " ".__("Company") . ": ". $lead["company"] . "\n";
-$mail .= " ".__("Position") . ": ". $lead["position"] . "\n";
-$mail .= " ".__("Country") . ": ". $lead["country"] . "\n";
-$mail .= " ".__("Language") . ": ". $lead["id_language"] . "\n";
-$mail .= " ".__("Email") . ": ". $lead["email"] . "\n";
-$mail .= " ".__("Phone") . ": ". $lead["phone"] . " / " .$lead["mobile"]. "\n";
-$mail .= " ".__("Comments") . ": ". $lead["description"] . "\n";
-$mail .= "\n\n";
-$mail .= "--";
-$mail .= "\n\t".$user["nombre_real"];
-$mail .= "\n\t".$user["direccion"];
-$mail .= "\n\t".$company_user;
+$mail =  "<b>".__("Lead details"). "</b><br><br>";
+$mail .= " ".__("Name") . ": ". $lead["fullname"] . "<br>";
+$mail .= " ".__("Company") . ": ". $lead["company"] . "<br>";
+$mail .= " ".__("Position") . ": ". $lead["position"] . "<br>";
+$mail .= " ".__("Country") . ": ". $lead["country"] . "<br>";
+$mail .= " ".__("Language") . ": ". $lead["id_language"] . "<br>";
+$mail .= " ".__("Email") . ": ". $lead["email"] . "<br>";
+$mail .= " ".__("Phone") . ": ". $lead["phone"] . " / " .$lead["mobile"]. "<br>";
+$mail .= " ".__("Comments") . ": ". $lead["description"] . "<br>";
+$mail .= "<br>";
+$mail .= "--<br>";
+$mail .= "<br>&nbsp;&nbsp;&nbsp;&nbsp;".$user["nombre_real"];
+$mail .= "<br>&nbsp;&nbsp;&nbsp;&nbsp;".$user["direccion"];
+$mail .= "<br>&nbsp;&nbsp;&nbsp;&nbsp;".$company_user;
 
 $table = new StdClass();
 $table->width = "100%";
@@ -118,7 +116,26 @@ print_table ($table);
 echo "</form>";
 
 ?>
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+tinymce.init({
+  selector: 'textarea',
+force_br_newlines : true,
+    force_p_newlines : false,
+    forced_root_block : false,
+  plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table contextmenu paste code'
+  ],
+  menubar: false,
+  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  content_css: 'include/js/tinymce/integria.css',
 
+});
+
+</script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 

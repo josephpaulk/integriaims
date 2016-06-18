@@ -1,17 +1,1 @@
-_additional_message_
-<br>
-Task _taskname_ of project _projectname_ has been updated by user _wu_user_ and a already reported workunit has been modified from history. You could track this workunit in the following URL (need to use your credentials):
-<br>
-	_access_url_
-<br>
-============================================================ <br>
-    TASK        : _taskname_ <br>
-    DATE        : _update_timestamp_ <br>
-    REPORTED by : _wu_user_ <br>
-    TIME USED   : _time_used_ <br>
-============================================================
-<br>
-_wu_text_
-<br>
-============================================================
-<br>
+<br /><br />Se ha modificado una imputaci&oacute;n de trabajo existente por parte del usuario&nbsp;<strong>_wu_user_.<br /></strong>Puede ver estos cambios en la siguiente URL:&nbsp;<br /> <br /><em>_access_url_</em> <br /><br />------------------------------------------------------------<br /><strong>PROYECTO</strong> :&nbsp;_projectname_<br /><strong>TAREA</strong>&nbsp;: _taskname_ <br /><strong>FECHA</strong>&nbsp;: _update_timestamp_ <br /><strong>REPORTADO POR</strong>&nbsp;: _wu_user_ <br /><strong>TIEMPO USADO</strong>&nbsp;: _time_used_ <br />------------------------------------------------------------<br /> _wu_text_ <br />------------------------------------------------------------

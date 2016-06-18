@@ -1410,9 +1410,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$type_ticket = get_db_sql ("SELECT name FROM tincident_type WHERE id = ".$row["id_incident_type"]);
 	$titulo =$row["titulo"];
-	$description = wordwrap(ascii_output($row["descripcion"]), 70, "<br />\n");
+	$description = $row["descripcion"];
 	$prioridad = get_priority_name($row["prioridad"]);
-	$nota = wordwrap(ascii_output($nota), 70, "<br />\n");
 
 	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);

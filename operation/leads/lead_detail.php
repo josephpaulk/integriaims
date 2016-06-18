@@ -717,7 +717,7 @@ if ($id || $new) {
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/files_tab.png"/></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/disk.png"/></a></li>';
 		
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'" title="'.__("Company").'"><img src="images/groups_small/house.png"/></a></li>';
