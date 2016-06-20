@@ -157,8 +157,8 @@ if ($create) {
 		$tasklist = safe_output ($tasklist);
 
 		$parent = (int) get_parameter ('padre');
-		$start = get_parameter ('start_date', date ("Y-m-d"));
-		$end = get_parameter ('end_date', date ("Y-m-d"));
+		$start = get_parameter ('start_date2', date ("Y-m-d"));
+		$end = get_parameter ('end_date2', date ("Y-m-d"));
 		$owner = get_parameter('dueno');
 		
 		if ($parent) {
