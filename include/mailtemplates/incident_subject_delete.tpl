@@ -1,1 +1,1 @@
-[_sitename_] BORRADO ticket _incident_id_ _incident_title_
+[_sitename_] DELETED ticket _incident_id_ _incident_title_

@@ -1,1 +1,5 @@
-<br />Nuestra pol&iacute;tica de SLA para el grupo de tickets<strong> _group_</strong> esta establecidad para que tenga un <strong>tiempo m&aacute;ximo de respuesta de _data1_ horas.&nbsp;</strong><br /><br />El tiempo para el incidente #_incident_id_ _incident_title_ se ha superado. Esto significa que el incidente est&aacute; inactivo por parte de usted o del creador. En cualquier caso, <strong>debe ser actualizado</strong> con un comentario o unidad de trabajo <strong>a la mayor brevedad de tiempo posible.</strong><br /><br />Para m&aacute;s detalles sobre esta incidencia, utilice esta URL:<br /><br /><em>_access_url_</em>
+<p>Our SLA policy for tickets _group_ group is established to have a <strong>maximum response time of _data1_ hours.</strong></p>
+<p>The time for #_incident_id_ _incident_title_ incident has been overcome. This means that the incident is inactive and&nbsp;it should be updated with a comment as soon as possible.&nbsp;</p>
+<p>For more details on this issue, use this URL:</p>
+<p>_access_url_</p>
+<p>&nbsp;</p>
