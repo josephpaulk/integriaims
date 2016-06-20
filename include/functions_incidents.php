@@ -1401,7 +1401,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	include_once($config["homedir"].'/include/functions_db.mysql.php');
 
 	clean_cache_db();
-	
+
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_group = get_db_sql ("SELECT email_group FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
@@ -1412,14 +1412,13 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$titulo =$row["titulo"];
 	$description = $row["descripcion"];
 	$prioridad = get_priority_name($row["prioridad"]);
-
 	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);
 	$create_timestamp = $row["inicio"];
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
-    $email_copy = $row["email_copy"];
+	$email_copy = $row["email_copy"];
 
 	// Send email for owner and creator of this incident
 	$email_creator = get_user_email ($creator);
@@ -1480,7 +1479,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_status_"] = $estado;
 	$MACROS["_resolution_"] = $resolution;
 	$MACROS["_time_used_"] = $timeused;
-	$MACROS["_incident_main_text_"] = replace_return_by_breaks($description);
+	$MACROS["_incident_main_text_"] = $description;
 	
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
@@ -1500,9 +1499,11 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$company_wu = " (".reset($company_wu).")";
 		}
 		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
-		$MACROS["_wu_text_"] = replace_return_by_breaks($nota);
+		$MACROS["_wu_text_"] = $nota; // Do not pass to safe_output. $nota is already HTML Safe in this point
+
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
+
 		break;
 	case 0: // Incident update
 		
@@ -1560,7 +1561,6 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		
 		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
-		
 		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
 		if ($attached_files === false) {
 			$attached_files = array();
@@ -2672,7 +2672,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '<td>';
 
 				if (!$report_mode) {							
-					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text($incident['titulo'], 50).'</a></strong><br>';
+					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text(safe_input($incident['titulo']), 50).'</a></strong><br>';
 				} else {
 					echo '<strong>'.$incident['titulo'].'</strong><br>';
 				}
@@ -2691,7 +2691,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 								if ($type_field["type"] == "textarea") {
 									$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
 								}
-								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[".safe_output($field_data)."]</div>";
+								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[".$field_data."]</div>";
 							}
 						}
 					}
