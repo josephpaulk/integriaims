@@ -155,7 +155,7 @@ $row[] = print_input_text ("smtp_user", $config["smtp_user"],
 $row[] = print_input_text ("smtp_pass", $config["smtp_pass"],
 	'', 25, 200, true, __('SMTP Password'));
 $row[] = print_button(__("Test"), 'test_smtp', false, '', 'class="sub"', true)
-	. '&nbsp;<div id="test_smtp_images" style="display: inline;"></div>';
+	. '<div id="test_smtp_images" style="display: inline;"></div>';
 $table->data[] = $row;
 
 $row = array();
@@ -344,6 +344,7 @@ echo '</form>';
 				
 				var image = document.createElement('img');
 				image.title = message;
+				$(image).tooltip({ track: true });
 				
 				if (status === 'loading') {
 					image.src = baseURL + '/images/spinner.gif';
