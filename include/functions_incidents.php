@@ -53,7 +53,7 @@ enterprise_include($config["homedir"]."/include/functions_groups.php");
 
 function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false, $csv_mode = false) {
 	global $config;
-	
+
 	/* Set default values if none is set */
 	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
 	$filters['status'] = isset ($filters['status']) ? $filters['status'] : 0;
@@ -262,7 +262,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	foreach ($incidents as $incident) {
 		
 		//Check external users ACLs
-		$standalone_check = enterprise_hook("manage_standalone", array($incident));
+		$standalone_check = enterprise_hook("manage_standalone", array($incident, "read"));
 
 		if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 			continue;

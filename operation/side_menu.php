@@ -403,7 +403,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 */
 
 // INCIDENTS
-if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN || $sec == "incidents" && give_acl ($config['id_user'], 0, "SI") && $show_incidents != MENU_HIDDEN) {
+if ($sec == "incidents" && (give_acl ($config['id_user'], 0, "IR") || get_standalone_user($config["id_user"])) && $show_incidents != MENU_HIDDEN || $sec == "incidents" && give_acl ($config['id_user'], 0, "SI") && $show_incidents != MENU_HIDDEN) {
 	$id_incident = get_parameter ('id');
 	
 	if (($sec2 == "operation/incidents/incident_dashboard") || ($sec2 == "operation/incidents/incident") || ($sec2 == "operation/incidents/incident_search") || 
@@ -416,29 +416,35 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		echo "<ul>";
 			echo "<li><h1>".__('Incidents')."</h1></li>";
 
-			if (give_acl ($config['id_user'], 0, "IR")) {
+			if (give_acl ($config['id_user'], 0, "IR") || (get_standalone_user($config["id_user"]))) {
 				// Incident overview
-				if ($sec2 == "operation/incidents/incident_dashboard")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
-				$search_id_user = (bool) get_parameter ('search_id_user', false);
+				if (give_acl ($config['id_user'], 0, "IR") && (!get_standalone_user($config["id_user"]))) {
+					if ($sec2 == "operation/incidents/incident_dashboard")
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
+					$search_id_user = (bool) get_parameter ('search_id_user', false);
+				}
 				//~ My Tickets
-				if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
+				if (!get_standalone_user($config["id_user"])) {
+					if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
+				}
 				
 				//~ Search Tickets
-				if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
+				if (give_acl ($config['id_user'], 0, "IR")) {
+					if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
+				}
 			}
-			if (give_acl ($config['id_user'], 0, "IW") || give_acl ($config['id_user'], 0, "SI")) {
+			if (give_acl ($config['id_user'], 0, "IW") || give_acl ($config['id_user'], 0, "SI") || (get_standalone_user($config["id_user"]))) {
 				// Incident creation
 				if ($sec2 == "operation/incidents/incident_detail")
 					echo "<li id='sidesel'>";
@@ -447,7 +453,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create ticket')."</a></li>";
 			}
 			
-			if (give_acl ($config['id_user'], 0, "IR")) {
+			if (give_acl ($config['id_user'], 0, "IR") && (!get_standalone_user($config["id_user"]))) {
 				// Incident reports
 				if ($sec2 == "operation/incidents/incident_reports")
 					echo "<li id='sidesel'>";
@@ -455,7 +461,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 					echo "<li>";
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports' id='link_incident_report'>".__('Reports')."</a></li>";
 			}
-			if (give_acl ($config['id_user'], 0, "IR")) {
+			if (give_acl ($config['id_user'], 0, "IR") && (!get_standalone_user($config["id_user"]))) {
 				if ($sec2 == "operation/incidents/incident_dashboard_detail")
 					echo "<li id='sidesel'>";
 				else
