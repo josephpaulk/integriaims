@@ -15,8 +15,7 @@
 
 global $config;
 
-// require_once($config["homedir"].'/include/swiftmailer/swift_required.php');
-require_once($config['homedir'].'/swiftmailer/lib/swift_required.php');
+require_once($config["homedir"].'/include/swiftmailer/swift_required.php');
 
 /**
  * Returns a valid transport for Swift_Mailer.
