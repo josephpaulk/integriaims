@@ -2673,7 +2673,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '<td>';
 
 				if (!$report_mode) {							
-					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text(safe_input($incident['titulo']), 50).'</a></strong><br>';
+					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text(safe_output($incident['titulo']), 50).'</a></strong><br>';
 				} else {
 					echo '<strong>'.$incident['titulo'].'</strong><br>';
 				}
