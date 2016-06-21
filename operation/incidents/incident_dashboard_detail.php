@@ -329,12 +329,22 @@ $right_side = print_container('incident_users', __('People').print_help_tip (_('
 
 // Quick editor
 if ($config['enabled_ticket_editor']) {
-	
-	$has_im  = give_acl ($config['id_user'], $id_grupo, "IM")
-		|| $config['id_user'] == $incident['id_creator'];
-	$has_iw = give_acl ($config['id_user'], $id_grupo, "IW")
-		|| $config['id_user'] == $incident['id_usuario']
-		|| $config['id_user'] == $incident['id_creator'];
+
+	if (get_standalone_user($config["id_user"])) {
+		$check_standalone_acl = enterprise_hook("manage_standalone", array($incident, "write"));
+		
+		if ($check_standalone_acl === ENTERPRISE_NOT_HOOK || $check_standalone_acl) {
+			$has_im  = true;
+			$has_iw = true;
+		}
+	} else {
+		$has_im  = give_acl ($config['id_user'], $id_grupo, "IM")
+			|| $config['id_user'] == $incident['id_creator'];
+		
+		$has_iw = give_acl ($config['id_user'], $id_grupo, "IW")
+			|| $config['id_user'] == $incident['id_usuario']
+			|| $config['id_user'] == $incident['id_creator'];
+	}
 	
 	if (!$pure) {
 		if ($has_iw) {
@@ -432,7 +442,7 @@ if ($config['enabled_ticket_editor']) {
 			$right_side .= print_container('ticket_editor', __('Quick edit'), $ticket_editor,'open', true, true,'','no_border',4, 'less_widht');
 		}
 	}
-}
+} //end quick editor
 
 // Incident dates
 if ($incident["cierre"] == "0000-00-00 00:00:00") {
@@ -595,10 +605,20 @@ if (!$pure) {
 	//Only incident manager and user with IR flag which are owners and admin can edit incidents
 	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
 
-	if ($check_acl === ENTERPRISE_NOT_HOOK || $check_acl) {
-		echo "<li>";
-		echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
-		echo "</li>";
+	if (get_standalone_user($config["id_user"])) {
+		$check_standalone_acl = enterprise_hook("manage_standalone", array($incident, "write"));
+		
+		if ($check_standalone_acl === ENTERPRISE_NOT_HOOK || $check_standalone_acl) {
+			echo "<li>";
+			echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
+			echo "</li>";
+		}
+	} else {
+		if ($check_acl === ENTERPRISE_NOT_HOOK || $check_acl) {
+			echo "<li>";
+			echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
+			echo "</li>";
+		}
 	}
 	echo '<li>';
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/icono_comentarios.png", true, array("title" => __('Comments'))).'</a>';

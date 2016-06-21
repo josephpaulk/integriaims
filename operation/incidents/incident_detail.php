@@ -397,8 +397,7 @@ if (isset($incident)) {
 		include ("general/noaccess.php");
 		exit;
 	}
-}
-else if (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") ) {
+else if (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") && (!get_standalone_user($config["id_user"]))) {
 	// Doesn't have access to this page
 	
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
@@ -1075,7 +1074,7 @@ if ($config['required_ticket_type']) {
 	$select = 'select';
 }
 
-if(give_acl ($config['id_user'], $id_grupo, "IW")){
+if (give_acl ($config['id_user'], $id_grupo, "IW") || give_acl ($config['id_user'], $id_grupo, "SI") || (get_standalone_user($config["id_user"]))) {
 	$table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
 } else if (give_acl ($config['id_user'], $id_grupo, "SI")){
 	$group_escalate_sql = 'select g.nombre from tusuario_perfil u, tgrupo g where g.id_grupo=u.id_grupo and u.id_usuario = "'.$config['id_user'].'"';
@@ -1565,7 +1564,9 @@ $(document).ready (function () {
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
 		id_user_ticket = $('#text-id_user_hidden').val();
-		incident_limit("#submit-accion", id_user_ticket, id_group);
+		if (id_group != null) {
+			incident_limit("#submit-accion", id_user_ticket, id_group);
+		}
 	}
 
 	//order groups for select
@@ -1592,7 +1593,9 @@ $(document).ready (function () {
 		id_incident = <?php echo $id?>;
 
 		if (id_incident == 0) {
-			incident_limit("#submit-accion", id_user_ticket, id_group);
+			if (id_group != null) {
+				incident_limit("#submit-accion", id_user_ticket, id_group);
+			}
 		}
 		
 		var group = $("#grupo_form").val();
