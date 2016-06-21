@@ -46,6 +46,7 @@ if (defined ('AJAX')) {
 	$filter['right_sla'] = $form_values['search_right_sla'];
 	$filter['show_hierarchy'] = $form_values['show_hierarchy'];
 	$filter['medals'] = $form_values['medals'];
+	$filter['parent_name'] = (string) get_parameter ('parent_name', '');
 	
 	$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 
@@ -89,6 +90,7 @@ $filter['left_sla'] = (int) get_parameter ('search_left_sla');
 $filter['right_sla'] = (int) get_parameter ('search_right_sla');
 $filter['show_hierarchy'] = (bool) get_parameter('search_show_hierarchy');
 $filter['medals'] = (int) get_parameter ('search_medals', 0);
+$filter['parent_name'] = (string) get_parameter ('parent_name', '');
 
 $type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 

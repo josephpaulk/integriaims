@@ -1,1 +1,1 @@
-[_sitename_] NEW incident #_incident_id_ _incident_title_.
+[_sitename_] NEW ticket #_incident_id_ _incident_title_.

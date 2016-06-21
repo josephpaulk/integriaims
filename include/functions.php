@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2016 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -96,6 +96,7 @@ function clean_output_breaks ($string) {
 }
 
 function replace_return_by_breaks ($string) {
+	$string = clean_output_breaks ($string);
 	return preg_replace ('/\n/', "<br>", $string);
 }
 
@@ -673,7 +674,9 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	
 	// We need to convert to pure ASCII here to use carriage returns
 	
-	$body = safe_output ($body);
+	// CAUTION: Do not safe_output($body. Data here SHOULD have HTML encoding in place
+	// to avoid bad rendering of contents
+
 	$subject = ascii_output ($subject);
 	
 	if ($remove_header_footer == 0)
@@ -690,20 +693,36 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	// without HTML encoding. THis is because it is not to be rendered on a browser, 
 	// it will be directly to a SMTP connection.
 	
-	$values = array(
-			'date' => $current_date,
-			'attempts' => 0,
-			'status' => 0,
+	
+	
+	
+	//New check, if exist any data with same data, doesn't insert in DB.
+	$check = array(
 			'recipient' => $to,
-			'subject' => mysql_real_escape_string($subject),
 			'body' => mysql_real_escape_string($body),
 			'attachment_list' => $attachments,
 			'from' => $from,
 			'cc' => $cc,
-			'extra_headers' => $extra_headers,
 			'image_list' => $images
 		);
-	process_sql_insert('tpending_mail', $values);
+		
+	$checked = get_db_row_filter('tpending_mail', $check, '*');
+	if (!$checked) {
+		$values = array(
+				'date' => $current_date,
+				'attempts' => 0,
+				'status' => 0,
+				'recipient' => $to,
+				'subject' => mysql_real_escape_string($subject),
+				'body' => mysql_real_escape_string($body),
+				'attachment_list' => $attachments,
+				'from' => $from,
+				'cc' => $cc,
+				'extra_headers' => $extra_headers,
+				'image_list' => $images
+			);
+		process_sql_insert('tpending_mail', $values);
+	}
 }
 
 function topi_rndcode ($length = 6) {
@@ -1486,6 +1505,24 @@ function to_traslate(){
 	__('new');
 	__('unused');
 	__('issued');
+}
+
+function check_correct_mail($mail) {
+	if (preg_match('/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+/', $mail)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+/**
+ * Returns a reliable base url which points to the root dir.
+ * TODO: Replace all the $config['base_url'] and $config['base_url_dir'] with this function.
+ */
+function base_url () {
+	global $config;
+	return empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 }
 
 ?>

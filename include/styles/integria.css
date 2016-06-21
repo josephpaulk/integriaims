@@ -15,7 +15,7 @@
 * {
 	margin: 0; padding: 0;
 	-webkit-font-smoothing: antialiased;
-	font-family: Verdana !important;
+	font-family: Verdana;
 }
 
 strong, b, .bold * {
@@ -246,9 +246,22 @@ div.divform {
 	width: 200px !important;
 }
 
+div.divform_right {
+	display: inline-block;
+	width: 18% !important;
+	height: inherit;
+	vertical-align: top;
+	padding-top: 2%;
+}
+
 div.divresult {
 	float: right;
 	width: 79%;
+}
+
+div.divresult_left {
+	display: inline-block;
+	width: 82%;
 }
 
 .divform .search-table input[type="text"] {
@@ -1511,6 +1524,8 @@ h3.system {
 	width:97%; 
 	padding: 10px; 
 	border-radius: 10px;
+	font-size: 10pt;
+	color: #444;
 	-moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     -khtml-border-radius: 10px;
@@ -2367,7 +2382,7 @@ img.avatar_small {
 .custom_search {
 	text-align: center;
 	float: left;
-	height: 25px;
+	/* height: 25px; */ /* This fix the "buttons" generated in Incident dashboard when search name is a bit larger and doesn't fit on a single line */
 	font-weight: bold;
 	border-radius: 2px;
 	background: #BBBBBB;
@@ -2908,7 +2923,7 @@ h3.update_online {
 }
 
 #box_online {
-	width: 100%;
+	width: 97%;
 	padding: 10px;
 	background-color: #e6e6e6;
 }
@@ -3753,7 +3768,7 @@ img#inventory_loading{
 	cursor: pointer;
 }
 .form_result{
-	height: 105px;
+	height: 125px;
 }
 .clear_both{
 	clear: both;
@@ -3925,4 +3940,64 @@ img#inventory_loading{
 }
 #form-invoice table tr td a {
 	padding-left: 1%; 
+}
+
+/*css for table search invoice*/
+
+#invoices_table tr td input {
+	width: 80% !important;
+}
+
+#invoices_table tr td #last_div,
+#invoices_table tr td #expiration_div{
+	width: 86% !important;
+}
+
+#invoices_table tr td #search_date_begin,
+#invoices_table tr td #search_date_end,
+#invoices_table tr td #search_exp_begin,
+#invoices_table tr td #search_exp_end{
+	width: 50% !important;
+}
+
+#invoices_table tr td select {
+	width: 83% !important;
+}
+#invoices_table tr td{
+	width: 20%;
+	white-space: nowrap;
+}
+#text-search_company_manager{
+	height: 20px;
+}
+.divform_right .button-form{
+	margin: 0 auto;
+}
+
+/*css for table search company*/
+#company_stats_form table tr td{
+	width: 25%;
+	white-space: nowrap;
+}
+
+#company_stats_form table tr td input{
+	width: 80% !important;	
+}
+
+#company_stats_form table tr td select{
+	width: 83% !important;	
+}
+
+/*css for table search contracts*/
+#contracts_stats_form table tr td{
+	width: 20%;
+	white-space: nowrap;
+}
+
+#contracts_stats_form table tr td input{
+	width: 80% !important;	
+}
+
+#contracts_stats_form table tr td select{
+	width: 83% !important;	
 }

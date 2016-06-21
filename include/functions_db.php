@@ -1418,7 +1418,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
-		
+		$companies_sql = '';
 		if ($search != '') {
 			$sql_companies = "SELECT id FROM tcompany WHERE name LIKE '%".$search."%'";
 			$companies = get_db_all_rows_sql ($sql_companies);

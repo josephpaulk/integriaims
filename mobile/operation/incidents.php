@@ -254,12 +254,18 @@ class Incidents {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
-				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}
@@ -347,7 +353,7 @@ class Incidents {
 		// 	$filter .= "&filter_owner=".$this->filter_owner;
 		// }
 		// $paginationCG = $ui->getPaginationControgroup("incidents$filter", $this->offset, $this->getNumPages());
-		$ui->createFooter($button_new.$paginationCG);
+		$ui->createFooter($button_new);
 		$ui->showFooter();
 		$ui->showPage();
 	}

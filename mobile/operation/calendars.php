@@ -82,8 +82,7 @@ class Calendars {
 									minMonth = 12;
 									minYear -= 1;
 								}
-								console.log(minYear);
-								console.log(minMonth);
+								
 								postvars = {};
 								postvars[\"action\"] = \"ajax\";
 								postvars[\"page\"] = \"calendars\";
@@ -174,7 +173,7 @@ class Calendars {
 		list($year, $month_name) = explode(',', gmstrftime('%Y,%B', $first_of_month));
 		$html = "<h1 class='title'>" . __(strtoupper(htmlentities(ucfirst($month_name)))) . " " . $year . "</h1>";
 
-		$html .= generate_work_calendar ($year, $month, array(), 1, NULL, $system->getConfig('first_day_week'), "", $user);
+		$html .= generate_work_calendar ($year, $month, array(), 1, NULL, $system->getConfig('first_day_week'), "", $user, false);
 		
 		return $html;
 	}
@@ -183,6 +182,8 @@ class Calendars {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 
+		$html = '';
+		
 		$html .= "<a id=\"min_month_button\" href=\"javascript:\" onclick=\"loadMinMonth()\" data-role=\"button\" data-icon=\"arrow-u\" data-mini=\"true\">" . __("Previous month") . "</a><br>";
 		
 		$html .= "<div id='min_month'></div>";
@@ -217,12 +218,18 @@ class Calendars {
 			if ($message != "") {
 				$options = array(
 					'popup_id' => 'message_popup',
+					'popup_custom' => true,
 					'popup_content' => $message
 					);
 				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
+											$(\"div.popup-back\")
+												.click(function (e) {
+													e.preventDefault();
+													$(this).remove();
+												})
+												.show();
 										});
 									</script>");
 			}

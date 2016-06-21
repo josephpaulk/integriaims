@@ -260,7 +260,7 @@ return;
 		$params_array = base64_decode($params_array);
 		$params_array = json_decode($params_array, true);
 	}
-	if($params_array['object_fields_custom'] != ''){
+	if(isset($params_array['object_fields_custom']) && $params_array['object_fields_custom'] != ''){
 		$object_fields_custom = $params_array['object_fields_custom'];
 	}
 	
@@ -271,7 +271,7 @@ return;
 	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
 
 	//field object_fields
-	if($params_array['object_fields'] != ''){
+	if(isset($params_array['object_fields']) && $params_array['object_fields'] != ''){
 		$object_fields = $params_array['object_fields'];
 	} else {
 		$object_fields_default = array();
@@ -289,7 +289,7 @@ return;
 	}
 
 	//id_type_object
-	if($params_array['id_object_type_search'] != ''){
+	if(isset($params_array['id_object_type_search']) && $params_array['id_object_type_search'] != ''){
 		$id_object_type = $params_array['id_object_type_search'];
 	} else {
 		$id_object_type = (int)get_parameter('id_object_type_search', 1);
@@ -298,7 +298,7 @@ return;
 
 	if ($object_fields) {
 		$params['object_fields'] = $object_fields;
-		if($params_array['count_object_custom_fields'] != ''){
+		if(isset($params_array['count_object_custom_fields']) && $params_array['count_object_custom_fields'] != ''){
 			$count_object_custom_fields = $params_array['count_object_custom_fields'];
 		} else {
 			$count_object_custom_fields = 0;
@@ -343,7 +343,7 @@ return;
 		}
 
 		//search word in the inventory only name, description,id,status and custom fields
-		if($params_array['search_free'] != ''){
+		if(isset($params_array['search_free']) && $params_array['search_free'] != ''){
 			$search_free = $params_array['search_free'];
 		} else {
 			$search_free = (string)get_parameter ('search_free', '');
@@ -399,7 +399,7 @@ return;
 		}
 	}
 	//owner
-	if($params_array['owner'] != ''){
+	if(isset($params_array['owner']) && $params_array['owner'] != ''){
 		$owner = $params_array['owner'];
 	} else {
 		$owner = (string)get_parameter('owner', '');
@@ -412,7 +412,7 @@ return;
 	}
 
 	//block size
-	if($params_array['block_size'] != ''){
+	if(isset($params_array['block_size']) && $params_array['block_size'] != ''){
 		$block_size = $params_array['block_size'];
 	}
 	else {
@@ -420,7 +420,7 @@ return;
 	}
 
 	//manufacturer
-	if($params_array['id_manufacturer'] != ''){
+	if(isset($params_array['id_manufacturer']) && $params_array['id_manufacturer'] != ''){
 		$id_manufacturer = $params_array['id_manufacturer'];
 	} else {
 		$id_manufacturer = get_parameter ('id_manufacturer', 0);
@@ -434,7 +434,7 @@ return;
 	}
 
 	//contract
-	if($params_array['id_contract'] != ''){
+	if(isset($params_array['id_contract']) && $params_array['id_contract'] != ''){
 		$id_contract = $params_array['id_contract'];
 	} else {
 		$id_contract = (int)get_parameter ('id_contract', 0);
@@ -448,7 +448,7 @@ return;
 	}
 
 	//status
-	if($params_array['inventory_status'] != ''){
+	if(isset($params_array['inventory_status']) && $params_array['inventory_status'] != ''){
 		$inventory_status = $params_array['inventory_status'];
 	} else {
 		$inventory_status = (string)get_parameter('inventory_status', '0');
@@ -462,7 +462,7 @@ return;
 	}
 
 	//Company
-	if($params_array['id_company'] != ''){
+	if(isset($params_array['id_company']) && $params_array['id_company'] != ''){
 		$id_company = $params_array['id_company'];
 	} else {
 		$id_company = (int)get_parameter('id_company', 0);
@@ -476,7 +476,7 @@ return;
 	}
 
 	//Associated_user
-	if($params_array['associated_user'] != ''){
+	if(isset($params_array['associated_user']) && $params_array['associated_user'] != ''){
 		$associated_user = $params_array['associated_user'];
 	} else {
 		$associated_user = (string)get_parameter('associated_user', "");
@@ -490,7 +490,7 @@ return;
 	}
 
 	//Parent name
-	if($params_array['parent_name'] != ''){
+	if(isset($params_array['parent_name']) && $params_array['parent_name'] != ''){
 		$parent_name = $params_array['parent_name'];
 	} else {
 		$parent_name = get_parameter ('parent_name', 'None');
@@ -508,13 +508,13 @@ return;
 	}
 
 	//sort table
-	if($params_array['sort_mode'] != ''){
+	if(isset($params_array['sort_mode']) && $params_array['sort_mode'] != ''){
 		$sort_mode = $params_array['sort_mode'];
 	} else {
 		$sort_mode = (string)get_parameter('sort_mode', 'asc');
 	}
 
-	if($params_array['sort_field_num'] != ''){
+	if(isset($params_array['sort_field_num']) && $params_array['sort_field_num'] != ''){
 		$sort_field_num = $params_array['sort_field_num'];
 	} else {
 		$sort_field_num = (int)get_parameter('sort_field', 1);
@@ -531,7 +531,7 @@ return;
 			break;
 	}	
 	//mode list or tree
-	if($params_array['mode'] != ''){
+	if(isset($params_array['mode']) && $params_array['mode'] != ''){
 		$mode = $params_array['mode'];
 	} else {
 		$mode = (string)get_parameter('mode', "list");
@@ -665,7 +665,7 @@ if (!$pure) {
 
 		print_container_div("inventory_column",__("Column editor"),$select_label_object, 'open', false, false);
 	 
-		$search_other .= "<div class='divresult_inventory'>";
+		$search_other = "<div class='divresult_inventory'>";
 		$table_search = new StdClass();
 		$table_search->class = 'search-table-button';
 		$table_search->width = '100%';

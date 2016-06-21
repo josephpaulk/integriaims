@@ -38,6 +38,13 @@ if (defined ('AJAX')) {
 		foreach ($result_ids as $id) {
 			$success = delete_task_workunit ($id);
 		}
+		
+		if ($success) {
+			$result = 'Succesfully deleted';
+		}
+		else {
+			$result = 'Error in delete wu';
+		}
 
 		echo json_encode($result);
 		return;
@@ -70,7 +77,7 @@ if (defined ('AJAX')) {
 			$values['id_profile'] = $id_profile;
 			$values['have_cost'] = ($have_cost == "true") ? 1: 0;
 			$values['public'] = ($public == "true") ? 1: 0;
-		
+			
 			if ($id_profile == -1) { //No change option
 				$values['id_profile'] = $wu_data['id_profile'];
 			}
@@ -80,7 +87,7 @@ if (defined ('AJAX')) {
 			if ($keep_public == "true") {
 				$values['public'] = $wu_data['public'];
 			}
-				
+			
 			$result = db_process_sql_update('tworkunit', $values, array('id'=>$id));
 
 			$id_workunit_task = get_db_sql ("SELECT id_task FROM tworkunit_task WHERE id_workunit = $id");
@@ -88,9 +95,16 @@ if (defined ('AJAX')) {
 			if ($id_task == 0) { //No change option
 				$values_task['id_task'] = $id_workunit_task;
 			}
-			$result_task = db_process_sql_update('tworkunit_task', $values_task, array('id_workunit'=>$id)); 
+			$result_task = db_process_sql_update('tworkunit_task', $values_task, array('id_workunit'=>$id));
+			if ($result && $result_task) {
+				$msg = __('Succesfully updated');
+			}
+			else {
+				$msg = __('Error in update');
+				break;
+			}
 		}
-		echo json_encode('ok');
+		echo json_encode($msg);
 		return;
 		
 	}
@@ -309,8 +323,13 @@ $(document).ready (function () {
 				var div = document.getElementById("wu_"+item);
 				div.remove();
 			});
+			launch_alert_delete(data);
+			location.reload();
 		}
 		});
+		function launch_alert_delete(msg) {
+			alert(msg);
+		}
 	});
 
 	$("#submit-update_btn").click (function () {
@@ -340,9 +359,13 @@ $(document).ready (function () {
 			"&id_task="+id_task+"&have_cost="+have_cost+"&public="+is_public+"&keep_cost="+keep_cost+"&keep_public="+keep_public,
 		dataType: "json",
 		success: function (data, status) {
+			launch_alert_update(data);
 			location.reload();
 		}
 		});
+		function launch_alert_update(msg) {
+			alert(msg);
+		}
 	});
 });
 </script>

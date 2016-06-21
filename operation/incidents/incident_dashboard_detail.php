@@ -231,7 +231,7 @@ if ($incident["id_incident_type"]) {
 			$incident_custom_fields .= "<td>";
 				$incident_custom_fields .= "<table>";
 				$incident_custom_fields .= "<tr>";
-				$incident_custom_fields .= "<td><b>".$f["label"].":</b></td><td>".safe_output($f["data"])."</td>";
+				$incident_custom_fields .= "<td><b>".$f["label"].":</b></td><td>".$f["data"]."</td>";
 				$incident_custom_fields .= "</tr>";
 				$incident_custom_fields .= "</table>";
 			$incident_custom_fields .= "</td>";
@@ -594,7 +594,7 @@ $table->data[0][1] = $right_side;
 
 echo "<div id='indicent-details-view'>";
 
-echo '<h2>'.__('Tickets').' #'.$incident["id_incidencia"].'</h2><h4>'.ui_print_truncate_text($incident['titulo'], 50);
+echo '<h2>'.__('Tickets').' #'.$incident["id_incidencia"].'</h2><h4>'. $incident['titulo'];
 
 
 if (!$pure) {
@@ -624,7 +624,7 @@ if (!$pure) {
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/icono_comentarios.png", true, array("title" => __('Comments'))).'</a>';
 	echo '</li>';
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/icono_files.png", true, array("title" => __('Files'))).'</a>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
 	echo '</li>';
 	echo '<li>';
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&pure=1&tab=tracking#incident-operations">'.print_image("images/chart_bar_dark.png", true, array("title" => __('Statistics'))).'</a>';
@@ -741,7 +741,7 @@ else {
 		echo '<li class="ui-tabs">';
 	}
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
-			'&tab=files#incident-operations"><img src="images/files_tab.png" title="'.__('Files').'"/></a>';
+			'&tab=files#incident-operations"><img src="images/disk.png" title="'.__('Files').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "workunits") {
@@ -799,7 +799,7 @@ else {
 }
 
 //parameter to reload page
-print_input_hidden ('base_url_homedir', $config['base_url_dir'], false);
+print_input_hidden ('base_url_homedir', base_url(), false);
 
 //div to show user info
 echo "<div class= 'dialog ui-dialog-content' title='".__("User info")."' id='user_info_window'></div>";

@@ -803,14 +803,6 @@ if ($action == "insert" && !$id) {
 				}
 			}
 			
-			// Email notify to all people involved in this incident
-			if ($email_copy != "") { 
-				mail_incident ($id, $usuario, "", 0, 1, 7);
-			}
-			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
-				mail_incident ($id, $usuario, "", 0, 1);
-			}
-			
 			// ATTACH A FILE IF IS PROVIDED
 			$upfiles = json_decode(safe_output($upfiles), true);
 			if (!empty($upfiles)) {
@@ -822,7 +814,7 @@ if ($action == "insert" && !$id) {
 						} else {
 							$file_description = __('No description available');
 						}
-						$file_result = attach_incident_file ($id, $file["location"], $file_description, $file["name"]);
+						$file_result = attach_incident_file ($id, $file["location"], $file_description, $file["name"], false);
 					}
 				}
 			}
@@ -830,6 +822,14 @@ if ($action == "insert" && !$id) {
 			// EXECUTE WORKFLOW RULES AT REALTIME
 			if ($is_enterprise) {
 				incidents_run_realtime_workflow_rules ($id);
+			}
+			
+			// Email notify to all people involved in this incident
+			if ($email_copy != "") { 
+				mail_incident ($id, $usuario, "", 0, 1, 7);
+			}
+			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($id, $usuario, "", 0, 1);
 			}
 			
 			// If the ticket creation is successful, redirect the page to the ticket dashboard detail of the new ticket

@@ -239,26 +239,32 @@ if ($operation == "") {
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
-<script type="text/javascript" src="include/js/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+
 
 <script type="text/javascript">
 $(document).ready (function () {
 /*
 	$("#textarea-description").TextAreaResizer ();
 */
-	tinyMCE.init({
-			mode : "exact",
-			elements: "textarea-content",
-			theme : "advanced",
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_buttons1 : "bold,italic, |, image, link, |, cut, copy, paste, |, undo, redo, |, forecolor, |, fontsizeselect, |, justifyleft, justifycenter, justifyright",
-			theme_advanced_buttons2 : "",
-			theme_advanced_buttons3 : "",
-			convert_urls : false,
-			theme_advanced_statusbar_location : "none"
-		});
-		
+
+	tinymce.init({
+	selector: 'textarea',
+	fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+	height: 444400,	
+	forced_root_block : false,
+	plugins: [
+		'advlist autolink lists link image charmap print preview anchor',
+		'searchreplace visualblocks code fullscreen',
+		'insertdatetime media table contextmenu paste code'
+		],
+	menubar: true,
+	toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | table code visualblocks',
+	content_css: 'include/js/tinymce/integria.css',
+});
+
+
 	$("#slider").slider ({
 		min: 0,
 		max: 100,

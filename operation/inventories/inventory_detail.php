@@ -374,20 +374,20 @@ if ($update) {
 	}
 	
 	$inventory_companies = get_parameter("inventory_companies");
-	$result_hook = enterprise_hook ('inventory_get_user_inventories', array (get_parameter ('companies', $inventory_companies), true));
+	inventory_get_user_inventories(get_parameter ('companies', $inventory_companies), true);
 	
-	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
+	//if ($result_hook !== ENTERPRISE_NOT_HOOK) {
 		// Update users in inventory
 		$users = get_parameter ('users');
 		$users = explode(", ", safe_output($users));	 
 		inventory_update_users ($id, $users, true);
-	}
+	//}
 
-	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
+	//if ($result_hook !== ENTERPRISE_NOT_HOOK) {
 		$companies = get_parameter ('companies');
 		$companies = explode(", ", safe_output($companies));
 		inventory_update_companies($id, $companies, true);
-	}	
+	//}	
 
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';

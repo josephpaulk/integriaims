@@ -1,16 +1,27 @@
-!! Introduction
+!! Welcome to your wiki!
 
-Example wiki. This is a a '''example''' wiki with some links and subpages just to show you use it.
+[http://openideas.info/wiki/images/thumb/b/b3/Integria_white.png/250px-Integria_white.png|right]
+This is a a '''example''' wiki with some links and subpages just to show you how to use it. You probably know about [Wikipedia|http://wikipedia.org]. Thats also a WIKI and works more or less the same, but of course that one has loads of content :)
 
-!!! Sub title.
+!!! What you can do on the wiki
 
-You probably know about the [wikipedia|http://wikipedia.org]. Thats also a WIKI, but with lot's of contents :)
-
-Of course we can also insert images here:
-
-[http://openideas.info/wiki/images/thumb/b/b3/Integria_white.png/250px-Integria_white.png]
-
-You can upload and use your own images or reference from another site.
+As said, it works about the same as Wikipedia, so it should be pretty easy to use. Some of the basic functionalities are:
+* Creation of '''new pages'''. You can do this by:
+** Thinking of a nice page title
+** Searching for this title in the menu on the left
+** On the results page (nothing is found), click on 'Create page'
+* Subpages (this is a [subpage|sample subpage] to demonstrate how to link different pages)
+* Pages in '''multiple langues''' (see 'Syntax' menu option on the left)
+* Use [side_menu] to add items to the bottom of the menu on the left
+* Click 'Edit' on the left to change a page's name
+* Standard '''formatting options''', like:
+** headings and sub-headings (like the one just above)
+** ordered and unordered lists (isn't this a great example!)
+** images (you can upload and use your own images or reference from another site)
+** tables and automatic tables of content
+** links, bot to external pages and other wiki pages
+** pieces of code (see example below)
+** ... and much, much more (see 'Syntax' menu option on the left)
 
 !!! Sample code
 
@@ -31,12 +42,7 @@ $perms = fileperms ('include/config.php');
 
 }}
 
-!!! Sample of list of items
+!! Now it's your turn
+Now you've seen some of the options to create a nice wiki to share information between people in your organisation.
 
-* First item
-** Subitem
-* Second item
-
-!!! Sample of links to subpages
-
-This is a [subpage|sample subpage] to demonstrate how to link different pages between wiki contents.
+Let's build this space!

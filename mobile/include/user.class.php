@@ -65,7 +65,7 @@ class User {
 			
 			$config['id_user'] = $this->user;
 			
-			$system->setSessionBase('id_usuario', $this->user);
+			$system->setSession('id_usuario', $this->user, false);
 			$system->setSession('integria_user', $this);
 		}
 	}
@@ -126,6 +126,7 @@ class User {
 		$this->logout_action = true;
 		
 		$system = System::getInstance();
+		$system->setSession('id_usuario', null);
 		$system->setSession('integria_user', null);
 	}
 	

@@ -67,11 +67,15 @@ if ($custom_searches === false) {
 			}
 		}
 		
-		$count_cs = filter_incidents ($filter_search, true);
+		// We omit the count for each incident due it's great impact in load speed
+        // Just display the custom search name +link to that search.
+        // Maybe in posterior development we can let choose the system admin to show totals for each
+        // custom search or not, at this time my dashboard takes 6-8 secs with this enable, very bad user experience.
+        //$count_cs = filter_incidents ($filter_search, true);
 		
 		$custom .="<td>";
 		$custom .="<div class='custom_search'>";
-		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]." ". "(". $count_cs.")" . "</a><br>";
+		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]."</a><br>";
 		$custom .="</div>";
 		$custom .="</td>";
 	}

@@ -955,6 +955,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$right_sla = (int)get_parameter('search_right_sla', 0);
 		$show_hierarchy = (bool) get_parameter('show_hierarchy');
 		$search_medal = get_parameter('search_medals');
+		$name = get_parameter('parent_name');
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
 		
@@ -986,6 +987,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$right_sla = (int) $filter['right_sla'];
 		$show_hierarchy = (bool) $filter['show_hierarchy'];
 		$search_medal = (int) $filter['medals'];
+		$name = (string) $filter['parent_name']; //This is inventory obj name value !!!
 
 
 		$type_fields = incidents_get_type_fields ($search_id_incident_type);
@@ -1072,10 +1074,10 @@ function form_search_incident ($return = false, $filter=false) {
 	$table_advanced->data[2][1] = print_select (get_incident_resolutions(), 'search_resolution', $resolution,
 			'', __('Any'), -1, true, false, false, __('Resolution'), false);
 			
-	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
+	//$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
 	
 	//Parent name
-	$table_advanced->data[2][2] =  print_input_text_extended ("parent_name", $name, "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:165px !important;'", true, false,  __('Parent object'), false, true);
+	$table_advanced->data[2][2] =  print_input_text_extended ("parent_name", $name, "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:165px !important;'", true, false,  __('Inventory object'), false, true);
 	$table_advanced->data[2][2] .= "&nbsp;&nbsp;" . print_image("images/add.png", true, array("onclick" => "show_inventory_search('','','','','','','','','','', '', '')", "style" => "cursor: pointer"));	
 	$table_advanced->data[2][2] .= "&nbsp;&nbsp;" . print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));
 

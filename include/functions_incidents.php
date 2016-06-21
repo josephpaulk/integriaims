@@ -79,6 +79,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
 	$filters["medals"] = isset ($filters['medals']) ? $filters['medals'] : 0;
+	$filters["parent_name"] = isset ($filters['parent_name']) ? $filters['parent_name'] : '';
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -209,6 +210,11 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			$medals_filter = " AND black_medals <> 0";
 		}
 	}
+	
+	if ($filters['parent_name'] !== '') {
+		$inventory_id = get_db_all_rows_sql("SELECT id FROM tinventory WHERE name = '" . $filters['parent_name'] . "'");
+		$inventory_id = $inventory_id[0]['id'];
+	}
 
 	//Use config block size if no other was given
 	if ($limit) {
@@ -216,7 +222,12 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			$filters["limit"] = $config["block_size"];
 		}
 	}
-
+	
+	if ($inventory_id) {
+		$sql_clause .= " AND id_incidencia = (SELECT id_incident FROM tincident_inventory WHERE id_inventory = (SELECT id from tinventory 
+						WHERE name = '" . $filters['parent_name'] . "'))";
+	}
+	
 	if ($no_parents) {
 		$sql_clause .= " AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)";
 	}
@@ -353,7 +364,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
  *
  */
  
-function attach_incident_file ($id, $file_temp, $file_description, $file_name = "") {
+function attach_incident_file ($id, $file_temp, $file_description, $file_name = "", $send_email = true) {
 	global $config;
 	
 	$file_temp = safe_output ($file_temp); // Decoding HTML entities
@@ -380,15 +391,16 @@ function attach_incident_file ($id, $file_temp, $file_description, $file_name = 
 	// Email notify to all people involved in this incident
 	
 	// Email in list email-copy
-	$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id.';';
-	$email_copy = get_db_sql($email_copy_sql);
-	if ($email_copy != "") { 
-		mail_incident ($id, $config['id_user'], 0, 0, 2, 7);
-	}
-	if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)){
-		mail_incident ($id, $config['id_user'], 0, 0, 2);
-	}
-	
+	if ($send_email) {
+		$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id.';';
+		$email_copy = get_db_sql($email_copy_sql);
+		if ($email_copy != "") { 
+			mail_incident ($id, $config['id_user'], 0, 0, 2, 7);
+		}
+		if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)){
+			mail_incident ($id, $config['id_user'], 0, 0, 2);
+		}
+	}	
 	// Copy file to directory and change name
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 	
@@ -1390,7 +1402,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	include_once($config["homedir"].'/include/functions_db.mysql.php');
 
 	clean_cache_db();
-	
+
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_group = get_db_sql ("SELECT email_group FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
@@ -1399,17 +1411,15 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$type_ticket = get_db_sql ("SELECT name FROM tincident_type WHERE id = ".$row["id_incident_type"]);
 	$titulo =$row["titulo"];
-	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
+	$description = $row["descripcion"];
 	$prioridad = get_priority_name($row["prioridad"]);
-	$nota = wordwrap($nota, 75, "\n");
-
 	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);
 	$create_timestamp = $row["inicio"];
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
-    $email_copy = $row["email_copy"];
+	$email_copy = $row["email_copy"];
 
 	// Send email for owner and creator of this incident
 	$email_creator = get_user_email ($creator);
@@ -1490,9 +1500,11 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$company_wu = " (".reset($company_wu).")";
 		}
 		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
-		$MACROS["_wu_text_"] = $nota ;
+		$MACROS["_wu_text_"] = $nota; // Do not pass to safe_output. $nota is already HTML Safe in this point
+
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
+
 		break;
 	case 0: // Incident update
 		
@@ -1518,9 +1530,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1550,7 +1562,6 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		
 		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
-		
 		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
 		if ($attached_files === false) {
 			$attached_files = array();
@@ -1567,9 +1578,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1616,9 +1627,9 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				$protocol = "http://";
 			}
 			
-			$ext = substr($file['filename'], -3, 3);
+			$ext = strtolower(substr($file['filename'], -3, 3));
 			
-			if ($ext == "jpg" || $ext == "png") {
+			if ($ext == "jpg" || $ext == "png" || $ext == "gif") {
 				
 				$path_file = $protocol.$access_public.'/'.$config['baseurl'].'/attachment/'.$file_name;
 				
@@ -1656,7 +1667,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	// Create the TicketID for have a secure reference to incident hidden 
 	// in the message. Will be used for POP automatic processing to add workunits
 	// to the incident automatically.
-	if ($public != 7){
+	if ($public != 7) {
 		//owner
 		$msg_code = "TicketID#$id_inc";
 		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
@@ -1668,33 +1679,33 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$msg_code = "TicketID#$id_inc";
 			$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
 			$msg_code .= "/".$row["id_creator"];
-			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+			integria_sendmail ($email_creator, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 		}
 		
 		// Send emails to the people in the group added
-		if($forced_email != 0){
+		if($forced_email != 0) {
 			$email_default = get_user_email ($user_defect_group);
-			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			if($email_group){
 				$email_g = explode(',',$email_group);
 				foreach ($email_g as $k){
-					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);	
+					integria_sendmail ($k, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);	
 				}
 			}
 		}
 	
 	}
-	if ($public == 7){
+	if ($public == 7) {
 		// Send a copy to each address in "email_copy"
 			if ($email_copy != ""){
 				$emails = explode (",",$email_copy);
 				foreach ($emails as $em){
-					integria_sendmail ($em, $subject, $text, false, "", $email_from, 0, "", "X-Integria: no_process", $images);
+					integria_sendmail ($em, $subject, $text, $attachments, "", $email_from, 0, "", "X-Integria: no_process", $images);
 				}
 			}
 	}
 	
-	if ($public == 1){
+	if ($public == 1) {
 		// Send email for all users with workunits for this incident
 		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario AND tusuario.disabled=0";
 		if ($result=mysql_query($sql1)) {
@@ -1703,7 +1714,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 					$msg_code = "TicketID#$id_inc";
 					$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
 					$msg_code .= "/". $row[1];
-					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+					integria_sendmail ( $row[0], $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 				}
 			}
 		}
@@ -1714,7 +1725,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			if ($contats)
 			foreach ($contacts as $contact) {
 				$contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
-				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, "", 0, "", "X-Integria: no_process", $images);
+				integria_sendmail ($contact_email, $subject, $text, false, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			}
 		}
 	}
@@ -2662,7 +2673,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '<td>';
 
 				if (!$report_mode) {							
-					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text($incident['titulo'], 50).'</a></strong><br>';
+					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text(safe_input($incident['titulo']), 50).'</a></strong><br>';
 				} else {
 					echo '<strong>'.$incident['titulo'].'</strong><br>';
 				}
@@ -2681,7 +2692,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 								if ($type_field["type"] == "textarea") {
 									$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
 								}
-								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[$field_data]</div>";
+								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[".$field_data."]</div>";
 							}
 						}
 					}
@@ -3594,7 +3605,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$ttl = $pdf_output+1;
 
 	// Max graph legend string length (without the '...')
-	$max_legend_strlen = 17;
+	$max_legend_strlen = 25;
 	
 	// Necessary for flash graphs
 	include_flash_chart_script();
@@ -3663,7 +3674,6 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	
 	//Initialize groups time array
 	$groups_time = array();
-
 	foreach ($incidents as $incident) {
 		
 		$inc_stats = incidents_get_incident_stats($incident["id_incidencia"]);
@@ -3997,7 +4007,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$status_aux .= "<tr>";
 	$status_aux .= "<th><strong>".__("Status")."</strong></th>";
 	$status_aux .= "<th><strong>".__("Number")."</strong></th>";
-	$status_aux .= "<th><strong>".__("Total time")."</strong></th>";
+	$status_aux .= "<th><strong>".__("Total time (AVG)")."</strong></th>";
 	$status_aux .= "</tr>";
 	
 		foreach ($incident_status as $key => $value) {
@@ -4005,7 +4015,8 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 			$status_aux .= "<tr>";
 			$status_aux .= "<td>".$name."</td>";
 			$status_aux .= "<td>".$value."</td>";
-			$time = $incident_status_timing[$key];
+			// Arithmetical average
+			$time = $incident_status_timing[$key] / count($incidents);
 			$status_aux .= "<td>".give_human_time($time,true,true,true)."</td>";
 			$status_aux .= "</tr>";
 		}
@@ -4141,20 +4152,27 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 
 	$count = 1;
 	arsort($groups_time);
+	
+	$count_groups = 0;
 	foreach ($groups_time as $key => $value) {
-		
 		//Only show first 5
 		if ($count == 5) {
 			break;
 		}
-
 		$output .= "<tr>";
 		$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
 		$output .= "<td>".$group_name."</td>";
 		$output .= "<td>".give_human_time($value,true,true,true)."</td>";
 		$output .= "</tr>";
 		$count++;
-	}	
+		$count_groups++;
+	}
+	if (($count_groups < 5) && ($count_groups != 0)) {
+		$output .= "<tr>";
+		$output .= "<td>". __('Only have ') . $count_groups . __(' group/s with tickets') ."</td>";
+		$output .= "<td>" . " " . "</td>";
+		$output .= "</tr>";
+	}
 	
 	$output .= "</table>";
 		
@@ -4169,6 +4187,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$output .= "</tr>";
 	
 	$count = 1;
+	$count_users = 0;
 	arsort($users_time);
 	foreach ($users_time as $key => $value) {
 		
@@ -4183,7 +4202,15 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 		$output .= "<td>".give_human_time($value,true,true,true)."</td>";
 		$output .= "</tr>";
 		$count++;
-	}	
+		$count_users++;
+	}
+	if (($count_users < 5) && ($count_users != 0)) {
+		$output .= "<tr>";
+		$output .= "<td>". __('Only have ') . $count_users . __(' user/s with tickets') ."</td>";
+		$output .= "<td>" . " " . "</td>";
+		$output .= "</tr>";
+	}
+	
 	
 	$output .= "</table>";
 		

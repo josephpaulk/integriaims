@@ -53,12 +53,6 @@ class Home {
 					'text' => __('Workunits'),
 					'href' => 'index.php?page=workunit');
 			$ui->contentAddHtml($ui->createButton($options));
-			// Workorders
-			$options = array('icon' => 'info',
-					'pos' => 'right',
-					'text' => __('Workorders'),
-					'href' => 'index.php?page=workorders&filter_status=0&filter_owner='.$system->getConfig('id_user'));
-			$ui->contentAddHtml($ui->createButton($options));
 			// Incidents
 			$options = array('icon' => 'alert',
 					'pos' => 'right',

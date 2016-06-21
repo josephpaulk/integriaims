@@ -183,7 +183,7 @@ if ($action == 'update')  {
 				$comentarios = get_parameter ("comentarios");
 				$avatar = get_parameter ("avatar");
 				$avatar = substr($avatar, 0, strlen($avatar)-4);
-
+				
 				if (dame_password ($nombre_viejo) != $password){
 					$password = md5($password);
 					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".safe_output($nombre_real)."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
@@ -728,5 +728,22 @@ messages = {
 	remote: "<?php echo __('This user ID already exists')?>"
 };
 add_validate_form_element_rules('input[name="nombre"]', rules, messages);
+// MAIL
+rules = {
+	//required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			check_mail: 1,
+			mail: function() { return $('input[name="direccion"]').val() }
+        }
+	}
+};
+messages = {
+	remote: "<?php echo __('Type a correct mail direction')?>"
+};
+add_validate_form_element_rules('input[name="direccion"]', rules, messages);
 
 </script>

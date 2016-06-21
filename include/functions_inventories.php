@@ -2394,4 +2394,27 @@ function inventory_get_users ($id_inventory, $only_names = true) {
 	
 	return $users;
 }
+
+function inventory_get_user_inventories($id_user, $inventories) {
+	if ($inventories == false) {
+		return false;
+	}
+
+	$user_inventories = array();
+
+	if (!$inventories) {
+
+		return $user_inventories;
+	}
+
+	foreach ($inventories as $key => $inventory) {
+		$read_perm = inventory_check_acl($id_user, $inventory['id']);
+		
+		if ($read_perm) {
+			array_push($user_inventories, $inventory);
+		}
+	}
+	
+	return $user_inventories;
+}
 ?>

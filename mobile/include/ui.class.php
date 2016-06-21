@@ -710,6 +710,8 @@ class Ui {
 		$popup_class = '';
 		$popup_content = '';
 		
+		$is_custom = false;
+		
 		if (is_array($options)) {
 			if (isset($options['popup_id']))
 				$popup_id = $options['popup_id'];
@@ -719,19 +721,31 @@ class Ui {
 				$popup_content = $options['popup_content'];
 			if (! isset($options['data-transition']))
 				$options['data-transition'] = 'slidedown';
-				
+			if (isset($options['popup_custom']))
+				$is_custom = (bool) $options['popup_custom'];
+			
 			unset($options['popup_id']);
 			unset($options['popup_class']);
 			unset($options['popup_content']);
+			unset($options['popup_custom']);
 		}
 		
-		$popupHtml = "<div id='" . $popup_id . "' class='" . $popup_class . "' data-role='popup'";
+		$popupHtml = '';
+		
+		if ($is_custom) $popupHtml .= "<div class=\"popup-back\">\n";
+		
+		$popupHtml .= "<div ";
+		$popupHtml .= "id=\"$popup_id\" ";
+		$popupHtml .= "class=\"$popup_class " . (($is_custom) ? " custom-popup" : "") . "\" ";
+		if (!$is_custom) $popupHtml .= "data-role=\"popup\" ";
 		foreach ($options as $option => $value) {
 			$popupHtml .= " " . $option  . "='" . $value . "' ";
 		}
 		$popupHtml .= ">\n";
 		$popupHtml .= $popup_content;
 		$popupHtml .= "</div>\n";
+		
+		if ($is_custom) $popupHtml .= "</div>\n";
 		
 		return $popupHtml;
 	}

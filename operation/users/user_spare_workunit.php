@@ -270,29 +270,52 @@ if ($operation == 'insert') {
 			"This is part of a multi-workunit assigment of $duration hours");
 	}
 	else {
-		// Single day workunit
-		$sql = sprintf ('INSERT INTO tworkunit 
-				(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
-				VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d, %d)',
-				$timestamp, $duration, $id_user, $description,
-				$have_cost, $id_profile, $public, $work_home);
-		$id_workunit = process_sql ($sql, 'insert_id');
-		if ($id_workunit !== false) {
-			$sql = sprintf ('INSERT INTO tworkunit_task 
-					(id_task, id_workunit) VALUES (%d, %d)',
-					$id_task, $id_workunit);
-			$result = process_sql ($sql, 'insert_id');
-			if ($result !== false) {
-				$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
-				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Spare work unit added", 
-						'Workunit for '.$config['id_user'].' added to Task ID #'.$id_task);
-				mail_project (0, $config['id_user'], $id_workunit, $id_task);
+		if (!$id_task) {
+			if ($duration > 24 /*max hours in one day*/) {
+				$result_output = '<h3 class="error">'.__('Workunit must be less than 24 hours of tasks').'</h3>';
+			}
+		}
+		else {
+			$tasks = sprintf ('SELECT id_workunit FROM tworkunit_task WHERE id_task = %d', $id_task);
+			$tasks = process_sql ($tasks);
+			$num_hours2 = 0;
+			foreach ($tasks as $task) {
+				$sql_hours = sprintf('SELECT duration FROM tworkunit WHERE id = %d AND timestamp = "%s"', $task[id_workunit], $timestamp);
+				$num_hours = process_sql($sql_hours);
+				
+				if ($num_hours) {
+					$num_hours2 += $num_hours[0]['duration'];
+				}
+			}
+			if (($duration + $num_hours2) > 24 /*max hours in one day*/) {
+				$result_output = '<h3 class="error">'.__('Workunit must be less than 24 hours of tasks').'</h3>';
 			}
 			else {
-				$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+				// Single day workunit
+				$sql = sprintf ('INSERT INTO tworkunit 
+						(timestamp, duration, id_user, description, have_cost, id_profile, public, work_home) 
+						VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d, %d)',
+						$timestamp, $duration, $id_user, $description,
+						$have_cost, $id_profile, $public, $work_home);
+				$id_workunit = process_sql ($sql, 'insert_id');
+				if ($id_workunit !== false) {
+					$sql = sprintf ('INSERT INTO tworkunit_task 
+							(id_task, id_workunit) VALUES (%d, %d)',
+							$id_task, $id_workunit);
+					$result = process_sql ($sql, 'insert_id');
+					if ($result !== false) {
+						$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+						audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Spare work unit added", 
+								'Workunit for '.$config['id_user'].' added to Task ID #'.$id_task);
+						mail_project (0, $config['id_user'], $id_workunit, $id_task);
+					}
+					else {
+						$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+					}
+				} else {
+					$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+				}
 			}
-		} else {
-			$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
 		}
 	}
 	

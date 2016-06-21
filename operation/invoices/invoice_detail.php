@@ -27,17 +27,23 @@ $offset = get_parameter ('offset', 0);
 // Invoice listing
 $search_text = (string) get_parameter ('search_text');
 $search_invoice_status = (string) get_parameter ('search_invoice_status');
+
 $search_last_date = (int) get_parameter ('search_last_date');
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
-$search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
+
+$search_exp_date = (int) get_parameter ('search_exp_date');
+$search_exp_begin = get_parameter ('search_exp_begin');
+$search_exp_end = get_parameter ('search_exp_end');
+
+$search_invoice_type = (string) get_parameter ('search_invoice_type', 'All');
 $search_company_role = (int) get_parameter ('search_company_role');
 $search_company_manager = (string) get_parameter ('search_company_manager');
 $search_contract_number = (string) get_parameter ('search_contract_number');
 
 $order_by = get_parameter ('order_by', '');
 
-$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&order_by=$order_by&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role&search_company_manager=$search_company_manager";
+$search_params = "&search_text=$search_text&search_invoice_status=$search_invoice_status&search_last_date=$search_last_date&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_exp_date=$search_exp_date&search_exp_end=$search_exp_end&search_exp_begin=$search_exp_begin&order_by=$order_by&search_invoice_type=$search_invoice_type&search_company_role=$search_company_role&search_company_manager=$search_company_manager";
 
 include_once('include/functions_crm.php');
 
@@ -145,17 +151,28 @@ if ($search_invoice_status != "") {
 if ($search_last_date) {
 	$last_date_seconds = $search_last_date * 24 * 60 * 60;
 	$search_date_begin = date('Y-m-d H:i:s', time() - $last_date_seconds);
-	//$search_date_end = date('Y-m-d H:i:s');
 	$search_date_end = "";
 }
-
 if ($search_date_begin != "") {
 	$where_clause .= sprintf (' AND invoice_create_date >= "%s"', $search_date_begin);
 }
 if ($search_date_end != "") {
 	$where_clause .= sprintf (' AND invoice_create_date <= "%s"', $search_date_end);
 }
-if ($search_invoice_type != "") {
+// exp_last_day
+if ($search_exp_date) {
+	$last_exp_seconds = $search_exp_date * 24 * 60 * 60;
+	$search_exp_begin = date('Y-m-d H:i:s', time() - $last_exp_seconds);
+	$search_exp_end = "";
+}
+if ($search_exp_begin != "") {
+	$where_clause .= sprintf (' AND invoice_expiration_date >= "%s"', $search_exp_begin);
+}
+if ($search_exp_end != "") {
+	$where_clause .= sprintf (' AND invoice_expiration_date <= "%s"', $search_exp_end);
+}
+//invoice_type
+if ($search_invoice_type != "All") {
 	$where_clause .= sprintf (' AND invoice_type = "%s"', $search_invoice_type);
 }
 if ($search_company_role > 0) {
@@ -197,11 +214,8 @@ if ($clean_output == 0){
 	$table->id = 'invoices_table';
 	$table->width = '100%';
 	$table->class = 'search-table-button';
-	$table->size = array();
-	$table->style = array();
-	$table->style[1] = 'vertical-align:top;';
-	$table->colspan[2][0] = 4;
 	$table->rowspan[0][1] = 2;
+	$table->rowspan[0][2] = 2;
 	$table->data = array();
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
@@ -209,35 +223,35 @@ if ($clean_output == 0){
 	$sql = 'SELECT id, name FROM tcompany_role ORDER BY name';
 	$table->data[1][0] = print_select_from_sql ($sql, 'search_company_role', $search_company_role, '', __('Any'), 0, true, false, false, __('Company Role'));
 	
-	$table->data[0][1] = get_last_date_control ($search_last_date, 'search_last_date', __('Date'), $search_date_begin, 'search_date_begin', __('From'), $search_date_end, 'search_date_end', __('To'));
-	
-	$invoice_types = array('Submitted'=>'Submitted', 'Received'=>'Received');
-	$table->data[0][2] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
-	$table->data[1][2] = print_input_text_extended ('search_company_manager', $search_company_manager, 'text-search_company_manager', '', 20, 50, false, '', array(), true, '', __("Manager") )
-		. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][1] = get_last_date_control_div ($search_last_date, 'search_last_date', __('Date Creation'), $search_date_begin, 'search_date_begin', __('From Creation'), $search_date_end, 'search_date_end', __('To Creation'), 'last_div');
 
-	$table->data[1][3] = print_input_text ("search_contract_number", $search_contract_number, "", 20, 100, true, __('Contract number'));
+	$table->data[0][2] = get_last_date_control_div ($search_exp_date, 'search_exp_date', __('Date Expiration'), $search_exp_begin, 'search_exp_begin', __('From Expir.'), $search_exp_end, 'search_exp_end', __('To Expir.'), 'expiration_div');
+	
+	$invoice_types = array("All"=>__('All'), "Submitted"=>__('Submitted'), "Received"=>__('Received'));
+	$table->data[0][3] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');
+	$table->data[1][3] = print_input_text_extended ('search_company_manager', $search_company_manager, 'text-search_company_manager', '', 20, 50, false, '', array(), true, '', __("Manager") . print_help_tip (__("Type at least two characters to search"), true), true);
+
+	$table->data[1][4] = print_input_text ("search_contract_number", $search_contract_number, "", 20, 100, true, __('Contract number'));
 
 	$invoice_status_ar = array();
 	$invoice_status_ar['active'] = __("Active");
 	$invoice_status_ar['pending'] = __("Pending");
 	$invoice_status_ar['paid'] = __("Paid");
 	$invoice_status_ar['canceled'] = __("Canceled");
-	$table->data[0][3] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
+	$table->data[0][4] = print_select ($invoice_status_ar, 'search_invoice_status', $search_invoice_status, '', __("Any"), '', true, 0, false, __('Invoice status'), false, 'width:150px;');
 	$form .= '<div class="form_result">';
-	$form .= "<div class='divform'>";
-		$form .= "<div class='button-form'>";
-			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+		$form .= "<div class='divresult_left'>";
+			$form .= print_table($table,true);
 		$form .= '</div>';
-	$form .= '</div>';
-	
-	$form .= "<div class='divresult'>";
-		$form .= print_table($table,true);
-	$form .= '</div>';
+		$form .= "<div class='divform_right'>";
+			$form .= "<div class='button-form'>";
+				$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+			$form .= '</div>';
+		$form .= '</div>';
 	$form .= '</div>';
 	$form .= '</form>';
 	
-	print_container_div("companys_form",__("Invoices form search"),$form, 'closed', false, false);
+	print_container_div("companys_form",__("Invoices form search"),$form, 'open', false, false);
 }
 
 $invoices = crm_get_all_invoices ($where_clause, $order_by);
@@ -402,6 +416,7 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_d
 <script type="text/javascript">
 
 add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
+add_ranged_datepicker ("#text-search_exp_begin", "#text-search_exp_end", null);
 	
 $(document).ready (function () {
 	$("#id_group").change (function() {

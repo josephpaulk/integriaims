@@ -80,6 +80,44 @@ textarea {
 	font-weight: bold;
 }
 
+/* START - Custom popup */
+
+div.popup-back {
+	display: none;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
+	height: 100vh;
+	
+	z-index: 100;
+}
+
+div#message_popup.custom-popup {
+	background-color: white;
+	padding: 5px;
+	
+	max-width: 80%;
+	max-height: 80%;
+	
+	margin-top: calc(100vh - 50vh);
+	margin-bottom: calc(100vh - 50vh);
+	margin-left: auto;
+	margin-right: auto;
+	
+	-webkit-box-shadow: 0px 0px 60px 10px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0px 0px 60px 10px rgba(0,0,0,0.3);
+	box-shadow: 0px 0px 60px 10px rgba(0,0,0,0.3);
+	
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	
+	text-align: center;
+}
+
+/* END - Custom popup */
+
 /*INIT---------Fix the square border in search input------------------*/
 .ui-input-search {
 	border-radius: 0.6em 0.6em 0.6em 0.6em !important;

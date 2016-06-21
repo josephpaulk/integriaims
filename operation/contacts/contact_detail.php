@@ -195,7 +195,7 @@ if ($id != 0) {
 		echo '<li class="ui-tabs-selected">';
 	else   
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/icono_files.png"/></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/disk.png"/></a></li>';
 
 	if ($op == "inventory")
 		echo '<li class="ui-tabs-selected">';
@@ -265,7 +265,7 @@ if ($id == 0 && !$new_contact) {
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 20, 100, true, __('Search'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 20, 100, true, __('Search'). print_help_tip (__("Search according to contact name, phone, email and mobile"), true));
 	
 	$params = array();
 	$params['input_id'] = 'id_company';
