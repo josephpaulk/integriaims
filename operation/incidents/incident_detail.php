@@ -397,7 +397,7 @@ if (isset($incident)) {
 		include ("general/noaccess.php");
 		exit;
 	}
-else if (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") && (!get_standalone_user($config["id_user"]))) {
+}elseif (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") && (!get_standalone_user($config["id_user"]))) {
 	// Doesn't have access to this page
 	
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
@@ -2080,5 +2080,3 @@ var rules, messages;
 //~ add_validate_form_element_rules('#text-titulo', rules, messages);
 
 </script>
-
-<?php //endif; ?>
