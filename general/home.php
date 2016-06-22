@@ -244,7 +244,7 @@ if ($info) {
 		$projects_home .= "</div>";	
 	}
 	
-	$much_more = "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
+	$much_more = "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>";
 	$much_more .= "<img class='much_more' src='images/flecha_dcha.png' title='" . __('See more') . "'>";
 	$much_more .= "</a>";
 	
