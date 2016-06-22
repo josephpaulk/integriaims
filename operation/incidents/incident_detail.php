@@ -1100,6 +1100,7 @@ if($id_group_type != "" && $id_group_type != "0"){
 	else{
 		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
 	}
+	$id_group_type = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", $id_group_type);
 	$groups_selected = explode(', ', $id_group_type);
 	$groups = array_intersect($groups_all, $groups_selected);
 } else {
