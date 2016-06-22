@@ -802,6 +802,9 @@ if ($id || $new) {
 			echo "<h2>".__('Leads management')."</h2>";
 			echo "<h4>".__('Create lead');
 			echo integria_help ("lead", true);
+			echo "<div id='button-bar-title'><ul>";
+				echo "<li><a href='index.php?sec=customers&sec2=operation/leads/lead'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+			echo "</ul></div>";
 			echo "</h4>";
 		}
 

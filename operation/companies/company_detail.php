@@ -412,6 +412,11 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		echo "<h2>".__('Companies')."</h2>";
 		echo "<h4>".__('New company');
 		echo integria_help ("company_detail", true);
+		echo "<div id='button-bar-title'>";
+		echo "<ul>";
+			echo "<li><a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+		echo "</ul>";
+		echo "</div>";
 		echo "</h4>";
 	}
 

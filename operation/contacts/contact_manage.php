@@ -180,6 +180,11 @@ if ($id || $new_contact) {
 	if ($new_contact) {
 		echo "<h4>".__('New Contact');
 		echo integria_help ("contact_detail", true);
+		echo "<div id='button-bar-title'>";
+				echo "<ul>";
+					echo "<li><a href='index.php?sec=customers&sec2=operation/contacts/contact_detail'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+				echo "</ul>";
+			echo "</div>";
 		echo "</h4>";
 		if (!$section_write_permission && !$section_manage_permission) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contact in a group without access");
