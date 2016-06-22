@@ -241,11 +241,11 @@ $csv_lines = array();
 
 $search = array();
 // Delete \r !!!
-//$search[] = "&#x0d;";
-//$search[] = "\r";
+$search[] = "&#x0d;";
+$search[] = "\r";
 // Delete \n !!!
-//$search[] = "&#x0a;";
-//$search[] = "\n";
+$search[] = "&#x0a;";
+$search[] = "\n";
 // Delete " !!!
 $search[] = '"';
 // Delete ' !!!
