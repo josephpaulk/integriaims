@@ -707,106 +707,126 @@ function cron_validate_newsletter_address() {
 }
 
 function run_newsletter_queue () {
-
 	global $config;
 
-	include_once ($config["homedir"] . "/include/functions.php");	
-	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
+	require_once($config['homedir'] . '/include/swiftmailer/swift_required.php');
 	
-	if (isset($config['news_smtp_host'])) { //If Newsletters STMP parameters are not empty
-		$total = $config["news_batch_newsletter"];
-	} else {
-		$total = $config["batch_newsletter"];
-	}
+	$total = isset($config['news_smtp_host']) // If Newsletters STMP parameters are not empty
+		? $config["news_batch_newsletter"]
+		: $config["batch_newsletter"];
 	
-	$utimestamp = date("U");
-	$current_date = date ("Y/m/d H:i:s");
-
 	// Select valid QUEUES for processing
+	$queues = get_db_all_rows_filter('tnewsletter_queue', array('status' => 1));
 	
-	$queues = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue WHERE status = 1");	
-	if ($queues) foreach ($queues as $queue){
+	if (!$queues) return;
 	
-		$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = ".$queue["id_newsletter_content"]);
-		$id_queue = $queue["id"];
+	// Init mailer
+	$mailer = null;
+	try {
+		// Empty snmp conf. System sendmail transport
+		$transport_conf = array();
+		if (!empty($config['news_smtp_host']) || !empty($config['smtp_host'])) {
+			// News conf
+			if (!empty($config['news_smtp_host'])) {
+				$transport_conf['host'] = $config['news_smtp_host'];
+				if (!empty($config['news_smtp_port'])) {
+					$transport_conf['port'] = $config['news_smtp_port'];
+				}
+				if (!empty($config['news_smtp_user'])) {
+					$transport_conf['user'] = $config['news_smtp_user'];
+				}
+				if (!empty($config['news_smtp_pass'])) {
+					$transport_conf['pass'] = $config['news_smtp_pass'];
+				}
+				if (!empty($config['news_smtp_proto'])) {
+					$transport_conf['proto'] = $config['news_smtp_proto'];
+				}
+			}
+			// General SMTP conf
+			else {
+				$transport_conf['host'] = $config['smtp_host'];
+				if (!empty($config['smtp_port'])) {
+					$transport_conf['port'] = $config['smtp_port'];
+				}
+				if (!empty($config['smtp_user'])) {
+					$transport_conf['user'] = $config['smtp_user'];
+				}
+				if (!empty($config['smtp_pass'])) {
+					$transport_conf['pass'] = $config['smtp_pass'];
+				}
+				if (!empty($config['smtp_proto'])) {
+					$transport_conf['proto'] = $config['smtp_proto'];
+				}
+			}
+		}
+		$transport = mail_get_transport($transport_conf);
+		$mailer = mail_get_mailer($transport);
+	}
+	catch (Exception $e) {
+		integria_logwrite(sprintf('Newsletter mail transport failure: %s', $e->getMessage()));
+		return;
+	}
+		
+	foreach ($queues as $queue) {
+		$id_queue = $queue['id'];
+		$id_content = (int) $queue['id_newsletter_content'];
 		
 		// Get issue and newsletter records
+		$issue = get_db_row('tnewsletter_content', 'id', $id_content);
+		$id_newsletter = (int) $issue['id_newsletter'];
 		
-		$issue = get_db_row ("tnewsletter_content", "id", $queue["id_newsletter_content"]);
+		if (!$issue) continue;
 
 		//Add void pixel to track campaings
-		$issue["html"] .= "<img src='".$config["public_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
+		$issue['html'] .= '<img src="'.$config['public_url'].'/operation/newsletter/track_newsletter.php?id_content='.$id_content.'">';
 
-		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
+		$newsletter = get_db_row('tnewsletter', 'id', $id_newsletter);
 		
 		// TODO
 		// max block size here is 500. NO MORE, fix this in the future with a real buffered system!
 		
-		$addresses = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue_data WHERE status = 0 AND id_queue = $id_queue LIMIT 500");
-
-		if (!$addresses) 
-			process_sql ("UPDATE tnewsletter_queue SET status=3 WHERE id = $id_queue");
-		else 
-		foreach ($addresses as $address){
-
-			if (!isset($config["news_smtp_host"])){ //If Newsletters STMP parameters are empty
-				
-				// Compose the mail for each valid address
-
-				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-				$transport->setUsername($config["smtp_user"]);
-				$transport->setPassword($config["smtp_pass"]);
+		$filter = array(
+			'status' => 0,
+			'id_queue' => $id_queue,
+			'limit' => 500
+		);
+		if ($total > 0) $filter['limit'] = $total;
+		$addresses = get_db_all_rows_filter('tnewsletter_queue_data', $filter);
+		
+		if ($addresses) {
+			foreach ($addresses as $address) {
+				$message = Swift_Message::newInstance(safe_output($issue['email_subject']));
+				if (!empty($issue['from_address'])) {
+					$message->setFrom($issue['from_address']);
+				}
+				else {
+					$message->setFrom($newsletter['from_address']);
+				}
+				$dest_email = trim(safe_output($address['email']));
 			
-			} else {
-				
-				// Compose the mail for each valid address
+				$message->setTo($dest_email);
 
-				$transport = Swift_SmtpTransport::newInstance($config["news_smtp_host"], $config["news_smtp_port"]);
-				$transport->setUsername($config["news_smtp_user"]);
-				$transport->setPassword($config["news_smtp_pass"]);
-			
-			}	
+				// TODO: replace names on macros in the body / HTML parts.
 
-			$mailer = Swift_Mailer::newInstance($transport);
-			$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
-			if (!empty($issue["from_address"])) {
-				$message->setFrom($issue["from_address"]);
-			} else {
-				$message->setFrom($newsletter["from_address"]);
+				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
+
+				$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
+
+				if ($mailer->send($message, $failures) > 0) {
+					process_sql_update('tnewsletter_queue_data', array('status' => 1), array('id_queue' => $id_queue, 'email' => $dest_email));
+				}
+				else {
+					// TODO: Do something like error count to disable invalid addresses
+					// after a number of invalid counts
+					integria_logwrite('Trouble with address ' . $failures[0]);
+					process_sql_update('tnewsletter_queue_data', array('status' => 2), array('id_queue' => $id_queue, 'email' => $dest_email));
+				}
 			}
-			$dest_email = trim(safe_output($address['email']));
-		
-			$message->setTo($dest_email);
-
-			// TODO: replace names on macros in the body / HTML parts.
-
-			$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
-
-			$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
-
-			if (!$mailer->send($message, $failures)) {
-				integria_logwrite ("Trouble with address ".$failures[0]);
-
-				// TODO: 
-				// Do something like error count to disable invalid addresses after a 
-				// number of invalid counts
-				// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
-			
-				process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
-			
-			} else {
-				process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
-			}
-				
-			$total = $total - 1;
-		
-			if ($total <= 0)
-					return;
-		
-		} // end of loop for each address in the queue		
-
-	} // end of main loop
-	
+		}
+		else {
+			process_sql_update('tnewsletter_queue', array('status' => 3), array('id' => $id_queue));
+		}
+	}
 }
 
 /**
