@@ -4005,3 +4005,10 @@ img#inventory_loading{
 #contracts_stats_form table tr td a.tip{
 	padding: 10px !important;
 }
+
+/*css for table file upload*/
+#file_upload_container_div table input[type = "submit"]{
+	float: right !important;
+	margin-right: 10px;
+	margin-top: 5px;
+}

@@ -2692,7 +2692,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 								if ($type_field["type"] == "textarea") {
 									$field_data = "<div style='display: inline-block;' title='$field_data'>" . substr($field_data, 0, 15) . "...</div>";
 								}
-								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[".$field_data."]</div>";
+								$type_fields_values_text .= " <div title='".$type_field["label"]."' style='display: inline-block;'>[".safe_output($field_data)."]</div>";
 							}
 						}
 					}
