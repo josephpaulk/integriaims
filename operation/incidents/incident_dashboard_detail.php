@@ -741,7 +741,7 @@ else {
 		echo '<li class="ui-tabs">';
 	}
 	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.
-			'&tab=files#incident-operations"><img src="images/disk.png" title="'.__('Files').'"/></a>';
+			'&tab=files#incident-operations"><img src="images/fichero_tab.png" title="'.__('Files').'"/></a>';
 	echo '</li>';
 
 	if ($tab === "workunits") {

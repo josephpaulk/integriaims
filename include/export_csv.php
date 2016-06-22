@@ -312,7 +312,7 @@ foreach ($csv_lines as $line) {
 	if (!$standard_encoding)
 		echo $line . "\n";
 	else
-		echo mb_convert_encoding($line, 'UTF-16LE', 'UTF-8') . "\n";
+		echo mb_convert_encoding($line, '', 'UTF-8') . "\n";
 }
 
 exit;	

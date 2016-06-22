@@ -883,6 +883,8 @@ elseif ($op == "") {
 				array_push ($table->data, $data);
 			}	
 			print_table ($table);
+		} else {
+			echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
 		}
 		
 		if ($section_write_permission || $section_manage_permission) {

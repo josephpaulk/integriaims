@@ -1199,35 +1199,48 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 					echo "<li><h1>".__('People management')."</h1></li>";
 			
 					// Usermanager
-					if ($sec2 == "godmode/usuarios/lista_usuarios") 
-						echo "<li id='sidesel'>";
-					else
-						echo "<li>";
-					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
+					if ($sec2 == "godmode/usuarios/lista_usuarios" || $sec2 == "godmode/usuarios/configurar_usuarios"){
+						if ($sec2 == "godmode/usuarios/lista_usuarios") {
+							echo "<li id='sidesel'>";
+						} else {
+							echo "<li>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";	
+						if ($sec2 == "godmode/usuarios/configurar_usuarios") {
+							echo "<li id='sidesel' style='margin-left: 15px;'>";
+						}
+						else {
+							echo "<li style='margin-left: 15px;'>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a></li>";
 					
-					if ($sec2 == "godmode/usuarios/configurar_usuarios") {
-						echo "<li id='sidesel' style='margin-left: 15px;'>";
+					} else {
+						echo "<li>";
+						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
 					}
-					else {
-						echo "<li style='margin-left: 15px;'>";
-					}
-					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
-					echo "</li>";
 					
 					// Group manager
-					if ($sec2 == "godmode/grupos/lista_grupos")
-						echo "<li id='sidesel'>";
-					else
+					if ($sec2 == "godmode/grupos/lista_grupos" || $sec2 == "godmode/grupos/configurar_grupo"){
+						if ($sec2 == "godmode/grupos/lista_grupos"){ 
+							echo "<li id='sidesel'>";
+						} else {
+							echo "<li>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+						
+						if ($sec2 == "godmode/grupos/configurar_grupo") {
+							echo "<li id='sidesel' style='margin-left: 15px;'>";
+						}
+						else {
+							echo "<li style='margin-left: 15px;'>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
+
+					} else {
 						echo "<li>";
-					echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+						echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+					}
 					
-					if ($sec2 == "godmode/grupos/configurar_grupo") {
-						echo "<li id='sidesel' style='margin-left: 15px;'>";
-					}
-					else {
-						echo "<li style='margin-left: 15px;'>";
-					}
-					echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
 					
 					enterprise_include ("operation/sidemenu_user_mgmt.php");
 					

@@ -4001,3 +4001,7 @@ img#inventory_loading{
 #contracts_stats_form table tr td select{
 	width: 83% !important;	
 }
+
+#contracts_stats_form table tr td a.tip{
+	padding: 10px !important;
+}

@@ -338,7 +338,9 @@ if ($id == 0 && !$new_contact) {
 		}
 		
 		print_table ($table);
-	}	
+	} else {
+		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
+	}
 	echo '</div>';
 }
 ?>

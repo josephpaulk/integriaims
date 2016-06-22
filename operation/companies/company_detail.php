@@ -1569,6 +1569,8 @@ if ((!$id) AND ($new_company == 0)){
 		}
 
 		print_table ($table);
+	} else {
+		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
 	}
 	
 	if ($write_permission || $manage_permission) {
