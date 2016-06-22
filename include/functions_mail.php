@@ -94,7 +94,6 @@ function mail_get_mailer ($transport = null) {
 			if (!empty($config['smtp_proto'])) {
 				$transport_conf['proto'] = $config['smtp_proto'];
 			}
-			$transport = mail_get_transport($transport_conf);
 		}
 		$transport = mail_get_transport($transport_conf);
 	}
