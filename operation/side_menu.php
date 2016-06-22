@@ -54,7 +54,8 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	}
 	// if for active li project
 	if (($sec2 == "operation/projects/project_overview" && $id_project < 0) || ($sec2 == "operation/projects/user_project_timegraph") || 
-	($sec2 == "operation/projects/project_detail" && $id_project < 0) || ($sec2 == "operation/projects/role_user_global"))
+	($sec2 == "operation/projects/project_detail" && $id_project < 0) || ($sec2 == "operation/projects/role_user_global") || 
+	($sec2 == "operation/projects/project"))
 		echo "<li title='".__('Projects')."' data-status='closed' id='sideselproject' class='sideselcolor'>";
 	else
 		echo "<li title='".__('Projects')."' data-status='closed' id='proyectos'>";
