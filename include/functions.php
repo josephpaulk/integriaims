@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2016 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -674,7 +674,9 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	
 	// We need to convert to pure ASCII here to use carriage returns
 	
-	$body = safe_output ($body);
+	// CAUTION: Do not safe_output($body. Data here SHOULD have HTML encoding in place
+	// to avoid bad rendering of contents
+
 	$subject = ascii_output ($subject);
 	
 	if ($remove_header_footer == 0)

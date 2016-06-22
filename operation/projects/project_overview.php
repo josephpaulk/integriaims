@@ -318,6 +318,9 @@ foreach($project_groups as $group) {
 		}
 		$title = "<img src='images/project_groups_small/" . $group["icon"] . "' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
 		print_container('info_projects_'.$group["id"], $title, $info_general, $apertura, false, '10px', '', '', 6, 'no_border_bottom');
+	} else {
+		ui_print_error_message(__('There are not projects to show.'));
+		return;
 	}
 }
 echo "</div>";

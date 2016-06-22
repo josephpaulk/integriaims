@@ -1,1 +1,6 @@
-<br /><br />Se ha modificado una imputaci&oacute;n de trabajo existente por parte del usuario&nbsp;<strong>_wu_user_.<br /></strong>Puede ver estos cambios en la siguiente URL:&nbsp;<br /> <br /><em>_access_url_</em> <br /><br />------------------------------------------------------------<br /><strong>PROYECTO</strong> :&nbsp;_projectname_<br /><strong>TAREA</strong>&nbsp;: _taskname_ <br /><strong>FECHA</strong>&nbsp;: _update_timestamp_ <br /><strong>REPORTADO POR</strong>&nbsp;: _wu_user_ <br /><strong>TIEMPO USADO</strong>&nbsp;: _time_used_ <br />------------------------------------------------------------<br /> _wu_text_ <br />------------------------------------------------------------
+<p>&nbsp;</p>
+<p><strong>UPDATED WORKUNIT</strong>&nbsp;on project.&nbsp;You can follow the ticket history and details in the following url:</p>
+<p><em>_access_url_</em> <br /> <br />------------------------------------------------------------<strong><br />PROJECT&nbsp;</strong>:&nbsp;_projectname_<strong><br />TASK</strong>&nbsp;: _taskname_ <br /><strong>DATE&nbsp;</strong>: _update_timestamp_ <br /><strong>REPORTED BY&nbsp;</strong>: _wu_user_ <br /><strong>TIME USED&nbsp;</strong>: _time_used_ <br />------------------------------------------------------------</p>
+<p>_wu_text_</p>
+<p>------------------------------------------------------------</p>
+<p>&nbsp;</p>

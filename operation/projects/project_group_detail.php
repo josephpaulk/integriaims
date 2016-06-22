@@ -74,7 +74,7 @@ if ($update_group) {
 }
 
 // DELETE
-if ($delete_group) {
+if ($delete_group && !$insert_group) {
 	$name = get_db_value ('name', 'tproject_group', 'id', $id);
 	$sql = sprintf ('DELETE FROM tproject_group WHERE id = %d', $id);
 	process_sql ($sql);

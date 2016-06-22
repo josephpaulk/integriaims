@@ -30,11 +30,20 @@ if (give_acl($config["id_user"], 0, "PR") && ($show_projects != MENU_HIDDEN) && 
 }
 
 // Support submenus ACLs
-$incidents_acl    = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
-$escalate_acl     = give_acl($config["id_user"], 0, "SI") && $show_incidents != MENU_HIDDEN;
-$kb_acl           = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
-$download_acl     = give_acl($config["id_user"], 0, "FRR");
-$file_sharing_acl = $download_acl;
+if (get_standalone_user($config["id_user"])) {
+	$incidents_acl    = $show_incidents != MENU_HIDDEN;
+	$escalate_acl     = false;
+	$kb_acl           = false;
+	$download_acl     = false;
+	$file_sharing_acl = false;
+} else {
+	$incidents_acl    = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
+	$escalate_acl     = give_acl($config["id_user"], 0, "SI") && $show_incidents != MENU_HIDDEN;
+	$kb_acl           = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
+	$download_acl     = give_acl($config["id_user"], 0, "FRR");
+	$file_sharing_acl = $download_acl;
+
+}
 
 $incidents_link        = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
 $escalate_tickets_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
@@ -140,7 +149,7 @@ if ((give_acl($config["id_user"], 0, "CR") || (give_acl($config["id_user"], 0, "
 	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>".__("Newsletters")."</a></lI>";
 }
 
-if ($show_people != MENU_HIDDEN) {
+if (($show_people != MENU_HIDDEN) && (get_standalone_user($config["id_user"]) == false)) {
 	// Users
 	if ($sec == "users" )
 		echo "<li id='current' class='people'>";
@@ -151,7 +160,7 @@ if ($show_people != MENU_HIDDEN) {
 }
 
 // Wiki
-if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
+if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN && (get_standalone_user($config["id_user"]) == false)) {
 	// Wiki
 	if ($sec == "wiki" )
 		echo "<li id='current' class='wiki'>";
@@ -163,7 +172,7 @@ if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
 }
 
 // Custom Screens
-if ((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) {
+if (((int)enterprise_include('custom_screens/CustomScreensManager.php', true) != ENTERPRISE_NOT_HOOK) && (get_standalone_user($config["id_user"]) == false)) {
 	$custom_screens = CustomScreensManager::getInstance()->getCustomScreensList(false);
 
 	if (!empty($custom_screens)) {

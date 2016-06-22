@@ -1,1 +1,1 @@
-[_sitename_] Adjunto nuevo en ticket #_incident_id_ _incident_title_
+[_sitename_] New attach in ticket #_incident_id_ _incident_title_

@@ -18,13 +18,18 @@ if (defined ('AJAX')) {
 	$id_group = get_parameter('id_group');
 	$id_user = get_parameter('id_user');
 
+	if (($id_group == null) || ($id_user == null)) {
+		echo "//";
+		echo "null";
+		return;
+	}
+	
 	$group = get_db_row_filter('tgrupo', array('id_grupo' => $id_group));
 	//soft limit is open incidents.
 	//hard limit is count all incidents.
 
 	if (($group['hard_limit'] == 0) && ($group['soft_limit'] == 0)) {
-		echo "correct"; //type
-				
+		echo "correct"; //type			
 		$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
 			WHERE id IN (
 			SELECT id_inventory_default

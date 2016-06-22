@@ -279,14 +279,6 @@ $(document).ready (function () {
 		selectedList: 1
 	});
 	
-	$("#roles").multiselect({
-		multiple: false,
-		header: false,
-		minWidth: 225,
-		noneSelectedText: "<?php echo __('Select an option') ?>",
-		selectedList: 1
-	});
-	
 	
 });
 </script>

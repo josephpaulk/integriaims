@@ -470,6 +470,11 @@ elseif ($op == "") {
 			echo "<h2>".__('Contract Management')."</h2>";
 			echo '<h4>' . __('New contract');
 			echo integria_help ("contract_detail", true);
+			echo "<div id='button-bar-title'>";
+				echo "<ul>";
+					echo "<li><a href='index.php?sec=customers&sec2=operation/contracts/contract_detail'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+				echo "</ul>";
+			echo "</div>";
 			echo "</h4>";
 			if (!$section_write_permission && !$section_manage_permission) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");

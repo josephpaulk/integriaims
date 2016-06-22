@@ -271,7 +271,7 @@ if ($operation == 'insert') {
 	}
 	else {
 		if (!$id_task) {
-			if ($duration > $config["hours_perday"]) {
+			if ($duration > 24 /*max hours in one day*/) {
 				$result_output = '<h3 class="error">'.__('Workunit must be less than 24 hours of tasks').'</h3>';
 			}
 		}
@@ -282,10 +282,12 @@ if ($operation == 'insert') {
 			foreach ($tasks as $task) {
 				$sql_hours = sprintf('SELECT duration FROM tworkunit WHERE id = %d AND timestamp = "%s"', $task[id_workunit], $timestamp);
 				$num_hours = process_sql($sql_hours);
-				$num_hours2 += $num_hours[0]['duration'];
 				
+				if ($num_hours) {
+					$num_hours2 += $num_hours[0]['duration'];
+				}
 			}
-			if (($duration + $num_hours2) > $config["hours_perday"]) {
+			if (($duration + $num_hours2) > 24 /*max hours in one day*/) {
 				$result_output = '<h3 class="error">'.__('Workunit must be less than 24 hours of tasks').'</h3>';
 			}
 			else {
