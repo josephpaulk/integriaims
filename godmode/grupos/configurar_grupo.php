@@ -170,7 +170,7 @@ $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
 if ($config['enteprise'] == 1){
-	$table->data[7][0] = print_textarea ("email_group", 5, 40, $email_group,'', true, __('Email group').print_help_tip (__("Place each email address in a new line. You can use regular expresions"), true));
+	$table->data[7][0] = print_textarea ("email_group", 5, 40, $email_group,'', true, __('Email group').print_help_tip (__("Set values separated by comma. You can use regular expresions"), true));
 }
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
