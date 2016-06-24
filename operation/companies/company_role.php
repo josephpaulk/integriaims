@@ -26,17 +26,22 @@ if (!$section_manage_permission) {
 	exit;
 }
 
-echo "<h2>".__('Customers')."</h2>";
-echo "<h4>".__('Company role management');
-echo integria_help ("company_detail", true);
-echo "</h4>";
-
 $id = (int) get_parameter ('id');
 
 $new_role = (bool) get_parameter ('new_role');
 $create_role = (bool) get_parameter ('create_role');
 $update_role = (bool) get_parameter ('update_role');
 $delete_role = (bool) get_parameter ('delete_role');
+
+echo "<h2>".__('Customers')."</h2>";
+echo "<h4>".__('Company role management');
+echo integria_help ("company_detail", true);
+if ($id || $new_role) {
+	echo "<div id='button-bar-title'><ul>";
+		echo "<li><a href='index.php?sec=customers&sec2=operation/companies/company_role'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+	echo "</ul></div>";
+}
+echo "</h4>";
 
 // CREATE
 if ($create_role) {
@@ -184,6 +189,8 @@ else {
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
+	} else {
+		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
 	}
 	
 	echo '</div>';

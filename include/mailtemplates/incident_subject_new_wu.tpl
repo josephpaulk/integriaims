@@ -1,1 +1,1 @@
-[_sitename_] Incident #_incident_id_ _incident_title_ has a new WORKUNIT.
+[_sitename_] New WORKUNIT in Ticket #_incident_id_ _incident_title_

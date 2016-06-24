@@ -54,7 +54,8 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	}
 	// if for active li project
 	if (($sec2 == "operation/projects/project_overview" && $id_project < 0) || ($sec2 == "operation/projects/user_project_timegraph") || 
-	($sec2 == "operation/projects/project_detail" && $id_project < 0) || ($sec2 == "operation/projects/role_user_global"))
+	($sec2 == "operation/projects/project_detail" && $id_project < 0) || ($sec2 == "operation/projects/role_user_global") || 
+	($sec2 == "operation/projects/project"))
 		echo "<li title='".__('Projects')."' data-status='closed' id='sideselproject' class='sideselcolor'>";
 	else
 		echo "<li title='".__('Projects')."' data-status='closed' id='proyectos'>";
@@ -403,7 +404,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 */
 
 // INCIDENTS
-if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN || $sec == "incidents" && give_acl ($config['id_user'], 0, "SI") && $show_incidents != MENU_HIDDEN) {
+if ($sec == "incidents" && (give_acl ($config['id_user'], 0, "IR") || get_standalone_user($config["id_user"])) && $show_incidents != MENU_HIDDEN || $sec == "incidents" && give_acl ($config['id_user'], 0, "SI") && $show_incidents != MENU_HIDDEN) {
 	$id_incident = get_parameter ('id');
 	
 	if (($sec2 == "operation/incidents/incident_dashboard") || ($sec2 == "operation/incidents/incident") || ($sec2 == "operation/incidents/incident_search") || 
@@ -416,29 +417,35 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		echo "<ul>";
 			echo "<li><h1>".__('Incidents')."</h1></li>";
 
-			if (give_acl ($config['id_user'], 0, "IR")) {
+			if (give_acl ($config['id_user'], 0, "IR") || (get_standalone_user($config["id_user"]))) {
 				// Incident overview
-				if ($sec2 == "operation/incidents/incident_dashboard")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
-				$search_id_user = (bool) get_parameter ('search_id_user', false);
+				if (give_acl ($config['id_user'], 0, "IR") && (!get_standalone_user($config["id_user"]))) {
+					if ($sec2 == "operation/incidents/incident_dashboard")
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Tickets overview')."</a></li>";
+					$search_id_user = (bool) get_parameter ('search_id_user', false);
+				}
 				//~ My Tickets
-				if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
+				if (!get_standalone_user($config["id_user"])) {
+					if ($sec2 == "operation/incidents/incident_search" && $search_id_user)
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&id_myticket=1&search_id_user=".$config['id_user']."'>".__('My tickets')."</a></li>";
+				}
 				
 				//~ Search Tickets
-				if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
+				if (give_acl ($config['id_user'], 0, "IR")) {
+					if ($sec2 == "operation/incidents/incident_search"  && !$search_id_user)
+						echo "<li id='sidesel'>";
+					else
+						echo "<li>";
+					echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('All tickets')."</a></li>";
+				}
 			}
-			if (give_acl ($config['id_user'], 0, "IW") || give_acl ($config['id_user'], 0, "SI")) {
+			if (give_acl ($config['id_user'], 0, "IW") || give_acl ($config['id_user'], 0, "SI") || (get_standalone_user($config["id_user"]))) {
 				// Incident creation
 				if ($sec2 == "operation/incidents/incident_detail")
 					echo "<li id='sidesel'>";
@@ -447,7 +454,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create ticket')."</a></li>";
 			}
 			
-			if (give_acl ($config['id_user'], 0, "IR")) {
+			if (give_acl ($config['id_user'], 0, "IR") && (!get_standalone_user($config["id_user"]))) {
 				// Incident reports
 				if ($sec2 == "operation/incidents/incident_reports")
 					echo "<li id='sidesel'>";
@@ -455,7 +462,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 					echo "<li>";
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_reports' id='link_incident_report'>".__('Reports')."</a></li>";
 			}
-			if (give_acl ($config['id_user'], 0, "IR")) {
+			if (give_acl ($config['id_user'], 0, "IR") && (!get_standalone_user($config["id_user"]))) {
 				if ($sec2 == "operation/incidents/incident_dashboard_detail")
 					echo "<li id='sidesel'>";
 				else
@@ -1192,35 +1199,48 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 					echo "<li><h1>".__('People management')."</h1></li>";
 			
 					// Usermanager
-					if ($sec2 == "godmode/usuarios/lista_usuarios") 
-						echo "<li id='sidesel'>";
-					else
-						echo "<li>";
-					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
+					if ($sec2 == "godmode/usuarios/lista_usuarios" || $sec2 == "godmode/usuarios/configurar_usuarios"){
+						if ($sec2 == "godmode/usuarios/lista_usuarios") {
+							echo "<li id='sidesel'>";
+						} else {
+							echo "<li>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";	
+						if ($sec2 == "godmode/usuarios/configurar_usuarios") {
+							echo "<li id='sidesel' style='margin-left: 15px;'>";
+						}
+						else {
+							echo "<li style='margin-left: 15px;'>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a></li>";
 					
-					if ($sec2 == "godmode/usuarios/configurar_usuarios") {
-						echo "<li id='sidesel' style='margin-left: 15px;'>";
+					} else {
+						echo "<li>";
+						echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
 					}
-					else {
-						echo "<li style='margin-left: 15px;'>";
-					}
-					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
-					echo "</li>";
 					
 					// Group manager
-					if ($sec2 == "godmode/grupos/lista_grupos")
-						echo "<li id='sidesel'>";
-					else
+					if ($sec2 == "godmode/grupos/lista_grupos" || $sec2 == "godmode/grupos/configurar_grupo"){
+						if ($sec2 == "godmode/grupos/lista_grupos"){ 
+							echo "<li id='sidesel'>";
+						} else {
+							echo "<li>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+						
+						if ($sec2 == "godmode/grupos/configurar_grupo") {
+							echo "<li id='sidesel' style='margin-left: 15px;'>";
+						}
+						else {
+							echo "<li style='margin-left: 15px;'>";
+						}
+						echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
+
+					} else {
 						echo "<li>";
-					echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+						echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+					}
 					
-					if ($sec2 == "godmode/grupos/configurar_grupo") {
-						echo "<li id='sidesel' style='margin-left: 15px;'>";
-					}
-					else {
-						echo "<li style='margin-left: 15px;'>";
-					}
-					echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
 					
 					enterprise_include ("operation/sidemenu_user_mgmt.php");
 					

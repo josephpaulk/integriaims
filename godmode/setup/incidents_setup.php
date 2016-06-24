@@ -84,6 +84,7 @@ if ($update) {
 	$config["change_creator_owner"] = (int) get_parameter ("change_creator_owner", 0);
 	$config["check_closed_incidents"] = (int) get_parameter ("check_closed_incidents", 0);
 	$config["days_check_closed_incidents"] = (int) get_parameter ("days_check_closed_incidents", 15);
+	$config["external_modify_tickets"] = (int) get_parameter ("external_modify_tickets", 0);
 	
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
@@ -105,7 +106,8 @@ if ($update) {
 	update_config_token ("show_creator_blank", $config["show_creator_blank"]);
 	update_config_token ("check_closed_incidents", $config["check_closed_incidents"]);
 	update_config_token ("days_check_closed_incidents", $config["days_check_closed_incidents"]);
-	
+	update_config_token ("external_modify_tickets", $config["external_modify_tickets"]);
+		
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
 			WHERE id = %d',
@@ -274,6 +276,8 @@ echo "<tr>";
 echo "<td style=''>".print_checkbox ("show_creator_blank", 1, $config["show_creator_blank"], true, __('Ignore user creator by default'))."</td>";
 
 echo "<td style=''>".print_checkbox ("change_creator_owner", 1, $config["change_creator_owner"], true, __('Allow to change user creator and user owner'))."</td>";
+
+echo "<td style=''>".print_checkbox ("external_modify_tickets", 1, $config["external_modify_tickets"], true, __('Allow to external users to modify their tickets'))."</td>";
 echo "</tr>";
 
 if ($is_enterprise) {

@@ -195,7 +195,7 @@ if ($id != 0) {
 		echo '<li class="ui-tabs-selected">';
 	else   
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/icono_files.png"/></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/disk.png"/></a></li>';
 
 	if ($op == "inventory")
 		echo '<li class="ui-tabs-selected">';
@@ -338,7 +338,9 @@ if ($id == 0 && !$new_contact) {
 		}
 		
 		print_table ($table);
-	}	
+	} else {
+		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
+	}
 	echo '</div>';
 }
 ?>

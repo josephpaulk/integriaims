@@ -134,7 +134,7 @@ if ($create_project) {
 if ($id_project)
 	echo '<form method="post" id="form-new_project">';
 else
-	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project_overview&action=insert">';
+	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project_overview">';
 
 // Main project table
 if ($create_mode == 0){

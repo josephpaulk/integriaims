@@ -273,7 +273,7 @@ else {
 	// PROYECT PEOPLE MANAGER editor
 	// ===============================
 	//echo "<h3>".__('Project role assignment')."</h3>";
-	echo "<form id='' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
+	echo "<form id='form-people_manager' method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 	echo "<table width=100% class='search-table'>";
 
 	echo "<tr><td>";
@@ -406,7 +406,8 @@ echo "</div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
-
+<script src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" >
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
@@ -418,6 +419,8 @@ $(document).ready (function () {
 	bindAutocomplete ("#text-user_role", idUser, idProject);
 		
 });
+trim_element_on_submit('input[name="user"]');
+validate_form("#form-people_manager");
 // #text-user
 validate_user ("#form-people_manager", "#text-user", "<?php echo __('Invalid user')?>");
 </script>

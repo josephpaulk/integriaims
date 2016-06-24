@@ -219,11 +219,11 @@ $html .= 	"<ul></ul>";
 $html .= "</div>";
 //$table->data[3][0] = print_container('attachment_upload_container', __('Attachments'), $html, 'closed', true, false);
 
-$table->data[4][0] = print_textarea ("last_mail", 10, 1, $last_email, 'style="height:350px;"', true, __('Last E-mail'));
+$table->data[4][0] = print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', true);
+$table->data[4][0] .= print_input_hidden ('id', $id, true);
+$table->data[4][0] .= print_input_hidden ('send', 1, true);
 
-$table->data[5][0] = print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', true);
-$table->data[5][0] .= print_input_hidden ('id', $id, true);
-$table->data[5][0] .= print_input_hidden ('send', 1, true);
+$table->data[5][0] = print_textarea ("last_mail", 10, 1, $last_email, 'style="height:350px;"', true, __('Last E-mail'));
 
 echo "<div class='divresult'>";
 echo '<form method="post" id="lead_mail_go">';
@@ -240,6 +240,28 @@ echo "</div>";
 <script type="text/javascript" src="include/js/jquery.fileupload.js"></script>
 <script type="text/javascript" src="include/js/jquery.iframe-transport.js"></script>
 <script type="text/javascript" src="include/js/jquery.knob.js"></script>
+
+
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+tinymce.init({
+  selector: 'textarea',
+force_br_newlines : true,
+    force_p_newlines : false,
+    forced_root_block : false,
+  plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table contextmenu paste code'
+  ],
+  menubar: false,
+  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  content_css: 'include/js/tinymce/integria.css',
+
+});
+
+</script>
 
 <script type="text/javascript" >
 

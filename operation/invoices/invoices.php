@@ -446,6 +446,11 @@ echo "<h2>" . __('Invoices');
 if ($id_invoice == "-1") {
 	echo "<h4>" . __('Add new invoice');
 	echo integria_help ("invoice_detail", true);
+	echo "<div id='button-bar-title'>";
+		echo "<ul>";
+			echo "<li><a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+		echo "</ul>";
+	echo "</div>";
 }
 else {
 	$is_update = true;

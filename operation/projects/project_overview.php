@@ -212,6 +212,7 @@ if ($search_id_project_group > -1)
 else
 	$apertura = 'closed';
 echo "<div class='divresult'>";
+$total_projects = 0;
 foreach($project_groups as $group) {
 	$info_general = "";
 	// Get projects info
@@ -237,6 +238,7 @@ foreach($project_groups as $group) {
 	$projects = $aux_projects;
 	
 	$nprojects = count($projects);
+	$total_projects += $nprojects;
 	if ($nprojects > 0 ) {
 		$info_general .= "<tr>";
 		//$info_general .= "<td class='no_border size_min'></td>";
@@ -301,6 +303,8 @@ foreach($project_groups as $group) {
 					$info_general .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
 						<img src="images/unarchive.png" /></a></td>';
 				}
+			} else {
+				$info_general .= '<td><img title=' . __('Forbidden') . ' src="images/lock_big.png" /></td>';
 			}
 			//$info_general .= "<td class='no_border'></td>";
 			$info_general .= "</tr>";
@@ -319,6 +323,9 @@ foreach($project_groups as $group) {
 		$title = "<img src='images/project_groups_small/" . $group["icon"] . "' style= 'float: left;'><a href='index.php?sec=projects&sec2=operation/projects/project_overview&search_id_project_group=".$group["id"]."'>".$group["name"]."</a>&nbsp; | &nbsp;".__('Nº Projects').": ".$nprojects;
 		print_container('info_projects_'.$group["id"], $title, $info_general, $apertura, false, '10px', '', '', 6, 'no_border_bottom');
 	}
+}
+if ($total_projects == 0) {
+	ui_print_error_message(__('There are not projects to show.'));
 }
 echo "</div>";
 ?>

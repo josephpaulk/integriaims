@@ -135,7 +135,13 @@ if ($update_field) { //update field to incident type
 }
 
 echo "<h2>".__("Company")."</h2>";
-echo "<h4>".__("Custom fields")."</h4>";
+echo "<h4>".__("Custom fields");
+	if ($id_field) {
+		echo "<div id='button-bar-title'><ul>";
+			echo "<li><a href='index.php?sec=customers&sec2=operation/companies/company_custom_fields'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+		echo "</ul></div>";
+	}
+echo "</h4>";
 		
 $company_fields = get_db_all_rows_sql ("SELECT * FROM tcompany_field");
 
@@ -190,8 +196,6 @@ if (!$id_field) {
 	$button .= print_input_hidden('add_field', 0, true);
 	$button .= print_input_hidden('id_field', $id_field, true);
 	$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
-	$button .= '<a href="index.php?sec=customers&sec2=operation/companies/company_custom_fields" alt="'.__('Return').'">
-		<img src= "images/go_begin.png" alt="'.__('Return').'"/></a>';
 }
 
 $table->data['button'][0] = $button;

@@ -717,7 +717,7 @@ if ($id || $new) {
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/files_tab.png"/></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files" title="'.__("Files").'"><img src="images/disk.png"/></a></li>';
 		
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'" title="'.__("Company").'"><img src="images/groups_small/house.png"/></a></li>';
@@ -802,6 +802,9 @@ if ($id || $new) {
 			echo "<h2>".__('Leads management')."</h2>";
 			echo "<h4>".__('Create lead');
 			echo integria_help ("lead", true);
+			echo "<div id='button-bar-title'><ul>";
+				echo "<li><a href='index.php?sec=customers&sec2=operation/leads/lead'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+			echo "</ul></div>";
 			echo "</h4>";
 		}
 
@@ -1209,23 +1212,22 @@ else {
 	// Delete new lines from the string
 	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
 	
-	$form .= "<div class='divresult'>";
-	$form .= print_table ($table,true);
+	$form .= "<div class='divresult_left'>";
+		$form .= print_table ($table,true);
 	$form .= '</div>';
 	$table->data = array ();
 	
-	$form .= "<div class='divform'>";
-		$form .= "<div class='button-form' style='width:100%;'>";
-			$form .= print_button(__('Export to CSV'), '', false, 
+	$form .= "<div class='divform_right'>";
+		$form .= "<div class='button-form'><ul>";
+			$form .= '<li>' . print_button(__('Export to CSV'), '', false, 
 				'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . 
-					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv" style="float:right;"', true);
-			$form .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"  style="float:right;"', true);
-		$form .= '</div>';
+					str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true) . '</li>';
+			$form .='<li>' . print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true). '</li>';
+		$form .= '</ul></div>';
 	$form .= '</div>';
-	
 	$form .= '</form>';
 	
-	print_container_div("lead_form",__("Leads form search"),$form, 'closed', false, false);
+	print_container_div("lead_form",__("Leads form search"),$form, 'open', false, false);
 		
 	$leads = crm_get_all_leads ($where_clause);
 

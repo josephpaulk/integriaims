@@ -82,7 +82,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_name_category) {
+}
+elseif ($search_name_category) {
 	require_once ('include/functions_db.php');
 	
 	$category_name = get_parameter ('category_name');
@@ -107,7 +108,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 
-} elseif ($search_existing_task) {
+}
+elseif ($search_existing_task) {
 	require_once ('include/functions_db.php');
 	
 	$project_id = (int) get_parameter ('project_id');
@@ -130,7 +132,8 @@ if ($search_existing_project) {
 			}
 		}
 		
-	} elseif ($operation_type == "view") {
+	}
+	elseif ($operation_type == "view") {
 		
 		$task_name = get_parameter ('task_name');
 		$old_task_id = get_parameter ('task_id');
@@ -158,7 +161,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_incident) {
+}
+elseif ($search_existing_incident) {
 	require_once ('include/functions_db.php');
 	$incident_name = get_parameter ('incident_name');
 	$incident_id = get_parameter ('incident_id', 0);
@@ -181,7 +185,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 
-} elseif ($search_input_number){
+}
+elseif ($search_input_number){
 	$input_number = get_parameter ('input_number');
 		if(is_numeric($input_number)) {
 			echo json_encode(true);
@@ -192,7 +197,8 @@ if ($search_existing_project) {
 		}
 
 
-} elseif ($search_existing_incident_type) {
+}
+elseif ($search_existing_incident_type) {
 	require_once ('include/functions_db.php');
 	$incident_type_name = get_parameter ('type_name');
 	$incident_type_id = get_parameter ('type_id', 0);
@@ -215,7 +221,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_project_group) {
+}
+elseif ($search_existing_project_group) {
 	require_once ('include/functions_db.php');
 	$group_name = get_parameter ('group_name');
 	$group_id = get_parameter ('group_id', 0);
@@ -238,7 +245,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_sla) {
+}
+elseif ($search_existing_sla) {
 	require_once ('include/functions_db.php');
 	$sla_name = get_parameter ('sla_name');
 	$sla_id = get_parameter ('sla_id', 0);
@@ -261,7 +269,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_object) {
+}
+elseif ($search_existing_object) {
 	require_once ('include/functions_db.php');
 	$object_name = get_parameter ('object_name');
 	$object_id = get_parameter ('object_id', 0);
@@ -284,7 +293,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_object_type) {
+}
+elseif ($search_existing_object_type) {
 	require_once ('include/functions_db.php');
 	$object_type_name = get_parameter ('object_type_name');
 	$object_type_id = get_parameter ('object_type_id', 0);
@@ -307,7 +317,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_object_type_field) {
+}
+elseif ($search_existing_object_type_field) {
 	require_once ('include/functions_db.php');
 	$object_type_field_name = get_parameter ('object_type_field_name');
 	$object_type_id = get_parameter ('object_type_id');
@@ -332,7 +343,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_object_type_field_data) {
+}
+elseif ($search_existing_object_type_field_data) {
 	require_once ('include/functions_db.php');
 	require_once ('include/functions_inventories.php');
 	$object_type_field_data = get_parameter ('object_type_field_data');
@@ -372,7 +384,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_manufacturer) {
+}
+elseif ($search_existing_manufacturer) {
 	require_once ('include/functions_db.php');
 	$manufacturer_name = get_parameter ('manufacturer_name');
 	$manufacturer_id = get_parameter ('manufacturer_id', 0);
@@ -395,7 +408,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_company) {
+}
+elseif ($search_existing_company) {
 	require_once ('include/functions_db.php');
 	$company_name = get_parameter ('company_name');
 	$company_id = get_parameter ('company_id', 0);
@@ -418,7 +432,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_fiscal_id) {
+}
+elseif ($search_existing_fiscal_id) {
 	require_once ('include/functions_db.php');
 	$fiscal_id = get_parameter ('fiscal_id');
 	$company_id = get_parameter ('company_id', 0);
@@ -441,7 +456,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_company_role) {
+}
+elseif ($search_existing_company_role) {
 	require_once ('include/functions_db.php');
 	$company_role_name = get_parameter ('company_role_name');
 	$company_role_id = get_parameter ('company_role_id', 0);
@@ -464,7 +480,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_invoice) {
+}
+elseif ($search_existing_invoice) {
 	require_once ('include/functions_db.php');
 	$bill_id = (string) get_parameter ('bill_id');
 	$invoice_id = get_parameter ('invoice_id', 0);
@@ -494,7 +511,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_contract) {
+}
+elseif ($search_existing_contract) {
 	require_once ('include/functions_db.php');
 	$contract_name = get_parameter ('contract_name');
 	$contract_id = get_parameter ('contract_id', 0);
@@ -518,7 +536,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_contract_number) {
+}
+elseif ($search_existing_contract_number) {
 	require_once ('include/functions_db.php');
 	$contract_number = get_parameter ('contract_number');
 	$contract_id = get_parameter ('contract_id', 0);
@@ -543,7 +562,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_contact) {
+}
+elseif ($search_existing_contact) {
 	require_once ('include/functions_db.php');
 	$contact_name = get_parameter ('contact_name');
 	$contact_id = get_parameter ('contact_id', 0);
@@ -566,7 +586,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_contact_email) {
+}
+elseif ($search_existing_contact_email) {
 	require_once ('include/functions_db.php');
 	$contact_email = get_parameter ('contact_email');
 	$contact_id = get_parameter ('contact_id', 0);
@@ -589,7 +610,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_lead) {
+}
+elseif ($search_existing_lead) {
 	require_once ('include/functions_db.php');
 	$lead_name = get_parameter ('lead_name');
 	$lead_id = get_parameter ('lead_id', 0);
@@ -614,7 +636,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_lead_email) {
+}
+elseif ($search_existing_lead_email) {
 	require_once ('include/functions_db.php');
 	$lead_email = get_parameter ('lead_email');
 	$lead_id = get_parameter ('lead_id', 0);
@@ -639,7 +662,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_crm_template) {
+}
+elseif ($search_existing_crm_template) {
 	require_once ('include/functions_db.php');
 	$crm_template_name = get_parameter ('crm_template_name');
 	$crm_template_id = get_parameter ('crm_template_id', 0);
@@ -664,7 +688,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_kb_item) {
+}
+elseif ($search_existing_kb_item) {
 	require_once ('include/functions_db.php');
 	$kb_item_name = get_parameter ('kb_item_name');
 	$kb_item_id = get_parameter ('kb_item_id', 0);
@@ -687,7 +712,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_kb_category) {
+}
+elseif ($search_existing_kb_category) {
 	require_once ('include/functions_db.php');
 	$kb_category_name = get_parameter ('kb_category_name');
 	$kb_category_id = get_parameter ('kb_category_id', 0);
@@ -710,7 +736,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_product_type) {
+}
+elseif ($search_existing_product_type) {
 	require_once ('include/functions_db.php');
 	$product_type_name = get_parameter ('product_type_name');
 	$product_type_id = get_parameter ('product_type_id', 0);
@@ -733,7 +760,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_download) {
+}
+elseif ($search_existing_download) {
 	require_once ('include/functions_db.php');
 	$download_name = get_parameter ('download_name');
 	$download_id = get_parameter ('download_id', 0);
@@ -756,7 +784,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_file_category) {
+}
+elseif ($search_existing_file_category) {
 	require_once ('include/functions_db.php');
 	$file_category_name = get_parameter ('file_category_name');
 	$file_category_id = get_parameter ('file_category_id', 0);
@@ -779,7 +808,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_file_type) {
+}
+elseif ($search_existing_file_type) {
 	require_once ('include/functions_db.php');
 	$file_type_name = get_parameter ('file_type_name');
 	$file_type_id = get_parameter ('file_type_id', 0);
@@ -802,7 +832,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_user_id) {
+}
+elseif ($search_existing_user_id) {
 	require_once ('include/functions_db.php');
 	$user_id = get_parameter ('user_id');
 	
@@ -817,7 +848,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_non_existing_user_id) {
+}
+elseif ($search_non_existing_user_id) {
 	require_once ('include/functions_db.php');
 	$user_id = get_parameter ('user_id', '');
 	
@@ -837,7 +869,8 @@ if ($search_existing_project) {
 	echo json_encode(false);
 	return;
 	
-} elseif ($search_existing_user_name) {
+}
+elseif ($search_existing_user_name) {
 	require_once ('include/functions_db.php');
 	$user_name = get_parameter ('user_name');
 	$user_id = get_parameter ('user_id', 0);
@@ -864,7 +897,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_user_num) {
+}
+elseif ($search_existing_user_num) {
 	require_once ('include/functions_db.php');
 	$user_num = get_parameter ('user_num');
 	$user_id = get_parameter ('user_id', 0);
@@ -887,7 +921,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_user_email) {
+}
+elseif ($search_existing_user_email) {
 	require_once ('include/functions_db.php');
 	$user_email = get_parameter ('user_email');
 	$user_id = get_parameter ('user_id', 0);
@@ -910,7 +945,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_role) {
+}
+elseif ($search_existing_role) {
 	require_once ('include/functions_db.php');
 	$role_name = get_parameter ('role_name');
 	$role_id = get_parameter ('role_id', 0);
@@ -933,7 +969,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_group) {
+}
+elseif ($search_existing_group) {
 	require_once ('include/functions_db.php');
 	$group_name = get_parameter ('group_name');
 	$group_id = get_parameter ('group_id', 0);
@@ -956,7 +993,8 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
-} elseif ($search_existing_inventory) {
+}
+elseif ($search_existing_inventory) {
 	require_once ('include/functions_db.php');
 	$name = (string) get_parameter ('name');
 	$inventory_id = get_parameter ('inventory_id', 0);

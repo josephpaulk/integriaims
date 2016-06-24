@@ -66,7 +66,7 @@ if ($create_group) {
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
 	$id_inventory = (int) get_parameter("id_inventory", 0);
 	$banner = (string) get_parameter ('banner');
-	$forced_email = (bool) get_parameter ('forced_email');
+	$forced_email = (int) get_parameter ('forced_email', 0);
 	$id_user_default = (string) get_parameter ('id_user');
 	$id_sla = (int) get_parameter ("id_sla");
 	$autocreate_user = (int) get_parameter("autocreate_user", 0);

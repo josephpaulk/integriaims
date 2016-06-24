@@ -1,1 +1,1 @@
-[_sitename_] Incident #_incident_id_ _incident_title_ has a new file attached.
+[_sitename_] New attach in ticket #_incident_id_ _incident_title_

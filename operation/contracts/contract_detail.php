@@ -470,6 +470,11 @@ elseif ($op == "") {
 			echo "<h2>".__('Contract Management')."</h2>";
 			echo '<h4>' . __('New contract');
 			echo integria_help ("contract_detail", true);
+			echo "<div id='button-bar-title'>";
+				echo "<ul>";
+					echo "<li><a href='index.php?sec=customers&sec2=operation/contracts/contract_detail'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back")))."</a></li>";
+				echo "</ul>";
+			echo "</div>";
 			echo "</h4>";
 			if (!$section_write_permission && !$section_manage_permission) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
@@ -745,11 +750,11 @@ elseif ($op == "") {
 		echo "</h4>";
 		
 		
-		$form = '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
+		$form = '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post" id="contracts_stats_form">';
 		
 		$form .= '<div class="form_result">';
 		
-		$form .= "<div class='divresult'>";
+		$form .= "<div class='divresult_left'>";
 		$form .= "<table width=100% class='search-table-button'>";
 		$form .= "<tr>";
 		
@@ -798,7 +803,7 @@ elseif ($op == "") {
 		$form .= "</table>";
 		$form .= "</div>";
 		
-		$form .= "<div class='divform'>";
+		$form .= "<div class='divform_right'>";
 			$form .= "<div class='button-form' style='width:100%;'>";
 				$form .= print_submit_button (__('Search'), 
 					"search_btn", false, 'class="sub search"', true);
@@ -878,6 +883,8 @@ elseif ($op == "") {
 				array_push ($table->data, $data);
 			}	
 			print_table ($table);
+		} else {
+			echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
 		}
 		
 		if ($section_write_permission || $section_manage_permission) {

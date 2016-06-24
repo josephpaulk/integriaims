@@ -189,9 +189,9 @@ $table->data[17][0] = "<h4>".__("Mail general texts")."</h4>";
 
 $table->colspan[19][0] = 3;
 $table->colspan[20][0] = 3;
-$table->data[19][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+$table->data[19][0] = print_textarea ("header_email", 9, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
-$table->data[20][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+$table->data[20][0] = print_textarea ("footer_email", 15, 40, $config["FOOTER_EMAIL"],
 	'', true, __('Email footer'));
 
 $table->data[21][1] = "<h4>".__("Mail queue control");
@@ -248,8 +248,24 @@ print_table ($table);
 echo '</form>';
 ?>
 
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
 <script type="text/javascript">
-$(document).ready (function () {
-	$("textarea").TextAreaResizer ();
+tinymce.init({
+    selector: 'textarea',
+    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+    force_br_newlines : true,
+    force_p_newlines : false,
+    forced_root_block : false,
+    plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table contextmenu paste code'
+  ],
+  menubar: false,
+  toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  content_css: 'include/js/tinymce/integria.css',
+
 });
+
 </script>

@@ -1,6 +1,6 @@
 -- Integria - http://integria.sourceforge.net
 -- ==================================================
--- Copyright (c) 2007-2011 Artica Soluciones Tecnologicas
+-- Copyright (c) 2007-2016 Artica Soluciones Tecnologicas
 
 -- This program is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU General Public License
@@ -18,10 +18,10 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('db_scheme_build','141015'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
-('sitename', 'Integria IMS - the ITIL Management System'),
+('sitename', 'Integria IMS'),
 ('hours_perday','8'),
-('FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integriaims.com).\n\nThanks for your time and have a nice day\n\n'),
-('HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),
+('FOOTER_EMAIL','&lt;br&#x20;/&gt;&#x20;--&#x20;&lt;br&#x20;/&gt;&#x20;&lt;br&#x20;/&gt;&amp;nbsp;&#x20;&amp;nbsp;&#x20;&amp;nbsp;Thanks&#x20;for&#x20;your&#x20;time&lt;br&#x20;/&gt;&#x20;&amp;nbsp;&#x20;&amp;nbsp;&lt;br&#x20;/&gt;&#x20;&lt;img&#x20;src=&quot;http://integriaims.com/wp-content/uploads/2016/04/logo_integria-1.png&quot;&#x20;alt=&quot;&quot;&#x20;width=&quot;163&quot;&#x20;height=&quot;50&quot;&#x20;/&gt;&lt;br&#x20;/&gt;&amp;nbsp;&#x20;&amp;nbsp;&amp;nbsp;&lt;strong&gt;Integria&#x20;IMS&lt;/strong&gt;&lt;br&#x20;/&gt;&amp;nbsp;&#x20;&amp;nbsp;&#x20;&lt;a&#x20;href=&quot;http://192.168.50.2/integria/&quot;&gt;http://i&lt;/a&gt;ntegriains.com'),
+('HEADER_EMAIL','&lt;br&#x20;/&gt;Hello,&#x20;this&#x20;is&#x20;an&#x20;automatic&#x20;message&#x20;from&#x20;Integria&#x20;IMS,&#x20;please&#x20;do&#x20;not&#x20;reply&#x20;this&#x20;mail.&lt;br&#x20;/&gt;&amp;nbsp;&lt;br&#x20;/&gt;&amp;nbsp;'),
 ('notification_period','24'),
 ('limit_size','250'),
 ('api_password',''),
@@ -49,7 +49,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
 ('current_package', 49),
-('url_updatemanager', 'https://artica.es/integriaupdate4/server.php'),
+('url_updatemanager', 'https://firefly.artica.es/integriaupdate5/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'paisaje.jpg'),
 ('inventory_default_owner', 'admin'),
@@ -74,7 +74,7 @@ INSERT INTO `tlanguage` VALUES ('de','Deutch');
 INSERT INTO `tlanguage` VALUES ('pl','Polski');
 
 
-INSERT INTO `tlink` VALUES  (1,'Artica','http://artica.es'), (2,'Integria IMS','http://integriaims.com/'), (3, 'Forum', 'http://forums.integriaims.com/'), (4, 'Support', 'https://artica.es/integria/');
+INSERT INTO `tlink` VALUES  (1,'Artica','http://artica.es'), (2,'Integria IMS','http://integriaims.com/'), (3, 'Forum', 'http://forums.integriaims.com/'), (4, 'Support', 'https://support.artica.es/');
 
 INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0, "");
 

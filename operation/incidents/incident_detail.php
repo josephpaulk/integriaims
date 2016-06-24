@@ -397,8 +397,7 @@ if (isset($incident)) {
 		include ("general/noaccess.php");
 		exit;
 	}
-}
-else if (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") ) {
+}elseif (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") && (!get_standalone_user($config["id_user"]))) {
 	// Doesn't have access to this page
 	
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
@@ -804,14 +803,6 @@ if ($action == "insert" && !$id) {
 				}
 			}
 			
-			// Email notify to all people involved in this incident
-			if ($email_copy != "") { 
-				mail_incident ($id, $usuario, "", 0, 1, 7);
-			}
-			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
-				mail_incident ($id, $usuario, "", 0, 1);
-			}
-			
 			// ATTACH A FILE IF IS PROVIDED
 			$upfiles = json_decode(safe_output($upfiles), true);
 			if (!empty($upfiles)) {
@@ -823,7 +814,7 @@ if ($action == "insert" && !$id) {
 						} else {
 							$file_description = __('No description available');
 						}
-						$file_result = attach_incident_file ($id, $file["location"], $file_description, $file["name"]);
+						$file_result = attach_incident_file ($id, $file["location"], $file_description, $file["name"], false);
 					}
 				}
 			}
@@ -831,6 +822,14 @@ if ($action == "insert" && !$id) {
 			// EXECUTE WORKFLOW RULES AT REALTIME
 			if ($is_enterprise) {
 				incidents_run_realtime_workflow_rules ($id);
+			}
+			
+			// Email notify to all people involved in this incident
+			if ($email_copy != "") { 
+				mail_incident ($id, $usuario, "", 0, 1, 7);
+			}
+			if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
+				mail_incident ($id, $usuario, "", 0, 1);
 			}
 			
 			// If the ticket creation is successful, redirect the page to the ticket dashboard detail of the new ticket
@@ -1075,7 +1074,7 @@ if ($config['required_ticket_type']) {
 	$select = 'select';
 }
 
-if(give_acl ($config['id_user'], $id_grupo, "IW")){
+if (give_acl ($config['id_user'], $id_grupo, "IW") || give_acl ($config['id_user'], $id_grupo, "SI") || (get_standalone_user($config["id_user"]))) {
 	$table->data[0][1] .= print_select($types, 'id_incident_type', $id_incident_type, '', $select, '', true, 0, true, false, $disabled_itype);
 } else if (give_acl ($config['id_user'], $id_grupo, "SI")){
 	$group_escalate_sql = 'select g.nombre from tusuario_perfil u, tgrupo g where g.id_grupo=u.id_grupo and u.id_usuario = "'.$config['id_user'].'"';
@@ -1101,6 +1100,7 @@ if($id_group_type != "" && $id_group_type != "0"){
 	else{
 		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
 	}
+	$id_group_type = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", $id_group_type);
 	$groups_selected = explode(', ', $id_group_type);
 	$groups = array_intersect($groups_all, $groups_selected);
 } else {
@@ -1565,7 +1565,9 @@ $(document).ready (function () {
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
 		id_user_ticket = $('#text-id_user_hidden').val();
-		incident_limit("#submit-accion", id_user_ticket, id_group);
+		if (id_group != null) {
+			incident_limit("#submit-accion", id_user_ticket, id_group);
+		}
 	}
 
 	//order groups for select
@@ -1592,7 +1594,9 @@ $(document).ready (function () {
 		id_incident = <?php echo $id?>;
 
 		if (id_incident == 0) {
-			incident_limit("#submit-accion", id_user_ticket, id_group);
+			if (id_group != null) {
+				incident_limit("#submit-accion", id_user_ticket, id_group);
+			}
 		}
 		
 		var group = $("#grupo_form").val();
@@ -2077,5 +2081,3 @@ var rules, messages;
 //~ add_validate_form_element_rules('#text-titulo', rules, messages);
 
 </script>
-
-<?php //endif; ?>

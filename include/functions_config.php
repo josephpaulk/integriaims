@@ -310,6 +310,9 @@ function load_config() {
 	if (!isset($config["max_direct_download"])) {
 		$config["max_direct_download"] = 100;
 	}
+	if (!isset($config["external_modify_tickets"])){
+		$config["external_modify_tickets"] = 1;
+	}
 }
 
 function config_prepare_session() {

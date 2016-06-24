@@ -99,6 +99,29 @@ print_table ($table);
 echo '</form>';
 ?>
 
+
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+tinymce.init({
+    selector: 'textarea',
+    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+    force_br_newlines : true,
+    force_p_newlines : false,
+    forced_root_block : false,
+    plugins: [
+    'advlist autolink lists link image charmap print preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table contextmenu paste code'
+  ],
+  menubar: false,
+  toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  content_css: 'include/js/tinymce/integria.css',
+
+});
+
+</script>
+
 <script type="text/javascript">
 $(document).ready (function () {
 	$("textarea").TextAreaResizer ();

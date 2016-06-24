@@ -53,7 +53,7 @@ enterprise_include($config["homedir"]."/include/functions_groups.php");
 
 function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false, $csv_mode = false) {
 	global $config;
-	
+
 	/* Set default values if none is set */
 	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
 	$filters['status'] = isset ($filters['status']) ? $filters['status'] : 0;
@@ -273,7 +273,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	foreach ($incidents as $incident) {
 		
 		//Check external users ACLs
-		$standalone_check = enterprise_hook("manage_standalone", array($incident));
+		$standalone_check = enterprise_hook("manage_standalone", array($incident, "read"));
 
 		if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 			continue;
@@ -364,7 +364,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
  *
  */
  
-function attach_incident_file ($id, $file_temp, $file_description, $file_name = "") {
+function attach_incident_file ($id, $file_temp, $file_description, $file_name = "", $send_email = true) {
 	global $config;
 	
 	$file_temp = safe_output ($file_temp); // Decoding HTML entities
@@ -391,15 +391,16 @@ function attach_incident_file ($id, $file_temp, $file_description, $file_name = 
 	// Email notify to all people involved in this incident
 	
 	// Email in list email-copy
-	$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id.';';
-	$email_copy = get_db_sql($email_copy_sql);
-	if ($email_copy != "") { 
-		mail_incident ($id, $config['id_user'], 0, 0, 2, 7);
-	}
-	if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)){
-		mail_incident ($id, $config['id_user'], 0, 0, 2);
-	}
-	
+	if ($send_email) {
+		$email_copy_sql = 'select email_copy from tincidencia where id_incidencia ='.$id.';';
+		$email_copy = get_db_sql($email_copy_sql);
+		if ($email_copy != "") { 
+			mail_incident ($id, $config['id_user'], 0, 0, 2, 7);
+		}
+		if (($config["email_on_incident_update"] != 2) && ($config["email_on_incident_update"] != 4)){
+			mail_incident ($id, $config['id_user'], 0, 0, 2);
+		}
+	}	
 	// Copy file to directory and change name
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 	
@@ -1401,7 +1402,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	include_once($config["homedir"].'/include/functions_db.mysql.php');
 
 	clean_cache_db();
-	
+
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$email_group = get_db_sql ("SELECT email_group FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
@@ -1410,17 +1411,15 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$email_from = get_db_sql ("SELECT email_from FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$type_ticket = get_db_sql ("SELECT name FROM tincident_type WHERE id = ".$row["id_incident_type"]);
 	$titulo =$row["titulo"];
-	$description = wordwrap(ascii_output($row["descripcion"]), 70, "<br />\n");
+	$description = $row["descripcion"];
 	$prioridad = get_priority_name($row["prioridad"]);
-	$nota = wordwrap(ascii_output($nota), 70, "<br />\n");
-
 	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);
 	$create_timestamp = $row["inicio"];
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
-    $email_copy = $row["email_copy"];
+	$email_copy = $row["email_copy"];
 
 	// Send email for owner and creator of this incident
 	$email_creator = get_user_email ($creator);
@@ -1481,7 +1480,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_status_"] = $estado;
 	$MACROS["_resolution_"] = $resolution;
 	$MACROS["_time_used_"] = $timeused;
-	$MACROS["_incident_main_text_"] = replace_return_by_breaks($description);
+	$MACROS["_incident_main_text_"] = $description;
 	
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
@@ -1501,9 +1500,11 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 			$company_wu = " (".reset($company_wu).")";
 		}
 		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
-		$MACROS["_wu_text_"] = replace_return_by_breaks($nota);
+		$MACROS["_wu_text_"] = $nota; // Do not pass to safe_output. $nota is already HTML Safe in this point
+
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
+
 		break;
 	case 0: // Incident update
 		
@@ -1561,7 +1562,6 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		
 		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
-		
 		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
 		if ($attached_files === false) {
 			$attached_files = array();
@@ -1667,7 +1667,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	// Create the TicketID for have a secure reference to incident hidden 
 	// in the message. Will be used for POP automatic processing to add workunits
 	// to the incident automatically.
-	if ($public != 7){
+	if ($public != 7) {
 		//owner
 		$msg_code = "TicketID#$id_inc";
 		$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
@@ -1683,7 +1683,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		}
 		
 		// Send emails to the people in the group added
-		if($forced_email != 0){
+		if($forced_email != 0) {
 			$email_default = get_user_email ($user_defect_group);
 			integria_sendmail ($email_default, $subject, $text, $attachments, $msg_code, $email_from, 0, "", "X-Integria: no_process", $images);
 			if($email_group){
@@ -1695,17 +1695,17 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		}
 	
 	}
-	if ($public == 7){
+	if ($public == 7) {
 		// Send a copy to each address in "email_copy"
 			if ($email_copy != ""){
 				$emails = explode (",",$email_copy);
 				foreach ($emails as $em){
-					integria_sendmail ($em, $subject, $text, false, "", $email_from, 0, "", "X-Integria: no_process", $images);
+					integria_sendmail ($em, $subject, $text, $attachments, "", $email_from, 0, "", "X-Integria: no_process", $images);
 				}
 			}
 	}
 	
-	if ($public == 1){
+	if ($public == 1) {
 		// Send email for all users with workunits for this incident
 		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario AND tusuario.disabled=0";
 		if ($result=mysql_query($sql1)) {
@@ -2673,7 +2673,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 				echo '<td>';
 
 				if (!$report_mode) {							
-					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text($incident['titulo'], 50).'</a></strong><br>';
+					echo '<strong><a href="'.$link.'">'.ui_print_truncate_text(safe_output($incident['titulo']), 50).'</a></strong><br>';
 				} else {
 					echo '<strong>'.$incident['titulo'].'</strong><br>';
 				}

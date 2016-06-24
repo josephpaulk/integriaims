@@ -105,14 +105,6 @@ if($create_incident) {
 		//Add traces and statistic information	
 		incidents_set_tracking ($id, 'create', $priority, $estado, $resolution, $id_user_responsible, $group_id);
 
-		// Email notify to all people involved in this incident
-		if ($email_copy != "") { 
-			mail_incident ($id, $id_user_responsible, "", 0, 1, 7);
-		}
-		if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
-			mail_incident ($id, $id_user_responsible, "", 0, 1);
-		}
-		
 		//insert data to incident type fields
 		if ($id_incident_type > 0) {
 			$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
@@ -149,13 +141,20 @@ if($create_incident) {
 
 		$file_temp = sys_get_temp_dir()."/$filename";
 		
-		$result = attach_incident_file ($id, $file_temp, $file_description);
+		$result = attach_incident_file ($id, $file_temp, $file_description, false);
 		
 		echo $result;
 		
 		$active_tab = 'files';
 	}
 	
+	// Email notify to all people involved in this incident
+	if ($email_copy != "") { 
+		mail_incident ($id, $id_user_responsible, "", 0, 1, 7);
+	}
+	if (($config["email_on_incident_update"] != 3) && ($config["email_on_incident_update"] != 4)) {
+		mail_incident ($id, $id_user_responsible, "", 0, 1);
+	}
 	
 }
 
