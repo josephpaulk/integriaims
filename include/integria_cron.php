@@ -17,11 +17,13 @@
 include ("config.php");
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", 1);
+require_once ($config["homedir"].'/include/functions.php');
 require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
 require_once ($config["homedir"].'/include/functions_workunits.php');
 require_once ($config["homedir"].'/include/functions_inventories.php');
 require_once ($config["homedir"].'/include/functions_html.php');
+require_once ($config["homedir"].'/include/functions_mail.php');
 
 // Activate errors. Should not be anyone, but if something happen, should be
 // shown on console.
@@ -40,7 +42,7 @@ $human_notification_period = give_human_time ($config["notification_period"]*360
 
 function delete_tmp_files(){
 
-	if (function_exists(sys_get_temp_dir))
+	if (function_exists('sys_get_temp_dir'))
 		$dir =  sys_get_temp_dir ();
 	else
 		$dir = "/tmp";
@@ -601,219 +603,63 @@ function check_sla_inactivity ($incident) {
 	}
 }
 
-// This will send pending mail from database queue, using its defined MTA, and swiftmail functions
-
 function run_mail_queue () {
-
 	global $config;
 	
-	include_once ($config["homedir"]."/include/functions.php");
-	
-	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
-
-	$utimestamp = date("U");
-	// $current_date = date ("Y/m/d H:i:s");
-
-	if (isset($config["batch_newsletter"])) {
-		$limit = " LIMIT ".$config['batch_newsletter'];
-	} else {
-		$limit = "";
+	// Get pending mails
+	$filter = array('status' => 0);
+	if (isset($config['batch_newsletter'])) {
+		$filter['limit'] = (int) $config['batch_newsletter'];
 	}
-	// get pending mails 
-	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail WHERE status = 0".$limit);
+	$mails = get_db_all_rows_filter('tpending_mail', $filter);
 	
-	if ($mails)
-	foreach ($mails as $email) {
-			
+	// No pending mails
+	if ($mails === false) return;
+	
+	// Init mailer
+	$mailer = null;
+	try {
 		// Use local mailer if host not provided - Attach not supported !!
-		//Headers must be comma separated
-		if (isset($email["extra_headers"])) {
-			$extra_headers = explode(",", $email["extra_headers"]);
+		if (empty($config['smtp_host'])) {
+			// Empty snmp conf. System sendmail transport
+			$transport = mail_get_transport();
+			$mailer = mail_get_mailer($transport);
 		}
 		else {
-			$extra_headers = array();
-		}		
-
-		//~ if ($config["smtp_host"] == "") {
-			
-			//~ $eol = PHP_EOL;
-			//~ $separator = md5(time());
-			
-			//~ // Use internal mail() function
-			//~ $headers   = array();
-			
-			//~ //$headers[] = "Content-Transfer-Encoding: 7bit";
-
-			//~ $headers = array_merge($headers, $extra_headers);
-
-			//~ if ($email["from"] == "")
-				//~ $from = $config["mail_from"];
-			//~ else
-				//~ $from = $email["from"]; 
-			
-			//~ $headers[] = "Message-ID: <" . uniqid() . '@integriaims>';
-			//~ $dest_email = trim(ascii_output($email['recipient']));
-			//~ $headers[] = "From: ". $from;
-			//~ $headers[] = "To: ". $dest_email;
-			//~ if ($email["cc"]) {
-				//~ $aux_cc = implode(",",$email["cc"]);
-				//~ $headers[] = "Cc: ".$aux_cc;
-			//~ }
-			
-			//~ $headers[] = "MIME-Version: 1.0";
-			//~ $headers[] = "Content-Type: multipart/alternative; boundary=\"" . $separator . "\"";
-			
-			//~ // message
-			//~ $message[] = "--" . $separator;
-			//~ $message[] = "Content-Type: text/html; charset=\"UTF-8\"";
-			//~ $message[] = "Content-Transfer-Encoding: 8bit";
-			//~ $message['html'] = '<html>'.$eol.'<body>' . $eol . safe_output($email['body']);
-			
-			//~ if ($email["image_list"] != "") {
-				//~ $images = explode ( ",", $email["image_list"]);
-				//~ $body_images = "";
-				//~ foreach ($images as $image) {
-					//~ $uniq  = uniqid("integriaims@");
-					//~ $type = pathinfo($image, PATHINFO_EXTENSION);
-					//~ $name_file = basename($image);
-					//~ $data = file_get_contents($image);
-					//~ $body_images .= $eol . '<img src="cid:' . $uniq . '" />';
-					
-					//~ $message[] = "--" . $separator;
-					//~ $message[] = "Content-Type: image/$type; name=" . $name_file;
-					//~ $message[] = "Content-Transfer-Encoding: base64";
-					//~ $message[] = "Content-Disposition: inline; filename=" . $name_file;
-					//~ $message[] = "Content-ID: <$uniq>";
-					//~ $message[] = chunk_split (base64_encode($data));
-					
-				//~ }
-				//~ $message[] = "--" . $separator . "--";
-			//~ }
-			
-			//~ $message['html'] .= $body_images . $eol . '</body>'.$eol.'</html>';
-			
-			//~ if ($email["attachment_list"] != "") {
-				//~ $attachments = explode ( ",", $email["attachment_list"]);
-				//~ foreach ($attachments as $attachment) {
-					//~ if (is_file($attachment)) {
-						//~ $type = pathinfo($attachment, PATHINFO_EXTENSION);
-						//~ $name_file = basename($attachment);
-						//~ $data = file_get_contents($attachment);
-						
-						//~ $headers[] = "--" . $separator;
-						//~ $headers[] = "Content-Type: image/$type; name=" . $name_file;
-						//~ $headers[] = "Content-Transfer-Encoding: base64";
-						//~ $headers[] = "Content-Disposition: attachment; filename=" . $name_file;
-						//~ $headers[] = chunk_split (base64_encode($data));
-					//~ }
-				//~ }
-			//~ }
-			
-			//~ $error = mail('', safe_output($email["subject"]), implode($eol, $message), implode($eol, $headers));
-			
-			//~ if (!$error) {
-				//~ process_sql ("UPDATE tpending_mail SET status =". $email['status'] . ", attempts =" . $email['retries'] . " WHERE id = ". $email["id"]);
-			//~ } else {
-				//~ // no errors found
-				//~ process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
-			//~ }
-		//~ }
-		//~ else {
-			// Use swift mailer library to connect to external SMTP
-			try {
-				
-				if ($config["smtp_host"] == "") {
-					$transport = Swift_MailTransport::newInstance('/usr/sbin/sendmail -t -bv');
-					$mailer = Swift_Mailer::newInstance($transport);
-				}
-				else {
-					// If SMTP port is not configured, abort mails directly!
-					if ($config["smtp_port"] == 0)
-						return;
-					
-					$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-					$transport->setUsername($config["smtp_user"]);
-					$transport->setPassword($config["smtp_pass"]);
-					$mailer = Swift_Mailer::newInstance($transport);
-				}
-				
-				$message = Swift_Message::newInstance($email["subject"]);
-				
-				if ($email["from"] == "") {
-					$message->setFrom($config["mail_from"]);
-				}
-				else {
-					$message->setFrom($email["from"]);
-				}
-				
-				if ($email["cc"]) {
-					$message->setCc($email["cc"]);
-				}
-
-				$to = trim(ascii_output($email['recipient']));
-				$toArray = array_map('trim', explode(",", $to));
-				if ($toArray) {
-					$to = $toArray;
-				}
-				
-				$message->setTo($to);
-
-				if ($email["image_list"] != "") {
-					$images = explode ( ",", $email["image_list"]);
-					$body_images = "";
-					foreach ($images as $image) {
-						$data = file_get_contents($image);
-						if ($data) {
-							$embed_image = $message->embed(Swift_Image::fromPath($image));
-							$body_images .= '<br><img src="' . $embed_image .'"/>';
-						}
-					}
-				}
-				
-				$message->setBody('<html><body>'.$email['body'].$body_images.'</body></html>', 'text/html');
-				
-				
-				if ($email["attachment_list"] != "") {
-					$attachments = explode ( ",", $email["attachment_list"]);
-					foreach ($attachments as $attachment) {
-						if (is_file($attachment)) {
-							$message->attach(Swift_Attachment::fromPath($attachment));
-						}
-					}
-				}
-				
-				$hola = $message->getBody();
-				
-				//~ $message->setContentType("text/html");
-
-				//~ $headers = $message->getHeaders();
-
-				//~ foreach ($extra_headers as $eh) {
-					//~ $aux_header = explode(":", $eh);
-					//~ $headers->addTextHeader($aux_header[0], $aux_header[1]);
-				//~ }
-		
-				//Check if the email was sent at least once
-				if ($mailer->send($message) >= 1)
-					process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
-				else
-					throw new Exception(__('The mail send failed'));
+			$mailer = mail_get_mailer();
+		}
+	}
+	catch (Exception $e) {
+		integria_logwrite(sprintf("Mail transport failure: %s", $e->getMessage()));
+		return;
+	}
+	
+	foreach ($mails as $email) {
+		try {
+			//Check if the email was sent at least once
+			if (mail_send($email, $mailer) > 0) {
+				process_sql_delete('tpending_mail', array('id' => (int)$email['id']));
 			}
-			// SMTP error management!
-			catch (Exception $e) {
-				$retries = $email["attempts"] + 1;
-				if ($retries > $config["smtp_queue_retries"]) {
-					$status = 1;
-					insert_event ('MAIL_FAILURE', 0, 0, $email["recipient"]. " - ". $e);
-				}
-				else  {
-					$status = 0;
-				}
-				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-				//integria_logwrite (sprintf("SMTP error sending to %s (%s)"), implode(',', $toArray), $e);
-				integria_logwrite (sprintf("SMTP error sending to %s (%s)", implode(',', $toArray), $e));
+			else {
+				throw new Exception(__('The mail send failed'));
 			}
-		//~ }
+		}
+		// Error management!
+		catch (Exception $e) {
+			$retries = $email['attempts'] + 1;
+			if ($retries > $config['smtp_queue_retries']) {
+				$status = 1;
+				insert_event('MAIL_FAILURE', 0, 0, $email['recipient'] . ' - ' . $e->getMessage());
+			}
+			else  {
+				$status = 0;
+			}
+			$values = array('status' => $status, 'attempts' => $retries);
+			$where = array('id' => (int)$email['id']);
+			process_sql_update('tpending_mail', $values, $where);
+			$to = trim(ascii_output($email['recipient']));
+			integria_logwrite(sprintf('SMTP error sending to %s (%s)', $to, $e->getMessage()));
+		}
 	}
 }
 
@@ -861,106 +707,126 @@ function cron_validate_newsletter_address() {
 }
 
 function run_newsletter_queue () {
-
 	global $config;
 
-	include_once ($config["homedir"] . "/include/functions.php");	
-	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
+	require_once($config['homedir'] . '/include/swiftmailer/swift_required.php');
 	
-	if (isset($config['news_smtp_host'])) { //If Newsletters STMP parameters are not empty
-		$total = $config["news_batch_newsletter"];
-	} else {
-		$total = $config["batch_newsletter"];
-	}
+	$total = isset($config['news_smtp_host']) // If Newsletters STMP parameters are not empty
+		? $config["news_batch_newsletter"]
+		: $config["batch_newsletter"];
 	
-	$utimestamp = date("U");
-	$current_date = date ("Y/m/d H:i:s");
-
 	// Select valid QUEUES for processing
+	$queues = get_db_all_rows_filter('tnewsletter_queue', array('status' => 1));
 	
-	$queues = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue WHERE status = 1");	
-	if ($queues) foreach ($queues as $queue){
+	if (!$queues) return;
 	
-		$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = ".$queue["id_newsletter_content"]);
-		$id_queue = $queue["id"];
+	// Init mailer
+	$mailer = null;
+	try {
+		// Empty snmp conf. System sendmail transport
+		$transport_conf = array();
+		if (!empty($config['news_smtp_host']) || !empty($config['smtp_host'])) {
+			// News conf
+			if (!empty($config['news_smtp_host'])) {
+				$transport_conf['host'] = $config['news_smtp_host'];
+				if (!empty($config['news_smtp_port'])) {
+					$transport_conf['port'] = $config['news_smtp_port'];
+				}
+				if (!empty($config['news_smtp_user'])) {
+					$transport_conf['user'] = $config['news_smtp_user'];
+				}
+				if (!empty($config['news_smtp_pass'])) {
+					$transport_conf['pass'] = $config['news_smtp_pass'];
+				}
+				if (!empty($config['news_smtp_proto'])) {
+					$transport_conf['proto'] = $config['news_smtp_proto'];
+				}
+			}
+			// General SMTP conf
+			else {
+				$transport_conf['host'] = $config['smtp_host'];
+				if (!empty($config['smtp_port'])) {
+					$transport_conf['port'] = $config['smtp_port'];
+				}
+				if (!empty($config['smtp_user'])) {
+					$transport_conf['user'] = $config['smtp_user'];
+				}
+				if (!empty($config['smtp_pass'])) {
+					$transport_conf['pass'] = $config['smtp_pass'];
+				}
+				if (!empty($config['smtp_proto'])) {
+					$transport_conf['proto'] = $config['smtp_proto'];
+				}
+			}
+		}
+		$transport = mail_get_transport($transport_conf);
+		$mailer = mail_get_mailer($transport);
+	}
+	catch (Exception $e) {
+		integria_logwrite(sprintf('Newsletter mail transport failure: %s', $e->getMessage()));
+		return;
+	}
+		
+	foreach ($queues as $queue) {
+		$id_queue = $queue['id'];
+		$id_content = (int) $queue['id_newsletter_content'];
 		
 		// Get issue and newsletter records
+		$issue = get_db_row('tnewsletter_content', 'id', $id_content);
+		$id_newsletter = (int) $issue['id_newsletter'];
 		
-		$issue = get_db_row ("tnewsletter_content", "id", $queue["id_newsletter_content"]);
+		if (!$issue) continue;
 
 		//Add void pixel to track campaings
-		$issue["html"] .= "<img src='".$config["public_url"]."/operation/newsletter/track_newsletter.php?id_content=".$queue["id_newsletter_content"]."'>";
+		$issue['html'] .= '<img src="'.$config['public_url'].'/operation/newsletter/track_newsletter.php?id_content='.$id_content.'">';
 
-		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
+		$newsletter = get_db_row('tnewsletter', 'id', $id_newsletter);
 		
 		// TODO
 		// max block size here is 500. NO MORE, fix this in the future with a real buffered system!
 		
-		$addresses = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue_data WHERE status = 0 AND id_queue = $id_queue LIMIT 500");
-
-		if (!$addresses) 
-			process_sql ("UPDATE tnewsletter_queue SET status=3 WHERE id = $id_queue");
-		else 
-		foreach ($addresses as $address){
-
-			if (!isset($config["news_smtp_host"])){ //If Newsletters STMP parameters are empty
-				
-				// Compose the mail for each valid address
-
-				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-				$transport->setUsername($config["smtp_user"]);
-				$transport->setPassword($config["smtp_pass"]);
+		$filter = array(
+			'status' => 0,
+			'id_queue' => $id_queue,
+			'limit' => 500
+		);
+		if ($total > 0) $filter['limit'] = $total;
+		$addresses = get_db_all_rows_filter('tnewsletter_queue_data', $filter);
+		
+		if ($addresses) {
+			foreach ($addresses as $address) {
+				$message = Swift_Message::newInstance(safe_output($issue['email_subject']));
+				if (!empty($issue['from_address'])) {
+					$message->setFrom($issue['from_address']);
+				}
+				else {
+					$message->setFrom($newsletter['from_address']);
+				}
+				$dest_email = trim(safe_output($address['email']));
 			
-			} else {
-				
-				// Compose the mail for each valid address
+				$message->setTo($dest_email);
 
-				$transport = Swift_SmtpTransport::newInstance($config["news_smtp_host"], $config["news_smtp_port"]);
-				$transport->setUsername($config["news_smtp_user"]);
-				$transport->setPassword($config["news_smtp_pass"]);
-			
-			}	
+				// TODO: replace names on macros in the body / HTML parts.
 
-			$mailer = Swift_Mailer::newInstance($transport);
-			$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
-			if (!empty($issue["from_address"])) {
-				$message->setFrom($issue["from_address"]);
-			} else {
-				$message->setFrom($newsletter["from_address"]);
+				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
+
+				$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
+
+				if ($mailer->send($message, $failures) > 0) {
+					process_sql_update('tnewsletter_queue_data', array('status' => 1), array('id_queue' => $id_queue, 'email' => $dest_email));
+				}
+				else {
+					// TODO: Do something like error count to disable invalid addresses
+					// after a number of invalid counts
+					integria_logwrite('Trouble with address ' . $failures[0]);
+					process_sql_update('tnewsletter_queue_data', array('status' => 2), array('id_queue' => $id_queue, 'email' => $dest_email));
+				}
 			}
-			$dest_email = trim(safe_output($address['email']));
-		
-			$message->setTo($dest_email);
-
-			// TODO: replace names on macros in the body / HTML parts.
-
-			$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
-
-			$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
-
-			if (!$mailer->send($message, $failures)) {
-				integria_logwrite ("Trouble with address ".$failures[0]);
-
-				// TODO: 
-				// Do something like error count to disable invalid addresses after a 
-				// number of invalid counts
-				// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
-			
-				process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
-			
-			} else {
-				process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
-			}
-				
-			$total = $total - 1;
-		
-			if ($total <= 0)
-					return;
-		
-		} // end of loop for each address in the queue		
-
-	} // end of main loop
-	
+		}
+		else {
+			process_sql_update('tnewsletter_queue', array('status' => 3), array('id' => $id_queue));
+		}
+	}
 }
 
 /**
