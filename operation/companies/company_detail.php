@@ -1344,7 +1344,7 @@ if ((!$id) AND ($new_company == 0)){
 	$date = false;
 	
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND ( `name` LIKE "%%%s%%" OR `country` LIKE "%%%s%%" OR `id` LIKE "%%%s%%")  ', $search_text, $search_text, $search_text);
+		$where_clause .= sprintf (' AND ( `name` LIKE "%%%s%%" OR `country` LIKE "%%%s%%" OR tcompany.id LIKE "%%%s%%")  ', $search_text, $search_text, $search_text);
 	}
 
 	if ($search_role != 0){ 
@@ -1485,8 +1485,8 @@ if ((!$id) AND ($new_company == 0)){
 	print_container_div("companys_form",__("Companies form search"),$form, 'open', false, false);
 	
 	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
-
-	if ($companies !== false) {
+	
+	if ($companies !== false && count($companies) != 0) {
 		$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$search_params", $offset);
 		
 		$table = new StdClass();
