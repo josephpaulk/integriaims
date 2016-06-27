@@ -58,12 +58,38 @@ if ($operation == "insert"){
 	
 	if ($id_task != -1) {
 		// People add for TASK
+				
+		// If this user is not assigned to the project, add him
+		$filter = array();
+		$filter['id_user'] = $id_user;
+		$filter['id_project'] = $id_project;
+		
+		$result_sql = get_db_value_filter ('MIN(id_role)', 'trole_people_project', $filter);
+		
+		if ($result_sql == false){
+			
+			$sql = "INSERT INTO trole_people_project
+					(id_project, id_user, id_role) VALUES
+					($id_project, '$id_user', '$id_role')";
+			
+			$result_sql = process_sql ($sql, 'insert_id');
+			
+			if ($result_sql !== false) {
+				$project = get_db_value ('name', 'tproject', 'id', $id_project);
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $id_user added to project $project");
+			} else {
+				$project = get_db_value ('name', 'tproject', 'id', $id_project);
+				$result_output = "<h3 class='error'>".__('Error assigning access to project '.$project.'.')."</h3>";
+				continue; // Does not insert the task
+			}
+		}
 		
 		// Comment this line, is a serious bug.
 		//~ $temp_id_user = get_db_value ("id_user", "trole_people_task", "id_user", $id_user);
 		$temp_id_user = $id_user;
 		$temp_id_role = get_db_value('id', 'trole', 'id', $id_role);
 		
+		$filter = array();
 		$filter['id_role']= $temp_id_role;
 		$filter['id_user']= $temp_id_user ;
 		$filter['id_task']= $id_task;

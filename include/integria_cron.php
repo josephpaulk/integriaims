@@ -226,6 +226,7 @@ function run_daily_check () {
 	delete_old_workflow_event_data();
 	delete_old_fs_files_data();
 	delete_old_files_track_data();
+	remove_no_task_users_project();
 }
 
 /**
@@ -1124,6 +1125,24 @@ function delete_old_workflow_event_data () {
 			AND `type` LIKE '%WORKFLOW%'";
 		process_sql ($sql);
 	}
+}
+/**
+ * Remove users from projects when none task is assigned in this project
+ * 
+ * Project managers will not be removed.
+ */
+function remove_no_task_users_project () {
+	
+	global $config;
+	
+	$sql = 'DELETE FROM trole_people_project WHERE 
+			ROW(id_user, id_project) NOT IN (
+				SELECT id_user, id_project FROM trole_people_task 
+				INNER JOIN ttask WHERE trole_people_task.id_task=ttask.id 
+				GROUP BY id_user, id_project)
+			AND id_role<>1';
+			
+	process_sql ($sql);
 }
 
 // ---------------------------------------------------------------------------
