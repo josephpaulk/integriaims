@@ -450,6 +450,11 @@ if ($operation == 'multiple_wu_insert') {
 }
 echo "<a href='#tab1' title='".__("Single WU")."'><img src='images/workunit_tab.png' /></a>";
 echo "</li>";
+if ($sec == 'projects') {
+	echo "<li id='tabmenu3' class='ui-tabs-disabled'>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=" . $id_project . "&id_task=" . $id_task . "&operation=view'><img src='images/flecha_volver.png' /></a>";
+	echo "</li>";
+}
 echo "</ul>";
 echo "</h4>";
 echo "</div>";
