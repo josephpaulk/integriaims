@@ -15,6 +15,7 @@
 check_login ();
 
 include_once ("include/functions_projects.php");
+include_once ("include/functions_html.php");
 
 $id = (int) get_parameter ('id_project');
 $project = get_db_row ('tproject', 'id', $id);
@@ -27,9 +28,11 @@ if ($project === false || ! $project_access['read']) {
 	no_permission();
 }
 
-echo '<h2>'.__('Project tracking').' </h2><h4>'.__("Project:")." ".$project['name'];
-echo integria_help ("project_tracking", true);
-echo '</h4>';
+// Print title and menu.
+$section_title = __('Project tracking');
+$section_subtitle = __("Project:")." ".$project['name'];
+$p_menu = print_project_tabs();
+print_title_with_menu ($section_title, $section_subtitle, "project_tracking", 'projects', $p_menu, 'tracking');
 
 $trackings = get_db_all_rows_field_filter ('tproject_track', 'id_project', $id);
 

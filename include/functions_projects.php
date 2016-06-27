@@ -353,5 +353,298 @@ function projects_get_cost_by_profile ($id_project, $have_cost=false) {
 		return $output;
 	echo $output;
 }
+/*
+ * Project menu associative array
+ * (it should be used with print_title_with_menu)
+ * 
+ * */
+function print_project_tabs($selected_tab = '') {
+	
+	global $config;
+	
+	$id_project = get_parameter ('id_project', -1);
+	$id_task = get_parameter ('id_task', -1);
+	
+	// Get id_task but not id_project
+	if (($id_task != -1) AND ($id_project == -1)){
+		$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	}
+	
+	// ACL Permissions
+	$section_permission = get_project_access ($config["id_user"]);
+	$manage_any_task = manage_any_task ($config["id_user"]);
+	
+	if ($id_project > 0) {
+		$project_permission = get_project_access ($config["id_user"], $id_project);
+		$manage_any_task_in_project = manage_any_task ($config["id_user"], $id_project);
+	}
+	
+	$p_menu = array ();
+	
+	$p_menu['overview'] = array (
+		'title' => __('Project overview'),
+		'link' => "operation/projects/project_detail&id_project=" . $id_project,
+		'img' => "images/eye.png",
+	);
+	
+	if ($manage_any_task_in_project) {
+		$p_menu['task_plan'] = array (
+			'title' => __('Task planning'),
+			'link' => "operation/projects/task_planning&id_project=" . $id_project,
+			'img' => "images/task_planning.png",
+		);
+	}
+	
+	$p_menu['time'] = array (
+		'title' => __('Time graph'),
+		'link' => "operation/projects/project_timegraph&id_project=" . $id_project,
+		'img' => "images/chart_pie.png",
+	);
+	
+	$p_menu['tracking'] = array (
+		'title' => __('Project traking'),
+		'link' => "operation/projects/project_tracking&id_project=" . $id_project,
+		'img' => "images/clock_tab.png",
+	);
+	
+	$task_number = get_tasks_count_in_project ($id_project);
+	if ($task_number > 0) {	
+		$p_menu['task_list'] = array (
+			'title' => __('Task list') . " (" . $task_number . ")",
+			'link' => "operation/projects/task&id_project=" . $id_project,
+			'img' => "images/tree_list.png",
+		);
+	} else {
+		$p_menu['task_list'] = array (
+			'title' => __('Task list') . " (" . __("Empty") . ")",
+			'img' => "images/tree_list_disabled.png",
+		);
+	}
+	
+	if ($manage_any_task_in_project) {
+		$p_menu['task_new'] = array (
+			'title' => __('New task'),
+			'link' => "operation/projects/task_detail&operation=create&id_project=" . $id_project,
+			'img' => "images/new_tab.png",
+		);
+	}
+	
+	$p_menu['gantt'] = array (
+		'title' => __('Gantt chart'),
+		'link' => "operation/projects/gantt&id_project=" . $id_project,
+		'img' => "images/gantt.png",
+	);
+	
+	$p_menu['milestones'] = array (
+		'title' => __('Milestones'),
+		'link' => "operation/projects/milestones&id_project=" . $id_project,
+		'img' => "images/milestone.png",
+	);
+	
+	if ($project_permission['manage']) {
+		$p_menu['people'] = array (
+			'title' => __('People'),
+			'link' => "operation/projects/people_manager&id_project=" . $id_project,
+			'img' => "images/contacts.png",
+		);
+	}
+
+	$totalhours = get_project_workunit_hours ($id_project);
+	$totalwu = get_project_count_workunits ($id_project);
+	if ($totalwu > 0) {
+		$p_menu['workunits'] = array (
+			'title' => __('Workunits') . " (" .$totalhours . " " . __("Hours") . ")",
+			'link' => "operation/projects/task_workunit&id_project=" . $id_project,
+			'img' => "images/workunit_tab.png",
+		);
+	} else {
+		$p_menu['workunits'] = array (
+			'title' => __('Workunit') . " (" . __("Empty") . ")",
+			'img' => "images/workunit_disabled.png",
+		);
+	}
+
+	$numberfiles = give_number_files_project ($id_project);
+	if ($numberfiles > 0){
+		$p_menu['files'] = array (
+			'title' => __('Files') . "(" . $numberfiles . ")",
+			'link' => "operation/projects/task_files&id_project=" . $id_project,
+			'img' => "images/products/folder.png",
+		);
+	} else {
+		$p_menu['files'] = array (
+			'title' => __('Files') . "(" . __("Empty") . ")",
+			'img' => "images/folder_disabled.png",
+		);
+	}
+	
+	if ($selected_tab == 'overview') {
+		$p_menu['report'] = array (
+			'title' => __('Project report'),
+			'link' => "operation/projects/project_report&id_project=" . $id_project,
+			'img' => "images/chart_bar_dark.png",
+		);
+	}
+		
+	if ($selected_tab == 'task_list') {
+		$p_menu['report_task'] = array (
+			'title' => __('Tasks report'),
+			'link' => "operation/projects/task&id_project=" . $id_project . "&pure=1",
+			'img' => "images/chart_bar_dark.png",
+		);
+	}
+	
+	if ($selected_tab == 'gantt') {
+		$p_menu['report_gant'] = array (
+			'title' => __('Full screen Gantt'),
+			'link' => "operation/projects/gantt&id_project=" . $id_project . "&clean_output=1",
+			'img' => "images/chart_bar_dark.png",
+			'target' => "top",
+		);
+	}
+	
+	if ($selected_tab == 'workunits') {
+		$p_menu['report_gant'] = array (
+			'title' => __('Tasks report'),
+			'link' => "operation/projects/task_workunit&id_project=" . $id_project . "&pure=1",
+			'img' => "images/chart_bar_dark.png",
+		);
+	}
+	
+	return $p_menu;
+}
+
+/*
+ * Task menu associative array
+ * (it should be used with print_title_with_menu)
+ * 
+ * */
+function print_task_tabs($selected_tab = '', $id_task_param = false) {
+	
+	global $config;
+	
+	$id_project = get_parameter ('id_project', -1);	
+	$id_task = ($id_task_param !== false) ? $id_task_param : get_parameter ('id_task', -1);
+	
+	// Get id_task but not id_project
+	if (($id_task != -1) AND ($id_project == -1)){
+		$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	}
+	
+	$task_permission = array ();
+	if ($id_task > 0) {
+		$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+	}
+	
+	$t_menu = array ();
+	
+	$t_menu['overview_project'] = array (
+		'title' => __('Project overview'),
+		'link' => "operation/projects/project_detail&id_project=" . $id_project,
+		'img' => "images/eye.png",
+	);
+	
+	$t_menu['overview'] = array (
+		'title' => __('Tasks overview'),
+		'link' => "operation/projects/task&id_project=" . $id_project,
+		'img' => "images/tree_list.png",
+	);
+	
+	$t_menu['detail'] = array (
+		'title' => __('Task detail'),
+		'link' => "operation/projects/task_detail&id_project=" . $id_project . "&id_task=" . $id_task . "&operation=view",
+		'img' => "images/inventory_dark.png",
+	);
+	
+	$t_menu['tracking'] = array (
+		'title' => __('Task traking'),
+		'link' => "operation/projects/task_tracking&id_project=" . $id_project . "&id_task=" . $id_task . "&operation=view",
+		'img' => "images/clock_tab.png",
+	);
+	
+	if ($task_permission['write']) {
+		$t_menu['workunit_add'] = array (
+			'title' => __('Add workunit'),
+			'link' => "operation/users/user_spare_workunit&id_project=" . $id_project . "&id_task=" . $id_task,
+			'img' => "images/multiple_workunits_tab.png",
+		);
+	
+		$t_menu['costs'] = array (
+			'title' => __('View external costs'),
+			'link' => "operation/projects/task_cost&id_project=" . $id_project . "&id_task=" . $id_task . "&operation=list",
+			'img' => "images/money.png",
+		);
+	}
+	
+	if ($task_permission['manage']) {
+		$t_menu['people'] = array (
+			'title' => __('People'),
+			'link' => "operation/projects/people_manager&id_project=" . $id_project . "&id_task=" . $id_task,
+			'img' => "images/contacts.png",
+		);
+		
+		$t_menu['email'] = array (
+			'title' => __('E-mail report'),
+			'link' => "operation/projects/task_emailreport&id_project=" . $id_project . "&id_task=" . $id_task,
+			'img' => "images/email_dark.png",
+		);
+		
+		$t_menu['move'] = array (
+			'title' => __('Move task'),
+			'link' => "operation/projects/task_move&id_project=" . $id_project . "&id_task=" . $id_task,
+			'img' => "images/move_task.png",
+		);
+	}
+	
+	$totalhours = get_task_workunit_hours ($id_task);
+	$totalwu = get_task_count_workunits ($id_task);
+	if ($totalwu > 0) {
+		$t_menu['workunits'] = array (
+			'title' => __('Workunits') . " (" .$totalhours . " " . __("Hours") . ")",
+			'link' => "operation/projects/task_workunit&id_project=" . $id_project. "&id_task=" . $id_task,
+			'img' => "images/workunit_tab.png",
+		);
+	} else {
+		$t_menu['workunits'] = array (
+			'title' => __('Workunit') . " (" . __("Empty") . ")",
+			'link' => "",
+			'img' => "images/workunit_disabled.png",
+		);
+	}
+
+	$numberfiles = give_number_files_project ($id_project);
+	if ($numberfiles > 0){
+		$t_menu['files'] = array (
+			'title' => __('Files') . "(" . $numberfiles . ")",
+			'link' => "operation/projects/task_files&id_project=" . $id_project . "&id_task=" . $id_task,
+			'img' => "images/products/folder.png",
+		);
+	} else {
+		$t_menu['files'] = array (
+			'title' => __('Files') . "(" . __("Empty") . ")",
+			'link' => "",
+			'img' => "images/folder_disabled.png",
+		);
+	}
+	
+	if ($selected_tab == 'detail') {
+		$t_menu['report'] = array (
+			'title' => __('Task report'),
+			'link' => "operation/projects/task_report&id_project=" . $id_project . "&id_task=" . $id_task,
+			'img' => "images/chart_bar_dark.png",
+		);
+	}
+	
+		
+	if ($selected_tab == 'workunits') {
+		$t_menu['report_gant'] = array (
+			'title' => __('Tasks report'),
+			'link' => "operation/projects/task_workunit&id_project=" . $id_project . "&id_task=" . $id_task . "&pure=1",
+			'img' => "images/chart_bar_dark.png",
+		);
+	}
+	
+	return $t_menu;
+}
 
 ?>

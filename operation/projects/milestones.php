@@ -113,12 +113,11 @@ if ($operation == "delete") {
 // CREATE new todo (form)
 // ---------------
 if ($operation == "create" || $operation == "update") {
-	echo "<h2>".__('Milestone')."</h2>";
 	
+	$section_title = __('Milestone');
+	$section_subtitle = '';
 	if ($id_milestone) {
-		echo "<h4>".__('Update');
-		echo integria_help ("milestones", true);
-		echo "</h4>";
+		$section_subtitle = __('Update');
 		$milestone = get_db_row ("tmilestone", "id", $id_milestone);
 		$name = $milestone["name"];
 		$description = $milestone["description"];
@@ -127,14 +126,16 @@ if ($operation == "create" || $operation == "update") {
 		$id_project = $milestone["id_project"];
 	}
 	else {
-		echo "<h4>".__('Creation');
-		echo integria_help ("milestones", true);
-		echo "</h4>";
+		$section_subtitle = __('Creation');
 		$name = '';
 		$description = '';
 		$timestamp = date("Y-m-d");
 		//$id_project = '';
 	}
+
+	$p_menu = print_project_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, "milestones", 'projects', $p_menu, 'milestones');
+	
 	echo '<table class="search-table-button"  width="100%">';
 	if ($id_milestone)
 		echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&id_milestone='.$id_milestone.'&operation=update2">';
@@ -176,10 +177,11 @@ if ($operation == "create" || $operation == "update") {
 // Milestone view
 // -------------------------
 if ($operation == ""){
-	echo "<h2>".__('Milestones')."</h2>";
-	echo "<h4>".__('Management');
-	echo integria_help ("milestones", true);
-	echo "</h4>";
+	
+	$section_title = __('Milestones');
+	$section_subtitle = __('Management');
+	$p_menu = print_project_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, "milestones", 'projects', $p_menu, 'milestones');
 	
 	echo "<div class='divresult' >";
 	echo "<table class='listing' width=100%>";

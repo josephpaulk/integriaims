@@ -1729,4 +1729,51 @@ function print_div ($options, $return = false) {
 		echo $output;
 	}
 }
+
+/**
+ * Print the title, subtitle and the menu into a page
+ *
+ * The element will have an id like: "password-$name"
+ * 
+ * @param title
+ * @param subtitle
+ * @param sec
+ * @param menu (associative array)
+ * 			- title: title when hover
+ * 			- link: sec2 (undef to avoid link and only print image)
+ * 			- img: image
+ * @param selected_tab
+ * @param bool return or echo flag
+ *
+ * @return echoes the header.
+ */
+function print_title_with_menu ($title = "", $subtitle = "", $help_tip = false, $sec = 'projects', $menu = false, $selected_tab = false) {
+	
+	echo "<h2>" . $title . "</h2>";
+	echo "<h4>" . $subtitle;
+	if ($help_tip !== false) echo integria_help ($help_tip, true);
+	echo "<div id='button-bar-title'>";
+	echo '<ul>';
+	
+	if ($menu !== false) {
+		foreach ($menu as $section => $info) {
+			$class = ($section == $selected_tab) ? 'button-bar-selected' : '';
+			
+			$anchor = '';
+			if (isset ($info['link'])) {
+				$anchor = '<a href="index.php?sec=' . $sec . '&sec2=' . $info['link'] . '"';
+				if (isset ($info['target'])) $anchor .= ' target="' . $info['target'] . '"';
+				$anchor .= '>';
+			}
+			
+			echo '<li class="' . $class . '">' . $anchor . '<span><img src="'.$info['img'].'" title="'.$info['title'].'"></span></a></li>';
+		}
+	}
+		
+	echo '</ul>';
+
+	echo '</div>';
+	echo "</h4>";
+}
+
 ?>

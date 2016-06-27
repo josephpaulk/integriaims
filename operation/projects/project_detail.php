@@ -138,21 +138,19 @@ else
 
 // Main project table
 if ($create_mode == 0){
-	echo "<h2>".__('Project management')."</h2>";
-	echo "<h4>"	.get_db_value ("name", "tproject", "id", $id_project); 
+	
+	// Print title and menu.
+	$section_title = __('Project management');
+	$section_subtitle = get_db_value ("name", "tproject", "id", $id_project);
+	$p_menu = false;
+	$print_help = false;
 
 	if (!$clean_output) {
-		echo integria_help ("project_detail", true);
-		echo "<div id='button-bar-title'>";
-			echo "<ul>";
-				echo "<li>";
-					echo "<a href='index.php?sec=projects&sec2=operation/projects/project_report&id_project=$id_project'>" .
-						print_image ("images/chart_bar.png", true, array("title" => __("Project report"))) . "</a>";
-				echo "</li>";
-			echo "</ul>";
-		echo "</div>";
+		$print_help = "project_detail";
+		$p_menu = print_project_tabs('overview');
 	}
-	echo "</h4>";
+	
+	print_title_with_menu ($section_title, $section_subtitle, $print_help, 'projects', $p_menu, 'overview');
 }
 else {
 	echo '<h2>'.__('Projects').'</h2>';

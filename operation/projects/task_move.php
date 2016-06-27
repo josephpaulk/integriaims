@@ -28,11 +28,12 @@ if (!$task_permission["manage"]) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task move without permission");
 	no_permission();
 }
-echo "<h2>".__('Move task to other project')."</h2>";
+
+$section_title = __('Move task to other project');
 $name_task  = get_db_value ("name", "ttask", "id", $id_task);
-echo "<h4>".__('Task'). ": " . $name_task;
-echo integria_help ("task_move", true); 
-echo "</h4>";
+$section_subtitle =  __('Task'). ": " . $name_task;
+$t_menu = print_task_tabs();
+print_title_with_menu ($section_title, $section_subtitle, "task_move", 'projects', $t_menu, 'move');
 
 //TASK MOVE Operation
 echo "<div class='divform'>";

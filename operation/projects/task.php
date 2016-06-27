@@ -569,34 +569,26 @@ if ($operation == 'move') {
 $search_text = (string) get_parameter ('search_text', '');
 
 
-echo '<h2>'.__('Task management').'</h2>';
-echo '<h4>'.$project['name'];
 	if (!$pure) {
-		echo integria_help ("task", true);
-		$attr = array();
-		$attr["pure"] = 1;
-		$html_report_image = print_html_report_image ("index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project", __("Report"), '', $attr);
-		if ($html_report_image) {
-			echo "<div id='button-bar-title'>";
-				echo "<ul>";
-					echo "<li>";
-						echo $html_report_image;
-					echo "</li>";
-				echo "</ul>";
-			echo "</div>";
-		}
+		// Print title and menu.
+		$section_title = __('Task management');
+		$section_subtitle = $project['name'];
+		$p_menu = print_project_tabs('task_list');
+		print_title_with_menu ($section_title, $section_subtitle, "task", 'projects', $p_menu, 'task_list');
 	 }
 	 else {
-		 echo "<div id='button-bar-title'>";
+		echo '<h2>'.__('Task management').'</h2>';
+		echo '<h4>'.$project['name'];
+		echo "<div id='button-bar-title'>";
 		echo "<ul>";
 		echo '<li class="ui-tabs">';
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".print_image ("images/flecha_volver.png", true, array("title" => __("Back to task list")))."</a>";
 		echo '</li>';
 		echo "</ul>";
 		echo "</div>";
+		echo '</h4>';
 	 }
-		
-echo '</h4>';
+
 
 $where_clause = ' 1=1 ';
 if ($search_text != "")

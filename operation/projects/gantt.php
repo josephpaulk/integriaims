@@ -43,21 +43,17 @@ if ($id_project != -1 && !$project_access['read']) {
 	no_permission();
 }
 
-echo "<h2>".__('Gantt graph'). "</h2><h4>" . __("Project:") . " " .$project_name;
-
 if (!$clean_output) {
-	echo integria_help ("gantt", true);
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	echo "<li>";
-		echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project&clean_output=1'>".
-		print_image ("images/chart_bar.png", true, array("title" => __("Full screen"))) .
-		"</a>";
-	echo "</li>";
-	echo "</ul>";
-	echo "</div>";
+	
+	// Print title and menu.
+	$section_title = __('Gantt graph');
+	$section_subtitle =  __("Project:") . " " .$project_name;
+	$p_menu = print_project_tabs('gantt');
+	print_title_with_menu ($section_title, $section_subtitle, 'gantt', 'projects', $p_menu, 'gantt');
+} else {
+	echo "<h2>".__('Gantt graph'). "</h2><h4>" . __("Project:") . " " .$project_name;
+	echo"</h4>";
 }
-echo"</h4>";
 
 $scales = array ("month" => __("Month"), "week" => __("Week"), "day" => __("Day"));
 $op_actual = array(0 => __("No"), 1 => __("Yes"));

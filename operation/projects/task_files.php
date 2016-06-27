@@ -124,10 +124,10 @@ if ($operation == "delete") {
 // Specific task
 if ($id_task != -1) { 
 	$sql = "SELECT * FROM tattachment WHERE id_task = $id_task";
-	echo "<h2>".__('Attached files');
-	echo "<h4>".__('Task')." - ".$task_name;
-	echo integria_help ("task_files", true);
-	echo "</h4>";
+	$section_title = __('Attached files');
+	$section_subtitle = __('Task')." - ".$task_name;
+	$t_menu = print_task_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, "task_files", 'projects', $t_menu, 'files');
 	
 	echo "<div class='divform'>";
 		echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile' enctype='multipart/form-data' >";
@@ -169,8 +169,10 @@ if ($id_task == -1) {
 	$sql = "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name, ttask.id as task_id FROM tattachment, ttask
 			WHERE ttask.id_project = $id_project AND ttask.id = tattachment.id_task";
 
-	echo "<h2>".__('Attached files');
-	echo "<h4>".__('Project')." - ".$project_name."</h4>";
+	$section_title = __('Attached files');
+	$section_subtitle = __('Project')." - ".$project_name;
+	$p_menu = print_project_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, false, 'projects', $p_menu, 'files');
 	
 	echo "<table cellpadding=4 cellspacing=4 border='0' width=95% class='listing'>";
 	echo "<tr><th>"; 

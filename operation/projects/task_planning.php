@@ -217,11 +217,12 @@ if ($create) {
 }
 
 $project_name =  get_db_value ("name", "tproject", "id", $id_project);
-
-echo '<h2>'.__('Project management').'</h2>';
-echo "<h4>".__("Task planning")." &raquo; $project_name";
-echo integria_help ("task_planning", true);
-echo "</h4>";
+	
+// Print title and menu.
+$section_title = __('Project management');
+$section_subtitle =__("Task planning")." &raquo; $project_name";
+$p_menu = print_project_tabs();
+print_title_with_menu ($section_title, $section_subtitle, "task_planning", 'projects', $p_menu, 'task_plan');
 
 //Calculate task summary stats!
 
