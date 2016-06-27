@@ -34,6 +34,9 @@ global $show_wiki;
 echo "<nav id='menu_nav'>";
 echo "<ul id='menu_slide'>";
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {
+		
+	$section_permission = get_project_access ($config["id_user"]);
+	$manage_any_task = manage_any_task ($config["id_user"]);
 	
 	// if for active li project
 	if (($sec2 == "operation/projects/project_overview") || 
