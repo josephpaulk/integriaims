@@ -306,13 +306,6 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 		}
 	}
 	
-	// Order
-	if ($filters['order_by'] && !is_array($filters['order_by'])) {
-		$order_by_array = json_decode(clean_output($filters['order_by']), true);
-	} else {
-		$order_by_array = $filters['order_by'];
-	}
-	
 	// SLA
 	$sla_filter = '';
 	if (!empty($filters['sla_state'])) {
@@ -364,6 +357,13 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	
 	if ($no_parents) {
 		$sql_clause .= ' AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)';
+	}
+	
+	// Order
+	if ($filters['order_by'] && !is_array($filters['order_by'])) {
+		$order_by_array = json_decode(clean_output($filters['order_by']), true);
+	} else {
+		$order_by_array = $filters['order_by'];
 	}
 	
 	$order_by = '';
@@ -444,6 +444,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 		
 		$inventories = get_inventories_in_incident($incident['id_incidencia'], false);
 		
+		// Inventory
 		if ($filters['id_inventory']) {
 			$found = false;
 			foreach ($inventories as $inventory) {
@@ -456,7 +457,8 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			if (!$is_inverse && !$found) continue;
 			else if ($is_inverse && $found) continue;
 		}
-	
+		
+		// Company
 		if ($filters['id_company']) {
 			$found = false;
 			$user_creator = $incident['id_creator'];
@@ -468,6 +470,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			if ($is_inverse && $filters['id_company'] == $user_company) continue;
 		}
 		
+		// SLA
 		if ($filters['left_sla']) {
 			$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
 			
@@ -3185,12 +3188,13 @@ function incidents_get_sla_graph_percentages ($incidents) {
 	return $slas;
 }
 
-function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false) {
+function incidents_get_filter_tickets_tree ($filters, $mode = false, $id_task = false) {
 	global $config;
 	
 	/* Set default values if none is set */
+	$filters['inverse_filter'] = isset ($filters['inverse_filter']) ? $filters['inverse_filter'] : false;
 	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
-	$filters['status'] = isset ($filters['status']) ? $filters['status'] : -10;
+	$filters['status'] = isset ($filters['status']) ? $filters['status'] : 0;
 	$filters['priority'] = isset ($filters['priority']) ? $filters['priority'] : -1;
 	$filters['id_group'] = isset ($filters['id_group']) ? $filters['id_group'] : -1;
 	$filters['id_company'] = isset ($filters['id_company']) ? $filters['id_company'] : 0;
@@ -3212,136 +3216,301 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 	$filters["left_sla"] = isset ($filters['left_sla']) ? $filters['left_sla'] : 0;
 	$filters["right_sla"] = isset ($filters['right_sla']) ? $filters['right_sla'] : 0;
 	$filters["show_hierarchy"] = isset ($filters['show_hierarchy']) ? $filters['show_hierarchy'] : 0;
+	$filters["medals"] = isset ($filters['medals']) ? $filters['medals'] : 0;
+	$filters["parent_name"] = isset ($filters['parent_name']) ? $filters['parent_name'] : '';
 	
-	if (empty ($filters['status']))
-		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
-	
-	// Not closed
-	if ($filters["status"] == -10)
-		$filters['status'] = "1,2,3,4,5,6";
-
-	$resolutions = get_incident_resolutions ();
+	///// IMPORTANT: Write an inverse filter for every new filter /////
+	$is_inverse = $filters['inverse_filter'];
+	$is_inverse = true;
 	
 	$sql_clause = '';
-	if ($filters['priority'] != -1)
-		$sql_clause .= sprintf (' AND prioridad = %d', $filters['priority']);
+	
+	// Status
+	if (!empty($filters['status'])) {
+		// Not closed
+		if ($filters['status'] == -10) {
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND estado <> %d', STATUS_CLOSED);
+			}
+			else {
+				$sql_clause .= sprintf(' AND estado = %d', STATUS_CLOSED);
+			}
+		}
+		else {
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND estado = %d', $filters['status']);
+			}
+			else {
+				$sql_clause .= sprintf(' AND estado <> %d', $filters['status']);
+			}
+		}
+	}
+	
+	// Priority
+	if ($filters['priority'] != -1) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND prioridad = %d', $filters['priority']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND prioridad <> %d', $filters['priority']);
+		}
+	}
+	
+	// Group
 	if ($filters['id_group'] != 1) {
-		if ($filters["show_hierarchy"]) {
+		if ($filters['show_hierarchy']) {
 			$children = groups_get_childrens($filters['id_group']);
 			$ids = $filters['id_group'];
 			foreach ($children as $child) {
 				$ids .= ",".$child['id_grupo'];
 			}	
-			$sql_clause .= " AND id_grupo IN (".$ids.")";
+			
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND id_grupo IN (%s)', $ids);
+			}
+			else {
+				$sql_clause .= sprintf(' AND id_grupo NOT IN (%s)', $ids);
+			}
 		} else {
-			$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
-		}
-
-	}
-	if (! empty ($filters['id_user']))
-		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
-	if (! empty ($filters['id_user_or_creator']))
-		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
-	if (! empty ($filters['resolution']) && $filters['resolution'] > -1)
-		$sql_clause .= sprintf (' AND resolution = %d', $filters['resolution']);
-	if ($filters['id_task'] == 0) {
-		$sql_clause .= sprintf (' AND id_task = 0');
-	} else if ($filters['id_task'] != -1) {
-		$sql_clause .= sprintf (' AND id_task = %d', $filters['id_task']);
-	}
-	
-	//Incident type 0 means all and incident type -1 means without type
-	if ($filters["id_incident_type"] != -1) {
-
-		if ($filters["id_incident_type"]) {
-			$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
-		}
-
-		$incident_fields = array();
-		
-		foreach ($filters as $key => $value) {
-			// If matchs an incident field, ad an element to the array with their real id and its data
-			if (preg_match("/^type_field_/", $key)) {
-				$incident_fields[preg_replace("/^type_field_/", "", $key)] = $value;
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND id_grupo = %d', $filters['id_group']);
+			}
+			else {
+				$sql_clause .= sprintf(' AND id_grupo <> %d', $filters['id_group']);
 			}
 		}
-		
+
+	}
+	
+	// User
+	if (!empty($filters['id_user'])) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND id_usuario = "%s"', $filters['id_user']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND id_usuario <> "%s"', $filters['id_user']);
+		}
+	}
+	
+	// User or creator
+	if (!empty($filters['id_user_or_creator'])) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND (id_usuario <> "%s" AND id_creator <> "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
+		}
+	}
+	
+	// Resolution
+	if (!empty($filters['resolution']) && $filters['resolution'] > -1) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND resolution = %d', $filters['resolution']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND resolution <> %d', $filters['resolution']);
+		}
+	}
+	
+	// Task
+	if ($id_task !== false) {
+		// Don't apply the task inverse filter
+		$sql_clause .= sprintf(' AND id_task = %d', $id_task);
+	}
+	else {
+		if ($filters['id_task'] > 0) {
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND id_task = %d', $filters['id_task']);
+			}
+			else {
+				$sql_clause .= sprintf(' AND id_task <> %d', $filters['id_task']);
+			}
+		}
+	}
+	
+	// Incidents
+	if (!empty($filters['id_incident_type']) && $filters['id_incident_type'] != -1) {
+
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND id_incident_type = %d', $filters['id_incident_type']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND id_incident_type <> %d', $filters['id_incident_type']);
+		}
+
+		// Incident fields
+		$incident_fields = array();
+		foreach ($filters as $key => $value) {
+			// If matchs an incident field, ad an element to the array with their real id and its data
+			if (preg_match('/^type_field_/', $key)) {
+				$incident_fields[preg_replace('/^type_field_/', '', $key)] = $value;
+			}
+		}
 		foreach ($incident_fields as $id => $data) {
-			if ($data !== "") {
-				$sql_clause .= sprintf (' AND id_incidencia = ANY (SELECT id_incident
+			if (!empty($data)) {
+				if (!$is_inverse) {
+					$sql_clause .= sprintf(' AND id_incidencia IN (SELECT id_incident
 																	FROM tincident_field_data
 																	WHERE id_incident_field = "%s"
 																		AND data LIKE "%%%s%%")', $id, $data);
+				}
+				else {
+					$sql_clause .= sprintf(' AND id_incidencia NOT IN (SELECT id_incident
+																	FROM tincident_field_data
+																	WHERE id_incident_field = "%s"
+																		AND data LIKE "%%%s%%")', $id, $data);
+				}
 			}
 		}
 	}
-
-	if (! empty ($filters['from_date']) && $filters['from_date'] > 0) {
-
+	
+	// Date
+	if (!empty($filters['from_date']) && $filters['from_date'] > 0) {
 		$last_date_seconds = $filters['from_date'] * 24 * 60 * 60;
 		$filters['first_date'] = date('Y-m-d H:i:s', time() - $last_date_seconds);
-		$sql_clause .= sprintf (' AND inicio >= "%s"', $filters['first_date']);
-		$filters['last_date'] = "";
-
-	} else {
-
-		if (! empty ($filters['first_date'])) {
-			$time = strtotime ($filters['first_date']);
-			//00:00:00 to set date at the beginig of the day
-			$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d 00:00:00", $time));
+		
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND inicio >= "%s"', $filters['first_date']);
 		}
-		if (! empty ($filters['last_date'])) {
-			$time = strtotime ($filters['last_date']);
-			if (! empty ($filters['first_date'])) {
-				//23:59:59 to set date at the end of day
-				$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d 23:59:59", $time));
-			} else {
-				$time_from = strtotime ($filters['first_date']);
-				if ($time_from < $time)
-					$sql_clause .= sprintf (' AND inicio <= "%s"',
-						date ("Y-m-d", $time));
+		else {
+			$sql_clause .= sprintf(' AND inicio < "%s"', $filters['first_date']);
+		}
+	}
+	else {
+		if (!empty($filters['first_date']) && !empty($filters['last_date'])) {
+			// 00:00:00 to set date at the beginig of the day
+			$start_time = strtotime($filters['first_date']);
+			$start_date = date('Y-m-d 00:00:00', $start_time);
+			// 23:59:59 to set date at the end of day
+			$end_time = strtotime($filters['last_date']);
+			$end_date = date('Y-m-d 23:59:59', $end_time);
+			
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND inicio >= "%s"', $start_date);
+				$sql_clause .= sprintf(' AND inicio <= "%s"', $end_date);
+			}
+			else {
+				$sql_clause .= sprintf(' AND (inicio < "%s" OR inicio > "%s")',
+					$start_date, $end_date);
+			}
+		}
+		else if (!empty($filters['first_date'])) {
+			// 00:00:00 to set date at the beginig of the day
+			$start_time = strtotime($filters['first_date']);
+			$start_date = date('Y-m-d 00:00:00', $start_time);
+			
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND inicio >= "%s"', $start_date);
+			}
+			else {
+				$sql_clause .= sprintf(' AND inicio < "%s"', $start_date);
+			}
+		}
+		else if (!empty($filters['last_date'])) {
+			// 23:59:59 to set date at the end of day
+			$end_time = strtotime($filters['last_date']);
+			$end_date = date('Y-m-d 23:59:59', $end_time);
+			
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND inicio <= "%s"', $end_date);
+			}
+			else {
+				$sql_clause .= sprintf(' AND inicio > "%s"', $end_date);
 			}
 		}
 	}
 	
-	if (! empty ($filters['id_creator']))
-		$sql_clause .= sprintf (' AND id_creator = "%s"', $filters['id_creator']);
-		
-	if (! empty ($filters['editor']))
-		$sql_clause .= sprintf (' AND editor = "%s"', $filters['editor']);
-		
-	if (! empty ($filters['closed_by']))
-		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
-		
-	if (!empty($filters['sla_state'])) {
-		switch ($filters['sla_state']) {
-			case 0:
-				$sla_filter = ' ';
-			break;
-			case 1:
-				$sla_filter = "AND (sla_disabled = 0 AND affected_sla_id <> 0)";
-			break;
-			case 2:
-				$sla_filter = "AND (sla_disabled = 0 AND affected_sla_id = 0)";
-			break;
+	// Creator
+	if (!empty($filters['id_creator'])) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND id_creator = "%s"', $filters['id_creator']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND id_creator <> "%s"', $filters['id_creator']);
 		}
 	}
 	
+	// Editor
+	if (!empty($filters['editor'])) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND editor = "%s"', $filters['editor']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND editor <> "%s"', $filters['editor']);
+		}
+	}
+	
+	// Closed by
+	if (!empty($filters['closed_by'])) {
+		if (!$is_inverse) {
+			$sql_clause .= sprintf(' AND closed_by = "%s"', $filters['closed_by']);
+		}
+		else {
+			$sql_clause .= sprintf(' AND closed_by <> "%s"', $filters['closed_by']);
+		}
+	}
+	
+	// SLA
+	$sla_filter = '';
+	if (!empty($filters['sla_state'])) {
+		$sla_fired_filter = 'AND (sla_disabled = 0 AND affected_sla_id <> 0)';
+		$sla_not_fired_filter = 'AND (sla_disabled = 0 AND affected_sla_id = 0)';
+		
+		if ($filters['sla_state'] == 1) {
+			$sla_filter = (!$is_inverse) ? $sla_fired_filter : $sla_not_fired_filter;
+		}
+		else if ($filters['sla_state'] == 2) {
+			$sla_filter = (!$is_inverse) ? $sla_not_fired_filter : $sla_fired_filter;
+		}
+	}
+	
+	// Medals
+	$medals_filter = '';
+	if ($filters['medals']) {
+		if ($filters['medals'] == 1) {
+			if (!$is_inverse) {
+				$medals_filter = 'AND gold_medals <> 0';
+			}
+			else {
+				$medals_filter = 'AND gold_medals = 0';
+			}
+		} else if ($filters['medals'] == 2) {
+			if (!$is_inverse) {
+				$medals_filter = 'AND black_medals <> 0';
+			}
+			else {
+				$medals_filter = 'AND black_medals = 0';
+			}
+		}
+	}
+	
+	if (!empty($filters['parent_name'])) {
+		$inventory_id = get_db_value('id', 'tinventory', 'name', $filters['parent_name']);
+		
+		if ($inventory_id) {
+			if (!$is_inverse) {
+				$sql_clause .= sprintf(' AND id_incidencia IN (SELECT id_incident FROM tincident_inventory WHERE
+					id_inventory = %d)', $inventory_id);
+			}
+			else {
+				$sql_clause .= sprintf(' AND id_incidencia NOT IN (SELECT id_incident FROM tincident_inventory WHERE
+					id_inventory = %d)', $inventory_id);
+			}
+		}
+	}
+	
+	if ($no_parents) {
+		$sql_clause .= ' AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)';
+	}
+	
+	// Order
 	if ($filters['order_by'] && !is_array($filters['order_by'])) {
-		$order_by_array = json_decode(clean_output($filters["order_by"]), true);
+		$order_by_array = json_decode(clean_output($filters['order_by']), true);
 	} else {
 		$order_by_array = $filters['order_by'];
 	}
-
-	//Use config block size if no other was given
-	if ($limit) {
-		if (!isset($filters["limit"])) {
-			$filters["limit"] = $config["block_size"];
-		}
-	}
-
-	$order_by = "";
-
+	
+	$order_by = '';
 	if ($order_by_array) {
 		foreach ($order_by_array as $key => $value) {
 			if ($value) {
@@ -3350,86 +3519,81 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 		}
 	}
 	
+	// Use config block size if no other was given
+	if ($limit && !isset($filters['limit'])) {
+		$filters['limit'] = $config['block_size'];
+	}
+	
+	// Text filter
+	$text_filter = '';
+	if (!empty($filters['string'])) {
+		if (!$is_inverse) {
+			$text_filter = sprintf('AND (
+				titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%"
+				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%"
+				OR id_incidencia = %d
+				OR id_incidencia IN (
+					SELECT id_incident
+					FROM tincident_field_data
+					WHERE data LIKE "%%%s%%"))',
+				$filters['string'], $filters['string'], $filters['string'],
+				$filters['string'], $filters['string'], $filters['string']);
+		}
+		else {
+			$text_filter = sprintf('AND (
+				titulo NOT LIKE "%%%s%%" AND descripcion NOT LIKE "%%%s%%"
+				AND id_creator NOT LIKE "%%%s%%" AND id_usuario NOT LIKE "%%%s%%"
+				AND id_incidencia <> %d
+				AND id_incidencia NOT IN (
+					SELECT id_incident
+					FROM tincident_field_data
+					WHERE data LIKE "%%%s%%"))',
+				$filters['string'], $filters['string'], $filters['string'],
+				$filters['string'], $filters['string'], $filters['string']);
+		}
+	}
+	
 	switch ($mode) {
 		case 'count':
 			//Just count items
-			$sql = sprintf ('SELECT COUNT(id_incidencia) FROM tincidencia FD
-				WHERE estado IN (%s)
-				%s
-				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
-				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-				%s',
-				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-				$filters['string'],$filters['string'], $filters['string'], $sla_filter);
-
-			$count = get_db_value_sql($sql);
-			
-			if ($count === false) {
-				return 0;
-			}
-			return $count;
+			$sql = sprintf('SELECT COUNT(id_incidencia) FROM tincidencia FD WHERE 1=1 %s %s %s %s',
+				$sql_clause, $text_filter, $sla_filter, $medals_filter);
+			return (int) get_db_value_sql($sql);
 		break;
 		case 'tasks':
-			$sql = sprintf ('SELECT id_task FROM tincidencia FD
-				WHERE estado IN (%s)
-				%s
-				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
-				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-				%s
-				GROUP BY id_task',
-				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-				$filters['string'],$filters['string'], $filters['string'], $sla_filter);
-
-			$tasks = get_db_all_rows_sql ($sql);
-			
-			if ($tasks === false) {
-				return false;
-			}
-			return $tasks;
+			$sql = sprintf('SELECT id_task FROM tincidencia FD WHERE 1=1 %s %s %s %s GROUP BY id_task',
+				$sql_clause, $text_filter, $sla_filter, $medals_filter);
+			return get_db_all_rows_sql($sql);
 		break;
 		case 'tickets':
 		default:
 			//Select all items and return all information
-			$sql = sprintf ('SELECT * FROM tincidencia FD
-				WHERE estado IN (%s)
-				%s
-				AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
-				OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
-				OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
-				%s
-				ORDER BY %s actualizacion DESC',
-				$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
-				$filters['string'],$filters['string'], $filters['string'], $sla_filter, $order_by);
+			$sql = sprintf('SELECT * FROM tincidencia FD WHERE 1=1 %s %s %s %s ORDER BY %s actualizacion DESC',
+				$sql_clause, $text_filter, $sla_filter, $medals_filter, $order_by);
+			$incidents = get_db_all_rows_sql($sql);
 
-			$incidents = get_db_all_rows_sql ($sql);
-
-			if ($incidents === false)
-				return false;
+			if ($incidents === false) return false;
 		
-			$result = array ();
+			$result = array();
 			foreach ($incidents as $incident) {
-				
 				//Check external users ACLs
-				$standalone_check = enterprise_hook("manage_standalone", array($incident));
+				$standalone_check = enterprise_hook('manage_standalone', array($incident, 'read'));
 
 				if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 					continue;
-				} else {
-				
-					//Normal ACL pass if IR for this group or if the user is the incident creator
-					//or if the user is the owner or if the user has workunits
-					
-					$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-					
-					if (!$check_acl)
-						continue;		
-						
+				}
+				else {
+					// Normal ACL pass if IR for this group or if the user is the incident creator
+					// or if the user is the owner or if the user has workunits
+					$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
+					if (!$check_acl) {
+						continue;
+					}
 				}
 				
-				$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+				$inventories = get_inventories_in_incident($incident['id_incidencia'], false);
 				
+				// Inventory
 				if ($filters['id_inventory']) {
 					$found = false;
 					foreach ($inventories as $inventory) {
@@ -3438,44 +3602,46 @@ function incidents_get_filter_tickets_tree ($filters, $mode=false, $limit=false)
 							break;
 						}
 					}
-				
-					if (! $found)
-						continue;
+					
+					if (!$is_inverse && !$found) continue;
+					else if ($is_inverse && $found) continue;
 				}
-			
+				
+				// Company
 				if ($filters['id_company']) {
 					$found = false;
 					$user_creator = $incident['id_creator'];
 					$user_company = get_db_value('id_company', 'tusuario', 'id_usuario', $user_creator);
-
-					//If company do no match, dismiss incident
-					if ($filters['id_company'] != $user_company) {
-						continue;
-					}
+					
+					// Don't match, dismiss incident
+					if (!$is_inverse && $filters['id_company'] != $user_company) continue;
+					// Match, dismiss incident
+					if ($is_inverse && $filters['id_company'] == $user_company) continue;
 				}
 				
+				// SLA
 				if ($filters['left_sla']) {
 					$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
-
-					//If sla do not match, dismiss incident
-					if ($filters['left_sla'] > $percent_sla_incident) {
-						continue;
-					}
+					
+					// Don't match, dismiss incident
+					if (!$is_inverse && $filters['left_sla'] > $percent_sla_incident) continue;
+					// Match, dismiss incident
+					if ($is_inverse && $filters['left_sla'] <= $percent_sla_incident) continue;
 				}
-
 				if ($filters['right_sla']) {
 					$percent_sla_incident = format_numeric (get_sla_compliance_single_id ($incident['id_incidencia']));
 					
-					//If sla do not match, dismiss incident
-					if ($filters['right_sla'] < $percent_sla_incident) {
-						continue;
-					}
+					// Don't match, dismiss incident
+					if (!$is_inverse && $filters['right_sla'] < $percent_sla_incident) continue;
+					// Match, dismiss incident
+					if ($is_inverse && $filters['right_sla'] >= $percent_sla_incident) continue;
 				}
 				
 				array_push ($result, $incident);
-			}	
+			}
+			
 			return $result;
-		break;
+			break;
 	}
 }
 
@@ -3528,7 +3694,7 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 	echo '</thead>';
 	echo "<tbody>";
 
-	$tasks_in_tickets = incidents_get_filter_tickets_tree ($filter, 'tasks');
+	$tasks_in_tickets = incidents_get_filter_tickets_tree($filter, 'tasks');
 	if ($tasks_in_tickets === false) {
 		$tasks_in_tickets = array();
 	}
@@ -3572,8 +3738,7 @@ function incidents_search_result_group_by_project ($filter, $ajax=false, $return
 		$img_task = print_image ("images/task.png", true, array ("style" => 'vertical-align: middle;'));
 		
 		//tickets in task
-		$filter['id_task'] = $task_ticket['id_task'];
-		$tickets_in_task = incidents_get_filter_tickets_tree ($filter, 'tickets');
+		$tickets_in_task = incidents_get_filter_tickets_tree($filter, 'tickets', $task_ticket['id_task']);
 		$count_tickets = count($tickets_in_task);
 			
 		//print ticket with task
