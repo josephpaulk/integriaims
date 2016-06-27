@@ -34,28 +34,30 @@ global $show_wiki;
 echo "<nav id='menu_nav'>";
 echo "<ul id='menu_slide'>";
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {
-	$id_project = get_parameter ('id_project', -1);
-	$id_task = get_parameter ('id_task', -1);
 	
-	// Get id_task but not id_project
-	if (($id_task != -1) AND ($id_project == -1)){
-		$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
-	}
-	
-	// ACL Permissions
-	$section_permission = get_project_access ($config["id_user"]);
-	$manage_any_task = manage_any_task ($config["id_user"]);
-	if ($id_project > 0) {
-		$project_permission = get_project_access ($config["id_user"], $id_project);
-		$manage_any_task_in_project = manage_any_task ($config["id_user"], $id_project);
-	}
-	if ($id_task > 0) {
-		$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
-	}
 	// if for active li project
-	if (($sec2 == "operation/projects/project_overview" && $id_project < 0) || ($sec2 == "operation/projects/user_project_timegraph") || 
-	($sec2 == "operation/projects/project_detail" && $id_project < 0) || ($sec2 == "operation/projects/role_user_global") || 
-	($sec2 == "operation/projects/project"))
+	if (($sec2 == "operation/projects/project_overview") || 
+		($sec2 == "operation/projects/user_project_timegraph") || 
+		($sec2 == "operation/projects/project_detail") || 
+		($sec2 == "operation/projects/role_user_global") || 
+		($sec2 == "operation/projects/project") ||
+		($sec2 == "operation/projects/project_detail") ||
+		($sec2 == "operation/projects/task_planning") ||
+		($sec2 == "operation/projects/project_timegraph") ||
+		($sec2 == "operation/projects/project_tracking") ||
+		($sec2 == "operation/projects/task") ||
+		($sec2 == "operation/projects/project_report") ||
+		($sec2 == "operation/projects/task_detail") ||
+		($sec2 == "operation/projects/gantt") ||
+		($sec2 == "operation/projects/milestones") ||
+		($sec2 == "operation/projects/people_manager") ||
+		($sec2 == "operation/projects/task_workunit") ||
+		($sec2 == "operation/projects/task_files") ||
+		($sec2 == "operation/projects/task_tracking") ||
+		($sec2 == "operation/users/user_spare_workunit") ||
+		($sec2 == "operation/projects/task_cost") ||
+		($sec2 == "operation/projects/task_move") ||
+		($sec2 == "operation/projects/task_emailreport"))
 		echo "<li title='".__('Projects')."' data-status='closed' id='sideselproject' class='sideselcolor'>";
 	else
 		echo "<li title='".__('Projects')."' data-status='closed' id='proyectos'>";
@@ -105,244 +107,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			
 		echo "</ul>";
 	echo "</li>";
-		
-	if ($id_project > 0) {
-		
-		$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 25);
-		if (($sec2 == "operation/projects/project_detail" && $id_project > 0) || ($sec2 == "operation/projects/task_planning" && $id_project > 0) || ($sec2 == "operation/projects/project_timegraph") || ($sec2 == "operation/projects/project_tracking") || 
-		($sec2 == "operation/projects/task") || ($sec2 == "operation/projects/task_detail" && $id_task < 0) || ($sec2 == "operation/projects/gantt") || ($sec2 == "operation/projects/milestones") ||($sec2 == "operation/projects/people_manager" && $id_task < 0) ||
-		($sec2 == "operation/projects/task_workunit" && $id_task < 0) || ($sec2 == "operation/projects/task_files" && $id_task < 0))
-			echo "<li title='".__('Project Management')."' data-status='closed' id='sideselgestionproyectos' class='sideselcolor'>";
-		else
-			echo "<li title='".__('Project Management')."' data-status='closed' id='gestionproyectos'>";
-		//echo "<a   title='".__('Project Management')."' href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>1</a>";
-		
-		echo "<ul>";
-			echo"<li><h1>".__('Project Management')."</h1></li>";
-				
-		// Project detail
-		if ($sec2 == "operation/projects/project_detail" && $id_project > 0)
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".__('Project overview')."</a></li>";
-		
-		if ($manage_any_task_in_project) {
-			// Task planning
-			if ($sec2 == "operation/projects/task_planning" && $id_project > 0)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=$id_project'>".__('Task planning')."</a></li>";
-		}
-		
-		// Timegraph d3.js treemap project
-		if ($sec2 == "operation/projects/project_timegraph")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=$id_project'>".__('Time graph')."</a></li>";
-		
-		// Project tracking
-		if ($sec2 == "operation/projects/project_tracking")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tracking&id_project=$id_project'>".__('Project tracking')."</a></li>";
-			
-		// Tasks
-		$task_number = get_tasks_count_in_project ($id_project);
-		if ($task_number > 0) {
-			if ($sec2 == "operation/projects/task")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".__('Task list')." ($task_number)</a></li>";
-		}
-		
-		if ($manage_any_task_in_project) {
-			// Create task
-			if ($sec2 == "operation/projects/task_detail" && $id_task < 0)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".__('New task')."</a></li>";
-		}
-		
-		// Gantt graph
-		if ($sec2 == "operation/projects/gantt")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project'>".__('Gantt graph')."</a></li>";
-		
-		
-		// Milestones
-		if ($sec2 == "operation/projects/milestones")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/milestones&id_project=$id_project'>".__('Milestones')."</a></li>";
-		
-		// PROJECT - People management
-		if ($project_permission['manage']) {
-			if ($sec2 == "operation/projects/people_manager" && $id_task < 0)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_task=-1&id_project=$id_project'>".__('People')."</a></li>";
-		}
-		
-		// Workunits
-		$totalhours = get_project_workunit_hours ($id_project);
-		$totalwu = get_project_count_workunits ($id_project);
-		if ($totalwu > 0){
-			if ($sec2 == "operation/projects/task_workunit" && $id_task < 0)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project'>".__('Workunits');
-			echo " ($totalhours ".__('Hours').")";
-			echo "</a></li>";
-		}
-
-		// Files
-		$numberfiles = give_number_files_project ($id_project);
-		if ($numberfiles > 0){
-			if ($sec2 == "operation/projects/task_files" && $id_task < 0)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project'>".__('Files')." ($numberfiles)";
-			echo "</a></li>";
-		}
-		echo "</ul>";	
-	echo "</li>";
-
-	}
-	// Dynamic sub options menu (Tasks)
-	if ($id_task > 0) {
-			
-		$task_title = substr(get_db_value ("name", "ttask", "id", $id_task), 0, 19);
-		if ($sec2 == "operation/projects/task_detail" || ($sec2 == "operation/projects/task_tracking") || ($sec2 == "operation/users/user_spare_workunit") || ($sec2 == "operation/users/user_spare_workunit") || 
-		($sec2 == "operation/projects/task_attach_file") || ($sec2 == "operation/projects/task_cost" && $operation != "list") || ($sec2 == "operation/projects/task_cost" && $operation == "list") || ($sec2 == "operation/projects/people_manager" && $id_task > 0) || 
-		($sec2 == "operation/projects/task_emailreport") || ($sec2 == "operation/projects/task_move") || ($sec2 == "operation/projects/task_workunit" && $id_task > 0) || ($sec2 == "operation/projects/task_incidents") || ($sec2 == "operation/projects/task_files"  && $id_task > 0))
-			echo "<li title='".__('Task')."' data-status='closed' id='sideseldetallestareas' class='sideselcolor'>";
-		else
-			echo "<li title='".__('Task')."' data-status='closed' id='detallestareas'>";
-		//echo "<a title='".__('Task').": $task_title' href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>1</a>";
 	
-			echo "<ul>";
-			  echo"<li><h1>".__('Task').": $task_title</h1></li>";
-
-			// Task detail
-			if ($sec2 == "operation/projects/task_detail")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>".__('Task detail')."</a></li>";
-
-			// Task tracking
-			if ($sec2 == "operation/projects/task_tracking")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_tracking&id_project=$id_project&id_task=$id_task&operation=view'>".__('Task tracking')."</a></li>";
-
-			if ($task_permission['write']) {
-				// Add task workunit
-				if ($sec2 == "operation/users/user_spare_workunit")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task'>".__('Add workunit')."</a></li>";
-
-				//~ // Add task file
-				//~ if ($sec2 == "operation/projects/task_attach_file")
-					//~ echo "<li id='sidesel'>";
-				//~ else
-					//~ echo "<li>";
-				//~ echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
-				
-				$operation = get_parameter ('operation', '');
-				//~ // Add task cost
-				//~ if ($sec2 == "operation/projects/task_cost" && $operation != "list")
-					//~ echo "<li id='sidesel'>";
-				//~ else
-					//~ echo "<li>";
-				//~ echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task'>".__('Add cost unit')."</a></li>";
-
-				// Vist task costs
-				if ($sec2 == "operation/projects/task_cost" && $operation == "list")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task&operation=list'>".__('View external costs')."</a></li>";
-
-
-			}
-			
-			// Task people_manager
-			if ($task_permission['manage']) {
-				if ($sec2 == "operation/projects/people_manager" && $id_task > 0)
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task'>".__('People')."</a></li>";
-
-				// Task email report
-				if ($sec2 == "operation/projects/task_emailreport")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_emailreport&id_task=$id_task&id_project=$id_project'>".__('Email report')."</a></li>";
-
-				// Move this task
-				if ($sec2 == "operation/projects/task_move")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_move&id_task=$id_task&id_project=$id_project'>".__('Move task')."</a></li>";
-			}
-
-			// Workunits
-			$totalhours = get_task_workunit_hours ($id_task);
-			$totalwu = get_task_workunit_hours ($id_task);
-			if ($totalwu > 0){
-				if ($sec2 == "operation/projects/task_workunit" && $id_task > 0)
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task'>".__('Workunits');
-				echo " ($totalhours ".__('Hours').")";
-				echo "</a></li>";
-			}
-
-			/*
-			// Incidents for this task
-			$task_incidents = get_incident_task($id_task);
-			if ( $task_incidents > 0){
-				$task_incidents_wu = get_incident_task_workunit_hours ($id_task);
-				if ($sec2 == "operation/projects/task_incidents")
-					echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/task_incidents&id_project=$id_project&id_task=$id_task'>".__('Tickets');
-				echo " ($task_incidents / $task_incidents_wu ".__('Hours').")";
-				echo "</a></li>";
-			}
-			*/
-			
-			// Files
-			if ($sec2 == "operation/projects/task_files"  && $id_task > 0)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project&id_task=$id_task'>".__('Files')." ($numberfiles)";
-			echo "</a></li>";
-			echo "</ul>";	
-		echo "</li>";
-	}
 }
 
 // Project group manager
