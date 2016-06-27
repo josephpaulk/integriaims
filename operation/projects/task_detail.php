@@ -275,25 +275,18 @@ else
 	$task_name = '';
 
 if (!$gantt_editor) {
+	
+	$section_title = __('Task management');
 	if ($operation == "create") {
-		echo '<h2>'.__('Task management') . "<h4>".__("Create task");
-	}
-	else {
-		echo '<h2>'.__('Task management'). "<h4>".$task_name;
-	}
-	if ($id_task != -1) {
-		echo "<div id='button-bar-title'>";
-		echo "<ul>";
-		echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_report&id_project=$id_project&id_task=$id_task'>".
-			print_image ("images/chart_bar.png", true, array("title" => __("Statistics"))) .
-			"</a>";
-		echo "</li>";
-		echo "</ul>";
-		echo "</div>";
-	}
-	echo integria_help ("create_task", true);
-	echo '</h4>';
+		// Print project menu on creation time.
+		$section_subtitle = __("Create task");
+		$p_menu = print_project_tabs();
+		print_title_with_menu ($section_title, $section_subtitle, "create_task", 'projects', $p_menu, 'task_new');
+	} else {
+		$section_subtitle = $task_name;
+		$t_menu = print_task_tabs('', $id_task);
+		print_title_with_menu ($section_title, $section_subtitle, "create_task", 'projects', $t_menu, 'detail');
+	}	
 }
 else {
 	echo "<div id='button-bar-title' style='margin-top: 5px; margin-bottom: 9px;'>";

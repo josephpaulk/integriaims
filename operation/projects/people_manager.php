@@ -199,14 +199,17 @@ echo $result_output;
 
 // MAIN PROJECT PEOPLE LIST
 if ($id_task == -1){
-	echo "<h2>".__('Project people management')." </h2><h4> ".get_db_value('name', 'tproject','id',$id_project);
-	echo integria_help ("people_manager", true);
-	echo "</h4>";
+	
+	$section_title = __('Project people management');
+	$section_subtitle = get_db_value('name', 'tproject','id',$id_project);
+	$p_menu = print_project_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, "people_manager", 'projects', $p_menu, 'people');
 }
 else {
-	echo "<h2>".__('Task human resources management')." </h2><h4> ".get_db_value('name', 'ttask','id',$id_task);
-	echo integria_help ("people_manager", true);
-	echo "</h4>";
+	$section_title = __('Task human resources management');
+	$section_subtitle = get_db_value('name', 'ttask','id',$id_task);
+	$t_menu = print_task_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, "people_manager", 'projects', $t_menu, 'people');
 }
 // Role / task assigment
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

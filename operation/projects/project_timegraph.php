@@ -43,10 +43,11 @@ if (! $project_access["read"]) {
 	no_permission ();
 }
 
-echo '<h2>'.__('Project management').'</h2>';
-echo "<h4>".__('Time graph');
-echo integria_help ("projects_timegraph", true);
-echo "</h4>";
+// Print title and menu.
+$section_title = __('Project management');
+$section_subtitle =__('Time graph');
+$p_menu = print_project_tabs();
+print_title_with_menu ($section_title, $section_subtitle, "projects_timegraph", 'projects', $p_menu, 'time');
 
 if ($id_project) {
 echo "<div class='divform'>";	

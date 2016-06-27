@@ -81,10 +81,10 @@ Description
 ------------------------------------------------------------------------------------------------------
 ", $task["name"], $project_manager, $task["start"], $task["end"], get_priority_name($task["priority"]), $task_days, $task_cost, $task["completion"], $participants, $task["description"]);
 
-echo "<h2>".__("Task report details")."</h2>";
-echo "<h4>" . $project_name . " >> " .$task["name"];
-echo integria_help ("task_emailreport", true);
-echo "</h4>";
+$section_title = __("Task report details");
+$section_subtitle =  $project_name . " >> " .$task["name"];
+$t_menu = print_task_tabs();
+print_title_with_menu ($section_title, $section_subtitle, "task_emailreport", 'projects', $t_menu, 'email');
 
 echo "<form method=post action=''>";
 echo "<table width=100% class=search-table-button>";

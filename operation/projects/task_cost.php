@@ -119,8 +119,11 @@ if ($operation == "add"){
 
 if ($operation == "list"){
 
-	echo "<h2>" . __('Cost unit listing'). "</h2><h4>". __('Task') .": ".$task_name."</h4>";
-	$total = task_cost_invoices ($id_task);
+	$section_title = __('Cost unit listing');
+	$section_subtitle =  __('Task') .": ".$task_name;
+	$t_menu = print_task_tabs();
+	print_title_with_menu ($section_title, $section_subtitle, false, 'projects', $t_menu, 'costs');
+	
 	echo "<h4>".__("Total cost for this task"). " : $total</h4>";
 	
 	echo "<div id='' class='divform'>";

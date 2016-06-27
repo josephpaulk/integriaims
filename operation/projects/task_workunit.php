@@ -254,17 +254,21 @@ if ($id_task != 0) {
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);		
 	}
-	echo '<h2>' . __('Workunit resume') . "</h2>";
-	echo '<h4>' . $project_name . ': '.$task_name;
-	
-	echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
-	if ($pure == 1)
+	if (!$pure) {
+		$section_title = __('Workunit resume');
+		$section_subtitle = $project_name.' - ' . __('All tasks');
+		$t_menu = print_task_tabs('workunits');
+		print_title_with_menu ($section_title, $section_subtitle, "task_workunit", 'projects', $t_menu, 'workunits');
+	} else {
+		echo '<h2>'.__('Workunit resume') . "</h2>";
+		echo '<h4>' . $project_name.' - ' . __('All tasks');
+		echo integria_help ("task_workunit", true);
+		echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&pure=0' title='".__("Back to view")."'><img src='images/go-previous.png'></a>";
-	else
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&pure=1' title='".__("Html report")."'><img src='images/html_tabs.png'></a>";
-    echo '</li>';
-    echo '</ul>';
-    echo "</h4>";
+		echo '</li>';
+		echo '</ul>';
+		echo '</h4>';
+	}
 } 
 elseif ($id_project != 0) {
 	// Whole project
@@ -291,20 +295,22 @@ elseif ($id_project != 0) {
 			ORDER BY tworkunit.timestamp DESC', $id_project);
 		
 	}
-	echo '<h2>'.__('Workunit resume') . "</h2>";
-	echo '<h4>' . $project_name.' - ' . __('All tasks');
-	if (!$pure){
-		echo integria_help ("task_workunit", true);
-	}
 	
-	echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
-	if ($pure == 1)
+	if (!$pure) {
+		$section_title = __('Workunit resume');
+		$section_subtitle = $project_name.' - ' . __('All tasks');
+		$p_menu = print_project_tabs('workunits');
+		print_title_with_menu ($section_title, $section_subtitle, "task_workunit", 'projects', $p_menu, 'workunits');
+	} else {
+		echo '<h2>'.__('Workunit resume') . "</h2>";
+		echo '<h4>' . $project_name.' - ' . __('All tasks');
+		echo integria_help ("task_workunit", true);
+		echo '<ul class="ui-tabs-nav"><li class="ui-tabs">';
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pure=0' title='".__("Back to view")."'><img src='images/go-previous.png'></a>";
-	else
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pure=1' title='".__("Html report")."'><img src='images/html_tabs.png'></a>";
-    echo '</li>';
-    echo '</ul>';
-    echo '</h4>';
+		echo '</li>';
+		echo '</ul>';
+		echo '</h4>';
+	}
 }
 
 
