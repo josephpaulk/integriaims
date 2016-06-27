@@ -85,7 +85,6 @@ function validate_user (form, input, message) {
 	var rules;
 	var messages;
 	rules = {
-		required: true,
 		remote: {
 			url: "ajax.php",
 			type: "POST",

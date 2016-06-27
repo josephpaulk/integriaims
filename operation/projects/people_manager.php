@@ -420,7 +420,23 @@ $(document).ready (function () {
 		
 });
 trim_element_on_submit('input[name="user"]');
+var input = "#text-user";
+
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			page: "include/ajax/remote_validations",
+			search_non_existing_user_id: 1,
+			user_id: function() { return $(input).val() }
+		}
+	}
+};
+messages = {
+	remote: "<?php echo __('Invalid user')?>"
+};
 validate_form("#form-people_manager");
-// #text-user
-validate_user ("#form-people_manager", "#text-user", "<?php echo __('Invalid user')?>");
+add_validate_form_element_rules(input, rules, messages);
 </script>
