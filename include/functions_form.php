@@ -1211,7 +1211,10 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data['button'][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub"', true);
 	
 	if ($inverse_filter) {
-		$output .= ui_print_message(__('Inverse filter enabled'), 'suc', 'style="padding-top: 15px;padding-bottom: 15px;"', true, 'h3', false);
+		$output .= ui_print_message(__('Inverse filter enabled'), 'suc', 'style="display:inline;padding-top: 15px;padding-bottom: 15px;"', true, 'h3', false);
+		$output .= print_help_tip(__('The result will be the items which doesn\'t match the filters')
+			. '. ' . __('The select controls with \'Any\' or \'All\' selected will be ignored'), true);
+		$output .= '<br /><br />';
 	}
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
