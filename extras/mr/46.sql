@@ -59,6 +59,5 @@ CREATE TABLE `treport_subtype` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `treport_type` (`nombre`) VALUES ('List');
-INSERT INTO `treport_type` (`nombre`) VALUES ('Graphics');
-INSERT INTO `treport_type` (`nombre`) VALUES ('List & Graphics');
 INSERT INTO `treport_subtype` (`nombre`) VALUES ('Tickets');
+INSERT INTO `tfolder_report` (`nombre`) VALUES ('Default Folder');
