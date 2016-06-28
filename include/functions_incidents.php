@@ -354,6 +354,10 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			}
 		}
 	}
+
+	if (!isset($inventory_id)){
+		$inventory_id = 0;
+	}
 	
 	if ($no_parents) {
 		$sql_clause .= ' AND id_incidencia NOT IN (SELECT id_incidencia FROM tincidencia WHERE id_parent <> 0)';
@@ -2613,7 +2617,7 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 /*Filters or display result for incident search*/
 function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false, $report_mode = false, $csv_mode = false, $id_ticket = 0) {
 	global $config;
-	
+	echo '<div class = "incident_table" id = "incident_table">';
 	$params = "";
 
 	foreach ($filter as $key => $value) {
@@ -2645,7 +2649,11 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$filter["offset"] = $offset;
 
 		// Store the previous limit filter
-		$limit_aux = $filter["limit"];
+		if(isset($filter["limit"])){
+			$limit_aux = $filter["limit"];
+		} else {
+			$limit_aux = 0;
+		}
 	}
 	// Set the limit filter to 0 to retrieve all the tickets for the array pagination
 	$filter["limit"] = 0;
@@ -2693,7 +2701,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		$order_by = $filter['order_by'];
 	}
 	if (!$report_mode) {
-		if ((!isset($order_by["id_incidencia"])) || ($order_by["id_incidencia"] != "")) {
+		if (is_array($order_by) && array_key_exists("id_incidencia", $order_by) && ($order_by["id_incidencia"] != "")) {
 			if ($order_by["id_incidencia"] == "DESC") {
 				$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
 			} else {
@@ -2702,7 +2710,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 		} else {
 			$id_order_image = "&nbsp;<a href='javascript:changeIncidentOrder(\"id_incidencia\", \"DESC\")'><img src='images/block_orange.png'></a>";
 		}
-		if ((!isset($order_by["id_prioridad"])) || ($order_by["id_prioridad"] != "")) {
+		if (is_array($order_by) && array_key_exists("prioridad", $order_by) && ($order_by["prioridad"] != "")) {
 			if ($order_by["prioridad"] == "DESC") {
 				$priority_order_image = "<a href='javascript:changeIncidentOrder(\"prioridad\", \"ASC\")'><img src='images/arrow_down_orange.png'></a>";
 			} else {
@@ -2719,7 +2727,7 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	// ----------------------------------------
 	// Here we print the result of the search
 	// ----------------------------------------
-	echo '<div class = "incident_table">';
+	
 	echo '<table width="100%" cellpadding="0" cellspacing="0" border="0px" class="listing" id="incident_search_result_table">';
 
 	echo '<thead>';
@@ -2938,14 +2946,15 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	}
 	echo "</tbody>";
 	echo "</table>";
-	echo "</div>";
+	
 	if (!$report_mode) {
 		pagination($count, $url, $offset, false, $aux_text);
 	}
 
 	if ($print_result_count) {
 		echo "<h5>".$count.__(" ticket(s) found")."</h5>";
-	}	
+	}
+	echo "</div>";
 }
 
 //Returns color value (hex) for incident priority

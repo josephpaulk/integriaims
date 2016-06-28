@@ -37,6 +37,7 @@ $hours_to_dms = get_parameter('hours_to_dms', 0);
 $check_incident_childs = get_parameter('check_incident_childs', 0);
 $check_custom_search = get_parameter('check_custom_search', 0);
 $set_params = get_parameter('set_params', 0);
+$search_ajax = (bool)get_parameter('search_ajax', 0);
 
 if ($get_incidents_search) {
 	
@@ -515,4 +516,49 @@ if ($set_params) {
 		enterprise_hook("incidents_run_realtime_workflow_rules", array($id_ticket));
 	}
 }
+
+if ($search_ajax){
+	
+	$filter = array ();
+	$filter['string']             = (string) get_parameter ('search_string');
+	$filter['status']             = (int) get_parameter ('search_status', -10);
+	$filter['priority']           = (int) get_parameter ('search_priority', -1);
+	$filter['id_group']           = (int) get_parameter ('search_id_group', 1);
+	$filter['id_company']         = (int) get_parameter ('search_id_company');
+	$filter['id_inventory']       = (int) get_parameter ('search_id_inventory');
+	$filter['id_incident_type']   = (int) get_parameter ('search_id_incident_type');
+	$filter['id_user']            = (string) get_parameter ('search_id_user', '');
+	$filter['id_user_or_creator'] = (string) get_parameter ('id_user_or_creator');
+	$filter['from_date']          = (string) get_parameter ('search_first_date');
+	$filter['last_date']          = (string) get_parameter ('search_last_date');	
+	$filter['sla_state']          = (string) get_parameter ('search_sla_state');
+	$filter['id_creator']         = (string) get_parameter ('search_id_creator');
+	$filter['editor']             = (string) get_parameter ('search_editor');
+	$filter['closed_by']          = get_parameter ('closed_by');
+	$filter['resolution']         = (int) get_parameter ('search_resolution', -1);
+	$filter["offset"]             = (int) get_parameter ('offset');
+	$filter['group_by_project']   = (bool) get_parameter('search_group_by_project');
+	$filter['sla_state']          = (bool) get_parameter ('search_sla_state');
+	$filter['id_task']            = (int) get_parameter ('search_id_task');	
+	$filter['left_sla']           = (int) get_parameter ('search_left_sla');
+	$filter['right_sla']          = (int) get_parameter ('search_right_left');
+	$filter['show_hierarchy']     = (bool) get_parameter('show_hierarchy');
+	$filter['search_medals']      = get_parameter('search_medals');
+	$filter['parent_name']        = get_parameter('parent_name');
+	$filter['serial_number']      = (string) get_parameter ('search_serial_number');
+	$filter['search_from_date']   = (int) get_parameter("search_from_date");
+	//$filter['id_product']       = (int) get_parameter ('search_id_product');
+	
+	//custom fields
+	$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
+	foreach ($type_fields as $key => $type_field) {
+		$filter['type_field_'.$type_field['id']] = safe_input(safe_output((string) get_parameter ('search_type_field_'.$type_field['id'])));
+	}
+
+	debugPrint($filter, true);
+	incidents_search_result($filter, false, false, true);
+	
+	return;
+}
+
 ?>

@@ -1403,3 +1403,19 @@ function setParams (id_ticket) {
 		}
 	});	
 }
+
+function incidents_gift (){
+	
+	var filters = $('#search_incident_form').serialize();
+	
+	$("#incident_table").html("<img id='inventory_loading' src='images/carga.gif' />");
+	$.ajax({	
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&search_ajax=1&" + filters,
+		dataType: "html",
+		success: function(data){
+			$("#incident_table").html(data);
+		}
+	});
+}

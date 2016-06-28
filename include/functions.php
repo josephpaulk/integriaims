@@ -424,6 +424,8 @@ function pagination ($count, $url, $offset, $print_result_count=false, $aux_text
 
 	if($modal_id){
 		$change_id = "modal_";
+	} else {
+		$change_id = "";
 	}
 	/* 	URL passed render links with some parameter
 			&offset - Offset records passed to next page

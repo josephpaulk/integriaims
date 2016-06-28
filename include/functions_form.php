@@ -1216,7 +1216,7 @@ function form_search_incident ($return = false, $filter=false) {
 			. '. ' . __('The select controls with \'Any\' or \'All\' selected will be ignored'), true);
 		$output .= '<br /><br />';
 	}
-	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
+	$output .= '<form id="search_incident_form" method="post" onsubmit="incidents_gift();return false">';
 	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
 	$output .= '</form>';
 		

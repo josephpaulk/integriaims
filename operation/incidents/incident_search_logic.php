@@ -276,6 +276,9 @@ echo "</form>";
 
 //Store serialize filter
 serialize_in_temp($filter, $config["id_user"]);
+$resolution = 0;
+$parent_name = 0;
+$id_parent = 0;
 
 $table = new StdClass();
 $table->class = 'search-table-button';
