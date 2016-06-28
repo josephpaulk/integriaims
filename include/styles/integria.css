@@ -3042,16 +3042,18 @@ table.gantt_buttons td {
 }
 
 #msg_box {
-	position: absolute;
+	position: fixed;
 	border: 2px solid #FF9933;
 	border-radius: 4px;
 	background-color: #fff;
-	top: 5%;
+	top: 40%;
 	left: 50%;
+	margin-left: -125px;
 	width: 250px;
 	padding-left: 5px;
 	padding-bottom: 5px;
 	text-align: center;
+	z-index: 1005;
 	display:none;
 }
 

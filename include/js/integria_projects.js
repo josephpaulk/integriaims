@@ -586,18 +586,18 @@ function show_task_editor_gantt (id, e) {
 }
 
 function submit_task_editor_form_gantt (id_project, id_task) {
-	var form_data = $("#form-task_detail").serialize();
+	var form_data = $("#form-new_project").serialize();
 	$.ajax({
 	type: "POST",
-	url: "ajax.php?page=include/ajax/projects&get_task_editor=1&id_project="+id_project+"&id_task="+id_task+"&gantt_editor=1",
+	url: "ajax.php?page=include/ajax/projects&get_task_editor=1&id_project="+id_project+"&id_task="+id_task+"&gantt_editor=1&operation=update",
 	data: form_data,
 	dataType: "html",
 	success: function(data){ 
 			$("#task_editor").dialog('close');
 			data += __("Loading data...");
 			$("#msg_box").html(data);
-			$("#msg_box").fadeToggle(1500);
-			$("#msg_box").fadeToggle(1000);
+			$("#msg_box").fadeToggle(1500, "easeOutQuint");
+			$("#msg_box").fadeToggle(1000, "easeInQuint");
 
 			refresh_gantt ();
 		}
