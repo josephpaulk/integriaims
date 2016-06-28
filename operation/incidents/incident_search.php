@@ -22,6 +22,7 @@ if (defined ('AJAX')) {
 	$search_name = get_parameter('search_name');
 	$form_values = get_parameter('form_values');
 
+	$filter['inverse_filter'] = $form_values['search_inverse_filter'];
 	$filter['string'] = $form_values['search_string'];
 	$filter['status'] = $form_values['search_status'];
 	$filter['priority'] = $form_values['search_priority'];
@@ -64,6 +65,7 @@ global $config;
 $option = get_parameter("option", "search");
 
 $filter = array ();
+$filter['inverse_filter'] = (bool) get_parameter('search_inverse_filter');
 $filter['string'] = (string) get_parameter ('search_string');
 $filter['priority'] = (int) get_parameter ('search_priority', -1);
 $filter['id_group'] = (int) get_parameter ('search_id_group', 1);

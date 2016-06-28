@@ -933,6 +933,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$output = '';
 	
 	if (!$filter) {
+		$inverse_filter = (bool) get_parameter ('search_inverse_filter');
 		$search_string = (string) get_parameter ('search_string');
 		$status = (int) get_parameter ('search_status', -10);
 		$priority = (int) get_parameter ('search_priority', -1);
@@ -965,6 +966,7 @@ function form_search_incident ($return = false, $filter=false) {
 		}
 	}
 	else {
+		$inverse_filter = (bool) $filter['inverse_filter'];
 		$search_string = (string) $filter['string'];
 		$priority = (int) $filter['priority'];
 		$id_group = (int) $filter['id_group'];
@@ -1007,20 +1009,20 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data = array ();
 	
 	
-	//Search
+	// Filter text
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
-		'', 30, 100, true, __('Search string'));
+		'', 30, 100, true, __('Text filter'));
 	
-	//Status
+	// Status
 	$available_status = get_indicent_status();
 	$available_status[-10] = __("Not closed");
 	$table->data[0][1] = print_select ($available_status,'search_status', $status,'', __('Any'), 0, true, false, true,__('Status'));
 	
-	//Groups
+	// Groups
 	$groups = users_get_groups_for_select ($config['id_user'], "IW", true, true);
 	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
-	//Check Box
+	// Check Box
 	$table->data[0][3] = print_checkbox_extended ('search_show_hierarchy', 1, $show_hierarchy, false, '', '', true, __('Show hierarchy'));
 	
 	$table_advanced = new stdclass;
@@ -1088,17 +1090,17 @@ function form_search_incident ($return = false, $filter=false) {
 	$table_advanced->cellstyle[2][3] = "vertical-align:top;";	
 	
 	if (!get_standalone_user ($config["id_user"]))
-		$table_advanced->data[4][0] = print_select (get_companies (), 'search_id_company', $id_company, '', __('All'), 0, true, false, false, __('Company'));
+		$table_advanced->data[4][0] = print_select (get_companies (), 'search_id_company', $id_company, '', __('Any'), 0, true, false, false, __('Company'));
 			
 	$table_advanced->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
-		$search_id_incident_type, 'javascript:change_type_fields_table(\''.__('Custom field').'\');', __('All'), 0, true, false, false, __('Ticket type'));
+		$search_id_incident_type, 'javascript:change_type_fields_table(\''.__('Custom field').'\');', __('Any'), 0, true, false, false, __('Ticket type'));
 		
 	$table_advanced->data[4][3] = print_checkbox_extended ('search_group_by_project', 1, $group_by_project, false, '', '', true, __('Group by project/task'));
 
 	$sla_states = array();
 	$sla_states[1] = __('SLA is fired');
 	$sla_states[2] = __('SLA is not fired');
-	$table_advanced->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('All'), 0, true, false, false, __('SLA'));
+	$table_advanced->data[5][0] = print_select ($sla_states, 'search_sla_state', $sla_state, '', __('Any'), 0, true, false, false, __('SLA'));
 	
 	$table_advanced->data[5][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"), 'search_id_task');
 	
@@ -1111,7 +1113,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$medals = array();
 	$medals[1] = __('Gold medals');
 	$medals[2] = __('Black medals');
-	$table_advanced->data[5][3] = print_select ($medals, 'search_medals', $search_medal, '', __('All'), 0, true, false, false, __('Medals'));
+	$table_advanced->data[5][3] = print_select ($medals, 'search_medals', $search_medal, '', __('Any'), 0, true, false, false, __('Medals'));
 	
 	$table_type_fields = new StdClass();
 	$table_type_fields->width = "100%";
@@ -1196,20 +1198,46 @@ function form_search_incident ($return = false, $filter=false) {
 	$table_advanced->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
 
 	$table->colspan['row_advanced'][0] = 5;
-	$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_search', __('Advanced search'), print_table($table_advanced, true), 'closed', true, true);
+	$table->data['row_advanced'][0] = print_container_div('advanced_parameters_incidents_search', __('Advanced filter'), print_table($table_advanced, true), 'closed', true, true);
 	
 	//Store serialize filter
 	serialize_in_temp($filter, $config["id_user"]);
 	$table->colspan['button'][0] = 2;
 	$table->colspan['button'][2] = 2;
 	$table->data['button'][0] = '</br>';
-	$table->data['button'][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data['button'][2] = print_submit_button (__('Filter'), 'search', false, 'class="sub search"', true);
+	$table->data['button'][2] .= print_input_hidden('search_inverse_filter', (int) $inverse_filter, true);
+	$table->data['button'][2] .= print_submit_button (__('Inverse filter'), 'submit_inverse_filter', false, 'class="sub search"', true);
 	$table->data['button'][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub"', true);
+	
+	if ($inverse_filter) {
+		$output .= ui_print_message(__('Inverse filter enabled'), 'suc', 'style="display:inline;padding-top: 15px;padding-bottom: 15px;"', true, 'h3', false);
+		$output .= print_help_tip(__('The result will be the items which doesn\'t match the filters')
+			. '. ' . __('The select controls with \'Any\' or \'All\' selected will be ignored'), true);
+		$output .= '<br /><br />';
+	}
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
 	$output .= '</form>';
 		
 	echo "<div class= 'dialog ui-dialog-content' id='search_inventory_window'></div>";
+	
+	// WARNING: Important for the inverse filter feature
+	// Change the search_inverse_filter value when the form is submitted using the submit_inverse_filter or the search buttons
+	$output .= '<script type="text/javascript">';
+		$output .= '$(document).ready(function () {';
+			$output .= 'var filterForm = document.getElementById("search_incident_form");';
+			$output .= 'var filterBtn = filterForm.elements["search"];';
+			$output .= 'var inverseFilterBtn = filterForm.elements["submit_inverse_filter"];';
+			$output .= 'var inverseFilter = filterForm.elements["search_inverse_filter"];';
+			$output .= '$(filterBtn).click(function (e) {';
+				$output .= 'inverseFilter.value = 0;';
+			$output .= '});';
+			$output .= '$(inverseFilterBtn).click(function (e) {';
+				$output .= 'inverseFilter.value = 1;';
+			$output .= '});';
+		$output .= '});';
+	$output .= '</script>';
 	
 	if ($return)
 		return $output;

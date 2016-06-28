@@ -132,7 +132,7 @@ echo "<div id='button-bar-title' style='margin-right: 12px;'>";
 echo "<ul>";
 print_autorefresh_button_ticket();
 echo "<li style=''>";
-echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."&nbsp;".integria_help ("custom_search", true)."</a>";
+echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom filter')."&nbsp;".integria_help ("custom_search", true)."</a>";
 echo "</li>";
 
 echo "</ul>";
@@ -155,13 +155,13 @@ $filter_form = $filter;
 $has_im  = give_acl ($config['id_user'], $filter_form['id_group'], "IM");
 
 echo '<div id="msg_ok_hidden" style="display:none;">';
-	echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+	echo '<h3 class="suc">'.__('Custom filter saved').'</h3>';
 echo '</div>';
 echo '<div id="msg_error_hidden" style="display:none;">';
-	echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+	echo '<h3 class="error">'.__('Could not create custom filter').'</h3>';
 echo '</div>';
 
-/* Get a custom search*/
+/* Get a custom filter*/
 if ($id_search && !$delete_custom_search) {
 	
 	$search = get_custom_search ($id_search, 'incidents');
@@ -173,14 +173,14 @@ if ($id_search && !$delete_custom_search) {
 			$filter = unserialize($search["form_values"]);
 			$filter_form = $filter;
 			
-			echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $search["name"]).'</h3>';
+			echo '<h3 class="suc">'.sprintf(__('Custom filter "%s" loaded'), $search["name"]).'</h3>';
 		}
 		else {
-			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $search["name"]).'</h3>';	
+			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom filter'), $search["name"]).'</h3>';	
 		}
 	}
 	else {
-		echo '<h3 class="error">'.__('Could not load custom search').'</h3>';
+		echo '<h3 class="error">'.__('Could not load custom filter').'</h3>';
 	}
 }
 
@@ -193,10 +193,10 @@ if ($delete_custom_search) {
 		$config['id_user'], $id_search);
 	$result = process_sql ($sql);
 	if ($result === false) {
-		echo '<h3 class="error">'.__('Could not delete custom search').'</h3>';
+		echo '<h3 class="error">'.__('Could not delete custom filter').'</h3>';
 	}
 	else {
-		echo '<h3 class="suc">'.__('Custom search deleted').'</h3>';
+		echo '<h3 class="suc">'.__('Custom filter deleted').'</h3>';
 	}
 }
 
@@ -215,14 +215,14 @@ $sql = sprintf ('SELECT id, name FROM tcustom_search
 	AND section = "incidents"
 	ORDER BY name',
 	$config['id_user']);
-$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('Select'), 0, true, false, true, __('Custom searches'));
+$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('Select'), 0, true, false, true, __('Custom filters'));
 
 //If a custom search was selected display cross
 if ($id_search) {
 	$table->data[0][0] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_search&delete_custom_search=1&saved_searches='.$id_search.'">';
 	$table->data[0][0] .= '<img src="images/cross.png" title="' . __('Delete') . '"/></a>';
 }
-$table->data[0][1] = print_input_text ('search_name', '', '', 40, 60, true, __('Save current search'));
+$table->data[0][1] = print_input_text ('search_name', '', '', 40, 60, true, __('Save current filter'));
 $table->data[0][2] = print_submit_button (__('Save'), 'save-search', false, 'class="sub save" style="margin-top: 13px;"', true);
 
 echo '<div id="custom_search" style="display: none;">';
