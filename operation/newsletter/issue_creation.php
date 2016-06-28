@@ -22,39 +22,11 @@ if (defined ('AJAX')) {
 	$id_issue = get_parameter('id');
 	$issue = get_db_row ("tnewsletter_content", "id", $id_issue);
 	$html = $issue["html"];
+	ob_clean();
 	echo safe_output($html);
 	return;
 }
-?>
 
-<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
-<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
-<script type="text/javascript">
-tinymce.init({
-        selector: 'textarea',
-        fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
-        height: 444400,
-        forced_root_block : false,
-        plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table contextmenu paste code'
-                ],
-        menubar: true,
-        toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | table code visualblocks preview charmap',
-        content_css: 'include/js/tinymce/integria.css',
-        valid_children : "+body[style]",
-                element_format : "html",
-                editor_deselector : "noselected",
-                 inline_styles : true,
-
-
-});
-</script>
-	
-	
-
-<?php
 if (! give_acl ($config["id_user"], 0, "CN")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access newsletter management");
 	require ("general/noaccess.php");
@@ -126,12 +98,10 @@ $table->data[1][2] = print_select ($campaigns, "campaign", $campaign, '', __("No
 
 $editor_type_chkbx = "<div style=\"padding: 4px 0px;\"><b><small>";
 $editor_type_chkbx .= __('Basic') . "&nbsp;&nbsp;";
-//$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', true, false, "removeTinyMCE('textarea-html')", '', true);
-$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', false, false, "removeTinyMCE('textarea-html')", '', true);
+$editor_type_chkbx .= print_radio_button('editor_type', 0, '', false, true);
 $editor_type_chkbx .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 $editor_type_chkbx .= __('Advanced') . "&nbsp;&nbsp;";
-//$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', false, false, "addTinyMCE('textarea-html')", '', true);
-$editor_type_chkbx .= print_radio_button_extended ('editor_type', 0, '', true, false, "addTinyMCE('textarea-html')", '', true);
+$editor_type_chkbx .= print_radio_button('editor_type', 1, '', true, true);
 $editor_type_chkbx .= "</small></b></div>";
 
 $table->data[3][0] = print_textarea ("html", 10, 1, $html, 'class="noselected"', true, "<br>" . __('HTML') . $editor_type_chkbx);
@@ -164,32 +134,64 @@ echo '</div>';
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
-
-<script>
-
-function removeTinyMCE(element_id) {
-
-	tinyMCE.EditorManager.execCommand('mceRemoveControl', true, element_id);
+<script type="text/javascript" src="include/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="include/js/tinymce/jquery.tinymce.min.js "></script>
+<script type="text/javascript">
+(function () {
+	function initTinyMCE (selector) {
+		tinymce.init({
+			selector: selector,
+			fontsize_formats: '8pt 9pt 10pt 11pt 12pt 26pt 36pt',
+			height: 300,
+			forced_root_block: false,
+			plugins: [
+				'advlist autolink lists link image charmap print preview anchor',
+				'searchreplace visualblocks code fullscreen',
+				'insertdatetime media table contextmenu paste code'
+			],
+			menubar: true,
+			toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | table code visualblocks preview charmap',
+			content_css: 'include/js/tinymce/integria.css',
+			valid_children: '+body[style]',
+			element_format: 'html',
+			editor_deselector: 'noselected',
+			inline_styles: true,
+		});
+	}
 	
-	id = $('#text-id').val();
-
-	values = Array ();
-	values.push ({name: "page",
-				value: "operation/newsletter/issue_creation"});
-	values.push ({name: "id",
-				value: id});
-	jQuery.get ("ajax.php",
-		values,
-		function (data, status) {
-			$('#textarea-html').val(data);
-		},
-		"html"
-	);
-}
-function addTinyMCE(element_id) {
-	tinyMCE.EditorManager.execCommand('mceAddControl', true, element_id);
-}
-
-add_datepicker ("#text-issue_date");
-
+	function hideTinyMCE(elementId) {
+		var editor = tinyMCE.get(elementId);
+		if (editor) {
+			editor.hide();
+			
+			var id = $('#text-id').val();
+		
+			jQuery.get ('ajax.php', {
+				page: 'operation/newsletter/issue_creation',
+				id: id
+			}, function (data, status) {
+				$('#textarea-html').val(data);
+			}, 'html');
+		}
+	}
+	function showTinyMCE(elementId, selector) {
+		var editor = tinyMCE.get(elementId);
+		if (!editor) initTinyMCE(selector);
+		else editor.show();
+	}
+	
+	// Basic
+	$('input[name="editor_type"]').change(function (e) {
+		// Advanced
+		if (Number.parseInt(e.target.value, 10) === 1) {
+			showTinyMCE('textarea-html', '#textarea-html');
+		}
+		// Basic
+		else {
+			hideTinyMCE('textarea-html');
+		}
+	}).change();
+	
+	add_datepicker('#text-issue_date');
+})()
 </script>

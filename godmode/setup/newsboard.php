@@ -245,26 +245,21 @@ if ($operation == "") {
 
 <script type="text/javascript">
 $(document).ready (function () {
-/*
-	$("#textarea-description").TextAreaResizer ();
-*/
-
 	tinymce.init({
-	selector: 'textarea',
-	fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
-	height: 444400,	
-	forced_root_block : false,
-	plugins: [
-		'advlist autolink lists link image charmap print preview anchor',
-		'searchreplace visualblocks code fullscreen',
-		'insertdatetime media table contextmenu paste code'
+		selector: 'textarea',
+		fontsize_formats: '8pt 9pt 10pt 11pt 12pt 26pt 36pt',
+		height: 300,	
+		forced_root_block: false,
+		plugins: [
+			'advlist autolink lists link image charmap print preview anchor',
+			'searchreplace visualblocks code fullscreen',
+			'insertdatetime media table contextmenu paste code'
 		],
-	menubar: true,
-	toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | table code visualblocks',
-	content_css: 'include/js/tinymce/integria.css',
-});
-
-
+		menubar: true,
+		toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | table code visualblocks',
+		content_css: 'include/js/tinymce/integria.css',
+	});
+	
 	$("#slider").slider ({
 		min: 0,
 		max: 100,
