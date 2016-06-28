@@ -3191,6 +3191,8 @@ function incidents_get_sla_graph_percentages ($incidents) {
 function incidents_get_filter_tickets_tree ($filters, $mode = false, $id_task = false) {
 	global $config;
 	
+	// TODO: Refactor to use the function 'filter_incidents'
+	
 	/* Set default values if none is set */
 	$filters['inverse_filter'] = isset ($filters['inverse_filter']) ? $filters['inverse_filter'] : false;
 	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
@@ -3221,7 +3223,6 @@ function incidents_get_filter_tickets_tree ($filters, $mode = false, $id_task = 
 	
 	///// IMPORTANT: Write an inverse filter for every new filter /////
 	$is_inverse = $filters['inverse_filter'];
-	$is_inverse = true;
 	
 	$sql_clause = '';
 	
