@@ -1194,7 +1194,9 @@ function form_search_incident ($return = false, $filter=false) {
 	if ($table_type_fields->data) {
 		$table_type_fields_html = print_table($table_type_fields, true);
 	}
-
+	if(!isset($table_type_fields_html)){
+		$table_type_fields_html = '';
+	}	
 	$table_advanced->data[6][0] = "<div id='table_type_fields'>". $table_type_fields_html ."</div>";
 
 	$table->colspan['row_advanced'][0] = 5;

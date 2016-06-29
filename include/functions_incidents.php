@@ -364,7 +364,10 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	}
 	
 	// Order
-	if ($filters['order_by'] && !is_array($filters['order_by'])) {
+	if(!isset($filters['order_by'])){
+		$filters['order_by'] = '';
+	}
+	if ($filters['order_by']) {
 		$order_by_array = json_decode(clean_output($filters['order_by']), true);
 	} else {
 		$order_by_array = $filters['order_by'];
@@ -4330,7 +4333,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$container_title = __("SLA compliance");
 	$container_sla_compliance = print_container_div('container_pie_graphs container_sla_compliance', $container_title, $output, 'no', true, true, "container_simple_title", "container_simple_div");  
 
-    $status_aux .= "<table class='listing' style=''>";
+    $status_aux = "<table class='listing' style=''>";
 	$status_aux .= "<tr>";
 	$status_aux .= "<th><strong>".__("Status")."</strong></th>";
 	$status_aux .= "<th><strong>".__("Number")."</strong></th>";
@@ -4353,7 +4356,7 @@ function print_incidents_stats_simply ($incidents, $return = false, $simple_mode
 	$container_title = __("Ticket by status");
     $container_status_incidents = print_container_div('container_status_incidents', $container_title, $status_aux, 'no', true, true, "container_simple_title", "container_simple_div");  
 
-	$priority_aux .= "<table class='listing table_priority_report'>";
+	$priority_aux = "<table class='listing table_priority_report'>";
 	
 	$priority_aux .= "<tr>";
 	$priority_aux .= "<th><strong>".__("Priority")."</strong></th>";

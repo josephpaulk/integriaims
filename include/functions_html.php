@@ -724,7 +724,7 @@ function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0,
  */
 function print_input_hidden ($name, $value, $return = false, $class = '', $label = false, $id = '') {
 	if ($label) {
-		$output .= print_label ($label, $name, 'hidden', true);
+		$output = print_label ($label, $name, 'hidden', true);
 	}
 
 	if (!$id) {

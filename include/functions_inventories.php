@@ -1291,7 +1291,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 		$is_enterprise = true;
 	}
 	
-	$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
+	$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], '', true));
 
 	//csv querys
 	$filter["query"] = $sql_search;
@@ -1333,20 +1333,21 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 	
 	$i=0;
 	$header=array();
-	foreach ($inventories_aux_pagination[0] as $key => $value) {
-		$header[$key] =1;
-	}
-	foreach ($inventories_aux_pagination as $key => $value) {
-		unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
-		foreach ($inventories_aux as $k => $v) {
-			$header[$v['label']] =1;
-			if($value['id'] == $v['id']){
-				$inventories_aux_pagination[$i][$v['label']] = $v['data'];
-			}
+	if(is_array($inventories_aux_pagination) || is_object($inventories_aux_pagination)){
+		foreach ($inventories_aux_pagination[0] as $key => $value) {
+			$header[$key] =1;
 		}
-		$i++;
+		foreach ($inventories_aux_pagination as $key => $value) {
+			unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
+			foreach ($inventories_aux as $k => $v) {
+				$header[$v['label']] =1;
+				if($value['id'] == $v['id']){
+					$inventories_aux_pagination[$i][$v['label']] = $v['data'];
+				}
+			}
+			$i++;
+		}
 	}
-
 	//deleted label and data 
 	unset($header['label'], $header['data'], $header['']);
 

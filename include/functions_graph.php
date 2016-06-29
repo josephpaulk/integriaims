@@ -1145,6 +1145,7 @@ function print_activity_calendar($values, $date_start, $date_end, $return = fals
 	// Convert the dates to unix timestamp
 	$udate_start = strtotime($date_start);
 	$udate_end = strtotime($date_end);
+	$udate = strtotime($date_start);
 
 	$week_day_start = date('w', $udate_start);
 	$year_start = date('Y', $udate_start);
@@ -1154,7 +1155,7 @@ function print_activity_calendar($values, $date_start, $date_end, $return = fals
 	$days = array();
 
 	$first_week = true;
-	while (!$end) {
+	while (!isset($end)) {
 		$week_count++;
 		foreach ($week_days as $i => $day) {
 			$data = array();
@@ -1180,7 +1181,7 @@ function print_activity_calendar($values, $date_start, $date_end, $return = fals
 
 			$data['type'] = "day";
 			$data['date'] = date("Y-m-d", $udate);
-			$data['val'] = $values[$data['date']];
+			$data['val'] = (isset($values[$data['date']]) ? $values[$data['date']] : null);
 			$days[$i][$week_count] = $data;
 
 			if ($udate >= $udate_end) {
@@ -1209,7 +1210,19 @@ function print_activity_calendar($values, $date_start, $date_end, $return = fals
 	$output .= "<tr>";
 	$output .= "<td width=$width height=$height style=\"line-height:0px;\"></td>";
 	for ($i = 1; $i <= count($months); $i++) {
-		if ($months[$i] != $months[$i-1] && $months[$i] == $months[$i+1]) {
+		if (isset($months[$i-1])) {
+			$previous = $months[$i - 1];
+		}
+		else {
+			$previous = -1; # Unexistent value - to check if it is the first column
+		}
+		if (isset($months[$i+1])){
+			$next = $months[$i + 1];
+		}
+		else {
+			$next = -2; # Unexistent value - to check if it is the last column
+		}
+		if ($months[$i] != $previous && $months[$i] == $next) {
 			$output .= "<td width=$width height=$height colspan=\"2\" style=\"line-height:0px;\">" . $months_names[$months[$i]] . "</td>";
 			$colspan = true;
 		} elseif (!$colspan) {

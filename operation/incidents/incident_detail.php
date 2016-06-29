@@ -1036,7 +1036,7 @@ $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-if (($has_permission && (!$blocked_incident)) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!$blocked_incident))) {
+if (($has_permission && (!isset($blocked_incident))) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!isset($blocked_incident)))) {
 	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, '', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
@@ -1064,7 +1064,9 @@ if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_
 } else {
 	$disabled_itype = true;
 }
-
+if (!isset($blocked_incident)){
+	$blocked_incident = 0;	
+}
 if ($disabled_itype || $blocked_incident) {
 	$disabled_itype = true;
 }
@@ -1144,7 +1146,9 @@ if (!$create_incident){
 	}
 	$table->data[1][2] .= "</div>";
 }
-
+if(!isset($incident["estado"])){
+	$incident["estado"] = '';
+}
 if ($incident["estado"] != STATUS_CLOSED) {
 		$table->data[1][3] = "<div id='div_incident_block' style='display: none;'>";
 	} else {

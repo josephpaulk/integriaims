@@ -274,7 +274,7 @@ foreach ($incidents as $inc) {
 	}
 }
 
-$search_by_priority .="<tr>";
+$search_by_priority ="<tr>";
 
 for ($i = 0; $i<=5; $i++) {
 	// Change the priority code to database code

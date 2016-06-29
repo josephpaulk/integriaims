@@ -305,13 +305,13 @@ return;
 		}
 		foreach ($object_fields as $key => $value) {
 			if ($key < 10){
-				if (!$pr){
+				if (!isset($pr)){
 					$pr = ' i.'.$value;
 				} else {
 					$pr .= ',i.'.$value;
 				}
 			} else {
-				if (!$tr){
+				if (!isset($tr)){
 					$tr = $value;
 					$count_object_custom_fields++;
 				} else {
@@ -320,7 +320,7 @@ return;
 				}
 			}
 		}
-		if($tr){
+		if(isset($tr)){
 			$sql_search = 'SELECT '.$pr.', o.label, t.data FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory and t.id_object_type_field IN ('.$tr.')';
 			$sql_search_pagination = 'SELECT '.$pr.' FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
 			$sql_search_count = 'SELECT i.id, i.name FROM tinventory i, tobject_field_data t, tobject_type_field o where t.id_object_type_field= o.id and i.id = t.id_inventory';
@@ -679,9 +679,15 @@ if (!$pure) {
 		//associate company
 		$companies = get_companies();
 		$companies[0] = __("All");
+		if(!isset($params['id_company'])){
+			$params['id_company'] = 0;
+		}
 		$table_search->data[0][1] = print_select ($companies, 'id_company', $params['id_company'],'', '', 0, true, false, false, __('Associated company'), '', 'width: 218px;');
 
 		//owner
+		if(!isset($params['owner'])){
+			$params['owner'] = "";
+		}
 		$params_assigned['input_id'] = 'text-owner';
 		$params_assigned['input_name'] = 'owner';
 		$params_assigned['input_value'] = $params['owner'];
@@ -692,15 +698,24 @@ if (!$pure) {
 		
 		//Contract
 		$contracts = get_contracts ();
+		if(!isset($params['id_contract'])){
+			$params['id_contract'] = '';	
+		}
 		$table_search->data[1][0] = print_select ($contracts, 'id_contract', $params['id_contract'],
 			'', __('None'), 0, true, false, false, __('Contract'), '', '');
 
 		//Manufacturer
+		if(!isset($params['id_manufacturer'])){
+			$params['id_manufacturer'] = '';
+		}
 		$manufacturers = get_manufacturers ();
 		$table_search->data[1][1] = print_select ($manufacturers, 'id_manufacturer',
 		$params['id_manufacturer'], '', __('None'), 0, true, false, false, __('Manufacturer'), '','');
 
 		//User Assoc
+		if(!isset($params['associated_user'])){
+			$params['associated_user'] = '';
+		}
 		$params_associated['input_id'] = 'text-associated_user';
 		$params_associated['input_name'] = 'associated_user';
 		$params_associated['input_value'] = $params['associated_user'];
@@ -712,10 +727,15 @@ if (!$pure) {
 		//status
 		$all_inventory_status = inventories_get_inventory_status ();
 		array_unshift($all_inventory_status, __("All"));
-		
+		if(!isset($params['inventory_status'])){
+			$params['inventory_status'] = 'All';
+		}
 		$table_search->data[2][0] = print_select ($all_inventory_status, 'inventory_status', $params['inventory_status'], '', '', '', true, false, false, __('Status'));
 
 		//Parent name
+		if(!isset($params['parent_name'])){
+			$params['parent_name'] = '';
+		}
 		$table_search->data[2][1] =  print_input_text_extended ("parent_name", $params['parent_name'], "text-parent_name", '', 20, 0, false, "", "class='inventory_obj_search' style='width:165px !important;'", true, false,  __('Parent object'), false, true);
 		$table_search->data[2][1] .= "&nbsp;&nbsp;" . print_image("images/add.png", true, array("onclick" => "show_inventory_search('','','','','','','','','','', '', '')", "style" => "cursor: pointer"));	
 		$table_search->data[2][1] .= "&nbsp;&nbsp;" . print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
@@ -734,6 +754,9 @@ if (!$pure) {
 		$table_search->data[3][0] .= print_input_hidden	('sort_mode', $params['sort_mode'], true, false, 'sort_mode');
 		
 		//offset pagination hidden
+		if(!isset($params['offset'])){
+			$params['offset'] = '';
+		}
 		$table_search->data[3][0] .= print_input_hidden	('offset', $params['offset'], true, false, 'offset');
 		
 		//mode: list, tree, pure
@@ -745,10 +768,10 @@ if (!$pure) {
 		serialize_in_temp($filter, $config["id_user"]);
 		
 		//tree_search_submit()
-		$table_search->data[3][1] .= print_button(__('Export to CSV'), '', false, 'tree_search_submit(); window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\');', 'class="sub csv"', true);
+		$table_search->data[3][1] = print_button(__('Export to CSV'), '', false, 'tree_search_submit(); window.open(\'' . 'include/export_csv.php?export_csv_inventory=1'.'\');', 'class="sub csv"', true);
 
 		//button
-		$table_search->data[3][2] .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+		$table_search->data[3][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 
 		$search_other .= print_table($table_search, true);
 		$search_other .= '</div>';

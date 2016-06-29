@@ -3820,7 +3820,7 @@ img#inventory_loading{
 	float:left;
 }
 .container_pie_graphs .pie_frame .graph .legend > table tr td{
-	line-height: 22px !important;
+	line-height: 10px !important;
 	font-size: 9px !important;
 }
 .container_pie_graphs .pie_frame .graph .legend > table tr td.legendColorBox{
