@@ -42,6 +42,7 @@ $search_ajax = (bool)get_parameter('search_ajax', 0);
 if ($get_incidents_search) {
 	
 	$filter = array ();
+	$filter['inverse_filter'] = (bool) get_parameter ('search_inverse_filter');
 	$filter['string'] = (string) get_parameter ('search_string');
 	$filter['priority'] = (int) get_parameter ('search_priority', -1);
 	$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
@@ -555,10 +556,8 @@ if ($search_ajax){
 	foreach ($type_fields as $key => $type_field) {
 		$filter['type_field_'.$type_field['id']] = safe_input(safe_output((string) get_parameter ('search_type_field_'.$type_field['id'])));
 	}
-
-	debugPrint($filter, true);
-	incidents_search_result($filter, false, false, true);
 	
+	incidents_search_result($filter, false, false, true);
 	return;
 }
 

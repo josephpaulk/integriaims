@@ -1212,12 +1212,14 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data['button'][2] .= print_submit_button (__('Inverse filter'), 'submit_inverse_filter', false, 'class="sub search"', true);
 	$table->data['button'][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_tickets=1'. '\')', 'class="sub"', true);
 	
-	if ($inverse_filter) {
-		$output .= ui_print_message(__('Inverse filter enabled'), 'suc', 'style="display:inline;padding-top: 15px;padding-bottom: 15px;"', true, 'h3', false);
-		$output .= print_help_tip(__('The result will be the items which doesn\'t match the filters')
-			. '. ' . __('The select controls with \'Any\' or \'All\' selected will be ignored'), true);
-		$output .= '<br /><br />';
-	}
+	// Inverse filter info
+	$output .= '<div id="inverse_filter_info" style="display: '.($inverse_filter ? 'block' : 'none').';">';
+	$output .= ui_print_message(__('Inverse filter enabled'), 'suc', 'style="display:inline;padding-top: 15px;padding-bottom: 15px;"', true, 'h3', false);
+	$output .= print_help_tip(__('The result will be the items which doesn\'t match the filters')
+		. '. ' . __('The select controls with \'Any\' or \'All\' selected will be ignored'), true);
+	$output .= '<br /><br />';
+	$output .= '</div>';
+	
 	$output .= '<form id="search_incident_form" method="post" onsubmit="incidents_gift();return false">';
 	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
 	$output .= '</form>';
@@ -1226,17 +1228,21 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	// WARNING: Important for the inverse filter feature
 	// Change the search_inverse_filter value when the form is submitted using the submit_inverse_filter or the search buttons
+	// Show or hide the inverse filter info
 	$output .= '<script type="text/javascript">';
 		$output .= '$(document).ready(function () {';
+			$output .= 'var inverseFilterInfo = document.getElementById("inverse_filter_info");';
 			$output .= 'var filterForm = document.getElementById("search_incident_form");';
 			$output .= 'var filterBtn = filterForm.elements["search"];';
 			$output .= 'var inverseFilterBtn = filterForm.elements["submit_inverse_filter"];';
 			$output .= 'var inverseFilter = filterForm.elements["search_inverse_filter"];';
 			$output .= '$(filterBtn).click(function (e) {';
 				$output .= 'inverseFilter.value = 0;';
+				$output .= '$(inverseFilterInfo).hide();';
 			$output .= '});';
 			$output .= '$(inverseFilterBtn).click(function (e) {';
 				$output .= 'inverseFilter.value = 1;';
+				$output .= '$(inverseFilterInfo).show();';
 			$output .= '});';
 		$output .= '});';
 	$output .= '</script>';
