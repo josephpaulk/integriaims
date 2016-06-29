@@ -107,6 +107,15 @@ if ($operation == "insert") {
 	if ($name == '') {
 		$operation = 'create';
 		$result_output = '<h3 class="error">'.__('Name cannot be empty').'</h3>';
+		
+	}
+	elseif (!strtotime ($start)){
+		$operation = 'create';
+		$result_output = '<h3 class="error">'.__('Malformed start date').'</h3>';
+	}
+	elseif (!strtotime ($end)){
+		$operation = 'create';
+		$result_output = '<h3 class="error">'.__('Malformed end date').'</h3>';
 	}
 	elseif (strtotime ($start) > strtotime ($end)) {
 		$operation = 'create';
@@ -182,60 +191,77 @@ if ($operation == "update") {
 	$current_completion = get_db_value('completion', 'ttask', 'id', $id_task);
 	
 	$name = (string) get_parameter ('name');
-	$description = (string) get_parameter ('description');
-	$priority = (int) get_parameter ('priority');
-	$completion = (int) get_parameter ('completion');
-	$parent = (int) get_parameter ('parent');
-	$hours = (int) get_parameter ('hours');
-	$periodicity = (string) get_parameter ('periodicity', 'none');
-	$estimated_cost = (int) get_parameter ('estimated_cost');
 	$start = get_parameter ('start_date', date ("Y-m-d"));
 	$end = get_parameter ('end_date', date ("Y-m-d"));
-	$count_hours = get_parameter("count_hours");
-	$cc = get_parameter('cc', '');
 	
-	$sql = sprintf ('UPDATE ttask SET name = "%s", description = "%s",
-			priority = %d, completion = %d,
-			start = "%s", end = "%s", hours = %d,
-			periodicity = "%s", estimated_cost = "%f",
-			id_parent_task = %d, count_hours = %d,
-			cc = "%s"
-			WHERE id = %d',
-			$name, $description, $priority, $completion, $start, $end,
-			$hours, $periodicity, $estimated_cost, $parent, $count_hours,
-			$cc, $id_task);
-	
-	if ($id_task != $parent) {
-		$result = process_sql ($sql);		
+	if ($name == '') {
+		$operation = 'update';
+		$result_output = '<h3 class="error">'.__('Name cannot be empty').'</h3>';
 	}
-	else {
-		$result = false;
+	elseif (!strtotime ($start)){
+		$operation = 'update';
+		$result_output = '<h3 class="error">'.__('Malformed start date').'</h3>';
 	}
-
-	//Update task links
-	$links_0 = get_parameter("links_0");
-	$links_1 = get_parameter("links_1");
-	$links_2 = get_parameter("links_2");
-	projects_update_task_links ($id_task, $links_0, 0);
-	projects_update_task_links ($id_task, $links_1, 1);
-	projects_update_task_links ($id_task, $links_2, 2);
-
-	if ($result !== false) {
-		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
-		$operation = "view";
-		task_tracking ($id_task, TASK_UPDATED);
+	elseif (!strtotime ($end)){
+		$operation = 'update';
+		$result_output = '<h3 class="error">'.__('Malformed end date').'</h3>';
+	}
+	elseif (strtotime ($start) > strtotime ($end)) {
+		$operation = 'update';
+		$result_output = '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
+	} else {
+		$description = (string) get_parameter ('description');
+		$priority = (int) get_parameter ('priority');
+		$completion = (int) get_parameter ('completion');
+		$parent = (int) get_parameter ('parent');
+		$hours = (int) get_parameter ('hours');
+		$periodicity = (string) get_parameter ('periodicity', 'none');
+		$estimated_cost = (int) get_parameter ('estimated_cost');
+		$count_hours = get_parameter("count_hours");
+		$cc = get_parameter('cc', '');
 		
+		$sql = sprintf ('UPDATE ttask SET name = "%s", description = "%s",
+				priority = %d, completion = %d,
+				start = "%s", end = "%s", hours = %d,
+				periodicity = "%s", estimated_cost = "%f",
+				id_parent_task = %d, count_hours = %d,
+				cc = "%s"
+				WHERE id = %d',
+				$name, $description, $priority, $completion, $start, $end,
+				$hours, $periodicity, $estimated_cost, $parent, $count_hours,
+				$cc, $id_task);
 		
-		// ONLY recalculate the complete if count hours flag is activated
-		if($count_hours) {
-			$hours = set_task_completion ($id_task);
+		if ($id_task != $parent) {
+			$result = process_sql ($sql);		
+		}
+		else {
+			$result = false;
+		}
+
+		//Update task links
+		$links_0 = get_parameter("links_0");
+		$links_1 = get_parameter("links_1");
+		$links_2 = get_parameter("links_2");
+		projects_update_task_links ($id_task, $links_0, 0);
+		projects_update_task_links ($id_task, $links_1, 1);
+		projects_update_task_links ($id_task, $links_2, 2);
+
+		if ($result !== false) {
+			$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
+			$operation = "view";
+			task_tracking ($id_task, TASK_UPDATED);
+			
+			
+			// ONLY recalculate the complete if count hours flag is activated
+			if($count_hours) {
+				$hours = set_task_completion ($id_task);
+			}
+		}
+		else {
+			$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
 		}
 	}
-	else {
-		$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
-	}
-
 	if ($gantt_editor) {
 		echo $result_output;
 		exit;

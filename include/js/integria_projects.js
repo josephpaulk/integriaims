@@ -646,6 +646,10 @@ function task_creation_gantt(task) {
 		task.id_parent = parent.id;
 	}
 	
+	// Choose current date as start date if there is not another task
+	if (!$(".gantt_task_row")[0]) {
+		task.start_date = new Date();
+	} 
 	
 	task.id_project = id_project;
 

@@ -32,6 +32,7 @@ $get_task_completion_hours = (int) get_parameter('get_task_completion_hours');
 $check_link = (int) get_parameter("check_link");
 $get_calculator = (int) get_parameter("get_calculator");
 $get_workunits_task = (int) get_parameter('get_workunits_task', 0);
+$get_scale = get_parameter('scale', 'month');
 
 function fix_date ($date, $default='') {
 	$date_array = preg_split ('/[\-\s]/', $date);
@@ -163,11 +164,11 @@ if ($project_tasks) {
 
 	// Fix undefined start/end dates
 	if ($from == '00/00/0000') {
-		$from = date ('d/m/Y');
+		$from = $min_start = date ('d/m/Y');
 	}
 
 	if ($to == '00/00/0000') {
-		$to = date ('d/m/Y');
+		$to = $max_end = date ('d/m/Y');
 	}
 	
 	get_tasks_gantt ($tasks, $project_tasks, $from, $to, 0, 0, $show_actual);
@@ -298,6 +299,22 @@ if ($project_tasks) {
 	$aux_date = str_replace ("/", "-", $max_end);
 	$max_end_sec = strtotime($aux_date);
 	$max_end_mili = $max_end_sec * 1000;
+	
+	// Add some space at end to avoid tooltip overload and too small tasks
+	$last_task_days = get_db_sql ('SELECT end - start AS diff FROM ttask WHERE id_project=' . $project_tasks . ' ORDER BY UNIX_TIMESTAMP(end) DESC LIMIT 1');
+	
+	switch ($get_scale) {
+		
+		case "month":
+			$added_days = 15 - $last_task_days;
+			if ($added_days > 0) $max_end_mili += $added_days * 24 * 60 * 60 * 1000;
+			break;
+		case "week":
+			$added_days = 5 - $last_task_days;
+			if ($added_days > 0) $max_end_mili += $added_days * 24 * 60 * 60 * 1000;
+			break;
+		default:
+	}
 
 	//Fix dates depending on scale
 	$result = array("tasks" => $tasks_array, "milestones" => $milestones_array, "min_scale" => $min_start_mili, "max_scale" => $max_end_mili);
