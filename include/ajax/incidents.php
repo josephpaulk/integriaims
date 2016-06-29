@@ -520,6 +520,7 @@ if ($set_params) {
 if ($search_ajax){
 	
 	$filter = array ();
+	$filter['inverse_filter']     = (bool) get_parameter ('search_inverse_filter');
 	$filter['string']             = (string) get_parameter ('search_string');
 	$filter['status']             = (int) get_parameter ('search_status', -10);
 	$filter['priority']           = (int) get_parameter ('search_priority', -1);
