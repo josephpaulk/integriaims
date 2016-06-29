@@ -38,6 +38,7 @@ if (defined ('AJAX')) {
 	$set_ticket_groups = (bool) get_parameter('set_ticket_groups', 0);
  	
  	if ($show_type_fields) {
+ 		$config['mysql_result_type'] = MYSQL_ASSOC;
 		$id_incident_type = get_parameter('id_incident_type');
 		$id_incident = get_parameter('id_incident');		
 		$fields = incidents_get_all_type_field ($id_incident_type, $id_incident);
@@ -1359,8 +1360,7 @@ if ($create_incident) {
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
-	$table_advanced->data[3][2] .= print_input_hidden ("inventories[]",
-						$inventory_id, true, 'selected-inventories');
+	$table_advanced->data[3][2] .= print_input_hidden ("inventories[]", $inventory_id, true, 'selected-inventories');
 }
 
 // END TABLE ADVANCED

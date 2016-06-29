@@ -2006,7 +2006,7 @@ function incidents_get_all_type_field ($id_incident_type, $id_incident) {
 
 	foreach ($all_fields as $key => $field) {
 		$id_incident_field = $field['id'];
-		$data = get_db_value_filter('data', 'tincident_field_data', array('id_incident'=>$id_incident, 'id_incident_field' => $id_incident_field), 'AND');
+		$data = safe_output(get_db_value_filter('data', 'tincident_field_data', array('id_incident'=>$id_incident, 'id_incident_field' => $id_incident_field), 'AND'));
 		if ($data === false) {
 			$all_fields[$key]['data'] = '';
 		} else {
