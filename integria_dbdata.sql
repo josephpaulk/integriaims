@@ -193,4 +193,4 @@ INSERT INTO `treport_type` (`nombre`) VALUES ('List');
 INSERT INTO `treport_subtype` (`nombre`) VALUES ('Tickets');
 INSERT INTO `tfolder_report` (`nombre`) VALUES ('Default Folder');
 
-INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0),('people',1,0);
+INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0);
