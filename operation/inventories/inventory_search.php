@@ -650,7 +650,7 @@ if (!$pure) {
 				if ($params['object_fields_custom']){
 					$i=10;
 					foreach ($params['object_fields_custom'] as $object) {
-						if($params['object_fields'][$i]){
+						if(isset($params['object_fields'][$i])){
 							$select_label_object .= '<input name="object_fields['.$i.']" checked class="checkbox_object_field" value="'.$object['id'].'" type="checkbox" id="'.$object['id'].'">';
 						} else {
 							$select_label_object .= '<input name="object_fields['.$i.']" class="checkbox_object_field" value="'.$object['id'].'" type="checkbox" id="'.$object['id'].'">';

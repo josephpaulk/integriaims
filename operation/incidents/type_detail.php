@@ -451,6 +451,7 @@ if ($show_fields) {
 	}
 
 	//table create/update field of ticket
+	$table = new StdClass();
 	$table->width = "100%";
 	$table->class = "search-table";
 	$table->data = array();
@@ -668,6 +669,7 @@ else {
 	}
 
 	//table search ticket-types
+	$table = new StdClass();
 	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
@@ -757,7 +759,7 @@ else {
 			
 			if (get_admin_user ($config['id_user'])) {
 
-				$data[3] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$type['id'].'"><img src="images/wrench.png" title="'.__('Add fields').'"/></a>';			
+				$data[3] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$type['id'].'"><img src="images/wrench.png" title="'.__('Add fields').'"/></a>';			
 				$data[3] .= '&nbsp;&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&autofocus=1&id='. $type['id'].'"><img src="images/update_icon.png" title="'.__('Update').'"></a>';
 				$data[3] .= '&nbsp;&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&delete_type=1&id='.$type['id'].'" onClick="if (!confirm(\''.__('Are you sure delete tyckets type?').'\'))return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 			}

@@ -208,13 +208,13 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 					$sql_clause .= sprintf(' AND id_incidencia IN (SELECT id_incident
 																	FROM tincident_field_data
 																	WHERE id_incident_field = "%s"
-																		AND data LIKE "%%%s%%")', $id, $data);
+																		AND data = "%s")', $id, $data);
 				}
 				else {
 					$sql_clause .= sprintf(' AND id_incidencia NOT IN (SELECT id_incident
 																	FROM tincident_field_data
 																	WHERE id_incident_field = "%s"
-																		AND data LIKE "%%%s%%")', $id, $data);
+																		AND data = "%s")', $id, $data);
 				}
 			}
 		}
@@ -3185,7 +3185,9 @@ function incidents_get_sla_graph_percentages ($incidents) {
 	$slas = array();
 
 	foreach ($incidents as $incident) {
-		
+		if (!isset($incident['sla_disabled'])){
+			$incident['sla_disabled'] = '';
+		}
 		if ($incident['sla_disabled'] != 1) {
 			$seconds = incidents_get_incident_sla_graph_seconds($incident["id_incidencia"]);
 

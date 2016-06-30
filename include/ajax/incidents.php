@@ -556,7 +556,10 @@ if ($search_ajax){
 	foreach ($type_fields as $key => $type_field) {
 		$filter['type_field_'.$type_field['id']] = safe_input(safe_output((string) get_parameter ('search_type_field_'.$type_field['id'])));
 	}
-	
+
+	//Store serialize filter
+	serialize_in_temp($filter, $config["id_user"]);
+
 	incidents_search_result($filter, false, false, true);
 	return;
 }

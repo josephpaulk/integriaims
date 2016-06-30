@@ -799,7 +799,7 @@ if ($action == "insert" && !$id) {
 					$values_insert['id_incident'] = $id;
 					$values_insert['data'] = get_parameter (base64_encode($label['label']));
 					$values_insert['id_incident_field'] = $id_incident_field;
-					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
+					//$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
 					process_sql_insert('tincident_field_data', $values_insert);
 				}
 			}
