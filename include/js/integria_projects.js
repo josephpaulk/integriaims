@@ -647,7 +647,12 @@ function task_creation_gantt(task) {
 	} 
 	
 	task.id_project = id_project;
-
+	
+	// Say to PHP date there is not another task
+	if (!$(".gantt_task_row")[0]) {
+		task.start_date = "__NEW__";
+ 	} 
+ 	
 	$.ajax({
 	type: "POST",
 	url: "ajax.php?page=include/ajax/projects&create_task=1",

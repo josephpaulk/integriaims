@@ -301,17 +301,22 @@ if ($project_tasks) {
 	$max_end_mili = $max_end_sec * 1000;
 	
 	// Add some space at end to avoid tooltip overload and too small tasks
-	$last_task_days = get_db_sql ('SELECT end - start AS diff FROM ttask WHERE id_project=' . $project_tasks . ' ORDER BY UNIX_TIMESTAMP(end) DESC LIMIT 1');
-	
+	$last_task_seconds = get_db_sql ('SELECT UNIX_TIMESTAMP(end) - UNIX_TIMESTAMP(start) AS diff FROM ttask 
+								   WHERE id_project=' . $project_tasks . ' 
+								   ORDER BY UNIX_TIMESTAMP(end) 
+								   DESC LIMIT 1');
+								   
 	switch ($get_scale) {
 		
 		case "month":
-			$added_days = 15 - $last_task_days;
-			if ($added_days > 0) $max_end_mili += $added_days * 24 * 60 * 60 * 1000;
+			$added_seconds = 15 * 86400 - $last_task_seconds;
+			if ($added_seconds > 0) {
+				$max_end_mili += $added_seconds * 1000;
+			}
 			break;
 		case "week":
-			$added_days = 5 - $last_task_days;
-			if ($added_days > 0) $max_end_mili += $added_days * 24 * 60 * 60 * 1000;
+			$added_seconds = 5 * 86400 - $last_task_seconds;
+			if ($added_seconds > 0) $max_end_mili += $added_seconds * 1000;
 			break;
 		default:
 	}
@@ -332,10 +337,12 @@ if ($update_task) {
 
 	//Fix date
 	$start_date = safe_output($start_date);
+	$start_date = preg_replace ('/ \(.*\)/i', '', $start_date);
 	$start_time = strtotime($start_date);
 	$start_date = date("Y-m-d", $start_time);
 
 	$end_date = safe_output($end_date);
+	$end_date = preg_replace ('/ \(.*\)/i', '', $end_date);
 	$end_time = strtotime($end_date);
 	$end_date = date("Y-m-d", $end_time);
 
@@ -447,13 +454,17 @@ if ($create_task) {
 	//Calculate task start and end
 	$start = safe_output($start);
 	
-	$date_array = split(" ", $start);
-	$date_array = split("-", $date_array[0]);
-
-	$start = $date_array[2]."-".$date_array[1]."-".$date_array[0];
+	if ($start == "__NEW__") {
+		$start = date ('Y-m-d');
+	} else {
+		$date_array = split(" ", $start);
+		$date_array = split("-", $date_array[0]);
+		$start = $date_array[2]."-".$date_array[1]."-".$date_array[0];
+	}
+	
 
 	//By default tasks ends a day after it starts
-	$end = $date_array[2]."-".$date_array[1]."-".($date_array[0]+1);
+	$end = date ('Y-m-d', strtotime($start. ' + 1 days'));
 
 	$sql = sprintf('INSERT INTO ttask (`id_project`, `id_parent_task`, 
 					`name`, `start`, `end`, `hours`) VALUES 
