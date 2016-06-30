@@ -554,7 +554,7 @@ if ($search_ajax){
 	//custom fields
 	$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 	foreach ($type_fields as $key => $type_field) {
-		$filter['type_field_'.$type_field['id']] = safe_input(safe_output((string) get_parameter ('search_type_field_'.$type_field['id'])));
+		$filter['type_field_'.$type_field['id']] = (string) get_parameter ('search_type_field_'.$type_field['id']);
 	}
 
 	//Store serialize filter

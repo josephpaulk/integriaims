@@ -57,7 +57,7 @@ if (defined ('AJAX')) {
 						$linked_values = explode(",", $type_field['linked_value']);
 						$values = array();
 						foreach ($linked_values as $value) {
-							$value_without_parent =  preg_replace("/^.*\|/","", $value);
+							$value_without_parent =  preg_replace("/^.*\|/","", safe_output($value));
 							$values[$value_without_parent] = $value_without_parent;
 							
 							$has_childs = get_db_all_rows_sql("SELECT * FROM tincident_type_field WHERE parent=".$type_field['id']);

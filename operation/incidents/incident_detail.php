@@ -160,7 +160,7 @@ if (defined ('AJAX')) {
 
 		$id_parent = get_parameter('id_parent');
 		$value_parent = get_parameter('value_parent');
-		$value_parent = safe_input(safe_output(base64_decode($value_parent)));
+		$value_parent = safe_input(base64_decode($value_parent));
 
 		$sql = "SELECT linked_value FROM tincident_type_field WHERE parent=".$id_parent."
 			AND label='".$label_field."'";
@@ -175,13 +175,13 @@ if (defined ('AJAX')) {
 					$pos_pipe = strpos($item,'|')+1;
 					$len_item = strlen($item);
 					$value_aux = substr($item, $pos_pipe, $len_item);
-					$result[$value_aux] = $value_aux;
+					$result[safe_output($value_aux)] = safe_output($value_aux);
 					
 				} else {
 					$pattern = "/^".$value_parent."\|/";
 					if (preg_match($pattern, $item)) {
 						$value_aux = preg_replace($pattern, "",$item);
-						$result[$value_aux] = $value_aux;
+						$result[safe_output($value_aux)] = safe_output($value_aux);
 					}
 				}
 			}
