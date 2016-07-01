@@ -1609,7 +1609,6 @@ function get_last_date_control_div ($last_date = 0, $id = 'last_date_search', $l
 
 
 function print_company_autocomplete_input ($parameters) {
-	
 	if (isset($parameters['input_name'])) {
 		$input_name = $parameters['input_name'];
 	}
@@ -1666,10 +1665,14 @@ function print_company_autocomplete_input ($parameters) {
 		if (!is_array($parameters['attributes']))
 			$attributes .= $parameters['attributes'];
 	}
-	
 	$html = "";
-	$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title). print_help_tip (__($help_message), $return_help));
+	if($return_help){
+		$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title). print_help_tip (__($help_message, $return_help)));
+	} else {
+		$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '');
+	}
 	$html .= print_input_hidden ($input_name, $input_value, true);
+	
 	if ($filter) {
 		$html .= print_input_hidden ("autocomplete_".$input_name."_filter", $filter, true);
 	}

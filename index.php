@@ -564,8 +564,8 @@ if ($clean_output == 0) {
 										opacity: 0.5,
 										background: 'black'
 									},
-									width: 400,
-									height: 150
+									width: 500,
+									height: 200
 								});";
 								echo "$('#three_day_dialog').dialog('open');";
 						echo "	});";
@@ -574,10 +574,12 @@ if ($clean_output == 0) {
 
 				if ($integria_free_wel) {
 					echo "<div class= 'dialog ui-dialog-content' title='".__("Welcome Enterpise edition")."' id='welcome_day_dialog'>";
-						echo "<b>".__('This is your first day of the 30 days enterprise trial.')."</b>";
-						echo "<b>".__('You can compose the enterprise edition with the open source edition at our page: ')."</b>";
-						echo "<a href='http://integriaims.com/' target='_blank'><img src='images/house.png'></a></br>";
-						echo "<b>".__('if you need help: ')."</b><a href='http://docs.integriaims.com/' target='_blank'><img src='images/help.png'></a>";
+						echo "<div style='float:left; width:25%; padding-top:30px; text-align:center;'>";
+						echo "<img src='images/icono_trial.png'></div>";
+						echo "<div style='float:left; width:75%; padding-top:45px; font-size:12px;'>";
+							echo "<b>".__('This is your first day of the 30 day enterprise edition trial ')."</b>";
+							echo "<a href='http://integriaims.com/' target='_blank' style='color:#ff9000 !important;'>".__(' at our page.')."</a></br></br>";
+						echo "<b>".__('Do you need help? ')."</b><a href='http://docs.integriaims.com/' target='_blank' style='color:#ff9000 !important;'> ".__(' Go to the wiki')."</a></div>";
 					echo "</div>";
 						echo "<script type='text/javascript'>";
 							echo "$(document).ready (function () {";
@@ -589,8 +591,8 @@ if ($clean_output == 0) {
 										opacity: 0.5,
 										background: 'black'
 									},
-									width: 400,
-									height: 150
+									width: 500,
+									height: 200
 								});";
 								echo "$('#welcome_day_dialog').dialog('open');";
 						echo "	});";

@@ -449,7 +449,7 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 <tr><td class="datos"><?php echo __('Telephone') ?>
 <td class="datos" colspan=2><input type="text" name="telefono" value="<?php echo $telefono ?>">
 
-<tr><td class="datos"><?php echo __('Company') ?>
+<tr><td class="datos"><?php echo __('Company') . print_help_tip ("Type at least two characters to search", true); ?>
 <td class="datos" colspan=2>
 <?php
 
@@ -457,6 +457,7 @@ $params = array();
 $params['input_id'] = 'id_company';
 $params['input_name'] = 'id_company';
 $params['input_value'] = $id_company;
+$params['return_help'] = 0;
 print_company_autocomplete_input($params);
 //print_select (get_companies (), 'id_company', $id_company, '', __('None'), 0, false);
 
