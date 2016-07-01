@@ -21,7 +21,7 @@ include_once ("include/functions_user.php");
 echo "<div class= 'dialog ui-dialog-content' id='info_inventory_window'></div>";
 
 //id could be passed by another view, if not, we try to get from parameters
-if(!$id) {
+if(!isset($id)) {
 	$id = get_parameter("id", false);
 }
 
@@ -70,6 +70,7 @@ if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] ==
 }
 
 /* Users affected by the incident */
+$table = new stdClass();
 $table->width = '100%';
 $table->class = "none";
 $table->size = array ();
@@ -167,7 +168,7 @@ else {
 
 $emails = $incident["email_copy"];
 
-$incident_adv_details .= "<tr>";
+$incident_adv_details = "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/editor.png', true)."</td>";
 $incident_adv_details .= "<td>".__("Editor").":</td><td><b>".$editor."</b></td>";
 $incident_adv_details .= "</tr>";
@@ -412,6 +413,11 @@ if ($config['enabled_ticket_editor']) {
 			$ticket_editor .= "</tr>";
 			
 			$ticket_editor .= "<tr><td>";
+			
+			if(!isset($blocked_incident)){
+				$blocked_incident = '';
+			}
+			
 			$ticket_editor .= print_select ($groups, "grupo_form", $id_grupo, '', '', 0, true, false, false, __('Group'), $blocked_incident);
 			$ticket_editor .= "</td>";
 			
@@ -423,7 +429,9 @@ if ($config['enabled_ticket_editor']) {
 									'2'=>__('Remove gold medal'),
 									'3'=>__('Add black medal'),
 									'4'=>__('Remove black medal'));
-
+				if(!isset($medal_option)){
+					$medal_option = '';
+				}
 				$ticket_editor .= print_select ($qa_options, "medal_option", $medal_option, '', 'Select', 0, true, false, false, __('Medals'), $blocked_incident);
 				$ticket_editor .= "</td>";
 			}
@@ -533,7 +541,7 @@ if  (($incident["id_creator"] == $config["id_user"]) AND ($incident["estado"] ==
 // SLA information
 if ($incident["sla_disabled"]) {
 	//$incident_sla .= '<table width="97%">';
-	$incident_sla .= '<tr>';
+	$incident_sla = '<tr>';
 	$incident_sla .= "<td style='text-align: center;'>";
 	$incident_sla .= "<em>".__("SLA disabled")."</em>";
 	$incident_sla .= "</td>";
@@ -541,7 +549,7 @@ if ($incident["sla_disabled"]) {
 	//$incident_sla .= "</table>";
 } else {
 	//$incident_sla .= '<table width="97%" style="border-spacing: 10px;">';
-	$incident_sla .= '<tr>';
+	$incident_sla = '<tr>';
 	$incident_sla .= "<td>";
 	$incident_sla .= __('SLA history compliance for: '); 
 	$incident_sla .= "</td>";

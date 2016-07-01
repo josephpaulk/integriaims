@@ -99,13 +99,14 @@ if ($render == 1){
 
 	$search = array();
 	
-	$search[] = "&#x0d;";
+	//$search[] = "&#x0d;";
 	$search[] = "\r";
-	$search[] = "&#x0a;";
+	//$search[] = "&#x0a;";
 	$search[] = "\n";
 	$search[] = '"';
 	$search[] = "'";
-	$search[] = ";";
+	//$search[] = ";";
+	$search[] = ",";
 
 	$report = get_db_row ('tinventory_reports', 'id', $id);
 	if ($report === false)
@@ -124,11 +125,11 @@ if ($render == 1){
 	if ($rows === false)
 		return;
 	// Header
-	echo safe_output (implode (',', array_keys (str_replace($search, " ", $rows[0]))))."\n";
+	echo safe_output (implode (';', array_keys (str_replace($search, " ", $rows[0]))))."\n";
 	
 	// Item / data
 	foreach ($rows as $row) {
-		$k = safe_output(implode(',', $row));
+		$k = safe_output(implode(';', $row));
 		$k = str_replace($search, "", $k);
 		echo mb_convert_encoding($k, 'UTF-8'). "\n";
 	}

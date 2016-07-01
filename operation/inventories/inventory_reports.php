@@ -51,7 +51,7 @@ if ($reports === false) {
 	echo '<h2 class="error">'.__('No reports were found').'</h2>';
 
 } else {
-
+	$table = new stdClass();
 	$table->width = '99%';
 	$table->class = 'listing';
 	$table->data = array ();

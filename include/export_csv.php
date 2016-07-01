@@ -241,10 +241,10 @@ $csv_lines = array();
 
 $search = array();
 // Delete \r !!!
-$search[] = "&#x0d;";
+//$search[] = "&#x0d;";
 $search[] = "\r";
 // Delete \n !!!
-$search[] = "&#x0a;";
+//$search[] = "&#x0a;";
 $search[] = "\n";
 // Delete " !!!
 $search[] = '"';
@@ -286,7 +286,7 @@ foreach ($rows as $row) {
 		if(array_key_exists($k, $row)){
 			$cell = str_replace ($search, " ", safe_output($row[$k]));
 		} else {
-			$cell = " ";
+			$cell = "";
 		}
 		// Change ; !!	
 		$cell = str_replace (";", ",", $cell);

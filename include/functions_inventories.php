@@ -650,7 +650,7 @@ function print_inventory_stats ($inventories, $return = false) {
 		$incidents_pct = format_numeric ($inventory_incidents / $total * 100);
 		$incidents_opened_pct = format_numeric ($inventory_opened / $total * 100);
 	}
-	
+	$table = new stdClass();
 	$table->width = '50%';
 	$table->class = 'float_left blank';
 	$table->style = array ();
@@ -1339,13 +1339,15 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 		}
 		foreach ($inventories_aux_pagination as $key => $value) {
 			unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
-			foreach ($inventories_aux as $k => $v) {
-				$header[$v['label']] =1;
-				if($value['id'] == $v['id']){
-					$inventories_aux_pagination[$i][$v['label']] = $v['data'];
+			if(is_array($inventories_aux) || is_object($inventories_aux)){
+				foreach ($inventories_aux as $k => $v) {
+					$header[$v['label']] =1;
+					if($value['id'] == $v['id']){
+						$inventories_aux_pagination[$i][$v['label']] = $v['data'];
+					}
 				}
-			}
 			$i++;
+			}
 		}
 	}
 	//deleted label and data 
