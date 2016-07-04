@@ -23,10 +23,10 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 }
 
 $text = get_parameter ("text", "");
-$action = get_parameter ("action", "");
+$action = safe_output(get_parameter ("action", ""));
 $date_from = get_parameter ("date_from", "");
 $date_to = get_parameter ("date_to", "");
-
+$offset = (int) get_parameter ("offset");
 $color = 0;
 $id_user = $config["id_user"];
 echo "<h2>".__('Audit log')."</h2>";
@@ -81,20 +81,19 @@ $table_search->data[3][0] .= print_input_text ('date_to', $date_to, '', 10, 20, 
 $table_search->data[4][0] = print_submit_button (__('Search'), 'search_btn', false, 'class="sub search"', true);
 $where_clause = $where;
 $where_clause = str_replace(array("\r", "\n"), '', $where_clause);
-$table_search->data[5][0] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_audit=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub"', true);
+$table_search->data[5][0] = print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_audit=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub"', true);
 
 echo "<div class='divform'>";
-echo "<form method=post>";
+echo "<form method=post action ='index.php?sec=godmode&sec2=godmode/setup/audit&text=$text&action=$action' >";
 print_table($table_search);
 echo "</form>";
 echo "</div>";
 	
 
 // Pagination
-$offset = (int) get_parameter ("offset");
 $total_events = get_db_sql ("SELECT COUNT(ID_sesion) FROM tsesion $where");
 echo "<div class='divresult'>";
-pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/audit&text=$text", $offset);
+pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/audit&text=$text&action=$action", $offset);
 
 $table = new StdClass();
 $table->width = '100%';
@@ -109,11 +108,9 @@ $table->head[5] = __('Timestamp');
 $table->data = array ();
 
 $sql = sprintf ('SELECT * FROM tsesion %s
-	ORDER by utimestamp
-	DESC LIMIT %d, %d',
-	$where, $offset, $config["block_size"]);
-		
-$events = get_db_all_rows_sql ($sql);
+	ORDER by utimestamp DESC LIMIT %d OFFSET %d',
+	$where, $config["block_size"], $offset);
+$events = process_sql ($sql);
 if ($events === false)
 	$events = array ();
 foreach ($events as $event) {
