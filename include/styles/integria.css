@@ -1225,12 +1225,14 @@ td.datosf9i, td.datos2f9i {
 
 .error {
 	color: #FF3333;
-	background: url(../../images/icono_error.png) no-repeat 1% 50%;
-	padding: 30px 0px 37px 60px;
+	background: url(../../images/icono_error_grande.png) no-repeat 1% 50% #fbfbfb;
+	padding: 35px 0px 35px 80px;
+	border-radius: 5px;
 	clear: both;
 	margin: 0px;
 	margin-bottom: 10px;
 	vertical-align: middle;
+	border: 1px #e2e2e2 solid;
 }
 
 #tree_search .error {
@@ -1245,12 +1247,14 @@ td.datosf9i, td.datos2f9i {
 
 .suc {
 	color: #5a8629;
-	background: url(../../images/icono_exito.png) no-repeat 1% 50%;
-	padding: 30px 0px 37px 60px;
-	clear: both;
-	margin: 0px;
-	margin-bottom: 10px;
-	vertical-align: middle;
+    background: url(../../images/icono_exito_grande.png) no-repeat 1% 50% #fbfbfb;
+    padding: 35px 0px 35px 80px;
+    border-radius: 5px;
+    clear: both;
+    margin: 0px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    border: 1px #e2e2e2 solid;
 }
 
 div#wizard {

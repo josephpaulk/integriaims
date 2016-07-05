@@ -107,7 +107,7 @@ function ui_print_message ($message, $class = '', $attributes = '', $return = fa
 	$id = uniqid();
 	
 	if ($cancel_button) {
-		$cancel_button = '<a href="javascript:cancel_msg(\''.$id.'\');"><img src="images/icono_cerrar.png" border=0></a>';
+		$cancel_button = '<a href="javascript:cancel_msg(\''.$id.'\');"><img src="images/icono_cerrar.png" border=1 style="margin-top: -30px; float:right; margin-right: 6px;"></a>';
 	}
 	else {
 		$cancel_button = "";
