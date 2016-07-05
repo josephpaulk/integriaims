@@ -1337,16 +1337,20 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 		foreach ($inventories_aux_pagination[0] as $key => $value) {
 			$header[$key] =1;
 		}
-		foreach ($inventories_aux_pagination as $key => $value) {
-			unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
-			if(is_array($inventories_aux) || is_object($inventories_aux)){
-				foreach ($inventories_aux as $k => $v) {
-					$header[$v['label']] =1;
-					if($value['id'] == $v['id']){
-						$inventories_aux_pagination[$i][$v['label']] = $v['data'];
+		if(is_array($inventories_aux_pagination) || is_object($inventories_aux_pagination)){
+			foreach ($inventories_aux_pagination as $key => $value) {
+				unset($inventories_aux_pagination[$i]['label'], $inventories_aux_pagination[$i]['data']);
+				if(is_array($inventories_aux) || is_object($inventories_aux)){
+					foreach ($inventories_aux as $k => $v) {
+						if(isset($v['label'])){
+							$header[$v['label']] =1;
+							if($value['id'] == $v['id']){
+								$inventories_aux_pagination[$i][$v['label']] = $v['data'];
+							}
+						}
 					}
+				$i++;
 				}
-			$i++;
 			}
 		}
 	}
@@ -1364,6 +1368,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
 	} else {
 
+		$table = new stdClass();
 		$table->id = 'inventory_list';
 		$table->class = 'listing';
 		$table->width = '100%';
