@@ -986,6 +986,7 @@ function delete_project ($id_project){
 }
 
 function delete_task ($id_task){
+	global $config;
 	// Have a parent ?
 	$task = get_db_row ("ttask", "id", $id_task);
 	if ($task["id_parent_task"] > 0){
@@ -2433,7 +2434,7 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			$description .= " -> ".get_db_value ("titulo", "tincidencia", "id_incidencia", $aditional_data);
 			break;
 		
-		case INVENTORY_DELETED:
+		case 'INVENTORY_DELETED':
 			$description = __('Deleted');
 			break;
 		

@@ -66,7 +66,7 @@ if (isset($_GET["id"])){
 			mysql_query($query);
 			mysql_query($query2);
 			if (mysql_query($query))
-				$result_msg = "<h3 class='suc'>".__('Note successfully deleted')."</h3>";
+				$result_msg = ui_print_success_message (__('Note successfully deleted'), '', true, 'h3', true);
 			incident_tracking ($id_inc, $id_usuario, INCIDENT_NOTE_DELETED);
 		}
 	}

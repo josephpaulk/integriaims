@@ -170,7 +170,7 @@ if (($create_company) OR ($update_company)) {
 		$id = process_sql ($sql, 'insert_id');
 
 		if ($id === false)
-			echo "<h3 class='error'>".__('Could not be created')."</h3>";
+			echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		else {
 			
 			foreach ($company_fields as $u) {
@@ -183,10 +183,10 @@ if (($create_company) OR ($update_company)) {
 				$res = process_sql($sql);
 
 				if ($res === false) {
-					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+					echo ui_print_error_message (__('There was a problem updating custom fields'), '', true, 'h3', true);
 				}
 			}
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+			echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Created company $name");
 		}
 
@@ -213,7 +213,7 @@ if (($create_company) OR ($update_company)) {
 
 		$result = mysql_query ($sql);
 		if ($result === false)
-			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		else {
 	
 			//Add custom fields
@@ -237,11 +237,10 @@ if (($create_company) OR ($update_company)) {
 				$res = process_sql($sql);
 
 				if ($res === false) {
-					echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+					echo ui_print_error_message (__('There was a problem updating custom fields'), '', true, 'h3', true);
 				}
 			}
-
-			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Updated company $name");
 		}
 	}
@@ -385,7 +384,7 @@ if ($id) {
 	
 	$message = get_parameter('message', '');
 	if ($message != '') {
-		echo "<h3 class='suc'>".__($message)."</h3>";
+		echo ui_print_success_message (__($message), '', true, 'h3', true);
 	}
 }
 
@@ -627,7 +626,7 @@ elseif ($op == "activities") {
 			$sql = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id);
 			process_sql ($sql);
 		} else {
-			echo "<h3 class='error'>".__('Error adding activity. Empty activity')."</h3>";
+			echo ui_print_error_message (__('Error adding activity. Empty activity'), '', true, 'h3', true);
 		}
 	}
 	
@@ -1224,7 +1223,7 @@ elseif ($op == "invoices") {
 		} 
 		else {
 			echo '<div class="divresult">';
-				echo "<h3 class='error'>".__('empty search invoices')."</h3>";
+				echo ui_print_error_message (__('empty search invoices'), '', true, 'h3', true);
 			echo '</div>';
 		}
 	} 
@@ -1322,7 +1321,7 @@ if ((!$id) AND ($new_company == 0)){
 	$message = get_parameter('message', '');
 
 	if ($message != '') {
-	 echo "<h3 class='suc'>".__($message)."</h3>";
+		echo ui_print_success_message (__($message), '', true, 'h3', true);
 	}
 	
 	// Search // General Company listing
@@ -1465,7 +1464,7 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 	$table->data[1][3] = print_input_text ('search_min_billing', $search_min_billing, '', 15, 20, true, __('Min. billing'));
 	
-	$form .= '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+	$form = '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	$form .= '<div class="form_result">';
 		$form .= "<div class='divresult_left' >";
 			$form .= print_table ($table,true);
@@ -1485,6 +1484,9 @@ if ((!$id) AND ($new_company == 0)){
 	
 	print_container_div("companys_form",__("Companies form search"),$form, 'open', false, false);
 	
+	if(!isset($having)){
+		$having = '';
+	}
 	$companies = crm_get_companies_list($where_clause, $date, $order_by, false, $having);
 	
 	if ($companies !== false && count($companies) != 0) {
@@ -1571,9 +1573,11 @@ if ((!$id) AND ($new_company == 0)){
 
 		print_table ($table);
 	} else {
-		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
+		echo ui_print_error_message (__("There are not results for the search"), '', true, 'h3', true);
 	}
-	
+	if(!isset($write_permission)){
+		$write_permission = '';
+	}
 	if ($write_permission || $manage_permission) {
 		echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		echo "<div class='button-form'>";

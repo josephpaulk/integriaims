@@ -60,12 +60,12 @@ if (($operation == "insert") OR ($operation == "update")){
 	}
 
 	if (! $id)
-		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
+		echo ui_print_error_message (__('Not created. Error inserting data'), '', true, 'h3', true);
 	else {
-		if ($operation == "insert") 
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
+		if ($operation == "insert")
+			echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		else
-			echo '<h3 class="suc">'.__('Successfully updated').'</h3>'; 
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	}
 	$operation = "";
 	$id = 0;
@@ -83,9 +83,9 @@ if ($operation == "delete") {
 	$sql_delete= "DELETE FROM tcrm_template WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
+		echo ui_print_error_message (__('Not deleted. Error deleting data'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	$operation = "";
 }
 

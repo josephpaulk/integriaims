@@ -91,9 +91,9 @@ if ($action == 'update') {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project updated", "Project $name");
 	if ($result !== false) {
 		project_tracking ($id_project, PROJECT_UPDATED);
-		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		$result_output = ui_print_success_message (__('The project successfully updated'), '', true, 'h3', true);
 	} else {
-		$result_output = '<h3 class="error">'.__('Could not update project').'</h3>';
+		$result_output = ui_print_error_message (__('Could not update project'), '', true, 'h3', true);
 	}
 }
 
@@ -181,7 +181,7 @@ else {
 	$table->data[0][1] .= print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 15, 20, false, '',
 				'', true, '','');
 
-	$table->data[0][2] .= '<b>' .  __('Project group') . "</b><br >";
+	$table->data[0][2] = '<b>' .  __('Project group') . "</b><br >";
 	if (!$clean_output) {
 		$table->data[0][2] .= print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
 			"id_project_group", $id_project_group, "", __('None'), '0',
@@ -191,19 +191,19 @@ else {
 	}
 	
 	// CC
-	$table->data[1][0] .= '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b><br >';
+	$table->data[1][0] = '<b>'.__('CC').print_help_tip (__("Email to notify changes in workunits"), true).' </b><br >';
 	$table->data[1][0] .= '<input type="text" name="cc" size=50 value="'.$cc.'">';
 
 	// start and end date
 	$table->data[1][1] = '<b>'.__('Start').' </b><br >';
 	$table->data[1][1] .= print_input_text ('start_date', $start_date, '', 10, 10, true);
 
-	$table->data[1][2] .= '<b>'.__('End').' </b><br >';
+	$table->data[1][2] = '<b>'.__('End').' </b><br >';
 	$table->data[1][2] .= print_input_text ('end_date', $end_date, '', 10, 10, true);
 
 	// Description
 	$table->colspan[7][0] = 4;
-	$table->data[7][0] .= "<b>".__("Description")."</b>";
+	$table->data[7][0] = "<b>".__("Description")."</b>";
 	$table->data[7][0] .= '<textarea name="description" style="height: 140px;">';
 	$table->data[7][0] .= $description;
 	$table->data[7][0] .= "</textarea>";
@@ -219,11 +219,11 @@ else {
 		//$table->data[8][0] .= ;
 		
 		if ($id_project && $project_access['manage']) {
-			$table->data[8][0] .= print_input_hidden ('id_project', $id_project, true);
+			$table->data[8][0] = print_input_hidden ('id_project', $id_project, true);
 			$table->data[8][0] .= print_input_hidden ('action', 'update', true);
 			$table->data[8][0] .= print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
 		} elseif (!$id_project) {
-			$table->data[8][0] .= print_input_hidden ('action', 'insert');
+			$table->data[8][0] = print_input_hidden ('action', 'insert');
 			$table->data[8][0] .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
 		}
 		
@@ -365,7 +365,7 @@ echo "<div class='divresult'>";
 	$real = $real + get_incident_project_workunit_cost ($id_project);
 
 	// Labour
-	$labour .= "<tr>";
+	$labour = "<tr>";
 	$labour .= '<td>'.__('Total people involved'). '</td><td>';
 	$labour .= $people_inv;
 	$labour .= "</td></tr>";
@@ -434,7 +434,7 @@ echo "<div class='divresult'>";
 	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
 
 	// Budget
-	$budget .= "<tr>";
+	$budget = "<tr>";
 	$budget .= '<td>'.__('Project profitability').'</td><td>';
 	if ($real > 0) {
 		$budget .=  format_numeric(($total/$real)*100) . " %" ;
@@ -555,6 +555,7 @@ validate_form("#form-new_project");
 // #text-id_owner
 validate_user ("#form-new_project", "#text-id_owner", "<?php echo __('Invalid user')?>");
 var rules, messages;
+
 // Rules: input[name="name"]
 rules = {
 	required: true,

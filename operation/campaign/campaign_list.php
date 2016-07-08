@@ -30,9 +30,9 @@ if ($delete) {
 	$res = process_sql_delete ("tcampaign", array("id" => $delete));
 
 	if ($res) {
-		echo "<h3 class='suc'>".__("Campaign deleted sucessfully")."</h3>";
+		echo ui_print_success_message (__("Campaign deleted sucessfully"), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__("There was a problem deleting campaign")."</h3>";
+		echo ui_print_error_message (__("There was a problem deleting campaign"), '', true, 'h3', true);
 	}
 }
 
@@ -53,20 +53,18 @@ if ($create) {
 	$id = process_sql_insert ("tcampaign", $values);	
 
 	if ($id) {
-		echo "<h3 class='suc'>".__("Campaign created sucessfully")."</h3>";
+		echo ui_print_success_message (__("Campaign created sucessfully"), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__("There was a problem creating campaign")."</h3>";
+		echo ui_print_error_message (__("There was a problem creating campaign"), '', true, 'h3', true);
 	}	
 }
 
 $campaigns = crm_get_campaigns();
 echo '<div class="divresult">';
 if (!$campaigns) {
-
-	echo "<h3 class='error'>".__("There aren't campaigns")."</h3>";
-
+	echo ui_print_error_message (__("There aren't campaigns"), '', true, 'h3', true);
 } else {
-	
+	$table = new stdClass();
 	$table->width = '98%';
 	$table->class = 'databox';
 	$table->colspan = array ();

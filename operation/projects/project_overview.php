@@ -65,7 +65,7 @@ if ($disable_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	$sql = sprintf ('UPDATE tproject SET disabled = 1 WHERE id = %d', $id_project);
 	process_sql ($sql);
-	echo '<h3 class="suc">'.__('Project successfully disabled').'</h3>';
+	echo ui_print_success_message (__('Project successfully disabled'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Project disabled", "User ".$config['id_user']." disabled project #".$id_project);
 	project_tracking ($id_project, PROJECT_DISABLED);
 }
@@ -97,7 +97,7 @@ if ($action == 'insert') {
 		$owner_exists = get_user($id_owner);
 	}
 	if($owner_exists === false) {
-		$error_msg  = '<h3 class="error">'.__('Project manager user does not exist').'</h3>';
+		$error_msg  = ui_print_err_message (__('Project manager user does not exist'), '', true, 'h3', true);
 		$id_project = false;
 	}
 	else {
@@ -110,9 +110,9 @@ if ($action == 'insert') {
 	}
 	
 	if ($id_project === false) {
-		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>'.$error_msg;
+		echo ui_print_err_message (__('Project cannot be created, problem found.').$error_msg, '', true, 'h3', true);
 	} else {
-		echo '<h3 class="suc">'.__('Successfully created').' #'.$id_project.'</h3>';
+		echo ui_print_success_message (__('The project successfully created.').' #'.$id_project, '', true, 'h3', true);
 		audit_db ($id_owner, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
 		
 		project_tracking ($id_project, PROJECT_CREATED);

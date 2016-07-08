@@ -52,9 +52,9 @@ if ($insert_product) {
 			$name, $description, $icon);
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
-		echo '<h3 class="error">'.__('Could not be created').'</h3>';
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		//insert_event ("PRODUCT CREATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created product $id - $name");
 	}
@@ -72,9 +72,9 @@ if ($update_product) {
 		$name, $icon, $description, $id);
 	$result = process_sql ($sql);
 	if (! $result) {
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		//insert_event ("PRODUCT UPDATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated product $id - $name");
 	}
@@ -88,10 +88,9 @@ if ($delete_product) {
 	$result = process_sql ($sql);
 
 	if ($result)
-		echo '<h3 class="suc">'.__("Successfully deleted").'</h3>';
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	else
-		echo '<h3 class="error">'.__("Could not be deleted").'</h3>';
-		
+		echo ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
 	unset ($id);
 }
 

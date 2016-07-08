@@ -78,21 +78,15 @@ if($pure){
 }
 if (isset($search)) {	
 	$custom_search = get_custom_search ($id_search, 'incidents');
-
 	if ($custom_search) {		
 		if ($custom_search["form_values"]) {
 			
 			$filter = unserialize($custom_search["form_values"]);
 			$filter_form = $filter;
-			
-			//echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $custom_search["name"]).'</h3>';
-		}
-		else {
-			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $custom_search["name"]).'</h3>';	
 		}
 	}
 	else {
-		echo '<h3 class="error">'.__('Could not load custom search').'</h3>';
+		echo ui_print_error_message (__('Could not load custom search'), '', true, 'h3', true);
 	}
 	
 	include("incident_statistics.php");

@@ -97,7 +97,7 @@ if (!$section_read_permission && !$section_write_permission && !$section_manage_
 $message = get_parameter('message', '');
 
 if ($message != '') {
-	echo "<h3 class='suc'>".__($message)."</h3>";
+	echo ui_print_success_message (__($message), '', true, 'h3', true);
 }
  
 
@@ -140,7 +140,7 @@ if ($id_contract) {
 	echo '</h4>';
 	$message = get_parameter('message', '');
 	if ($message != '') {
-		echo "<h3 class='suc'>".__($message)."</h3>";
+		echo ui_print_success_message (__($message), '', true, 'h3', true);
 	}
 }
 
@@ -276,12 +276,11 @@ elseif ($op == "") {
 			$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
 				$id_attachment);
 			process_sql ($sql);
-			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+			$result_msg = ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 			if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
-				$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
-			
+				$result_msg = ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
 		} else {
-			$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
+			$result_msg = ui_print_error_message (__('You have no permission'), '', true, 'h3', true);
 		}
 		
 		echo $result_msg;
@@ -333,7 +332,7 @@ elseif ($op == "") {
 
 			$id = process_sql ($sql, 'insert_id');
 			if ($id === false)
-				echo '<h3 class="error">'.__('Could not be created').'</h3>';
+				echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 			else {
 				//update last activity
 				$datetime =  date ("Y-m-d H:i:s");
@@ -364,22 +363,21 @@ elseif ($op == "") {
 							$file_target = $config["homedir"]."/attachment/".$filename_encoded;
 					
 							if (!(copy($file_tmp, $file_target))){
-								echo "<h3 class=error>".__("Could not be attached")."</h3>";
+								echo ui_print_error_message (__("Could not be attached"), '', true, 'h3', true);
 							} else {
 								// Delete temporal file
-								echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+								echo ui_print_success_message (__("Successfully attached"), '', true, 'h3', true);
 								$location = $file_target;
 								unlink ($file_tmp);
 							}
 						}
 					}
 				}
-
-				echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+				echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 				audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
 			}
 		} else {
-			echo "<h3 class='error'>".__("This contract number already exists")."</h3>";
+			echo ui_print_error_message (__("This contract number already exists"), '', true, 'h3', true);
 		}	
 	$id = 0;
 	}
@@ -413,7 +411,7 @@ elseif ($op == "") {
 		
 		$result = process_sql ($sql);
 		if ($result === false) {
-			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		} else {
 			//update last activity
 			$datetime =  date ("Y-m-d H:i:s");
@@ -445,10 +443,10 @@ elseif ($op == "") {
 						$file_target = $config["homedir"]."/attachment/".$filename_encoded;
 				
 						if (!(copy($file_tmp, $file_target))){
-							echo "<h3 class=error>".__("Could not be attached")."</h3>";
+							echo ui_print_error_message (__("Could not be attached"), '', true, 'h3', true);
 						} else {
 							// Delete temporal file
-							echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+							echo ui_print_success_message (__("Successfully attached"), '', true, 'h3', true);
 							$location = $file_target;
 							unlink ($file_tmp);
 						}
@@ -456,7 +454,7 @@ elseif ($op == "") {
 				}
 			}
 
-			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
 		}
 
@@ -884,7 +882,7 @@ elseif ($op == "") {
 			}	
 			print_table ($table);
 		} else {
-			echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
+			echo ui_print_error_message (__("There are not results for the search"), '', true, 'h3', true);
 		}
 		
 		if ($section_write_permission || $section_manage_permission) {

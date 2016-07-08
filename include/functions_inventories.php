@@ -2414,15 +2414,15 @@ function inventory_get_user_inventories($id_user, $inventories) {
 
 		return $user_inventories;
 	}
-
-	foreach ($inventories as $key => $inventory) {
-		$read_perm = inventory_check_acl($id_user, $inventory['id']);
-		
-		if ($read_perm) {
-			array_push($user_inventories, $inventory);
+	if (is_array($inventories) || is_object($inventories)){
+		foreach ($inventories as $key => $inventory) {
+			$read_perm = inventory_check_acl($id_user, $inventory['id']);
+			
+			if ($read_perm) {
+				array_push($user_inventories, $inventory);
+			}
 		}
 	}
-	
 	return $user_inventories;
 }
 ?>

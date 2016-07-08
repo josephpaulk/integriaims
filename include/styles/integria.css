@@ -1230,9 +1230,17 @@ td.datosf9i, td.datos2f9i {
 	border-radius: 5px;
 	clear: both;
 	margin: 0px;
-	margin-bottom: 10px;
+	margin-top: 30px;
+	margin-bottom: 20px;
 	vertical-align: middle;
 	border: 1px #e2e2e2 solid;
+}
+
+.error_validate{
+	color: #FF3333;
+    background: url(../../images/asterisco.png) no-repeat 1% 50%;
+    font-weight: bold;
+    padding-left: 18px;
 }
 
 #tree_search .error {
@@ -1252,7 +1260,8 @@ td.datosf9i, td.datos2f9i {
     border-radius: 5px;
     clear: both;
     margin: 0px;
-    margin-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
     vertical-align: middle;
     border: 1px #e2e2e2 solid;
 }
@@ -3632,7 +3641,10 @@ ul li {
 }
 .images_option{
 	line-height: 35px;
+	margin-right: 3px;
+	margin-top: 10px;
 }
+
 #folder_name{
 	padding-left: 6px;
 	font-size: 12px;
@@ -3644,9 +3656,8 @@ ul li {
 .folders_select {
 	background: #FF9000;
 }
-.images_option{
-	margin-right: 3px;
-	margin-top: 10px;
+.images_option img{
+	cursor:pointer;
 }
 /*
 #list_folders:hover{
@@ -4082,7 +4093,7 @@ img#inventory_loading{
     border-color: #FF9000;
     font-weight: 300;
     cursor: pointer;
-    padding: 0px;
+    padding: 7px;
 }
 
 #list_reports table tr th,
@@ -4121,5 +4132,10 @@ img#inventory_loading{
 #button-bar-title-button {
     float: right;
     margin-top: -35px;
-    margin-right: 10px;
+    margin-right: 22px;
+}
+
+.table-clean{
+	text-align: left;
+	margin: 0 auto;
 }

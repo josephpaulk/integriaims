@@ -113,7 +113,7 @@ if ($insert_workunit) {
 		return;
 	}
 	else {
-		$result_msg = '<h3 class="suc">'.__('Comment added successfully').'</h3>';
+		$result_msg = ui_print_success_message (__('Comment added successfully'), '', true, 'h3', true);
 		echo $result_msg;
 	}
 	

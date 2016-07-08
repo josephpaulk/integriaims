@@ -137,7 +137,7 @@ $total_result["num_loop"] = $num_loop;
 // Create
 if ($create) {
 	
-	if ($$id_company) {
+	if ($id_company) {
 		if (!$write_permission && !$manage_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a lead");
 			require ("general/noaccess.php");
@@ -239,9 +239,12 @@ if ($create) {
 	}
 	
 	if ($id === false) {
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
+		if(!isset($REMOTE_ADDR)){
+			$REMOTE_ADDR = '';
+		}
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Lead created", "Lead named '$fullname' has been added");
 		$new = false;
 	}
@@ -366,14 +369,14 @@ if ($update) { // if modified any parameter
 
 	$result = process_sql_update('tlead', $values, $where);
 	if ($result === false) {
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	} else {
 		// Assign tags to the leads
 		if (!empty($tags)) {
 			create_lead_tag($id, $tags);
 		}
 		
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		audit_db ($config['id_user'], '', "Lead updated", "Lead named '$fullname' has been updated");
 
 		$datetime = date ("Y-m-d H:i:s");	
@@ -486,7 +489,7 @@ if ($close) {
 			);
 		process_sql_insert('tlead_history', $values);
 
-		echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
+		echo ui_print_success_message (__('Successfully closed'), '', true, 'h3', true);
 		$id = 0;
 
 		if ($massive_leads_update && is_ajax()) {
@@ -508,7 +511,7 @@ if ($delete) {
 	$exists = get_db_value  ('id', 'tlead', 'id', $id);
 
 	if (!$exists) {
-		echo "<h3 class='error'>".__('Error deleting lead')."</h3>";
+		echo ui_print_error_message (__('Error deleting lead'), '', true, 'h3', true);
 		$id = 0; // Force go listing page.
 	} else {
 		$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
@@ -525,7 +528,7 @@ if ($delete) {
 		$sql = sprintf ('SELECT id FROM tlead WHERE id = %d', $id);
 		$result = process_sql ($sql);
 		if (!$result) {
-			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+			echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 			$id = 0; // Force go listing page.
 
 			if ($massive_leads_update && is_ajax()) {
@@ -570,14 +573,14 @@ if ($create_custom_search && !$id_search) {
 	if (!$duped_name) {
 		$result = create_custom_search ($search_name, 'leads', $filter);
 			if ($result === false) {
-			echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+			echo ui_print_error_message (__('Could not create custom search'), '', true, 'h3', true);
 		}
 		else {
-			echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+			echo ui_print_success_message (__('Custom search saved'), '', true, 'h3', true);
 		}
 	}
 	else {
-		echo '<h3 class="error">'.__('This name already exist').'</h3>';
+		echo ui_print_error_message (__('This name already exist'), '', true, 'h3', true);
 	}
 }
 
@@ -591,15 +594,14 @@ if ($id_search && !$delete_custom_search) {
 		if ($search["form_values"]) {
 			
 			$filter = unserialize($search["form_values"]);
-			
-			echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $search["name"]).'</h3>';
+			echo ui_print_success_message (sprintf(__('Custom search "%s" loaded'), $search["name"]), '', true, 'h3', true);
 		}
 		else {
-			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $search["name"]).'</h3>';	
+			echo ui_print_error_message (sprintf(__('Could not load "%s" custom search'), $search["name"]), '', true, 'h3', true);	
 		}
 	}
 	else {
-		echo '<h3 class="error">'.__('Could not load custom search').'</h3>';
+		echo ui_print_error_message (__('Could not load custom search'), '', true, 'h3', true);
 	}
 }
 
@@ -612,11 +614,11 @@ if ($id_search && $delete_custom_search) {
 		$config['id_user'], $id_search);
 	$result = process_sql ($sql);
 	if ($result === false) {
-		echo '<h3 class="error">'.__('Could not delete custom search').'</h3>';
+		echo ui_print_error_message (__('Could not delete custom search'), '', true, 'h3', true);
 	}
 	else {
 		$id_search = false;
-		echo '<h3 class="suc">'.__('Custom search deleted').'</h3>';
+		echo ui_print_success_message (__('Custom search deleted'), '', true, 'h3', true);
 	}
 }
 
@@ -764,7 +766,9 @@ if ($id || $new) {
 		echo '</h4>';
 		
 	}
-
+	if(!isset($op)){
+		$op ='';
+	}
 	switch ($op) {
 		case "activity":
 			// Load tab activity
@@ -787,7 +791,7 @@ if ($id || $new) {
 			include "lead_forward.php";
 			return;
 	}
-
+	$table = new stdClass();
 	$table->width = "100%";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -856,6 +860,12 @@ if ($id || $new) {
 				<img src='images/award_star_silver_1.png'></a>";
 		}
 		
+		if(!isset($creation)){
+			$creation = '';
+		}
+		if(!isset($modification)){
+			$modification = '';
+		}
 		$languages = crm_get_all_languages();
 		$table->data[6][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, true,  __('Language'));
 		
@@ -1240,6 +1250,8 @@ else {
 	if ($leads !== false) {
 		$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$search_params", $offset);
 		unset ($table);
+		
+		$table = new stdClass();
 		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
@@ -1354,6 +1366,7 @@ else {
 	}
 
 	unset($table);
+	$table = new stdClass();
 	$table->class = 'search-table-button';
 	$table->width = '100%';
 	$table->id = 'lead_massive';

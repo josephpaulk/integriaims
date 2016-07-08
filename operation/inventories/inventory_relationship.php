@@ -61,9 +61,9 @@ if ($delete_link) {
 	$result = process_sql_delete ('tinventory_relationship', array ('id_object_src' => $id_src, 'id_object_dst' => $id_dst));
 	
 	if ($result) {
-		echo '<h3 class="suc">'.__("Inventory relationship deleted").'</h3>'; 
+		echo ui_print_success_message (__("Inventory relationship deleted"), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="error">'.__("Error deleting inventory relationship").'</h3>';
+		echo ui_print_error_message (__("Error deleting inventory relationship"), '', true, 'h3', true);
 	}
 }
 
@@ -75,9 +75,9 @@ if ($add_link) {
 	$result = process_sql($sql);
 	
 	if ($result) {
-		echo '<h3 class="suc">'.__("Inventory relationship added").'</h3>'; 
+		echo ui_print_success_message (__("Inventory relationship added"), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="error">'.__("Error adding inventory relationship").'</h3>';
+		echo ui_print_error_message (__("Error adding inventory relationship"), '', true, 'h3', true);
 	}
 }
 
@@ -90,6 +90,7 @@ if ($all_links == false) {
 	$all_links = array();
 }
 
+$table = new stdClass;
 $table->width = '100%';
 $table->class = 'listing';
 $table->data = array ();

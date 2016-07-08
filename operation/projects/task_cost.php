@@ -89,7 +89,7 @@ if ($operation == "add"){
 		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 			
 		if (! copy($file_temp, $file_target)) {
-			$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
+			$result_output = ui_print_error_message (__('File cannot be saved. Please contact Integria administrator about this error'), '', true, 'h3', true);
 			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 			process_sql ($sql);
 		} else {
@@ -107,9 +107,9 @@ if ($operation == "add"){
 	
 	$ret = process_sql ($sql, 'insert_id');
 	if ($ret !== false) {
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="error">'.__('There was a problem creating adding the cost').'</h3>';
+		echo ui_print_error_message (__('There was a problem creating adding the cost'), '', true, 'h3', true);
 	}
 	
 	$operation = "list";
@@ -124,7 +124,7 @@ if ($operation == "list"){
 	$t_menu = print_task_tabs();
 	print_title_with_menu ($section_title, $section_subtitle, false, 'projects', $t_menu, 'costs');
 	
-	echo "<h4>".__("Total cost for this task"). " : $total</h4>";
+	echo "<h4>".__("Total cost for this task")."</h4>";
 	
 	echo "<div id='' class='divform'>";
 	echo "<form method='POST' action='index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project' enctype='multipart/form-data' >";
@@ -134,15 +134,19 @@ if ($operation == "list"){
 	$table->id = 'cost_form';
 	$table->width = '100%';
 	$table->class = 'search-table';
-	
+	if(!isset($bill_id)){
+		$bill_id = '';
+	}
 	$table->data[0][0] = "<b>" . __('Bill ID') . "</b>";
-	$table->data[1][0] .= print_input_text_extended ('bill_id', $bill_id, '', '', 15, 50, false, '', 'style="width:255px !important;"', true);
-	
+	$table->data[1][0] = print_input_text_extended ('bill_id', $bill_id, '', '', 15, 50, false, '', 'style="width:255px !important;"', true);
+	if(!isset($amount)){
+		$amount = '';
+	}
 	$table->data[2][0] = "<b>" . __('Amount') . "</b>";
-	$table->data[3][0] .= print_input_text_extended ('amount', $amount, '', '', 10, 20, false, '', 'style="width:255px !important;"', true);//Check
+	$table->data[3][0] = print_input_text_extended ('amount', $amount, '', '', 10, 20, false, '', 'style="width:255px !important;"', true);//Check
 	
 	$table->data[4][0] = "<b>" . __('Description') . "</b>";
-	$table->data[5][0] .= print_input_text_extended ('description', '', '', '', 60, 250, false, '', 'style="width:255px !important;"', true);
+	$table->data[5][0] = print_input_text_extended ('description', '', '', '', 60, 250, false, '', 'style="width:255px !important;"', true);
 	
 	$table->data[6][0] = "<b>" . __('Attach a file') . "</b>";
 	$table->data[7][0] = '<input type="file" name="upfile" value="upfile" class="sub" size="30">';
@@ -150,7 +154,7 @@ if ($operation == "list"){
 	
 	//~ if ($operation == "") {
 		$table->align['button'] = 'center';
-		$table->data[8]['button'] .= print_submit_button (__('Add'), "crt", false, '', true);
+		$table->data[8]['button'] = print_submit_button (__('Add'), "crt", false, '', true);
 		$table->data[8]['button'] .= print_input_hidden ('operation', "add", true);
 		//~ $button_name = "button-crt";
 	//~ } else {

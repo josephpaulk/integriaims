@@ -1667,7 +1667,13 @@ function print_company_autocomplete_input ($parameters) {
 	}
 	$html = "";
 	if($return_help){
-		$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title). print_help_tip (__($help_message, $return_help)));
+		if(!isset($input_size)){
+			$input_size = '';
+		}
+		if(!isset($input_maxlength)){
+			$input_maxlength = '';
+		}
+		$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '', __($title). print_help_tip (__($help_message, $return_help), true));
 	} else {
 		$html .= print_input_text_extended ("autocomplete_".$input_name, $company_name, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, true, '');
 	}

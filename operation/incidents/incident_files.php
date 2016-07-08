@@ -216,13 +216,12 @@ if ($delete_file) {
 		$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
 			$id_attachment);
 		process_sql ($sql);
-		$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+		$result_msg = ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 		if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
-			$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
+			$result_msg = ui_print_error_message (__('Could not be deleted'), '', true, 'h3', true);
 		incident_tracking ($id, INCIDENT_FILE_REMOVED);
-		
 	} else {
-		$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
+		$result_msg = ui_print_error_message (__('You have no permission'), '', true, 'h3', true);
 	}
 	
 	echo $result_msg;
@@ -274,6 +273,8 @@ if ($files === false) {
 	$files = array();
 	echo '<h4 id="no_files_message">'.__('No files were added to the ticket').'</h4>';
 	$hidden = "style=\"display:none;\"";
+}else{
+	$hidden ='';
 }
 
 echo "<div style='width: 90%; margin: 0 auto;'>";

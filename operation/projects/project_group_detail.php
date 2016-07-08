@@ -29,8 +29,7 @@ if (!$section_permission["write"]) {
 }
 
 
-echo '<h2>'.__('Projects').'</h2>';
-echo '<h4>'.__('Project group management').'</h4>';
+
 
 $id = (int) get_parameter ('id');
 $new_group = (bool) get_parameter ('new_group');
@@ -46,9 +45,9 @@ if ($insert_group) {
 
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
-		echo '<h3 class="error">'.__('Could not be created').'</h3>';
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project Management", "Created group project $name");
 	}
 	$id = 0;
@@ -66,9 +65,9 @@ if ($update_group) {
 
 	$result = process_sql ($sql);
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project Management", "Updated group project $name");
 	}
 }
@@ -79,10 +78,12 @@ if ($delete_group && !$insert_group) {
 	$sql = sprintf ('DELETE FROM tproject_group WHERE id = %d', $id);
 	process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Project Management", "Deleted group project $name");
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$id = 0;
 }
 
+echo '<h2>'.__('Projects').'</h2>';
+echo '<h4>'.__('Project group management').'</h4>';
 // FORM (Update / Create)
 
 	if ($new_group) {
@@ -94,7 +95,8 @@ if ($delete_group && !$insert_group) {
 		$name = $group["name"];
 		$icon = $group["icon"];
 	}
-	
+
+	$table = new StdClass;
 	$table->width = '99%';
 	$table->class = 'search-table';
 	$table->data = array ();
@@ -116,7 +118,7 @@ if ($delete_group && !$insert_group) {
 		$table->data[4][0] = $button;
 		$table->data[5][0] = $return_a;
 	} else {
-		$button .= print_submit_button (__('Create'), "enviar", false, '', true);
+		$button = print_submit_button (__('Create'), "enviar", false, '', true);
 		$button .= print_input_hidden ('insert_group', 1, true);
 		$table->data[4][0] = $button;
 	}

@@ -617,7 +617,7 @@ if ($clean_output == 0) {
 							}
 						}
 					} else {
-						echo "<h3 class='error'>".__('Page not found')."</h3>";
+						echo ui_print_error_message (__('Page not found'), '', true, 'h3', true);
 					}
 				}
 				else {

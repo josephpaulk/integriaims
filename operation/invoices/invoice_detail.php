@@ -57,7 +57,7 @@ if (!$read) {
 
 $message = get_parameter('message', '');
 if ($message != '') {
-	echo "<h3 class='suc'>".__($message)."</h3>";
+	echo ui_print_success_message (__($message), '', true, 'h3', true);
 }
 
 if ($id_invoice || $id) {
@@ -396,7 +396,7 @@ if ($invoices != false) {
 	}
 
 } else {
-	echo "<h3 class='no_result'>".__("No invoices")."</h3>";
+	echo ui_print_error_message (__("No invoices"), '', true, 'h3', true);
 }
 
 

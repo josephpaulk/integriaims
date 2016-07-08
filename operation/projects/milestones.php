@@ -64,9 +64,9 @@ if ($operation == "create2") {
 	$sql_insert="INSERT INTO tmilestone (name, description, timestamp, id_project) VALUES ('$name','$description', '$timestamp', '$id_project') ";
 	$result=mysql_query($sql_insert);
 	if (! $result)
-		echo "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
+		echo ui_print_error_message (__('Not created. Error inserting data'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>"; 
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$id_ms = mysql_insert_id();
 	}
 	
@@ -86,9 +86,9 @@ if ($operation == "update2") {
 	
 	$result = process_sql_update("tmilestone",$values, "id = $id_milestone");
 	if (! $result)
-		echo "<h3 class='error'>".__('Error to update or nothing to update')."</h3>";
+		echo ui_print_error_message (__('Error to update or nothing to update'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully update')."</h3>"; 
+		echo ui_print_success_message (__('Successfully update'), '', true, 'h3', true); 
 	}
 	
 	$operation = "";
@@ -102,9 +102,9 @@ if ($operation == "delete") {
 	$sql_delete= "DELETE FROM tmilestone WHERE id = $id_milestone";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
+		echo ui_print_error_message (__('Not deleted. Error deleting data'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$operation = "";
 }
 
@@ -192,6 +192,9 @@ if ($operation == ""){
 		echo "<th>".__("OP");
 	}
 	$color=1;
+	if(!isset($tdcolor)){
+		$tdcolor ="";
+	}
 	$sql1="SELECT * FROM tmilestone WHERE id_project = $id_project";
 	if ($result=mysql_query($sql1))
 		while ($row=mysql_fetch_array($result)){

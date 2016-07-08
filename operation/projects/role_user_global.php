@@ -35,8 +35,9 @@ if (! $section_access['read']) {
 
 $id_user = get_parameter ("id_user", $config["id_user"]);
 $id_role = get_parameter ("roles", 0);
-$tasks = (array) $_POST["tasks"];
-
+if (isset($_POST["tasks"])){
+	$tasks = (array) $_POST["tasks"];
+}
 $delete = get_parameter ("delete", 0);
 if ($delete) {
 	$id_project = get_db_value ('id_project', 'ttask', 'id', $delete);
@@ -47,10 +48,10 @@ if ($delete) {
 		$id_task = $delete;
 		$sql = "DELETE FROM trole_people_task WHERE id_task = $id_task AND id_user = '$id_user'";
 		$resq1=mysql_query($sql);
-		echo "<h3 class='suc'>".__ ("Assigment removed succesfully")."</h3>";
+		echo ui_print_success_message (__("Assigment removed succesfully"), '', true, 'h3', true);
 	} else {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete the task $delete");
-		echo "<h3 class='error'>".__ ("You do not have permission to delete this task")."</h3>";
+		echo ui_print_error_message (__("You do not have permission to delete this task"), '', true, 'h3', true);
 	}
 }
 
@@ -62,7 +63,7 @@ if ($add && $id_role) {
 		$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
 		$task = get_db_value ('name', 'ttask', 'id', $id_task);
 		if (!$id_project) {
-			echo "<h3 class='error'>".__('Error. Task '.$task.' is not assigned to a project.')."</h3>";
+			echo ui_print_error_message (__('Error. Task is not assigned to a project.'), '', true, 'h3', true);
 			continue; // Does not insert the project and the task
 		}
 		
@@ -72,14 +73,14 @@ if ($add && $id_role) {
 		// ACL - To add an user to a task, you should be project manager
 		if (!$project_access['manage'] && !$task_access['manage']) {
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to add an user to the task $task");
-			echo "<h3 class='error'>".__ ("You don't have permission to add an user to the task $task")."</h3>";
+			echo ui_print_error_message (__("You don't have permission to add an user to the task $task"), '', true, 'h3', true);
 			continue; // Does not insert the project and the task
 		}
 		
 		// ACL - To add the project manager role to an user, you should be project manager
 		if ($id_role == 1 && !$project_access['manage']) {
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to add the task $task");
-			echo "<h3 class='error'>".__ ("You do not have permission to add the project manager role to an user")."</h3>";
+			echo ui_print_error_message (__("You do not have permission to add the project manager role to an user"), '', true, 'h3', true);
 			continue; // Does not insert the project and the task
 		}
 		
@@ -101,7 +102,7 @@ if ($add && $id_role) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $id_user added to project $project");
 			} else {
 				$project = get_db_value ('name', 'tproject', 'id', $id_project);
-				$result_output = "<h3 class='error'>".__('Error assigning access to project '.$project.'.')."</h3>";
+				$result_output = ui_print_error_message (__('Error assigning access to project'), '', true, 'h3', true);
 				continue; // Does not insert the task
 			}
 		}
@@ -123,7 +124,7 @@ if ($add && $id_role) {
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $id_user added to project $project");
 			} else {
 				$task = get_db_value ("name", "ttask", "id", $id_task);
-				$result_output = "<h3 class='error'>".__('Error assigning access to task '.$task.'.')."</h3>";
+				$result_output = ui_print_error_message (__('Error assigning access to task'), '', true, 'h3', true);
 			}
 		} else {
 			
@@ -140,7 +141,7 @@ if ($add && $id_role) {
 					"User $id_user has now the role $role in the task $task");
 			} else {
 				$task = get_db_value ("name", "ttask", "id", $id_task);
-				$result_output = "<h3 class='error'>".__('Error updating the role of the task '.$task.'.')."</h3>";
+				$result_output = ui_print_error_message (__('Error updating the role of the task'), '', true, 'h3', true);
 			}
 		}
 		
@@ -161,18 +162,20 @@ echo "</h4>";
 echo "<div class='divform'>";
 	echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/projects/role_user_global'>";
 		// Select user
+		$table = new stdClass;
 		$table->id = "cost_form";
 		$table->width = "99%";
 		$table->class = "search-table";
 		$table->data = array ();
 		$table->data[0][0] = '<b>'.__('User ').'</b>' . print_help_tip (__("Type at least two characters to search"), true);
-		$table->data[1][0] .= print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 26, 30, false, '', '', true, '');
-		$table->data[2][0] .= print_submit_button (__('Go'), 'sub_btn', false, '', true);
+		$table->data[1][0] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 26, 30, false, '', '', true, '');
+		$table->data[2][0] = print_submit_button (__('Go'), 'sub_btn', false, '', true);
 		print_table ($table);
 		unset($table);
 	echo "</form>";
 	// Form to give project/task access
 	echo "<form name='form-access' method=post action='index.php?sec=projects&sec2=operation/projects/role_user_global&add=1&id_user=$id_user'>";
+		$table = new stdClass;
 		$table->id = "cost_form";
 		$table->width = "99%";
 		$table->class = "search-table";

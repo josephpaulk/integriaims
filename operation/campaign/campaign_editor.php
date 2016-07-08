@@ -59,9 +59,9 @@ if ($update) {
 	$res = process_sql_update ("tcampaign", $values, array("id" => $id));
 	
 	if ($res) {
-		echo "<h3 class='suc'>".__("Campaign updated sucessfully")."</h3>";
+		echo ui_print_success_message (__("Campaign updated sucessfully"), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__("There was a problem updating campaign")."</h3>";
+		echo ui_print_error_message (__("There was a problem updating campaign"), '', true, 'h3', true);
 	}
 }
 
@@ -79,7 +79,7 @@ if ($id) {
 	//Check if campaign exists
 	if (!$campaign) {
 		echo "<h1>".__("Campaign edition")."</h1>";
-		echo "<h3 class='error'>".__("The campaign doesn't exists")."</h3>";
+		echo ui_print_error_message (__("The campaign doesn't exists"), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access campaign management with wrong id: ".$id);
 		return;
 	}
@@ -92,7 +92,7 @@ if ($new) {
 	//echo '<div class="under_tabs_info">'.__("Campaign").': '.$title.'</div>';
 	$action = "index.php?sec=customers&sec2=operation/campaign/campaign&tab=editor&id=".$id;
 }
-
+$table = new stdClass();
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
@@ -110,7 +110,9 @@ $table->data[0][0] = print_input_text ('title', $title, '', 55, 100, true, __('T
 $table->data[0][1] = print_input_text ('start_date', $start_date, '', 10, 10, true, __('Start date'));
 
 $table->data[0][2] = print_input_text ('end_date', $end_date, '', 10, 10, true, __('End date'));
-
+if(!isset($expenses)){
+	$expenses = '';
+}
 $table->data[0][3] = print_input_text ('expenses', $expenses, '', 10, 10, true, __('Expenses'));
 
 $table->data[1][0] = print_textarea ('description', 9, 80, $description, false, true, __('Description'));

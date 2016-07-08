@@ -36,21 +36,21 @@ if (is_numeric($id))
 
 // Security checks
 if (!isset($incident)){
-	echo "<h3 class='error'>".__("Invalid ticket ID")."</h3>";
+	echo ui_print_error_message (__("Invalid ticket ID"), '', true, 'h3', true);
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Ticket score hack", "Trying to access ticket score on a invalid ticket");
 	no_permission();
 	return;
 }
 
 if ($incident["id_creator"] != $config["id_user"]){
-	echo "<h3 class='error'>".__("Non authorized ticket score review")."</h3>";
+	echo ui_print_error_message (__("Non authorized ticket score review"), '', true, 'h3', true);
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Ticket score hack", "Trying to access ticket score on a non-authorship ticket");
 	no_permission();
 	return;
 }
 
 if (($incident["estado"] !=6) AND ($incident["estado"] != 7)){
-	echo "<h3 class='error'>".__("Ticket cannot be scored until be closed")."</h3>";
+	echo ui_print_error_message (__("Ticket cannot be scored until be closed"), '', true, 'h3', true);
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Ticket score hack", "Trying to access ticket score before closing ticket");
 	no_permission();
 	return;

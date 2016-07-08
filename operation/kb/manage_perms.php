@@ -39,9 +39,9 @@ if (isset($_GET["create2"])){ // Create
 
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$id_cat = mysql_insert_id();
 	}
 	
@@ -58,9 +58,9 @@ if (isset($_GET["delete"])){ // if modified any parameter
 	id_group = $id_group AND id_product = $id_product";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be deleted')."</h3>"; 
+		echo ui_print_error_message (__('Could not be deleted'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	}
 }
 
@@ -82,6 +82,9 @@ if (isset($_GET["delete"])){ // if modified any parameter
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo "<b>" . __('Product') . "</b>";
+	if(!isset($id_product)){
+		$id_product = '';
+	}
 	combo_kb_products ($id_product, 0);
 
 	echo "<tr>";

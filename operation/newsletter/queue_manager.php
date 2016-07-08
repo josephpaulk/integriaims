@@ -134,7 +134,7 @@ if ($create) {
 			process_sql ($sql);
 		}
 			
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER QUEUE CREATED", "Created newsletter queue for issue ".$issue["email_subject"]);
 		
 	}
@@ -164,7 +164,7 @@ if ($delete) { // if delete
 	$sql= sprintf ('DELETE FROM tnewsletter_queue_data WHERE id_queue = %d', $id);
 	process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER QUEUE DELETED", "Deleted newsletter queue $id");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -192,7 +192,7 @@ if ($disable_bad) { // if delete
 		$sql = "UPDATE tnewsletter_address SET status = 1 WHERE id_newsletter = $id AND email = '".$item["email"]."'";
 		$result = mysql_query ($sql);
 	}
-	echo "<h3 class='suc'>".__('Disabled bad addresses')."</h3>";
+	echo ui_print_success_message (__('Disabled bad addresses'), '', true, 'h3', true);
 	$id = 0;
 }
 

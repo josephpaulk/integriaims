@@ -47,7 +47,7 @@ if ($id_invoice > 0 || $id_company > 0) {
 		exit;
 	}
 	
-	if (crm_is_invoice_locked ($invoice["id"])) {
+	if (crm_is_invoice_locked ($id_invoice)) {
 		include ("operation/invoices/invoice_view.php");
 		return;
 	}
@@ -62,7 +62,7 @@ if ($deletef != ""){
 		process_sql ($sql);	
 		$filename = $config["homedir"]."/attachment/". $file["id_attachment"]. "_" . $file["filename"];
 		unlink ($filename);
-		echo "<h3 class=suc>".__("Successfully deleted")."</h3>";
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	}
 }
 
@@ -209,9 +209,9 @@ if ($operation_invoices == "update_invoice"){
 		$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
 		$result_activity = process_sql ($sql_activity);
 		
-		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';
+		echo ui_print_error_message (__('There was a problem updating the invoice'), '', true, 'h3', true);
 	}
 }
 
@@ -295,7 +295,7 @@ if ($operation_invoices == "add_invoice"){
 		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 			
 		if (! copy($file_temp, $file_target)) {
-			$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
+			$result_output = ui_print_error_message (__('File cannot be saved. Please contact Integria administrator about this error'), '', true, 'h3', true);
 			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 			process_sql ($sql);
 		} else {
@@ -345,13 +345,13 @@ if ($operation_invoices == "add_invoice"){
 			$sql_activity = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id_company);
 			$result_activity = process_sql ($sql_activity);
 				
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+			echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 			$operation_invoices = "update_invoice";
 		} else {
-			echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
+			echo ui_print_error_message (__('There was a problem creating the invoice'), '', true, 'h3', true);
 		}
 	} else {
-		echo '<h3 class="error">'.__('This bill ID already exists').'</h3>';
+		echo ui_print_error_message (__('This bill ID already exists'), '', true, 'h3', true);
 	}
 }
 
@@ -553,29 +553,55 @@ $table->data[4][2] = "<br/><h4>".__('Amount')."</h4>";
 $table->data[4][3] = "<br/><h4 id='currency_change_title' >". $currency_change ."</h4>";
 
 $table->colspan[5][0] = 2;
+if(!isset($amount[0])){
+	$amount[0] = '';
+}
+if(!isset($concept[0])){
+	$concept[0] = '';
+}
 $rate1 = sprintf("%.2f", $amount[0] * $rates);
 $table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
 $table->data[5][2] = print_input_text_extended ('amount1', $amount[0], 'text-amount1', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount1\", \"text-rate1\");'",true);
 $table->data[5][3] = print_input_text ('rate1', $rate1, '', 18, 20, true);
-
+if(!isset($amount[1])){
+	$amount[1] = '';
+}
+if(!isset($concept[1])){
+	$concept[1] = '';
+}
 $table->colspan[6][0] = 2;
 $rate2 = sprintf("%.2f", $amount[1] * $rates);
 $table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
 $table->data[6][2] = print_input_text_extended ('amount2', $amount[1], 'text-amount2', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount2\", \"text-rate2\")'",true);
 $table->data[6][3] = print_input_text ('rate2', $rate2, '', 18, 20, true);
-
+if(!isset($amount[2])){
+	$amount[2] = '';
+}
+if(!isset($concept[2])){
+	$concept[2] = '';
+}
 $table->colspan[7][0] = 2;
 $rate3 = sprintf("%.2f", $amount[2] * $rates);
 $table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
 $table->data[7][2] = print_input_text_extended ('amount3', $amount[2], 'text-amount3', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount3\", \"text-rate3\")'",true);
 $table->data[7][3] = print_input_text ('rate3', $rate3, '', 18, 20, true);
-
+if(!isset($amount[3])){
+	$amount[3] = '';
+}
+if(!isset($concept[3])){
+	$concept[3] = '';
+}
 $table->colspan[8][0] = 2;
 $rate4 = sprintf("%.2f", $amount[3] * $rates);
 $table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
 $table->data[8][2] = print_input_text_extended ('amount4', $amount[3], 'text-amount4', '', 18, 20, false, '', "oninput='calculate_rate(\"text-amount4\", \"text-rate4\")'",true);
 $table->data[8][3] = print_input_text ('rate4', $rate4, '', 18, 20, true);
-
+if(!isset($amount[4])){
+	$amount[4] = '';
+}
+if(!isset($concept[4])){
+	$concept[4] = '';
+}
 $table->colspan[9][0] = 2;
 $rate5 = sprintf("%.2f", $amount[4] * $rates);
 $table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
@@ -646,7 +672,7 @@ $table->colspan[12][2] = 2;
 $table->data[12][2] = print_input_text ('irpf', $irpf, '', 5, 20, true, __('Retention (%)'));
 
 echo '<div id="msg_ok_hidden" style="display:none;">';
-	echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+	echo ui_print_success_message (__('Custom search saved'), '', true, 'h3', true);
 echo '</div>';
 
 if ($id_invoice != -1) {

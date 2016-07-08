@@ -33,7 +33,7 @@ $tab = (string) get_parameter("tab");
 
 $message = get_parameter('message', '');
 if ($message != '') {
-	echo "<h3 class='suc'>".__($message)."</h3>";
+	echo ui_print_error_message (__($message), '', true, 'h3', true);
 }
 
 $title = "";

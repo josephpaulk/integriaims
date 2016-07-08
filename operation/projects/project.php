@@ -64,7 +64,7 @@ if ($disable_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	$sql = sprintf ('UPDATE tproject SET disabled = 1 WHERE id = %d', $id_project);
 	process_sql ($sql);
-	echo '<h3 class="suc">'.__('Project successfully disabled').'</h3>';
+	echo ui_print_success_message (__('Project successfully disabled'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Project disabled", "User ".$config['id_user']." disabled project #".$id_project);
 	project_tracking ($id_project, PROJECT_DISABLED);
 }
@@ -81,7 +81,7 @@ if ($activate_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	$sql = sprintf ('UPDATE tproject SET disabled = 0 WHERE id = %d', $id_project);
 	process_sql ($sql);
-	echo '<h3 class="suc">'.__('Successfully reactivated').'</h3>';
+	echo ui_print_success_message (__('Successfully reactivated'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
 	project_tracking ($id_project, PROJECT_ACTIVATED);
 }
@@ -97,7 +97,7 @@ if ($delete_project) {
 	
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	delete_project ($id_project);
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 }
 
 if ($view_disabled) {
@@ -105,10 +105,6 @@ if ($view_disabled) {
 	echo '<h4>'.__('Archived projects');
 	echo integria_help ("archieved_projects", true);
 	echo '</h4>';
-}
-else {
-	echo '<h1>'.__('Project management').'</h1>';
-	echo '<h3 class="error">No debe mandarte aqui esta desaparece</h3>';
 }
 
 $table = new stdClass;
@@ -200,7 +196,7 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 }
 echo "<div class='divresult'>";
 	if(empty($table->data)) {
-		echo '<h3 class="error">'.__('No projects found').'</h3>';
+		echo ui_print_error_message(__('No projects found'), '', true, 'h3', true);
 	}
 	else {
 		print_table ($table);

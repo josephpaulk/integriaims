@@ -79,7 +79,7 @@ if ($operation == "insert"){
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $id_user added to project $project");
 			} else {
 				$project = get_db_value ('name', 'tproject', 'id', $id_project);
-				$result_output = "<h3 class='error'>".__('Error assigning access to project '.$project.'.')."</h3>";
+				$result_output = ui_print_error_message (__('Error assigning access to project.'), '', true, 'h3', true);
 				continue; // Does not insert the task
 			}
 		}
@@ -97,7 +97,7 @@ if ($operation == "insert"){
 		$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);
 		
 		if ( $result_sql !== false) {
-			echo "<h3 class='error'>".__('Not created. Role already exists.')."</h3>";
+			echo ui_print_error_message (__('Not created. Role already exists.'), '', true, 'h3', true);
 		}
 		else {
 			$sql = "INSERT INTO trole_people_task
@@ -107,14 +107,14 @@ if ($operation == "insert"){
 			$id_task_inserted = process_sql ($sql, 'insert_id');
 			
 			if ($id_task_inserted !== false) {
-				$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
+				$result_output = ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 					"User/Role added to task", "User $id_user added to task " . get_db_value ("name", "ttask", "id", $id_task));
 			}
 			else {
 				$update_mode = 0;
 				$create_mode = 1;
-				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
+				$result_output = ui_print_error_message (__('Not created. Error inserting data.'), '', true, 'h3', true);
 			}
 		}
 	}
@@ -127,7 +127,7 @@ if ($operation == "insert"){
 		
 		$result_sql = get_db_value_filter('id_user', 'trole_people_project', $filter);
 		if ($result_sql !== false){
-			echo "<h3 class='error'>".__('Not created. Role already exists.')."</h3>";
+			echo ui_print_error_message (__('Not created. Role already exists.'), '', true, 'h3', true);
 		}
 		else {
 			$sql = "INSERT INTO trole_people_project
@@ -137,12 +137,12 @@ if ($operation == "insert"){
 			$id_task_inserted = process_sql ($sql, 'insert_id');
 		
 			if ($id_task_inserted !== false) {
-				$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
+				$result_output = ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $id_user added to project ".get_db_value ("name", "tproject", "id", $id_project));
 			} else {
 				$update_mode = 0;
 				$create_mode = 1;
-				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
+				$result_output = ui_print_error_message (__('Not created. Error inserting data.'), '', true, 'h3', true); 
 			}
 		}
 	}
@@ -163,7 +163,7 @@ if ($operation == "delete"){
 		$sql = "DELETE FROM trole_people_project WHERE id = $id";
 	}
 	if (mysql_query($sql)){
-		$result_output = "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		$result_output = ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 		$operation = "view";
 	}
 }
@@ -174,7 +174,7 @@ if ($operation == 'insert_all') {
 	if (empty($all_people)) {
 		$update_mode = 0;
 		$create_mode = 1;
-		$result_output = "<h3 class='error'>".__('You must select user/role')."</h3>";
+		$result_output = ui_print_error_message (__('You must select user/role'), '', true, 'h3', true);
 	}
 	else {
 	
@@ -193,7 +193,7 @@ if ($operation == 'insert_all') {
 			$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);
 			
 			if ( $result_sql !== false) {
-				echo "<h3 class='error'>".__('Not created. Role already exists: ').$id_user.' / '.$role_name."</h3>";
+				echo ui_print_error_message (__('Not created. Role already exists: ').$id_user.' / '.$role_name, '', true, 'h3', true);
 			}
 			else {
 				$sql = "INSERT INTO trole_people_task
@@ -204,14 +204,14 @@ if ($operation == 'insert_all') {
 				$id_task_inserted = process_sql ($sql, 'insert_id');
 				
 				if ($id_task_inserted !== false) {
-					$result_output .= "<h3 class='suc'>".__('Successfully created: ').$id_user.' / '.$role_name."</h3>";
+					$result_output .= ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 					audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 						"User/Role added to task", "User $id_user added to task " . get_db_value ("name", "ttask", "id", $id_task));
 				}
 				else {
 					$update_mode = 0;
 					$create_mode = 1;
-					$result_output .= "<h3 class='error'>".__('Not created. Error inserting data: ').$id_user.' / '.$role_name."</h3>";
+					$result_output .= ui_print_error_message (__('Not created. Error inserting data: ').$id_user.' / '.$role_name, '', true, 'h3', true);
 				}
 			}
 		}
@@ -245,6 +245,7 @@ if ($id_task != -1){
 	
 	// Task people manager editor
 	// ===============================
+	$table = new StdClass;
 	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->id = "project_people";
@@ -405,7 +406,9 @@ else {
 	}
 	$assigned_role .= "</table>";
 }
-
+if(!isset($columns)){
+	$columns = '';
+}
 print_container_div('assigned_roles', __('Assigned roles'), $assigned_role, 'open', false, '10px', '', '', $columns, 'no_border_bottom');
 
 // Role informational table

@@ -344,22 +344,23 @@ function print_project_user_timegraph($id_user, $start_date = false, $end_date =
 			$project['id_project']);
 		$project_name = get_db_value('name', 'tproject',
 			'id', $project['id_project']);
-		
-		foreach ($tasks as $task) {
-			$hours = get_task_workunit_hours_user ($task['id'],
-				$id_user, 0, $start_date, $end_date);
-			
-			if (empty($hours))
-				continue;
-			
-			$data[$project['id_project']][$task['id']] = array(
-				'parent_name' => safe_output($project_name),
-				'name' => safe_output($task['name']),
-				'value' => $hours,
-				'tooltip' => "<b>" . __('Project:') . "</b> " . $project_name . "<br />" .
-					"<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
-					"<b>" . __('Hours:') . "</b> " . $hours,
-				'id' => $project['id_project'] . "_" . $task['id']);
+		if (is_array($tasks) || is_object($tasks)){
+			foreach ($tasks as $task) {
+				$hours = get_task_workunit_hours_user ($task['id'],
+					$id_user, 0, $start_date, $end_date);
+				
+				if (empty($hours))
+					continue;
+				
+				$data[$project['id_project']][$task['id']] = array(
+					'parent_name' => safe_output($project_name),
+					'name' => safe_output($task['name']),
+					'value' => $hours,
+					'tooltip' => "<b>" . __('Project:') . "</b> " . $project_name . "<br />" .
+						"<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
+						"<b>" . __('Hours:') . "</b> " . $hours,
+					'id' => $project['id_project'] . "_" . $task['id']);
+			}
 		}
 	}
 	
@@ -388,25 +389,27 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 	$tasks = get_db_all_rows_field_filter('ttask', 'id_project', $id_project);
 	
 	$data = array();
-	foreach ($tasks as $task) {
-		foreach($users as $user) {
-			$user_name = get_db_value('nombre_real', 'tusuario',
-				'id_usuario', $user['id_user']);
-			
-			$hours = get_task_workunit_hours_user ($task['id'],
-				$user['id_user'], 0, $start_date, $end_date);
-			
-			if (empty($hours))
-				continue;
-			
-			$data[$task['id']][$user['id_user']] = array(
-				'parent_name' => safe_output($task['name']),
-				'name' => safe_output($user_name),
-				'value' => $hours,
-				'tooltip' => "<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
-					"<b>" . __('User:') . "</b> " . $user_name . "<br />" .
-					"<b>" . __('Hours:') . "</b> " . $hours,
-				'id' => $task['id'] . "_" . $user['id_user']);
+	if (is_array($tasks) || is_object($tasks)){
+		foreach ($tasks as $task) {
+			foreach($users as $user) {
+				$user_name = get_db_value('nombre_real', 'tusuario',
+					'id_usuario', $user['id_user']);
+				
+				$hours = get_task_workunit_hours_user ($task['id'],
+					$user['id_user'], 0, $start_date, $end_date);
+				
+				if (empty($hours))
+					continue;
+				
+				$data[$task['id']][$user['id_user']] = array(
+					'parent_name' => safe_output($task['name']),
+					'name' => safe_output($user_name),
+					'value' => $hours,
+					'tooltip' => "<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
+						"<b>" . __('User:') . "</b> " . $user_name . "<br />" .
+						"<b>" . __('Hours:') . "</b> " . $hours,
+					'id' => $task['id'] . "_" . $user['id_user']);
+			}
 		}
 	}
 	
@@ -1462,7 +1465,11 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
 	// Calculate chart data
 	for ($i = 0; $i < $resolution; $i++) {
 		//$timestamp =  $start_unixdate + ($interval * $i);
-		$timestamp = strtotime($data[$i]['timestamp']);
+		if(isset($data[$i]['timestamp'])){
+			$timestamp = strtotime($data[$i]['timestamp']);
+		} else {
+			$timestamp = null;
+		}
 		$total = 0;
 		$j = 0;
 
@@ -1473,8 +1480,11 @@ function project_activity_graph ($id_project, $width = 650, $height = 150, $area
 			//~ }
 			//~ $j++;
 		//~ }
-		
-		$total = ($data[$i]['duration']);
+		if(isset($data[$i]['duration'])){
+			$total = $data[$i]['duration'];
+		} else {
+			$total = '';
+		}
     	$time_format = "d M Y";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human]['graph'] = $total;

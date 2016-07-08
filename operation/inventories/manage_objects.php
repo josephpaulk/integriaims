@@ -86,9 +86,9 @@ if ($insert_object) {
 			$name, $description, $icon, $min_stock, $show_in_list);
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
-		echo '<h3 class="error">'.__('Could not be created').'</h3>';
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		//insert_event ("OBJECT TYPE CREATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created object $id - $name");
 	}
@@ -109,9 +109,9 @@ if ($update_object) {
 		
 	$result = process_sql ($sql);
 	if (! $result) {
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true); 
 	} else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		//insert_event ("PRODUCT UPDATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated object $id - $name");
 	}
@@ -127,9 +127,9 @@ if ($delete_object) {
 	$result = process_sql ($sql);
 
 	if ($result)
-		echo '<h3 class="suc">'.__("Successfully deleted").'</h3>';
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	else
-		echo '<h3 class="error">'.__("Could not be deleted").'</h3>';
+		echo ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
 		
 	$id = 0;
 }
@@ -159,7 +159,7 @@ if ($create || $id) {
 	} else {
 		echo "<h3>".__('Update existing object')."</h3>";
 	}*/
-	
+	$table = new StdClass;
 	$table->width = '100%';
 	$table->class = 'search-table-button';
 	$table->colspan = array ();
@@ -168,7 +168,9 @@ if ($create || $id) {
 	$table->data = array ();
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 45, 100, true, __('Name'));
-
+	if(!isset($show_in_list)){
+		$show_in_list ='';	
+	}
 	$table->data[0][1] = '<label>' . __('Show in tree view') . print_help_tip(__('If this value is checked this object type will appear as a root inside inventory\'s tree view.'), true) . '</label>';
 	$table->data[0][1] .= print_checkbox ('show_in_list', 1, $show_in_list, __('Show in tree view'));	
 	
@@ -208,7 +210,7 @@ if ($create || $id) {
 //**********************************************************************
 if (! $id && ! $create) {
 	$objects = get_db_all_rows_in_table ('tobject_type', 'name');
-	
+	$table = new StdClass;
 	$table->width = '99%';
 	echo "<div class='divresult'>";
 	if ($objects !== false) {	

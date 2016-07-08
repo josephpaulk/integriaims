@@ -30,7 +30,7 @@ $data = "";
 
 echo "<h2>".__("Addresses management")."</h2>";
 echo "<h4>".__("Addresses bulk creation")."</h4>";
-	
+$table = new stdClass();	
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();

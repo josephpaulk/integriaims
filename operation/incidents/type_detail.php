@@ -68,19 +68,19 @@ if ($add_field) { //add field to incident type
 	}
 	
 	if ($value['label'] == '') {
-		echo '<h3 class="error">'.__('Empty field name').'</h3>';
+		echo ui_print_error_message (__('Empty field name'), '', true, 'h3', true);
 	} else if ($error_combo) {
-		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
+		echo ui_print_error_message (__('Empty combo value'), '', true, 'h3', true);
 	} else if ($error_linked) {
-		echo '<h3 class="error">'.__('Empty linked value').'</h3>';
+		echo ui_print_error_message (__('Empty linked value'), '', true, 'h3', true);
 	} else if (!$value["type"]) {
-		echo '<h3 class="error">'.__('No type selected').'</h3>';
+		echo ui_print_error_message (__('No type selected'), '', true, 'h3', true);
 	} else {
 
 		$result_field = process_sql_insert('tincident_type_field', $value);
 		
 		if ($result_field === false) {
-			echo '<h3 class="error">'.__('Field could not be created').'</h3>';
+			echo ui_print_error_message (__('Field could not be created'), '', true, 'h3', true);
 		} else {
 
 			//Global fields are inserted in all types
@@ -111,12 +111,11 @@ if ($add_field) { //add field to incident type
 					$res = process_sql_insert('tincident_type_field', $value);
 
 					if (!$res) {
-						echo '<h3 class="error">'.__('There was a problem creating global field for type could not be created for type: ')." ".$t["name"].'</h3>';
+						echo ui_print_error_message (__('There was a problem creating global field for type could not be created for type: ')." ".$t["name"], '', true, 'h3', true);
 					}
 				}
 			}
-
-			echo '<h3 class="suc">'.__('Field created successfully').'</h3>';
+			echo ui_print_success_message (__('Field created successfully'), '', true, 'h3', true);
 		}
 	}
 }
@@ -148,9 +147,9 @@ if ($delete_field) {
 	
 	
 	if ($result_delete === false) {
-		echo '<h3 class="error">'.__('Field could not be deleted').'</h3>';
+		echo ui_print_error_message (__('Field could not be deleted'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="suc">'.__('Field deleted successfully').'</h3>';
+		echo ui_print_success_message (__('Field deleted successfully'), '', true, 'h3', true);
 	}
 }
 
@@ -183,10 +182,9 @@ if ($update_field && $upd) { //update field to incident type
 	} 
 	
 	if ($error_combo_update) {
-		echo '<h3 class="error">'.__('Field could not be updated. Empty combo value').'</h3>';
+		echo ui_print_error_message (__('Field could not be updated. Empty combo value'), '', true, 'h3', true);
 	} else if ($error_linked_update) {
-		echo '<h3 class="error">'.__('Field could not be updated. Empty linked value').'</h3>';
-	
+		echo ui_print_error_message (__('Field could not be updated. Empty linked value'), '', true, 'h3', true);
 	} else {
 		if ($is_global) {
 			if ($add_linked_value != "") {
@@ -217,7 +215,7 @@ if ($update_field && $upd) { //update field to incident type
 					foreach ($types as $t) {
 						$res = process_sql_update('tincident_type_field', $value_update, array('id_incident_type' => $t['id'],'global_id'=>$is_global));
 						if (!$res) {
-							echo '<h3 class="error">'.__('There was a problem updating global field for type: ')." ".$t["name"].'</h3>';
+							echo ui_print_error_message (__('There was a problem updating global field for type: ')." ".$t["name"], '', true, 'h3', true);
 						}
 					}
 				}
@@ -245,14 +243,14 @@ if ($update_field && $upd) { //update field to incident type
 					$res = process_sql_insert('tincident_type_field', $value_update);
 
 					if (empty($res))
-						echo '<h3 class="error">'.__('There was a problem creating global field for type could not be created for type: ')." ".$type["name"].'</h3>';
+						echo ui_print_error_message (__('There was a problem creating global field for type could not be created for type: ')." ".$type["name"], '', true, 'h3', true);
 				}
 			}
 		}		
 		if ($result_update === false) {
-			echo '<h3 class="error">'.__('Field could not be updated').'</h3>';
+			echo ui_print_error_message (__('Field could not be updated'), '', true, 'h3', true);
 		} else {
-			echo '<h3 class="suc">'.__('Field updated successfully').'</h3>';
+			echo ui_print_success_message (__('Field updated successfully'), '', true, 'h3', true);
 		}
 	}
 }
@@ -261,7 +259,6 @@ if ($update_field && $upd) { //update field to incident type
 
 // CREATE
 if ($create_type) {
-
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
 	$values['id_group'] = (string) get_parameter ('id_group');
@@ -271,14 +268,14 @@ if ($create_type) {
 
 		$id = process_sql_insert('tincident_type', $values);	
 		if ($id === false) {
-			echo '<h3 class="error">'.__('Could not be created').'</h3>';
+			echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		} else {
 			//$show_fields = true;
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+			echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Created ticket type $id - ".$values['name']);
 		}
 	} else {
-		echo '<h3 class="error">'.__('Type name empty').'</h3>';
+		echo ui_print_error_message (__('Type name empty'), '', true, 'h3', true);
 	}
 	//$id = 0;
 	
@@ -304,7 +301,7 @@ if ($create_type) {
 			$result = process_sql_insert('tincident_type_field', $value);
 
 			if (!$result) {
-				echo '<h3 class="error">'.__('There was a problem creating global field for type could not be created for type: ')." ".$global_id["global_id"].'</h3>';
+				echo ui_print_error_message (__('There was a problem creating global field for type could not be created for type: ')." ".$global_id["global_id"], '', true, 'h3', true);
 			}
 		}
 	}
@@ -322,15 +319,16 @@ if ($update_type) {
 		$result = process_sql_update('tincident_type', $values, array('id' => $id));
 
 		if ($result === false)
-			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		else {
-			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
+			$name = $values['name'];
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Updated ticket type $id - $name");
 			//$show_fields = true;
 		}
 	}
 	else {
-		echo '<h3 class="error">'.__('Type name empty').'</h3>';
+		echo ui_print_error_message (__('Type name empty'), '', true, 'h3', true);
 	}
 	
 	//$id = 0;
@@ -342,7 +340,7 @@ if ($delete_type) {
 	$sql = sprintf ('DELETE FROM tincident_type WHERE id = %d', $id);
 	process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Ticket Management", "Deleted ticket type $id - $name");
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$id = 0;
 }
 

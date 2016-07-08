@@ -59,7 +59,7 @@ if($delete) {
 	}
 	
 	delete_task ($delete);
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	project_tracking ($id_project, PROJECT_TASK_DELETED);
 }
 
@@ -94,14 +94,14 @@ if ($update) {
 		//If there is a problem nothing will be updated
 		if (strtotime ($start) > strtotime ($end)) {
 			//Check date properly set
-			echo '<h3 class="error">'.sprintf(__('Begin date cannot be before end date in task %s'), $name).'</h3>';
+			echo ui_print_error_message (sprintf(__('Begin date cannot be before end date in task %s'), $name), '', true, 'h3', true);
 			continue;
 		}
 		
 		//Check name not empty
 		//If there is a problem nothing will be updated
 		if ($name == '') {
-			echo '<h3 class="error">'.__('Task name cannot be empty').'</h3>';
+			echo ui_print_error_message (__('Task name cannot be empty'), '', true, 'h3', true);
 			continue;
 		}
 		
@@ -120,8 +120,8 @@ if ($update) {
 		$result1 = process_sql($sql);		
 		
 		$result2 = true;//To avoid strange messages with many task users
-
-		if ($result1[0][0] == 1) {		
+		
+		if ($result1[0]['num_users'] == 1) {		
 			$sql = sprintf("SELECT id_role FROM trole_people_project 
 					WHERE id_project = %d AND id_user = '%s'", $id_project, $config['id_user']);
 						
@@ -139,11 +139,11 @@ if ($update) {
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 			task_tracking ($id, TASK_UPDATED);
 		} else {
-			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		}
 
 	}
-	echo '<h3 class="suc">'.sprintf(__('%d tasks successfully updated'), $succ).'</h3>';
+	echo ui_print_success_message (sprintf(__('%d tasks successfully updated'), $succ), '', true, 'h3', true);
 }
 
 //Create a new task
@@ -203,16 +203,16 @@ if ($create) {
 
 					$result2 = process_sql($sql);
 					if (! $result2) {
-						echo "<h3 class='error'>".__('An error ocurred setting the permissions for the task '.$data)."</h3>";
+						echo ui_print_error_message (__('An error ocurred setting the permissions for the task'), '', true, 'h3', true);
 					}
 				}
 				else {
-					echo "<h3 class='error'>".__('The task '.$data.' could not be created')."</h3>";
+					echo ui_print_error_message (__('The task could not be created'), '', true, 'h3', true);
 				}
 
 			}
 		}
-	
+		echo ui_print_success_message (__('Project created successfully'), '', true, 'h3', true);
 	} 
 }
 
@@ -258,8 +258,12 @@ foreach ($res as $r) {
 $sql = sprintf("SELECT DISTINCT(id_user) FROM trole_people_project WHERE id_project = %d", $id_project);
 $users_db = get_db_all_rows_sql ($sql);
 
-foreach ($users_db as $u) {
-	$users[$u['id_user']] = $u['id_user'];
+if (is_array($users_db) || is_object($users_db)){
+	foreach ($users_db as $u) {
+		$users[$u['id_user']] = $u['id_user'];
+	}
+} else {
+	$users="";
 }
 
 echo "<div class='divform'>";
@@ -318,7 +322,7 @@ echo "<table class = 'listing'><tr>";
 	echo "<th>".__("Pending").":<span style='background-color:#FFF;'>&nbsp;".$pending."&nbsp;</span></th>";
 echo "</tr></table>";
 
-$content_general .= "<tr><td valign='top' >";
+$content_general = "<tr><td valign='top' >";
 		$content = '<tr><td colspan="2" valign=top style="height:250px;">'.graph_workunit_project_user_single(350, 150, $id_project).'</td></tr>';
 	$content_general .=	print_container('planning_hours_worked', __("Hours worked"), $content, 'no', true, '10px');
 $content_general .= "</td><td valign='top' >";

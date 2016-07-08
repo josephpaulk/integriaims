@@ -38,7 +38,7 @@ if ($activities !== false) {
 	} else {
 
 		unset ($table);
-
+		$table = new stdClass();
 		$table->width = "95%";
 		$table->class = "listing";
 		$table->data = array ();

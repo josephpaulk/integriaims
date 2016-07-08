@@ -38,9 +38,9 @@ if (isset($_GET["create2"])){ // Create group
 	$result=mysql_query($sql_insert);	
 
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$id_cat = mysql_insert_id();
 		//insert_event ("DOWNLOAD CATEGORY CREATED", $id_cat, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Created download category $id_cat - $name");
@@ -61,9 +61,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true); 
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		//insert_event ("DOWNLOAD CATEGORY UPDATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Updated download category $id - $name");
 	}
@@ -78,9 +78,9 @@ if (isset($_GET["delete_cat"])){ // if delete
 	$sql_delete= "DELETE FROM tdownload_category WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
+		echo ui_print_error_message (__('Successfully deleted'), '', true, 'h3', true); 
 	else
-		echo "<h3 class='suc'>".__('Cannot be deteled')."</h3>";
+		echo ui_print_success_message (__('Cannot be deteled'), '', true, 'h3', true);
 }
 
 

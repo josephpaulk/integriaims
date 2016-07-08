@@ -37,7 +37,7 @@ if ($deletef != ""){
 		process_sql ($sql);	
 		$filename = $config["homedir"]."/attachment/". $file["id_attachment"]. "_" . $file["filename"];
 		unlink ($filename);
-		echo "<h3 class=suc>".__("Successfully deleted")."</h3>";
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	}
 }
 
@@ -59,10 +59,10 @@ if (isset($_GET["upload"])) {
 		$file_target = $config["homedir"]."/attachment/".$filename_encoded;
 
 		if (!(copy($file_tmp, $file_target))){
-			echo "<h3 class=error>".__("Could not be attached")."</h3>";
+			echo ui_print_error_message (__('Could not be attached'), '', true, 'h3', true);
 		} else {
 			// Delete temporal file
-			echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+			echo ui_print_success_message (__('Successfully attached'), '', true, 'h3', true);
 			$location = $file_target;
 			unlink ($file_tmp);
 		}

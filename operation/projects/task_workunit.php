@@ -176,7 +176,7 @@ if ($operation == "workunit") {
 				VALUES (%d, %d)',
 				$id_task, $id_workunit);
 			process_sql ($sql);
-			$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+			$result_output = ui_print_success_message (__('Workunit added'), '', true, 'h3', true);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Inserted PWU. $description");
 			task_tracking ($id_task, TASK_WORKUNIT_ADDED, $id_workunit);
 
@@ -196,12 +196,12 @@ if ($operation == "workunit") {
                 	}
 		} else {
 			mail_project (1, $config['id_user'], $id_workunit, $id_task);
-			$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
+			$result_output = ui_print_success_message (__('Workunit updated'), '', true, 'h3', true);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Updated PWU. $description");
 		}
 		
 	} else {
-		$result_output = '<h3 class="error">'.__('There was a problem adding workunit').'</h3>';
+		$result_output = ui_print_error_message (__('There was a problem adding workunit'), '', true, 'h3', true);
 	}
 	$operation = "view";
 }
@@ -224,7 +224,8 @@ if ($operation == "delete") {
 		return;
 	}
 	
-	$result_output = "<h3 class='suc'>".__('Successfully deleted').'</h3>';
+	$result_output = ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
+
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 }
 

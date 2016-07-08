@@ -196,10 +196,11 @@ function projects_get_task_links ($id_project, $id_task, $type) {
 	$tasks = get_db_all_rows_sql($sql);
 	
 	$task_aux = array();
-	foreach ($tasks as $t) {
-		$task_aux[$t["id"]] = $t["name"];
+	if (is_array($tasks) || is_object($tasks)){
+		foreach ($tasks as $t) {
+			$task_aux[$t["id"]] = $t["name"];
+		}
 	}
-
 	return $task_aux;
 }
 
@@ -227,13 +228,14 @@ function projects_update_task_links ($id_task, $links, $type, $delete_previous=t
 
 		$ret = process_sql($sql);
 	}
+	if (is_array($links) || is_object($links)){
+		foreach ($links as $l) {
+			$sql = sprintf ("INSERT INTO ttask_link (`source`, `target`, `type`) VALUES (%d, %d, %d)", $l, $id_task, $type);
+			$ret = process_sql($sql);
 
-	foreach ($links as $l) {
-		$sql = sprintf ("INSERT INTO ttask_link (`source`, `target`, `type`) VALUES (%d, %d, %d)", $l, $id_task, $type);
-		$ret = process_sql($sql);
-
-		if (!$ret) {
-			break;
+			if (!$ret) {
+				break;
+			}
 		}
 	}
 	
@@ -314,9 +316,9 @@ function projects_get_project_profiles ($id_project) {
 			$all_profiles[$result['id_role']]['name'] = $result['name'];
 		}
 	}
-	
-	return $all_profiles;
-	
+	if(isset($all_profiles)){
+		return $all_profiles;
+	}
 }
 
 function projects_get_cost_by_profile ($id_project, $have_cost=false) {
@@ -328,8 +330,10 @@ function projects_get_cost_by_profile ($id_project, $have_cost=false) {
 	
 	if ($project_profiles) {
 		foreach ($project_profiles as $profile) {
-			foreach ($project_tasks as $task) {
-				$total_per_profile[$profile['name']] += projects_get_cost_task_by_profile ($task['id'], $profile['id_role'], $have_cost);
+			if (is_array($project_tasks) || is_object($project_tasks)){
+				foreach ($project_tasks as $task) {
+					$total_per_profile[$profile['name']] += projects_get_cost_task_by_profile ($task['id'], $profile['id_role'], $have_cost);
+				}
 			}
 		}
 	}

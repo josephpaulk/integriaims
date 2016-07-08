@@ -26,7 +26,9 @@ if ($is_enterprise) {
 //**********************************************************************
 // Tabs
 //**********************************************************************
-
+if(!isset($inventory_name)){
+	$inventory_name = '';
+}
 print_inventory_tabs('tracking', $id, $inventory_name);
 
 if (! $id) {
@@ -37,6 +39,7 @@ if (! $id) {
 $trackings = get_db_all_rows_field_filter ('tinventory_track', 'id_inventory', $id, 'timestamp DESC');
 
 if ($trackings !== false) {
+	$table = new stdClass;
 	$table->width = "99%";
 	$table->class = 'listing';
 	$table->data = array ();

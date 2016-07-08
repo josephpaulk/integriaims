@@ -39,9 +39,9 @@ if ($delete) {
 	$res = process_sql($sql);
 
 	if ($res) {
-		echo "<h3 class='suc'>".__('Field '. $name_delete .' deleted')."</h3>";
+		echo ui_print_success_message (__('Field deleted'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__('There was a problem deleting field')."</h3>";
+		echo ui_print_error_message (__('There was a problem deleting field'), '', true, 'h3', true);
 	}
 }
 
@@ -76,20 +76,19 @@ if ($add_field) {
 	}
 	
 	if ($value['label'] == '') {
-		echo '<h3 class="error">'.__('Empty field name').'</h3>';
+		echo ui_print_error_message (__('Empty field name'), '', true, 'h3', true);
 	} else if ($error_combo) {
-		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
+		echo ui_print_error_message (__('Empty combo value'), '', true, 'h3', true);
 	} else if ($error_linked) {
-		echo '<h3 class="error">'.__('Empty linked value').'</h3>';
+		echo ui_print_error_message (__('Empty linked value'), '', true, 'h3', true);
 	} else {
 
 		$result_field = process_sql_insert('tcompany_field', $value);
 		
 		if ($result_field === false) {
-			echo '<h3 class="error">'.__('Field '.$value['label'].' could not be created').'</h3>';
+			echo ui_print_error_message (__('Field could not be created'), '', true, 'h3', true);
 		} else {
-			echo '<h3 class="suc">'.__('Field '.$value['label'].' created successfully').'</h3>';
-
+			echo ui_print_success_message (__('Field created successfully'), '', true, 'h3', true);
 			$id_field = $result_field;
 		}
 	}
@@ -118,18 +117,18 @@ if ($update_field) { //update field to incident type
 	}
 
 	if ($value_update['label'] == '') {
-		echo '<h3 class="error">'.__('Empty field name').'</h3>';
+		echo ui_print_error_message (__('Empty field name'), '', true, 'h3', true);
 	} else if ($error_combo) {
-		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
+		echo ui_print_error_message (__('Empty combo value'), '', true, 'h3', true);
 	} else if ($error_linked) {
-		echo '<h3 class="error">'.__('Empty linked value').'</h3>';
+		echo ui_print_error_message (__('Empty linked value'), '', true, 'h3', true);
 	} else {
 		$result_update = process_sql_update('tcompany_field', $value_update, array('id' => $id_field));
 		
 		if ($result_update === false) {
-			echo '<h3 class="error">'.__('Field '.$value_update['label'].' could not be updated').'</h3>';
+			echo ui_print_error_message (__('Field could not be updated'), '', true, 'h3', true);
 		} else {
-			echo '<h3 class="suc">'.__('Field '.$value_update['label'].' updated successfully').'</h3>';
+			echo ui_print_success_message (__('Field updated successfully'), '', true, 'h3', true);
 		}
 	}
 }

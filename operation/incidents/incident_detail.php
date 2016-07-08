@@ -716,10 +716,10 @@ if ($action == "insert" && !$id) {
 
 
 	if($creator_exists === false) {
-		$result_msg  = '<h3 class="error">'.__('Creator user does not exist').'</h3>';
+		$result_msg  = ui_print_error_message (__('Creator user does not exist'), '', true, 'h3', true);
 	}
 	else if($user_exists === false) {
-		$result_msg  = '<h3 class="error">'.__('Owner user does not exist').'</h3>';
+		$result_msg  = ui_print_error_message (__('Owner user does not exist'), '', true, 'h3', true);
 	}
 	else {
 	
@@ -767,8 +767,7 @@ if ($action == "insert" && !$id) {
 		if ($id !== false) {
 			/* Update inventory objects in incident */
 			update_incident_inventories ($id, get_parameter ('inventories'));
-			
-			$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
+			$result_msg = ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
 			//Add traces and statistic information	
@@ -841,7 +840,7 @@ if ($action == "insert" && !$id) {
 			exit;
 			
 		} else {
-			$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
+			$result_msg = ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		}
 	}
 	
