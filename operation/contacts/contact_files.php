@@ -98,12 +98,11 @@ if ($delete_file) {
                 $sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
                         $id_attachment);
                 process_sql ($sql);
-                $result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+                $result_msg = ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
                 if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
-                        $result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
-
+                        $result_msg = ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
         } else {
-                $result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
+            $result_msg = ui_print_error_message (__('You have no permission'), '', true, 'h3', true);
         }
 
         echo $result_msg;
@@ -171,7 +170,7 @@ $files = crm_get_contact_files ($id);
 echo "<h3>".__('Files')."</h3>";
 
 if (!$files) {
-	echo '<h3 class="error">'.__("This contact doesn't have any file associated").'</h3>';
+	echo ui_print_error_message (__("This contact doesn't have any file associated"), '', true, 'h3', true);
 }
 else {
 

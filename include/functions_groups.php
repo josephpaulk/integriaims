@@ -189,7 +189,7 @@ function print_groups_table ($groups) {
 		
 		echo '</table>';
 		if (empty($groups)) {
-			echo "<h2 class='error'>" . __("No groups") . "</h2>";
+			echo ui_print_error_message (__("No groups"), '', true, 'h3', true);
 		}
 		echo '</div>';
 	}

@@ -190,7 +190,7 @@ function print_file_types_table ($return = false) {
 			$types_aux = array();
 			for ($i = 0; $i < count($types); $i++) {
 				$types_aux[] = $types[$i];
-				if ($types[$i]["last_update"] && $types[$i+1]["last_update"]) {
+				if (isset($types[$i]["last_update"]) && isset($types[$i+1]["last_update"])) {
 					if ($types[$i]["last_update"] > $without_type["last_update"] && $types[$i+1]["last_update"] < $without_type["last_update"]) {
 						$types_aux[] = $without_type;
 					}

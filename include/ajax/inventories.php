@@ -54,11 +54,11 @@ if ($quick_delete) {
 	$id_inv = get_parameter('id_inventory');
 	if (give_acl ($config['id_user'], 0, "VW")) {
 		borrar_objeto ($id_inv);
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "Object deleted","User ".$config['id_user']." deleted object #".$id_inv);
 	} else {
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete object");
-		echo "<h3 class='error'>".__('There was a problem deleting object')."</h3>";
+		echo ui_print_error_message (__('There was a problem deleting object'), '', true, 'h3', true);
 		no_permission();
 	}
 	
@@ -370,7 +370,7 @@ if ($get_external_data) {
 	$exists = mysql_query("SELECT * FROM ".$table_name." LIMIT 1");
 
 	if (!$exists) {
-		echo "<h3 class='error'>".__("External table is not present")."</h3>";
+		echo ui_print_error_message (__("External table is not present"), '', true, 'h3', true);
 		return;
 	}
 	

@@ -260,6 +260,7 @@ if ($id == 0 && !$new_contact) {
 	}
 	$search_params = "&search_text=$search_text&id_company=$id_company";
 
+	$table = new stdClass();
 	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
@@ -304,6 +305,7 @@ if ($id == 0 && !$new_contact) {
 		
 		$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$search_params", $offset);
 		unset ($table);
+		$table = new stdClass();
 		$table->width = "100%";
 		$table->class = "listing";
 		$table->data = array ();
@@ -339,7 +341,7 @@ if ($id == 0 && !$new_contact) {
 		
 		print_table ($table);
 	} else {
-		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
+		echo ui_print_error_message (__("There are not results for the search"), '', true, 'h3', true);
 	}
 	echo '</div>';
 }

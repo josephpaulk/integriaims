@@ -1425,9 +1425,9 @@ function db_update_schema () {
 									}
 								}
 								
-								$message = "<h3 class='suc'>".__('The database schema has been updated to the minor release')." $sqlfile_num</h3>";
+								$message = ui_print_success_message (__('The database schema has been updated to the minor release') . $sqlfile_num, '', true, 'h3', true);
 							} else {
-								$message = "<h3 class='error'>".__('An error occurred while updating the database schema to the minor release ')." $sqlfile_num</h3>";
+								$message = ui_print_error_message (__('An error occurred while updating the database schema to the minor release ') . $sqlfile_num, '', true, 'h3', true);
 								break;
 							}
 						}
@@ -1436,10 +1436,10 @@ function db_update_schema () {
 			}
 			
 		} else {
-			$message = "<h3 class='error'>".__('The directory '.$dir.' should have read permissions in order to update the database schema')."</h3>";
+			$message = ui_print_error_message (__('The directory ') . $dir . __(' should have read permissions in order to update the database schema'), '', true, 'h3', true);
 		}
 	} else {
-		$message = "<h3 class='error'>".__('The directory '.$dir.' does not exist')."</h3>";
+		$message = ui_print_error_message (__('The directory ') . $dir . __(' does not exist'), '', true, 'h3', true);
 	}
 	
 	return $message;

@@ -125,7 +125,7 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 			
 		if (($id_usuario!='')&&($nombre_real!='')) {
 			if ($id_usuario == get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id_usuario)){
-				echo "<h3 class='error'>" . __ ('User '). $id_usuario . __(' already exists') . "</h3>";
+				echo ui_print_error_message (__('User '). $id_usuario . __(' already exists'), '', true, 'h3', true);
 			}
 			else {
 				$resul = process_sql_insert('tusuario', $value);
@@ -147,12 +147,11 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy, $avatar
 	}
 
 	if ($users_check === false) {
-		echo "<h3 class='error'>".__('The number of users has reached the license limit')."</h3>";
+		echo ui_print_error_message (__('The number of users has reached the license limit'), '', true, 'h3', true);
 	}
 	
 	fclose($file_handle);
-	echo "<h3 class='info'>" . __ ('File loaded'). "</h3>";
-	
+	echo ui_print_success_message (__('File loaded'), '', true, 'h3', true);
 	return;
 }
 
@@ -214,11 +213,10 @@ function user_delete_user($id_user) {
 	$query_del3 = "DELETE FROM tuser_field_data WHERE id_user = '".$id_user."'";
 	$resq3 = mysql_query($query_del3);
 
-	if (! $resq2) 
-		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
+	if (! $resq2)
+		echo ui_print_error_message (__('Could not be deleted'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
-	
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	return;
 }
 
@@ -279,7 +277,8 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 }
 							
 function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $search_text, $disabled_user, $level, $group) {
-
+	global $config;
+	
 	if ($filter != 0){
 		$offset = $filter['offset'];
 		$search_text = $filter['search_text'];
@@ -315,109 +314,108 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 	
 	echo "<div class='divresult'>";
 	pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=".$search_text."&disabled_user=".$disabled_user."&level=".$level."&group=".$group, $offset, true);
-
-	echo '<table width="100%" class="listing">';
-	if ($filter == 0){
-		echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
-		echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
-		echo '<th title="'.__('Enabled login').'">'.__('Enabled login');
-	}
-	echo '<th>'.__('User ID');
-	echo '<th>'.__('Name');
-	echo '<th>'.__('Company');
-	echo '<th>'.__('Last contact');
-	echo '<th>'.__('Profile');
-	if ($filter == 0){
-		echo '<th>'.__('Delete');
-	}
-
 	$resq1 = process_sql($sql1);
-	
-	// Init vars
-	$nombre = "";
-	$nivel = "";
-	$comentarios = "";
-	$fecha_registro = "";
-	if ($resq1) {
-		foreach($resq1 as $rowdup){
-			$nombre=$rowdup["id_usuario"];
-			$nivel =$rowdup["nivel"];
-			$realname =$rowdup["nombre_real"];
-			$fecha_registro =$rowdup["fecha_registro"];
-			$avatar = $rowdup["avatar"];
+	if (!$resq1) {
+		echo ui_print_error_message (__("No users"), '', true, 'h3', true);
+	} else {
+		echo '<table width="100%" class="listing">';
+		if ($filter == 0){
+			echo '<th>'.print_checkbox('all_user_checkbox', 1, false, true);
+			echo '<th title="'.__('Enabled/Disabled').'">'.__('E/D');
+			echo '<th title="'.__('Enabled login').'">'.__('Enabled login');
+		}
+		echo '<th>'.__('User ID');
+		echo '<th>'.__('Name');
+		echo '<th>'.__('Company');
+		echo '<th>'.__('Last contact');
+		echo '<th>'.__('Profile');
+		if ($filter == 0){
+			echo '<th>'.__('Delete');
+		}
 
-			if ($rowdup["nivel"] == 0)
-				$nivel = "<img src='images/group.png' title='".__("Grouped user")."'>";
-			elseif ($rowdup["nivel"] == 1)
-				$nivel = "<img src='images/integria_mini_logo.png' title='".__("Administrator")."'>";
-			else
-				$nivel = "<img src='images/user_gray.png' title='".__("Standalone user")."'>";
+		// Init vars
+		$nombre = "";
+		$nivel = "";
+		$comentarios = "";
+		$fecha_registro = "";
+		if ($resq1) {
+			foreach($resq1 as $rowdup){
+				$nombre=$rowdup["id_usuario"];
+				$nivel =$rowdup["nivel"];
+				$realname =$rowdup["nombre_real"];
+				$fecha_registro =$rowdup["fecha_registro"];
+				$avatar = $rowdup["avatar"];
 
-			$disabled = $rowdup["disabled"];	
-			$id_company = $rowdup["id_company"];
-			$enabled_login = $rowdup["enable_login"];	
-			
-			echo "<tr>";
-			if ($filter == 0){
-				echo "<td>";
-				echo print_checkbox_extended ("user-".$rowdup["id_usuario"], $rowdup["id_usuario"], false, false, "", "class='user_checkbox'", true);
-			
-				echo "<td>";
-				if ($disabled == 1){
-					echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'> ";
-				}
-				echo "<td>";
-				if ($enabled_login == 1){
-					echo "<img src='images/accept.png' title='".__("Enabled login")."'> ";
-				} else {
-					echo "<img src='images/fail.png' title='".__("Disabled login")."'> ";
-				}
-			}
-			echo "<td>";
-			if ($filter == 0){
-				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
-			} else {
-				$url = "javascript:loadContactUser(\"".$nombre."\",\"".$clickin."\");";
-				echo "<a href='".$url."'>".ucfirst($nombre)."</a>";
-			}
-			echo "<td style=''>" . $realname;	
-			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
-			echo "<td>".$company_name."</td>";
+				if ($rowdup["nivel"] == 0)
+					$nivel = "<img src='images/group.png' title='".__("Grouped user")."'>";
+				elseif ($rowdup["nivel"] == 1)
+					$nivel = "<img src='images/integria_mini_logo.png' title='".__("Administrator")."'>";
+				else
+					$nivel = "<img src='images/user_gray.png' title='".__("Standalone user")."'>";
 
-
-			echo "<td style=''>".human_time_comparation($fecha_registro);
-			echo "<td>";
-			print_user_avatar ($nombre, true);
-			echo "&nbsp;";
-
-			if ($config["enteprise"] == 1){
-				$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-				$result=mysql_query($sql1);
-				echo "<a href='#' class='tip'>&nbsp;<span>";
-				if (mysql_num_rows($result)){
-					while ($row=mysql_fetch_array($result)){
-						echo dame_perfil($row["id_perfil"])."/ ";
-						echo dame_grupo($row["id_grupo"])."<br>";
+				$disabled = $rowdup["disabled"];	
+				$id_company = $rowdup["id_company"];
+				$enabled_login = $rowdup["enable_login"];	
+				
+				echo "<tr>";
+				if ($filter == 0){
+					echo "<td>";
+					echo print_checkbox_extended ("user-".$rowdup["id_usuario"], $rowdup["id_usuario"], false, false, "", "class='user_checkbox'", true);
+				
+					echo "<td>";
+					if ($disabled == 1){
+						echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'> ";
+					}
+					echo "<td>";
+					if ($enabled_login == 1){
+						echo "<img src='images/accept.png' title='".__("Enabled login")."'> ";
+					} else {
+						echo "<img src='images/fail.png' title='".__("Disabled login")."'> ";
 					}
 				}
-				else { 
-					echo __('This user doesn\'t have any assigned profile/group'); 
+				echo "<td>";
+				if ($filter == 0){
+					echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
+				} else {
+					$url = "javascript:loadContactUser(\"".$nombre."\",\"".$clickin."\");";
+					echo "<a href='".$url."'>".ucfirst($nombre)."</a>";
 				}
-				echo "</span></a>";
-			}
+				echo "<td style=''>" . $realname;	
+				$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
+				echo "<td>".$company_name."</td>";
 
-			echo $nivel;
-			if ($filter == 0){
-				echo '<td align="center">';
-				echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
-				echo '</td>';
+
+				echo "<td style=''>".human_time_comparation($fecha_registro);
+				echo "<td>";
+				print_user_avatar ($nombre, true);
+				echo "&nbsp;";
+
+				if ($config["enteprise"] == 1){
+					$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+					$result=mysql_query($sql1);
+					echo "<a href='#' class='tip'>&nbsp;<span>";
+					if (mysql_num_rows($result)){
+						while ($row=mysql_fetch_array($result)){
+							echo dame_perfil($row["id_perfil"])."/ ";
+							echo dame_grupo($row["id_grupo"])."<br>";
+						}
+					}
+					else { 
+						echo __('This user doesn\'t have any assigned profile/group'); 
+					}
+					echo "</span></a>";
+				}
+
+				echo $nivel;
+				if ($filter == 0){
+					echo '<td align="center">';
+					echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+					echo '</td>';
+				}
 			}
 		}
-	}
-	
-	echo "</table>";
-	if (!$resq1) {
-		echo "<h2 class='error'>". __("No users") . "</h2>";
+		
+		echo "</table>";
 	}
 	echo "</div>";
 }

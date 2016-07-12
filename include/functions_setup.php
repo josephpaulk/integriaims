@@ -80,6 +80,9 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 	echo '<li class="' . $auth_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/key.png"  title="'.__('Authentication').'"></span></a></li>';
 	echo '<li class="' . $crm_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/invoice_dark.png"  title="'.__('CRM setup').'"></span></a></li>';
 	echo '<li class="' . $maintenance_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_maintenance"><span><img src="images/trash.png"  title="'.__('Old data maintenance').'"></span></a></li>';
+	if(!isset($project_class)){
+		$project_class ='';
+	}
 	echo '<li class="' . $project_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_project"><span><img src="images/star_dark.png"  title="'.__('Project management').'"></span></a></li>';
 	echo '<li class="' . $license_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_license"><span><img src="images/license.png"  title="'.__('License').'"></span></a></li>';
 	echo '</ul>';

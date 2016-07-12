@@ -64,9 +64,9 @@ if ($update != "none") {
 	$file = "include/mailtemplates/".$template;
 	$fileh = fopen ($file, "wb");
 	if (fwrite ($fileh, $data))
-    	echo "<h3 class='suc'>".lang_string (__('File successfully updated'))."</h3>";
-    else    
-    	echo "<h3 class='error'>".lang_string (__('Problem updating file'))." ($file) </h3>";
+    	echo ui_print_success_message (lang_string (__('File successfully updated')), '', true, 'h3', true);
+    else
+    	echo ui_print_error_message (lang_string (__('Problem updating file')), '', true, 'h3', true);
 	fclose ($file);
 
 }

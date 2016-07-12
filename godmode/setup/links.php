@@ -43,9 +43,9 @@ if (isset($_POST["create"])){ // If create
 	$sql_insert="INSERT INTO tlink (name,link) VALUES ('$name','$link') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".__('There was a problem creating link')."</h3>";
+		echo ui_print_error_message (__('There was a problem creating link'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>"; 
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$id_link = mysql_insert_id();
 	}
 }
@@ -57,9 +57,9 @@ if (isset($_POST["update"])){ // if update
 	$sql_update ="UPDATE tlink SET name = '".$name."', link ='".$link."'  WHERE id_link = '".$id_link."'";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__('There was a problem modifying link')."</h3>";
+		echo ui_print_error_message (__('There was a problem modifying link'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 
@@ -68,10 +68,9 @@ if ($delete != 0){
 	$sql_delete= "DELETE FROM tlink WHERE id_link = ".$id_link;
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
+		echo ui_print_error_message (__('Could not be deleted'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
-
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 }
 
 // Main form view for Links edit
@@ -85,7 +84,7 @@ if ($add || $edit) {
 				$nombre = $link["name"];
 				$link = $link["link"];
 			} else {
-				echo "<h3 class='error'>".__('Name error')."</h3>";
+				echo ui_print_error_message (__('Name error'), '', true, 'h3', true);
 			}
 	} else { // form_add
 		$creation_mode =1;

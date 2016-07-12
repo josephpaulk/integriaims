@@ -78,9 +78,9 @@ if (isset($_GET["delete_cat"])){ // if delete
 	$sql_delete= "DELETE FROM tdownload_category WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo ui_print_error_message (__('Successfully deleted'), '', true, 'h3', true); 
+		echo ui_print_error_message (__('Cannot be deteled'), '', true, 'h3', true); 
 	else
-		echo ui_print_success_message (__('Cannot be deteled'), '', true, 'h3', true);
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 }
 
 
@@ -177,10 +177,12 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
             $groups  =  get_db_all_rows_sql( "SELECT id_group FROM tdownload_category_group WHERE id_category = ".$row["id"]);
 
-        	foreach($groups as $key => $id_group){        
-    			echo dame_nombre_grupo($id_group[0]);
-                echo "<br>";
-            }
+            if (is_array($groups) || is_object($groups)){
+	        	foreach($groups as $key => $id_group){
+	    			echo dame_nombre_grupo($id_group['id_group']);
+	                echo "<br>";
+	            }
+        	}
 
 			// Items
 			echo "<td class='".$tdcolor."f9'>";

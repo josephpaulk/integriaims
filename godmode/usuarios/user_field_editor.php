@@ -50,12 +50,21 @@ $table->width = "100%";
 $table->class = "search-table";
 $table->data = array ();
 
+if(!isset($label)){
+	$label = '';
+}
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
 
 $types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'));
 $table->data[1][0] = print_label (__("Type"), "label-id", 'text', true);
+if(!isset($type)){
+	$type = '';
+}
 $table->data[1][0] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
 
+if(!isset($combo_value)){
+	$combo_value = '';
+}
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value').print_help_tip (__("Set values separated by comma"), true));
 
 if (!$id_field) {

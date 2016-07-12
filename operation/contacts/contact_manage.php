@@ -82,7 +82,7 @@ if ($get_contacts && $id) {
 if ($create_contact) {
 
 	if (!$id_company) {
-		echo "<h3 class='error'>".__('Error creating contact. Company is empty')."</h3>";
+		echo ui_print_error_message (__('Error creating contact. Company is empty'), '', true, 'h3', true);
 	} else {
 		if (!$write_permission && !$manage_permission) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
@@ -113,9 +113,12 @@ if ($create_contact) {
 		}
 		
 		if ($id === false) {
-			echo "<h3 class='error'>".__('Could not be created')."</h3>";
+			echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		} else {
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+			echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
+			if(!isset($REMOTE_ADDR)){
+				$REMOTE_ADDR = '';	
+			}
 			audit_db ($config['id_user'], $REMOTE_ADDR, "Contact created", "Contact named '$fullname' has been added");
 		}
 	}
@@ -134,7 +137,7 @@ if ($update_contact && $id) { // if modified any parameter
 	$id_company = (int) get_parameter ('id_company');
 	
 	if (!$id_company) {
-		echo "<h3 class='error'>".__('Error updating contact. Company is empty')."</h3>";
+		echo ui_print_error_message (__('Error updating contact. Company is empty'), '', true, 'h3', true);
 	} else {
 		if (!$write_permission && !$manage_permission) {
 		   audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a contact in a group without access");
@@ -151,9 +154,9 @@ if ($update_contact && $id) { // if modified any parameter
 
 		$result = process_sql ($sql);
 		if ($result === false) {
-			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		} else {
-			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 			audit_db ($config['id_user'], '', "Contact updated", "Contact named '$fullname' has been updated");
 		}
 	}
@@ -170,8 +173,11 @@ if ($delete_contact && $id) {
 	$fullname = get_db_value  ('fullname', 'tcompany_contact', 'id', $id);
 	$sql = sprintf ('DELETE FROM tcompany_contact WHERE id = %d', $id);
 	process_sql ($sql);
+	if(!isset($REMOTE_ADDR)){
+		$REMOTE_ADDR = '';
+	}
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Contact deleted", "Contact named '$fullname' has been deleted");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -221,6 +227,7 @@ if ($id || $new_contact) {
 		$description = $contact['description'];
 	}
 	
+	$table = new stdClass();
 	$table->width = "100%";
 	$table->data = array ();
 	$table->colspan = array ();

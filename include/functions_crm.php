@@ -1065,10 +1065,10 @@ function crm_merge_newsletter_address ($id_newsletter_source, $id_newsletter_des
 			}
 		}
 	} else {
-		return '<h3 class="error">'.__('No address to import').'</h3>';
+		return ui_print_error_message (__('No address to import'), '', true, 'h3', true);
 	}
 	
-	return '<h3 class="suc">'.$success.' of '.$total_address.'&nbsp;'.__('addresses have been imported').'</h3>';
+	return ui_print_success_message ($success.' of '.$total_address.'&nbsp;'.__('addresses have been imported'), '', true, 'h3', true);
 }
 
 function crm_attach_contract_file ($id, $file_temp, $file_description, $file_name = "") {

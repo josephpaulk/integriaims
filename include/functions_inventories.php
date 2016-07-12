@@ -1365,7 +1365,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 	
 	//print table
 	if (count($header) == 0) {
-		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
+		echo ui_print_error_message (__("Empty inventory"), '', true, 'h3', true);
 	} else {
 
 		$table = new stdClass();
@@ -1609,7 +1609,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 	}
 
 	if ($inventories === false) {
-		echo "<h3 class='error'>".__("Empty inventory")."</h3>";
+		echo ui_print_error_message (__("Empty inventory"), '', true, 'h3', true);
 	} else {
 		$result_check = inventories_check_same_object_type_list($inventories);
 		$table->id = 'inventory_list';
@@ -1868,12 +1868,12 @@ function inventories_load_file ($objects_file) {
 			'last_update' => date ("Y/m/d", get_system_time()));
 
 			if ($name == '') {
-				echo "<h3 class='error'>" . __ ('Inventory name empty') ."</h3>";
+				echo ui_print_error_message (__('Inventory name empty'), '', true, 'h3', true);
 				$create = false;
 			} else {
 				$inventory_id = get_db_value ('id', 'tinventory', 'name', $name);
 				if ($inventory_id != false) {
-					echo "<h3 class='error'>" . __ ('Inventory '). $name . __(' already exists') . "</h3>";
+					echo ui_print_error_message (__('Inventory '). $name . __(' already exists'), '', true, 'h3', true);
 					$create = false;
 				}
 			}
@@ -1882,7 +1882,7 @@ function inventories_load_file ($objects_file) {
 				$exists = get_db_value('id', 'tcontract', 'id', $id_contract);
 				
 				if (!$exists) {
-					echo "<h3 class='error'>" . __ ('Contract ') . $id_contract . __(' doesn\'t exist')."</h3>";
+					echo ui_print_error_message (__('Contract ') . $id_contract . __(' doesn\'t exist'), '', true, 'h3', true);
 					$create = false;
 				}
 			}
@@ -1891,7 +1891,7 @@ function inventories_load_file ($objects_file) {
 				$exists = get_db_value('id', 'tmanufacturer', 'id', $id_manufacturer);
 				
 				if (!$exists) {
-					echo "<h3 class='error'>" . __ ('Manufacturer ') . $id_manufacturer . __(' doesn\'t exist')."</h3>";
+					echo ui_print_error_message (__('Manufacturer ') . $id_manufacturer . __(' doesn\'t exist'), '', true, 'h3', true);
 					$create = false;
 				}
 			}
@@ -1900,7 +1900,7 @@ function inventories_load_file ($objects_file) {
 				$exists_object_type = get_db_value('id', 'tobject_type', 'id', $id_object_type);
 				
 				if (!$exists_object_type) {
-					echo "<h3 class='error'>" . __ ('Object type ') . $id_object_type . __(' doesn\'t exist')."</h3>";
+					echo ui_print_error_message (__('Object type ') . $id_object_type . __(' doesn\'t exist'), '', true, 'h3', true);
 					$create = false;
 				} else {
 					//~ $all_fields = inventories_get_all_type_field ($id_object_type);
@@ -1924,7 +1924,7 @@ function inventories_load_file ($objects_file) {
 								$k = array_search($data, $combo_val);
 						
 								if ($k === false) {
-									echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' doesn\'t match. Valid values: ').$field['combo_value']."</h3>";
+									echo ui_print_error_message (__('Field ') . $field['label'] . __(' doesn\'t match. Valid values: ').$field['combo_value'], '', true, 'h3', true);
 									$create = false;
 								}
 								
@@ -1932,7 +1932,7 @@ function inventories_load_file ($objects_file) {
 							case 'numeric':
 								$res = is_numeric($data);
 								if (!$res) {
-									echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' must be numeric')."</h3>";
+									echo ui_print_error_message (__('Field ') . $field['label'] . __(' must be numeric'), '', true, 'h3', true);
 									$create = false;
 								}
 								break;
@@ -1941,7 +1941,7 @@ function inventories_load_file ($objects_file) {
 								$exists_table = get_db_sql ("SHOW TABLES LIKE '$table_ext'");
 								
 								if (!$exists_table) {
-									echo "<h3 class='error'>" . __ ('External table ') . $table_ext . __(' doesn\'t exist')."</h3>";
+									echo ui_print_error_message (__('External table ') . $table_ext . __(' doesn\'t exist'), '', true, 'h3', true);
 									$create = false;
 								}
 								
@@ -1949,7 +1949,7 @@ function inventories_load_file ($objects_file) {
 								$exists_id = get_db_sql ("SELECT $id FROM $table_ext");
 								
 								if (!$exists_id) {
-									echo "<h3 class='error'>" . __ ('Id ') . $id . __(' doesn\'t exist')."</h3>";
+									echo ui_print_error_message (__('Id ') . $id . __(' doesn\'t exist'), '', true, 'h3', true);
 									$create = false;
 								}
 								break;
@@ -1958,7 +1958,7 @@ function inventories_load_file ($objects_file) {
 						if ($field['inherit']) {
 							$ok = inventories_check_unique_field($data, $field['type']);
 							if (!$ok) {
-								echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' must be unique')."</h3>";
+								echo ui_print_error_message (__('Field ') . $field['label'] . __(' must be unique'), '', true, 'h3', true);
 								$create = false;
 							}
 						}
@@ -2002,7 +2002,7 @@ function inventories_load_file ($objects_file) {
 	} //end while
 
 	fclose($file_handle);
-	echo "<h3 class='info'>" . __ ('File loaded'). "</h3>";
+	echo ui_print_success_message (__('File loaded'), '', true, 'h3', true);
 	return;
 }
 

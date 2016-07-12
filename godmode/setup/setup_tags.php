@@ -165,7 +165,7 @@ else if ($delete) {
 // Echo the result of the CRUD operation
 if (isset($crud_operation))
 	echo $crud_operation['message'];
-
+$table = new stdClass();
 $table->width = '100%';
 $table->class = 'search-table';
 $table->style = array ();

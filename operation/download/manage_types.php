@@ -42,9 +42,9 @@ if ($op == "insert") {
 	$id = process_sql($sql_insert, "insert_id");	
 
 	if (!$id)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 	}
 	
 }
@@ -59,9 +59,9 @@ if ($op == "update" && $id > 0) {
 	$result = process_sql($sql_update);
 	
 	if (!$result)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	}
 }
 
@@ -76,9 +76,9 @@ if ($op == "delete" && $id > 0) {
 
 	if ($result) {
 		delete_type_file($id);
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__('Cannot be deteled')."</h3>";
+		echo ui_print_error_message (__('Cannot be deteled'), '', true, 'h3', true);
 	}
 	$id = 0;
 }
@@ -143,7 +143,7 @@ else {
 	echo "<div class='divresult'>";
 	if (!$types) {
 		$types = array();
-		echo "<h3 class='error'>".__('No types found')."</h3>";
+		echo ui_print_error_message (__('No types found'), '', true, 'h3', true);
 	} else {
 		$table = new stdClass;
 		$table->width = '99%';

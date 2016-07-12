@@ -79,7 +79,8 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 	$rowdup = get_db_row_sql ($sql);
 
 	if ($rowdup === false) {
-		echo "<h3 class='error'>".__('There was a problem loading user')."</h3>";
+		echo ui_print_error_message (__('There was a problem loading user'), '', true, 'h3', true);
+
 		//echo "</table>";
 		include ("general/footer.php");
 		exit;
@@ -172,10 +173,10 @@ if ($action == 'update')  {
 			}
 			
 			if ($password <> $password2){
-				echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
+				echo ui_print_error_message (__('Passwords don\'t match.'), '', true, 'h3', true);
 			}
 			else if ($already_exists) {
-				echo "<h3 class='error'>".__('Number employee already exists.')."</h3>";
+				echo ui_print_error_message (__('Number employee already exists.'), '', true, 'h3', true);
 			}
 			else {
 				$direccion = trim (ascii_output(get_parameter ("direccion")));
@@ -218,10 +219,10 @@ if ($action == 'update')  {
 							if ($users_check || !$enable_login) {
 								$res = enterprise_hook('associate_userprofile');
 								if($res === false) {
-									echo "<h3 class='error'>".__('There was a problem assigning user profile')."</h3>";
+									echo ui_print_error_message (__('There was a problem assigning user profile'), '', true, 'h3', true);
 								}
 							} else {
-								echo "<h3 class='error'>".__('There was a problem assigning user profile. The number of users has reached the license limit')."</h3>";
+								echo ui_print_error_message (__('There was a problem assigning user profile. The number of users has reached the license limit'), '', true, 'h3', true);
 							}	
 						}
 					}
@@ -248,20 +249,20 @@ if ($action == 'update')  {
 					$res = process_sql($sql);
 
 					if ($res === false) {
-						echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+						echo ui_print_error_message (__('There was a problem updating custom fields'), '', true, 'h3', true);
 					}
 				}
 
 				$modo = "edicion";
-				echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+				echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 			}
 		}
 		else {
-			echo "<h3 class='error'>".__('There was a problem updating user')."</h3>";
+			echo ui_print_error_message (__('There was a problem updating user'), '', true, 'h3', true);
 		}
 	} else {
 		$enable_login = 0;
-		echo "<h3 class='error'>".__('The number of users has reached the license limit. You can update users without enable login')."</h3>";
+		echo ui_print_error_message (__('The number of users has reached the license limit. You can update users without enable login'), '', true, 'h3', true);
 	}
 } 
 
@@ -296,7 +297,7 @@ if ($action == 'create'){
 	$nombre_real = get_parameter ("nombre_real");
 	$lang = get_parameter ("lang");
 	if ($password <> $password2){
-		echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
+		echo ui_print_error_message (__('Passwords don\'t match. Please repeat again'), '', true, 'h3', true);
 	}
 	$direccion = rtrim(get_parameter ("direccion"));
 	$telefono = get_parameter ("telefono");
@@ -316,7 +317,7 @@ if ($action == 'create'){
 	$resq1 = process_sql($sql_insert);
 	
 	if (! $resq1)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
 
 		//Insert custom fields
@@ -330,24 +331,23 @@ if ($action == 'create'){
 			$res = process_sql($sql);
 
 			if ($res === false) {
-				echo "<h3 class='error'>".__('There was a problem updating custom fields')."</h3>";
+				echo ui_print_error_message (__('There was a problem updating custom fields'), '', true, 'h3', true);
 			}
-		}	
-
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		}
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 	}
 
 	$update_user = $nombre;
 	$modo ="edicion";
 
 	if (!$users_check) {
-		echo "<h3 class='error'>".__('User has been created disabled. The number of users has reached the license limit')."</h3>";
+		echo ui_print_error_message (__('User has been created disabled. The number of users has reached the license limit'), '', true, 'h3', true);
 	}
 }
 
 if (isset($_GET["alta"])){
 	if ($_GET["alta"]==1){
-		echo '<h1>'.__('Create user').'</h1>';
+		echo '<h2>'.__('Create user').'</h2>';
 	}
 }
 
