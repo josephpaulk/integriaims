@@ -212,8 +212,9 @@ if ($operation == ""){
 			if ($project_access['write']) {
 				echo '<td class="'.$tdcolor.'">';
 				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=update&id_milestone='.$row["id"].'"><img border=0 src="images/editor.png"></a>';
-				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
-				
+				$offset=0;
+				$search_params='';
+				echo "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_milestones\",".$id_project.",".$row["id"].",".$offset.",\"".$search_params."\");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 			}
 			
 		}
@@ -234,14 +235,14 @@ if ($operation == ""){
 	    echo "</div>";
     }
 } // Fin bloque else
-
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 
 ?>
 
 
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
-
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript">
 
 // Form validation

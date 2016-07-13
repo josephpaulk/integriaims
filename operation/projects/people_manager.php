@@ -32,7 +32,7 @@ $id_task = get_parameter ("id_task", -1);
 $id_project = get_parameter ("id_project", 0);
 $operation = get_parameter ("action");
 $result_output = "";
-
+$search_params = "&id_task=$id_task&id_project=$id_project";
 // ACL
 if ($id_task == -1) {
 	$project_permission = get_project_access ($config["id_user"], $id_project);
@@ -333,7 +333,6 @@ echo "</div>";
 echo "<div class='divresult'>";
 $assigned_role = '<tr>';
 if ($id_task != -1) {
-	
 	$sql = "SELECT COUNT(*) total FROM trole_people_task where id_task = $id_task";
 	$result = get_db_row_sql($sql);
 	$assigned_role = "<table class='listing'>";
@@ -364,6 +363,7 @@ if ($id_task != -1) {
 
 			if ($task_permission["manage"]) {
 				$assigned_role .= "<td>";
+				
 				$assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 			}
 		}
@@ -400,7 +400,8 @@ else {
 			
 			if ($project_permission["manage"]) {
 				$assigned_role .= "<td>";
-				$assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
+				$offset=0;
+				$assigned_role .= "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_people_manager\",".$row["id"].",0,".$offset.",\"".$search_params."\");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 			}
 		}
 	}
@@ -434,10 +435,11 @@ $roles .= "</table>";
 print_container_div('people_roles', __('Available roles'), $roles, 'closed', false, '10px', '', '', 2, 'no_border_bottom');
 
 echo "</div>";
-
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" >

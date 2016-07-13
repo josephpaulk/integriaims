@@ -248,8 +248,10 @@ echo "<div class='divresult'>";
 					echo "<td>";
 					echo "<td>";
 				}
+				$offset = 0;
+				$search_params = '';
 				if ($task_access['manage'] && $belong_task) {
-					echo '<td align="center"><a href="index.php?sec=projects&sec2=operation/projects/role_user_global&id_user='.$id_user.'&delete='.$task['id'].'" onClick="if (!confirm(\''.__('Are you sure to delete the project?').'\')) return false;"><img border=0 src="images/icons/icono_papelera.png"></a>';
+					echo "<td align='center'><a href='#' onClick='javascript: show_validation_delete_general(\"delete_role_user_global\",".$task['id'].",\"".$id_user."\",".$offset.",\"".$search_params."\");'><img src='images/icons/icono_papelera.png' title='".__('Delete')."'></a>";
 				} else {
 					echo "<td align='center'>";
 				}
@@ -258,11 +260,12 @@ echo "<div class='divresult'>";
 		}
 	echo "</table>";
 echo "</div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.multiselect.js"></script>
-
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript">
 
 $(document).ready (function () {

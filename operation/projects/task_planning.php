@@ -359,7 +359,7 @@ echo "<table class='listing'>";
 echo "</table>";
 echo "</form>";
 echo "</div>";
-
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 function show_task_row ($table, $id_project, $task, $level, $users) {
 	global $config;
 	
@@ -469,9 +469,9 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.$id_project.'&id_task='.$task['id'].'&operation=view">';
 	echo '<img style="margin-right: 6px;" src="images/wrench.png">';
 	echo '</a>';
-	
-	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_planning&id_project='.$id_project.'&delete='.$task["id"].'"
-		onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png" /></a>';
+	$offset=0;
+	$search_params='';
+	echo "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_task_panning\",".$id_project.",".$task["id"].",".$offset.",\"".$search_params."\");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 	echo "</td>";
 }
 

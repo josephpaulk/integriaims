@@ -973,6 +973,7 @@ function project_tracking ($id_project, $state, $id_aditional = 0) {
 
 
 function delete_project ($id_project){
+	global $config;
 	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 	$query = "DELETE FROM trole_people_project WHERE id_project = $id_project";
 	mysql_query($query);
