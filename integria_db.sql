@@ -1428,3 +1428,16 @@ CREATE TABLE `tcompany_field_data` (
     FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
           ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ---------------------------------------------------------------------
+-- Table tcompany_field_data (24/05/2016)
+-- ---------------------------------------------------------------------
+
+CREATE TABLE `temail_template` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL default '',
+  `id_group` int(10) unsigned NOT NULL default '0',
+  `template_action` varchar(200) NOT NULL default '',
+  `predefined_templates` INT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

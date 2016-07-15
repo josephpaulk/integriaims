@@ -1664,18 +1664,44 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
 		$MACROS["_wu_text_"] = $nota; // Do not pass to safe_output. $nota is already HTML Safe in this point
 
-		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
+		$temp_group  = get_db_value('id_grupo', 'tgrupo', 'nombre', $group_name);
+		$sql_body    = "SELECT name FROM temail_template WHERE template_action = 7 AND id_group =".$temp_group.";";
+		$sql_subject = "SELECT name FROM temail_template WHERE template_action = 6 AND id_group =".$temp_group.";";
+		$templa_body = get_db_sql($sql_body);
+		$templa_subj = get_db_sql($sql_subject);
 
+		if(!$templa_body){
+			$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
+		} else {
+			$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+		}
+		if(!$templa_subj){
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
+		} else {
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+		}
 		break;
 	case 0: // Incident update
 		
 		$attachments = "";
 		$images = "";
 		
-		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
-		
+		$temp_group  = get_db_value('id_grupo', 'tgrupo', 'nombre', $group_name);
+		$sql_body    = "SELECT name FROM temail_template WHERE template_action = 9 AND id_group =".$temp_group.";";
+		$sql_subject = "SELECT name FROM temail_template WHERE template_action = 8 AND id_group =".$temp_group.";";
+		$templa_body = get_db_sql($sql_body);
+		$templa_subj = get_db_sql($sql_subject);
+
+		if(!$templa_body){
+			$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		} else {
+			$text .= template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+		}
+		if(!$templa_subj){
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
+		} else{
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+		}
 		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
 		if ($attached_files === false) {
 			$attached_files = array();
@@ -1722,8 +1748,24 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$attachments = "";
 		$images = "";
 		
-		$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
+		$temp_group  = get_db_value('id_grupo', 'tgrupo', 'nombre', $group_name);
+		$sql_body    = "SELECT name FROM temail_template WHERE template_action = 0 AND id_group =".$temp_group.";";
+		$sql_subject = "SELECT name FROM temail_template WHERE template_action = 1 AND id_group =".$temp_group.";";
+		$templa_body = get_db_sql($sql_body);
+		$templa_subj = get_db_sql($sql_subject);
+
+		if(!$templa_body){
+			$text .= template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
+		} else {
+			$text .= template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+		}
+
+		if(!$templa_subj){
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
+		} else {
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+		}
+
 		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
 		if ($attached_files === false) {
 			$attached_files = array();
@@ -1770,9 +1812,23 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$attachments = "";
 		$images = "";
 
-		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_attach.tpl", $MACROS);
+		$temp_group  = get_db_value('id_grupo', 'tgrupo', 'nombre', $group_name);
+		$sql_body    = "SELECT name FROM temail_template WHERE template_action = 9 AND id_group =".$temp_group.";";
+		$sql_subject = "SELECT name FROM temail_template WHERE template_action = 4 AND id_group =".$temp_group.";";
+		$templa_body = get_db_sql($sql_body);
+		$templa_subj = get_db_sql($sql_subject);
 		
+		if(!$templa_body){
+			$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		} else {
+			$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+		}
+		if(!$templa_subj){
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_attach.tpl", $MACROS);
+		} else {
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+		}
+
 		$attached_files = get_db_all_rows_sql ("SELECT * FROM tattachment WHERE id_incidencia=".$id_inc);
 		if ($attached_files === false) {
 			$attached_files = array();
@@ -1814,14 +1870,41 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		}
 	
 		break;
-	case 3: // Incident deleted 
-		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_delete.tpl", $MACROS);
+	case 3: // Incident deleted
+		$temp_group  = get_db_value('id_grupo', 'tgrupo', 'nombre', $group_name);
+		$sql_body    = "SELECT name FROM temail_template WHERE template_action = 9 AND id_group =".$temp_group.";";
+		$sql_subject = "SELECT name FROM temail_template WHERE template_action = 5 AND id_group =".$temp_group.";";
+		$templa_body = get_db_sql($sql_body);
+		$templa_subj = get_db_sql($sql_subject);
+		if(!$templa_body){
+			$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		} else {
+			$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+		}
+		if(!$templa_subj){
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_delete.tpl", $MACROS);
+		} else {
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+		}
 		break;
     case 5: // Incident closed
 		$MACROS["_ticket_score_"] = $ticket_score;
-		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_close.tpl", $MACROS);
-		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_close.tpl", $MACROS);
+		
+		$temp_group  = get_db_value('id_grupo', 'tgrupo', 'nombre', $group_name);
+		$sql_body    = "SELECT name FROM temail_template WHERE template_action = 2 AND id_group =".$temp_group.";";
+		$sql_subject = "SELECT name FROM temail_template WHERE template_action = 3 AND id_group =".$temp_group.";";
+		$templa_body = get_db_sql($sql_body);
+		$templa_subj = get_db_sql($sql_subject);
+		if(!$templa_body){
+			$text = template_process ($config["homedir"]."/include/mailtemplates/incident_close.tpl", $MACROS);
+		} else {
+			$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+		}
+		if(!$templa_subj){
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_close.tpl", $MACROS);
+		} else {
+			$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+		}
         break;
    }
 		

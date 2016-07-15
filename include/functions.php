@@ -683,7 +683,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	
 	if ($remove_header_footer == 0)
 		// Add global header and footer to mail
-		$body = safe_output($config["HEADER_EMAIL"]). "\r\n". $body . "\r\n". safe_output ($config["FOOTER_EMAIL"]);
+		$body = safe_output($config["HEADER_EMAIL"]). "\r\n". html_entity_decode($body) . "\r\n". safe_output ($config["FOOTER_EMAIL"]);
 	
 	// Add custom code to the end of message subject (to put there ID's).
 	if ($code != "") {
