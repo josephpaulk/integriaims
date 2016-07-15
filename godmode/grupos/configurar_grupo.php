@@ -55,7 +55,7 @@ if ($id) {
 		$parent = $group['parent'];
 		$soft_limit = $group["soft_limit"];
 		$hard_limit = $group["hard_limit"];
-		$enforce_soft_limit = (bool) $group["enforce_soft_limit"];
+		$enforce_soft_limit = $group["enforce_soft_limit"];
 		$forced_email = (bool) $group['forced_email'];
 		$id_sla = $group["id_sla"];
 		$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id);

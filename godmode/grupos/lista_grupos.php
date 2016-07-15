@@ -63,7 +63,7 @@ if ($create_group) {
     $parent = (int) get_parameter ('parent');
 	$soft_limit = (int) get_parameter ('soft_limit', 0);
 	$hard_limit = (int) get_parameter ('hard_limit', 0);
-	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
+	$enforce_soft_limit = (int) get_parameter ('enforce_soft_limit');
 	$id_inventory = (int) get_parameter("id_inventory", 0);
 	$banner = (string) get_parameter ('banner');
 	$forced_email = (int) get_parameter ('forced_email', 0);
