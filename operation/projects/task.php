@@ -644,7 +644,7 @@ if ($clean_output == 1) {
 	show_task_tree ($table, $id_project, 0, 0, $where_clause);
 	
 	if (empty($table->data)) {
-		echo '<h3 class="error">'.__('No tasks found').'</h3>';
+		echo ui_print_error_message (__('No tasks found'), '', true, 'h3', true);
 	}
 	else {
 		print_table ($table);

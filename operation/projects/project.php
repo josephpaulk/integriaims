@@ -43,12 +43,12 @@ $id_project = (int) get_parameter ('id');
 $delete_project = (bool) get_parameter ('delete_project');
 $view_disabled = (int) get_parameter ('view_disabled');
 $disable_project = (bool) get_parameter ('disable_project');
-$delete_project = (bool) get_parameter ('delete_project');
 $activate_project = (bool) get_parameter ('activate_project');
 $action = (string) get_parameter ('action');
 $search_id_project_group = (int) get_parameter ('search_id_project_group');
 $search_text = (string) get_parameter ('search_text');
 
+$search_params = "&search_id_project_group=$search_id_project_group&search_text=$search_text";
 
 $project_permission = get_project_access ($config['id_user'], $id_project);
 
@@ -64,7 +64,7 @@ if ($disable_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	$sql = sprintf ('UPDATE tproject SET disabled = 1 WHERE id = %d', $id_project);
 	process_sql ($sql);
-	echo '<h3 class="suc">'.__('Project successfully disabled').'</h3>';
+	echo ui_print_success_message (__('Project successfully disabled'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Project disabled", "User ".$config['id_user']." disabled project #".$id_project);
 	project_tracking ($id_project, PROJECT_DISABLED);
 }
@@ -81,7 +81,7 @@ if ($activate_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	$sql = sprintf ('UPDATE tproject SET disabled = 0 WHERE id = %d', $id_project);
 	process_sql ($sql);
-	echo '<h3 class="suc">'.__('Successfully reactivated').'</h3>';
+	echo ui_print_success_message (__('Successfully reactivated'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
 	project_tracking ($id_project, PROJECT_ACTIVATED);
 }
@@ -97,7 +97,7 @@ if ($delete_project) {
 	
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	delete_project ($id_project);
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 }
 
 if ($view_disabled) {
@@ -105,10 +105,6 @@ if ($view_disabled) {
 	echo '<h4>'.__('Archived projects');
 	echo integria_help ("archieved_projects", true);
 	echo '</h4>';
-}
-else {
-	echo '<h1>'.__('Project management').'</h1>';
-	echo '<h3 class="error">No debe mandarte aqui esta desaparece</h3>';
 }
 
 $table = new stdClass;
@@ -120,9 +116,10 @@ $table->data[1][0] = print_input_text ("search_text", $search_text, "", 25, 100,
 $table->data[2][0] = '<b>'.__('Group').'</b>';
 $table->data[3][0] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
 $table->data[4][0] = print_submit_button (__('Search'), "search_btn", false, '', true);
+$table->data[4][0] .= print_input_hidden ('delete_project', 1);
 
 echo '<div class="divform">';
-	echo '<form method="post">';
+	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1">';
 		print_table ($table);
 	echo '</form>';
 echo '</div>';
@@ -184,14 +181,13 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 		$data[3] = "<span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span>";
 	else
 		$data[3] = __('Never');
-	
+	$offset = 0;
 	$data[4] = '';
 	// Disable or delete
 	if ($project['id'] != -1 && $project_permission['manage']) {
 		$table->head[4] = __('Delete/Unarchive');
-		$data[4] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-			onClick="if (!confirm(\''.__('Are you sure to delete the project?').'\')) return false;">
-			<img src="images/icons/icono_papelera.png" /></a> ';
+		$data[4] = "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_project\",".$project['id'].",0,".$offset.",\"".$search_params."\");'><img src='images/icons/icono_papelera.png' title='".__('Delete')."'></a>";
+		
 		$data[4] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
 			<img src="images/unarchive.png" /></a>';
 	}
@@ -200,15 +196,18 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 }
 echo "<div class='divresult'>";
 	if(empty($table->data)) {
-		echo '<h3 class="error">'.__('No projects found').'</h3>';
+		echo ui_print_error_message(__('No projects found'), '', true, 'h3', true);
 	}
 	else {
 		print_table ($table);
 	}
 echo "</div>";
+
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript">
 trim_element_on_submit("#text-search_text");
 </script>

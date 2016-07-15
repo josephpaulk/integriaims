@@ -45,9 +45,9 @@ if (isset($_GET["create2"])){ // Create group
 		  		 VALUE ('$title','$data', '$id_product', '$id_category', '".$config["id_user"]."', '$timestamp', '$id_language') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$id_data = mysql_insert_id();
 		//insert_event ("KB ITEM CREATED", $id_data, 0, $title);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Created kb item $id_data - $title");
@@ -73,7 +73,7 @@ if (isset($_GET["delete_attach"])){
 	unlink ($nombre_archivo);
 	//insert_event ("KB ITEM UPDATED", $id_kb, 0, "File ".$attach_row["filename"]." deleted");
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Deleted kb item $id_kb - ".$attach_row["filename"]);
-	echo "<h3 class='suc'>".__('Attach deleted ok')."</h3>";
+	echo ui_print_success_message (__('Attach deleted ok'), '', true, 'h3', true);
 	unset ($id_kb);
 }
 
@@ -102,9 +102,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true); 
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		//insert_event ("KB ITEM UPDATED", $id, 0, $title);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Updated kb item $id - $title");
 	}
@@ -121,12 +121,12 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 		mysql_query($sql);
 		$id_attachment=mysql_insert_id();
-		$result_msg = "<h3 class='suc'>".__('File added')."</h3>";
+		echo ui_print_success_message (__('File added'), '', true, 'h3', true);
 		// Copy file to directory and change name
 		$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 
 		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-			$result_msg = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
+			$result_msg = ui_print_error_message (__('File cannot be saved. Please contact Integria administrator about this error'), '', true, 'h3', true); 
 			$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 			mysql_query($sql);
 			unlink ($_FILES['userfile']['tmp_name']);
@@ -166,7 +166,7 @@ if (isset($_GET["delete_data"])){ // if delete
 	}
 	//insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "KB", "Deleted kb item $id - $kb_title");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 }
 
 if (isset($_GET["update2"])){
@@ -440,7 +440,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "</table>";
 	} else {
 		$downloads = array();
-		echo "<h3 class='error'>".__('No items found')."</h3>";
+		echo ui_print_error_message (__('No items found'), '', true, 'h3', true); 
 	}
 	echo "</div>";
 }

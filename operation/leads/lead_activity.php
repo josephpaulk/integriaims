@@ -61,6 +61,7 @@ if ($op2 == "purge"){
 }
 
 // Add item form
+$table = new stdClass();
 $table->width = "100%";
 $table->class = "search-table-button";
 $table->data = array ();

@@ -51,8 +51,7 @@ $cco = get_parameter ("cco", "");
 // Send mail
 if ($send) {
 	if (($subject != "") AND ($from != "") AND ($to != "")) {
-		echo "<h3 class='suc'>".__('Mail queued')."</h3>";
-
+		echo ui_print_success_message (__('Mail queued'), '', true, 'h3', true);
 		$cc = $config["mail_from"];
 		
 		$subject_mail = "[Lead#$id] " . $subject;
@@ -129,7 +128,7 @@ if ($send) {
 		process_sql ($sql);
 
 	} else {
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	}
 }
 

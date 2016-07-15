@@ -177,9 +177,9 @@ if ($quick_delete) {
 	}	
 
 	if ($result !== false) {
-			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+		$result_msg = ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	} else {
-			$result_msg = '<h3 class="error">'.__('There was an error deleting inventory object').'</h3>';
+		$result_msg = ui_print_error_message (__('There was an error deleting inventory object'), '', true, 'h3', true);
 	}
 	
 	$id = 0;
@@ -300,7 +300,7 @@ if ($update) {
 					$is_unique = inventories_check_unique_field($values['data'], $label['type']);
 					$is_unique_distinct = inventories_check_unique_update($values, $label['type'] );
 					if (!$is_unique) {
-						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not updated. Value must be unique").'</h3>';
+						$msg_err .= ui_print_error_message (__(" Field '").$label['label'].__("' not updated. Value must be unique"), '', true, 'h3', true);
 					}
 				}
 				$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
@@ -390,9 +390,9 @@ if ($update) {
 	//}	
 
 	if ($result !== false) {
-		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		$result_msg = ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	} else {
-		$result_msg = '<h3 class="error">'.__('There was an error updating inventory object').'</h3>';
+		$result_msg = ui_print_error_message (__('There was an error updating inventory object'), '', true, 'h3', true);
 	}
 	
 	if (defined ('AJAX')) {
@@ -470,7 +470,7 @@ if ($create) {
 					$is_unique = inventories_check_unique_field($values_insert['data'], $label['type']);
 					$is_unique_distinct = inventories_check_unique_update($values_insert, $label['type']);
 					if (!$is_unique) {
-						$msg_err .= '<h3 class="error">'.__(" Field '").$label['label'].__("' not created. Value must be unique").'</h3>'; 
+						$msg_err .= ui_print_error_message (__(" Field '").$label['label'].__("' not created. Value must be unique"), '', true, 'h3', true);
 					}
 				}
 				$values_insert['id_object_type_field'] = $id_object_field;
@@ -519,11 +519,11 @@ if ($create) {
 		$users = explode(", ", safe_output($users));
 		$result_users = inventory_update_users ($id, $users);
 
-		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
+		$result_msg = ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
 
 	} else {
-		$result_msg = '<h3 class="error">'.$err_message.'</h3>';
+		$result_msg = ui_print_error_message ($err_message, '', true, 'h3', true);
 	}
 	
 	$id = 0;
@@ -571,10 +571,11 @@ if ($id) {
 }
 
 if ($id && !$inventory_name) {
-        echo '<h3 class="error">'.__("The inventory object doesn't exist")."</h3>";
+    echo ui_print_error_message (__("The inventory object doesn't exist"), '', true, 'h3', true);
 }
 else {
 
+	$table = new stdClass;
 	$table->class = 'search-table-button';
 	$table->width = '100%';
 	$table->data = array ();
@@ -669,15 +670,15 @@ else {
 
 	if($companies){
 		foreach ($companies as $key => $value) {
-			$company_id .= $key . ', ';
-			$company_name .= $value . ',';
+			$company_id = $key . ', ';
+			$company_name = $value . ',';
 		}
 	}
 
 	if($users){
 		foreach ($users as $key => $value) {
-			$user_id .= $key . ', ';
-			$user_name .= $value . ',';
+			$user_id = $key . ', ';
+			$user_name = $value . ',';
 		}
 	}
 	

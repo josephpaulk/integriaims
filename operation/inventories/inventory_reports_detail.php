@@ -58,10 +58,10 @@ if ($create) {
 		$result = process_sql_insert ('tinventory_reports', $values);
 	
 	if ($result) {
-		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
+		$result_msg = ui_print_success_message (__("Successfully created"), '', true, 'h3', true);
 		$id = $result;
 	} else {
-		$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
+		$result_msg = ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		$id = false;
 	}
 }
@@ -75,9 +75,9 @@ if ($update) {
 	if (! empty ($values['name']))
 		$result = process_sql_update ('tinventory_reports', $values, array ('id' => $id));
 	if ($result) {
-		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		$result_msg = ui_print_success_message (__("Successfully updated"), '', true, 'h3', true);
 	} else {
-		$result_msg = '<h3 class="error">'.__('Could not be updated').'</h3>';
+		$result_msg = ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	}
 }
 
@@ -204,6 +204,7 @@ if ($id) {
 }
 echo $result_msg;
 
+$table = new stdClass;
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->data = array ();

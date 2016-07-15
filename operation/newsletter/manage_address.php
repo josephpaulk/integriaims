@@ -39,7 +39,7 @@ if ($merge) {
 	$id_newsletter_destination = get_parameter('id_newsletter_destination');
 	
 	if ($id_newsletter_source == $id_newsletter_destination) {
-		echo '<h3 class="error">'.__('Source and destination must be different').'</h3>';
+		echo ui_print_error_message (__('Source and destination must be different'), '', true, 'h3', true);
 	} else {
 		echo crm_merge_newsletter_address($id_newsletter_source, $id_newsletter_destination);
 	}
@@ -48,13 +48,20 @@ if ($merge) {
 echo "<h2>".__('Newsletter')."</h2>";
 echo "<h4>".__('address merge')."</h4>";
 
+$table = new stdClass();
 $table->width = '100%';
 $table->class = 'search-table';
 $table->colspan = array ();
 $table->data = array ();
+if(!isset($id_newsletter_source)){
+	$id_newsletter_source = '';
+}
 
 $table->data[0][0] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
 	'id_newsletter_source', $id_newsletter_source, '', '', '', true, false, false,__('Source'));
+if(!isset($id_newsletter_destination)){
+	$id_newsletter_destination = '';
+}
 	
 $table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tnewsletter ORDER BY name',
 'id_newsletter_destination', $id_newsletter_destination, '', '', '', true, false, false,__('Destination'));

@@ -241,17 +241,17 @@ if ($update_agenda_entry) {
 		// unlink ($full_filename);
 		
 		if (empty($id)) {
-			echo "<h3 class='suc'>".__('The event was added to calendar')."</h3>";
+			echo ui_print_success_message (__('The event was added to calendar'), '', true, 'h3', true);
 		} else {
-			echo "<h3 class='suc'>".__('The event was updated')."</h3>";
+			echo ui_print_success_message (__('The event was updated'), '', true, 'h3', true);
 		}
 		echo "<br>";
 		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
 	} else {
 		if (empty($id)) {
-			echo "<h3 class='error'>".__('An error ocurred. Event not inserted.')."</h3>";
+			echo ui_print_error_message (__('An error ocurred. Event not inserted.'), '', true, 'h3', true);
 		} else {
-			echo "<h3 class='error'>".__('An error ocurred. Event not updated.')."</h3>";
+			echo ui_print_error_message (__('An error ocurred. Event not updated.'), '', true, 'h3', true);
 		}
 		echo "<br>";
 		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
@@ -271,11 +271,11 @@ if ($delete_agenda_entry) {
 	$result = process_sql_delete('tagenda', array('id' => $id));
 	
 	if ($result !== false) {
-		echo "<h3 class='suc'>".__('The event was deleted')."</h3>";
+		echo ui_print_success_message (__('The event was deleted'), '', true, 'h3', true);
 		echo "<br>";
 		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
 	} else {
-		echo "<h3 class='error'>".__('An error ocurred. Event not deleted')."</h3>";
+		echo ui_print_error_message (__('An error ocurred. Event not deleted'), '', true, 'h3', true);
 		echo "<br>";
 		print_button (__('OK'), 'OK', false, '', 'class="sub blank"');
 	}

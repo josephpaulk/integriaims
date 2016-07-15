@@ -1,3 +1,4 @@
+
 <?php
 
 // Integria IMS - http://integriaims.com
@@ -30,9 +31,9 @@ if ($delete) {
 	$result = process_sql_delete ('tinventory_reports', array ('id' => $id));
 	
 	if ($result !== false) {
-		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="error">'.__('Could not be deleted').'</h3>';
+		echo ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
 	}
 }
 
@@ -47,9 +48,7 @@ if (dame_admin ($config['id_user'])) {
 echo "<div class='divresult'>";
 
 if ($reports === false) {
-
-	echo '<h2 class="error">'.__('No reports were found').'</h2>';
-
+	echo ui_print_error_message (__('No reports were found'), '', true, 'h3', true);
 } else {
 	$table = new stdClass();
 	$table->width = '99%';

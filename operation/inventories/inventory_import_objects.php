@@ -30,16 +30,21 @@ $id_object_type = get_parameter('id_object_type');
 if ($upload_file) {
 	if ($_FILES["file"]["error"] == 0) {
 		if (($_FILES["file"]["type"] != 'text/csv') && ($_FILES["file"]["type"] != 'application/vnd.ms-excel')) {
-			echo "<h3 class='error'>" . __ ('Unsupported file type') . "</h3>";
+			echo ui_print_error_message (__('Unsupported file type'), '', true, 'h3', true);
 		}
 		else {
 			inventories_load_file ($_FILES["file"]["tmp_name"]);
 		}
 	}
 }
-if ($_FILES["file"]["error"] != 0) {
-	echo "<h2 class='error'>" . __("Error uploading file") . "</h2>";
+if(!isset($_FILES["file"]["error"])){
+	$_FILES["file"]["error"] = 0;	
 }
+if ($_FILES["file"]["error"] != 0) {
+	echo ui_print_error_message (__("Error uploading file"), '', true, 'h3', true);
+}
+
+$table = new StdClass;
 $table->width = '99%';
 $table->class = 'search-table';
 $table->size = array ();

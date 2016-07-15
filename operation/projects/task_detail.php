@@ -106,20 +106,19 @@ if ($operation == "insert") {
 	
 	if ($name == '') {
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Name cannot be empty').'</h3>';
-		
+		$result_output = ui_print_error_message (__('Name cannot be empty'), '', true, 'h3', true);
 	}
 	elseif (!strtotime ($start)){
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Malformed start date').'</h3>';
+		$result_output = ui_print_error_message (__('Malformed start date'), '', true, 'h3', true);	
 	}
 	elseif (!strtotime ($end)){
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Malformed end date').'</h3>';
+		$result_output = ui_print_error_message (__('Malformed end date'), '', true, 'h3', true);
 	}
 	elseif (strtotime ($start) > strtotime ($end)) {
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
+		$result_output = ui_print_error_message (__('Begin date cannot be before end date'), '', true, 'h3', true);
 	}
 	else {
 		$description = (string) get_parameter ('description');
@@ -140,7 +139,7 @@ if ($operation == "insert") {
 			$parent, $hours, $estimated_cost, $periodicity, $count_hours, $cc);
 		$id_task = process_sql ($sql, 'insert_id');
 		if ($id_task !== false) {
-			$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
+			$result_output = ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
 			$operation = "view";
 	
@@ -178,7 +177,7 @@ if ($operation == "insert") {
 		else {
 			$update_mode = 0;
 			$create_mode = 1;
-			$result_output = "<h3 class='error'>".__('Could not be created')."</h3>";
+			$result_output = ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		}
 	}
 }
@@ -196,19 +195,19 @@ if ($operation == "update") {
 	
 	if ($name == '') {
 		$operation = 'update';
-		$result_output = '<h3 class="error">'.__('Name cannot be empty').'</h3>';
+		$result_output = ui_print_error_message (__('Name cannot be empty'), '', true, 'h3', true);
 	}
 	elseif (!strtotime ($start)){
 		$operation = 'update';
-		$result_output = '<h3 class="error">'.__('Malformed start date').'</h3>';
+		$result_output = ui_print_error_message (__('Malformed start date'), '', true, 'h3', true);
 	}
 	elseif (!strtotime ($end)){
 		$operation = 'update';
-		$result_output = '<h3 class="error">'.__('Malformed end date').'</h3>';
+		$result_output = ui_print_error_message (__('Malformed end date'), '', true, 'h3', true);
 	}
 	elseif (strtotime ($start) > strtotime ($end)) {
 		$operation = 'update';
-		$result_output = '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
+		$result_output = ui_print_error_message (__('Begin date cannot be before end date'), '', true, 'h3', true);
 	} else {
 		$description = (string) get_parameter ('description');
 		$priority = (int) get_parameter ('priority');
@@ -247,7 +246,7 @@ if ($operation == "update") {
 		projects_update_task_links ($id_task, $links_2, 2);
 
 		if ($result !== false) {
-			$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+			$result_output = ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 			$operation = "view";
 			task_tracking ($id_task, TASK_UPDATED);
@@ -259,7 +258,7 @@ if ($operation == "update") {
 			}
 		}
 		else {
-			$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
+			$result_output = ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		}
 	}
 	if ($gantt_editor) {
@@ -327,6 +326,7 @@ else {
 }
 
 echo '<form id="form-new_project" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+$table = new stdClass();
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
@@ -355,8 +355,10 @@ $table->data[0][2] = combo_task_user_manager ($config['id_user'], $parent, true,
 $table->data[1][0] = print_input_text_extended ('cc', $cc, '', '', 40,
 			240, false, '', "style='width:300px;'", true, false, 
 				__('CC') . print_help_tip (__("Email to notify changes in workunits"), true));
-$table->data[1][1] = print_select (get_periodicities (), 'periodicity',
-	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
+if(!isset($periodicity)){
+	$periodicity = "";
+}
+$table->data[1][1] = print_select (get_periodicities (), 'periodicity', $periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
 
 $table->data[1][2] = print_checkbox_extended ('count_hours', 1, $count_hours,
 		false, '', '', true, __('Completion based on hours') . 

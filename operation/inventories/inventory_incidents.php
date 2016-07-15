@@ -30,10 +30,13 @@ if (! give_acl ($config['id_user'], get_inventory_group ($id), 'IR')) {
 //**********************************************************************
 // Tabs
 //**********************************************************************
-
+if(!isset($inventory_name)){
+	$inventory_name = '';
+}
 print_inventory_tabs('incidents', $id, $inventory_name);
 
 echo '<div class="divresult" id="">';
+$table = new stdClass;
 $table->width = '100%';
 $table->class = 'listing';
 $table->data = array ();

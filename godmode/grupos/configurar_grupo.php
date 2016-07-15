@@ -77,10 +77,8 @@ if ($id) {
 		if ($id_inventory == 0) {
 			$id_inventory = "";
 		}
-
-
 	} else {
-		echo "<h3 class='error'>".__('There was a problem loading group')."</h3>";
+		echo ui_print_error_message (__('There was a problem loading group'), '', true, 'h3', true);
 		include ("general/footer.php");
 		exit;
 	}
@@ -164,8 +162,14 @@ foreach ($slas_aux as $s) {
 $table->data[5][1] = print_select ($slas,
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Ticket SLA'));
 	
+if(!isset($inventory_name)){
+	$inventory_name = '';
+}
 $table->data[6][0] = print_input_text ('inventory_name', $inventory_name,'', 25, 0, true, __('Default Inventory object'), false);	
 $table->data[6][0] .= '&nbsp;&nbsp;' . "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Search parent')."'><img src='images/add.png' /></a>";
+if(!isset($id_inventory)){
+	$id_inventory = '';
+}
 $table->data[6][0] .= print_input_hidden ('id_inventory', $id_inventory, true);
 
 $table->data[6][1] = print_input_text ('email_from', $email_from, '', 40, 0, true , __('Email from'));
@@ -175,6 +179,15 @@ if ($config['enteprise'] == 1){
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
 
+if(!isset($autocreate_user)){ $autocreate_user = ''; }
+if(!isset($grant_access)){ $grant_access = ''; }
+if(!isset($send_welcome)){ $send_welcome = ''; }
+if(!isset($default_company)){ $default_company = ''; }
+if(!isset($welcome_email)){ $welcome_email = ''; }
+if(!isset($email_queue)){ $email_queue = ''; }
+if(!isset($default_profile)){ $default_profile = ''; }
+if(!isset($user_level)){ $user_level = ''; }
+if(!isset($incident_type)){ $incident_type = ''; }
 enterprise_hook("groups_email_queue_form", array($autocreate_user, $grant_access, $send_welcome, $default_company, $welcome_email, $email_queue,$default_profile,$user_level, $incident_type));
 
 echo '<div class="button-form" style="width: '.$table->width.'">';

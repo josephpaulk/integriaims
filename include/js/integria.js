@@ -599,3 +599,96 @@ function parseURL (URL) {
 		host: parser.host
 	}
 }
+
+function show_validation_delete_general (name, id, id2, offset, search_params) {
+	console.log('1 -> '+name);
+	console.log('2 -> '+id);
+	console.log('3 -> '+id2);
+	console.log('4 -> '+offset);
+	console.log('5 -> '+search_params);
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/delete_item_general&get_delete_validation=1",
+		dataType: "html",
+		success: function(data){
+			$("#item_delete_window").html (data);
+			$("#item_delete_window").show ();
+			$("#item_delete_window").dialog ({
+					resizable: false,
+					draggable: false,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 440,
+					height: 195
+				});
+			$("#item_delete_window").dialog('open');
+			$("#validation_delete_form").submit(function (e){
+				e.preventDefault();
+				delete_item_general (name, id, id2, offset, search_params);
+			});
+			$("#button-modal_cancel").click(function (e){
+				e.preventDefault();
+				$("#item_delete_window").dialog('close');
+			});
+			$('.ui-widget-overlay').click(function(e){
+				e.preventDefault();
+				$("#item_delete_window").dialog('close');
+			});
+
+		}
+	});
+}
+
+function delete_item_general (name, id, id2, offset, search_params) {
+	console.log(id);
+	console.log(id2);
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/delete_item_general&delete_item=1&name="+ name+"&id="+id,
+		dataType: "html",
+		async:false,
+		success: function (data) {
+			console.log(name);
+			switch (name) {
+				case 'delete_project':
+					window.location.assign("index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id="+id+"&offset="+offset+"&search_params="+search_params);
+				break;
+				case 'delete_role_user_global':
+					window.location.assign("index.php?sec=projects&sec2=operation/projects/role_user_global&id_user="+id2+"&delete="+id);
+				break;
+				case 'delete_task_panning':
+					window.location.assign("index.php?sec=projects&sec2=operation/projects/task_planning&id_project="+id+"&delete="+id2);
+				break;
+				case 'delete_milestones':
+					window.location.assign("index.php?sec=projects&sec2=operation/projects/milestones&id_project="+id+"&operation=delete&id="+id2);
+				break;
+				case 'delete_people_manager':
+					window.location.assign("index.php?sec=projects&sec2=operation/projects/people_manager&action=delete&id="+id+search_params);
+				break;
+
+				
+
+				case 'delete_company':
+					window.location.assign("index.php?sec=customers&sec2=operation/companies/company_detail&id=0&offset="+offset+"&search_params="+search_params+"message="+data);
+				break;
+				case 'delete_contract':
+					window.location.assign("index.php?sec=customers&sec2=operation/contracts/contract_detail&"+search_params+"&message="+data);
+				break;
+				case 'delete_invoice':
+					window.location.assign("index.php?sec=customers&sec2=operation/invoices/invoice_detail&offset="+offset+"&search_params="+search_params+"&message="+data);
+				break;
+				case 'delete_company_invoice':
+					window.location.assign("index.php?sec=customers&sec2=operation/companies/company_detail&id="+id_company+"&op=invoices&offset="+offset+"&message="+data);
+				break;
+				case 'delete_lead':
+					window.location.assign("index.php?sec=customers&sec2=operation/leads/lead&tab=search&offset="+offset+"&message="+data);
+				break;
+			}
+		}
+	});
+}

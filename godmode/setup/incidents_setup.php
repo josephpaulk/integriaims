@@ -122,7 +122,7 @@ if ($update) {
 		process_sql ($sql);
 	}
 		
-	echo '<h3 class="suc">'.__('Updated successfuly').'</h3>';
+	echo ui_print_success_message (__('Updated successfuly'), '', true, 'h3', true);
 }
 
 echo '<form method="post">';

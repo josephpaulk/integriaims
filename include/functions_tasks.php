@@ -154,7 +154,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 		$countRows = (int) $countRows[0]['num'];
 	
 	if ($countRows == 0) {
-		echo '<h3 class="error">'.__('No tasks found').'</h3>';
+		echo ui_print_error_message (__('No tasks found'), '', true, 'h3', true);
 		return;
 	}
 	

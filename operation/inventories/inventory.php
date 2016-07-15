@@ -64,12 +64,12 @@ if (get_parameter("quick_delete")) {
 	
 	if (give_acl ($config['id_user'], 0, "VW")) {
 		borrar_objeto ($id_inv);
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 		$pr = 1;
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "Object deleted","User ".$config['id_user']." deleted object #".$id_inv);
 	} else {
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete object");
-		echo "<h3 class='error'>".__('There was a problem deleting object')."</h3>";
+		echo ui_print_error_message (__('There was a problem deleting object'), '', true, 'h3', true);
 		no_permission();
 		$pr = 2;
 	}
@@ -114,9 +114,9 @@ if ($update_extras == 1){
                 array ('id' => $id));
 
 	if ($result !== false) {
-		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		$result_msg = ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	} else {
-		$result_msg = '<h3 class="error">'.__('There was an error updating inventory object').'</h3>';
+		$result_msg = ui_print_error_message (__('There was an error updating inventory object'), '', true, 'h3', true);
 	}
 	echo $result_msg;
 	

@@ -24,7 +24,7 @@ function check_incident_access ($id) {
 			$id_grupo = $incident['id_grupo'];
 		} else {
 			echo "<h1>".__("Ticket")."</h1>";
-			echo "<h3 class='error'>".__("There is no information for this ticket")."</h3>";
+			echo ui_print_error_message (__("There is no information for this ticket"), '', true, 'h3', true);
 			echo "<br>";
 			echo "<a style='margin-left: 90px' href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__("Try the search form to find the ticket")."</a>";
 			return false;
@@ -50,7 +50,7 @@ function check_incident_access ($id) {
 		return false;
 	} else {
 		//No incident but ACLs enabled
-		echo "<h3 class='error'>".__("The ticket doesn't exist")."</h3>";
+		echo ui_print_error_message (__("The ticket doesn't exist"), '', true, 'h3', true);
 		return false;
 	}
 	

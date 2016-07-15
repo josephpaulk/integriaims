@@ -36,7 +36,7 @@ $table->data = array();
 //echo "<h3>".__('Inventory objects')."</h3>";
 
 if (count ($inventories) == 0) {
-	echo '<h3 class="error">'.__('There\'s no inventory objects associated to this ticket').'</h3>';
+	echo ui_print_error_message (__('There\'s no inventory objects associated to this ticket'), '', true, 'h3', true);
 }
 else {
 	fill_inventories_table($inventories, $table);
@@ -52,7 +52,7 @@ $company = get_user_company($config['id_user']);
 echo "<h3>".__('Inventory objects related').print_help_tip (__('Inventory objects with a contract of the ticket creator company'), true)."</h3>";
 
 if(empty($company)) {
-	echo '<h3 class="error">'.__('The ticket creator has not company associated.').'</h3>';
+	echo ui_print_error_message (__('The ticket creator has not company associated.'), '', true, 'h3', true);
 	return;
 }
 
@@ -73,7 +73,7 @@ $table->size[5] = '40px';
 $table->data = array();
 
 if (count ($inventories) == 0) {
-	echo '<h3 class="error">'.__('There\'s no inventory objects associated to the creator company').'</h3>';
+	echo ui_print_error_message (__('There\'s no inventory objects associated to the creator company'), '', true, 'h3', true);
 	return;
 }
 

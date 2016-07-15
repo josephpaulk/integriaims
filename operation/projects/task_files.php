@@ -85,12 +85,12 @@ if ($operation == "attachfile") {
 		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename_safe."','".$description."',".$filesize.") ";
 		$id_attachment = process_sql ($sql, 'insert_id');
 		//project_tracking ( $id_inc, $id_usuario, 3);
-		$result_output = "<h3 class='suc'>".__('File added')."</h3>";
+		$result_output = ui_print_success_message (__('File added'), '', true, 'h3', true);
 		// Copy file to directory and change name
 		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename_safe;
 		
 		if (! copy($file_temp, $file_target)) {
-				$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
+			$result_output = ui_print_error_message (__('File cannot be saved. Please contact Integria administrator about this error'), '', true, 'h3', true);
 			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 			process_sql ($sql);
 		} else {
@@ -118,7 +118,7 @@ if ($operation == "delete") {
 	$nombre_archivo = $config["homedir"]."/attachment/".$file_id."_".$file_row["filename"];
 	unlink ($nombre_archivo);
 	get_db_sql ("DELETE FROM tattachment WHERE id_attachment = $file_id");
-	$result_output = "<h3 class='suc'>".__('File deleted')."</h3>";
+	$result_output = ui_print_success_message (__('File deleted'), '', true, 'h3', true);
 }
 
 // Specific task

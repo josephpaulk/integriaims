@@ -40,13 +40,13 @@ $pending_ok = (bool) get_parameter ("pending_ok");
 $pending_delete = (bool) get_parameter ("pending_delete");
 
 if ($pending_ok){
-	echo "<h3 class='suc'>".__('Mail queue refreshed')."</h3>";
+	echo ui_print_success_message (__('Mail queue refreshed'), '', true, 'h3', true);
 	process_sql ("UPDATE tpending_mail SET attempts = 0, status = 0 WHERE status = 1");
 }
 
 if ($pending_delete){
-	echo "<h3 class='suc'>".__('Mail queue deleted')."</h3>";
-        process_sql ("DELETE FROM tpending_mail");
+	echo ui_print_success_message (__('Mail queue deleted'), '', true, 'h3', true);
+    process_sql ("DELETE FROM tpending_mail");
 }
 
 if ($update) {

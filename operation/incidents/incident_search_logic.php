@@ -155,10 +155,10 @@ $filter_form = $filter;
 $has_im  = give_acl ($config['id_user'], $filter_form['id_group'], "IM");
 
 echo '<div id="msg_ok_hidden" style="display:none;">';
-	echo '<h3 class="suc">'.__('Custom filter saved').'</h3>';
+	echo ui_print_success_message (__('Custom filter saved'), '', true, 'h3', true);
 echo '</div>';
 echo '<div id="msg_error_hidden" style="display:none;">';
-	echo '<h3 class="error">'.__('Could not create custom filter').'</h3>';
+	echo ui_print_error_message (__('Could not create custom filter'), '', true, 'h3', true);
 echo '</div>';
 
 /* Get a custom filter*/
@@ -173,14 +173,14 @@ if ($id_search && !$delete_custom_search) {
 			$filter = unserialize($search["form_values"]);
 			$filter_form = $filter;
 			
-			echo '<h3 class="suc">'.sprintf(__('Custom filter "%s" loaded'), $search["name"]).'</h3>';
+			echo ui_print_success_message (__('Custom filter "%s" loaded'), '', true, 'h3', true);
 		}
 		else {
-			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom filter'), $search["name"]).'</h3>';	
+			echo ui_print_error_message (__('Could not load custom filter'), '', true, 'h3', true);
 		}
 	}
 	else {
-		echo '<h3 class="error">'.__('Could not load custom filter').'</h3>';
+		echo ui_print_error_message (__('Could not load custom filter'), '', true, 'h3', true);
 	}
 }
 
@@ -193,10 +193,10 @@ if ($delete_custom_search) {
 		$config['id_user'], $id_search);
 	$result = process_sql ($sql);
 	if ($result === false) {
-		echo '<h3 class="error">'.__('Could not delete custom filter').'</h3>';
+		echo ui_print_error_message (__('Could not delete custom filter'), '', true, 'h3', true);
 	}
 	else {
-		echo '<h3 class="suc">'.__('Custom filter deleted').'</h3>';
+		echo ui_print_success_message (__('Custom filter deleted'), '', true, 'h3', true);
 	}
 }
 

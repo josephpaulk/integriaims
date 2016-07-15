@@ -330,10 +330,9 @@ function create_single_workunit ($number) {
 
 function print_single_workunit_report ($mwur) {
 	if ($mwur['result_out']) {
-		echo '<h3 class="suc">'.__('Workunit added').'</h3>';
-
+		echo ui_print_success_message (__('Workunit added'), '', true, 'h3', true);
 	} else {
-		echo '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+		echo ui_print_error_message (__('Problemd adding workunit.'), '', true, 'h3', true);
 	}
 
 	echo "<table class='search-table' width='99%'>";

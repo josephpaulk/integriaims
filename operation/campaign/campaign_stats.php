@@ -28,7 +28,7 @@ if (! give_acl ($config["id_user"], 0, "VM")) {
 $campaign = get_db_row("tcampaign", "id", $id);
 
 //echo '<div class="under_tabs_info">'.__("Campaign").': '.$campaign["title"].'</div>';
-
+$table = new stdClass();
 $table->class = 'blank';
 $table->width = '100%';
 $table->data = array ();
@@ -40,7 +40,9 @@ $table->size[1] = "50%";
 
 //Calculate leads funnel data
 $leads_funnel = crm_get_total_leads_funnel("WHERE id_campaign = ".$id);
-
+if(!isset($read)){
+	$read = '';
+}
 if ($read && $enterprise) {
 	$leads_funnel = crm_get_user_leads($config['id_user'], $leads_funnel);
 }
@@ -97,11 +99,14 @@ if (isset($data[200]["amount"])) {
 }
 
 $expenses = $campaign["expenses"];
-
-$roi = (($total_revenue-$expenses) / $expenses) * 100;
+if($expenses != 0){
+	$roi = (($total_revenue-$expenses) / $expenses) * 100;
+} else {
+	$roi = 0;
+}
 
 //$leads_conversion_rate = "<table class='conversion_rate'>";
-$leads_conversion_rate .= "<tr>";
+$leads_conversion_rate = "<tr>";
 $leads_conversion_rate .= "<td class='conversion_value'>";
 $leads_conversion_rate .= sprintf("%.2f %%",$roi);
 $leads_conversion_rate .= "</td>";
@@ -122,7 +127,7 @@ $table->data[0][1] = print_container('conversion_rate', __('ROI'), $leads_conver
 $email_camp_stats = crm_get_campaign_email_stats($campaign["id"]);
 
 //$email_stats = "<table class='details_table alternate'>";
-$email_stats .= "<tr>";
+$email_stats = "<tr>";
 $email_stats .= "<td>";
 $email_stats .= "<strong>".__("Emails sent")."</strong>";
 $email_stats .= "</td>";
@@ -151,8 +156,11 @@ $email_stats .= "</tr>";
 //$email_stats = '<br><div>' . $email_stats . '</div>';
 $table->data[1][0] = print_container('newsletter_rate', __('Newsletter statistics'), $email_stats, 'open', true, true, "container_simple_title", "container_simple_div",1,"less_widht");
 
+if(!isset($total_leads)){
+	$total_leads = 0;
+}
 //$lead_stats = "<table class='details_table alternate'>";
-$lead_stats .= "<tr>";
+$lead_stats = "<tr>";
 $lead_stats .= "<td>";
 $lead_stats .= "<strong>".__("Total leads")."</strong>";
 $lead_stats .= "</td>";
@@ -165,7 +173,9 @@ $lead_stats .= "<td>";
 $lead_stats .= "<strong>".__("Total success")."</strong>";
 $lead_stats .= "</td>";
 $lead_stats .= "<td style='text-align:right'>";
-
+if(!isset($data[200]["total_leads"])){
+	$data[200]["total_leads"] = 0;
+}
 $leads_success = $data[200]["total_leads"];
 
 $lead_stats .= sprintf("%d",$leads_success);

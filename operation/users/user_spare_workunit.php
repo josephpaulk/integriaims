@@ -118,7 +118,7 @@ if ($operation == "lock") {
 		return;
 	}
 	
-	$result_output = '<h3 class="suc">'.__('Locked successfully').'</h3>';
+	$result_output = ui_print_success_message (__('Locked successfully'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit locked",
 		"Workunit for ".$config['id_user']);
 	
@@ -219,13 +219,13 @@ if ($operation == 'insert') {
 					$id_task, $id_workunit);
 				$result = process_sql ($sql, 'insert_id');
 				if ($result !== false) {
-					$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+					$result_output = ui_print_success_message (__('Workunit added'), '', true, 'h3', true);
 				} else {
-					$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+					$result_output = ui_print_error_message (__('Problem adding workunit.'), '', true, 'h3', true);
 				}
 			}
 			else {
-				$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+				$result_output = ui_print_error_message (__('Problem adding workunit.'), '', true, 'h3', true);
 			}
 		}
 		mail_project (0, $config['id_user'], $id_workunit, $id_task,
@@ -257,13 +257,13 @@ if ($operation == 'insert') {
 					$id_task, $id_workunit);
 				$result = process_sql ($sql, 'insert_id');
 				if ($result !== false) {
-					$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+					$result_output = ui_print_success_message (__('Workunit added'), '', true, 'h3', true);
 				} else {
-					$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+					$result_output = ui_print_error_message (__('Problem adding workunit.'), '', true, 'h3', true);
 				}
 			}
 			else {
-				$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+				$result_output = ui_print_error_message (__('Problem adding workunit.'), '', true, 'h3', true);
 			}
 		}
 		mail_project (0, $config['id_user'], $id_workunit, $id_task,
@@ -272,23 +272,25 @@ if ($operation == 'insert') {
 	else {
 		if (!$id_task) {
 			if ($duration > 24 /*max hours in one day*/) {
-				$result_output = '<h3 class="error">'.__('Workunit must be less than 24 hours of tasks').'</h3>';
+				$result_output = ui_print_error_message (__('Workunit must be less than 24 hours of tasks'), '', true, 'h3', true);
 			}
 		}
 		else {
 			$tasks = sprintf ('SELECT id_workunit FROM tworkunit_task WHERE id_task = %d', $id_task);
 			$tasks = process_sql ($tasks);
 			$num_hours2 = 0;
-			foreach ($tasks as $task) {
-				$sql_hours = sprintf('SELECT duration FROM tworkunit WHERE id = %d AND timestamp = "%s"', $task[id_workunit], $timestamp);
-				$num_hours = process_sql($sql_hours);
-				
-				if ($num_hours) {
-					$num_hours2 += $num_hours[0]['duration'];
+			if (is_array($tasks) || is_object($tasks)){
+				foreach ($tasks as $task) {
+					$sql_hours = sprintf('SELECT duration FROM tworkunit WHERE id = %d AND timestamp = "%s"', $task['id_workunit'], $timestamp);
+					$num_hours = process_sql($sql_hours);
+					
+					if ($num_hours) {
+						$num_hours2 += $num_hours[0]['duration'];
+					}
 				}
 			}
 			if (($duration + $num_hours2) > 24 /*max hours in one day*/) {
-				$result_output = '<h3 class="error">'.__('Workunit must be less than 24 hours of tasks').'</h3>';
+				$result_output = ui_print_error_message (__('Workunit must be less than 24 hours of tasks'), '', true, 'h3', true);
 			}
 			else {
 				// Single day workunit
@@ -304,16 +306,16 @@ if ($operation == 'insert') {
 							$id_task, $id_workunit);
 					$result = process_sql ($sql, 'insert_id');
 					if ($result !== false) {
-						$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+						$result_output = ui_print_success_message (__('Workunit added'), '', true, 'h3', true);
 						audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Spare work unit added", 
 								'Workunit for '.$config['id_user'].' added to Task ID #'.$id_task);
 						mail_project (0, $config['id_user'], $id_workunit, $id_task);
 					}
 					else {
-						$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+						$result_output = ui_print_error_message (__('Problemd adding workunit.'), '', true, 'h3', true);
 					}
 				} else {
-					$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+					$result_output = ui_print_error_message (__('Problemd adding workunit.'), '', true, 'h3', true);
 				}
 			}
 		}
@@ -335,7 +337,7 @@ if ($operation == "delete") {
 		return;
 	}
 	
-	$result_output = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	$result_output = ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 	
 	if (defined ('AJAX'))
@@ -375,7 +377,7 @@ if ($operation == 'update') {
                                         $id_task, $id_workunit);
             $result = process_sql ($sql, 'insert_id');
 	}
-	$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
+	$result_output = ui_print_success_message (__('Workunit updated'), '', true, 'h3', true);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "PWU", "Updated PWU. $description");
 	
 	if ($result !== false) {

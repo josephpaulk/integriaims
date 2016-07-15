@@ -44,6 +44,9 @@ echo '<h2>'.__('User management') . '</h2>';
 echo '<h4>'.__('List users') . '</h4>';
 
 echo "<div style='width:100%' class='divform'>";
+	if(!isset($filter_form)){
+		$filter_form = '';
+	}
 	form_search_users (false, $filter_form);
 	echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
 		echo "<table style='width:20%' class='search-table'>";
@@ -59,6 +62,12 @@ echo "<div style='width:100%' class='divform'>";
 	echo "</form>";
 echo "</div>";
 
+if(!isset($ajax)){
+	$ajax = '';
+}
+if(!isset($clickin)){
+	$clickin = '';
+}
 user_search_result($filter_form, $ajax, $config["block_size"], $offset, $clickin, $search_text, $disabled_user, $level, $group);
 ?>
 

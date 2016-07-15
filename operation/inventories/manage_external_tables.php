@@ -38,9 +38,9 @@ if ($delete_row) {
 	$result = process_sql_delete ($external_table, array($key=>$key_value));
 	
 	if ($result) {
-		echo "<h3 class='suc'>".__('Deleted row')."</h3>";
+		echo ui_print_success_message (__('Deleted row'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__('There was a problem deleting row')."</h3>";
+		echo ui_print_error_message (__('There was a problem deleting row'), '', true, 'h3', true);
 	}
 }
 
@@ -63,9 +63,9 @@ if ($update_row) {
 	$result = process_sql_update ($external_table, $values, array($key=>$key_value));
 	
 	if ($result) {
-		echo "<h3 class='suc'>".__('Updated row')."</h3>";
+		echo ui_print_success_message (__('Updated row'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__('There was a problem updating row')."</h3>";
+		echo ui_print_error_message (__('There was a problem updating row'), '', true, 'h3', true);
 	}
 }
 
@@ -86,14 +86,15 @@ if ($insert_row) {
 	$result_insert = process_sql_insert ($external_table, $values);
 	
 	if ($result_insert) {
-		echo "<h3 class='suc'>".__('Inserted row')."</h3>";
+		echo ui_print_success_message (__('Inserted row'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='error'>".__('There was a problem inserting row')."</h3>";
+		echo ui_print_error_message (__('There was a problem inserting row'), '', true, 'h3', true);
 	}
 }
 
 echo "<h1>".__('External table management')."</h1>";
 
+$table = new stdClass;
 $table->width = '98%';
 $table->class = 'search-table';
 $table->id = "external-editor";
@@ -210,6 +211,9 @@ echo '</form>';
 
 print_input_hidden ('base_url_homedir', base_url(), false);
 print_input_hidden ('id', $id_object_type, false);
+if(!isset($key)){
+	$key = '';
+}
 print_input_hidden ('key', $key, false);
 
 ?>

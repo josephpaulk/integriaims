@@ -45,12 +45,15 @@ require_once ('include/functions_inventories.php');
 
 $inventory = get_db_row ('tinventory', 'id', $id);
 
+
 //**********************************************************************
 // Tabs
 //**********************************************************************
-
+if(!isset($inventory_name)){
+	$inventory_name = '';
+}
 print_inventory_tabs('contacts', $id, $inventory_name);
-
+$table = new stdClass;
 $table->width = '99%';
 $table->class = 'listing';
 $table->head = array ();
@@ -81,7 +84,9 @@ $companies = get_companies ();
 
 foreach ($contacts as $contact) {
 	$data = array ();
-
+	if(!isset($companies[$contact['id_company']])){
+		$companies[$contact['id_company']] = '';
+	}
 	$data[0] = $companies[$contact['id_company']];
 	$data[1] = $contact['fullname'];
 	$details = '';

@@ -37,11 +37,11 @@ if (isset($_GET["upload_file"])) {
 		// Copy file to directory and change name
 		$file_target = $config["homedir"]."/".$directory."/".$filename;
 		if (!(copy($file_tmp, $file_target))){
-			echo "<h3 class=error>".__("Could not be attached")."</h3>";
+			echo ui_print_error_message (__("Could not be attached"), '', true, 'h3', true);
 		}
 		else {
 			// Delete temporal file
-			echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+			echo ui_print_success_message (__("Successfully attached"), '', true, 'h3', true);
 			$location = $file_target;
 			unlink ($file_tmp);
 		}
@@ -52,13 +52,13 @@ if (isset($_GET["upload_file"])) {
 // Delete file
 $delete = get_parameter ("delete", "");
 if ($delete != ""){
-	echo "<h1>".__("Deleting file")."</h1>";
+	//echo ui_print_success_message (__("Deleting file"), '', true, 'h3', true);
 	$file = get_parameter ("delete", "");
 	$directory = get_parameter ("directory", "");
 
 	$full_filename = $directory . "/". $file;
 	if (!is_dir ($full_filename)){
-		echo "<h3>".__("Deleting")." ".$full_filename."</h3>";
+		echo ui_print_success_message (__("Deleting")." ".$full_filename, '', true, 'h3', true);
 		unlink ($full_filename);
 	}
 }
@@ -74,7 +74,7 @@ if (isset($_GET["create_dir"])) {
 	$newdir = get_parameter ("newdir","");
 	if ($newdir != ""){
 		mkdir($current_directory."/".$newdir);
-		echo "<h3>".__("Created directory '$newdir'")."</h3>";
+		echo ui_print_success_message (__("Created directory ") . $newdir, '', true, 'h3', true);
 	}
 
 }
@@ -143,7 +143,7 @@ else {
 	echo "</table>";
 	echo "</form>";
 	echo "</div>";
-	echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
+	echo ui_print_success_message (__('Current directory is not writtable by HTTP Server') . $newdir, '', true, 'h3', true);
 	echo '<p>';
 	echo __('Please check that current directory has write rights for HTTP server');
 	echo "</p>";

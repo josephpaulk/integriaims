@@ -32,6 +32,9 @@ $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
 $update = (bool) get_parameter ('update');
 $delete = (bool) get_parameter ('delete');
+if(!isset($id_group)){
+	$id_group = '';
+}
 
 // CREATE
 if ($create) {
@@ -69,9 +72,9 @@ if ($create) {
 		);
 	$id = process_sql_insert('tnewsletter_content', $values);
 	if ($id === false)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER ISSUE CREATED", "Created newsletter $email_subject");
 	}
 	$id = 0;
@@ -103,9 +106,9 @@ if ($update) {
 		);
 	$result = process_sql_update('tnewsletter_content', $values, array('id' => $id));
 	if ($result === false)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER UPDATED", "Updated newsletter issue $email_subject");
 	}
 	$id = 0;
@@ -129,7 +132,7 @@ if ($delete) { // if delete
 	process_sql ($sql);
 	
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Newsletter Management", "Newsletter issue deleted $name");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -145,7 +148,7 @@ $where_clause = "WHERE 1=1 ";
 if ($search_text != "") {
 	$where_clause .= sprintf ('AND email_subject LIKE "%%%s%%" OR html LIKE "%%%s%%" OR plain LIKE "%%%s%%"', $search_text, $search_text, $search_text);
 }
-
+$table = new stdClass();
 $table->width = '90%';
 $table->class = 'search-table';
 $table->style = array ();
@@ -235,6 +238,6 @@ if ($issues !== false) {
 	print_table ($table);
 }
 else
-	echo "<h3>" . __("No data to show") . "</h3>";
+	echo ui_print_error_message (__("No data to show"), '', true, 'h3', true);
 echo "</div>";
 ?>

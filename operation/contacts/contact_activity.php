@@ -51,6 +51,7 @@ if ($op2 == "purge"){
 }
 
 // Add item form
+$table = new stdClass();
 $table->width = "100%";
 $table->class = "search-table-button";
 $table->data = array ();
@@ -77,7 +78,7 @@ $activities = print_array_pagination ($activities, "index.php?sec=customers&sec2
 
 if ($activities !== false) {	
 	if (sizeof($activities) == 0){
-		echo "<h3 class='error'>".__("There is no activity")."</h3>";
+		echo ui_print_error_message (__("There is no activity"), '', true, 'h3', true);
 	} else {
 		foreach ($activities as $activity) {
 			echo "<div class='notetitle'>"; // titulo

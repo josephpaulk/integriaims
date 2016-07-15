@@ -123,6 +123,14 @@ h6 { font-size: 0.5em !important; }
     background-color: #F7F7F7;
 }
 
+#button-bar-title-button li{
+    display: inline;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: none;
+    padding: 12px;
+}
+
 .button-bar-selected {
 	background-color: #FF9000 !important;
 }
@@ -1217,12 +1225,22 @@ td.datosf9i, td.datos2f9i {
 
 .error {
 	color: #FF3333;
-	background: url(../../images/icono_error.png) no-repeat 1% 50%;
-	padding: 30px 0px 37px 60px;
+	background: url(../../images/icono_error_grande.png) no-repeat 1% 50% #fbfbfb;
+	padding: 35px 0px 35px 80px;
+	border-radius: 5px;
 	clear: both;
 	margin: 0px;
-	margin-bottom: 10px;
+	margin-top: 30px;
+	margin-bottom: 20px;
 	vertical-align: middle;
+	border: 1px #e2e2e2 solid;
+}
+
+.error_validate{
+	color: #FF3333;
+    background: url(../../images/asterisco.png) no-repeat 1% 50%;
+    font-weight: bold;
+    padding-left: 18px;
 }
 
 #tree_search .error {
@@ -1237,12 +1255,15 @@ td.datosf9i, td.datos2f9i {
 
 .suc {
 	color: #5a8629;
-	background: url(../../images/icono_exito.png) no-repeat 1% 50%;
-	padding: 30px 0px 37px 60px;
-	clear: both;
-	margin: 0px;
-	margin-bottom: 10px;
-	vertical-align: middle;
+    background: url(../../images/icono_exito_grande.png) no-repeat 1% 50% #fbfbfb;
+    padding: 35px 0px 35px 80px;
+    border-radius: 5px;
+    clear: both;
+    margin: 0px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    vertical-align: middle;
+    border: 1px #e2e2e2 solid;
 }
 
 div#wizard {
@@ -3596,12 +3617,18 @@ ul li {
     margin-top: 10px;
 }
 
-
 #list_folders{
-	height:450px;
-	border: 1px solid #dadada;
-	overflow-y: hidden;
+	height: 500px;
+    border: 1px solid #dadada;
+    overflow: auto;
+    border-radius: 5px;
 }
+#list_folders h2{
+	width: 90%;
+	padding: 5px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
 .folders{
 	border-bottom:1px solid #E0E0E0;
 	min-height: 40px;
@@ -3614,11 +3641,14 @@ ul li {
 }
 .images_option{
 	line-height: 35px;
+	margin-right: 3px;
+	margin-top: 10px;
 }
+
 #folder_name{
 	padding-left: 6px;
 	font-size: 12px;
-	width: 69%;
+	width: 60%;
 }
 #button-update_folder{
 	text-align: center !important;
@@ -3626,22 +3656,23 @@ ul li {
 .folders_select {
 	background: #FF9000;
 }
-.images_option{
-	margin-right: 3px;
-	margin-top: 10px;
+.images_option img{
+	cursor:pointer;
 }
+/*
 #list_folders:hover{
 	overflow-y: scroll;
 }
+
 #list_reports:hover{
 	overflow-y: scroll;
 }
+*/
 #list_reports {
 	width: 75%;
 	float: right;
 	height: 500px;
-	border: 1px solid #dadada;
-	overflow-y: hidden;
+	overflow: auto;
 	padding-left: 15px;
 	padding-right: 15px;
 }
@@ -4013,4 +4044,121 @@ img#inventory_loading{
 	float: right !important;
 	margin-right: 10px;
 	margin-top: 5px;
+}
+
+/*css for reports*/
+#search_folder table tr td:nth-child(-n+2){
+	width: 45%;
+}
+#search_folder table tr td:nth-child(n+3){
+	width: 10%;
+}
+
+#search_folder table tr td select{
+	width: 83% !important;
+}
+
+#search_folder table tr td input{
+	width: 80% !important;
+}
+
+#search_folder table tr td input[type = "button"]{
+	width: 65% !important;
+	float: right;
+    height: 30px;
+    margin-right: 25%;
+    border-radius: 3px;
+    font-size: 13px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 0px;
+}
+.divform_folder{
+	width: 21%;
+	float: left;
+	margin-top: 22px;
+}
+
+#list_reports input[type = "submit"]{
+	width: 100% !important;
+    height: 30px;
+    margin-right: 25%;
+    border-radius: 3px;
+    font-size: 13px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 7px;
+}
+
+#list_reports table tr th,
+#list_reports table tr td{
+	width: 12,5%;
+}
+
+#divresult_create_folder table tr td{
+	width: 50%;
+}
+
+#divresult_create_folder table tr td input{
+	width: 80% !important;
+}
+
+#divresult_create_folder table tr td select{
+	width: 82% !important;
+}
+
+#divresult_create_folder table tr td input[type = "button"]{
+	width: 20% !important;
+    float: right;
+    height: 30px;
+    margin-right: 9%;
+    margin-top: 11px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: white;
+    background: #FF9000;
+    border-color: #FF9000;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 0px;
+}
+
+#button-bar-title-button {
+    float: right;
+    margin-top: -35px;
+    margin-right: 22px;
+}
+
+.table-clean{
+	text-align: left;
+	margin: 0 auto;
+}
+
+#button-modal_cancel,
+#submit-delete_btn {
+	width: 23% !important;
+    float: right;
+    height: 32px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: white;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 0px;
+    font-size: 13px !important;
+    font-weight: bold;
+    border-radius: 0px !important
+}
+
+#submit-delete_btn {
+	background: #FF9000;
+    border-color: #FF9000;
+    margin-left: 15px;
+    margin-right: 15px;
 }

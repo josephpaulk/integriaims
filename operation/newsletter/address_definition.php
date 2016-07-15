@@ -77,8 +77,8 @@ if ($create) {
 		
 	}
 
-	echo "<h3 class='suc'>".__('Successfully added')." $total/$invalid ". __("addresses (valid/invalid)"). "</h3>";
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER ADDRESESS CREATED", "Created newsletter $total");
+	echo ui_print_success_message (__('Successfully added')." $total/$invalid ". __("addresses (valid/invalid)"), '', true, 'h3', true);
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER ADDRESESS CREATED", "Created newsletter $total");
 	
 	
 	$id = 0;
@@ -92,9 +92,9 @@ if ($disable) {
 	$sql = "UPDATE tnewsletter_address SET status = 1 WHERE id = $id";
 	$result = mysql_query ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully disabled')."</h3>";
+		echo ui_print_success_message (__('Successfully disabled'), '', true, 'h3', true);
 	}
 	$id = 0;
 }
@@ -106,9 +106,9 @@ if ($enable) {
 	$sql = "UPDATE tnewsletter_address SET status = 0 WHERE id = $id";
 	$result = mysql_query ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully disabled')."</h3>";
+		echo ui_print_success_message (__('Successfully disabled'), '', true, 'h3', true);
 	}
 	$id = 0;
 }
@@ -123,9 +123,9 @@ if ($delete) {
 	$sql = "DELETE FROM tnewsletter_address WHERE id = $id";
 	$result = mysql_query ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
+		echo ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER ADDRESESS DELETED", "Deleted $email");
 	}
 	$id = 0;
@@ -146,7 +146,7 @@ if ($multiple_delete) {
 		}
 	}
 
-	echo "<h3 class='suc'>".__('Successfully multiple deleted')."</h3>";
+	echo ui_print_success_message (__('Successfully multiple deleted'), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -328,7 +328,7 @@ if ($issues !== false) {
 	}
 }
 else
-	echo "<h3>" . __("No data to show") . "</h3>";
+	echo ui_print_error_message (__("No data to show"), '', true, 'h3', true);
 echo "</div>";
 
 

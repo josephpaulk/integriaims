@@ -215,7 +215,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$result=mysql_query($sql_update);
 
 	if (! $result)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
 		if ($id_type > 0) {
 			insert_type_file($id, $id_type);
@@ -223,7 +223,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 			delete_type_file($id);
 		}
 
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		//insert_event ("DOWNLOAD ITEM UPDATED", $id, 0, $name);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Updated download item $id - $name");
 	}
@@ -267,7 +267,7 @@ if (isset($_GET["delete_data"])){ // if delete
 
 	//insert_event ("DOWNLOAD ITEM DELETED", $id, 0, "Deleted Download $download_title");
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Download", "Deleted download item  $download_title");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
+	echo ui_print_error_message (__('Successfully deleted'), '', true, 'h3', true);
 }
 
 if (isset($_GET["update2"])){
@@ -319,8 +319,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$current_directory = $config["homedir"]. "/attachment/downloads";
 
 		if (!is_writable($current_directory)) {
-
-			echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
+			echo ui_print_error_message (__('Current directory is not writtable by HTTP Server'), '', true, 'h3', true);
 			echo "<p>";
 			echo __('Please check that current directory has write rights for HTTP server');
 			echo "</p>";
@@ -488,7 +487,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))) {
 		
 		if($downloads == false) {
 			$downloads = array();
-			echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
+			echo ui_print_error_message (__('No Downloads found'), '', true, 'h3', true);
 		}
 		else {
 

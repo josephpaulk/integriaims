@@ -51,9 +51,9 @@ if ($create_role) {
 		VALUE ("%s", "%s")', $name, $description);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false) {
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Created company role $name");
 	}
 	$id = 0;
@@ -70,9 +70,9 @@ if ($update_role) {
 
 	$result = process_sql ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Updated company role $name");
 	}
 	$id = 0;
@@ -84,7 +84,7 @@ if ($delete_role) {
 	$sql = sprintf ('DELETE FROM tcompany_role WHERE id = %d', $id);
 	$result = process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Company Management", "Deleted company role $name");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -190,7 +190,7 @@ else {
 		}
 		print_table ($table);
 	} else {
-		echo "<h3 class='error'>".__("There are not results for the search")."</h3>";
+		echo ui_print_error_message (__("There are not results for the search"), '', true, 'h3', true);
 	}
 	
 	echo '</div>';

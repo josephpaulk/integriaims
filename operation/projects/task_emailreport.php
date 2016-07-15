@@ -42,7 +42,7 @@ if ($operation == "generate_email") {
 		$subject = ascii_output ($title);
 		integria_sendmail ($participant["direccion"], $subject, $text);
 	}
-	echo '<h3 class="suc">'.__("Operation successfully completed").'</h3>';
+	echo ui_print_success_message (__("Operation successfully completed"), '', true, 'h3', true);
 }
 
 // Get names
@@ -97,7 +97,7 @@ echo '</table>';
 
 $button = '';
 echo '<div style="width:100%;">';
-unset($table->data);
+$table = new StdClass;
 $table->width = '100%';
 $table->class = "button-form";
 $button .= print_submit_button (__('Send'), 'create_btn', false, 'class="sub create"', true);

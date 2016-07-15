@@ -25,14 +25,12 @@ function update_manager_main() {
 	echo "<p><b>";
 	$license = $config['license'];
 	if ($license == 'INTEGRIA-FREE') {
-		echo "<h3 class='update'>".__('Your Integria IMS version number is') . ' ' .
-			$config['db_scheme_build']."</h3>";
+		echo "<h3 class='update'>".__('Your Integria IMS version number is') . ' ' . $config['db_scheme_build']."</h3>";
 	} else {
 		if ($config['current_package'] == 0) 
 			echo "<h3 class='update'>".__('You do not have installed any updates of Integria IMS')."</h3>";
 		else
-			echo "<h3 class='update'>".__('Your Integria IMS version number is') . ' ' .
-				$config['current_package']."</h3>";
+			echo "<h3 class='update'>".__('Your Integria IMS version number is') . ' ' . $config['current_package']."</h3>";
 	}
 	
 	echo "</b></p>";

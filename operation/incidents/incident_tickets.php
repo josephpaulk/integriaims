@@ -23,7 +23,7 @@ $incidents = incidents_get_incident_childs ($id_incident, false);
 
 
 if (count ($incidents) == 0) {
-	echo '<h3 class="error">'.__('There\'s no tickets associated to this ticket').'</h3>';
+	echo ui_print_error_message (__('There\'s no tickets associated to this ticket'), '', true, 'h3', true);
 }
 else {
 	

@@ -114,7 +114,7 @@ if (!$stats) {
 					$work_hours = get_incident_workunit_hours ($id);
 					$workunits = get_incident_workunits ($id);	
 					$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
-					$workunit_detail .= "<tr>";
+					$workunit_detail = "<tr>";
 					$workunit_detail .= "<td><strong>".__("Last work at")."</strong>:</td>";
 					$workunit_detail .= "<td style='text-align:right;'>".human_time_comparation ($workunit_data['timestamp'])."</td>";
 					$workunit_detail .= "</tr>";
@@ -164,7 +164,7 @@ if (!$stats) {
 				//$tracking_status = "<table class='details_table alternate'>";
 				foreach ($stats[INCIDENT_METRIC_STATUS] as $key => $value) {
 					$name = get_db_value ('name', 'tincident_status', 'id', $key);
-					$tracking_status .= "<tr>";
+					$tracking_status = "<tr>";
 					$tracking_status .= "<td><strong>".$name."</strong>:</td>";
 					$tracking_status .= "<td style='text-align:right;'>".give_human_time($value,true,true,true)."</td>";
 					$tracking_status .= "</tr>";
@@ -177,7 +177,7 @@ if (!$stats) {
 				//$tracking_group = "<table class='details_table alternate'>";
 				foreach ($stats[INCIDENT_METRIC_GROUP] as $key => $value) {
 					$name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
-					$tracking_group .= "<tr>";
+					$tracking_group = "<tr>";
 					$tracking_group .= "<td><strong>".$name."</strong>:</td>";
 					$tracking_group .= "<td style='text-align:right;'>".give_human_time($value,true,true,true)."</td>";
 					$tracking_group .= "</tr>";
@@ -190,7 +190,7 @@ if (!$stats) {
 				//$tracking_user = "<table class='details_table alternate'>";
 				foreach ($stats[INCIDENT_METRIC_USER] as $key => $value) {
 					$name = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
-					$tracking_user .= "<tr>";
+					$tracking_user = "<tr>";
 					$tracking_user .= "<td><strong>".$name."</strong>:</td>";
 					$tracking_user .= "<td style='text-align:right;'>".give_human_time($value,true,true,true)."</td>";
 					$tracking_user .= "</tr>";
@@ -207,6 +207,7 @@ $trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id
 
 if ($trackings !== false) {
 	unset($table);
+	$table = new StdClass;
 	$table->width = "100%";
 	$table->class = 'listing';
 	$table->data = array ();

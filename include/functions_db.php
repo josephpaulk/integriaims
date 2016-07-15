@@ -973,6 +973,7 @@ function project_tracking ($id_project, $state, $id_aditional = 0) {
 
 
 function delete_project ($id_project){
+	global $config;
 	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 	$query = "DELETE FROM trole_people_project WHERE id_project = $id_project";
 	mysql_query($query);
@@ -986,6 +987,7 @@ function delete_project ($id_project){
 }
 
 function delete_task ($id_task){
+	global $config;
 	// Have a parent ?
 	$task = get_db_row ("ttask", "id", $id_task);
 	if ($task["id_parent_task"] > 0){
@@ -2433,7 +2435,7 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			$description .= " -> ".get_db_value ("titulo", "tincidencia", "id_incidencia", $aditional_data);
 			break;
 		
-		case INVENTORY_DELETED:
+		case 'INVENTORY_DELETED':
 			$description = __('Deleted');
 			break;
 		

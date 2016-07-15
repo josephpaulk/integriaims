@@ -57,8 +57,8 @@ if ($validate_newsletter) {
 		process_sql_update('tnewsletter_address', $values, array('id'=>$email['id']));
 		$i++;
 	}
-	
-	echo "<h3 class='suc'>".__('Emails validated: ').$i."</h3>";
+
+	echo ui_print_success_message (__('Emails validated: ').$i, '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -88,9 +88,9 @@ if ($create) {
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER CREATED", "Created newsletter $name");
 	}
 	$id = 0;
@@ -118,9 +118,9 @@ if ($update) {
 
 	$result = mysql_query ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER UPDATED", "Updated newsletter $name");
 	}
 	$id = 0;
@@ -149,7 +149,7 @@ if ($delete) { // if delete
 	process_sql ($sql);
 	
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Newsletter Management", "Deleted newsletter $name");
-	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -165,7 +165,7 @@ $where_clause = "WHERE 1=1 ";
 if ($search_text != "") {
 	$where_clause .= sprintf ('AND name LIKE "%%%s%%"', $search_text);
 }
-
+$table = new stdClass();
 $table->width = '100%';
 $table->class = 'search-table';
 $table->style = array ();
@@ -264,6 +264,8 @@ if ($newsletters !== false) {
 	}
 	print_table ($table);
 }
+else
+	echo ui_print_error_message (__("No data to show"), '', true, 'h3', true);
 echo "</div>";
 
 ?>

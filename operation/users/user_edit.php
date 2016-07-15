@@ -83,20 +83,20 @@ if ($upload_avatar) {
 				
 				$upload_result = move_uploaded_file($tmp_name, $config["homedir"]."/images/avatars/$filename");
 				if ($upload_result) {
-					echo "<h3 class=suc>".__("Avatar successfully uploaded")."</h3>";
+					echo ui_print_success_message (__("Avatar successfully uploaded"), '', true, 'h3', true);
 				} else {
 					unlink($tmp_name);
-					echo "<h3 class=error>".__("The avatar could not be uploaded")."</h3>";
+					echo ui_print_error_message (__("The avatar could not be uploaded"), '', true, 'h3', true);
 				}
 				
 			} else {
 				unlink($tmp_name);
-				echo "<h3 class=error>".__("The maximum dimensions of the avatar are 150x150px")."</h3>";
+				echo ui_print_error_message (__("The maximum dimensions of the avatar are 150x150px"), '', true, 'h3', true);
 			}
 			
 		} else {
 			unlink($tmp_name);
-			echo "<h3 class=error>".__("The avatar should be a PNG file")."</h3>";
+			echo ui_print_error_message (__("The avatar should be a PNG file"), '', true, 'h3', true);
 		}
 		
 	}
@@ -128,7 +128,7 @@ if ($update_user) {
 	$error = false;
 	if ($password != '' && md5 ($password) != $user['password']) {
 		if ($password != $password_confirmation) {
-			echo '<h3 class="error">'.__('Passwords don\'t match').'</h3>';
+			echo ui_print_error_message (__('Passwords don\'t match'), '', true, 'h3', true);
 			$error = true;
 		} else {
 			// Only when change password
@@ -150,9 +150,9 @@ if ($update_user) {
 		$result = process_sql ($sql);
 		
 		if ($result !== false) {
-			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		} else {
-			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		}
 	}
 }

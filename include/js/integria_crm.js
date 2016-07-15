@@ -126,7 +126,7 @@ function delete_item (mode, id, id_company, offset, search_params) {
 		dataType: "html",
 		async:false,
 		success: function (data) {
-
+			console.log(mode);
 			switch (mode) {
 				case 'delete_company':
 					window.location.assign("index.php?sec=customers&sec2=operation/companies/company_detail&id=0&offset="+offset+"&search_params="+search_params+"message="+data);
@@ -149,7 +149,11 @@ function delete_item (mode, id, id_company, offset, search_params) {
 }
 
 function show_validation_delete (mode, id, id_company, offset, search_params) {
-
+	console.log(mode);
+	console.log(id);
+	console.log(id_company);
+	console.log(offset);
+	console.log(search_params);
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -158,23 +162,31 @@ function show_validation_delete (mode, id, id_company, offset, search_params) {
 		success: function(data){
 			$("#item_delete_window").html (data);
 			$("#item_delete_window").show ();
-
 			$("#item_delete_window").dialog ({
-					resizable: true,
-					draggable: true,
+					resizable: false,
+					draggable: false,
 					modal: true,
 					overlay: {
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 210,
-					height: 180
+					width: 440,
+					height: 195
 				});
 			$("#item_delete_window").dialog('open');
 			$("#validation_delete_form").submit(function (e){
 				e.preventDefault();
 				delete_item (mode, id, id_company, offset, search_params);
 			});
+			$("#button-modal_cancel").click(function (e){
+				e.preventDefault();
+				$("#item_delete_window").dialog('close');
+			});
+			$('.ui-widget-overlay').click(function(e){
+				e.preventDefault();
+				$("#item_delete_window").dialog('close');
+			});
+
 		}
 	});
 }

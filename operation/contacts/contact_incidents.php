@@ -37,7 +37,7 @@ $email = safe_input($email);
 $incidents = incidents_get_by_notified_email ($email);
 
 if (!$incidents) {
-        echo '<h3 class="error">'.__("This contact doesn't have any ticket associated").'</h3>';
+    echo ui_print_error_message (__("This contact doesn't have any ticket associated"), '', true, 'h3', true);
 } else {
 
 	$table->class = "listing";

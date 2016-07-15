@@ -32,9 +32,9 @@ if (isset($_POST["create"])){ // If create
 	$sql_insert="INSERT INTO trole (name,description,cost) VALUES ('$name','$description','$cost') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
+		echo ui_print_error_message (__('Not created. Error inserting data'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		$id = mysql_insert_id();
 	}
 }
@@ -51,9 +51,9 @@ if (isset($_POST["update"])){ // if update
 				   WHERE id = '$id'";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__('Not updated. Error updating data')."</h3>";
+		echo ui_print_error_message (__('Not updated. Error updating data'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Succcessfully updated')."</h3>";
+		echo ui_print_success_message (__('Succcessfully updated'), '', true, 'h3', true);
 }
 
 // DELETE
@@ -65,11 +65,11 @@ if (isset($_GET["delete"])){ // if delete
 		$sql_delete= "DELETE FROM trole WHERE id = ".$id;
 		$result=mysql_query($sql_delete);
 		if (! $result)
-			echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
+			echo ui_print_error_message (__('Not deleted. Error deleting data'), '', true, 'h3', true);
 		else
-			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
-	} else 
-		echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
+			echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
+	} else
+		echo ui_print_error_message (__('Not deleted. Error deleting data'), '', true, 'h3', true);
 
 }
 
@@ -86,7 +86,7 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 					$description = $row["description"];
 					$cost = $row["cost"];
 				}
-			else echo "<h3 class='error'>".__('Name error')."</h3>";
+			else echo ui_print_error_message (__('Name error'), '', true, 'h3', true);
 	} else { // form_add
 		$creation_mode =1;
 		$name = "";

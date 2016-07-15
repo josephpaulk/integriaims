@@ -34,7 +34,7 @@ if ($upload_file) {
 	if ($_FILES["file"]["error"] == 0) {
 
 		if (($_FILES["file"]["type"] != 'text/csv') && ($_FILES["file"]["type"] != 'application/vnd.ms-excel')) {
-			echo "<h3 class='error'>" . __ ('Unsupported file type') . "</h3>";
+			echo ui_print_error_message (__('Unsupported file type'), '', true, 'h3', true);
 		}
 		else {
 			load_file ($_FILES["file"]["tmp_name"], $group, $profile, $nivel, $pass_policy, $avatar);
@@ -50,6 +50,9 @@ $table->size[0] = '120px';
 $table->align[3] = "right";
 $table->data = array ();
 
+if(!isset($id_group)){
+	$id_group = '';
+}
 $table->data[0][0] = combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW', $id_group, true);
 
 $table->data[1][0] = "<label>".__('Profiles')."</label>";

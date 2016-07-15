@@ -48,9 +48,9 @@ if ($create_manufacturer) {
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false) {
-		echo "<h3 class='error'>".__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	} else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Created manufacturer $name");
 	}
 	$id = 0;
@@ -71,9 +71,9 @@ if ($update_manufacturer) {
 		$address, $id_sla, $id_company_role, $comments, $name, $id);
 	$result = process_sql ($sql);
 	if ($result === false)
-		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Updated manufacturer $name");
 	}
 
@@ -87,8 +87,7 @@ if ($delete_manufacturer) {
 	$sql = sprintf ('DELETE FROM tmanufacturer WHERE id = %d', $id);
 	process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Manufacturer", "Deleted manufacturer $name");
-
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -220,7 +219,7 @@ else {
 		}
 		print_table ($table);
 	} else {
-		echo "<h3 class='error'>".__("Empty manufacturers")."</h3>";
+		echo ui_print_error_message (__("Empty manufacturers"), '', true, 'h3', true);
 	}
 	echo "</div>";
 } // end of list

@@ -89,7 +89,7 @@ echo '</div>';
 //**********************************************************************
 // Field update form
 //**********************************************************************
-
+$table = new StdClass;
 $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();

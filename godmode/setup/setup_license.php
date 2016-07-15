@@ -76,6 +76,7 @@ if ($unblock_users) {
 
 
 // Render SYSTEM language code, not current language.
+$table = new stdClass();
 $table->width = '99%';
 $table->class = 'search-table-button';
 $table->colspan = array ();

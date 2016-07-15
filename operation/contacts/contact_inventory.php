@@ -37,9 +37,9 @@ if ($inv_obj === ENTERPRISE_NOT_HOOK) {
 }
 
 if (!$inv_obj) {
-	echo '<h3 class="error">'.__("This contact doesn't have any inventory objects").'</h3>';
+	echo ui_print_error_message (__("This contact doesn't have any inventory objects"), '', true, 'h3', true);
 } else {
-
+	$table = new stdClass();
 	$table->class = "listing";
 	$table->width = "99%";
 	$table->head[0] = __("Id");

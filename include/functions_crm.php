@@ -187,7 +187,9 @@ function crm_get_all_contracts ($where_clause, $order_by='date_end') {
 	$sql = "SELECT * FROM tcontract $where_clause ORDER BY $order_by DESC";
 
 	$contracts = get_db_all_rows_sql ($sql);
-	
+	if(!isset($only_name)){
+		$only_name = '';
+	}
 	$user_contracts = enterprise_hook('crm_get_user_contracts', array($config['id_user'], $contracts, $only_name));
 	if ($user_contracts !== ENTERPRISE_NOT_HOOK) {
 		$contracts = $user_contracts;
@@ -582,19 +584,19 @@ function crm_get_total_leads_funnel ($where_clause=false, $user = false) {
 	} else {
 		$user_clasue = " OR (owner = $user AND progress = 200)";
 	}
-
+	if(!isset($user_clause)){
+		$user_clause = '';
+	}
 	if ($where_clause) {
 		$sql = "SELECT COUNT(id) as total_leads, SUM(estimated_sale) as amount, progress, owner FROM tlead
 			WHERE id IN (SELECT id FROM tlead
 					 $where_clause $user_clause)
 			GROUP BY progress
-			ORDER BY total_leads DESC
-			";
+			ORDER BY total_leads DESC";
 	} else {
 		$sql = "SELECT COUNT(id) as total_leads, SUM(estimated_sale) as amount, progress, owner FROM tlead
 			GROUP BY progress
-			ORDER BY total_leads DESC
-			";
+			ORDER BY total_leads DESC";
 	}
 	
 	$total = process_sql ($sql);
@@ -1007,13 +1009,17 @@ function crm_get_campaign_email_stats($id_campaign) {
 	//Get issue reads
 	$total_reads = 0;
 	$total_sent = 0;
-	foreach ($email_issues as $ei) {
-		$total_reads = $total_reads + crm_get_issue_reads($ei["id"]);
-		$total_sent = $total_sent + get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = ".$ei["id"]);
+	if (is_array($email_issues) || is_object($email_issues)){
+		foreach ($email_issues as $ei) {
+			$total_reads = $total_reads + crm_get_issue_reads($ei["id"]);
+			$total_sent = $total_sent + get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = ".$ei["id"]);
+		}
 	}
-	
-	$ratio = ($total_reads / $total_sent) * 100;
-
+	if($total_sent != 0){
+		$ratio = ($total_reads / $total_sent) * 100;
+	} else {
+		$ratio = 0;
+	}
 	$stats = array();
 
 	$stats["reads"] = $total_reads;
@@ -1059,10 +1065,10 @@ function crm_merge_newsletter_address ($id_newsletter_source, $id_newsletter_des
 			}
 		}
 	} else {
-		return '<h3 class="error">'.__('No address to import').'</h3>';
+		return ui_print_error_message (__('No address to import'), '', true, 'h3', true);
 	}
 	
-	return '<h3 class="suc">'.$success.' of '.$total_address.'&nbsp;'.__('addresses have been imported').'</h3>';
+	return ui_print_success_message ($success.' of '.$total_address.'&nbsp;'.__('addresses have been imported'), '', true, 'h3', true);
 }
 
 function crm_attach_contract_file ($id, $file_temp, $file_description, $file_name = "") {

@@ -63,10 +63,9 @@ if ($create_sla) {
 
 	$id = process_sql ($sql);
 	if ($id === false)
-		echo '<h3 class="error">'.__('Could not be created')."</h3>";
+		echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
         audit_db ($config["id_user"], $config["REMOTE_ADDR"], "SLA Created",
 		"Created a new SLA ($name)", $sql);
 	}
@@ -99,9 +98,9 @@ if ($update_sla) {
 
 	$result = process_sql ($sql);
 	if (! $result)
-		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
+		echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 	else {
-		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
         audit_db ($config["id_user"], $config["REMOTE_ADDR"], "SLA Modified",
 		"Updated SLA ($name)", $sql);
 	}
@@ -116,7 +115,7 @@ if ($delete_sla) {
 	$result = process_sql ($sql);
     audit_db ($config["id_user"], $config["REMOTE_ADDR"], "SLA Deleted",
 		"Delete SLA ($name)", $sql);
-	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -242,7 +241,7 @@ else {
 			OR description LIKE "%%%s%%"',
 			$search_text, $search_text);
 	}
-
+	$table = new StdClass();
 	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();

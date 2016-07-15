@@ -98,9 +98,9 @@ switch ($action_db) {
 		$id_object_type_field = process_sql ($sql, 'insert_id');
 		
 		if (! $id_object_type_field) {
-			echo '<h3 class="error">'.__('Could not be created').'</h3>';
+			echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 		} else {
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+			echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 			//insert_event ("OBJECT TYPE CREATED", $id_object_type_field, $id_object_type, $label);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Created object type $id_object_type_field - $label");
 		}
@@ -119,10 +119,10 @@ switch ($action_db) {
 		$result = process_sql ($sql);
 		
 		if (! $result) {
-			echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
+			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true); 
 		}
 		else {
-			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+			echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 			//insert_event ("OBJECT TYPE UPDATED", $id_object_type_field, $id_object_type, $label);
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory Management", "Updated object type $id_object_type_field - $label");
 		}
@@ -140,10 +140,9 @@ if ($delete_object_type_field) {
 	$result = process_sql ($sql);
 
 	if ($result)
-		echo '<h3 class="suc">'.__("Successfully deleted").'</h3>';
+		echo ui_print_success_message (__("Successfully deleted"), '', true, 'h3', true); 
 	else
-		echo '<h3 class="error">'.__("Could not be deleted").'</h3>';
-		
+		echo ui_print_error_message (__("Could not be deleted"), '', true, 'h3', true);
 	$id = 0;
 }
 
@@ -153,6 +152,7 @@ if ($delete_object_type_field) {
 
 $objects_type_fields = get_db_all_rows_field_filter ('tobject_type_field', 'id_object_type', $id_object_type, 'id');
 
+$table = new StdClass;
 $table->width = '99%';
 echo '<div class="divresult">';
 if ($objects_type_fields !== false) {

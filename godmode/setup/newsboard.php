@@ -59,9 +59,9 @@ if ($operation == "insert") {
 		
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id)
-		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
+		echo ui_print_error_message (__('Not created. Error inserting data'), '', true, 'h3', true);
 	else {
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
+		echo ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 	}
 	$operation = "";
 }
@@ -84,7 +84,7 @@ if ($operation == "updated") {
 	$values['expire_timestamp'] = "$expire_date $expire_time";
 	//$creator = $config['id_user'];
 
-	if (!$expire)
+	if (!isset($expire))
 		$values['expire_timestamp'] = "0000-00-00 00:00:00";
 	
 	
@@ -92,9 +92,9 @@ if ($operation == "updated") {
 	$result = process_sql_update ('tnewsboard', $values, $where);
 	
 	if (! $result)
-		echo '<h3 class="error">'.__('Not Updated. Nothing to updated').'</h3>';
+		echo ui_print_error_message (__('Not Updated. Nothing to updated'), '', true, 'h3', true);
 	else {
-		echo '<h3 class="suc">'.__('Successfully updated').'</h3>'; 
+		echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	}
 	$operation = "";
 }
@@ -108,9 +108,9 @@ if ($operation == "delete") {
 	$sql_delete= "DELETE FROM tnewsboard WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
+		echo ui_print_error_message (__('Not deleted. Error deleting data'), '', true, 'h3', true);
 	else
-		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+		echo ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 	$operation = "";
 }
 
