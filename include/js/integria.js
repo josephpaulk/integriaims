@@ -601,11 +601,11 @@ function parseURL (URL) {
 }
 
 function show_validation_delete_general (name, id, id2, offset, search_params) {
-	console.log('1 -> '+name);
-	console.log('2 -> '+id);
-	console.log('3 -> '+id2);
-	console.log('4 -> '+offset);
-	console.log('5 -> '+search_params);
+	//console.log('1 -> '+name);
+	//console.log('2 -> '+id);
+	//console.log('3 -> '+id2);
+	//console.log('4 -> '+offset);
+	//console.log('5 -> '+search_params);
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -670,7 +670,9 @@ function delete_item_general (name, id, id2, offset, search_params) {
 				case 'delete_people_manager':
 					window.location.assign("index.php?sec=projects&sec2=operation/projects/people_manager&action=delete&id="+id+search_params);
 				break;
-
+				case 'delete_template':
+					window.location.assign("index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates&search=1&delete_template=1&id_template="+id+search_params);
+				break;
 				
 
 				case 'delete_company':

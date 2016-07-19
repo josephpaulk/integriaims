@@ -30,7 +30,7 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 			break;
 		case 'mailtemplates':
 			$mailtemplates_class = 'button-bar-selected';
-			$title = __('Mail templates setup');
+			$title = __('Mail templates setup').integria_help ("macros", true);
 			break;
 		case 'visibility':
 			$visibility_class = 'button-bar-selected';
@@ -72,7 +72,7 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 	}
 	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/incidents_setup"><span><img src="images/incident_dark.png" title="'.__('Incident setup').'"></span></a></li>';
 	echo '<li class="' . $mail_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mail"><span><img src="images/email_dark.png"  title="'.__('Mail setup').'"></span></a></li>';
-	echo '<li class="' . $mailtemplates_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates"><span><img src="images/email_edit.png"  title="'.__('Mail templates setup').'"></span></a></li>';
+	echo '<li class="' . $mailtemplates_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates&search=1"><span><img src="images/email_edit.png"  title="'.__('Mail templates setup').'"></span></a></li>';
 	if ($is_enterprise) {
 		echo '<li class="' . $visibility_class . '"><a href="index.php?sec=godmode&sec2=enterprise/godmode/usuarios/menu_visibility_manager"><span valign=bottom><img src="images/eye.png" title="'.__('Visibility management').'"></span></a></li>';
 	}

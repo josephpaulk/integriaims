@@ -15,7 +15,7 @@
 // GNU General Public License for more details.
 
 global $config;
-
+$search_existing_template_name = (bool) get_parameter ('search_existing_template_name');
 $search_existing_project = (bool) get_parameter ('search_existing_project');
 $search_name_category = (bool) get_parameter ('search_name_category');
 $search_existing_task = (bool) get_parameter ('search_existing_task');
@@ -921,6 +921,23 @@ elseif ($search_existing_user_num) {
 	echo json_encode(true);
 	return;
 	
+}
+elseif($search_existing_template_name){
+	require_once ('include/functions_db.php');
+	$name_template = get_parameter ('template_name', '');
+	if($name_template == ''){
+		echo json_encode(true);
+		return;
+	}
+	$template_exist = get_db_value("id", "temail_template", "name", $name_template);
+	
+	if($template_exist) {
+		echo json_encode(false);
+		return;
+	} else {
+		echo json_encode(true);
+		return;
+	}
 }
 elseif ($search_existing_user_email) {
 	require_once ('include/functions_db.php');
