@@ -83,7 +83,15 @@ if ($delete_group && !$insert_group) {
 }
 
 echo '<h2>'.__('Projects').'</h2>';
-echo '<h4>'.__('Project group management').'</h4>';
+echo '<h4>'.__('Project group management');
+	echo integria_help ("inventory", true);
+	if($id){
+	echo "<div id='button-bar-title'>";
+		echo "<ul><li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/project_group_detail' alt='".__('Return')."'>" . print_image ("images/flecha_volver.png", true, array("title" => __("Return"))) . "</a>";
+	echo "</li></ul></div>";
+	}
+echo '</h4>';
 // FORM (Update / Create)
 
 	if ($new_group) {
@@ -113,10 +121,9 @@ echo '<h4>'.__('Project group management').'</h4>';
 		$button = print_submit_button (__('Update'), "enviar", false, '', true);
 		$button .= print_input_hidden ('update_group', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
-		$return_a = '<a href="index.php?sec=projects&sec2=operation/projects/project_group_detail" alt="'.__('Return').'">
-		<img src= "images/go_begin.png" alt="'.__('Return').'"/></a>';
+		$return_a = '<a href="" alt="'.__('Return').'">
+		<img src= "images/go_begin.png" /></a>';
 		$table->data[4][0] = $button;
-		$table->data[5][0] = $return_a;
 	} else {
 		$button = print_submit_button (__('Create'), "enviar", false, '', true);
 		$button .= print_input_hidden ('insert_group', 1, true);
@@ -146,26 +153,26 @@ echo '<h4>'.__('Project group management').'</h4>';
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Delete');
 		
+		$offset=0;
+		$search_params='';
 		foreach ($groups as $group) {
 			$data = array ();
 			
 			// Name
 			$data[0] = '<img src="images/project_groups_small/'.$group["icon"].'" /> ';
 			$data[0] .= '<a href="index.php?sec=projects&sec2=operation/projects/project_group_detail&id='.$group["id"].'">'.$group["name"]."</a>";
-			
-			$data[1] = '<a href="index.php?sec=projects&
-						sec2=operation/projects/project_group_detail&
-						delete_group=1&id='.$group["id"].'"
-						onClick="if (!confirm(\''.__('Are you sure delete group project?').'\'))
-						return false;">
-						<img src="images/icons/icono_papelera.png" /></a>';
+			$data[1] = "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_project_group_detail\",".$group['id'].",0,".$offset.",\"".$search_params."\");'><img src='images/icons/icono_papelera.png' title='".__('Delete')."'></a>";
 			array_push ($table->data, $data);
 		}
 		echo '<div class="divresult">';
 			print_table ($table);
 		echo '</div>';
+	} else {
+		echo '<div class="divresult">';
+			echo ui_print_error_message(__('No groups found'), '', true, 'h3', true);
+		echo '</div>';
 	}
-
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>

@@ -363,7 +363,8 @@ $table->data[5][0] .= print_submit_button(__('Delete'), 'delete_btn', false, 'cl
 
 print_table ($table);	
 
-echo '</div>';	
+echo '</div>';
+echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";	
 ?>
 
 <script type="text/javascript">
@@ -391,10 +392,12 @@ $(document).ready (function () {
 	});
 	
 	$(".delete-workunit").attr ("onclick", "").click (function () {
-		if (! confirm ("<?php echo __('Are you sure?')?>"))
-			return false;
 		var div = $(this).parents ("div.notebody");
 		id = this.id.split ("-").pop ();
+		show_validation_delete_general("delete_task_wu", id, ' ', ' ' );
+		/*
+		if (! confirm ("<?php echo __('Are you sure?')?>"))
+			return false;
 		values = Array ();
 		values.push ({name: "page", value: "operation/users/user_spare_workunit"});
 		values.push ({name: "operation", value: "delete"});
@@ -406,6 +409,7 @@ $(document).ready (function () {
 			},
 			"html");
 		return false;
+		*/
 	});
 	
 	//WU Multiple delete

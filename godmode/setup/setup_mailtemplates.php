@@ -96,12 +96,9 @@ function get_template_action () {
     $action_template[14] = __('SLA min response time incident body'); //[incident_sla_min_response_time.tpl] => incident_sla_min_response_time.tpl
     $action_template[15] = __('SLA min response time incident subject'); //[incident_sla_min_response_time_subject.tpl] => incident_sla_min_response_time_subject.tpl
     
-    //$action_template[16] = __('SLA WU create project subject'); //[project_subject_wucreate.tpl] => project_subject_wucreate.tpl
-    //$action_template[17] = __('SLA WU create project body'); //[project_wu_create.tpl] => project_wu_create.tpl
-    
-    //$action_template[18] = __('SLA WU update project subject'); //[project_subject_wuupdate.tpl] => project_subject_wuupdate.tpl
-    //$action_template[19] = __('SLA WU update project body'); //[project_wu_update.tpl] => project_wu_update.tpl
-	
+    $action_template[16] = __('New entry calendar body'); //[new_entry_calendar.tpl] => new_entry_calendar_.tpl
+    $action_template[17] = __('Update entry calendar body'); //[update_entry_calendar.tpl] => update_entry_calendar.tpl
+  
 	return $action_template;
 }
 //update template
@@ -426,7 +423,7 @@ function onchange_template() {
 		data: "page=godmode/setup/setup_mailtemplates&onchange_template=1&template_name="+template_name,
 		dataType: "json",
 		success: function(data){
-			if(data[2] == 2 || data[2] ==0 || data[2] ==10 || data[2] ==12 || data[2] ==14 || data[2] ==7 || data[2] ==9) {
+			if(data[2] == 2 || data[2] ==0 || data[2] ==10 || data[2] ==12 || data[2] ==14 || data[2] ==7 || data[2] ==9 || data[2] ==16 || data[2] ==17) {
 				var editor = tinyMCE.get('textarea-template_content');
 				tinyMCE.activeEditor.setContent(data[0]);
 			} else {
@@ -452,7 +449,7 @@ function onchange_template() {
 function onchange_actions() {
 	var editor = tinyMCE.get('textarea-template_content');
 	var data   = $('#template_action').val();
-	if(data == 2 || data ==0 || data ==10 || data ==12 || data ==14 || data ==7 || data ==9) {
+	if(data == 2 || data ==0 || data ==10 || data ==12 || data ==14 || data ==7 || data ==9 || data ==16 || data ==17) {
 		tinymce.init({
 		    selector: 'textarea',
 		    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",

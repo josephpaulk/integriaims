@@ -165,6 +165,8 @@ if ($operation == "delete"){
 	if (mysql_query($sql)){
 		$result_output = ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
 		$operation = "view";
+	} else {
+		$result_output = ui_print_error_message (__('Deleted'), '', true, 'h3', true);
 	}
 }
 
@@ -363,8 +365,8 @@ if ($id_task != -1) {
 
 			if ($task_permission["manage"]) {
 				$assigned_role .= "<td>";
-				
-				$assigned_role .= "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
+				$offset=0;
+				$assigned_role .= "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_people_task_human\",".$id_project.",".$id_task.",".$row['id'].",\"".$search_params."\");'><img src='images/cross.png' title='".__('Delete')."'></a>";
 			}
 		}
 	}

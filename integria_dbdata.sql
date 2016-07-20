@@ -211,4 +211,6 @@ insert into temail_template (name, id_group, template_action, predefined_templat
 ('incident_sla_max_response_time', 0, 12, 1),
 ('incident_sla_max_response_time_subject', 0, 13, 1),
 ('incident_sla_min_response_time', 0, 14, 1),
-('incident_sla_min_response_time_subject', 0, 15, 1)
+('incident_sla_min_response_time_subject', 0, 15, 1),
+('new_entry_calendar', 0, 16, 1),
+('update_entry_calendar', 0, 17, 1);

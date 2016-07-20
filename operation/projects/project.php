@@ -189,7 +189,7 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 		$data[4] = "<a href='#' onClick='javascript: show_validation_delete_general(\"delete_project\",".$project['id'].",0,".$offset.",\"".$search_params."\");'><img src='images/icons/icono_papelera.png' title='".__('Delete')."'></a>";
 		
 		$data[4] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
-			<img src="images/unarchive.png" /></a>';
+			<img src="images/upload.png" /></a>';
 	}
 	
 	array_push ($table->data, $data);
