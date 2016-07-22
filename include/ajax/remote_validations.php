@@ -929,6 +929,10 @@ elseif($search_existing_template_name){
 		echo json_encode(true);
 		return;
 	}
+	if(preg_match('/[^A-Za-z0-9_ -]/', $name_template)){
+		echo json_encode(__('Do not include spaces or symbols'));
+		return;
+	}
 	$template_exist = get_db_value("id", "temail_template", "name", $name_template);
 	
 	if($template_exist) {
