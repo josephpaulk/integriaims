@@ -251,7 +251,7 @@ $search[] = '"';
 // Delete ' !!!
 $search[] = "'";
 // Delete , !!!
-$search[] = ",";
+//$search[] = ",";
 // Delete , !!!
 $search[] = ";";
 
@@ -289,31 +289,37 @@ foreach ($rows as $row) {
 			$cell = "";
 		}
 		// Change ; !!	
-		$cell = str_replace (";", ",", $cell);
+		$cell = str_replace (",", ".", $cell);
 		$line[] = $cell;
 	}
-	$line = implode(';', $line);
+	$line = implode(';',  $line);
 	$csv_lines[] = $line;
 }
 
 ob_end_clean();
 
 // CSV Output
+header ('Content-Encoding: UTF-8');
 header ('Content-Type: text/csv; charset=UTF-8');
 header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
+$os_csv = substr(PHP_OS, 0 , 1);
+echo "\xEF\xBB\xBF";
 
 // Header
 echo $csv_head . "\n";
-
 $standard_encoding = (bool) $config['csv_standard_encoding'];
 
 // Item / data
 foreach ($csv_lines as $line) {
-	if (!$standard_encoding)
-		echo $line . "\n";
-	else
+	if (!$standard_encoding){
+		if($os_csv != "W"){
+			echo mb_convert_encoding($line, 'UTF-16LE', 'UTF-8'). "\n";
+		} else {
+			echo $line . "\n";
+		}
+	}else{
 		echo mb_convert_encoding($line, '', 'UTF-8') . "\n";
+	}
 }
-
 exit;	
 ?>

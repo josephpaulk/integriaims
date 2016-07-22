@@ -423,7 +423,7 @@ if ($get_external_data) {
 				}
 				if (array_key_exists($k, $fields)) {
 					//~ $data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ")'>".$dat."</a>";	
-					$data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ", \"" . $data_name . "\")'>".$dat."</a>";	
+					$data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ", \"" . safe_output($data_name) . "\")'>".safe_output($dat)."</a>";	
 				}
 				$j++;
 			}

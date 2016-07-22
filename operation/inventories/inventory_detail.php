@@ -64,8 +64,8 @@ if (defined ('AJAX')) {
 		} else {
 			$result = process_sql_insert('tobject_field_data', array('data' => $id_value,'id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory));
 		}
-	
-		return $result;
+
+		return safe_output($result);
 	}
 	
 	if ($get_company_name) {
