@@ -390,7 +390,12 @@ function get_template_files ($field) {
 
 <script type="text/javascript">
 $(document).ready (function () {
-	onchange_template();
+	var create_template = "<?php  echo $create_template; ?>";
+	if(!create_template){
+		onchange_template();
+	} else {
+		onchange_actions();
+	}
 	$("#template_name").change(onchange_template);
 	$("#template_action").change(onchange_actions);
 	$("textarea").TextAreaResizer ();
@@ -449,6 +454,7 @@ function onchange_template() {
 function onchange_actions() {
 	var editor = tinyMCE.get('textarea-template_content');
 	var data   = $('#template_action').val();
+	console.log(data);
 	if(data == 2 || data ==0 || data ==10 || data ==12 || data ==14 || data ==7 || data ==9 || data ==16 || data ==17) {
 		tinymce.init({
 		    selector: 'textarea',
