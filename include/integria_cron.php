@@ -490,8 +490,23 @@ function check_sla_min ($incident) {
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
-	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
-	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time_subject.tpl", $MACROS);
+	$sql_body    = "SELECT name FROM temail_template WHERE template_action = 14 AND id_group =".$incident['id_grupo'].";";
+	$sql_subject = "SELECT name FROM temail_template WHERE template_action = 15 AND id_group =".$incident['id_grupo'].";";
+	$templa_body = get_db_sql($sql_body);
+	$templa_subj = get_db_sql($sql_subject);
+	
+	if(!$templa_body){
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
+	} else {
+		$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+	}
+
+	if(!$templa_subj){
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time_subject.tpl", $MACROS);
+	} else {
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+	}
+
 	if ($sla['enforced'] == 1){
 		integria_sendmail ($user['direccion'], $subject, $text);
 		insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
@@ -543,8 +558,23 @@ function check_sla_max ($incident) {
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
-	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
-	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time_subject.tpl", $MACROS);
+	$sql_body    = "SELECT name FROM temail_template WHERE template_action = 12 AND id_group =".$incident['id_grupo'].";";
+	$sql_subject = "SELECT name FROM temail_template WHERE template_action = 13 AND id_group =".$incident['id_grupo'].";";
+	$templa_body = get_db_sql($sql_body);
+	$templa_subj = get_db_sql($sql_subject);
+	
+	if(!$templa_body){
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
+	} else {
+		$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+	}
+
+	if(!$templa_subj){
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time_subject.tpl", $MACROS);
+	} else {
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+	}
+
 	if ($sla['enforced'] == 1){
 		integria_sendmail ($user['direccion'], $subject, $text);
 		insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
@@ -594,8 +624,20 @@ function check_sla_inactivity ($incident) {
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia'];
 
-	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time.tpl", $MACROS);
-	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time_subject.tpl", $MACROS);
+	$sql_body    = "SELECT name FROM temail_template WHERE template_action = 10 AND id_group =".$incident['id_grupo'].";";
+	$sql_subject = "SELECT name FROM temail_template WHERE template_action = 11 AND id_group =".$incident['id_grupo'].";";
+	$templa_body = get_db_sql($sql_body);
+	$templa_subj = get_db_sql($sql_subject);
+	if(!$templa_body){
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time.tpl", $MACROS);
+	} else {
+		$text = template_process ($config["homedir"]."/include/mailtemplates/".$templa_body.".tpl", $MACROS);
+	}
+	if(!$templa_subj){
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time_subject.tpl", $MACROS);
+	} else {
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/".$templa_subj.".tpl", $MACROS);
+	}
 	if ($sla['enforced'] == 1){
 		integria_sendmail ($user['direccion'], $subject, $text);
 		insert_event ('SLA_MAX_INACTIVITY_NOTIFY', $incident['id_incidencia']);

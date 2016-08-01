@@ -647,9 +647,12 @@ function flot_vcolumn_chart ($graph_data, $width, $height, $color, $legend, $lon
 	if ($width != 'auto') {
 		$width = $width . "px";
 	}
+	if(!isset($adapt_key)){
+		$adapt_key = '';
+	}
 	
 	// Set some containers to legend, graph, timestamp tooltip, etc.
-	$return .= "<div id='$graph_id' class='graph $adapt_key' style='width: ".$width."; height: ".$height."px; padding-left: 20px;'></div>";
+	$return = "<div id='$graph_id' class='graph $adapt_key' style='width: ".$width."; height: ".$height."px; padding-left: 20px;'></div>";
 	$return .= "<div id='value_$graph_id' style='display:none; position:absolute; background:#fff; border: solid 1px #aaa; padding: 2px'></div>";
 	
 	if ($water_mark != '') {

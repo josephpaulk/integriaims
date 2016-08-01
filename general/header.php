@@ -97,7 +97,7 @@ echo "<div class='table_header'>";
 	//echo '</tr>';
 echo '</div>';
 
-echo "<div class= 'dialog ui-dialog-content' id='alert_window'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Notices")."' id='alert_window'></div>";
 
 //one div per alarm calendar
 if ($check_alarm_calendar) {

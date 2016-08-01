@@ -176,36 +176,39 @@ if ($operation == "list"){
 	echo "<div id='' class='divresult'>";
 	
 	$costs = get_db_all_rows_sql ("SELECT * FROM tinvoice WHERE id_task = $id_task");
-	if ($costs === false)
-		$costs = array ();
-	
-	$table->class = 'listing';
-	$table->width = '100%';
-	$table->data = array ();
-	
-	$table->head = array ();
-	$table->head[0] = __('Description');
-	$table->head[1] = __('Amount');
-	$table->head[2] = __('Filename');
-	$table->head[3] = __('Delete');
-	
-	foreach ($costs as $cost) {
-		$data = array ();
-		$data[0] = $cost["description"];
-		$data[1] = get_invoice_amount($cost["id"]);// Check
-		$id_invoice = $cost["id"];
+	//if ($costs === false)
+	//	$costs = array ();
+	if(isset($cost)){
+		$table->class = 'listing';
+		$table->width = '100%';
+		$table->data = array ();
 		
-		$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $cost["id_attachment"]);
+		$table->head = array ();
+		$table->head[0] = __('Description');
+		$table->head[1] = __('Amount');
+		$table->head[2] = __('Filename');
+		$table->head[3] = __('Delete');
 		
-		$data[2] = 	"<a href='".$config["base_url"]."/attachment/".$cost["id_attachment"]."_".$filename."'>$filename</a>";
-		
-		if (($config["id_user"] = $cost["id_user"]) OR (project_manager_check ($id_project))){
-			$data[3] = 	"<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project&operation=delete&id_invoice=$id_invoice '><img src='images/cross.png'></a>";
+		foreach ($costs as $cost) {
+			$data = array ();
+			$data[0] = $cost["description"];
+			$data[1] = get_invoice_amount($cost["id"]);// Check
+			$id_invoice = $cost["id"];
+			
+			$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $cost["id_attachment"]);
+			
+			$data[2] = 	"<a href='".$config["base_url"]."/attachment/".$cost["id_attachment"]."_".$filename."'>$filename</a>";
+			
+			if (($config["id_user"] = $cost["id_user"]) OR (project_manager_check ($id_project))){
+				$data[3] = 	"<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project&operation=delete&id_invoice=$id_invoice '><img src='images/cross.png'></a>";
+			}
+			
+			array_push ($table->data, $data);
 		}
-		
-		array_push ($table->data, $data);
+		print_table ($table);
+	} else {
+		echo ui_print_error_message(__('No data found'), '', true, 'h3', true);
 	}
-	print_table ($table);
 	echo "</div>";
 	echo "</div>";
 }	

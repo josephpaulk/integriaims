@@ -111,6 +111,7 @@ echo "</div>";
 </script>
 
 <?php
-	
+	echo "<div class = 'divresult'>";
 	print_project_timegraph($id_project, $start_date, $end_date, $id_user_filter);
+	echo "</div>";
 }

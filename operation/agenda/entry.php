@@ -131,7 +131,7 @@ if ($show_agenda_entry) {
 }
 
 if ($update_agenda_entry) {
-	
+	$config['mysql_result_type'] = MYSQL_ASSOC;
 	if (!empty($id) && !$permission) {
 		// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update an agenda entry");
@@ -187,27 +187,33 @@ if ($update_agenda_entry) {
 		$nombre = get_db_value('nombre_real', 'tusuario', 'id_usuario', $config['id_user']);
 		$email = get_db_value('direccion', 'tusuario', 'id_usuario', $config['id_user']);
 		
-		if (empty($id)) {
-			$mail_description = $config["HEADER_EMAIL"].
-				"A new entry in calendar has been created by user ".$config['id_user']." ($nombre)\n\n
-				Date and time: $date $time\n
-				Title        : $title\n
-				Description  : $description\n\n".$config["FOOTER_EMAIL"];
-		} else {
-			$mail_description = $config["HEADER_EMAIL"].
-				"A calendar entry has been updated by user ".$config['id_user']." ($nombre)\n\n
-				Old date and time: ".$old_entry['timestamp']."\n
-				Old title        : ".$old_entry['title']."\n
-				Old description  : ".$old_entry['description']."\n\n
-				New date and time: $date $time\n
-				New title        : $title\n
-				New description  : $description\n\n".$config["FOOTER_EMAIL"];
-		}
+		//Macros
+		$MACROS["_entry-username_"] = $config['id_user'];
+		$MACROS["_entry-realname_"] = $config['id_user'];
+		
+		$MACROS["_entry-date_"] = $date;
+		$MACROS["_entry-time_"] = $time;
+		$MACROS["_entry-title_"] = $title;
+		$MACROS["_entry-description_"] = $description;
+
+		$MACROS["_entry-date-old_"] = $old_entry['timestamp'];
+		$MACROS["_entry-title-old_"] = $old_entry['title'];
+		$MACROS["_entry-description-old_"] = $old_entry['description'];
+		
+		
+		
 		
 		$emails = array();
 		$users = false;
 		if ($public) {
-			$users = get_user_visible_users($config['id_user'], 'AR', false, true, true);
+			$users_all = get_user_visible_users($config['id_user'], 'AR', false, true, true);
+			if(is_array($users_all)){
+				foreach ($users_all as $user){
+					$id_group = get_db_value('id_grupo', 'tusuario_perfil', 'id_usuario', $user['id_usuario']);
+					$user['id_grupo'] = $id_group;
+					$users[] = $user;
+				}
+			}
 		}
 		else if (!empty($groups)) {
 			$users = get_users_in_group($config['id_user'], $groups, 'AR');
@@ -216,25 +222,48 @@ if ($update_agenda_entry) {
 			$emails = array_reduce($users, function ($carry, $user) {
 				$disabled = (bool) $user['disabled'];
 				$email = trim($user['direccion']);
-				
+				$id_group = $user['id_grupo'];
 				if (!$disabled && !empty($email)) {
-					if (!in_array($email, $carry))
-						$carry[] = $email;
+					if (!in_array($email, $carry)){
+						$carry[] = array('email' => $email, 'id_group' => $id_group,);
+					}
 				}
-				
 				return $carry;
 			}, array());
 		}
 		else {
-			array_unshift($emails, $email);
+			$emails[0]= array('email' => $email, 'id_group' => 0);
 		}
-		
 		$attachments = $full_filename;
 		foreach ($emails as $email) {
 			if (empty($id)) {
-				integria_sendmail($email, "[".$config["sitename"]."] ".__("New calendar event"), $mail_description,  $attachments);
+				if($email['id_group']){
+					$sql_new    = "SELECT name FROM temail_template WHERE template_action = 16 AND id_group =".$email['id_group'].";";
+					$templa_new = get_db_sql($sql_new);
+				} else {
+					$templa_new = '';
+				}
+				if(!$templa_new){
+					$mail_description = template_process ($config["homedir"]."/include/mailtemplates/new_entry_calendar.tpl", $MACROS);
+					integria_sendmail($email['email'], "[".$config["sitename"]."] ".__("New calendar event"), $mail_description,  $attachments);
+				} else {
+					$mail_description = template_process ($config["homedir"]."/include/mailtemplates/".$templa_new.".tpl", $MACROS);
+					integria_sendmail($email['email'], "[".$config["sitename"]."] ".__("New calendar event"), $mail_description,  $attachments);
+				}
 			} else {
-				integria_sendmail($email, "[".$config["sitename"]."] ".__("Updated calendar event"), $mail_description,  $attachments);
+				if($email['id_group']){
+					$sql_update    = "SELECT name FROM temail_template WHERE template_action = 17 AND id_group =".$email['id_group'].";";
+					$templa_update = get_db_sql($sql_update);
+				} else {
+					$templa_update = '';
+				}
+				if(!$templa_update){
+					$mail_description = template_process ($config["homedir"]."/include/mailtemplates/update_entry_calendar.tpl", $MACROS);
+					integria_sendmail($email['email'], "[".$config["sitename"]."] ".__("Updated calendar event"), $mail_description,  $attachments);
+				} else {
+					$mail_description = template_process ($config["homedir"]."/include/mailtemplates/".$templa_update.".tpl", $MACROS);
+					integria_sendmail($email['email'], "[".$config["sitename"]."] ".__("Updated calendar event"), $mail_description,  $attachments);
+				}
 			}
 		}
 		

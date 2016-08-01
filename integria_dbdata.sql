@@ -48,12 +48,12 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 49),
+('current_package', 51),
 ('url_updatemanager', 'https://firefly.artica.es/integriaupdate5/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'paisaje.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 49);
+('minor_release', 50);
 
 -- Default password is 'integria'
 
@@ -194,3 +194,23 @@ INSERT INTO `treport_subtype` (`nombre`) VALUES ('Tickets');
 INSERT INTO `tfolder_report` (`nombre`) VALUES ('Default Folder');
 
 INSERT INTO `tmenu_visibility` (`menu_section`,`id_group`,`mode`) VALUES ('customers',1,0),('wiki',1,0);
+
+insert into temail_template (name, id_group, template_action, predefined_templates) values
+('incident_create', 0, 0, 1),
+('incident_subject_create', 0, 1, 1),
+('incident_close', 0, 2, 1),
+('incident_subject_close', 0, 3, 1),
+('incident_subject_attach', 0, 4, 1),
+('incident_subject_delete', 0, 5, 1),
+('incident_subject_new_wu', 0, 6, 1),
+('incident_update_wu', 0, 7, 1),
+('incident_subject_update', 0, 8, 1),
+('incident_update', 0, 9, 1),
+('incident_sla_max_inactivity_time', 0, 10, 1),
+('incident_sla_max_inactivity_time_subject', 0, 11, 1),
+('incident_sla_max_response_time', 0, 12, 1),
+('incident_sla_max_response_time_subject', 0, 13, 1),
+('incident_sla_min_response_time', 0, 14, 1),
+('incident_sla_min_response_time_subject', 0, 15, 1),
+('new_entry_calendar', 0, 16, 1),
+('update_entry_calendar', 0, 17, 1);
