@@ -954,7 +954,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_task = (int) get_parameter('search_id_task', 0);
 		$left_sla = (int)get_parameter('search_left_sla', 0);
 		$right_sla = (int)get_parameter('search_right_sla', 0);
-		$show_hierarchy = (bool) get_parameter('show_hierarchy');
+		$show_hierarchy = (bool) get_parameter('search_show_hierarchy');
 		$search_medal = get_parameter('search_medals');
 		$name = get_parameter('parent_name');
 

@@ -62,6 +62,7 @@ if ($get_incidents_search) {
 	$filter['id_task'] = (int) get_parameter ('search_id_task');	
 	$filter['left_sla'] = (int) get_parameter ('search_left_sla');
 	$filter['right_sla'] = (int) get_parameter ('search_right_left');
+	$filter['show_hierarchy']     = (bool) get_parameter('search_show_hierarchy');
 	
 	$ajax = get_parameter("ajax");
 	
@@ -544,7 +545,7 @@ if ($search_ajax){
 	$filter['id_task']            = (int) get_parameter ('search_id_task');	
 	$filter['left_sla']           = (int) get_parameter ('search_left_sla');
 	$filter['right_sla']          = (int) get_parameter ('search_right_left');
-	$filter['show_hierarchy']     = (bool) get_parameter('show_hierarchy');
+	$filter['show_hierarchy']     = (bool) get_parameter('search_show_hierarchy');
 	$filter['search_medals']      = get_parameter('search_medals');
 	$filter['parent_name']        = get_parameter('parent_name');
 	$filter['serial_number']      = (string) get_parameter ('search_serial_number');
