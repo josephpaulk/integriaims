@@ -1477,7 +1477,7 @@ function inventories_show_list2($sql_search, $sql_count, $params='', $block_size
 					
 					case 'status': 
 						if ($inventory['status'] != "") {
-							$data[7] = $inventory['status'];
+							$data[7] = __($inventory['status']);
 						} else { 
 							$status_none = '--';
 							$data[7] = $status_none;
