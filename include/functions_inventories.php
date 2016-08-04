@@ -1726,7 +1726,7 @@ function inventories_show_list($sql_search, $sql_count, $params='', $last_update
 			}
 			
 			if ($inventory['status'] != "") {
-				$data[7] = $inventory['status'];
+				$data[7] = __($inventory['status']);
 			} else { 
 				$status_none = '--';
 				$data[7] = $status_none;
@@ -2424,5 +2424,15 @@ function inventory_get_user_inventories($id_user, $inventories) {
 		}
 	}
 	return $user_inventories;
+}
+
+function strings_without_translations () {
+	
+	__("new");
+	__("inuse");
+	__("unused");
+	__("issued");
+	
+	return;
 }
 ?>

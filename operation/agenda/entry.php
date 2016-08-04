@@ -176,9 +176,21 @@ if ($update_agenda_entry) {
 			$groups = agenda_process_privacy_groups($result, $public, $groups);
 		else
 			$groups = agenda_process_privacy_groups($id, $public, $groups);
-		
+
+		$i = 0;
+		$str_groups = "";
+		foreach ($groups as $key => $id_group) {
+			$group_name = groups_get_group_name($id_group);
+			if ($i == 0) {
+				$str_groups = $group_name;
+			} else {
+				$str_groups .= ','.$group_name;
+			}
+			$i++;
+		}
+
 		$full_path = $config['homedir'].'/attachment/tmp/';
-		$ical_text = create_ical ($date.' '.$time, $duration, $config['id_user'], $description, "Integria imported event: $title");
+		$ical_text = create_ical ($date.' '.$time, $duration, $config['id_user'], $description, "Integria imported event: ".safe_output($title));
 		$full_filename = $full_path.$config['id_user'].'-'.microtime(true).'.ics';
 		$full_filename_h = fopen($full_filename, 'a');
 		fwrite($full_filename_h, $ical_text);
@@ -195,6 +207,7 @@ if ($update_agenda_entry) {
 		$MACROS["_entry-time_"] = $time;
 		$MACROS["_entry-title_"] = $title;
 		$MACROS["_entry-description_"] = $description;
+		$MACROS["_group_"] = $str_groups;
 
 		$MACROS["_entry-date-old_"] = $old_entry['timestamp'];
 		$MACROS["_entry-title-old_"] = $old_entry['title'];
@@ -235,6 +248,7 @@ if ($update_agenda_entry) {
 			$emails[0]= array('email' => $email, 'id_group' => 0);
 		}
 		$attachments = $full_filename;
+
 		foreach ($emails as $email) {
 			if (empty($id)) {
 				if($email['id_group']){
@@ -243,7 +257,7 @@ if ($update_agenda_entry) {
 				} else {
 					$templa_new = '';
 				}
-				if(!$templa_new){
+				if ((!$templa_new) || ($templa_new == '')) {
 					$mail_description = template_process ($config["homedir"]."/include/mailtemplates/new_entry_calendar.tpl", $MACROS);
 					integria_sendmail($email['email'], "[".$config["sitename"]."] ".__("New calendar event"), $mail_description,  $attachments);
 				} else {
@@ -257,7 +271,7 @@ if ($update_agenda_entry) {
 				} else {
 					$templa_update = '';
 				}
-				if(!$templa_update){
+				if ((!$templa_update) || ($templa_update == '')) {
 					$mail_description = template_process ($config["homedir"]."/include/mailtemplates/update_entry_calendar.tpl", $MACROS);
 					integria_sendmail($email['email'], "[".$config["sitename"]."] ".__("Updated calendar event"), $mail_description,  $attachments);
 				} else {
