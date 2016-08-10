@@ -1831,40 +1831,26 @@ function inventories_load_file ($objects_file) {
 		preg_match_all('/(.*),/',$line,$matches);
 		$values = explode(',',$line);
 		
-		$id_object_type = $values[0];
+		$name = $values[0];
 		$owner = $values[1];
-		$name = $values[2];
-		$public = $values[3];
-		$description = $values[4];
+		$id_parent = $values[2];
+		$id_object_type = $values[3];
+		$id_manufacturer = $values[4];
 		$id_contract = $values[5];
-		$id_manufacturer = $values[6];
-		$id_parent = $values[7];
-		$id_companies = $values[8];
-		$id_users = $values[9];
-		$status = $values[10];
-		
-		if ($id_companies != '') {
-			$id_companies_arr = explode(';', $id_companies);
-		} else {
-			$id_companies_arr = array();
-		}
-		
-		if ($id_users != '') {
-			$id_users_arr = explode(';', $id_users);
-		} else {
-			$id_users_arr = array();
-		}
+		$status = $values[6];
+		$receipt_date = $values[7];
+		$issue_date = $values[8];
 		
 		$value = array(
 			'id_object_type' => $id_object_type,
 			'owner' => $owner,
 			'name' => safe_input($name),
-			'public' => $public,
-			'description' => safe_input($description),
 			'id_contract' => $id_contract,
 			'id_manufacturer' => $id_manufacturer,
 			'id_parent' => $id_parent,
 			'status' => $status,
+			'receipt_date' => $receipt_date,
+			'issue_date' => $issue_date,
 			'last_update' => date ("Y/m/d", get_system_time()));
 
 			if ($name == '') {
@@ -1913,7 +1899,7 @@ function inventories_load_file ($objects_file) {
 					}
 					
 					$value_data = array();
-					$i = 11;
+					$i = 9;
 					$j = 0;
 					foreach ($all_fields as $key=>$field) {
 						$data = $values[$i];

@@ -34,7 +34,7 @@ require_once($config["homedir"].'/include/swiftmailer/swift_required.php');
  * @throws Swift_TransportException if the transport can't connect
  */
 function mail_get_transport ($snmp_conf = array()) {
-	debugPrint($snmp_conf, true);
+	//~ debugPrint($snmp_conf, true);
 	if (empty($snmp_conf)) {
 		// Use the system sendmail
 		debugPrint('sendmail', true);
@@ -45,7 +45,7 @@ function mail_get_transport ($snmp_conf = array()) {
 		throw new Exception('Invalid SNMP connection data');
 	}
 	
-	debugPrint('smtp', true);
+	//~ debugPrint('smtp', true);
 	$transport = Swift_SmtpTransport::newInstance();
 	$transport->setHost($snmp_conf['host']);
 	$transport->setPort((int) $snmp_conf['port']);

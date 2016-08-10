@@ -431,21 +431,34 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 		if ($count) return 0;
 		else return false;
 	}
-	
+
 	$result = array();
 	foreach ($incidents as $incident) {
 		//Check external users ACLs
 		$standalone_check = enterprise_hook('manage_standalone', array($incident, 'read'));
 
-		if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
-			continue;
-		}
-		else {
-			// Normal ACL pass if IR for this group or if the user is the incident creator
-			// or if the user is the owner or if the user has workunits
-			$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
-			if (!$check_acl) {
-				continue;
+		//~ if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
+			//~ continue;
+		//~ }
+		//~ else {
+			//~ // Normal ACL pass if IR for this group or if the user is the incident creator
+			//~ // or if the user is the owner or if the user has workunits
+			//~ $check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
+			//~ if (!$check_acl) {
+				//~ continue;
+			//~ }
+		//~ }
+		
+		if ($standalone_check !== ENTERPRISE_NOT_HOOK) { // Enterprise
+			if (($standalone_check == 0) || ($standalone_check == 1)) { // standalone user
+				if ((!$standalone_check)) {
+					continue;
+				}	
+			} else { // grouped user
+				$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
+				if (!$check_acl) {
+					continue;
+				}
 			}
 		}
 		
