@@ -938,12 +938,11 @@ if (! $id) {
 }
 
 //The user with IW flag can modify all data from the incident.
-$has_permission = give_acl ($config['id_user'], $id_grupo, "IW");
+
+$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW") || ((get_standalone_user($config["id_user"])) && ($incident["id_creator"] == $config["id_user"])));
 $has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
-$has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
-//~ $has_permission = (give_acl ($config['id_user'], $id_grupo, "IW")  || ($usuario == $config['id_user']) || ($id_creator == $config['id_user']));
-//~ $has_im = (give_acl ($config['id_user'], $id_grupo, "IM") || ($id_creator == $config['id_user']));
-//~ $has_iw = (give_acl ($config['id_user'], $id_grupo, "IW") || ($id_creator == $config['id_user']));
+$has_iw = (give_acl ($config['id_user'], $id_grupo, "IW") || ((get_standalone_user($config["id_user"])) && ($incident["id_creator"] == $config["id_user"])));
+
 
 if ($id) {	
 	
@@ -1035,7 +1034,9 @@ $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 
-if (($has_permission && (!isset($blocked_incident))) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!isset($blocked_incident)))) {
+
+//~ if (($has_permission && (!isset($blocked_incident))) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!isset($blocked_incident)))) {
+if (($has_permission && (!$blocked_incident)) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!$blocked_incident))) {
 	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, '', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);

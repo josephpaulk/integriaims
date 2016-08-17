@@ -318,7 +318,8 @@ foreach ($csv_lines as $line) {
 			echo $line . "\n";
 		}
 	}else{
-		echo mb_convert_encoding($line, '', 'UTF-8') . "\n";
+		//~ echo mb_convert_encoding($line, '', "UTF-8") . "\n";
+		echo $line . "\n";
 	}
 }
 exit;	

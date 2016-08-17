@@ -35,6 +35,10 @@ enterprise_include ('include/functions_db.php');
 function give_acl ($id_user, $id_group, $access) {
 	global $config;
 	
+	$is_admin = get_db_value ('nivel', 'tusuario', 'id_usuario', $id_user);
+	if ($is_admin == 1)
+		return true;
+		
 	$return = enterprise_hook ('give_acl_extra', array ($id_user, $id_group, $access));
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
