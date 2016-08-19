@@ -350,47 +350,58 @@ function load_menu_visibility() {
 	global $config;
 	
 	// Get visibility permissions to sections
-	$show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
+	//~ $show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
+	$show_projects = enterprise_hook ('get_menu_section_mode', array ('projects'));
 	if($show_projects == ENTERPRISE_NOT_HOOK) {
 		$show_projects = MENU_FULL;
 	}
-	$show_incidents = enterprise_hook ('get_menu_section_access', array ('incidents'));
+	//~ $show_incidents = enterprise_hook ('get_menu_section_access', array ('incidents'));
+	$show_incidents = enterprise_hook ('get_menu_section_mode', array ('incidents'));
 	if($show_incidents == ENTERPRISE_NOT_HOOK) {
 		$show_incidents = MENU_FULL;
 	}
-	$show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
+	//~ $show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
+	$show_inventory = enterprise_hook ('get_menu_section_mode', array ('inventory'));
 	if($show_inventory == ENTERPRISE_NOT_HOOK) {
 		$show_inventory = MENU_FULL;
 	}
-	$show_reports = enterprise_hook ('get_menu_section_access', array ('reports'));
+	//~ $show_reports = enterprise_hook ('get_menu_section_access', array ('reports'));
+	$show_reports = enterprise_hook ('get_menu_section_mode', array ('reports'));
 	if($show_reports == ENTERPRISE_NOT_HOOK) {
 		$show_reports = MENU_FULL;
 	}
-	$show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
+	//~ $show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
+	$show_kb = enterprise_hook ('get_menu_section_mode', array ('kb'));
 	if($show_kb == ENTERPRISE_NOT_HOOK) {
 		$show_kb = MENU_FULL;
 	}
-	$show_file_releases = enterprise_hook ('get_menu_section_access', array ('file_releases'));
+	//~ $show_file_releases = enterprise_hook ('get_menu_section_access', array ('file_releases'));
+	$show_file_releases = enterprise_hook ('get_menu_section_mode', array ('file_releases'));
 	if($show_file_releases == ENTERPRISE_NOT_HOOK) {
 		$show_file_releases = MENU_FULL;
 	}
-	$show_people = enterprise_hook ('get_menu_section_access', array ('people'));
+	//~ $show_people = enterprise_hook ('get_menu_section_access', array ('people'));
+	$show_people = enterprise_hook ('get_menu_section_mode', array ('people'));
 	if($show_people == ENTERPRISE_NOT_HOOK) {
 		$show_people = MENU_FULL;
 	}
-	$show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
+	//~ $show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
+	$show_agenda = enterprise_hook ('get_menu_section_mode', array ('agenda'));
 	if($show_agenda == ENTERPRISE_NOT_HOOK) {
 		$show_agenda = MENU_FULL;
 	}
-	$show_setup = enterprise_hook ('get_menu_section_access', array ('setup'));
+	//~ $show_setup = enterprise_hook ('get_menu_section_access', array ('setup'));
+	$show_setup = enterprise_hook ('get_menu_section_mode', array ('setup'));
 	if($show_setup == ENTERPRISE_NOT_HOOK) {
 		$show_setup = MENU_FULL;
 	}
-	$show_wiki = enterprise_hook ('get_menu_section_access', array ('wiki'));
+	//~ $show_wiki = enterprise_hook ('get_menu_section_access', array ('wiki'));
+	$show_wiki = enterprise_hook ('get_menu_section_mode', array ('wiki'));
 	if($show_wiki == ENTERPRISE_NOT_HOOK) {
 		$show_wiki = MENU_FULL;
 	}
-	$show_customers = enterprise_hook ('get_menu_section_access', array ('customers'));
+	//~ $show_customers = enterprise_hook ('get_menu_section_access', array ('customers'));
+	$show_customers = enterprise_hook ('get_menu_section_mode', array ('customers'));
 	if($show_customers == ENTERPRISE_NOT_HOOK) {
 		$show_customers = MENU_FULL;
 	}
