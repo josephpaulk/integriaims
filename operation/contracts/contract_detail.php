@@ -25,6 +25,8 @@ if (defined ('AJAX')) {
 	global $config;
 	
 	$upload_file = (bool) get_parameter('upload_file');
+	$get_data_child = (bool) get_parameter('get_data_child', 0);
+	
 	if ($upload_file) {
 		$result = array();
 		$result["status"] = false;
@@ -74,6 +76,83 @@ if (defined ('AJAX')) {
 		echo json_encode($result);
 		return;
 	}
+	
+ 	if ($get_data_child) {
+
+		$id_field = get_parameter('id_field', 0);
+		if ($id_field) {
+			$label_field = get_db_value_sql("SELECT label FROM tcontract_field WHERE id=".$id_field);
+		} else {
+			$label_field = get_parameter('label_field');
+		}
+
+		$label_field_enco = get_parameter('label_field_enco',0);
+		if ($label_field_enco) {
+			$label_field_enco = str_replace("&quot;","",$label_field_enco);
+			$label_field = base64_decode($label_field_enco);
+		}
+
+		$id_parent = get_parameter('id_parent');
+		$value_parent = get_parameter('value_parent');
+		$value_parent = safe_input(safe_output(base64_decode($value_parent)));
+
+		$sql = "SELECT linked_value FROM tcontract_field WHERE parent=".$id_parent."
+			AND label='".$label_field."'";
+		$field_data = get_db_value_sql($sql);
+
+		$result = false;
+		if ($field_data != "") {
+			$data = explode(',', $field_data);
+			foreach ($data as $item) {
+				if ($value_parent == 'any') {
+
+					$pos_pipe = strpos($item,'|')+1;
+					$len_item = strlen($item);
+					$value_aux = substr($item, $pos_pipe, $len_item);
+					$result[$value_aux] = $value_aux;
+					
+				} else {
+					$pattern = "/^".$value_parent."\|/";
+					if (preg_match($pattern, $item)) {
+						$value_aux = preg_replace($pattern, "",$item);
+						$result[$value_aux] = $value_aux;
+					}
+				}
+			}
+		}
+
+		$sql_id = "SELECT id FROM tcontract_field WHERE parent=".$id_parent."
+					AND label='".$label_field."'";
+		$result['id'] = get_db_value_sql($sql_id);
+		$result['label'] = $label_field;
+		$result['label_enco'] = base64_encode($label_field);
+				
+		$sql_labels = "SELECT label, id FROM tcontract_field WHERE parent=".$result['id'];
+
+		$label_childs = get_db_all_rows_sql($sql_labels);
+
+		if ($label_childs != false) {
+			$i = 0;
+			foreach($label_childs as $label) {
+				if ($i == 0) {
+					$result['label_childs'] = $label['label'];
+					$result['id_childs'] = $label['id'];
+					$result['label_childs_enco'] = base64_encode($label['label']);
+				} else { 
+					$result['label_childs'] .= ','.$label['label'];
+					$result['id_childs'] .= ','.$label['id'];
+					$result['label_childs_enco'] .= ','.base64_encode($label['label']);
+				}
+				$i++;
+			}
+		} else {
+			$result['label_childs'] = '';
+			$result['label_childs_enco'] = '';
+		}
+
+		echo json_encode($result);
+		return;
+	}
 }
 
 $id = (int) get_parameter ('id');
@@ -99,8 +178,9 @@ $message = get_parameter('message', '');
 if ($message != '') {
 	echo ui_print_success_message (__($message), '', true, 'h3', true);
 }
- 
 
+$contract_fields = get_db_all_rows_sql ("SELECT * FROM tcontract_field");
+ 
 // Show tabs for a given contract
 if ($id_contract) {
 	
@@ -334,6 +414,20 @@ elseif ($op == "") {
 			if ($id === false)
 				echo ui_print_error_message (__('Could not be created'), '', true, 'h3', true);
 			else {
+				
+				foreach ($contract_fields as $u) {
+
+					$custom_value = get_parameter("custom_".$u["id"]);
+			
+					$sql = sprintf('INSERT INTO tcontract_field_data (`data`, `id_contract`,`id_contract_field`) VALUES ("%s", "%s", %d)',
+								$custom_value, $id, $u["id"]);
+					$res = process_sql($sql);
+
+					if ($res === false) {
+						echo ui_print_error_message (__('There was a problem updating custom fields'), '', true, 'h3', true);
+					}
+				}
+				
 				//update last activity
 				$datetime =  date ("Y-m-d H:i:s");
 				$comments = __("Created contract by ".$config['id_user']);
@@ -413,6 +507,31 @@ elseif ($op == "") {
 		if ($result === false) {
 			echo ui_print_error_message (__('Could not be updated'), '', true, 'h3', true);
 		} else {
+			
+			foreach ($contract_fields as $u) {
+
+				$custom_value = get_parameter("custom_".$u["id"]);
+				
+				$sql = sprintf('SELECT data FROM tcontract_field_data WHERE id_contract = "%s" AND id_contract_field = %d',
+								$id, $u["id"]);
+				
+				$current_data = process_sql($sql);
+				
+				if ($current_data) {
+					$sql = sprintf('UPDATE tcontract_field_data SET data = "%s" WHERE id_contract = "%s" AND id_contract_field = %d',
+							$custom_value, $id, $u["id"]);
+				} else {
+					$sql = sprintf('INSERT INTO tcontract_field_data (`data`, `id_contract`,`id_contract_field`) VALUES ("%s", "%s", %d)',
+							$custom_value, $id, $u["id"]);
+				}
+
+				$res = process_sql($sql);
+
+				if ($res === false) {
+					echo ui_print_error_message (__('There was a problem updating custom fields'), '', true, 'h3', true);
+				}
+			}
+				
 			//update last activity
 			$datetime =  date ("Y-m-d H:i:s");
 			$comments = __("Update contract ".$id. " by ".$config['id_user']);
@@ -512,7 +631,6 @@ elseif ($op == "") {
 		$table->width = '100%';
 		$table->class = 'search-table-button';
 		$table->colspan = array ();
-		$table->colspan[4][0] = 2;
 		$table->data = array ();
 		
 		if ($new_contract || ($id && ($write_permission || $manage_permission))) {
@@ -541,7 +659,150 @@ elseif ($op == "") {
 			
 			$table->data[3][1] = print_select (get_contract_status(), 'status', $status, '', '', '', true, 0, false,  __('Status'));
 
-			$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+
+			$column=4;
+			$row=0;
+
+			if($contract_fields){
+				foreach ($contract_fields as $comp) {
+					
+					$data = get_parameter('custom_'.$comp["id"]);
+					
+					if(!$data){
+						$sql_data = sprintf('SELECT data FROM tcontract_field_data WHERE id_contract = "%s" AND id_contract_field = %d', $id, $comp["id"]);
+						
+						$result = process_sql($sql_data);
+						
+						if($result) {
+							$data = safe_output($result[0]["data"]);
+						}
+					}
+				
+					switch ($comp["type"]) {
+						case "text": 
+							$table->data[$column][$row] = print_input_text ("custom_".$comp["id"], $data, "", 18, 100, true, $comp["label"], $disabled_write);
+							break;
+						
+						case "combo":
+							$aux = split(",", $comp["combo_value"]);
+							
+							$options = array();
+
+							foreach ($aux as $a) {
+								$options[$a] = $a;
+							}
+
+							$table->data[$column][$row] = print_select ($options, 'custom_'.$comp["id"], $data, '', '', '0', true, false, false, $comp["label"]);
+							break;
+
+						case "linked":
+							$linked_values = explode(",", $comp['linked_value']);
+
+							if ($id) {
+								$has_parent = get_db_value_sql("SELECT parent FROM tcontract_field WHERE id=".$comp['id']);
+								if ($has_parent) {
+									$parent_value = get_db_value_sql("SELECT `data` FROM tcontract_field_data WHERE id_contract =".$id." AND id_contract_field =".$has_parent);
+
+									$values = array();
+									foreach ($linked_values as $value) {
+										$parent_found = preg_match("/^".$parent_value."\|/", $value);
+
+										if ($parent_found) {
+											$value_without_parent =  preg_replace("/^.*\|/","", $value);
+											$values[$value_without_parent] = $value_without_parent;
+										}
+									}
+								} else {
+									foreach ($linked_values as $value) {
+										$values[$value] = $value;
+									}
+								}
+								
+								$has_childs = get_db_all_rows_sql("SELECT * FROM tcontract_field WHERE parent=".$comp['id']);
+
+								if ($has_childs) {
+									$i = 0;
+									foreach ($has_childs as $child) {
+										if ($i == 0) 
+											$childs = $child['id'];
+										else 
+											$childs .= ','.$child['id'];
+										$i++;
+									}
+									$childs = "'".$childs."'";
+
+									$script = 'javascript:change_linked_type_fields_table_contract('.$childs.','.$comp['id'].');';
+								} else {
+									$script = '';
+								}
+								
+							} else {
+								$values = array();
+								foreach ($linked_values as $value) {
+									$value_without_parent =  preg_replace("/^.*\|/","", $value);
+
+									$values[$value_without_parent] = $value_without_parent;
+									$has_childs = get_db_all_rows_sql("SELECT * FROM tcontract_field WHERE parent=".$comp['id']);
+
+									if ($has_childs) {
+										$i = 0;
+										foreach ($has_childs as $child) {
+											if ($i == 0) 
+												$childs = $child['id'];
+											else 
+												$childs .= ','.$child['id'];
+											$i++;
+										}
+										$childs = "'".$childs."'";
+
+										$script = 'javascript:change_linked_type_fields_table_contract('.$childs.','.$comp['id'].');';
+									} else {
+										$script = '';
+									}
+								}
+							}
+
+							$table->data[$column][$row] = print_select ($values, 'custom_'.$comp['id'], $data, $script, __('Any'), '', true, false, false, $comp['label']);
+						break;
+
+					case "numeric":
+						if($data == '') 
+							$data = 0;
+						$table->data[$column][$row] = print_input_number ('custom_'.$comp["id"], $data, 0, 1000000, '', true, $comp["label"], $disabled_write);
+						break;
+
+					case "date":
+						$table->data[$column][$row] = print_input_date ('custom_'.$comp["id"], $data, '', '', '', true, $comp["label"], $disabled_write);
+						break;
+
+					case "textarea":
+						if($column != 0){
+							$column++;
+						}
+						$table->colspan[$column][0] = 3;
+						$table->data[$column][0] = print_textarea ('custom_'.$comp["id"], 3, 1, $data, '', true, $comp["label"], $disabled_write);
+						$column++;
+						$row = -1;
+						break;
+				}
+				
+				if($row < 2){
+					$row++;
+				} else {
+					$row=0;
+					$column++;
+				}
+			}
+			if ($row != 2){
+				$column++;
+			}
+		}
+		$column++;
+		
+		$table->colspan[$column][0] = 2;
+
+
+			$table->data[$column][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 			
 			// Optional file update
 			$html = "";
@@ -572,9 +833,11 @@ elseif ($op == "") {
 			$html .= "<div id='contract_file_description_table_hook' style='display:none;'>";
 			$html .= print_table($table_description, true);
 			$html .= "</div>";
-
-			$table->colspan[5][0] = 4;
-			$table->data[5][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
+			
+			$column++;
+			
+			$table->colspan[$column][0] = 4;
+			$table->data[$column][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
 			
 			$button = "<div class='button-form' style='width:100%; text-align:right;'>";
 			if ($id) {

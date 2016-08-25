@@ -424,6 +424,11 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 				echo "<li style='margin-left: 15px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a></li>";
 		}
+		if ($sec2 == "operation/contracts/conctract_custom_fields" && (give_acl ($config["id_user"], 0, "CW")))
+				echo "<li id='sidesel' style='margin-left: 15px;'>";
+			else
+				echo "<li style='margin-left: 15px;'>";
+			echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_custom_fields'>".__('Manage contract fields')."</a></li>";
 
 		// Contact overview
 		$new_contact = (int) get_parameter('new_contact');

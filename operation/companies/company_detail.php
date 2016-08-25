@@ -522,10 +522,27 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 
 				case "linked":
 					$linked_values = explode(",", $comp['linked_value']);
-					$values = array();
-					foreach ($linked_values as $value) {
-						$value_without_parent =  preg_replace("/^.*\|/","", $value);
-						$values[$value_without_parent] = $value_without_parent;
+					
+					if ($id) {
+						$has_parent = get_db_value_sql("SELECT parent FROM tcompany_field WHERE id=".$comp['id']);
+						if ($has_parent) {
+							$parent_value = get_db_value_sql("SELECT `data` FROM tcompany_field_data WHERE id_company =".$id." AND id_company_field =".$has_parent);
+
+							$values = array();
+							foreach ($linked_values as $value) {
+								$parent_found = preg_match("/^".$parent_value."\|/", $value);
+
+								if ($parent_found) {
+									$value_without_parent =  preg_replace("/^.*\|/","", $value);
+									$values[$value_without_parent] = $value_without_parent;
+								}
+							}
+						} else {
+							foreach ($linked_values as $value) {
+								$values[$value] = $value;
+							}
+						}
+						
 						$has_childs = get_db_all_rows_sql("SELECT * FROM tcompany_field WHERE parent=".$comp['id']);
 						if ($has_childs) {
 							$i = 0;
@@ -540,6 +557,31 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 							$script = 'javascript:change_linked_type_fields_table_company('.$childs.','.$comp['id'].');';
 						} else {
 							$script = '';
+						}
+						
+					} else {
+						$values = array();
+						foreach ($linked_values as $value) {
+							$value_without_parent =  preg_replace("/^.*\|/","", $value);
+
+							$values[$value_without_parent] = $value_without_parent;
+							$has_childs = get_db_all_rows_sql("SELECT * FROM tcompany_field WHERE parent=".$comp['id']);
+
+							if ($has_childs) {
+								$i = 0;
+								foreach ($has_childs as $child) {
+									if ($i == 0) 
+										$childs = $child['id'];
+									else 
+										$childs .= ','.$child['id'];
+									$i++;
+								}
+								$childs = "'".$childs."'";
+
+								$script = 'javascript:change_linked_type_fields_table_company('.$childs.','.$comp['id'].');';
+							} else {
+								$script = '';
+							}
 						}
 					}
 					$table->data[$column][$row] = print_select ($values, 'custom_'.$comp['id'], $data, $script, __('Any'), '', true, false, false, $comp['label']);
