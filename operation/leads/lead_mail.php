@@ -101,10 +101,10 @@ if ($send) {
 			$upfiles = false;
 		}
 
-		integria_sendmail ($to, $subject_mail, $mail, $upfiles, "", $from, true, $cc, "X-Integria: no_process");
+		integria_sendmail ($to, $subject_mail, html_entity_decode($mail), $upfiles, "", $from, true, $cc, "X-Integria: no_process");
 
 		if ($cco != "")
-			integria_sendmail ($cco, $subject_mail, $mail, $upfiles, "", $from, true);
+			integria_sendmail ($cco, $subject_mail, html_entity_decode($mail), $upfiles, "", $from, true);
 
 		// Lead update
 		if ($lead["progress"] == 0 ){
