@@ -22,7 +22,7 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 	exit;
 }
 
-$text = get_parameter ("text", "");
+$text = safe_output(get_parameter ("text", ""));
 $action = safe_output(get_parameter ("action", ""));
 $date_from = get_parameter ("date_from", "");
 $date_to = get_parameter ("date_to", "");
