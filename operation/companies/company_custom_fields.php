@@ -77,6 +77,8 @@ if ($add_field) {
 	
 	if ($value['label'] == '') {
 		echo ui_print_error_message (__('Empty field name'), '', true, 'h3', true);
+	} else if ($value['type'] == '0') {
+		echo ui_print_error_message (__('Empty field type'), '', true, 'h3', true);
 	} else if ($error_combo) {
 		echo ui_print_error_message (__('Empty combo value'), '', true, 'h3', true);
 	} else if ($error_linked) {
@@ -118,7 +120,10 @@ if ($update_field) { //update field to incident type
 
 	if ($value_update['label'] == '') {
 		echo ui_print_error_message (__('Empty field name'), '', true, 'h3', true);
-	} else if ($error_combo) {
+	} else if ($value_update['type'] == '0') {
+		echo ui_print_error_message (__('Empty field type'), '', true, 'h3', true);
+	} 
+	else if ($error_combo) {
 		echo ui_print_error_message (__('Empty combo value'), '', true, 'h3', true);
 	} else if ($error_linked) {
 		echo ui_print_error_message (__('Empty linked value'), '', true, 'h3', true);
