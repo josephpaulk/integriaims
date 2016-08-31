@@ -345,24 +345,24 @@ if (<?php echo $id ?> > 0 || <?php echo json_encode($new_contact) ?> == true) {
 	validate_form("#contact_form");
 	var rules, messages;
 	// Rules: #text-fullname
-	rules = {
-		required: true,
-		remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-				page: "include/ajax/remote_validations",
-				search_existing_contact: 1,
-				contact_name: function() { return $('#text-fullname').val() },
-				contact_id: "<?php echo $id?>"
-			}
-		}
-	};
-	messages = {
-		required: "<?php echo __('Name required')?>",
-		remote: "<?php echo __('This contact already exists')?>"
-	};
-	add_validate_form_element_rules('#text-fullname', rules, messages);
+	//~ rules = {
+		//~ required: true,
+		//~ remote: {
+			//~ url: "ajax.php",
+			//~ type: "POST",
+			//~ data: {
+				//~ page: "include/ajax/remote_validations",
+				//~ search_existing_contact: 1,
+				//~ contact_name: function() { return $('#text-fullname').val() },
+				//~ contact_id: "<?php echo $id?>"
+			//~ }
+		//~ }
+	//~ };
+	//~ messages = {
+		//~ required: "<?php echo __('Name required')?>",
+		//~ remote: "<?php echo __('This contact already exists')?>"
+	//~ };
+	//~ add_validate_form_element_rules('#text-fullname', rules, messages);
 	// Rules: #text-email
 	rules = {
 		required: true,
