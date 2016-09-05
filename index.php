@@ -426,6 +426,22 @@ else if (! isset ($_SESSION['id_usuario'])) {
 	exit;
 }
 else {
+	if (isset ($_SESSION['id_usuario'])) {
+		$user_in_db = get_db_value_filter('id_usuario', 'tusuario', array('id_usuario'=>$_SESSION['id_usuario']));
+		if ($user_in_db == false) {
+			//logout
+			$_REQUEST = array ();
+			$_GET = array ();
+			$_POST = array ();
+			echo '<body class="login">';
+			require ('general/login_page.php');
+			$iduser = $_SESSION["id_usuario"];
+			logoff_db ($iduser, $config["REMOTE_ADDR"]);
+			unset($_SESSION["id_usuario"]);
+			exit;
+		}
+	}
+	
 	// Create id_user variable in $config hash, of ALL pages.
 	$config["id_user"] = $_SESSION['id_usuario'];
 }

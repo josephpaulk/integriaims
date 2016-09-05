@@ -613,16 +613,16 @@ if ($modo == "edicion") { // Only show groups for existing users
 
 enterprise_hook ('show_delete_profiles');
 
+echo "</td></tr>";
+echo "</table>";
+
 if (isset($_GET["alta"])){
-	//echo "</table>";
 	echo "<div class='button-form' style='width: 100%' >";
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	print_input_hidden ('action', 'create');
 	echo '</div>';
 } 
 
-echo "</td></tr>";
-echo "</table>";
 echo "</form>";
 ?> 
 
