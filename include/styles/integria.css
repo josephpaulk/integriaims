@@ -28,7 +28,9 @@ body {
 
 body.login {
 	background: url(../../images/greyback.gif);
+/*
 	background-size: 100% !important;
+*/
 }
 
 /* Necessary for firefox */
