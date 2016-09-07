@@ -667,7 +667,7 @@ if ($action == "insert" && !$id) {
 	$grupo = (int) get_parameter ('grupo_form');
 	
 	// Read input variables
-	$titulo = get_parameter ('titulo');
+	$titulo = get_parameter ('titulo', "");
 	$description =  get_parameter ('description');
 	$priority = get_parameter ('priority_form');
 	$id_creator = get_parameter ('id_creator', $config["id_user"]);
@@ -715,7 +715,9 @@ if ($action == "insert" && !$id) {
 	$user_exists = get_user($usuario);
 
 
-	if($creator_exists === false) {
+	if ($titulo == "") {
+		$result_msg  = ui_print_error_message (__('Title cannot be empty'), '', true, 'h3', true);
+	} else if($creator_exists === false) {
 		$result_msg  = ui_print_error_message (__('Creator user does not exist'), '', true, 'h3', true);
 	}
 	else if($user_exists === false) {
