@@ -154,6 +154,7 @@ if (($create_company) OR ($update_company)) {
 	$website = (string) get_parameter ("website");
 	$manager = (string) get_parameter ("manager");
 	$id_parent = (int) get_parameter ("id_parent", 0);
+	$payment_conditions = (int) get_parameter ("payment_conditions", 30);
 
 	
 	if ($create_company){
@@ -164,8 +165,8 @@ if (($create_company) OR ($update_company)) {
 			exit;
 		}
 		
-		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
-					 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent)";
+		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent, payment_conditions)
+					 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent, $payment_conditions)";
 
 		$id = process_sql ($sql, 'insert_id');
 
@@ -207,9 +208,9 @@ if (($create_company) OR ($update_company)) {
 		}
 		
 		$sql = sprintf ('UPDATE tcompany SET manager="%s", id_parent = %d, comments = "%s", name = "%s",
-		address = "%s", fiscal_id = "%s", id_company_role = %d, country = "%s", website = "%s", last_update = "%s" WHERE id = %d',
+		address = "%s", fiscal_id = "%s", id_company_role = %d, country = "%s", website = "%s", last_update = "%s", payment_conditions = %d WHERE id = %d',
 		$manager, $id_parent, $comments, $name, $address,
-		$fiscal_id, $id_company_role, $country, $website, $last_update, $id);
+		$fiscal_id, $id_company_role, $country, $website, $last_update, $payment_conditions, $id);
 
 		$result = mysql_query ($sql);
 		if ($result === false)
@@ -431,6 +432,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$id_parent = $company["id_parent"];
 		$manager = $company["manager"];
 		$last_update = $company["last_update"];
+		$payment_conditions = $company["payment_conditions"];
 		if ($last_update == "0000-00-00 00:00:00" || $last_update == "") {
 			$last_update = get_db_sql ("SELECT MAX(date) FROM tcompany_activity WHERE id_company = ". $company["id"]);
 		}
@@ -445,6 +447,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$manager = $config["id_user"];
 		$id_parent = 0;
 		$last_update = '';
+		$payment_conditions = 30;
 	}
 	
 	$table = new StdClass();
@@ -484,6 +487,8 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 
 	$table->data[2][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'), $disabled_write);
 	$table->data[2][1] = print_input_text ("country", $country, "", 18, 100, true, __('Country'), $disabled_write);
+	$days = array (30=>30,60=>60,90=>90,180=>180);
+	$table->data[2][2] = print_select ($days, 'payment_conditions', $payment_conditions,"",'','0',true,0,true,__("Payment conditions"), $disabled_write);
 	
 	$column=3;
 	$row=0;

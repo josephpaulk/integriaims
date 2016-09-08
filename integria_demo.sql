@@ -90,7 +90,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tconfig` WRITE;
 /*!40000 ALTER TABLE `tconfig` DISABLE KEYS */;
-INSERT INTO `tconfig` (`token`, `value`) VALUES ('enterprise_installed','0'),('timezone','Europe/Madrid'),('want_chat','0'),('incident_creation_wu','0'),('lead_warning_time','7'),('months_to_delete_incidents','12'),('max_file_size','50M'),('autowu_completion','0'),('no_wu_completion',''),('incident_reporter','0'),('show_creator_incident','1'),('show_owner_incident','1'),('pwu_defaultime','4'),('iwu_defaultime','0.25'),('api_acl','127.0.0.1'),('auto_incident_close','72'),('email_on_incident_update','0'),('error_log','1'),('iw_creator_enabled','0'),('enable_newsletter','0'),('batch_newsletter','15'),('update_manager_installed', 1),('license', 'INTEGRIA-FREE'),('current_package', 51),('minor_release', 51);
+INSERT INTO `tconfig` (`token`, `value`) VALUES ('enterprise_installed','0'),('timezone','Europe/Madrid'),('want_chat','0'),('incident_creation_wu','0'),('lead_warning_time','7'),('months_to_delete_incidents','12'),('max_file_size','50M'),('autowu_completion','0'),('no_wu_completion',''),('incident_reporter','0'),('show_creator_incident','1'),('show_owner_incident','1'),('pwu_defaultime','4'),('iwu_defaultime','0.25'),('api_acl','127.0.0.1'),('auto_incident_close','72'),('email_on_incident_update','0'),('error_log','1'),('iw_creator_enabled','0'),('enable_newsletter','0'),('batch_newsletter','15'),('update_manager_installed', 1),('license', 'INTEGRIA-FREE'),('current_package', 53),('minor_release', 52);
 /*!40000 ALTER TABLE `tconfig` ENABLE KEYS */;
 UNLOCK TABLES;
 

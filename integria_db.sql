@@ -589,7 +589,7 @@ CREATE TABLE `tcompany_role` (
 
 CREATE TABLE `tcompany` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
+  `name` varchar(300) NOT NULL default '',
   `address` varchar(300) NOT NULL default '', 
   `fiscal_id` varchar(250) NULL default NULL,
   `country` tinytext NULL default NULL,
