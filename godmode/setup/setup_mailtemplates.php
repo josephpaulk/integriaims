@@ -71,35 +71,36 @@ $name_template   = get_parameter('name_template', 0);
 
 //function create templates fixed
 function get_template_action () {
-	$action_template[0]  = __('Create incident body'); //[incident_create.tpl] => incident_create.tpl
-	$action_template[1]  = __('Create incident subject'); //[incident_subject_create.tpl] => incident_subject_create.tpl
+	$actions_template[0]  = __('Create incident body'); //[incident_create.tpl] => incident_create.tpl
+	$actions_template[1]  = __('Create incident subject'); //[incident_subject_create.tpl] => incident_subject_create.tpl
 	
-	$action_template[2]  = __('Close incident body'); //[incident_close.tpl] => incident_close.tpl
-	$action_template[3]  = __('Close incident subject'); //[incident_subject_close.tpl] => incident_subject_close.tpl
+	$actions_template[2]  = __('Close incident body'); //[incident_close.tpl] => incident_close.tpl
+	$actions_template[3]  = __('Close incident subject'); //[incident_subject_close.tpl] => incident_subject_close.tpl
 	
-	$action_template[4]  = __('Attach incident subject'); //[incident_subject_attach.tpl] => incident_subject_attach.tpl
+	$actions_template[4]  = __('Attach incident subject'); //[incident_subject_attach.tpl] => incident_subject_attach.tpl
 	
-	$action_template[5]  = __('Delete incident subject'); //[incident_subject_delete.tpl] => incident_subject_delete.tpl
+	$actions_template[5]  = __('Delete incident subject'); //[incident_subject_delete.tpl] => incident_subject_delete.tpl
 	
-	$action_template[6]  = __('New WU incident subject'); //[incident_subject_new_wu.tpl] => incident_subject_new_wu.tpl
+	$actions_template[6]  = __('New WU incident subject'); //[incident_subject_new_wu.tpl] => incident_subject_new_wu.tpl
 	
-	$action_template[7]  = __('Update WU incident body'); //[incident_update_wu.tpl] => incident_update_wu.tpl
+	$actions_template[7]  = __('Update WU incident body'); //[incident_update_wu.tpl] => incident_update_wu.tpl
 
-	$action_template[8]  = __('Update incident subject'); //[incident_subject_update.tpl] => incident_subject_update.tpl
-	$action_template[9]  = __('Update incident body'); //[incident_update.tpl] => incident_update.tpl
+	$actions_template[8]  = __('Update incident subject'); //[incident_subject_update.tpl] => incident_subject_update.tpl
+	$actions_template[9]  = __('Update incident body'); //[incident_update.tpl] => incident_update.tpl
 	
-	$action_template[10] = __('SLA max inactivity time incident body'); //[incident_sla_max_inactivity_time.tpl] => incident_sla_max_inactivity_time.tpl
-	$action_template[11] = __('SLA max inactivity time incident subject'); //[incident_sla_max_inactivity_time_subject.tpl] => incident_sla_max_inactivity_time_subject.tpl
-	$action_template[12] = __('SLA max response time incident body'); //[incident_sla_max_response_time.tpl] => incident_sla_max_response_time.tpl
-    $action_template[13] = __('SLA max response time incident subject'); //[incident_sla_max_response_time_subject.tpl] => incident_sla_max_response_time_subject.tpl
+	$actions_template[10] = __('SLA max inactivity time incident body'); //[incident_sla_max_inactivity_time.tpl] => incident_sla_max_inactivity_time.tpl
+	$actions_template[11] = __('SLA max inactivity time incident subject'); //[incident_sla_max_inactivity_time_subject.tpl] => incident_sla_max_inactivity_time_subject.tpl
+	$actions_template[12] = __('SLA max response time incident body'); //[incident_sla_max_response_time.tpl] => incident_sla_max_response_time.tpl
+    $actions_template[13] = __('SLA max response time incident subject'); //[incident_sla_max_response_time_subject.tpl] => incident_sla_max_response_time_subject.tpl
     
-    $action_template[14] = __('SLA min response time incident body'); //[incident_sla_min_response_time.tpl] => incident_sla_min_response_time.tpl
-    $action_template[15] = __('SLA min response time incident subject'); //[incident_sla_min_response_time_subject.tpl] => incident_sla_min_response_time_subject.tpl
+    $actions_template[14] = __('SLA min response time incident body'); //[incident_sla_min_response_time.tpl] => incident_sla_min_response_time.tpl
+    $actions_template[15] = __('SLA min response time incident subject'); //[incident_sla_min_response_time_subject.tpl] => incident_sla_min_response_time_subject.tpl
     
-    $action_template[16] = __('New entry calendar body'); //[new_entry_calendar.tpl] => new_entry_calendar_.tpl
-    $action_template[17] = __('Update entry calendar body'); //[update_entry_calendar.tpl] => update_entry_calendar.tpl
+    $actions_template[16] = __('New entry calendar body'); //[new_entry_calendar.tpl] => new_entry_calendar_.tpl
+    $actions_template[17] = __('Update entry calendar body'); //[update_entry_calendar.tpl] => update_entry_calendar.tpl
+
   
-	return $action_template;
+	return $actions_template;
 }
 //update template
 if ($update_template && $edit) {
@@ -328,6 +329,9 @@ if($create_template || $update_template){
 	if ($update_template) {
 		$templatelist = get_template_files ('');
 		$template = $name_template . '.tpl';
+		$full_filename = "include/mailtemplates/" . $name_template.".tpl";
+		$data = html_entity_decode(file_get_contents ($full_filename));
+
 		$table->data[0][0] = print_select ($templatelist, 'template_name', $templatelist[$template], '', '', '',  true, 0, true, __('Name'),false, "");
 	} else {
 		$table->data[0][0] = print_input_text ('template_name', $template_name, '', 60, 100, true, __('Name'), false);
@@ -343,7 +347,7 @@ if($create_template || $update_template){
 	}
 
 	$templatelist = get_template_action();
-	$table->data[0][1] = print_select ($templatelist, 'template_action', $action_template,'', '', '',  true, 0, true, __('Actions'),false, "");
+	$table->data[0][1] = print_select ($templatelist, 'template_action', $action,'', '', '',  true, 0, true, __('Actions'),false, "");
 
 	$table->data[0][2] = print_select ($user_groups, "template_group", $template_group, '', '', 0, true, false, false, __('Group'), false) . "<div id='group_spinner'></div>"; 
 	$table->data[0][3] = "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates&search=1'><img src='images/flecha_volver.png' title='".__('Back to list')."'/></a>";
@@ -368,7 +372,6 @@ if($create_template || $update_template){
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
 
-//////////////////////	FIN NUEVO
 
 function get_template_files ($field) {
 	$base_dir = 'include/mailtemplates';

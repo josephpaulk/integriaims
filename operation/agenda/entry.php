@@ -201,7 +201,7 @@ if ($update_agenda_entry) {
 		
 		//Macros
 		$MACROS["_entry-username_"] = $config['id_user'];
-		$MACROS["_entry-realname_"] = $config['id_user'];
+		$MACROS["_entry-realname_"] = $nombre;
 		
 		$MACROS["_entry-date_"] = $date;
 		$MACROS["_entry-time_"] = $time;

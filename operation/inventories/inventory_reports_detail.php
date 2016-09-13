@@ -114,26 +114,41 @@ if ($render == 1){
 	
 	$filename = clean_output ($report['name']).'-'.date ("YmdHi");
 
-	ob_end_clean();
 	$config['mysql_result_type'] = MYSQL_ASSOC;
-	// We'll be outputting a CSV
+
+    ob_end_clean();
+
+	// CSV Output
+	header ('Content-Encoding: UTF-8');
 	header ('Content-Type: text/csv; charset=UTF-8');
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
-
+	$os_csv = substr(PHP_OS, 0 , 1);
+	echo "\xEF\xBB\xBF";
 	
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
 	if ($rows === false)
 		return;
+
 	// Header
 	echo safe_output (implode (';', array_keys (str_replace($search, " ", $rows[0]))))."\n";
+	$standard_encoding = (bool) $config['csv_standard_encoding'];
 	
 	// Item / data
 	foreach ($rows as $row) {
-		$k = safe_output(implode(';', $row));
-		$k = str_replace($search, "", $k);
-		echo mb_convert_encoding($k, 'UTF-8'). "\n";
+		$line = safe_output(implode(';', $row));
+
+		if (!$standard_encoding){
+			if($os_csv != "W"){
+				echo mb_convert_encoding($line, 'UTF-16LE', 'UTF-8'). "\n";
+			} else {
+				echo $line . "\n";
+			}
+		}else{
+			echo $line . "\n";
+		}
 	}
-    exit;
+	exit;	
+
 }
 
 if ($render_html == 1){
