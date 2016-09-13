@@ -301,7 +301,7 @@ foreach ($files as $file) {
 	echo '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
 
 	$stat = stat ($real_filename);
-	echo "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
+	echo "<td valign=top class=f9>" . $file['timestamp'];
 
 	echo "<td valign=top class=f9>". $file["description"];
 	echo "<td valign=top>". $file["id_usuario"];
