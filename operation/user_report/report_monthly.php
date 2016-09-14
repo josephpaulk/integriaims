@@ -130,7 +130,7 @@ if (!empty($values)) {
 		}
 		$i++;
 
-		$row0 = get_db_row ("tusuario", "id_usuario", $key);
+		$row0 = get_db_row ("tusuario", "id_usuario", safe_input("$key"));
 		if ($row0){
 			$nombre = $row0["id_usuario"];
 			$avatar = $row0["avatar"];
