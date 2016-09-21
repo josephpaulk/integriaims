@@ -498,11 +498,7 @@ function api_update_incident ($return_type, $user, $params){
 		}
 	} else {
 		$check_resolution = true;
-		//~ $enterprise = enterprise_hook("incidents_check_allowed_resolution", array($resolution, $values['estado'], $id_incident, true));
-		$enterprise = enterprise_hook("incidents_check_allowed_resolution", array($values['resolution'], $values['estado'], $id_incident, true));
-		if ($enterprise != ENTERPRISE_NOT_HOOK) {
-			$values['resolution'] = 0;
-		}
+		$values['resolution'] = 0;
 	}
 	
 	if ($check_status && $check_resolution) {
