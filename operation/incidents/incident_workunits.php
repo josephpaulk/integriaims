@@ -71,18 +71,18 @@ if ($insert_workunit) {
 
 	// Adding a new workunit to a incident in NEW status
 	// Status go to "Assigned" and Owner is the writer of this Workunit
-	if (($incident["estado"] == 1) AND ($incident["id_creator"] != $config['id_user'])){
-		$sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id_incident);
+	//~ if (($incident["estado"] == 1) AND ($incident["id_creator"] != $config['id_user'])){
+		//~ $sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id_incident);
 
-		incident_tracking ($id_incident, INCIDENT_STATUS_CHANGED, 3);
+		//~ incident_tracking ($id_incident, INCIDENT_STATUS_CHANGED, 3);
 	
-		incident_tracking ($id_incident, INCIDENT_USER_CHANGED, $config["id_user"]);
+		//~ incident_tracking ($id_incident, INCIDENT_USER_CHANGED, $config["id_user"]);
 
-	} else {
-		$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id_incident);
-	}
+	//~ } else {
+		//~ $sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id_incident);
+	//~ }
 
-	process_sql ($sql);
+	//~ process_sql ($sql);
 
 	$workunit_id = create_workunit ($id_incident, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
 	

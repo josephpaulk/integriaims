@@ -134,8 +134,10 @@ if ($id_workunit) {
 		FROM tworkunit
 		WHERE tworkunit.id = %d', $id_workunit);
 	$workunit = get_db_row_sql ($sql);
+	
+	$belong_to_ticket = get_db_value_sql("SELECT * FROM tworkunit_incident WHERE id_workunit = ".$id_workunit);
 
-	if ($workunit === false) {
+	if (($workunit === false) OR $belong_to_ticket) {
 		require ("general/noaccess.php");
 		return;
 	}
