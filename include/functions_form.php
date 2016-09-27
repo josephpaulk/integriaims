@@ -799,7 +799,7 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$id_task&operation=view'>$task_title</A>";
 	} else  {
 		echo __('Ticket')." </b> : ";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>$incident_title</A>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_incident'>$incident_title</A>";
 	}
 	echo "</td>";
 	echo "<td><b>";
