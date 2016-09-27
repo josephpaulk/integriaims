@@ -242,9 +242,9 @@ $alldata = get_db_all_rows_sql ($sql);
 foreach ($alldata as $row){ 
 	
 	if ($row["id"] != -1)
-        	show_workunit_user ($row['id'], 1);
+        show_workunit_user ($row['id'], 1, true, true, $id_user, $timestamp_h, $timestamp_l);
 	else 
-		show_workunit_user ($row['id']);
+		show_workunit_user ($row['id'], 0, true, true, $id_user, $timestamp_h, $timestamp_l);
 }
 
 echo '<div id="show_multiple_edit">';

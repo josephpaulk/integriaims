@@ -83,6 +83,10 @@ $id_workunit = (int) get_parameter ('id_workunit');
 $id_task = (int) get_parameter ("id_task",0);
 $id_incident = (int) get_parameter ("id_incident", 0);
 $work_home = get_parameter ("work_home", 0);
+$back_to_wu = get_parameter("back_to_wu", 0);
+$user = get_parameter ("user");
+$timestamp_h = get_parameter ("timestamp_h");
+$timestamp_l = get_parameter ("timestamp_l");
 
 if ($id_task == 0){
     // Try to get id_task from tworkunit_task
@@ -456,7 +460,12 @@ echo "<a href='#tab1' title='".__("Single WU")."'><img src='images/workunit_tab.
 echo "</li>";
 if ($sec == 'projects') {
 	echo "<li id='tabmenu3' class='ui-tabs-disabled'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=" . $id_project . "&id_task=" . $id_task . "&operation=view'><img src='images/flecha_volver.png' /></a>";
+
+	if ($back_to_wu) {
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=" . $user . "&timestamp_h=" . $timestamp_h . "&timestamp_l=".$timestamp_l."'><img src='images/flecha_volver.png' /></a>";
+	} else {
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=" . $id_project . "&id_task=" . $id_task . "&operation=view'><img src='images/flecha_volver.png' /></a>";
+	}
 	echo "</li>";
 }
 echo "</ul>";

@@ -743,7 +743,7 @@ function show_workunit_data ($workunit, $title, $enable_link = true) {
 	echo "</div>";
 }
 
-function show_workunit_user ($id_workunit, $full = 0, $show_multiple=true) {
+function show_workunit_user ($id_workunit, $full = 0, $show_multiple=true, $back_to_wu = false, $user = "", $timestamp_h = "", $timestamp_l = "") {
 	global $config;
 	
 	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
@@ -881,28 +881,27 @@ echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects
 	$output .= "<td valign='top'>";
 	$output .= "<table width='100%'  class=''>";
 
-	if ($_GET["sec2"] == "operation/users/user_workunit_report")
+	if ($_GET["sec2"] == "operation/users/user_workunit_report") {
 		$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
-	else {
-		if ($id_project > 0)
+	} else {
+		if ($id_project > 0) {
 			$myurl = "index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task";
-		else
+		} else {
 			$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
+		}
 	}
 	
 	$belong_to_ticket = get_db_value_sql("SELECT * FROM tworkunit_incident WHERE id_workunit = ".$id_workunit);
 	
-	//~ if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], 0, "TM")) ) {
 	if (((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], 0, "TM"))) && (!$belong_to_ticket)) {
 		$output .= "<tr><td align='right'>";
 		$output .= "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png'  title='".__('Delete workunit')."'/></a>";
 	}
 
 	// Edit workunit
-	//~ if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], 0, "UM")) )) {
 	if ((((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], 0, "UM")) )) && (!$belong_to_ticket)) {
 		$output .= "<tr><td align='right'>";
-		$output .= "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&id_profile=$id_profile'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
+		$output .= "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&id_profile=$id_profile&back_to_wu=$back_to_wu&user=$user&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
 		$output .= "</td>";
 	}
 
