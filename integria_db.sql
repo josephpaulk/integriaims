@@ -599,6 +599,7 @@ CREATE TABLE `tcompany` (
   `id_parent` mediumint(8) unsigned default NULL,
   `manager` varchar(150) NOT NULL default '',
   `last_update` datetime NOT NULL default '0000-00-00 00:00:00',
+  `payment_conditions` mediumint(8) NOT NULL default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

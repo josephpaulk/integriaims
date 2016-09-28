@@ -608,7 +608,7 @@ else {
 					// User vs Total wu hours
 					echo "<td>".$incident["suma"]."<br>";
 					$incident_user  += $incident["suma"];
-					$this_incident = get_incident_workunit_hours($incident["iid"]);
+					$this_incident = get_incident_workunit_hours($incident["id"]);
 					echo $this_incident."</td>";
 					$incident_totals +=  $this_incident;
 					

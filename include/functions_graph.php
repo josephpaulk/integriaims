@@ -22,6 +22,7 @@ if (file_exists("include/config.php")) {
 	include_once ("include/config.php");
 	include_once("include/graphs/fgraph.php");
 	include_once ("include/functions_calendar.php");
+	include_once("include/graphs/functions_flot.php");
 } // If is called through url
 elseif (file_exists("config.php")) {
 	include_once ("config.php");
