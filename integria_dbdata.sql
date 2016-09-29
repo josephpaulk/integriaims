@@ -48,7 +48,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 53),
+('current_package', 54),
 ('url_updatemanager', 'https://firefly.artica.es/integriaupdate5/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'paisaje.jpg'),
