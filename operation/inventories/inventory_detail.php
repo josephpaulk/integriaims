@@ -196,199 +196,210 @@ if ($update) {
 	$old_inventory = get_db_row('tinventory', 'id', $id);
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
 
-	//Preserve old inventory type if any
-	if ($old_inventory["id_object_type"]) {
-		$id_object_type = $old_inventory["id_object_type"];
+	$check_name = false;
+	$msg_err_extra = "";
+	if (($old_inventory['name'] != $name) AND (!$config['duplicate_inventory_name'])) {
+		$check_name = get_db_value_filter('name', 'tinventory', array('name'=>$name));
 	}
-	
-	$last_update = date ("Y/m/d", get_system_time());
-	if ($inventory_status != 'issued') {
-		$issue_date = '';
-	}
-	
-	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
-			id_contract = %d,
-			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s",
-			status="%s", receipt_date = "%s", issue_date = "%s"
-			WHERE id = %d',
-			$name, $description, $id_contract,
-			$id_parent,
-			$id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status, $receipt_date, $issue_date, $id);
+	if ($check_name != false) {
+		$msg_err .= ui_print_error_message (__("Name must be unique"), '', true, 'h3', true);
+		$result = false;
+		$msg_err_extra = ui_print_error_message (__("Name must be unique"), '', true, 'h3', true);
+	} else {
+		
+		//Preserve old inventory type if any
+		if ($old_inventory["id_object_type"]) {
+			$id_object_type = $old_inventory["id_object_type"];
+		}
+		
+		$last_update = date ("Y/m/d", get_system_time());
+		if ($inventory_status != 'issued') {
+			$issue_date = '';
+		}
+		
+		$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
+				id_contract = %d,
+				id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s",
+				status="%s", receipt_date = "%s", issue_date = "%s"
+				WHERE id = %d',
+				$name, $description, $id_contract,
+				$id_parent,
+				$id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status, $receipt_date, $issue_date, $id);
 
-	$result = process_sql ($sql);	
-	
-	if ($result !== false) {
-		inventory_tracking($id, INVENTORY_UPDATED);
+		$result = process_sql ($sql);	
 		
-		if ($owner != $old_inventory['owner']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['owner'];
-			$aditional_data['new'] = $owner;
-			inventory_tracking($id, INVENTORY_OWNER_CHANGED, $aditional_data);
+		if ($result !== false) {
+			inventory_tracking($id, INVENTORY_UPDATED);
+			
+			if ($owner != $old_inventory['owner']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['owner'];
+				$aditional_data['new'] = $owner;
+				inventory_tracking($id, INVENTORY_OWNER_CHANGED, $aditional_data);
+			}
+			if ($public != $old_inventory['public']) {
+				if ($public)
+					inventory_tracking($id, INVENTORY_PUBLIC);
+				else 
+					inventory_tracking($id, INVENTORY_PRIVATE);
+			}
+			if ($name != $old_inventory['name']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['name'];
+				$aditional_data['new'] = $name;
+				inventory_tracking($id, INVENTORY_NAME_CHANGED, $aditional_data);
+			}
+			if ($id_contract != $old_inventory['id_contract']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['id_contract'];
+				$aditional_data['new'] = $id_contract;
+				inventory_tracking($id, INVENTORY_CONTRACT_CHANGED, $aditional_data);
+			}
+			if ($id_manufacturer != $old_inventory['id_manufacturer']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['id_manufacturer'];
+				$aditional_data['new'] = $id_manufacturer;
+				inventory_tracking($id, INVENTORY_MANUFACTURER_CHANGED, $aditional_data);
+			}
+			if ($inventory_status != $old_inventory['status']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['status'];
+				$aditional_data['new'] = $inventory_status;
+				inventory_tracking($id, INVENTORY_STATUS_CHANGED, $aditional_data);
+			}
+
+			if ($id_object_type != $old_inventory['id_object_type']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['id_object_type'];
+				$aditional_data['new'] = $id_object_type;
+				inventory_tracking($id, INVENTORY_OBJECT_TYPE_CHANGED, $aditional_data);
+			}
+			if ($receipt_date != $old_inventory['receipt_date']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['receipt_date'];
+				$aditional_data['new'] = $receipt_date;
+				inventory_tracking($id, INVENTORY_RECEIPT_DATE_CHANGED, $aditional_data);
+			}
+			if ($issue_date != $old_inventory['issue_date']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['issue_date'];
+				$aditional_data['new'] = $issue_date;
+				inventory_tracking($id, INVENTORY_ISSUE_DATE_CHANGED, $aditional_data);
+			}
+			if ($description != $old_inventory['description']) {
+				$aditional_data = array();
+				$aditional_data['old'] = $old_inventory['description'];
+				$aditional_data['new'] = $description;
+				inventory_tracking($id, INVENTORY_DESCRIPTION_CHANGED, $aditional_data);
+			}
 		}
-		if ($public != $old_inventory['public']) {
-			if ($public)
-				inventory_tracking($id, INVENTORY_PUBLIC);
-			else 
-				inventory_tracking($id, INVENTORY_PRIVATE);
-		}
-		if ($name != $old_inventory['name']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['name'];
-			$aditional_data['new'] = $name;
-			inventory_tracking($id, INVENTORY_NAME_CHANGED, $aditional_data);
-		}
-		if ($id_contract != $old_inventory['id_contract']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['id_contract'];
-			$aditional_data['new'] = $id_contract;
-			inventory_tracking($id, INVENTORY_CONTRACT_CHANGED, $aditional_data);
-		}
-		if ($id_manufacturer != $old_inventory['id_manufacturer']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['id_manufacturer'];
-			$aditional_data['new'] = $id_manufacturer;
-			inventory_tracking($id, INVENTORY_MANUFACTURER_CHANGED, $aditional_data);
-		}
-		if ($inventory_status != $old_inventory['status']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['status'];
-			$aditional_data['new'] = $inventory_status;
-			inventory_tracking($id, INVENTORY_STATUS_CHANGED, $aditional_data);
+		
+		//update object type fields
+		if ($id_object_type != 0) {
+			$sql_label = "SELECT `label`, `type`, `unique` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
+			$labels = get_db_all_rows_sql($sql_label);
+			
+			if ($labels === false) {
+				$labels = array();
+			}
+			
+			foreach ($labels as $label) {
+					
+					$values['data'] = get_parameter (base64_encode($label['label']));
+					
+					if ($label['unique']) {
+						$is_unique = inventories_check_unique_field($values['data'], $label['type']);
+						$is_unique_distinct = inventories_check_unique_update($values, $label['type'] );
+						if (!$is_unique) {
+							$msg_err .= ui_print_error_message (__(" Field '").$label['label'].__("' not updated. Value must be unique"), '', true, 'h3', true);
+						}
+					}
+					$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
+					
+					
+					
+					$values['id_object_type_field'] = $id_object_type_field;
+					$values['id_inventory'] = $id;
+					
+					$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
+					if ($is_unique_distinct['id_object_type_field'] != $values['id_object_type_field']){
+						if ($exists_id) 
+							process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
+						else
+							process_sql_insert('tobject_field_data', $values);
+					}
+			}
+			
+			inventory_tracking($id,INVENTORY_OBJECT_TYPE, $id_object_type);
 		}
 
-		if ($id_object_type != $old_inventory['id_object_type']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['id_object_type'];
-			$aditional_data['new'] = $id_object_type;
-			inventory_tracking($id, INVENTORY_OBJECT_TYPE_CHANGED, $aditional_data);
-		}
-		if ($receipt_date != $old_inventory['receipt_date']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['receipt_date'];
-			$aditional_data['new'] = $receipt_date;
-			inventory_tracking($id, INVENTORY_RECEIPT_DATE_CHANGED, $aditional_data);
-		}
-		if ($issue_date != $old_inventory['issue_date']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['issue_date'];
-			$aditional_data['new'] = $issue_date;
-			inventory_tracking($id, INVENTORY_ISSUE_DATE_CHANGED, $aditional_data);
-		}
-		if ($description != $old_inventory['description']) {
-			$aditional_data = array();
-			$aditional_data['old'] = $old_inventory['description'];
-			$aditional_data['new'] = $description;
-			inventory_tracking($id, INVENTORY_DESCRIPTION_CHANGED, $aditional_data);
-		}
-	}
-	
-	//update object type fields
-	if ($id_object_type != 0) {
-		$sql_label = "SELECT `label`, `type`, `unique` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
-		$labels = get_db_all_rows_sql($sql_label);
-		
-		if ($labels === false) {
-			$labels = array();
-		}
-		
-		foreach ($labels as $label) {
-				
-				$values['data'] = get_parameter (base64_encode($label['label']));
-				
-				if ($label['unique']) {
-					$is_unique = inventories_check_unique_field($values['data'], $label['type']);
-					$is_unique_distinct = inventories_check_unique_update($values, $label['type'] );
-					if (!$is_unique) {
-						$msg_err .= ui_print_error_message (__(" Field '").$label['label'].__("' not updated. Value must be unique"), '', true, 'h3', true);
+		//parent
+		if ($id_parent != 0) {	
+			if ($old_parent != false) {
+				//delete fields old parent
+				$old_id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $old_parent);
+				//parent has object
+				if ($old_id_object_type_inherit !== false) {
+					$old_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$old_id_object_type_inherit, 'inherit' => 1));
+
+					if ($old_fields === false) {
+						$old_fields = array();
+					}
+					foreach ($old_fields as $key => $old) {
+						process_sql_delete('tobject_field_data', array('id_object_type_field' => $old['id'], 'id_inventory' => $id));
 					}
 				}
-				$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
-				
-				
-				
-				$values['id_object_type_field'] = $id_object_type_field;
-				$values['id_inventory'] = $id;
-				
-				$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
-				if ($is_unique_distinct['id_object_type_field'] != $values['id_object_type_field']){
-					if ($exists_id) 
-						process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
-					else
-						process_sql_insert('tobject_field_data', $values);
-				}
-		}
-		
-		inventory_tracking($id,INVENTORY_OBJECT_TYPE, $id_object_type);
-	}
+				$aditional_data = array();
+				$aditional_data['old'] = $old_parent;
+				$aditional_data['new'] = $id_parent;
+				inventory_tracking($id,INVENTORY_PARENT_UPDATED, $aditional_data);
+			}
+			
+			inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
+			
+			$id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $id_parent);
 
-	//parent
-	if ($id_parent != 0) {	
-		if ($old_parent != false) {
-			//delete fields old parent
-			$old_id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $old_parent);
 			//parent has object
-			if ($old_id_object_type_inherit !== false) {
-				$old_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$old_id_object_type_inherit, 'inherit' => 1));
-
-				if ($old_fields === false) {
-					$old_fields = array();
+			if ($id_object_type_inherit !== false) {
+				$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type_inherit, 'inherit' => 1));
+			
+				if ($inherit_fields === false) {
+					$inherit_fields = array();
 				}
-				foreach ($old_fields as $key => $old) {
-					process_sql_delete('tobject_field_data', array('id_object_type_field' => $old['id'], 'id_inventory' => $id));
+
+				foreach ($inherit_fields as $key=>$field) {
+					$values = array();
+					$values['id_object_type_field'] = $field['id'];
+					$values['id_inventory'] = $id;
+					$data = get_db_value_filter('data', 'tobject_field_data', array('id_inventory' => $id_parent, 'id_object_type_field' => $field['id']));
+					$values['data'] = $data;
+
+					process_sql_insert('tobject_field_data', $values);
 				}
 			}
+		} else if ($old_parent != false) { // Parent set to none
 			$aditional_data = array();
 			$aditional_data['old'] = $old_parent;
-			$aditional_data['new'] = $id_parent;
+			$aditional_data['new'] = '';
 			inventory_tracking($id,INVENTORY_PARENT_UPDATED, $aditional_data);
 		}
 		
-		inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
+		$inventory_companies = get_parameter("inventory_companies");
+		inventory_get_user_inventories(get_parameter ('companies', $inventory_companies), true);
 		
-		$id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $id_parent);
+		//if ($result_hook !== ENTERPRISE_NOT_HOOK) {
+			// Update users in inventory
+			$users = get_parameter ('users');
+			$users = explode(", ", safe_output($users));	 
+			inventory_update_users ($id, $users, true);
+		//}
 
-		//parent has object
-		if ($id_object_type_inherit !== false) {
-			$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type_inherit, 'inherit' => 1));
-		
-			if ($inherit_fields === false) {
-				$inherit_fields = array();
-			}
-
-			foreach ($inherit_fields as $key=>$field) {
-				$values = array();
-				$values['id_object_type_field'] = $field['id'];
-				$values['id_inventory'] = $id;
-				$data = get_db_value_filter('data', 'tobject_field_data', array('id_inventory' => $id_parent, 'id_object_type_field' => $field['id']));
-				$values['data'] = $data;
-
-				process_sql_insert('tobject_field_data', $values);
-			}
-		}
-	} else if ($old_parent != false) { // Parent set to none
-		$aditional_data = array();
-		$aditional_data['old'] = $old_parent;
-		$aditional_data['new'] = '';
-		inventory_tracking($id,INVENTORY_PARENT_UPDATED, $aditional_data);
+		//if ($result_hook !== ENTERPRISE_NOT_HOOK) {
+			$companies = get_parameter ('companies');
+			$companies = explode(", ", safe_output($companies));
+			inventory_update_companies($id, $companies, true);
+		//}	
 	}
-	
-	$inventory_companies = get_parameter("inventory_companies");
-	inventory_get_user_inventories(get_parameter ('companies', $inventory_companies), true);
-	
-	//if ($result_hook !== ENTERPRISE_NOT_HOOK) {
-		// Update users in inventory
-		$users = get_parameter ('users');
-		$users = explode(", ", safe_output($users));	 
-		inventory_update_users ($id, $users, true);
-	//}
-
-	//if ($result_hook !== ENTERPRISE_NOT_HOOK) {
-		$companies = get_parameter ('companies');
-		$companies = explode(", ", safe_output($companies));
-		inventory_update_companies($id, $companies, true);
-	//}	
-
 	if ($result !== false) {
 		$result_msg = ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 	} else {
@@ -403,7 +414,7 @@ if ($update) {
 }
 
 if ($create) {
-	
+
 	if (!$write_permission) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory #".$id);
 		include ("general/noaccess.php");
@@ -421,9 +432,18 @@ if ($create) {
 	}
 	
 	$inventory_id = get_db_value ('id', 'tinventory', 'name', $name);
-
-	if($name == '') {
-		$err_message .= ". ".__('Name cannot be empty').".";
+	$check_name = false;
+	if (!$config['duplicate_inventory_name']) {
+		$check_name = get_db_value_filter('name', 'tinventory', array('name'=>$name));
+	}
+	//~ if($name == '') {
+	if (($name == '') || ($check_name != false)) {
+		if ($name == '') {
+			$err_message .= ". ".__('Name cannot be empty').".";
+		}
+		if ($check_name != false) {
+			$err_message .= ". ".__('Name must be unique').".";
+		}
 		$id = false;
 	} else {
 
