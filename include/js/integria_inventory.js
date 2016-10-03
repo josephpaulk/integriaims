@@ -50,15 +50,16 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 
 	if (label_parent_enco != "") {
 		id_parent_value = $("input[name='"+label_parent_enco+"']").val();
+		id_parent = $("input[name='"+label_parent_enco+"']").attr("id");
 	} else {
 		id_parent_value = 0;
+		id_parent = 0;
 	}
 			
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field+"&id_parent_value="+id_parent_value+"&id_parent_table="+id_parent_table+"&external_label="+external_label,
-		//~ data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field+"&id_parent_value="+id_parent_value+"&id_parent_table="+id_parent_table,
+		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field+"&id_parent_value="+id_parent_value+"&id_parent_table="+id_parent_table+"&external_label="+external_label+"&id_parent="+id_parent,
 		dataType: "html",
 		success: function(data){	
 			$("#external_table_window").html (data);
