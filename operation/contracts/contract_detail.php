@@ -934,7 +934,7 @@ elseif ($op == "") {
 
 				// Delete attachment
 				if ($manage_permission) {
-					echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id='.$id.'&id_attachment='.$file["id_attachment"].'&delete_file=1">
+					echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract='.$id.'&id_attachment='.$file["id_attachment"].'&delete_file=1">
 					<img src="images/cross.png"></a>';
 				}
 			}
