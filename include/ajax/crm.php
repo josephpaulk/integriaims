@@ -263,21 +263,8 @@ if ($delete_item) {
 }
 
 if ($get_invoice_id) {
-	$pattern = $config['invoice_id_pattern'];
 	
-	$sql = "SELECT bill_id_variable FROM tinvoice WHERE bill_id_pattern = '".$pattern."' AND invoice_type = 'Submitted' ORDER BY bill_id_variable DESC LIMIT 1";
-	$last_id_variable = get_db_sql($sql);
-	
-	$results = preg_match('/.*\[(.*)\]/', $last_id_pattern, $matches);
-	
-	if ($last_id_variable) {
-		$last_id = $last_id_variable+1;
-	} else {
-		preg_match('/.*\[(.*)\]/', $pattern, $other_matches);
-		$last_id = $other_matches[1]+1;
-	}
-
-	preg_match('/.*\[.*(\].*)/', $pattern, $matches);
+	$last_id = crm_get_next_invoice_id ();
 
 	$result_id = substr_replace ($pattern, $last_id, strpos($pattern, "["));
 	$final = str_replace ("]", "", $matches[1]);

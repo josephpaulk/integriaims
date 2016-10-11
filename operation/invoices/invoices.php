@@ -515,7 +515,7 @@ $table->data[0][3] = print_input_text ('reference', $reference, '', 25, 100, tru
 $table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
 if ($bill_id == ""){ // let's show the latest Invoice ID generated in the system
-	$last_invoice_generated = get_db_sql ("SELECT bill_id FROM tinvoice ORDER by invoice_create_date DESC LIMIT 1");
+	$last_invoice_generated = crm_get_last_invoice_id();
 	$table->data[1][0] .= "<div id='last_id'><span style='font-size: 9px'> ". __("Last generated ID: "). $last_invoice_generated . "</span></div>";
 }
 
@@ -528,7 +528,6 @@ $table->data[1][1] = print_select ($invoice_status_ar, 'invoice_status',
 
 $table->data[1][2] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
 $table->data[1][3] = print_checkbox_extended ('calendar_event', 1, '', false, '', '', true, __('Create calendar event'));
-$table->data[2][0] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
 
 if ($id_invoice != -1) {
 	$disabled = true;
@@ -536,7 +535,8 @@ if ($id_invoice != -1) {
 	$disabled = false;
 }
 
-$table->data[2][1] = print_input_text ('invoice_expiration_date', $invoice_expiration_date, '', 15, 50, true,__('Invoice expiration date'));
+$table->data[2][0] = print_input_text ('invoice_expiration_date', $invoice_expiration_date, '', 15, 50, true,__('Invoice expiration date'));
+$table->data[2][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
 
 $table->data[2][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name', 'id_language', 
 	$language, '', '', '', true, false, false, __('Language'));

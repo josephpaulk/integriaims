@@ -36,7 +36,7 @@ $search_exp_date = (int) get_parameter ('search_exp_date');
 $search_exp_begin = get_parameter ('search_exp_begin');
 $search_exp_end = get_parameter ('search_exp_end');
 
-$search_invoice_type = (string) get_parameter ('search_invoice_type', 'All');
+$search_invoice_type = (string) get_parameter ('search_invoice_type', 'Submitted');
 $search_company_role = (int) get_parameter ('search_company_role');
 $search_company_manager = (string) get_parameter ('search_company_manager');
 $search_contract_number = (string) get_parameter ('search_contract_number');
@@ -223,9 +223,9 @@ if ($clean_output == 0){
 	$sql = 'SELECT id, name FROM tcompany_role ORDER BY name';
 	$table->data[1][0] = print_select_from_sql ($sql, 'search_company_role', $search_company_role, '', __('Any'), 0, true, false, false, __('Company Role'));
 	
-	$table->data[0][1] = get_last_date_control_div ($search_last_date, 'search_last_date', __('Date Creation'), $search_date_begin, 'search_date_begin', __('From Creation'), $search_date_end, 'search_date_end', __('To Creation'), 'last_div');
+	$table->data[0][1] = get_last_date_control_div ($search_last_date, 'search_last_date', __('Date Creation'), $search_date_begin, 'search_date_begin', __('From'), $search_date_end, 'search_date_end', __('To'), 'last_div');
 
-	$table->data[0][2] = get_last_date_control_div ($search_exp_date, 'search_exp_date', __('Date Expiration'), $search_exp_begin, 'search_exp_begin', __('From Expir.'), $search_exp_end, 'search_exp_end', __('To Expir.'), 'expiration_div');
+	$table->data[0][2] = get_last_date_control_div ($search_exp_date, 'search_exp_date', __('Date Expiration'), $search_exp_begin, 'search_exp_begin', __('From'), $search_exp_end, 'search_exp_end', __('To'), 'expiration_div');
 	
 	$invoice_types = array("All"=>__('All'), "Submitted"=>__('Submitted'), "Received"=>__('Received'));
 	$table->data[0][3] = print_select ($invoice_types, 'search_invoice_type', $search_invoice_type, '','', 0, true, 0, false, __('Invoice type'), false, 'width:150px;');

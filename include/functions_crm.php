@@ -1217,4 +1217,48 @@ function crm_print_company_projects_tree($projects) {
 		
 	//~ echo '</table>';
 }
+
+function crm_get_last_invoice_id () {
+	global $config;
+
+	$pattern = $config['invoice_id_pattern'];
+	$results_pattern = preg_match('/(.*)\[.*\]/', $pattern, $matches);
+
+	$sql = "SELECT bill_id FROM tinvoice WHERE bill_id_pattern = '".$pattern."' AND invoice_type = 'Submitted' AND bill_id LIKE '%".$matches[1]."%' ORDER BY bill_id DESC LIMIT 1";
+	$last_id = get_db_sql($sql);
+
+	if ($last_id == false) {
+		preg_match('/.*\[(.*)\]/', $pattern, $other_matches);
+		$last_id = $other_matches[1];
+	}
+
+	return $last_id;
+}
+
+function crm_get_next_invoice_id () {
+	global $config;
+
+	$pattern = $config['invoice_id_pattern'];
+	$results_pattern = preg_match('/(.*)\[.*\]/', $pattern, $matches);
+
+	$sql = "SELECT bill_id FROM tinvoice WHERE bill_id_pattern = '".$pattern."' AND invoice_type = 'Submitted' AND bill_id LIKE '%".$matches[1]."%' ORDER BY bill_id DESC LIMIT 1";
+	$last_id = get_db_sql($sql);
+
+	$last_id_variable = substr($last_id,strlen($matches[1]),strlen($last_id));	
+
+	if ($last_id_variable) {
+		$last_id = $last_id_variable+1;
+	} else {
+		preg_match('/.*\[(.*)\]/', $pattern, $other_matches);
+		$last_id = $other_matches[1]+1;
+	}
+
+	preg_match('/.*\[.*(\].*)/', $pattern, $matches);
+
+	$result_id = substr_replace ($pattern, $last_id, strpos($pattern, "["));
+	$final = str_replace ("]", "", $matches[1]);
+	$result_id .= $final;
+
+	return $result_id;
+}
 ?>
