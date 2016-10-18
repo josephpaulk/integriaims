@@ -2066,6 +2066,9 @@ function set_ticket_groups() {
 		} else {
 			$("#grupo_form").append(new Option('', ''));
 		}
+		
+		group = $("#grupo_form").val();
+		set_ticket_owner(group);
 	});
 }
 
