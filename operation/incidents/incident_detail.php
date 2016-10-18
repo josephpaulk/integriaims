@@ -1578,19 +1578,7 @@ $(document).ready (function () {
 
 	//order groups for select
 	$("#id_incident_type").change (function () {
-		var id_incident_type = $("#id_incident_type").val();
-		show_incident_groups_fields(id_incident_type, id_group_p, null, function (err, incident_groups) {
-			var obj = incident_groups;
-			$("#grupo_form option").remove();
-			if(obj.length > 0){
-				$.each (obj, function (id, value) {
-					value_aux = value[1].replace(/&nbsp;/g, '\u00a0');
-					$("#grupo_form").append(new Option(value_aux, value[0]));
-				});
-			} else {
-				$("#grupo_form").append(new Option('', ''));
-			}
-		});
+		set_ticket_groups();
 	});
 	
 	$("#grupo_form").change (function () {
@@ -1821,6 +1809,8 @@ $(document).ready (function () {
 		var score = $("#score_ticket").val();
 		setTicketScore(id_ticket, score);
 	});
+
+	set_ticket_groups();
 
 	// Init the file upload
 	form_upload();
@@ -2056,6 +2046,25 @@ function set_ticket_owner(id_group) {
 		dataType: "json",
 		success: function (data) {
 			$("#text-id_user").val(data);
+		}
+	});
+}
+
+function set_ticket_groups() {
+	
+	var id_group_p = <?php echo $id_grupo?>;
+	var id_incident_type = $("#id_incident_type").val();
+	
+	show_incident_groups_fields(id_incident_type, id_group_p, null, function (err, incident_groups) {
+		var obj = incident_groups;
+		$("#grupo_form option").remove();
+		if(obj.length > 0){
+			$.each (obj, function (id, value) {
+				value_aux = value[1].replace(/&nbsp;/g, '\u00a0');
+				$("#grupo_form").append(new Option(value_aux, value[0]));
+			});
+		} else {
+			$("#grupo_form").append(new Option('', ''));
 		}
 	});
 }
