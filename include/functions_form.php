@@ -1224,8 +1224,8 @@ function form_search_incident ($return = false, $filter=false) {
 	$output .= '<br /><br />';
 	$output .= '</div>';
 	
-	//~ $output .= '<form id="search_incident_form" method="post" onsubmit="incidents_gift();return false">';
-	$output .= '<form id="search_incident_form" method="post">';
+	$output .= '<form id="search_incident_form" method="post" onsubmit="incidents_gift();return false">';
+	//~ $output .= '<form id="search_incident_form" method="post">';
 	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
 	$output .= '</form>';
 		
