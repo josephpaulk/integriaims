@@ -1235,8 +1235,8 @@ function create_ical ( $date_from, $duration, $id_user, $title, $description ){
 	$output .= "DTEND:".$date_to_date."T".$date_to_time."\n";
 	$output .= "DESCRIPTION:";
 	$description = str_replace(chr(13).chr(10),"  ", $description);
-	$output .= $description."\n";
-	$output .=  "SUMMARY:$title\n";
+	$output .= safe_output($description)."\n";
+	$output .=  "SUMMARY:".safe_output($title)."\n";
 	$output .=  "UID:$id_user\n";
 	$output .=  "SEQUENCE:0\n";
 	$output .=  "DTSTAMP:".date('Ymd').'T'.date('His')."\n";
