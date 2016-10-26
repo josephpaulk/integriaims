@@ -156,6 +156,9 @@ if ($render_html == 1){
 	if ($report === false)
 		return;
 	
+	ini_set ("memory_limit", "3072M");
+	ini_set ("max_execution_time", 600);
+	
 	echo "<h2>".__('Custom report')."</h2>";
 	echo "<h4>".$report['name'];
 		echo "<div id='button-bar-title'><ul>";

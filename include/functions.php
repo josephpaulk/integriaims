@@ -701,7 +701,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	//New check, if exist any data with same data, doesn't insert in DB.
 	$check = array(
 			'recipient' => $to,
-			'body' => mysql_real_escape_string($body),
+			'body' => mysql_real_escape_string(safe_output($body)),
 			'attachment_list' => $attachments,
 			'from' => $from,
 			'cc' => $cc,
@@ -716,8 +716,8 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 				'status' => 0,
 				'recipient' => $to,
 				'subject' => mysql_real_escape_string($subject),
-				//~ 'body' => mysql_real_escape_string($body),
-				'body' => html_entity_decode($body),
+				'body' => mysql_real_escape_string(safe_output($body)),
+				//~ 'body' => html_entity_decode($body),
 				'attachment_list' => $attachments,
 				'from' => $from,
 				'cc' => $cc,
