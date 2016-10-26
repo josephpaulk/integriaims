@@ -63,6 +63,10 @@ if ($get_incidents_search) {
 	$filter['left_sla'] = (int) get_parameter ('search_left_sla');
 	$filter['right_sla'] = (int) get_parameter ('search_right_left');
 	$filter['show_hierarchy']     = (bool) get_parameter('search_show_hierarchy');
+	$filter['resolution'] = (int) get_parameter('search_resolution', -1);
+    $filter['editor'] = (string) get_parameter ('search_editor');
+    $filter['id_creator'] = (string) get_parameter ('search_id_creator');
+    $filter['closed_by'] = (string) get_parameter ('search_closed_by');
 	
 	$ajax = get_parameter("ajax");
 	
