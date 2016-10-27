@@ -274,7 +274,8 @@ function show_fields() {
 					
 						//~ a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'")';
 						a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'",'+'"'+parent_name_enco+'",'+'"'+id_parent_table+'","'+external_label+'")';
-						a2.href = 'javascript: removeExternal(id="'+element.id+'")';
+						//~ a2.href = 'javascript: removeExternal(id="'+element.id+'")';
+						a2.href = 'javascript: removeExternal('+element.id+')';
 						
 						img=document.createElement('img');
 						img.id='img_show_external_table';

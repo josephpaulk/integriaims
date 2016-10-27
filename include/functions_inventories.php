@@ -2115,7 +2115,7 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name, $manage_permi
 function inventories_get_external_tables ($id_object_type) {
 	global $config;
 	
-	$sql = "SELECT external_table_name FROM tobject_type_field WHERE id_object_type=".$id_object_type;
+	$sql = "SELECT external_table_name FROM tobject_type_field WHERE id_object_type=".$id_object_type." AND `type`='external'";
 	
 	$tables = get_db_all_rows_sql($sql);
 	
