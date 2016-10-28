@@ -39,47 +39,6 @@ $check_custom_search = get_parameter('check_custom_search', 0);
 $set_params = get_parameter('set_params', 0);
 $search_ajax = (bool)get_parameter('search_ajax', 0);
 
-if ($get_incidents_search) {
-	
-	$filter = array ();
-	$filter['inverse_filter'] = (bool) get_parameter ('search_inverse_filter');
-	$filter['string'] = (string) get_parameter ('search_string');
-	$filter['priority'] = (int) get_parameter ('search_priority', -1);
-	$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
-	$filter['status'] = (int) get_parameter ('search_status', -10);
-	$filter['id_product'] = (int) get_parameter ('search_id_product');
-	$filter['id_company'] = (int) get_parameter ('search_id_company');
-	$filter['id_inventory'] = (int) get_parameter ('search_id_inventory');
-	$filter['serial_number'] = (string) get_parameter ('search_serial_number');
-	$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
-	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-	$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
-	$filter['id_user'] = (string) get_parameter ('search_id_user', '');
-	$filter['first_date'] = (string) get_parameter ('search_first_date');
-	$filter['last_date'] = (string) get_parameter ('search_last_date');	
-	$filter['sla_state'] = (string) get_parameter ('search_sla_state');
-	$filter['id_task'] = (int) get_parameter ('search_id_task');	
-	$filter['left_sla'] = (int) get_parameter ('search_left_sla');
-	$filter['right_sla'] = (int) get_parameter ('search_right_left');
-	$filter['show_hierarchy']     = (bool) get_parameter('search_show_hierarchy');
-	$filter['resolution'] = (int) get_parameter('search_resolution', -1);
-    $filter['editor'] = (string) get_parameter ('search_editor');
-    $filter['id_creator'] = (string) get_parameter ('search_id_creator');
-    $filter['closed_by'] = (string) get_parameter ('search_closed_by');
-	
-	$ajax = get_parameter("ajax");
-	
-	$filter_form = false;
-	echo "<div style='float:right;'>";
-	form_search_incident (false, $filter_form);
-	echo "</div>";
-	$no_parents = true;
-	
-	incidents_search_result($filter, $ajax, false, false, $no_parents, false, false, false, $id_ticket);
-
-}
-
 if ($get_user_search) {
 	
 	$filter = array ();
@@ -536,26 +495,28 @@ if ($search_ajax){
 	$filter['id_incident_type']   = (int) get_parameter ('search_id_incident_type');
 	$filter['id_user']            = (string) get_parameter ('search_id_user', '');
 	$filter['id_user_or_creator'] = (string) get_parameter ('id_user_or_creator');
-	$filter['from_date']          = (string) get_parameter ('search_first_date');
+	
+	$filter['first_date']          = (string) get_parameter ('search_first_date');
 	$filter['last_date']          = (string) get_parameter ('search_last_date');	
-	$filter['sla_state']          = (string) get_parameter ('search_sla_state');
 	$filter['id_creator']         = (string) get_parameter ('search_id_creator');
 	$filter['editor']             = (string) get_parameter ('search_editor');
-	$filter['closed_by']          = get_parameter ('closed_by');
+	$filter['closed_by']          = (string) get_parameter ('closed_by');
 	$filter['resolution']         = (int) get_parameter ('search_resolution', -1);
 	$filter["offset"]             = (int) get_parameter ('offset');
 	$filter['group_by_project']   = (bool) get_parameter('search_group_by_project');
-	$filter['sla_state']          = (bool) get_parameter ('search_sla_state');
+	$filter['sla_state']          = (string) get_parameter ('search_sla_state');
+	
 	$filter['id_task']            = (int) get_parameter ('search_id_task');	
 	$filter['left_sla']           = (int) get_parameter ('search_left_sla');
 	$filter['right_sla']          = (int) get_parameter ('search_right_left');
 	$filter['show_hierarchy']     = (bool) get_parameter('search_show_hierarchy');
-	$filter['search_medals']      = get_parameter('search_medals');
+	
 	$filter['parent_name']        = get_parameter('parent_name');
 	$filter['serial_number']      = (string) get_parameter ('search_serial_number');
 	$filter['search_from_date']   = (int) get_parameter("search_from_date");
 	//$filter['id_product']       = (int) get_parameter ('search_id_product');
-	
+	$filter['medals']             = (int) get_parameter('search_medals');
+
 	//custom fields
 	$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 	foreach ($type_fields as $key => $type_field) {
@@ -565,7 +526,18 @@ if ($search_ajax){
 	//Store serialize filter
 	serialize_in_temp($filter, $config["id_user"]);
 
-	incidents_search_result($filter, false, false, true);
+
+	$ajax = get_parameter("ajax", "");
+
+	if($ajax){
+		$filter_form = false;
+		echo "<div style='float:right;'>";
+			form_search_incident (false, $filter_form);
+		echo "</div>";
+	}
+	
+	incidents_search_result($filter, $ajax, false, true);
+	//incidents_search_result($filter, $ajax, false, false, $no_parents, false, false, false, $id_ticket);
 	return;
 }
 

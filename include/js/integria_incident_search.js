@@ -817,52 +817,6 @@ function show_incident_type_fields(numRow) {
 	});
 }
 
-function parent_search_form(filter, id_ticket) {
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: 'page=include/ajax/incidents&get_incidents_search=1&id_ticket='+id_ticket+'&ajax=1&'+filter,
-		dataType: "html",
-		success: function(data){	
-			$("#parent_search_window").html (data);
-			$("#parent_search_window").show ();
-
-			$("#parent_search_window").dialog ({
-					resizable: true,
-					draggable: true,
-					modal: true,
-					overlay: {
-						opacity: 0.5,
-						background: "black"
-					},
-					width: 1024,
-					height: 768
-				});
-			$("#parent_search_window").dialog('open');
-			
-			//JS to catch incident search submit request
-			$("#search_incident_form").submit(function (){
-				var filter = $("#search_incident_form").formSerialize();
-				parent_search_form(filter);
-				return false;
-			});
-						
-			$("a[id^='page']").click(function(e) {
-
-				e.preventDefault();
-				var id = $(this).attr("id");
-								
-				offset = id.substr(5,id.length);
-				
-				var filter = $("#search_incident_form").formSerialize();
-				filter = filter+"&offset="+offset;
-				parent_search_form(filter);
-			});
-		}
-	});
-}
-
 function update_parent(id_parent) {
 
 	var str_parent = __('Ticket') +" #"+id_parent;
@@ -1402,6 +1356,63 @@ function setParams (id_ticket) {
 			window.location = url;
 		}
 	});	
+}
+
+function parent_search_form(filter, id_ticket) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: 'page=include/ajax/incidents&search_ajax=1&id_ticket='+id_ticket+'&ajax=1&'+filter,
+		dataType: "html",
+		async: true,
+		success: function(data){	
+			$("#parent_search_window").html (data);
+			$("#parent_search_window").show ();
+
+			$("#parent_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 1024,
+					height: 768
+				});
+			$("#parent_search_window").dialog('open');
+					
+			$("a[id^='page']").click(function(e) {
+
+				e.preventDefault();
+				var id = $(this).attr("id");
+								
+				offset = id.substr(5,id.length);
+				
+				var filter = $("#search_incident_form").formSerialize();
+				filter = filter+"&offset="+offset;
+				parent_search_form(filter);
+			});
+
+			var idUser = "<?php echo $config['id_user'] ?>";
+
+			bindAutocomplete("#text-search_id_user", idUser);
+			bindAutocomplete("#text-search_editor", idUser);
+			bindAutocomplete("#text-search_closed_by", idUser);
+			bindAutocomplete("#text-search_id_creator", idUser);
+
+			if ($("#incident_status_form").length > 0){
+				validate_user ("#search_incident_form", "#text-search_id_user", "<?php echo __('Invalid user')?>");
+				validate_user ("#search_incident_form", "#text-search_editor", "<?php echo __('Invalid user')?>");
+				validate_user ("#search_incident_form", "#text-search_closed_by", "<?php echo __('Invalid user')?>");
+				validate_user ("#search_incident_form", "#text-search_id_creator", "<?php echo __('Invalid user')?>");
+			}
+
+			add_datepicker ("#text-search_first_date");
+			add_datepicker ("#text-search_last_date");
+		}
+	});
 }
 
 function incidents_gift (){
