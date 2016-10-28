@@ -952,7 +952,7 @@ function form_search_incident ($return = false, $filter=false) {
 		$date_end = (string) get_parameter("search_last_date");
 		$search_creator = (string) get_parameter ('search_id_creator');
 		$search_editor = (string) get_parameter ('search_editor');
-		$search_closed_by = (string) get_parameter ('search_id_creator');
+		$search_closed_by = (string) get_parameter ('search_closed_by');
 		$group_by_project = (bool) get_parameter('search_group_by_project');
 		$sla_state = (int)get_parameter('search_sla_state', 0);
 		$id_task = (int) get_parameter('search_id_task', 0);

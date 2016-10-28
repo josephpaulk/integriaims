@@ -2722,6 +2722,13 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	foreach ($filter as $key => $value) {
 		$params .= "&search_".$key."=".$value;
 	}
+	
+	if ($filter['closed_by'] == '') {
+		$filter['closed_by'] = get_parameter('search_closed_by', '');
+	}
+	if ($filter['from_date'] == '') {
+		$filter['from_date'] = get_parameter('search_from_date', '');
+	}
 
 	//Only show incident for last year if there isn't a search by dates
 	if (!$filter['first_date'] && !$filter['last_date']) {
