@@ -32,7 +32,9 @@ if($pdf_output == 1) {
 else {
 	$ttl = 1;
 }
-$user_id = get_parameter ('user_id', $config["id_user"]);
+//~ $user_id = get_parameter ('user_id', $config["id_user"]);
+$user_id = get_parameter ('wu_reporter', $config["id_user"]);
+
 
 if (($user_id != $config["id_user"]) AND (!give_acl ($config["id_user"], 0, "IM")) AND (!give_acl($config["id_user"], 0, "PM"))) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "Unauthorized access", "Trying to access full user report");
