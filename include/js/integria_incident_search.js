@@ -1380,8 +1380,16 @@ function parent_search_form(filter, id_ticket) {
 					},
 					width: 1024,
 					height: 768
-				});
+			});
+
 			$("#parent_search_window").dialog('open');
+
+			$("#search_incident_form").submit(function (){
+				var filter = $("#search_incident_form").formSerialize();
+				$("#incident_table").html("<img id='inventory_loading' src='images/carga.gif' />");
+ 				parent_search_form(filter);
+ 				return false;
+			});
 					
 			$("a[id^='page']").click(function(e) {
 

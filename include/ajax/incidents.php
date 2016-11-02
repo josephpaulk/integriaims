@@ -531,8 +531,8 @@ if ($search_ajax){
 
 	if($ajax){
 		$filter_form = false;
-		echo "<div style='float:right;'>";
-			form_search_incident (false, $filter_form);
+		echo "<div style='float:right; width:99%'>";
+			form_search_incident (false, $filter_form, $ajax);
 		echo "</div>";
 	}
 	

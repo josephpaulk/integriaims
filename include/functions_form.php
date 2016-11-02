@@ -931,7 +931,7 @@ echo "</form>";
 echo "</div>";
 }
 
-function form_search_incident ($return = false, $filter=false) {
+function form_search_incident ($return = false, $filter=false, $ajax=0) {
 	include_once ("functions_user.php");
 	global $config;
 	$output = '';
@@ -1224,7 +1224,11 @@ function form_search_incident ($return = false, $filter=false) {
 	$output .= '<br /><br />';
 	$output .= '</div>';
 	
-	$output .= '<form id="search_incident_form" method="post" onsubmit="incidents_gift();return false">';
+	if($ajax){
+		$output .= '<form id="search_incident_form" method="post">';
+	} else {
+		$output .= '<form id="search_incident_form" method="post" onsubmit="incidents_gift();return false">';
+	}
 	//~ $output .= '<form id="search_incident_form" method="post">';
 	$output .= '<div class="divresult_incidents">' . print_table ($table, true) . '</div>';
 	$output .= '</form>';
