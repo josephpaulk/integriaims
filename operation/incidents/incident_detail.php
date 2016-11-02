@@ -941,7 +941,8 @@ if (! $id) {
 
 //The user with IW flag can modify all data from the incident.
 
-$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW") || ((get_standalone_user($config["id_user"])) && ($incident["id_creator"] == $config["id_user"])));
+//~ $has_permission = (give_acl ($config['id_user'], $id_grupo, "IW") || ((get_standalone_user($config["id_user"])) && ($incident["id_creator"] == $config["id_user"])));
+$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW") || ((get_standalone_user($config["id_user"]))));
 $has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
 $has_iw = (give_acl ($config['id_user'], $id_grupo, "IW") || ((get_standalone_user($config["id_user"])) && ($incident["id_creator"] == $config["id_user"])));
 
@@ -1035,7 +1036,6 @@ $table->style = array();
 $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-
 
 //~ if (($has_permission && (!isset($blocked_incident))) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!isset($blocked_incident)))) {
 if (($has_permission && (!$blocked_incident)) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!$blocked_incident))) {
@@ -1134,20 +1134,16 @@ $table->data[1][0] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
 $table->data[1][1] = combo_incident_status ($estado, $blocked_incident, 0, true, false, '', '', 0);
 
-if (!$create_incident){
-	if ($incident["estado"] != STATUS_CLOSED) {
-		$table->data[1][2] = "<div id='div_incident_resolution' style='display: none;'>";
-	} else {
-		$table->data[1][2] = "<div id='div_incident_resolution'>";
-	}
-	if ($has_im)
-		$table->data[1][2] .= combo_incident_resolution ($resolution, $blocked_incident, true);
-	else {
-		$table->data[1][2] .= print_label (__('Resolution'), '','',true, render_resolution($resolution));
-		$table->data[1][2] .= print_input_hidden ('incident_resolution', $resolution, true);
-	}
-	$table->data[1][2] .= "</div>";
+
+if ($incident["estado"] != STATUS_CLOSED) {
+	$table->data[1][2] = "<div id='div_incident_resolution' style='display: none;'>";
+} else {
+	$table->data[1][2] = "<div id='div_incident_resolution'>";
 }
+	
+$table->data[1][2] .= combo_incident_resolution ($resolution, $blocked_incident, true);
+$table->data[1][2] .= "</div>";
+
 if(!isset($incident["estado"])){
 	$incident["estado"] = '';
 }
