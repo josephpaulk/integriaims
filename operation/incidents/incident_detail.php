@@ -2048,8 +2048,9 @@ function set_ticket_owner(id_group) {
 
 function set_ticket_groups() {
 	
-	var id_group_p = <?php echo $id_grupo?>;
+	var id_group_p = <?php echo $id_grupo;?>;
 	var id_incident_type = $("#id_incident_type").val();
+	var id_grupo_incident = <?php echo $id_grupo_incident;?>;
 	
 	show_incident_groups_fields(id_incident_type, id_group_p, null, function (err, incident_groups) {
 		var obj = incident_groups;
@@ -2062,6 +2063,7 @@ function set_ticket_groups() {
 		} else {
 			$("#grupo_form").append(new Option('', ''));
 		}
+		$("#grupo_form option[value=" + id_grupo_incident + "]").attr("selected", "selected");
 		
 		group = $("#grupo_form").val();
 		set_ticket_owner(group);
