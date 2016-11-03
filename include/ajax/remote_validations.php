@@ -56,6 +56,7 @@ $search_existing_group = (bool) get_parameter ('search_existing_group');
 $search_duplicate_name = (bool) get_parameter ('search_duplicate_name');
 $search_input_number = (bool) get_parameter ('search_input_number');
 $check_mail = (bool) get_parameter ('check_mail');
+$check_user_name = (bool) get_parameter ('check_user_name');
 
 if ($search_existing_project) {
 	require_once ('include/functions_db.php');
@@ -1074,6 +1075,23 @@ if ($search_duplicate_name) {
 			echo json_encode(true);
 			return;
 		}
+	}
+}
+
+
+if ($check_user_name) {
+
+	$user_id = get_parameter("user_id");
+
+	$special_characters = preg_match ("/.*(&#x20;)|(&ntilde;)|(acute;)|(uml;).*/", $user_id);
+	(strlen($user_id) > 30) ? $too_long = true : $too_long = false;
+	
+	if (($special_characters) || ($too_long)) {
+		echo json_encode(false);
+		return;
+	} else {
+		echo json_encode(true);
+		return;
 	}
 }
 

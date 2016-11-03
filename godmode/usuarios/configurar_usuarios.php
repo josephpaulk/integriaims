@@ -747,4 +747,21 @@ messages = {
 };
 add_validate_form_element_rules('input[name="direccion"]', rules, messages);
 
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			check_user_name: 1,
+			user_id: function() { return $('input[name="nombre"]').val() }
+        }
+	}
+};
+messages = {
+	remote: "<?php echo __('User ID has invalid characters or exceeds 30 characters')?>"
+};
+add_validate_form_element_rules('input[name="nombre"]', rules, messages);
+
 </script>
