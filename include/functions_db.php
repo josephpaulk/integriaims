@@ -617,8 +617,14 @@ function borrar_incidencia ($id_incident) {
 // --------------------------------------------------------------- 
 function borrar_objeto ($id) {
 	$sql = sprintf ('DELETE FROM tinventory WHERE id = %d', $id);
+	$result = process_sql ($sql);
 	
-	return process_sql ($sql);
+	if ($result !== false) {
+		$sql = sprintf ('DELETE FROM tobject_field_data WHERE id_inventory = %d', $id);
+		$res = process_sql ($sql);
+	}
+	
+	return $result;
 }
 
 // --------------------------------------------------------------- 
