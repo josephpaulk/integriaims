@@ -103,7 +103,8 @@ if (defined ('AJAX')) {
 		$package = (string) get_parameter("package");
 		$package = trim($package);
 
-		$is_package = preg_match("/^[\w*\/*]*package_[\d*]/", $package);
+		$is_package = preg_match("/^.*package_(\d*)/", $package);
+		//$is_package = preg_match("/^[\w*\/*]*package_[\d*]/", $package);
 
 		if ($is_package) {
 
@@ -111,7 +112,8 @@ if (defined ('AJAX')) {
 			$pattern = "/\.oum$/";
 			$replacement = "";
 			$package_aux = preg_replace($pattern, $replacement, $package); // Remove extension .oum
-			$pattern = "/^[\w*\/*]*package_/";
+			//$pattern = "/^[\w*\/*]*package_/";
+			$pattern = "/^.*package_/";
 			$package_num = preg_replace($pattern, $replacement, $package_aux); // Get the number of the package
 
 			if ($current_package >= $package_num) {
