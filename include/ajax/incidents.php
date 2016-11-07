@@ -344,7 +344,7 @@ if ($check_custom_search) {
 	$count_search = get_db_value_sql($sql);
 	
 	if (!$count_search) {
-		$result = __("Ticket reports are based on custom searches. In order to elaborate a report, first it is required to define a customized search that will be used as a base for the report.");
+		$result = __("Ticket reports are based on custom searches. In order to elaborate a report, first you will need to define a custom search on which the report will be based.");
 		$result .= integria_help ("custom_search", true);
 		$result .= '<br><br><a href="index.php?sec=incidents&sec2=operation/incidents/incident_search">'.__('Go to Custom search').'</a>';
 

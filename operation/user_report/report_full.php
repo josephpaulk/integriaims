@@ -170,8 +170,7 @@ if ($clean_output == 0){
 
     echo "<tr><td>";
     echo print_checkbox ('only_projects', 1, $only_projects, true, __('Project search') .
-		print_help_tip (__("If selected, will render all project info.
-			If not, will show only time spent in tickets related to proyects"), true));
+		print_help_tip (__("If selected, renders entire all of the project info. Otherwise, it`ll show only time spent on project-related tickets"), true));
 
     echo "<td>";
     echo print_checkbox ('only_incidents', 1, $only_incidents, true, __('Show ticket summary'));

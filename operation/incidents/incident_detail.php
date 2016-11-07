@@ -1058,7 +1058,7 @@ if($id_grupo==0) {
 }
 
 $types = get_incident_types (true, $config['required_ticket_type']);
-$table->data[0][1] = print_label (__('Ticket type') . print_help_tip (__("When changing the ticket type, it's possible for the group to change as well"), true), '','',true);
+$table->data[0][1] = print_label (__('Ticket type') . print_help_tip (__("If the ticket type is changed, the group can change with it"), true), '','',true);
 
 //Disabled incident type if any, type changes not allowed
 if ($id <= 0 || $config["incident_type_change"] == 1 || dame_admin ($config['id_user'])) {
@@ -1207,7 +1207,7 @@ if ($has_im) {
 	$params_assigned['input_name'] = 'id_user';
 	$params_assigned['input_value'] = $assigned_user_for_this_incident;
 	$params_assigned['title'] = __('Owner');
-	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage tickets. If you are opening a ticket and want to be resolved by someone different than yourself, please assign to other user");
+	$params_assigned['help_message'] = __("The user assigned here will be responsible for managing tickets. If you are opening a ticket and want it to be solved by someone other than yourself, assign this value to another user.");
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	$params_assigned['disabled'] = $disabled_creator;
