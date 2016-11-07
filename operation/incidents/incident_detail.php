@@ -1806,7 +1806,10 @@ $(document).ready (function () {
 		setTicketScore(id_ticket, score);
 	});
 
-	set_ticket_groups();
+	var action = '<?php echo $action;?>';
+	if(action != 'update'){
+		set_ticket_groups();
+	}
 
 	// Init the file upload
 	form_upload();

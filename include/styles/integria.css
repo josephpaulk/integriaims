@@ -3680,12 +3680,13 @@ ul li {
 }
 
 .legend {
-	float:left;
-	width:190px;
+	display: inline-block;
+	padding-left:4%;
 }
+
 .legend_text {
 	float:left;
-	line-height:15px;
+	line-height:20px;
 	margin-left: 5px;
 }
 .legend_box_color {

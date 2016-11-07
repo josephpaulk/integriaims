@@ -567,8 +567,11 @@ if ($clean_output == 0) {
 
 				if ($integria_free_days) {
 					echo "<div class= 'dialog ui-dialog-content' title='".__("You are less than three days as premium")."' id='three_day_dialog'>";
-						echo "<b>".__('In 3 days you`ll lose the premium features from the 30 days trial. If you wish to purchase a premium license click')."</b>";
-						echo "<a href='http://integriaims.com/' target='_blank'>.__(' here').</a></br>";
+						echo "<div style='float:left; width:25%; padding-top:30px; text-align:center;'>";
+						echo "<img src='images/icon_delete.png'></div>";
+						echo "<div style='float:left; width:75%; padding-top:45px; font-size:12px;'>";
+							echo "<b>".__('In 3 days you`ll lose the premium features from the 30 days trial. If you wish to purchase a premium license click')."</b>";
+							echo "<a href='http://integriaims.com/' target='_blank'>".__(' Click here')."</a></br></div>";
 					echo "</div>";
 						echo "<script type='text/javascript'>";
 							echo "$(document).ready (function () {";
