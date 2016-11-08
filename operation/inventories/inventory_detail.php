@@ -31,6 +31,7 @@ if (defined ('AJAX')) {
 	$update_external_id = (bool) get_parameter('update_external_id', 0);
 	$get_company_name = (bool) get_parameter('get_company_name', 0);
 	$get_user_name = (bool) get_parameter('get_user_name', 0);
+	$get_external_child = (bool) get_parameter('get_external_child', 0);
  	
  	if ($show_type_fields) {
 		$id_object_type = get_parameter('id_object_type');
@@ -64,8 +65,16 @@ if (defined ('AJAX')) {
 		} else {
 			$result = process_sql_insert('tobject_field_data', array('data' => $id_value,'id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory));
 		}
+		
+		$child = array();
+		
+		if ($result) {
+			$parent_name = get_db_value ('external_table_name', 'tobject_type_field', 'id', $id_object_type_field);
+			$child = get_db_all_rows_sql ("SELECT id FROM tobject_type_field WHERE parent_table_name ='".$parent_name."'");			
+		}
 
-		return safe_output($result);
+		echo json_encode($child);
+		return;
 	}
 	
 	if ($get_company_name) {
@@ -81,6 +90,16 @@ if (defined ('AJAX')) {
 		$name = get_db_value('nombre_real', 'tusuario', 'id_usuario', $id_user);
 
 		echo json_encode($name);
+		return;
+	}
+	
+	if ($get_external_child) {
+		$id_object_type_field = get_parameter('id_object_type_field');
+		
+		$parent_name = get_db_value ('external_table_name', 'tobject_type_field', 'id', $id_object_type_field);
+		$child = get_db_all_rows_sql ("SELECT id FROM tobject_type_field WHERE parent_table_name ='".$parent_name."'");
+
+		echo json_encode($child);
 		return;
 	}
 }

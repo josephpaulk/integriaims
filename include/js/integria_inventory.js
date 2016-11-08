@@ -88,14 +88,31 @@ function refresh_external_id(id_object_type_field, id_inventory, id_value, data_
 		$.ajax({
 			type: "POST",
 			url: "ajax.php",
-			data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+data_name, 
-			dataType: "html",
+			data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+data_name,
+			dataType: "json",
 			success: function(data){
-				show_fields();
+				//~ show_fields();
+				$("#"+id_object_type_field).val(data_name);
+							
+				jQuery.each (data, function (id, value) {
+					$("#"+value['id']).attr("value", "");
+				});
 			}
 		});
 	} else {
 		$("#"+id_object_type_field).val(data_name);
+		
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: "page=operation/inventories/inventory_detail&get_external_child=1&id_object_type_field=" + id_object_type_field, 
+			dataType: "json",
+			success: function(data){
+				jQuery.each (data, function (id, value) {
+					$("#"+value['id']).attr("value", "");
+				});
+			}
+		});	
 	}
 
 }
@@ -841,7 +858,19 @@ function clean_users_groups() {
 }
 
 function removeExternal(id) {
-	$("#"+id).attr("value", "");	
+	$("#"+id).attr("value", "");
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/inventories/inventory_detail&get_external_child=1&id_object_type_field=" + id, 
+		dataType: "json",
+		success: function(data){
+			jQuery.each (data, function (id, value) {
+				$("#"+value['id']).attr("value", "");
+			});
+		}
+	});	
 }
 
 /**
