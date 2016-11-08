@@ -998,7 +998,7 @@ CREATE TABLE `tobject_type_field` (
   `id` mediumint(8) unsigned NOT NULL auto_increment, 
   `id_object_type` mediumint(8) unsigned, 
   `label` varchar(100) NOT NULL default '', 
-  `type` enum ('numeric', 'text', 'combo', 'external' ) default 'text',
+  `type` enum ('numeric', 'text', 'combo', 'external', 'date') default 'text',
   `combo_value` text default NULL,
   `external_table_name` text default null,
   `external_reference_field` text default null,

@@ -66,7 +66,8 @@ function object_get_types () {
 	$object_types['text'] = __('Text');
 	$object_types['combo'] = __('Combo');
 	$object_types['external'] = __('External');
-	
+	$object_types['date'] = __('Date');
+
 	return $object_types;
 }
 

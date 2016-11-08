@@ -208,7 +208,7 @@ function show_fields() {
 					i++;
 				}
 				
-				if ((value['type'] == "text") || (value['type'] == "numeric") || (value['type'] == "external")) {
+				if ((value['type'] == "text") || (value['type'] == "numeric") || (value['type'] == "external") || (value['type'] == "date")) {
 				
 					if (resto == 0) {
 						var objTr = document.createElement("tr"); //create row
@@ -244,7 +244,9 @@ function show_fields() {
 
 					} else if (value['type'] == 'numeric') {
 						element.type='number';
-					} 
+					} else if (value['type'] == 'date') {
+						element.type='date';
+					}
 					
 					if (only_read) {
 						element.disabled = true;
@@ -388,6 +390,7 @@ function show_fields() {
 					i++;
 				}
 			});
+		add_datepicker ("input[type=date]");
 		}
 	});
 }
