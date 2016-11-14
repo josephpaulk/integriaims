@@ -14,8 +14,6 @@
 
 // Load global vars
 
-
-
 global $config;
 $id_user = $config["id_user"];
 
@@ -32,16 +30,15 @@ if($pdf_output == 1) {
 else {
 	$ttl = 1;
 }
-//~ $user_id = get_parameter ('user_id', $config["id_user"]);
-$user_id = get_parameter ('wu_reporter', $config["id_user"]);
 
+$user_id = get_parameter ('user_id', $config["id_user"]);
+//$user_id = get_parameter ('wu_reporter', $config["id_user"]);
 
 if (($user_id != $config["id_user"]) AND (!give_acl ($config["id_user"], 0, "IM")) AND (!give_acl($config["id_user"], 0, "PM"))) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "Unauthorized access", "Trying to access full user report");
 	require ("general/noaccess.php");
 	exit;
 }
-
 
 $now = date ('Y-m-d');
 $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 months")));
@@ -83,7 +80,7 @@ $incident_time = 0;
 // for incident match (origin, resolution, group, author, editor, status, inventory object, or contract
 
 $do_search = 0;
- 
+
 if ($only_summary == 1){
     $do_search = 1;
 }
@@ -91,7 +88,6 @@ if ($only_summary == 1){
 if ($id_group_creator > 0){
 	$do_search = 1;
 }
-
 
 if ($resolution > 0){
 	$do_search = 1;
@@ -145,99 +141,107 @@ if ($clean_output == 0){
 echo  "</h4>";
 
 if ($clean_output == 0){
+	if($render_resolution == 0){
+	    echo "<form id='form-report_full' method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
+	    echo "<table class='search-table-button' style='' width='100%'>";
 
-    echo "<form id='form-report_full' method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
-    echo "<table class='search-table-button' style='' width='100%'>";
+	    echo "<tr><td>";
 
-    echo "<tr><td>";
-
-    //echo print_label (, '', true);
-    $params_user['input_id'] = 'text-user_id';
-    $params_user['input_name'] = 'user_id';
-    $params_user['title'] = __("User");
-	$params_user['input_value'] = $user_id;
-    $params_user['return'] = false;
-    $params_user['return_help'] = true;
-    user_print_autocomplete_input($params_user);
-   
-    echo "</td><td>"; 
-    echo print_label (__("Begin date"), '', true);
-    print_input_text ('start_date', $start_date, '', 10, 20);	
-    echo "</td><td>";
-    echo print_label (__("End date"), '', true);
-    print_input_text ('end_date', $end_date, '', 10, 20);	
+	    //echo print_label (, '', true);
+	    $params_user['input_id'] = 'text-user_id';
+	    $params_user['input_name'] = 'user_id';
+	    $params_user['title'] = __("User");
+		$params_user['input_value'] = $user_id;
+	    $params_user['return'] = false;
+	    $params_user['return_help'] = true;
+	    user_print_autocomplete_input($params_user);
+	   
+	    echo "</td><td>"; 
+	    echo print_label (__("Begin date"), '', true);
+	    print_input_text ('start_date', $start_date, '', 10, 20);	
+	    echo "</td><td>";
+	    echo print_label (__("End date"), '', true);
+	    print_input_text ('end_date', $end_date, '', 10, 20);	
 
 
-    echo "<tr><td>";
-    echo print_checkbox ('only_projects', 1, $only_projects, true, __('Project search') .
-		print_help_tip (__("If selected, renders entire all of the project info. Otherwise, it`ll show only time spent on project-related tickets"), true));
+	    echo "<tr><td>";
+	    echo print_checkbox ('only_projects', 1, $only_projects, true, __('All Project search') .
+			print_help_tip (__("If selected, will render all projects info.
+				If not, will show only projects for user"), true));
 
-    echo "<td>";
-    echo print_checkbox ('only_incidents', 1, $only_incidents, true, __('Show ticket summary'));
+	    echo "<td>";
+	    echo print_checkbox ('only_incidents', 1, $only_incidents, true, __('Show ticket summary'));
 
-    echo "<td>";
-    echo print_checkbox ('only_summary', 1, $only_summary, true, __('Show only summary').
-		print_help_tip (__("If not selected, will skip the data tables with information and render only totals in hours and working days"), true));
+	    echo "<td>";
+	    echo print_checkbox ('only_summary', 1, $only_summary, true, __('Show only summary').
+			print_help_tip (__("If not selected, will skip the data tables with information and render only totals in hours and working days"), true));
 
-    echo "<tr><td>";
-    //~ echo print_label (, '', true);
-    
-	$params_creator['input_id'] = 'text-user_id2';
-	$params_creator['input_name'] = 'author';
-	$params_creator["input_value"] = $author;
-	$params_creator["title"] = __("Ticket creator");
-	$params_creator['return'] = false;
-	$params_creator['return_help'] = true;
-	
-	user_print_autocomplete_input($params_creator);
+	    echo "</table>";
 
-    echo "<td>";
-    //~ echo print_label (, '', true);
+	    echo "<table class='search-table-button hide_table_advanced' style='' width='100%'>";
 
-	$params_editor['input_id'] = 'text-user_id3';
-	$params_editor['input_name'] = 'editor';
-	$params_editor["input_value"] = $editor;
-	$params_editor["title"] = __("Ticket editor");
-	$params_editor['return'] = false;
-	$params_editor['return_help'] = true;
-	
-	user_print_autocomplete_input($params_editor);
+	    echo "<tr><td colspan='3'>";
+	    echo "<h2>" . __('Advanced custom search for projects and task') . "</h2>";
+	    echo "</td></tr>";
 
-    echo "<td>";
-    echo print_select (get_user_groups (), 'id_group_creator', $id_group_creator, '', __('All'), 1, true, false, false, __('Creator group'));
+	    echo "<tr class='hide_first_fields_formulary'><td>";
+	    combo_project_user ($id_project, $config["id_user"], 0, false, true, $start_date, $end_date, $user_id);
+	    
+	    echo "<td>";
+	    echo combo_task_user_participant_full_report ($config["id_user"], false, $id_task, true, __('Task'), false, true, false, '',
+	     false, false, $start_date, $end_date, $user_id);
 
-	
-    echo "<tr><td>";
-    echo print_select (get_user_groups (), 'search_id_group', $id_group, '', __('All'), 1, true, false, false, __('Group'));
+	    echo "<tr class='hide_second_fields_formulary'><td>";
+	    echo print_select (get_user_groups (), 'search_id_group', $id_group, '', __('All'), 1, true, false, false, __('Group'));
 
-    echo "<td>";
-    echo combo_incident_resolution ($resolution, false, true);
+	    echo "<td>";
+	    echo combo_incident_resolution ($resolution, false, true);
 
-    echo "<tr><td>";
-    combo_project_user ($id_project, $config["id_user"], 0, false);
+	    echo "<td>";
+	    echo print_select (get_user_groups (), 'id_group_creator', $id_group_creator, '', __('All'), 1, true, false, false, __('Creator group'));
 
-    echo "<td>";
-    echo combo_task_user_participant ($config["id_user"], true, 0, true, __('Task'));
+	    echo "<tr class='hide_second_fields_formulary'><td>";
+	    
+	    $params_creator['input_id'] = 'text-user_id2';
+		$params_creator['input_name'] = 'author';
+		$params_creator["input_value"] = $author;
+		$params_creator["title"] = __("Ticket creator");
+		$params_creator['return'] = false;
+		$params_creator['return_help'] = true;
+		
+		user_print_autocomplete_input($params_creator);
 
-    echo "<td>";
-    $available_status = get_indicent_status();
-    $available_status[-10] = __("Not closed");
+	    echo "<td>";
+	    
+	    $params_editor['input_id'] = 'text-user_id3';
+		$params_editor['input_name'] = 'editor';
+		$params_editor["input_value"] = $editor;
+		$params_editor["title"] = __("Ticket editor");
+		$params_editor['return'] = false;
+		$params_editor['return_help'] = true;
+		
+		user_print_autocomplete_input($params_editor);
 
-    echo print_select ($available_status,
-        'search_status', $status,
-        '', __('Any'), 0, true, false, true,
-        __('Status'));
+	    echo "<td>";
+	    $available_status = get_indicent_status();
+	    $available_status[-10] = __("Not closed");
 
-    // TODO: Meter aqui inventario, con un control nuevo, tipo AJAX similar al de los usuarios.
+	    echo print_select ($available_status,
+	        'search_status', $status,
+	        '', __('Any'), 0, true, false, true,
+	        __('Status'));
 
-    echo "</table>";
-    
-    echo "<div class='button-form'>";
-		print_input_hidden('show_filter', 1);
-		print_submit_button (__('Show'), 'show_btn', false, 'class="sub zoom"');
-    echo "</div>";
-    
-    echo "</form>";
+	    // TODO: Meter aqui inventario, con un control nuevo, tipo AJAX similar al de los usuarios.
+
+	    echo "</table>";
+	    
+	    echo "<div class='button-form'>";
+			print_input_hidden('show_filter', 1);
+			print_submit_button (__('Show'), 'show_btn', false, 'class="sub zoom"');
+	    echo "</div>";
+	    
+	    echo "</form>";
+	}
 }
 
 if ($do_search == 0){
@@ -246,7 +250,6 @@ if ($do_search == 0){
 	echo "</h3>";
 }
 else {
-
 	if ($only_projects == 0)
 		echo "<h3>".__("Project activity related to ticket")."</h3>";
 	else
@@ -266,31 +269,35 @@ else {
 
 	// Search project data related on an incident match, not regular project info
 	if ($only_projects == 0) {
-
-		$sql = "SELECT id_incidencia, id_task FROM tincidencia WHERE 1=1 ";
+		$sql = "SELECT ti.id_incidencia, ti.id_task FROM tincidencia ti, ttask tt WHERE ti.id_task = tt.id ";
+		if ($id_project != 0)
+			$sql .= " AND tt.id_project = '$id_project' ";
+		
+		if ($id_task != 0)
+			$sql .= " AND tt.id = '$id_task' ";
 
 		if ($user_id != "")
-			$sql = $sql . " AND id_usuario = '$user_id' ";
+			$sql .= " AND ti.id_usuario = '$user_id' ";
 
 		if ($resolution > 0)
-						$sql = $sql . " AND resolution = $resolution ";
+			$sql = $sql . " AND ti.resolution = $resolution ";
 
 		if ($author != "")
-			$sql = $sql . " AND id_creator = '$author' ";
+			$sql .= " AND ti.id_creator = '$author' ";
 
 		if ($editor != "")
-			$sql = $sql . " AND editor = '$editor' ";
+			$sql .= " AND ti.editor = '$editor' ";
 
 		if ($status > 0)
-			$sql = $sql . " AND estado = $status ";
+			$sql .= " AND ti.estado = $status ";
 
 		if ($id_group > 1)
-			$sql = $sql . " AND id_grupo = $id_group ";
+			$sql .= " AND ti.id_grupo = $id_group ";
 
 		if ($id_group_creator > 1)
-			$sql = $sql . " AND id_group_creator = $id_group_creator ";
-
-		$search_incidents = get_db_all_rows_sql ($sql);
+			$sql .= " AND ti.id_group_creator = $id_group_creator ";
+		
+		$search_incidents = get_db_all_rows_sql($sql);
 
 		if ($search_incidents) {
 			$lista_incidencias = " 0";
@@ -298,9 +305,11 @@ else {
 
 			// Get the lists separated
 			foreach ($search_incidents as $i){
-				$lista_incidencias .= ", ". $i[0];
+				
+				$lista_incidencias .= ", ". $i['id_incidencia'];
+				
 				if ($i['id_task']) {
-					$lista_tareas .= ", ".$i[1];
+					$lista_tareas .= ", ".$i['id_task'];
 				}
 			}
 		} else {
@@ -345,9 +354,9 @@ else {
 			$user_search = "";
 
 		// ACL CHECK, show all info (user) or only related info for this user (current user) projects
-
+		
 		if ((dame_admin($config["id_user"])) OR ($config["id_user"] == $user_id)) {
-
+			
 			$sql = sprintf ('SELECT tproject.id as id, tproject.name as name, SUM(tworkunit.duration) AS sum
 			FROM tproject, ttask, tworkunit_task, tworkunit
 			WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
@@ -359,10 +368,10 @@ else {
 			$start_date, $end_date);
 
 		} else {
-
+		
 			// Show only info on my projects for this user
 			// TODO: Move this to enterprise code.
-
+			
 			$sql = sprintf ('SELECT tproject.id as id, tproject.name as name, SUM(tworkunit.duration) AS sum
 			FROM tproject, ttask, tworkunit_task, tworkunit
 			WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
@@ -510,7 +519,6 @@ else {
 	if ($only_incidents == 1){
 		echo "<h3>".__("Ticket report")."</h3>";
 
-
 		if ($user_id != ""){
 			$user_search = " AND tworkunit.id_user = '$user_id' ";
 		} else {
@@ -526,7 +534,7 @@ else {
 			GROUP BY title', $start_date, $end_date);
 
 		$incidencias = get_db_all_rows_sql ($sql);
-
+		
 		if (!$incidencias){
 			echo "<h4>";
 			echo __("There is no data to show");
@@ -694,6 +702,44 @@ $(document).ready (function () {
 		validate_user ("#form-report_full", "#text-user_id3", "<?php echo __('Invalid user')?>");
 		validate_user ("#form-report_full", "#text-user_id4", "<?php echo __('Invalid user')?>");
 	}
+
+	//if proyect search is selected then search all project if not selected show field for custom search
+	hide_table_formulary();
 	
+	$('#checkbox-only_projects').on('change', function(){
+		hide_table_formulary();
+	});
 });
+
+function hide_table_formulary(){
+	if($('#checkbox-only_projects').prop('checked')){
+		console.log('vamos_bien');
+		$('.hide_table_advanced').hide();
+	} else {
+		$('.hide_table_advanced').show();
+
+		hide_fields_formulary();
+
+		$('#id_project').on('change', function(){
+			hide_fields_formulary();
+		});
+
+		$('#id_task').on('change', function(){
+			hide_fields_formulary();
+		});
+	}
+}
+
+function hide_fields_formulary(){
+	if($('#id_project').val() != 0){
+		$('.hide_second_fields_formulary').show();
+	} else {
+		if($('#id_task').val() != 0){
+			$('.hide_second_fields_formulary').show();
+		} else {
+			$('.hide_second_fields_formulary').hide();
+		}
+	}
+}
+
 </script>

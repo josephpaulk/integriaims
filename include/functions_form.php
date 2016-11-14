@@ -414,8 +414,10 @@ function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0,
 
 // Returns a combo with the projects that current user could see
 // ----------------------------------------------------------------------
-function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) {
+function combo_project_user ($actual, $id_user, $disabled = 0, $return = false, $full_report = false
+	, $start_date = null, $end_date = null, $user_id = false) {
 	$output = '';
+	global $config;
 
 	if ($disabled) {
 		$output .= print_label (__('Project'), '', '', true);
@@ -432,17 +434,48 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 	$values = array ();
 	$values[0] = __('N/A');
 
-	$sql = sprintf ('SELECT tproject.id, tproject.name as pname 
+	if($full_report==100){
+		if ($user_id != "")
+			$user_search = " AND tworkunit.id_user = '".$user_id . "'";
+		else
+			$user_search = "";
+
+		if ((dame_admin($config["id_user"])) OR ($config["id_user"] == $user_id)) {
+			$sql = sprintf ('SELECT tproject.id as id, tproject.name as name
+				FROM tproject, ttask, tworkunit_task, tworkunit
+				WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
+				AND tworkunit_task.id_task = ttask.id
+				AND ttask.id_project = tproject.id
+				AND tworkunit.timestamp >= "%s"
+				AND tworkunit.timestamp <= "%s"
+				GROUP BY tproject.name',
+				$start_date, $end_date);
+		} else {
+			$sql = sprintf ('SELECT tproject.id as id, tproject.name as name
+				FROM tproject, ttask, tworkunit_task, tworkunit
+				WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
+				AND tworkunit_task.id_task = ttask.id
+				AND ttask.id_project = tproject.id
+				AND tworkunit.timestamp >= "%s"
+				AND tworkunit.timestamp <= "%s"
+				AND tproject.id_owner = "%s" 
+				GROUP BY tproject.name',
+				$start_date, $end_date, $config["id_user"]);
+		}
+	} 
+	else {
+		$sql = sprintf ('SELECT tproject.id, tproject.name as name 
 			FROM tproject, ttask, trole_people_task
 			WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task
 			AND trole_people_task.id_user = "%s"
 			ORDER BY pname',
 			$id_user);
+	}
 	$projects = get_db_all_rows_sql ($sql);
 	if ($projects === false)
 		$projects = array ();
 	foreach ($projects as $project) {
-		$values[$project['id']] = $project['pname'];
+		$values[$project['id']] = $project['name'];
 	}
 	$output = print_select ($values, 'id_project', $actual, '', '',
 				0, true, false, false, __('Project'));
@@ -450,6 +483,89 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 		return $output;
 	echo $output;
 	return;
+}
+
+// Returns a combo with the tasks that current user is working on
+// ----------------------------------------------------------------------
+function combo_task_user_participant_full_report ($id_user, $show_vacations = false, $actual = 0, $return = false,
+ $label = false, $name = false, $nothing = true, $multiple = false, $script = '', $no_change=false, $disabled = false,
+ $start_date = null, $end_date = null, $user_id = false) {
+	$output = '';
+	$values = array ();
+	global $config;
+	
+	if ($show_vacations) {
+		$values[-1] = "(*) ".__('Vacations');
+		$values[-2] = "(*) ".__('Not working for disease');
+		$values[-3] = "(*) ".__('Not justified');
+	}
+	
+	if ($user_id != "")
+		$user_search = " AND tworkunit.id_user = '".$user_id . "'";
+	else
+		$user_search = "";
+
+	// ACL CHECK, show all info (user) or only related info for this user (current user) projects
+	
+	if ((dame_admin($config["id_user"])) OR ($config["id_user"] == $user_id)) {
+
+		$sql = sprintf ('SELECT ttask.id, tproject.name AS project_name, ttask.name AS task_name
+		FROM tproject, ttask, tworkunit_task, tworkunit
+		WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
+		AND tworkunit_task.id_task = ttask.id
+		AND ttask.id_project = tproject.id
+		AND tworkunit.timestamp >= "%s"
+		AND tworkunit.timestamp <= "%s"
+		GROUP BY ttask.name',
+		$start_date, $end_date);
+
+	} else {
+	
+		// Show only info on my projects for this user
+		// TODO: Move this to enterprise code.
+		
+		$sql = sprintf ('SELECT ttask.id, tproject.name AS project_name, ttask.name AS task_name
+		FROM tproject, ttask, tworkunit_task, tworkunit
+		WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
+		AND tworkunit_task.id_task = ttask.id
+		AND ttask.id_project = tproject.id
+		AND tworkunit.timestamp >= "%s"
+		AND tworkunit.timestamp <= "%s"
+		AND tproject.id_owner = "%s" 
+		GROUP BY ttask.name',
+		$start_date, $end_date, $config["id_user"]);
+
+	}
+	
+	$tasks = get_db_all_rows_sql ($sql);
+	if ($tasks)
+	foreach ($tasks as $task){
+		$values[$task['id']] = array('optgroup' => $task['project_name'], 'name' => '&nbsp;'.$task['task_name']);
+	}
+	
+	
+	if (!$name) {
+		$name = 'id_task';
+	}
+	
+	if ($nothing) {
+		$nothing = __('N/A');
+	} else {
+		$nothing = '';
+	}
+	
+	if ($no_change) {
+		$nothing = __('No change');
+	}
+	
+	$output .= print_select ($values, $name, $actual, $script, $nothing, 0, true,
+		$multiple, false, $label, $disabled);
+	print_select ($values, 'id_project', $actual, '', '',
+				0, true, false, false, __('Project'));
+
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 // Returns a combo with the tasks that current user is working on
