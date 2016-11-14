@@ -475,11 +475,11 @@ if ($show_fields) {
 	$table->data[3][0] = print_checkbox ('global', 1, $global_field, true, __('Global field'), $global_field);
 
 	// Combo value
-	$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 0, true, __('Combo value'). print_help_tip (__("Set values separated by comma"), true), $global_field);
+	$table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 255, 0, true, __('Combo value'). print_help_tip (__("Set values separated by comma"), true), $global_field);
 	
 	// Add values
 	if ($global_field) {
-		$table->data['id_combo_value'][0] = print_input_text ('add_combo_value', $add_combo_value, '', 45, 0, true, __('Add values').print_help_tip (__("Set values separated by comma"), true));
+		$table->data['id_combo_value'][0] = print_input_text ('add_combo_value', $add_combo_value, '', 255, 0, true, __('Add values').print_help_tip (__("Set values separated by comma"), true));
 	}
 
 	// Linked values
