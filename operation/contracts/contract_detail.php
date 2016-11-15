@@ -957,42 +957,41 @@ elseif ($op == "") {
 
 		$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning&search_status=$search_status&search_expire_days=$search_expire_days";
 		
-		$where_clause = "WHERE 1=1";
+		$where_clause = "";
 		
 		if ($search_text != "") {
-			$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
-				name LIKE "%%%s%%" OR contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
+			$where_clause .= sprintf (' AND (tc.id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR tc.name LIKE "%%%s%%" OR tc.contract_number LIKE "%%%s%%" OR tc.id IN (SELECT id_contract FROM tcontract_field_data WHERE data LIKE "%%%s%%"))', $search_text, $search_text, $search_text, $search_text);
 		}
 		
 		if ($search_company_role) {
-			$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
+			$where_clause .= sprintf (' AND tc.id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
 		}
 		
 		if ($search_date_end != "") {
-			$where_clause .= sprintf (' AND date_end <= "%s"', $search_date_end);
+			$where_clause .= sprintf (' AND tc.date_end <= "%s"', $search_date_end);
 		}
 		
 		if ($search_date_begin != "") {
-			$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
+			$where_clause .= sprintf (' AND tc.date_end >= "%s"', $search_date_begin);
 		}
 			
 		if ($search_date_end_beginning != "") {
-			$where_clause .= sprintf (' AND date_begin <= "%s"', $search_date_end_beginning);
+			$where_clause .= sprintf (' AND tc.date_begin <= "%s"', $search_date_end_beginning);
 		}
 		
 		if ($search_date_begin_beginning != "") {
-			$where_clause .= sprintf (' AND date_begin >= "%s"', $search_date_begin_beginning);
+			$where_clause .= sprintf (' AND tc.date_begin >= "%s"', $search_date_begin_beginning);
 		}
 		
 		if ($search_status >= 0) {
-			$where_clause .= sprintf (' AND status = %d', $search_status);
+			$where_clause .= sprintf (' AND tc.status = %d', $search_status);
 		}
 		
 		if ($search_expire_days > 0) {
 			// Comment $today_date to show contracts that expired yet
 			$today_date = date ("Y/m/d");
 			$expire_date = date ("Y/m/d", strtotime ("now") + $search_expire_days * 86400);
-			$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
+			$where_clause .= sprintf (' AND (tc.date_end < "%s" AND tc.date_end > "%s")', $expire_date, $today_date);
 		}
 		
 		echo "<h2>".__('Contracts')."</h2>";
@@ -1077,7 +1076,7 @@ elseif ($op == "") {
 		
 		print_container_div("contract_form",__("Contracts form search"),$form, 'open', false, false);
 		
-		$contracts = crm_get_all_contracts ($where_clause);
+		$contracts = crm_get_all_contracts_with_custom_fields ($where_clause);
 		if ($contracts !== false) {
 			
 			$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
@@ -1092,25 +1091,32 @@ elseif ($op == "") {
 			$table->size = array ();
 			$table->style = array ();
 			$table->colspan = array ();
-			$table->style[3]= "font-size: 8px";
-			$table->style[4]= "font-size: 8px";
-			$table->style[1]= "font-size: 9px";
+			
 			$table->head[0] = __('Name');
 			$table->head[1] = __('Contract number');
 			$table->head[2] = __('Company');
 			$table->head[3] = __('Begin');
 			$table->head[4] = __('End');
+			
+			//extraction header 
+			$header = array_pop($contracts);
+			$i = 5;
+			foreach ($header as $key => $value) {
+				$table->head[$i] = $value;
+				$i++;	
+			}
+
 			if ($section_write_permission || $section_manage_permission) {
-				$table->head[5] = __('Privacy');
-				$table->head[6] = __('Delete');
+				$table->head[$i++] = __('Privacy');
+				$table->head[$i++] = __('Delete');
 			}
 			if ($write_invoice || $manage_invoice) {
-				$table->head[7] = __('Generate invoice');
+				$table->head[$i++] = __('Generate invoice');
 			}
-			$counter = 0;
 			
+			$counter = 0;
+			$i = 5;
 			foreach ($contracts as $contract) {
-				
 				$data = array ();
 				
 				$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id_contract="
@@ -1123,27 +1129,39 @@ elseif ($op == "") {
 				$data[3] = $contract["date_begin"];
 				$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 				
+				foreach ($header as $key => $value) {
+					if($contract[$value] != ""){
+						$data[$i] = $contract[$value];
+					}
+					else{
+						$data[$i] = "--";
+					}
+					$i++;
+				}
+				
 				if ($section_write_permission || $section_manage_permission) {
 					// Delete
 					if($contract["private"]) {
-						$data[5] = __('Private');
+						$data[$i++] = __('Private');
 					}
 					else {
-						$data[5] = __('Public');
+						$data[$i++] = __('Public');
 					}
 
-					$data[6] = "<a href='#' onClick='javascript: show_validation_delete(\"delete_contract\",".$contract["id"].",0,0,\"".$search_params."\");'><img src='images/cross.png'></a>";
+					$data[$i++] = "<a href='#' onClick='javascript: show_validation_delete(\"delete_contract\",".$contract["id"].",0,0,\"".$search_params."\");'><img src='images/cross.png'></a>";
 				}
 				if ($write_invoice || $manage_invoice) {
-					//~ $data[7] = "<a href='#');'><img src='images/invoice.png'></a>";
-					$data[7] = ' <a method="POST" href="index.php?sec=customers&sec2=operation/invoices/invoices
+					$data[$i++] = ' <a method="POST" href="index.php?sec=customers&sec2=operation/invoices/invoices
 					&generate=1&invoice_contract_number='.$contract["contract_number"].'&company_id='.$contract["id_company"].'" 
 					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 					<img src="images/invoice.png" title="'.__('Generate invoice').'"></a>';
 				}
 				array_push ($table->data, $data);
-			}	
-			print_table ($table);
+			}
+			echo '<div id= "inventory_only_table">';
+				print_table ($table);
+			echo '</div>';	
+			
 		} else {
 			echo ui_print_error_message (__("There are not results for the search"), '', true, 'h3', true);
 		}
