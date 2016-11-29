@@ -54,14 +54,16 @@ $type = '';
 $combo_value = '';
 $parent = '';
 $linked_value = '';
+$show_in_list = 0;
 
 if ($add_field) {
 	$value = array();
-	$value["label"] = get_parameter("label");
-	$value["type"] = get_parameter("type");
-	$value["combo_value"] = get_parameter("combo_value");
-	$value["parent"] = get_parameter("parent");
+	$value["label"]        = get_parameter("label");
+	$value["type"]         = get_parameter("type");
+	$value["combo_value"]  = get_parameter("combo_value");
+	$value["parent"]       = get_parameter("parent");
 	$value["linked_value"] = get_parameter("linked_value");
+	$value["show_in_list"] = get_parameter("show_in_list");
 	$error_combo = false;
 	$error_linked = false;
 
@@ -104,6 +106,7 @@ if ($update_field) { //update field to incident type
 	$value_update['combo_value'] = get_parameter ('combo_value', '');
 	$value_update["parent"] = get_parameter("parent");
 	$value_update["linked_value"] = get_parameter("linked_value");
+	$value_update["show_in_list"] = get_parameter("show_in_list", 0);
 	
 	$error_combo = false;
 	$error_linked = false;
@@ -154,12 +157,13 @@ if ($contract_fields === false) {
 
 $id_field = get_parameter ('id_field');
 if ($id_field) {
-	$field_data = get_db_row_filter('tcontract_field', array('id' => $id_field));
-	$label = $field_data['label'];
-	$type = $field_data['type'];
-	$combo_value = $field_data['combo_value'];
-	$parent = $field_data['parent'];
+	$field_data   = get_db_row_filter('tcontract_field', array('id' => $id_field));
+	$label        = $field_data['label'];
+	$type 	      = $field_data['type'];
+	$combo_value  = $field_data['combo_value'];
+	$parent       = $field_data['parent'];
 	$linked_value = $field_data['linked_value'];
+	$show_in_list = $field_data['show_in_list'];
 }
 
 $table = new StdClass();
@@ -169,8 +173,10 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
 $types = array('text' =>__('Text'), 'textarea' => __('Textarea'), 'combo' => __('Combo'), 'linked' => __('Linked'), 'numeric' => __('Numeric'), 'date' => __('Date'));
-$table->data[1][0] = print_label (__("Type"), "label-id", 'text', true);
-$table->data[1][0] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
+$table->data[1][0] = print_checkbox ('show_in_list', 1, $show_in_list, true, __('Show in list'));
+
+$table->data[2][0] = print_label (__("Type"), "label-id", 'text', true);
+$table->data[2][0] .= print_select ($types, 'type', $type, '', __('Select type'), '0', true);
 
 //combo values
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 255, true, __('Combo value').print_help_tip (__("Set values separated by comma"), true));
@@ -221,7 +227,8 @@ $table->head[0] = __("Name field");
 $table->head[1] = __("Type");
 $table->head[2] = __("Parent");
 $table->head[3] = __("Value");
-$table->head[4] = __("Action");
+$table->head[4] = __("Show in list");
+$table->head[5] = __("Action");
 
 $data = array();
 
@@ -234,13 +241,15 @@ if (!empty($contract_fields)) {
 		
 		if ($field['label'] == '') {
 			$data[0] = '';
-		} else {
+		}
+		else {
 			$data[0] = "<a href='" . $url_update . "'>" . $field["label"]."</a>";
 		}
 		
 		if ($field_type = '') {
 			$data[1] = '';
-		} else {
+		}
+		else {
 			$data[1] = $field["type"];
 		}
 		
@@ -249,21 +258,32 @@ if (!empty($contract_fields)) {
 			$sql = "SELECT label FROM tcontract_field WHERE type = 'linked' AND id =".$field["parent"];
 			$parent = get_db_sql($sql);
 			$data[2] = $parent;
-		} else {
+		}
+		else {
 			$data[2] = "";
 		}
 
 		//Only combo or linked
 		if ($field["type"] == "combo") {
 			$data[3] = ui_print_truncate_text($field["combo_value"], 60);
-		} else if ($field["type"] == "linked") {
+		} 
+		else if ($field["type"] == "linked") {
 			$data[3] = ui_print_truncate_text($field["linked_value"], 60);
- 		} else{
+ 		}
+ 		else{
 			$data[3] = "";
 		}
 
-		$data[4] = "<a href='" . $url_update . "'> <img src='images/wrench.png' border=0 /></a>";
-		$data[4] .= "<a onclick=\"if (!confirm('" . __('Are you sure delete custom field '. $field["label"] .' ?') . "')) return false;\" href='" . $url_delete . "'> <img src='images/cross.png' border=0 /></a>";
+		//Show in list yes or no
+		if ($field["show_in_list"] == 0){
+			$data[4] = __('No');
+		}
+		else{
+			$data[4] = __('Yes');
+		}
+
+		$data[5] = "<a href='" . $url_update . "'> <img src='images/wrench.png' border=0 /></a>";
+		$data[5] .= "<a onclick=\"if (!confirm('" . __('Are you sure delete custom field '. $field["label"] .' ?') . "')) return false;\" href='" . $url_delete . "'> <img src='images/cross.png' border=0 /></a>";
 		array_push ($table->data, $data);
 	}
 	print_table($table);

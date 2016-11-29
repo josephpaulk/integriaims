@@ -206,6 +206,73 @@ function crm_get_all_contracts ($where_clause, $order_by='date_end') {
 	return $contracts;
 }
 
+function crm_get_all_contracts_with_custom_fields ($where_clause) {
+	global $config;
+	
+	$sql = "select * from(
+						select tc.*, tcf.label, tcfd.data 
+						from tcontract as tc, tcontract_field as tcf, tcontract_field_data as tcfd  
+						where tc.id= tcfd.id_contract and tcf.id = tcfd.id_contract_field and tcf.show_in_list = 1 " . $where_clause ."
+	  	      		union 
+						select tc.*, null as label, null as data 
+						from tcontract as tc where 1=1 " . $where_clause . "
+		      		) 
+		as t order by 1";
+
+	$contracts = get_db_all_rows_sql ($sql);
+	
+	//prepare $contracts
+	if(is_array($contracts) || is_object($contracts)){
+		
+		//init vars
+		$save_id = 0;
+		$i=0;
+		$k=1;
+		$header=array();
+
+		foreach ($contracts as $con) {
+			//This controls whether there label and data, if not eliminate the array exists
+			if($con['label'] == ''){
+				unset($contracts[$i]['label']);
+				unset($contracts[$i]['data']);
+			}
+
+			//This controls whether the following array has the same id
+			if($save_id == $con['id']){
+				//This controls exist label as key and data as value
+				if(isset($con['label'])){
+					//add array contracts label
+					$contracts[$i-$k][$con['label']] = $con['data'];
+					//for th table
+					$header[$con['label']] = $con['label'];
+				}
+				//delete arrays with same id
+				unset($contracts[$i]);
+				$k++;	
+			} else {
+				//if isset label
+				if(isset($con['label'])){
+					//This controls exist label as key and data as value
+					$contracts[$i][$con['label']] = $con['data'];
+					//for th table
+					$header[$con['label']] = $con['label'];
+					//delete label and data
+					unset($contracts[$i]['label']);
+					unset($contracts[$i]['data']);
+				}
+				$k=1;
+			}
+			//keep the previous id
+			$save_id = $con['id'];
+			$i++;
+		}
+		//add new field for build table
+		array_push($contracts , $header);
+	}
+
+	return $contracts;
+}
+
 function crm_get_all_invoices ($where_clause, $order_by='') {
 	global $config;
 	

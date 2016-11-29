@@ -1454,7 +1454,8 @@ CREATE TABLE `tcontract_field` (
   `combo_value` text,
   `parent` mediumint(8) unsigned default 0,
   `linked_value` LONGTEXT default NULL,
-  `order` mediumint(8) unsigned default 0, 
+  `order` mediumint(8) unsigned default 0,
+  `show_in_list` int(1) not null default 0, 
   PRIMARY KEY (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -17,3 +17,4 @@
 -- ---------------------------------------------------------------------
 
 ALTER TABLE `tobject_type_field` MODIFY `type` enum('numeric', 'text', 'combo', 'external', 'date') DEFAULT 'text';
+ALTER TABLE `tcontract_field` ADD `show_in_list` int(1) not null default 0; 
