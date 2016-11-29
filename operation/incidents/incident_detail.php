@@ -1738,14 +1738,20 @@ $(document).ready (function () {
 			
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
-	bindAutocomplete("#text-id_creator", idUser);
-	bindAutocomplete("#text-id_user", idUser);
-	bindAutocomplete("#text-closed_by", idUser);
+	//~ bindAutocomplete("#text-id_creator", idUser);
+	//~ bindAutocomplete("#text-id_user", idUser);
+	//~ bindAutocomplete("#text-closed_by", idUser);
+	bindAutocomplete("#text-id_creator", idUser,false,false,true);
+	bindAutocomplete("#text-id_user", idUser,false,false,true);
+	bindAutocomplete("#text-closed_by", idUser,false,false,true);
 	
 	if ($("#incident_status_form").length > 0){
-		validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
-		validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
-		validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
+		//~ validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
+		//~ validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
+		//~ validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
+		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
+		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
+		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
 	}
 	
 	$("#tgl_incident_control").click(function() {

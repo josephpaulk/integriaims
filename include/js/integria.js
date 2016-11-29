@@ -217,9 +217,13 @@ function toggleInventoryInfo(id_inventory) {
  * @param idUser String user's id
  * @param byProject Boolean flag to search by users in a project
  */
-function bindAutocomplete (idTag, idUser, idProject, onChange) {
+function bindAutocomplete (idTag, idUser, idProject, onChange, ticket) {
 	
 	var ajaxUrl = "ajax.php?page=include/ajax/users&search_users=1&id_user="+idUser;
+	
+	if (ticket) {
+		ajaxUrl = "ajax.php?page=include/ajax/users&search_users_ticket=1&id_user="+idUser;
+	}
 	
 	if (idProject) {
 		ajaxUrl = "ajax.php?page=include/ajax/users&search_users_role=1&id_user="+idUser+"&id_project="+idProject;

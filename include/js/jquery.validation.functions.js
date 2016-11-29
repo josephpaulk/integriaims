@@ -101,3 +101,25 @@ function validate_user (form, input, message) {
 	validate_form(form);
 	add_validate_form_element_rules(input, rules, messages);
 }
+
+function validate_ticket_user (form, input, message) {
+	var rules;
+	var messages;
+	rules = {
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				check_allowed_users: 1,
+				user_id: function() { return $(input).val() }
+			}
+		}
+	};
+	messages = {
+		remote: message
+	};
+	validate_form(form);
+	add_validate_form_element_rules(input, rules, messages);
+}
+

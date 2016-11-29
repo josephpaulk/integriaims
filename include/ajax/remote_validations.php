@@ -57,6 +57,7 @@ $search_duplicate_name = (bool) get_parameter ('search_duplicate_name');
 $search_input_number = (bool) get_parameter ('search_input_number');
 $check_mail = (bool) get_parameter ('check_mail');
 $check_user_name = (bool) get_parameter ('check_user_name');
+$check_allowed_users = (bool) get_parameter ('check_allowed_users', 0);
 
 if ($search_existing_project) {
 	require_once ('include/functions_db.php');
@@ -1093,6 +1094,30 @@ if ($check_user_name) {
 		echo json_encode(true);
 		return;
 	}
+}
+
+if ($check_allowed_users) {
+
+	require_once ('include/functions_db.php');
+	$user_id = get_parameter ('user_id', '');
+	
+	if ($user_id == '') {
+		echo json_encode(true);
+		return;
+	}
+	
+	$query_users = users_get_allowed_users_query ($config['id_user'], false);
+	$users = get_db_all_rows_sql($query_users);
+	foreach ($users as $user) {
+		if(preg_match('/^'.$user_id.'$/i', $user['id_usuario']) || preg_match('/^'.$user_id.'$/i', $user['nombre_real'])|| preg_match('/^'.$user_id.'$/i', $user['num_employee'])) {
+			echo json_encode(true);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(false);
+	return;
+	
 }
 
 ?>

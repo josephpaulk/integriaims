@@ -55,7 +55,7 @@ if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($standalone_check !=
 
 $is_enterprise = false;
 
-if ($check_acl != ENTERPRISE_NOT_HOOK) {
+if (file_exists ("enterprise/load_enterprise.php")) {
 	$is_enterprise = true;
 }
 

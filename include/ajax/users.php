@@ -16,6 +16,7 @@
 global $config;
 
 $search_users = (bool) get_parameter ('search_users');
+$search_users_ticket = (bool) get_parameter ('search_users_ticket');
 $search_users_role = (bool) get_parameter ('search_users_role');
 $get_group_info = (bool) get_parameter ('get_group_info');
 $get_user_company = (bool) get_parameter ('get_user_company');
@@ -33,6 +34,29 @@ if ($search_users) {
 	if ($users === false)
 		return;
 		
+	$res = array();
+	
+	foreach ($users as $user) {
+		if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
+			array_push($res, array("label" => safe_output($user['nombre_real'])." (".safe_output($user['id_usuario']).")", "value" => safe_output($user['id_usuario'])));
+		}
+	}
+	
+	echo json_encode($res);
+	
+	return;
+}
+
+if ($search_users_ticket) {
+	require_once ('include/functions_db.php');
+
+	$id_user = $config['id_user'];
+	$string = (string) get_parameter ('term'); /* term is what autocomplete plugin gives */
+	$users = users_get_users_owners_or_creators ($config['id_user']);
+	
+	if ($users === false)
+		return;
+	
 	$res = array();
 	
 	foreach ($users as $user) {

@@ -55,7 +55,8 @@ if ($get_user_search) {
 	echo "<div class='divform'>";
 	form_search_users (false, $filter_form);
 	echo "</div>";
-	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin);
+	//~ user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin);
+	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, false, true);
 }
 
 if ($get_incident_name) {

@@ -392,7 +392,7 @@ if ($get_external_data) {
 		$table_name_parent = get_db_value_sql("SELECT parent_table_name FROM tobject_type_field WHERE id=".$id_object_type_field);
 		$id_reference_parent = get_db_value_sql("SELECT parent_reference_field FROM tobject_type_field WHERE id=".$id_object_type_field);
 		$parent_label = get_db_value_sql("SELECT external_label FROM tobject_type_field WHERE id=".$id_parent);
-		$id_parent_value = get_db_value_sql('SELECT id FROM '.$table_name_parent.' WHERE '.$parent_label.'="'.$id_parent_value.'"');
+		$id_parent_value = get_db_value_sql('SELECT '.$id_parent_table.' FROM '.$table_name_parent.' WHERE '.$parent_label.'="'.$id_parent_value.'"');
 		$external_data = get_db_all_rows_sql("SELECT * FROM $table_name WHERE ".$id_reference_parent."=".$id_parent_value);
 	} else {
 		$external_data = get_db_all_rows_in_table($table_name);

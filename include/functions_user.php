@@ -276,7 +276,7 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 	return $fields;
 }
 							
-function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $search_text, $disabled_user, $level, $group) {
+function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $search_text, $disabled_user, $level, $group, $from_tickets = false) {
 	global $config;
 	
 	if ($filter != 0){
@@ -307,7 +307,10 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 	}
 
 	$query1 = "SELECT * FROM tusuario $search ORDER BY id_usuario";
-
+	
+	if ($from_tickets) {
+		$query1 = users_get_allowed_users_query ($config['id_user'], $filter);
+	}
 	$count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
 	
 	$sql1 = "$query1 LIMIT $offset, ". $size_page;
@@ -439,4 +442,87 @@ function users_can_manage_group_all($id_group = 1, $access = "IR") {
 	return false;
 }
 
+function users_get_users_owners_or_creators ($id_user) {
+	global $config;
+	
+	$values = array ();
+	
+	if ($id_user === 0) {
+		$id_user = $config['id_user'];
+	}
+	
+	$query_users = users_get_allowed_users_query ($id_user, false);
+	$users = get_db_all_rows_sql($query_users);
+	if ($users == false) {
+		$users = array();
+	}
+	foreach ($users as $user) {
+		$values[$user['id_usuario']] = get_db_row_sql ("SELECT * FROM tusuario WHERE id_usuario = '".$user['id_usuario']."'");
+	}
+
+	return $values;
+	
+}
+
+
+function users_get_allowed_users_query ($id_user, $filter = false) {
+	global $config;
+	
+	if ($id_user === 0) {
+		$id_user = $config['id_user'];
+	}
+	
+	if ($filter != 0) {
+		$offset = $filter['offset'];
+		$search_text = $filter['search_text'];
+		$disabled_user = $filter['disabled_user'];
+		$level = $filter['level'];
+		$group = $filter['group'];
+	} 	
+	
+	$search = "";
+	if ($search_text != "") {
+		$search .= " AND (id_usuario LIKE '%$search_text%' OR comentarios LIKE '%$search_text%' OR nombre_real LIKE '%$search_text%' OR direccion LIKE '%$search_text%')";
+	}
+
+	if ($disabled_user > -1) {
+		$search .= " AND disabled = $disabled_user";
+	}
+
+	if ($level > -10) {
+		$search .= " AND nivel = $level";
+	}
+
+	if ($group == -1){
+		$search .= " AND id_usuario NOT IN (select id_usuario from tusuario_perfil)";
+	} else if($group > 0) {
+		$search .= " AND id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+	}
+	
+	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
+	
+	if ($level == 1) { //admin
+		$query = "SELECT * FROM tusuario t1 WHERE 1=1";
+		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
+	} else {
+		$query = "SELECT * FROM tusuario WHERE id_usuario IN (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."')) ";
+		//~ $query = "SELECT * FROM tusuario WHERE (id_usuario IN (SELECT id_usuario FROM tusuario_perfil WHERE (id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."'))) OR nivel = 1) ";
+		
+		$groups = get_db_all_rows_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."'");
+
+		if ($groups === false) {
+			$groups = array();
+		}
+		foreach ($groups as $group) {
+			if ($group['id_grupo'] == 1) { //all
+				$query = "SELECT * FROM tusuario t1 WHERE 1=1";
+			}
+		}	
+	}
+	
+	$final_query = $query.$search;
+
+	return $final_query;
+}
+			
 ?>
