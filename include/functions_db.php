@@ -1707,10 +1707,52 @@ function get_incidents_on_inventory ($id_inventory, $only_names = true) {
 	return $incidents;
 }
 
-function get_incident_types ($only_names = true, $no_empty = false) {
-	$types = get_db_all_rows_in_table ('tincident_type');
-	if ($types == false)
-		return array ();
+//~ function get_incident_types ($only_names = true, $no_empty = false) {
+function get_incident_types ($only_names = true, $no_empty = false, $id_user = "") {
+
+	global $config;
+	
+	if ($id_user == "") {
+		$id_user = $config['id_user'];
+	}
+	
+	$level = get_db_value('nivel', 'tusuario', 'id_usuario', $id_user);
+	if ($level == 1) {
+		$final_types = get_db_all_rows_in_table ('tincident_type');
+	} else {
+		$user_groups = get_db_all_rows_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."'");
+		if ($user_groups === false) {
+			$user_groups = array();
+		}
+
+		$types = get_db_all_rows_in_table ('tincident_type');
+		if ($types == false)
+			return array ();
+
+		foreach ($types as $id=>$type) {
+			if ($type['id_group'] != '0') {
+
+				$groups = explode(',',$type['id_group']);
+				foreach ($groups as $group) {
+					$group = preg_replace('/^(&#x20;)\.*/',"",$group);
+					foreach ($user_groups as $id => $ug) {
+						if ($ug['id_grupo'] == 1) { //all
+							$final_types[$type['id']] = $type;
+						} else {
+							$id_g = get_db_value('id_grupo','tgrupo', 'nombre', $group);
+							if ($ug['id_grupo'] == $id_g) {
+								$final_types[$type['id']] = $type;
+							}
+						}
+					}
+				}
+			} else {
+				$final_types[$type['id']] = $type;
+			}
+		}
+	}
+
+	$types = $final_types;
 
 	if (!$no_empty) {
 		//Add without type option
