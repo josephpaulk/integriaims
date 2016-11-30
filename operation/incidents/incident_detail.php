@@ -1422,8 +1422,8 @@ if (!$create_incident){
 	$html .= print_table($table_description, true);
 	$html .= "</div>";
 
-	$table->colspan[10][0] = 4;
-	$table->data[10][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
+	$table->colspan[11][0] = 4;
+	$table->data[11][0] = print_container_div('file_upload_container', __('File upload'), $html, 'closed', true, true);
 }
 
 if ($create_incident) {
