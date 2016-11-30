@@ -1514,9 +1514,13 @@ $(document).ready (function () {
 	id_group = $("#grupo_form").val();
 	id_incident = $('#text-id_incident_hidden').val();
 	status = $('#incident_status').val();
+	
+	no_change_owner = <?php echo $config['ticket_owner_is_creator']?>;
 		
 	if (id_incident == 0) {
-		set_ticket_owner(id_group);
+		if (!no_change_owner) {
+			set_ticket_owner(id_group);
+		}
 		set_initial_status();
 	} else {
 		set_allowed_status();
@@ -1592,10 +1596,12 @@ $(document).ready (function () {
 		var group = $("#grupo_form").val();
 		
 		var group_info = get_group_info(group);
-				
-		$("#text-id_user").val(group_info.id_user_default);
-		$("#plain-id_user").html(group_info.id_user_default);
-		$("#hidden-id_user").val(group_info.id_user_default);
+			
+		if (!no_change_owner) {	
+			$("#text-id_user").val(group_info.id_user_default);
+			$("#plain-id_user").html(group_info.id_user_default);
+			$("#hidden-id_user").val(group_info.id_user_default);
+		}
 		
 	});
 	
@@ -1813,7 +1819,9 @@ $(document).ready (function () {
 	});
 
 	var action = '<?php echo $action;?>';
-	if(action != 'update'){
+
+	//~ if(action != 'update'){
+	if (id_incident == 0) {
 		set_ticket_groups();
 	}
 
@@ -2075,7 +2083,10 @@ function set_ticket_groups() {
 		$("#grupo_form option[value=" + id_grupo_incident + "]").attr("selected", "selected");
 		
 		group = $("#grupo_form").val();
-		set_ticket_owner(group);
+
+		if (!no_change_owner) {
+			set_ticket_owner(group);
+		}
 	});
 }
 
