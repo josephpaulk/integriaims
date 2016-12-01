@@ -454,7 +454,7 @@ return;
 		$inventory_status = (string)get_parameter('inventory_status', '0');
 	}
 
-	if ($inventory_status != '0') {
+	if (($inventory_status != '0') && ($inventory_status != 'All')) {
 		$sql_search .= " AND i.status = '$inventory_status'";
 		$sql_search_pagination .= " AND i.status = '$inventory_status'";
 		$sql_search_count .= " AND i.status = '$inventory_status'";
