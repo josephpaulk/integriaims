@@ -301,7 +301,7 @@ if ($invoices != false) {
 	$counter = 0;
 
 	$total=array();
-	
+	$final_total = array();	
 	foreach ($invoices as $invoice) {
 		
 		$is_locked = crm_is_invoice_locked ($invoice["id"]);
@@ -322,7 +322,7 @@ if ($invoices != false) {
 		$id_title = $invoice["concept1"];
 		$data[1] = "<a title='$id_title' href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
 		
-		$partial = get_invoice_amount ($invoice["id"]);
+		$amount = get_invoice_amount ($invoice["id"]);
 		$discount_before = get_invoice_discount_before ($invoice["id"]);
 		
 		$tax = get_invoice_tax ($invoice["id"]);
@@ -336,16 +336,20 @@ if ($invoices != false) {
 		$tax = $result;
 		$irpf = get_invoice_irpf($invoice["id"]);
 		//~ Descuento sobre el total
-		$before_amount = $partial * ($discount_before/100);
-		$data[2] = ($before_amount > 0) ? $before_amount : $partial;
-		$total_before = round($partial - $before_amount, 2);
+		$before_amount = $amount * ($discount_before/100);
+		$total_before = round($amount - $before_amount, 2);
 		//~ Se aplica sobre el descuento los task 
 		$tax_amount = $total_before * ($tax/100);
 		//~ Se aplica sobre el descuento el irpf
 		$irpf_amount = $total_before * ($irpf/100);
+
 		$total = round($total_before + $tax_amount - $irpf_amount, 2);
+		$final_total[strtoupper ($invoice["currency"])] += $total;
+
+		$data[2] = $total;
+		
 		if (($tax != 0) && ($clean_output == 0))
-			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($total,2), true);
+			$data[2] .= print_help_tip (__("With taxes"). ": ". format_numeric($amount,2), true);
 		
 		$data[3] = strtoupper ($invoice["currency"]);
 		$data[4] = __($invoice["status"]);
@@ -389,10 +393,11 @@ if ($invoices != false) {
 	}
 	print_table ($table);
 
-	if ($total)
-	echo __("Subtotals for each currency: ");
-	foreach ($total as $key => $value) {
-		echo "- $key : ". format_numeric ($value,2);
+	if (!empty($final_total)) {
+		echo __("Subtotals for each currency: ");
+		foreach ($final_total as $key => $value) {
+			echo " - $key : ". format_numeric ($value,2);
+		}
 	}
 
 } else {
