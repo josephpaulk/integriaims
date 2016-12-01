@@ -90,7 +90,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tconfig` WRITE;
 /*!40000 ALTER TABLE `tconfig` DISABLE KEYS */;
-INSERT INTO `tconfig` (`token`, `value`) VALUES ('enterprise_installed','0'),('timezone','Europe/Madrid'),('want_chat','0'),('incident_creation_wu','0'),('lead_warning_time','7'),('months_to_delete_incidents','12'),('max_file_size','50M'),('autowu_completion','0'),('no_wu_completion',''),('incident_reporter','0'),('show_creator_incident','1'),('show_owner_incident','1'),('pwu_defaultime','4'),('iwu_defaultime','0.25'),('api_acl','127.0.0.1'),('auto_incident_close','72'),('email_on_incident_update','0'),('error_log','1'),('iw_creator_enabled','0'),('enable_newsletter','0'),('batch_newsletter','15'),('update_manager_installed', 1),('license', 'INTEGRIA-FREE'),('current_package', 57),('minor_release', 54);
+INSERT INTO `tconfig` (`token`, `value`) VALUES ('enterprise_installed','0'),('timezone','Europe/Madrid'),('want_chat','0'),('incident_creation_wu','0'),('lead_warning_time','7'),('months_to_delete_incidents','12'),('max_file_size','50M'),('autowu_completion','0'),('no_wu_completion',''),('incident_reporter','0'),('show_creator_incident','1'),('show_owner_incident','1'),('pwu_defaultime','4'),('iwu_defaultime','0.25'),('api_acl','127.0.0.1'),('auto_incident_close','72'),('email_on_incident_update','0'),('error_log','1'),('iw_creator_enabled','0'),('update_manager_installed', 1),('license', 'INTEGRIA-FREE'),('current_package', 57),('minor_release', 55);
 /*!40000 ALTER TABLE `tconfig` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -403,60 +403,6 @@ LOCK TABLES `tnewsboard` WRITE;
 /*!40000 ALTER TABLE `tnewsboard` DISABLE KEYS */;
 INSERT INTO `tnewsboard` VALUES (1,'Welcome&#x20;to&#x20;Integria&#x20;4.0','Remember,&#x20;this&#x20;is&#x20;a&#x20;development&#x20;version.&#x20;Some&#x20;screens&#x20;are&#x20;ugly&#x20;yet,&#x20;but&#x20;will&#x20;be&#x20;much&#x20;nicer!.&#x20;Most&#x20;features&#x20;need&#x20;to&#x20;be&#x20;improved,&#x20;but&#x20;the&#x20;base&#x20;of&#x20;the&#x20;system&#x20;is&#x20;already&#x20;done.&#x0d;&#x0a;','2013-02-12 00:00:00',0,0,0,'');
 /*!40000 ALTER TABLE `tnewsboard` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tnewsletter`
---
-
-LOCK TABLES `tnewsletter` WRITE;
-/*!40000 ALTER TABLE `tnewsletter` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tnewsletter` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tnewsletter_address`
---
-
-LOCK TABLES `tnewsletter_address` WRITE;
-/*!40000 ALTER TABLE `tnewsletter_address` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tnewsletter_address` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tnewsletter_content`
---
-
-LOCK TABLES `tnewsletter_content` WRITE;
-/*!40000 ALTER TABLE `tnewsletter_content` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tnewsletter_content` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tnewsletter_queue`
---
-
-LOCK TABLES `tnewsletter_queue` WRITE;
-/*!40000 ALTER TABLE `tnewsletter_queue` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tnewsletter_queue` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tnewsletter_queue_data`
---
-
-LOCK TABLES `tnewsletter_queue_data` WRITE;
-/*!40000 ALTER TABLE `tnewsletter_queue_data` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tnewsletter_queue_data` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `tnewsletter_tracking`
---
-
-LOCK TABLES `tnewsletter_tracking` WRITE;
-/*!40000 ALTER TABLE `tnewsletter_tracking` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tnewsletter_tracking` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

@@ -47,11 +47,10 @@ if ($update) {
 	$config["api_acl"] = get_parameter ("api_acl", "*");
 	$config["api_password"] = get_parameter ("api_password", "");
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
-    $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
+    	$config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["error_log"] = get_parameter ("error_log", 0);
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
 	$config["max_file_size"] = get_parameter ("max_file_size", 1);
-	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
 	$config["first_day_week"] = get_parameter ("first_day_week", 0);
 	$config["url_updatemanager"] = get_parameter ("url_updatemanager", "");
 	$config["access_protocol"] = get_parameter("access_protocol");
@@ -86,7 +85,6 @@ if ($update) {
 	update_config_token ("api_acl", $config["api_acl"]);
 	update_config_token ("api_password", $config["api_password"]);
 	update_config_token ("error_log", $config["error_log"]);
-	update_config_token ("enable_newsletter", $config["enable_newsletter"]);
 	update_config_token ("first_day_week", $config["first_day_week"]);
 	
 	update_config_token ("access_protocol", $config["access_protocol"]);
@@ -146,19 +144,6 @@ $table->data[2][1] = print_input_text ("api_password", $config["api_password"], 
 	30, 255, true, __('API password'));
 
 
-$table->data[3][0] = print_input_text ("max_file_size", $config["max_file_size"], '',
-	10, 255, true, __('Max. Upload file size'));
-		
-$newsletter_options[0] = __('Disabled');
-$newsletter_options[1] = __('Enabled');
-$table->data[3][1] = print_select ($newsletter_options,
-		"enable_newsletter", $config["enable_newsletter"], '','','',
-			true,0,true, __('Enable newsletter') . 
-		print_help_tip (__("Enable this option to activate the newsletter feature of Integria IMS"), true));
-
-$newsletter_options[0] = __('Disabled');
-$newsletter_options[1] = __('Enabled');
-
 $days_of_week = get_days_of_week();
 $table->data[4][0] = print_select ($days_of_week, "first_day_week", $config["first_day_week"], '','','',true,0,false, __('First day of the week'));
 
@@ -188,6 +173,9 @@ $table->data[7][1] = print_checkbox ("enable_update_manager", 1, $config["enable
 
 $table->data[8][0] = print_input_text ("max_direct_download", $config["max_direct_download"], '',10, 255, true, __('Maximum direct download size (MB)'));
 
+$table->data[8][1] = print_input_text ("max_file_size", $config["max_file_size"], '',
+	10, 255, true, __('Max. Upload file size'));
+	
 echo "<form name='setup' method='post'>";
 print_table ($table);
 

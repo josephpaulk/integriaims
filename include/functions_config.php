@@ -179,14 +179,6 @@ function load_config() {
 		$config["max_file_size"] = "50M";
 	}
 	
-	if (!isset($config["enable_newsletter"])) {
-		$config["enable_newsletter"] = 0;
-	}
-	
-	if (!isset($config["batch_newsletter"])) {
-		$config["batch_newsletter"] = 15;
-	}
-	
 	if (!isset($config["want_chat"])){
 		$config["want_chat"] = 0;
 	}
@@ -267,33 +259,8 @@ function load_config() {
 		$config["license"]= "INTEGRIA-FREE";
 		update_config_token ("license", $config["license"]);
 	}
-	
-	if (!isset ($config["news_smtp_host"])){
-		$config["news_smtp_host"] = "";
-	}
-	
-	if (!isset ($config["news_smtp_user"])){
-		$config["news_smtp_user"] = "";
-	}
-	
-	if (!isset ($config["news_smtp_pass"])){
-		$config["news_smtp_pass"] = "";
-	}
-	
-	if (!isset ($config["news_smtp_port"])){
-		$config["news_smtp_port"] = "";
-	}
-	if (!isset($config["news_batch_newsletter"])) {
-		$config["news_batch_newsletter"] = "";
-	}
 	if (!isset($config["enabled_ticket_editor"])){
 		$config["enabled_ticket_editor"] = 0;
-	}
-	if (!isset($config["batch_email_validation"])) {
-		$config["batch_email_validation"] = 10;
-	}
-	if (!isset ($config["active_validate"])) {
-		$config["active_validate"] = 1;
 	}
 	if (!isset ($config["enable_update_manager"])) {
 		$config["enable_update_manager"] = true;

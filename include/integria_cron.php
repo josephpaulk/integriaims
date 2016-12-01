@@ -651,9 +651,7 @@ function run_mail_queue () {
 	
 	// Get pending mails
 	$filter = array('status' => 0);
-	if (isset($config['batch_newsletter'])) {
-		$filter['limit'] = (int) $config['batch_newsletter'];
-	}
+	
 	$mails = get_db_all_rows_filter('tpending_mail', $filter);
 	
 	// No pending mails
@@ -702,172 +700,6 @@ function run_mail_queue () {
 			process_sql_update('tpending_mail', $values, $where);
 			$to = trim(ascii_output($email['recipient']));
 			integria_logwrite(sprintf('SMTP error sending to %s (%s)', $to, $e->getMessage()));
-		}
-	}
-}
-
-function cron_validate_newsletter_address() {
-	
-	global $config;
-	require_once($config["homedir"] . "/include/smtp_validate_email.php");
-	
-	$smtp_validate = new SMTP_validateEmail;
-	
-	$sql = "SELECT email FROM tnewsletter_address WHERE status = 0 AND validated = 0 LIMIT ". $config["batch_email_validation"];
-	$newsletter_emails = get_db_all_rows_sql($sql);
-	
-	if ($newsletter_emails === false) {
-		return;
-	}
-	
-	$i = 0;
-	foreach ($newsletter_emails as $email) {
-		$news_emails[$i] = $email['email']; 
-		$i++;
-	}
-
-	$checked_emails = $smtp_validate->validate($news_emails);
-	
-	foreach ($news_emails as $mail) {
-		$exists = array_key_exists($mail, $checked_emails);
-		if (!$exists) {
-			$checked_emails[$mail] = false;
-		}
-	}
-
-	foreach ($checked_emails as $email=>$validated) {
-		if ($validated) { //validated
-			$values['validated'] = 1;
-			$values['status'] = 0;
-		} else { //disabled/removed
-			$values['validated'] = 1;
-			$values['status'] = 1;
-		}
-		process_sql_update('tnewsletter_address', $values, array('email'=>$email));
-	}
-	
-	return;
-}
-
-function run_newsletter_queue () {
-	global $config;
-
-	require_once($config['homedir'] . '/include/swiftmailer/swift_required.php');
-	
-	$total = isset($config['news_smtp_host']) // If Newsletters STMP parameters are not empty
-		? $config["news_batch_newsletter"]
-		: $config["batch_newsletter"];
-	
-	// Select valid QUEUES for processing
-	$queues = get_db_all_rows_filter('tnewsletter_queue', array('status' => 1));
-	
-	if (!$queues) return;
-	
-	// Init mailer
-	$mailer = null;
-	try {
-		// Empty snmp conf. System sendmail transport
-		$transport_conf = array();
-		if (!empty($config['news_smtp_host']) || !empty($config['smtp_host'])) {
-			// News conf
-			if (!empty($config['news_smtp_host'])) {
-				$transport_conf['host'] = $config['news_smtp_host'];
-				if (!empty($config['news_smtp_port'])) {
-					$transport_conf['port'] = $config['news_smtp_port'];
-				}
-				if (!empty($config['news_smtp_user'])) {
-					$transport_conf['user'] = $config['news_smtp_user'];
-				}
-				if (!empty($config['news_smtp_pass'])) {
-					$transport_conf['pass'] = $config['news_smtp_pass'];
-				}
-				if (!empty($config['news_smtp_proto'])) {
-					$transport_conf['proto'] = $config['news_smtp_proto'];
-				}
-			}
-			// General SMTP conf
-			else {
-				$transport_conf['host'] = $config['smtp_host'];
-				if (!empty($config['smtp_port'])) {
-					$transport_conf['port'] = $config['smtp_port'];
-				}
-				if (!empty($config['smtp_user'])) {
-					$transport_conf['user'] = $config['smtp_user'];
-				}
-				if (!empty($config['smtp_pass'])) {
-					$transport_conf['pass'] = $config['smtp_pass'];
-				}
-				if (!empty($config['smtp_proto'])) {
-					$transport_conf['proto'] = $config['smtp_proto'];
-				}
-			}
-		}
-		$transport = mail_get_transport($transport_conf);
-		$mailer = mail_get_mailer($transport);
-	}
-	catch (Exception $e) {
-		integria_logwrite(sprintf('Newsletter mail transport failure: %s', $e->getMessage()));
-		return;
-	}
-		
-	foreach ($queues as $queue) {
-		$id_queue = $queue['id'];
-		$id_content = (int) $queue['id_newsletter_content'];
-		
-		// Get issue and newsletter records
-		$issue = get_db_row('tnewsletter_content', 'id', $id_content);
-		$id_newsletter = (int) $issue['id_newsletter'];
-		
-		if (!$issue) continue;
-
-		//Add void pixel to track campaings
-		$issue['html'] .= '<img src="'.$config['public_url'].'/operation/newsletter/track_newsletter.php?id_content='.$id_content.'">';
-
-		$newsletter = get_db_row('tnewsletter', 'id', $id_newsletter);
-		
-		// TODO
-		// max block size here is 500. NO MORE, fix this in the future with a real buffered system!
-		
-		$filter = array(
-			'status' => 0,
-			'id_queue' => $id_queue,
-			'limit' => 500
-		);
-		if ($total > 0) $filter['limit'] = $total;
-		$addresses = get_db_all_rows_filter('tnewsletter_queue_data', $filter);
-		
-		if ($addresses) {
-			foreach ($addresses as $address) {
-				$message = Swift_Message::newInstance(safe_output($issue['email_subject']));
-				if (!empty($issue['from_address'])) {
-					$message->setFrom($issue['from_address']);
-				}
-				else {
-					$message->setFrom($newsletter['from_address']);
-				}
-				$dest_email = trim(safe_output($address['email']));
-			
-				$message->setTo($dest_email);
-
-				// TODO: replace names on macros in the body / HTML parts.
-
-				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
-
-				$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
-
-				if ($mailer->send($message, $failures) > 0) {
-					process_sql_update('tnewsletter_queue_data', array('status' => 1), array('id_queue' => $id_queue, 'email' => $dest_email));
-				}
-				else {
-					// TODO: Do something like error count to disable invalid addresses
-					// after a number of invalid counts
-					integria_logwrite('Trouble with address ' . $failures[0]);
-					process_sql_update('tnewsletter_queue_data', array('status' => 2), array('id_queue' => $id_queue, 'email' => $dest_email));
-				}
-			}
-		}
-		else {
-			process_sql_update('tnewsletter_queue', array('status' => 3), array('id' => $id_queue));
 		}
 	}
 }
@@ -1133,26 +965,6 @@ function delete_old_files_track_data () {
 	}
 }
 
-function cron_validate_all_newsletter_address() {
-	global $config;
-	
-	$sql = "SELECT id,email FROM tnewsletter_address WHERE status = 0 AND validated = 0 LIMIT ". $config["batch_email_validation"];
-	$newsletter_emails = get_db_all_rows_sql($sql);
-	
-	if ($newsletter_emails === false) {
-		$newsletter_emails = array();
-	}
-	
-	foreach ($newsletter_emails as $email) {
-		$values['validated'] = 1;
-		$values['status'] = 0;
-		
-		process_sql_update('tnewsletter_address', $values, array('id'=>$email['id']));
-	}
-	
-	return;
-}
-
 /**
  * This function deletes tevent workflow data with more than X days.
  */
@@ -1224,17 +1036,6 @@ enterprise_include ("include/integria_cron_enterprise.php");
 // Execute always (Send pending mails, SMTP)
 
 run_mail_queue();
-
-// if enabled, run newsletter queue
-
-if ($config["enable_newsletter"] == 1) {
-	if ($config["active_validate"]) {
-		cron_validate_newsletter_address();
-	} else {
-		cron_validate_all_newsletter_address();
-	}
-	run_newsletter_queue();
-}
 
 // Check SLA on active incidents (max. opened time without fixing and min. response)
 

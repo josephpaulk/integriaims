@@ -59,11 +59,6 @@ if ($update) {
 	$config["smtp_host"] = (string) get_parameter ("smtp_host");
 	$config["smtp_port"] = (string) get_parameter ("smtp_port");
 	$config["smtp_proto"] = (string) get_parameter ("smtp_proto");
-	$config["news_smtp_user"] = (string) get_parameter ("news_smtp_user");
-	$config["news_smtp_pass"] = (string) get_parameter ("news_smtp_pass");
-	$config["news_smtp_host"] = (string) get_parameter ("news_smtp_host");
-	$config["news_smtp_port"] = (string) get_parameter ("news_smtp_port");
-	$config["news_smtp_proto"] = (string) get_parameter ("news_smtp_proto");
 	$config["pop_user"] = (string) get_parameter ("pop_user");
 	$config["pop_pass"] = (string) get_parameter ("pop_pass");
 	$config["pop_host"] = (string) get_parameter ("pop_host");
@@ -71,9 +66,6 @@ if ($update) {
 	$config["smtp_queue_retries"] = (int) get_parameter ("smtp_queue_retries", 10);
 	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
 	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
-	$config["news_batch_newsletter"] = get_parameter ("news_batch_newsletter", 0);
-	$config["batch_email_validation"] = get_parameter ("batch_email_validation", 0);
-	$config["active_validate"] = get_parameter("active_validate", 0);
 	$config["select_pop_imap"] = get_parameter("select_pop_imap");
 	
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
@@ -85,11 +77,6 @@ if ($update) {
 	update_config_token ("smtp_user", $config["smtp_user"]);
 	update_config_token ("smtp_pass", $config["smtp_pass"]);
 	update_config_token ("smtp_proto", $config["smtp_proto"]);
-	update_config_token ("news_smtp_port", $config["news_smtp_port"]);
-	update_config_token ("news_smtp_host", $config["news_smtp_host"]);
-	update_config_token ("news_smtp_user", $config["news_smtp_user"]);
-	update_config_token ("news_smtp_pass", $config["news_smtp_pass"]);
-	update_config_token ("news_smtp_proto", $config["news_smtp_proto"]);
 	update_config_token ("pop_host", $config["pop_host"]);
 	update_config_token ("pop_user", $config["pop_user"]);
 	update_config_token ("pop_pass", $config["pop_pass"]);
@@ -97,9 +84,6 @@ if ($update) {
 	update_config_token ("smtp_queue_retries", $config["smtp_queue_retries"]);
 	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
-	update_config_token ("news_batch_newsletter", $config["news_batch_newsletter"]);
-	update_config_token ("batch_email_validation", $config["batch_email_validation"]);
-	update_config_token ("active_validate", $config["active_validate"]);
 	update_config_token ("select_pop_imap", $config["select_pop_imap"]);
 }
 
@@ -187,37 +171,6 @@ $row = array();
 $row[] = print_input_text ("pop_user", $config["pop_user"],
 	'', 15, 30, true, __('POP/IMAP User'));
 $row[] = print_input_text ("pop_pass", $config["pop_pass"], '', 15, 30, true, __('POP/IMAP Password'));
-$table->data[] = $row;
-
-$row = array();
-$row[] = "<br /><h4>".__("Newsletter SMTP Parameters")."</h4>";
-$table->data['newsletter_snmp'] = $row;
-$table->colspan['newsletter_snmp'][0] = $cols;
-
-$row = array();
-$row[] = print_select ($smtp_prococols, 'news_smtp_proto', $config['news_smtp_proto'], '','','',true,0,true, __('Encryption'));
-$row[] = print_input_text ("news_smtp_host", $config["news_smtp_host"],
-	'', 35, 200, true, __('SMTP Host'));
-$row[] = print_input_text ("news_smtp_port", $config["news_smtp_port"],
-	'', 5, 10, true, __('SMTP Port'));
-$table->data[] = $row;
-
-$row = array();
-$row[] = print_input_text ("news_smtp_user", $config["news_smtp_user"],
-	'', 25, 200, true, __('SMTP User'));
-$row[] = print_input_text ("news_smtp_pass", $config["news_smtp_pass"],
-	'', 25, 200, true, __('SMTP Password'));
-$row[] = print_button(__("Test"), 'test_news_smtp', false, '', 'class="sub"', true)
-	. '&nbsp;<div id="test_news_smtp_images" style="display: inline;"></div>';
-$table->data[] = $row;
-
-$row = array();
-$row[] = print_input_text ("news_batch_newsletter", $config["news_batch_newsletter"], '',
-	4, 255, true, __('Max. emails sent per execution') . print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true));
-$row[] = print_input_text ("batch_email_validation", $config["batch_email_validation"], '',
-	4, 255, true, __('Newsletter email validation batch') . 
-	print_help_tip (__("This means, in each execution of the batch external process (integria_cron) will try to validate this ammount of emails."), true));
-$row[] = print_checkbox ("active_validate", 1, $config["active_validate"], true, __('Activate email validation'));
 $table->data[] = $row;
 
 $row = array();
@@ -373,26 +326,6 @@ echo '</form>';
 			var proto = $('#smtp_proto').val();
 			var user = $('#text-smtp_user').val();
 			var pass = $('#text-smtp_pass').val();
-			
-			checkTransport(host, port, proto, user, pass, function (err, data) {
-				if (err) return changeStatus('failure', err);
-				if (data.result) changeStatus('success', data.message);
-				else changeStatus('failure', data.message);
-			});
-		});
-		
-		$('input#button-test_news_smtp').click(function (e) {
-			e.preventDefault();
-			
-			var changeStatus = changeSmtpTestStatus(document.getElementById('test_news_smtp_images'));
-			
-			changeStatus('loading');
-			
-			var host = $('#text-news_smtp_host').val();
-			var port = $('#text-news_smtp_port').val();
-			var proto = $('#news_smtp_proto').val();
-			var user = $('#text-news_smtp_user').val();
-			var pass = $('#text-news_smtp_pass').val();
 			
 			checkTransport(host, port, proto, user, pass, function (err, data) {
 				if (err) return changeStatus('failure', err);

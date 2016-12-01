@@ -1035,17 +1035,6 @@ function crm_check_if_exists ($id, $companies) {
 	return false;
 }
 
-function crm_get_issue_reads($id_issue) {
-
-	$reads = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 2 AND id_newsletter_content = ".$id_issue);
-
-	if(!$reads) {
-		$reads = 0;
-	}
-
-	return $reads;
-}
-
 function crm_get_campaigns () {
 	$campaigns = get_db_all_rows_in_table ("tcampaign");
 
@@ -1068,74 +1057,10 @@ function crm_get_campaigns_combo_list () {
 	return $result;
 }
 
-function crm_get_campaign_email_stats($id_campaign) {
-	$email_issues = get_db_all_rows_filter ('tnewsletter_content', array ('id_campaign' => $id_campaign));
-
-	//Get email sent
-
-	//Get issue reads
-	$total_reads = 0;
-	$total_sent = 0;
-	if (is_array($email_issues) || is_object($email_issues)){
-		foreach ($email_issues as $ei) {
-			$total_reads = $total_reads + crm_get_issue_reads($ei["id"]);
-			$total_sent = $total_sent + get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = ".$ei["id"]);
-		}
-	}
-	if($total_sent != 0){
-		$ratio = ($total_reads / $total_sent) * 100;
-	} else {
-		$ratio = 0;
-	}
-	$stats = array();
-
-	$stats["reads"] = $total_reads;
-	$stats["sent"] = $total_sent;
-	$stats["ratio"] = $ratio;
-
-	return $stats;
-}
-
 function crm_get_amount_total_invoice($field_invoice) {
 	
 	$total = $field_invoice['amount1']+$field_invoice['amount2']+$field_invoice['amount3']+$field_invoice['amount4']+$field_invoice['amount5'];
 	return $total;
-}
-
-function crm_merge_newsletter_address ($id_newsletter_source, $id_newsletter_destination) {
-	
-	$sql = "SELECT * FROM tnewsletter_address
-		WHERE email NOT IN (
-			SELECT email FROM tnewsletter_address
-			WHERE id_newsletter=$id_newsletter_destination
-			)
-		AND status=0 AND id_newsletter=$id_newsletter_source";
-	
-	$address_source = get_db_all_rows_sql($sql);
-	$now = date ("Y-m-d H:i:s");
-	$success = 0;
-
-	if ($address_source) {
-		$total_address = count($address_source);
-		foreach ($address_source as $address) {
-			
-			$values['id_newsletter'] = $id_newsletter_destination;
-			$values['name'] = $address['name'];
-			$values['email'] = $address['email'];
-			$values['status'] = $address['status'];
-			$values['datetime'] = $now;
-			
-			$result = process_sql_insert('tnewsletter_address', $values);
-			
-			if ($result) {
-				$success = $success+1;
-			}
-		}
-	} else {
-		return ui_print_error_message (__('No address to import'), '', true, 'h3', true);
-	}
-	
-	return ui_print_success_message ($success.' of '.$total_address.'&nbsp;'.__('addresses have been imported'), '', true, 'h3', true);
 }
 
 function crm_attach_contract_file ($id, $file_temp, $file_description, $file_name = "") {

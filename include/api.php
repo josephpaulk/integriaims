@@ -248,12 +248,6 @@ switch ($op){
 		echo api_ovo_manager ($return_type, $params);
 		break;
 	}
-	case "add_address_to_newsletter":
-	{
-		$params = explode($token, $params);
-		echo api_add_address_to_newsletter ($return_type, $user, $params);
-		break;
-	}
 	default: 
 	{
 	}
