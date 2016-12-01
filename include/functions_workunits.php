@@ -60,6 +60,7 @@ function lock_task_workunit ($id_workunit) {
 
 function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1, $work_home = 0, $workflow = false) {
 	global $config;
+	
 	$fecha = print_mysql_timestamp();
 	$sql = sprintf ('UPDATE tincidencia
 		SET affected_sla_id = 0, actualizacion = "%s"  
@@ -198,11 +199,6 @@ function create_new_table_multiworkunit ($number=false, $date=false) {
 	echo print_checkbox ('forward_'.$number, 1, false, true, __('Forward').
 	print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'), true));
 	echo "</td>";
- 
-	echo "<td>";
-	echo print_checkbox ('split_'.$number, 1, false, true, __('Split > 1day') .
-	 print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'), true));	
-	echo "</td>";
 	
 	echo "</tr>";
 	
@@ -231,14 +227,13 @@ function create_single_workunit ($number) {
 	$id_task = (int) get_parameter ("id_task_".$number, -1);
 	$id_profile = (int) get_parameter ("id_profile_".$number);
 	$public = (bool) get_parameter ("public_".$number);
-	$split = (bool) get_parameter ("split_".$number);
 	$id_user = (string) get_parameter ("id_username_".$number, $config['id_user']);
 	$wu_user = $id_user;
 	$forward = (bool) get_parameter ("forward_".$number);	
 	$work_home = (bool) get_parameter ("work_home_".$number);
 	
 	// Multi-day assigment
-	if ($split && $duration > $config["hours_perday"]) {
+	if ($forward && $duration > $config["hours_perday"]) {
 
 		$total_days = ceil ($duration / $config["hours_perday"]);
 		$total_days_sum = 0;
@@ -319,7 +314,6 @@ function create_single_workunit ($number) {
 					"public" => $public,
 					"user" => $id_user,
 					"duration" => $duration,
-					"split" => $split,
 					"forward" => $forward,
 					"description" => $description,
 					"result_out" => $result_output,
