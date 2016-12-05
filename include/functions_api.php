@@ -518,19 +518,21 @@ function api_update_incident ($return_type, $user, $params){
 			if ($labels === false) {
 				$labels = array();
 			}
-		
+			
 			$num_params = 13;
 			foreach ($labels as $label) {
 				$values_type_field['data'] = $params[$num_params];
+				
 				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 				$values_type_field['id_incident_field'] = $id_incident_field;
 				$values_type_field['id_incident'] = $id_incident;
-				
-				$exists_id = get_db_value_filter('id', 'tincident_field_data', array('id_incident' => $id_incident, 'id_incident_field'=> $id_incident_field), 'AND');
-				if ($exists_id) 
-					process_sql_update('tincident_field_data', $values_type_field, array('id_incident_field' => $id_incident_field, 'id_incident' => $id_incident), 'AND');
-				else
-					process_sql_insert('tincident_field_data', $values_type_field);
+				if (($values_type_field['data'] != null) && ($values_type_field['data'] != "")) {
+					$exists_id = get_db_value_filter('id', 'tincident_field_data', array('id_incident' => $id_incident, 'id_incident_field'=> $id_incident_field), 'AND');
+					if ($exists_id) 
+						process_sql_update('tincident_field_data', $values_type_field, array('id_incident_field' => $id_incident_field, 'id_incident' => $id_incident), 'AND');
+					else
+						process_sql_insert('tincident_field_data', $values_type_field);
+				}
 					
 				$num_params++;
 			}
