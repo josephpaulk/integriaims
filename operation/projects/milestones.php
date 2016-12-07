@@ -60,6 +60,7 @@ if ($operation == "create2") {
 	$name = get_parameter ("name");
 	$description = get_parameter ("description");
 	$timestamp = get_parameter ("timestamp");
+	$timestamp = safe_output($timestamp);
 	$id_project = get_parameter ("id_project");
 	$sql_insert="INSERT INTO tmilestone (name, description, timestamp, id_project) VALUES ('$name','$description', '$timestamp', '$id_project') ";
 	$result=mysql_query($sql_insert);
@@ -80,9 +81,7 @@ if ($operation == "update2") {
 	$description = get_parameter ("description");
 	$timestamp = get_parameter ("timestamp");
 	$id_project = get_parameter ("id_project");
-	
-	$values = array("name" => $name, "description" => $description, "timestamp" => $timestamp, "id_project" => $id_project);
-	
+	$values = array("name" => $name, "description" => $description, "timestamp" => safe_output($timestamp), "id_project" => $id_project);
 	
 	$result = process_sql_update("tmilestone",$values, "id = $id_milestone");
 	if (! $result)
@@ -121,15 +120,14 @@ if ($operation == "create" || $operation == "update") {
 		$milestone = get_db_row ("tmilestone", "id", $id_milestone);
 		$name = $milestone["name"];
 		$description = $milestone["description"];
-		$timestamp = explode(" ",$milestone["timestamp"]);
-		$timestamp = $timestamp[0];
+		$timestamp = $milestone["timestamp"];
 		$id_project = $milestone["id_project"];
 	}
 	else {
 		$section_subtitle = __('Creation');
 		$name = '';
 		$description = '';
-		$timestamp = date("Y-m-d");
+		$timestamp = date("Y-m-d H:i:s");
 		//$id_project = '';
 	}
 
@@ -243,10 +241,23 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_d
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
+<script type="text/javascript" src="include/js/jquery-ui-timepicker-addon.js"></script>
+<link rel="stylesheet" type="text/css" href="include/js/jquery-ui-timepicker-addon.css"/ >
 <script type="text/javascript">
 
 // Form validation
 trim_element_on_submit('input[name="name"]');
 
-add_datepicker ("#timestamp");
+add_complete_datepicker("#timestamp");
+
+function add_complete_datepicker (element_picker, startDate_picker) {
+	$(document).ready(function () {
+		$(element_picker).datetimepicker({
+			dateFormat: "yy-mm-dd",
+			timeFormat: "hh:mm:ss",
+			minDate: startDate_picker
+		});
+	});
+}
+
 </script>
