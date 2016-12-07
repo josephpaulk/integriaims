@@ -458,7 +458,7 @@ function users_get_users_owners_or_creators ($id_user) {
 		$users = array();
 	}
 	foreach ($users as $user) {
-		$values[$user['id_usuario']] = get_db_row_sql ("SELECT * FROM tusuario WHERE id_usuario = '".$user['id_usuario']."'");
+		$values[$user['id_usuario']] = get_db_row_sql ("SELECT id_usuario, nombre_real, num_employee FROM tusuario WHERE id_usuario = '".$user['id_usuario']."'");
 	}
 
 	return $values;
@@ -506,7 +506,10 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 		$query = "SELECT * FROM tusuario t1 WHERE 1=1";
 		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
 	} else {
-		$query = "SELECT * FROM tusuario WHERE id_usuario IN (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."')) ";
+		$query = "SELECT * FROM tusuario t1
+					INNER JOIN tusuario_perfil t2 ON t1.id_usuario = t2.id_usuario 
+						AND t2.id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."')";
+			//~ WHERE id_usuario IN (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."')) ";
 		//~ $query = "SELECT * FROM tusuario WHERE (id_usuario IN (SELECT id_usuario FROM tusuario_perfil WHERE (id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."'))) OR nivel = 1) ";
 		
 		$groups = get_db_all_rows_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."'");
