@@ -99,8 +99,6 @@ if ($change_table) {
 
 	$search_free = (string)get_parameter ('search_free', '');
 
-	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
-
 	$params = array();
 	//offset
 	//$offset = (int)get_parameter('offset', 0);
@@ -198,13 +196,6 @@ if ($change_table) {
 				$sql_search_count .= " AND ((t.`id_object_type_field` IN ($string_fields_object_types) ";		
 				$sql_search_count .= "AND t.`data` LIKE '%$search_free%')";
 				$sql_search_count .= "OR (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%'))";
-				/*
-				$sql_search_obj_type = "SELECT DISTINCT(`tobject_type`.`id`), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE
-										`tinventory.id_object_type` = `tobject_type`.`id` AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
-				$sql_search_obj_type .= " AND ((`tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";
-				$sql_search_obj_type .= "AND tobject_field_data.`data` LIKE '%$search_free%')";
-				$sql_search_obj_type .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";
-				*/	
 			} else {
 				if($search_free){
 					$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
@@ -326,7 +317,7 @@ if ($change_table) {
 	if($mode == 'list'){
 		inventories_show_list2($sql_search, $sql_search_count, $params, $block_size, 0, $count_object_custom_fields, $sql_search_pagination);
 	} else {
-		inventories_print_tree($sql_search_count, $sql_search_obj_type, $last_update);
+		inventories_print_tree($sql_search_count, $last_update);
 	}
 	return;
 }

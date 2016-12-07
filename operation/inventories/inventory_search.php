@@ -268,8 +268,6 @@ return;
 	//$offset = (int)get_parameter('offset', $params_array['offset']);	
 	//$params['offset'] = $offset;
 
-	$sql_search_obj_type = 'SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tinventory.id_object_type = tobject_type.id order by name';
-
 	//field object_fields
 	if(isset($params_array['object_fields']) && $params_array['object_fields'] != ''){
 		$object_fields = $params_array['object_fields'];
@@ -374,13 +372,6 @@ return;
 				$sql_search_count .= " AND ((t.`id_object_type_field` IN ($string_fields_object_types) ";		
 				$sql_search_count .= "AND t.`data` LIKE '%$search_free%')";
 				$sql_search_count .= "OR (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%'))";
-				/*
-				$sql_search_obj_type = "SELECT DISTINCT(`tobject_type`.`id`), tobject_type.* FROM `tinventory`, `tobject_type`, `tobject_field_data` WHERE
-										`tinventory.id_object_type` = `tobject_type`.`id` AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`";
-				$sql_search_obj_type .= " AND ((`tobject_field_data`.`id_object_type_field` IN ($string_fields_object_types) ";
-				$sql_search_obj_type .= "AND tobject_field_data.`data` LIKE '%$search_free%')";
-				$sql_search_obj_type .= "OR (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%' OR tinventory.id LIKE '%$search_free%' OR tinventory.status LIKE '%$search_free%'))";
-				*/	
 			} else {
 				if($search_free){
 					$sql_search .= " AND (i.name LIKE '%$search_free%' OR i.description LIKE '%$search_free%' OR i.id LIKE '%$search_free%' OR i.status LIKE '%$search_free%')";
@@ -786,7 +777,7 @@ $page = (int)get_parameter('page', 1);
 switch ($mode) {
 	case 'tree':
 		echo '<div class = "inventory_tree_table" id = "inventory_tree_table">';
-			inventories_print_tree($sql_search_pagination, $sql_search_obj_type, $last_update);
+			inventories_print_tree($sql_search_pagination, $last_update);
 		echo '</div>';
 		break;
 	case 'list':

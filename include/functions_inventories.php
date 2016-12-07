@@ -854,7 +854,7 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 	return $all_fields_ext;
 }
 
-function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update = 0) {
+function inventories_print_tree ($sql_search, $last_update = 0) {
 	global $config;
 	global $enteprise_load;
 	$config['mysql_result_type'] = MYSQL_ASSOC;	
@@ -865,12 +865,8 @@ function inventories_print_tree ($sql_search, $sql_search_obj_type, $last_update
 	echo print_help_tip (__("Filters only apply <br> to the first level"), true);
 	echo "</em>";
 
-	if (!$sql_search_obj_type) {
-		$object_types = get_object_types (false, true);
-	} else {
-		$object_types = get_db_all_rows_sql($sql_search_obj_type);
-	}
-	
+	$object_types = get_db_all_rows_sql("SELECT DISTINCT(tobject_type.id), tobject_type.* FROM `tinventory`, `tobject_type` WHERE tobject_type.show_in_list = 1 AND tinventory.id_object_type = tobject_type.id order by name");
+
 	$sql_search = base64_encode($sql_search);
 
 	if (empty($object_types)) {
