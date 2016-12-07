@@ -324,7 +324,23 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	echo '</form>';
 	echo '</li>';
 	
+	if ($sec2=="operation/inventories/inventory_import_objects")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects'>".__('Import objects from CSV')."</a></li>";
+	
+	if (give_acl ($config["id_user"], 0, "VW")) {
+		if ($sec2=="operation/manufacturers/manufacturer_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>".__('Manufacturer overview')."</a></li>";
+	}
+	
 	echo "</ul>";
+	
+			
 //~ Revisar
 	//~ // Dynamic inventory sub options menu
 	//~ echo '<h3>'.__('Inventory').' #<span class="id-inventory-menu">';
@@ -490,23 +506,23 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CM") && $show_custo
 }
 
 // MANUFACTURER
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
-	if ($sec2=="operation/manufacturers/manufacturer_detail")
-		echo "<li title='".__('Manufacturers')."' data-status='closed' id='sideselfabricantes' class='sideselcolor'>";
-	else
-		echo "<li title='".__('Manufacturers')."' data-status='closed' id='fabricantes'>";
-		//echo "<a title='".__('Manufacturers')."' href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>1</a>";
-		echo "<ul>";
-			echo "<li><h1>".__('Manufacturers')."</h1></li>";
-			// Building overview
-			if ($sec2=="operation/manufacturers/manufacturer_detail")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>".__('Manufacturer overview')."</a></li>";
-		echo "</ul>";
-	echo "</li>";
-}
+//~ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
+	//~ if ($sec2=="operation/manufacturers/manufacturer_detail")
+		//~ echo "<li title='".__('Manufacturers')."' data-status='closed' id='sideselfabricantes' class='sideselcolor'>";
+	//~ else
+		//~ echo "<li title='".__('Manufacturers')."' data-status='closed' id='fabricantes'>";
+		//~ //echo "<a title='".__('Manufacturers')."' href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>1</a>";
+		//~ echo "<ul>";
+			//~ echo "<li><h1>".__('Manufacturers')."</h1></li>";
+			//~ // Building overview
+			//~ if ($sec2=="operation/manufacturers/manufacturer_detail")
+				//~ echo "<li id='sidesel'>";
+			//~ else
+				//~ echo "<li>";
+			//~ echo "<a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>".__('Manufacturer overview')."</a></li>";
+		//~ echo "</ul>";
+	//~ echo "</li>";
+//~ }
 
 // Product types
 if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_inventory != MENU_HIDDEN) {
@@ -526,11 +542,11 @@ if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_invent
 			echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>".__('Object types')."</a></li>";
 
 			// Building overview
-			if ($sec2=="operation/inventories/inventory_import_objects")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects'>".__('Import objects from CSV')."</a></li>";
+			//~ if ($sec2=="operation/inventories/inventory_import_objects")
+				//~ echo "<li id='sidesel'>";
+			//~ else
+				//~ echo "<li>";
+			//~ echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects'>".__('Import objects from CSV')."</a></li>";
 		echo "</ul>";
 	echo "</li>";
 }
