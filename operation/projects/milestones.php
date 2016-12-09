@@ -146,7 +146,7 @@ if ($operation == "create" || $operation == "update") {
 	echo "<tr><td class='datos2'><b>".__('Timestamp') . "</b>";
 	echo "<td class='datos2'>";
 	
-	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$timestamp'>";
+	echo "<input type='text' id='timestamp' name='timestamp' size=15 value='$timestamp'>";
 
 	echo "<tr><td class='datos' valign='top'><b>".__('Description') . "</b>";
 	echo "<td class='datos'><textarea name='description' style='width:95%; height:100px'>";
@@ -254,7 +254,7 @@ function add_complete_datepicker (element_picker, startDate_picker) {
 	$(document).ready(function () {
 		$(element_picker).datetimepicker({
 			dateFormat: "yy-mm-dd",
-			timeFormat: "hh:mm:ss",
+			timeFormat: "HH:mm:ss",
 			minDate: startDate_picker
 		});
 	});
