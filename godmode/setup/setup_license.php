@@ -67,7 +67,8 @@ if ($update) {
 		$sql_insert = "INSERT INTO tconfig (`token`, `value`) VALUES ('url_updatemanager', 'https://artica.es/integriaupdate4/server.php');";
         process_sql  ($sql_insert);	
 	}
-		
+
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 if ($unblock_users) {

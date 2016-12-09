@@ -85,6 +85,8 @@ if ($update) {
 	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
 	update_config_token ("select_pop_imap", $config["select_pop_imap"]);
+
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 $smtp_prococols = array(

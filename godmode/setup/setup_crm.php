@@ -68,6 +68,8 @@ if ($update) {
 	foreach ($progress as $key => $value) {
 		process_sql_update ('tlead_progress', array ('name' => $value), array ('id' => $key));
 	}
+
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 $table = new StdClass();

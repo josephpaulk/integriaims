@@ -76,7 +76,8 @@ if ($update) {
 	update_config_token ("pandora_user", $config["pandora_user"]);
     update_config_token ("pandora_pass", $config["pandora_pass"]); 
     update_config_token ("default_contract", $config["default_contract"]);
-  
+
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 $table = new StdClass();

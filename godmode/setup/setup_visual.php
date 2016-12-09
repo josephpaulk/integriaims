@@ -54,6 +54,8 @@ if ($update) {
     update_config_token ("header_logo", $config["header_logo"]);
     update_config_token ("login_background", $config["login_background"]);
     update_config_token ("flash_charts", $config["flash_charts"]);
+
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 $table = new StdClass();

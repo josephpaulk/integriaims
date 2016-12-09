@@ -78,6 +78,8 @@ if ($update) {
 	update_config_token ('ad_domain', $config['ad_domain']);
 
     update_config_token ("session_timeout", $config["session_timeout"]);
+
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
 if(!isset($config['auth_methods'])) {

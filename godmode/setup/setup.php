@@ -107,7 +107,8 @@ if ($update) {
 		update_config_token ("first_login", $config["first_login"]);
 		update_config_token ("mins_fail_pass", $config["mins_fail_pass"]);
 		update_config_token ("number_attempts", $config["number_attempts"]);
-	}	
+	}
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 // Render SYSTEM language code, not current language.
 $table = new StdClass();

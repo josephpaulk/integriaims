@@ -55,6 +55,8 @@ if ($update) {
 	update_config_token ("pwu_defaultime", $config["pwu_defaultime"]);
 	update_config_token ("currency", $config["currency"]);
 
+	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
+
 }
 
 $table = new StdClass();
