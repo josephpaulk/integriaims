@@ -249,7 +249,7 @@ if ($info) {
 	$much_more .= "</a>";
 	
 	$subtitle = "<span class='landing_subtitle'>";
-	$subtitle .= __("Total active projects") . ": ";
+	$subtitle .= __("Activity") . ": ";
 	$subtitle .= projects_active_user ($config["id_user"]);
 	$subtitle .= "</span>";
 	
