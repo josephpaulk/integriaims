@@ -131,8 +131,8 @@ $table->data[0][1] = print_input_text ("sitename", $config["sitename"], '',
 
 $error_log_options[0] = __('Disabled');
 $error_log_options[1] = __('Enabled');
-$table->data[1][0] = print_select ($error_log_options, "error_log", 
-		$config["error_log"], '','','',true,0,true, __('Error log') . 
+$table->data[1][0] = print_checkbox ("error_log", $error_log_options, 
+		$config["error_log"], true, __('Enable error log') . 
 			print_help_tip (__("This errorlog is on /integria.log"), true));
 
 $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',

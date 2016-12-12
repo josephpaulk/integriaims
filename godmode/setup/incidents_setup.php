@@ -242,9 +242,9 @@ echo "<td style=''>".print_input_text ("limit_size", $config["limit_size"], '',5
 echo "</tr>";
 
 echo "<tr>";
-echo "<td style=''>".print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show ticket owner'))."</td>";	
+echo "<td style=''>".print_checkbox ("show_owner_incident", $incident_reporter_options, $config["show_owner_incident"], true, __('Show ticket owner'))."</td>";	
 
-echo "<td style=''>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show ticket creator'))."</td>";
+echo "<td style=''>".print_checkbox ("show_creator_incident", $incident_reporter_options, $config["show_creator_incident"], true, __('Show ticket creator'))."</td>";
 
 echo "<td style=''>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto ticket close').
 	integria_help ("auto_incident_close", true))."</td>";
@@ -253,9 +253,9 @@ echo "</tr>";
 echo "<tr>";
 echo "<td style=''>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
 
-echo "<td style=''>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on ticket creation'))."</td>";
+echo "<td style=''>".print_checkbox ("incident_creation_wu", $newsletter_options, $config["incident_creation_wu"], true, __('Editor adds a WU on ticket creation'))."</td>";
 
-echo "<td style=''>".print_select ($ticket_options, "enabled_ticket_editor", $config["enabled_ticket_editor"], '','','',true, 0, true, __('Enable quick edit mode'))."</td>";
+echo "<td style=''>".print_checkbox ("enabled_ticket_editor", $ticket_options, $config["enabled_ticket_editor"], true, __('Enable quick edit mode'))."</td>";
 
 echo "<tr>";
 echo "<td style=''>".print_checkbox ("incident_type_change", 1, $config["incident_type_change"], true, __('Allow to change the ticket type'))."</td>";
