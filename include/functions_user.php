@@ -220,6 +220,17 @@ function user_delete_user($id_user) {
 	return;
 }
 
+function user_delete_user_profile_group($id_user, $id_profile, $id_group) {
+	global $config;
+
+	if ($config["enteprise"] == 1){
+		$delete_profile = mysql_query("DELETE FROM tusuario_perfil WHERE id_usuario = '".$id_user."'
+			 AND id_perfil = " . $id_profile . " AND id_grupo = " . $id_group);
+	}
+	
+	return;
+}
+
 function user_is_disabled ($id_user) {
 	
 	$disabled = get_db_value('disabled', 'tusuario', 'id_usuario', $id_user);

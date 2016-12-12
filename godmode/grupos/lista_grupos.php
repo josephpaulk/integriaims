@@ -25,7 +25,9 @@ $delete_user = get_parameter('delete_user', 0);
 
 if ($delete_user) {
 	$id_user_delete = get_parameter('id_user_delete');
-	user_delete_user($id_user_delete);
+	$id_profile = get_parameter('id_profile');
+	$id_group = get_parameter('id_group');
+	user_delete_user_profile_group($id_user_delete, $id_profile, $id_group);
 }
 
 if ($get_group_details) {
