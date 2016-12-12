@@ -204,10 +204,6 @@ echo "<h2>";
 echo __('Workunit personal report for user');
 echo " '". dame_nombre_real($id_user). "'.";
 
-$html_report_image = print_html_report_image ("index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&id=$id_user&id_task=$id_task", __("Report"));
-if ($html_report_image) {
-	echo "&nbsp;" . $html_report_image;
-}
 
 echo "</h2>";
 
@@ -218,6 +214,37 @@ if ($timestamp_l != "" AND $timestamp_h != "")
 
 if ($id_task != 0)
     echo __("Task"). " : ".get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
+
+$now_year = date("Y");
+$now_month = date("m");
+
+echo "<div id='button-bar-title'><ul>";
+if (!$pure) {    
+   echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id'>";
+		echo "<img src='images/calendar_orange.png' border=0 title='". __("Show calendar"). "'>";
+		echo "</a>";
+	echo "</li>";
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$now_month&year=$now_year&id=$id'>";
+		echo "<img src='images/chart_bar.png' border=0 title='". __("Show graphs"). "'>";
+		echo "</a>";
+	echo "</li>";
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&id=$id&pure=1'>";
+		echo "<img src='images/html_tabs.png' border=0 title='". __("HTML"). "'>";
+		echo "</a>";
+	echo "</li>";
+} else {
+	echo "<li>";
+		echo " <a href=index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&pure=0&id=$id'>";
+		echo "<img src='images/flecha_volver.png' border=0 title='". __("Back"). "'>";
+		echo "</a>";
+	echo "</li>";
+}
+	echo "</ul>";
+	echo "</div>";  
+   
 echo "</h4>";
 
 if ($id_workunit != -1){

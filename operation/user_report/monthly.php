@@ -95,6 +95,16 @@ if ($lock_month != ""){
 	}
 }
 
+$now = date("Y-m-d H:i:s");
+$now_year = date("Y");
+$now_month = date("m");
+
+$working_month = get_parameter ("working_month", $now_month);
+$working_year = get_parameter ("working_year", $now_year);
+
+$begin_month = "$now_year-$now_month-01 00:00:00";
+$end_month = "$now_year-$now_month-31 23:59:59";
+
 echo "<h2>".__('Monthly report') . "</h2>";
 
 echo "<h4>" . __("For") . ": " . $id;
@@ -108,20 +118,30 @@ echo "<div id='button-bar-title'><ul>";
 
 if (!$pure) {
 	echo "<li>";
-		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
-		echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
+		echo " <a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$id'>";
+		echo "<img src='images/page_white_text.png' border=0 title='". __("Show workunits"). "'>";
 		echo "</a>";
 	echo "</li>";
 	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$now_month&year=$now_year&id=$id'>";
+		echo "<img src='images/chart_bar.png' border=0 title='". __("Show graphs"). "'>";
+		echo "</a>";
+	echo "</li>";
+	//~ echo "<li>";
+		//~ echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
+		//~ echo "<img src='images/lock.png' border=0 title='". __("Lock all workunits in this month"). "'>";
+		//~ echo "</a>";
+	//~ echo "</li>";
+	echo "<li>";
 		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&pure=1&id=$id'>";
-		echo "<img src='images/html_tabs.png' border=0 title='". _("HTML"). "'>";
+		echo "<img src='images/html_tabs.png' border=0 title='". __("HTML"). "'>";
 		echo "</a>";
 	echo "</li>";
 }
 else {
 	echo "<li>";
 		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&pure=0&id=$id'>";
-		echo "<img src='images/flecha_volver.png' border=0 title='". _("Back"). "'>";
+		echo "<img src='images/flecha_volver.png' border=0 title='". __("Back"). "'>";
 		echo "</a>";
 	echo "</li>";
 }

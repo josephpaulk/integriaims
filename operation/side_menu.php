@@ -324,11 +324,6 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	echo '</form>';
 	echo '</li>';
 	
-	if ($sec2=="operation/inventories/inventory_import_objects")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects'>".__('Import objects from CSV')."</a></li>";
 	
 	if (give_acl ($config["id_user"], 0, "VW")) {
 		if ($sec2=="operation/manufacturers/manufacturer_detail")
@@ -337,6 +332,12 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 			echo "<li>";
 		echo "<a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>".__('Manufacturer overview')."</a></li>";
 	}
+
+	if ($sec2=="operation/inventories/inventory_import_objects")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects'>".__('Import objects from CSV')."</a></li>";
 	
 	echo "</ul>";
 	
@@ -803,12 +804,6 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 				$now_year = date("Y");
 				$now_month = date("m");
 
-				// My workunit report
-				if ($sec2 == "operation/user_report/monthly")
-				echo "<li id='sidesel'>";
-				else
-					echo "<li>";
-				echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=".$config['id_user']."'>".__('Workunit report')."</a></li>";
 
 				// My tasks
 				if ($sec2 == "operation/users/user_task_assigment")
@@ -841,13 +836,20 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full'>".__('Full report')."</a></li>";
-
+		
+		// My workunit report
+		if ($sec2 == "operation/user_report/monthly")
+		echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=".$config['id_user']."'>".__('Calendar Workunit report')."</a></li>";
+		
 		// Basic report (monthly)
 		if ($sec2 == "operation/user_report/report_monthly")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('Montly report')."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('Monthly report')."</a></li>";
 
 		// Basic report (annual)
 		if ($sec2 == "operation/user_report/report_annual")

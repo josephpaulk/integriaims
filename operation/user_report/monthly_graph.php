@@ -72,7 +72,43 @@ $from_one_month = "$prev_year-$prev_month-$day";
 $next_one_month = "$next_year-$next_month-$day";
 
 echo "<h2>".__('Monthly report') . "</h4>";
-echo "<h4>". __("User") .": " . $id_user . "</h4>";
+echo "<h4>". __("User") .": " . $id_user;
+
+$now = date("Y-m-d H:i:s");
+$now_year = date("Y");
+$now_month = date("m");
+
+$begin_month = "$now_year-$now_month-01 00:00:00";
+$end_month = "$now_year-$now_month-31 23:59:59";
+
+echo "<div id='button-bar-title'><ul>";
+if (!$pure) {
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$id'>";
+		echo "<img src='images/page_white_text.png' border=0 title='". __("Show workunits"). "'>";
+		echo "</a>";
+	echo "</li>";
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id'>";
+		echo "<img src='images/calendar_orange.png' border=0 title='". __("Show calendar"). "'>";
+		echo "</a>";
+	echo "</li>";
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&pure=1&month=$now_month&year=$now_year&id=$id'>";
+		echo "<img src='images/html_tabs.png' border=0 title='". __("HTML"). "'>";
+		echo "</a>";
+	echo "</li>";
+} else {
+	echo "<li>";
+		echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&pure=0&month=$now_month&year=$now_year&id=$id'>";
+		echo "<img src='images/flecha_volver.png' border=0 title='". __("Back"). "'>";
+		echo "</a>";
+	echo "</li>";
+}
+	echo "</ul>";
+	echo "</div>";
+   
+echo "</h4>";
 
 echo "<table class=search-table width=100%>";
 echo "<tr><td style='text-align: center;'>";
