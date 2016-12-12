@@ -18,10 +18,10 @@ global $config;
 
 	echo "<center>";
 	echo '<div style="margin-top: 100px; width: 450px;">';
-	echo '<h2>'.__('You don\'t have access to this page').'</h2>';
+	echo '<h2 style="font-size:22px !important; font-weight: bold; margin-top:32px;">'.__('You don\'t have access to this page').'</h2>';
 	echo "<p align='center'>";
 	echo "<img src='".$config["base_url"]."/images/noaccess.gif'>";
-	echo "<p>". __('Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of Integria System Database'). "</p>";
+	echo "<p style='font-size:18px; font-weight: normal; line-height: 1.5em;'>". __('Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of Integria System Database.'). "</p>";
 	echo "</p>";
 	echo "</div>";
 	echo "</center>";
