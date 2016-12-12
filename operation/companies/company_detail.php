@@ -155,6 +155,7 @@ if (($create_company) OR ($update_company)) {
 	$manager = (string) get_parameter ("manager");
 	$id_parent = (int) get_parameter ("id_parent", 0);
 	$payment_conditions = (int) get_parameter ("payment_conditions", 30);
+	$last_update = get_parameter('last_update', "0000-00-00 00:00:00");
 
 	
 	if ($create_company){
@@ -164,9 +165,9 @@ if (($create_company) OR ($update_company)) {
 			include ("general/noaccess.php");
 			exit;
 		}
-		
-		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent, payment_conditions)
-					 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent, $payment_conditions)";
+		$last_update = safe_output($last_update);
+		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent, payment_conditions, last_update)
+					 VALUES ('$name', '$address', '$comments', '$fiscal_id', $id_company_role, '$website', '$country', '$manager', $id_parent, $payment_conditions, '$last_update')";
 
 		$id = process_sql ($sql, 'insert_id');
 
@@ -199,7 +200,7 @@ if (($create_company) OR ($update_company)) {
 			include ("general/noaccess.php");
 			exit;
 		}
-		
+
 		$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
 		$last_update = process_sql ($sql);
 
@@ -446,7 +447,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$website = "";
 		$manager = $config["id_user"];
 		$id_parent = 0;
-		$last_update = '';
+		$last_update = date("Y-m-d H:i:s");
 		$payment_conditions = 30;
 	}
 	
@@ -1648,11 +1649,24 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_d
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/jquery-ui-timepicker-addon.js"></script>
+<link rel="stylesheet" type="text/css" href="include/js/jquery-ui-timepicker-addon.css"/ >
 
 <script type="text/javascript" >
 	
 add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
-add_datepicker ("#text-last_update");
+add_complete_datepicker ("#text-last_update");
+
+function add_complete_datepicker (element_picker, startDate_picker) {
+	$(document).ready(function () {
+		$(element_picker).datetimepicker({
+			dateFormat: "yy-mm-dd",
+			timeFormat: "hh:mm:ss",
+			minDate: startDate_picker
+		});
+	});
+}
+
 add_datepicker ("input[type=date]");
 
 $(document).ready (function () {
