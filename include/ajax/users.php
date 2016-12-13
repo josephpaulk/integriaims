@@ -23,6 +23,7 @@ $get_user_company = (bool) get_parameter ('get_user_company');
 $delete_users = (bool) get_parameter ('delete_users');
 $enable_users = (bool) get_parameter ('enable_users');
 $disable_users = (bool) get_parameter ('disable_users');
+$noaccess_table = (bool) get_parameter ('noaccess_table');
 
 if ($search_users) {
 	require_once ('include/functions_db.php');
@@ -158,6 +159,29 @@ if ($disable_users) {
 	}
 	
 	echo json_encode($result);
+}
+
+if ($noaccess_table) {
+	$noacces = "";
+
+	$noacces .= "<table>";
+		$noacces .= "<tr>";
+			$noacces .= "<td>";
+				$noacces .= "<img style='float:left;' src='".$config["base_url"]."/images/icono_lock_grande.png'>";
+			$noacces .= "</td>";
+			$noacces .= "<td style='padding-left:10px;'>";
+				$noacces .= '<h2 style="font-family: Verdana; font-size:16px !important; font-weight: bold; margin-top:2px;">'.__('You don\'t have access to this page').'</h2>';
+
+				$noacces .= "<p style='font-family: Verdana; font-size:14px; font-weight: normal; line-height: 1.5em;'>" . 
+						__('Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br>Please know that all attempts to access this page are recorded in security logs of Integria System Database.');
+				$noacces .= "</p>";
+			$noacces .= "</td>";
+		$noacces .= "</tr>";
+	$noacces .= "</table>";
+
+	echo $noacces;
+
+	return;
 }
 
 ?>
