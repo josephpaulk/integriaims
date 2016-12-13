@@ -52,7 +52,10 @@ if ($search_users_ticket) {
 
 	$id_user = $config['id_user'];
 	$string = (string) get_parameter ('term'); /* term is what autocomplete plugin gives */
-	$users = users_get_users_owners_or_creators ($config['id_user']);
+	$id_group = (int) get_parameter('id_group');
+
+	//~ $users = users_get_users_owners_or_creators ($config['id_user']);
+	$users = users_get_users_owners_or_creators ($config['id_user'], $id_group);
 	
 	if ($users === false)
 		return;

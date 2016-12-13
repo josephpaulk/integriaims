@@ -1100,13 +1100,21 @@ if ($check_allowed_users) {
 
 	require_once ('include/functions_db.php');
 	$user_id = get_parameter ('user_id', '');
+	$id_group = get_parameter ('id_group', '');
 	
 	if ($user_id == '') {
 		echo json_encode(true);
 		return;
 	}
 	
-	$query_users = users_get_allowed_users_query ($config['id_user'], false);
+	if ($id_group != '') {
+		$filter['group'] = $id_group;
+	} else {
+		$filter = false;
+	}
+	
+	//~ $query_users = users_get_allowed_users_query ($config['id_user'], false);
+	$query_users = users_get_allowed_users_query ($config['id_user'], $filter);
 	$users = get_db_all_rows_sql($query_users);
 	foreach ($users as $user) {
 		if(preg_match('/^'.$user_id.'$/i', $user['id_usuario']) || preg_match('/^'.$user_id.'$/i', $user['nombre_real'])|| preg_match('/^'.$user_id.'$/i', $user['num_employee'])) {

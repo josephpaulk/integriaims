@@ -998,11 +998,13 @@ $.ajax({
 }
 
 function incident_show_user_search (filter, clickin) {
-	
+
+var idGroup = $("#grupo_form").val();
+
 $.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: 'page=include/ajax/incidents&get_user_search=1&clickin='+clickin+'&ajax=1&'+filter,
+		data: 'page=include/ajax/incidents&get_user_search=1&clickin='+clickin+'&ajax=1&'+filter+'&group='+idGroup,
 		dataType: "html",
 		success: function(data){	
 			$("#users_search_window").html (data);

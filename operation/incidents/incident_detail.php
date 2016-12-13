@@ -1596,6 +1596,10 @@ $(document).ready (function () {
 		var group = $("#grupo_form").val();
 		
 		var group_info = get_group_info(group);
+
+		bindAutocomplete("#text-id_creator", idUser,false,false,true,group);
+		bindAutocomplete("#text-id_user", idUser,false,false,true,group);
+		bindAutocomplete("#text-closed_by", idUser,false,false,true,group);
 			
 		if (!no_change_owner) {	
 			$("#text-id_user").val(group_info.id_user_default);
@@ -1743,13 +1747,14 @@ $(document).ready (function () {
 	}
 			
 	var idUser = "<?php echo $config['id_user'] ?>";
+	var idGroup = $("#grupo_form").val();
 	
 	//~ bindAutocomplete("#text-id_creator", idUser);
 	//~ bindAutocomplete("#text-id_user", idUser);
 	//~ bindAutocomplete("#text-closed_by", idUser);
-	bindAutocomplete("#text-id_creator", idUser,false,false,true);
-	bindAutocomplete("#text-id_user", idUser,false,false,true);
-	bindAutocomplete("#text-closed_by", idUser,false,false,true);
+	bindAutocomplete("#text-id_creator", idUser,false,false,true,idGroup);
+	bindAutocomplete("#text-id_user", idUser,false,false,true,idGroup);
+	bindAutocomplete("#text-closed_by", idUser,false,false,true,idGroup);
 	
 	if ($("#incident_status_form").length > 0){
 		//~ validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");

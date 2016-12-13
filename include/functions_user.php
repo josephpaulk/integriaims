@@ -313,15 +313,16 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 	}
 
 	if ($group == -1){
-		$search .= " AND id_usuario NOT IN (select id_usuario from tusuario_perfil)";
+		$search .= " AND tusuario.id_usuario NOT IN (select id_usuario from tusuario_perfil)";
 	} else if($group > 0) {
-		$search .= " AND id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+		$search .= " AND tusuario.id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
 	}
 
 	$query1 = "SELECT * FROM tusuario $search ORDER BY id_usuario";
 	
 	if ($from_tickets) {
 		$query1 = users_get_allowed_users_query ($config['id_user'], $filter);
+		$query1 .= " GROUP BY t1.id_usuario";
 	}
 	$count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
 	
@@ -454,7 +455,7 @@ function users_can_manage_group_all($id_group = 1, $access = "IR") {
 	return false;
 }
 
-function users_get_users_owners_or_creators ($id_user) {
+function users_get_users_owners_or_creators ($id_user, $id_group = false) {
 	global $config;
 	
 	$values = array ();
@@ -463,7 +464,12 @@ function users_get_users_owners_or_creators ($id_user) {
 		$id_user = $config['id_user'];
 	}
 	
-	$query_users = users_get_allowed_users_query ($id_user, false);
+	if ($id_group) {
+		$query_users = "SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $id_group OR id_grupo = 0"; 
+	} else {
+		$query_users = users_get_allowed_users_query ($id_user, false);
+	}
+	
 	$users = get_db_all_rows_sql($query_users);
 	if ($users == false) {
 		$users = array();
@@ -506,9 +512,9 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	}
 
 	if ($group == -1){
-		$search .= " AND id_usuario NOT IN (select id_usuario from tusuario_perfil)";
+		$search .= " AND t1.id_usuario NOT IN (select id_usuario from tusuario_perfil)";
 	} else if($group > 0) {
-		$search .= " AND id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+		$search .= " AND t1.id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
 	}
 	
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");

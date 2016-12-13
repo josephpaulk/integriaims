@@ -105,6 +105,8 @@ function validate_user (form, input, message) {
 function validate_ticket_user (form, input, message) {
 	var rules;
 	var messages;
+	var idGroup = $("#grupo_form").val();
+
 	rules = {
 		remote: {
 			url: "ajax.php",
@@ -112,6 +114,7 @@ function validate_ticket_user (form, input, message) {
 			data: {
 				page: "include/ajax/remote_validations",
 				check_allowed_users: 1,
+				id_group: idGroup,
 				user_id: function() { return $(input).val() }
 			}
 		}

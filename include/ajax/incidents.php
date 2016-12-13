@@ -47,7 +47,7 @@ if ($get_user_search) {
 	$filter['disabled_user'] = get_parameter ("disabled_user", -1);
 	$filter['level'] = get_parameter ("level", -10);
 	$filter['group'] = get_parameter ("group", 0);
-		
+	$id_group = get_parameter("group");	
 	$ajax = get_parameter("ajax");
 	
 	$filter_form = false;
@@ -56,7 +56,8 @@ if ($get_user_search) {
 	form_search_users (false, $filter_form);
 	echo "</div>";
 	//~ user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin);
-	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, false, true);
+	//~ user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, false, true);
+	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, $id_group, true);
 }
 
 if ($get_incident_name) {
