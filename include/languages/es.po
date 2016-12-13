@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-12 11:11+0100\n"
-"PO-Revision-Date: 2016-12-12 10:18+0000\n"
+"PO-Revision-Date: 2016-12-13 14:47+0000\n"
 "Last-Translator: artu30 <gonzalez.arturo1991@gmail.com>\n"
 "Language-Team: Español <artica@artica.es>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-12-12 10:24+0000\n"
-"X-Generator: Launchpad (build 18292)\n"
+"X-Launchpad-Export-Date: 2016-12-13 15:08+0000\n"
+"X-Generator: Launchpad (build 18293)\n"
 "Language: \n"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:30
@@ -5101,7 +5101,7 @@ msgstr "Días para borrar eventos"
 
 #: ../../godmode/setup/setup_maintenance.php:73
 msgid "Days to delete tickets"
-msgstr "Días para borrar el ticket"
+msgstr "Días para borrar tickets cerrados"
 
 #: ../../godmode/setup/setup_maintenance.php:76
 msgid "Days to delete work units"
@@ -15219,141 +15219,3 @@ msgstr ""
 #: ../../include/integria_cron.php:685
 msgid "The mail send failed"
 msgstr "El correo enviado falló"
-
-#~ msgid "Split > 1day"
-#~ msgstr "Saltar > 1 día"
-
-#~ msgid ""
-#~ "If workunit added is superior to 8 hours, it will be propagated to previous "
-#~ "workday and deduced from the total, until deplete total hours assigned"
-#~ msgstr ""
-#~ "Si la unidad añadida es superior a 8 horas, entonces se propagará al día de "
-#~ "trabajo anterior y deducido del total, hasta que se acaben las horas totales "
-#~ "asignadas"
-
-#~ msgid "Project search"
-#~ msgstr "Búsqueda de proyecto"
-
-#~ msgid "New newsletter"
-#~ msgstr "Nueva newsletter"
-
-#~ msgid "Newsletters"
-#~ msgstr "Newsletters"
-
-#~ msgid "New address"
-#~ msgstr "Nueva dirección"
-
-#~ msgid "Queue control"
-#~ msgstr "Control de la cola"
-
-#~ msgid "Enable newsletter"
-#~ msgstr "Habilitar newsletter"
-
-#~ msgid "Enable this option to activate the newsletter feature of Integria IMS"
-#~ msgstr "Habilitar esta opción para activar las newsletter en Integria IMS"
-
-#~ msgid "Total active projects"
-#~ msgstr "Total proyectos activos"
-
-#~ msgid "Lenght"
-#~ msgstr "Longitud"
-
-#~ msgid "Empty date is all range time."
-#~ msgstr "La fecha vacía es todo el rango de tiempo"
-
-#~ msgid "Newsletter SMTP Parameters"
-#~ msgstr "Parámetros SMTP de la newsletter"
-
-#~ msgid "Activate email validation"
-#~ msgstr "Activar validación por email"
-
-#~ msgid "Manage address"
-#~ msgstr "Gestionar direcciones"
-
-#~ msgid ""
-#~ "This means, in each execution of the batch external process (integria_cron) "
-#~ "will try to validate this ammount of emails."
-#~ msgstr ""
-#~ "Esto significa, en cada ejecución de los procesos externos por lotes "
-#~ "(integria_cron) intentará validar esta cantidad de emails."
-
-#~ msgid "Newsletter email validation batch"
-#~ msgstr "Validación por lotes del email de la newsletter"
-
-#~ msgid "addresses have been imported"
-#~ msgstr "las direcciones han sido importadas"
-
-#~ msgid "No address to import"
-#~ msgstr "Sin direcciones que importar"
-
-#~ msgid ""
-#~ "Ticket reports are based on custom searches. In order to elaborate a report, "
-#~ "first it is required to define a customized search that will be used as a "
-#~ "base for the report."
-#~ msgstr ""
-#~ "Los informes de incidencias están basados en búsquedas personalizadas. Con "
-#~ "el fin de elaborar un informe, primero es necesario definir una búsqueda "
-#~ "personalizada que será usada como base para el informe."
-
-#~ msgid "Issues"
-#~ msgstr "Publicaciones"
-
-#~ msgid "New issue"
-#~ msgstr "Nueva publicación"
-
-#~ msgid "Allowed status: "
-#~ msgstr "Estado permitido: "
-
-#~ msgid "Allowed resolution: "
-#~ msgstr "Resolución permitida: "
-
-#~ msgid ""
-#~ "When changing the ticket type, it's possible for the group to change as well"
-#~ msgstr ""
-#~ "Cuando cambie el tipo de ticket, es posible que el grupo cambie también"
-
-#~ msgid ""
-#~ "If selected, will render all project info.\n"
-#~ "\t\t\tIf not, will show only time spent in tickets related to proyects"
-#~ msgstr ""
-#~ "Si se selecciona, se mostrará toda la información del proyecto.\n"
-#~ "\t\t\tSi no solo mostrará el tiempo gastado en tickets relacionados con "
-#~ "proyectos"
-
-#~ msgid "Reference field of the parent table"
-#~ msgstr "Campo de referencia de la tabla padre"
-
-#~ msgid "Reference field of the outer table"
-#~ msgstr "Campo de referencia de la tabla externa"
-
-#~ msgid "Add folder"
-#~ msgstr "Añadir carpeta"
-
-#~ msgid "Without folder"
-#~ msgstr "Sin carpeta"
-
-#~ msgid ""
-#~ "When created, the chart name and ID field for it must be detailed. In case "
-#~ "of it being related with another chart, the name of the fathering chart and "
-#~ "the name of the field where the ID value for said fathering chart can be "
-#~ "found, will also need to be specified."
-#~ msgstr ""
-#~ "Al ser creado, el nombre del gráfico y el campo ID deben ser detallados. En "
-#~ "caso de estar relacionados con otro gráfico, el nombre del gráfico padre y "
-#~ "el nombre del campo donde el valor del ID de dicho gráfico padre puede ser "
-#~ "encontrado, deberá ser especifcado también."
-
-#~ msgid "Total  of "
-#~ msgstr "Total de "
-
-#~ msgid "To Expir."
-#~ msgstr "Hasta su expiración"
-
-#~ msgid "To Creation"
-#~ msgstr "Hasta su creación"
-
-#~ msgid "From Creation"
-#~ msgstr "Desde su creación"
-
-#~ msgid "From Expir."
-#~ msgstr "Desde su expiración"
