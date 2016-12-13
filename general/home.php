@@ -255,50 +255,6 @@ if ($info) {
 	
 	echo print_container_div('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no', false, true,'','','','',"height: 400px;");
 	
-	// ==============================================================
-	// Show WorkOrder items
-	// ==============================================================
-	$workorders_home = '';
-	if ($todo > 0){
-		$workorders_home .= "<table class='landing_incidents listing' width=100%>";
-		$workorders_home .= "<tr><th>".__("Priority")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
-
-		$sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' AND progress < 1 ORDER BY priority, last_update  DESC limit 5";
-		$result_2 = mysql_query($sql_2);
-
-		// TODO: replace this code to our own DB functions
-
-		while ($wo = mysql_fetch_array($result_2)){
-			$workorders_home .= "<tr>";
-			
-			$data[0] = print_priority_flag_image ($wo["priority"], true);
-			$data[1] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".$wo["id"]."'>". $wo["name"] . "</a>";
-
-			if ($wo["end_date"] != "0000-00-00 00:00:00"){
-				$data[2] = substr($wo["end_date"],0,11);		
-			} else {
-				$data[2] = "";
-			}
-			$workorders_home .= "<td>".$data[0]. "</td><td>".$data[1]."</td><td>".$data[2]."</td></tr>";
-		}
-		
-		$workorders_home .= "</table>";
-	} else {
-		$workorders_home .= "<div class='landing_empty'>";
-		$workorders_home .= __("There aren't TO-DOs");
-		$workorders_home .= "</div>";
-	}
-	
-	$much_more = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>";
-	$much_more .= "<img class='much_more' src='images/flecha_dcha.png' title='" . __('See more') . "'>";
-	$much_more .= "</a>";
-	
-	$subtitle = "<span class='landing_subtitle'>";
-	$subtitle .= __('Total active WO'). ": ". todos_active_user ($config["id_user"]) . " ".__('(Showing only five)');
-	$subtitle .= "</span>";
-	
-	echo print_container_div('workorders_home', __('Work orders') . $subtitle . $much_more, $workorders_home, 'no');
-	
 	echo "</td>";
 	echo "</tr>";	
 	echo "</table>";
