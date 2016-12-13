@@ -519,7 +519,7 @@ function api_update_incident ($return_type, $user, $params){
 				$labels = array();
 			}
 			
-			$num_params = 13;
+			$num_params = 15;
 			foreach ($labels as $label) {
 				$values_type_field['data'] = $params[$num_params];
 				
