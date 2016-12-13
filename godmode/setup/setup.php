@@ -141,7 +141,7 @@ $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',
 $table->data[2][0] = print_textarea ("api_acl", 2, 1, $config["api_acl"], 'style="max-width: 280px;"', true, __('List of IP with access to API') . 
 	print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true), false);
 
-$table->data[2][1] = print_input_text ("api_password", $config["api_password"], '',
+$table->data[2][1] = print_input_password ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
 
 
