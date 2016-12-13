@@ -697,9 +697,26 @@ if ($id_invoice != -1) {
 	$irpf_amount = $total_before * ($irpf/100);
 	$total = round($total_before + $tax_amount - $irpf_amount, 2);
 	$table->colspan[13][0] = 2;
-	$table->data[13][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	if ($total < 0) {
+		$total = abs($total);
+		$total = format_numeric($total,2);
+		$total = "-" . $total;
+		$table->data[13][0] = print_label(__('Total amount: ').$total.' '.$invoice['currency'], 'total_amount', 'text', true);
+	}
+	else {
+		$table->data[13][0] = print_label(__('Total amount: ').format_numeric($total,2).' '.$invoice['currency'], 'total_amount', 'text', true);
+	}
+	
 	$table->colspan[13][2] = 2;
-	$table->data[13][2] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	if ($amount < 0) {
+		$amount = abs($amount);
+		$amount = format_numeric($amount,2);
+		$amount = "-" . $amount;
+		$table->data[13][2] = print_label(__('Total amount without taxes or discounts: '). $amount .' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	}
+	else {
+		$table->data[13][2] = print_label(__('Total amount without taxes or discounts: ').format_numeric($amount,2).' '.$invoice['currency'], 'total_amount_without_taxes', 'text', true);
+	}
 }
 
 

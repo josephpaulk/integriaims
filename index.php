@@ -558,7 +558,7 @@ if ($clean_output == 0) {
 										background: 'black'
 									},
 									width: 400,
-									height: 150
+									height: 200
 								});";
 								echo "$('#mr_dialog').dialog('open');";
 						echo "	});";

@@ -57,7 +57,7 @@ $table->data[0][0] = print_checkbox ('show_events', 1, $show_events, true, __('S
 $table->data[0][1] = print_checkbox ('show_wu', 1, $show_wu, true, __('Show Workunits'));
 $table->data[0][2] = print_checkbox ('show_projects', 1, $show_projects, true, __('Show projects'));
 $table->data[0][3] = print_checkbox ('show_tasks', 1, $show_tasks, true, __('Show tasks'));
-$table->data[0][4] = print_checkbox ('show_clients', 1, $show_clients, true, __('Show clients'));
+$table->data[0][4] = print_checkbox ('show_clients', 1, $show_clients, true, __('Show customers'));
 
 $button = print_submit_button (__('Filter'), "filter_btn", false, 'class="sub search"', true);
          

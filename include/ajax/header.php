@@ -40,19 +40,19 @@ if ($get_alerts) {
 	$alerts = '';
 	
 	if ($minutes_last_exec == '') {
-		$alerts .= '<h4>'.__('Crontask not installed. Please check documentation!').'</h4>';
+		$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.__('Crontask not installed. Please check documentation!').'</h4>';
 	}
 	if (!$check_cron) {
-		$alerts .= '<h4>'.__('Last time Crontask was executed was ').calendar_seconds_to_humand($seconds_last_exec).__(' ago').'</h4>';
+		$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.__('Last time Crontask was executed was ').calendar_seconds_to_humand($seconds_last_exec).__(' ago').'</h4>';
 	}
 	if (!$check_emails) {
-		$alerts .= '<h4>'.__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration').'</h4>';
+		$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.__('Too many pending mail in mail queue: ').$queued_emails.('. Check SMTP configuration').'</h4>';
 	}
 	if ($update_manager_msg != '') {
 		$update_manager_msg .= "<br><a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".
 							__("Go to Update Manager")."</a>";
 							
-		$alerts .= '<h4>'.$update_manager_msg.'</h4>';
+		$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.$update_manager_msg.'</h4>';
 
 	}
 	if ($check_alarm_calendar) {
@@ -62,7 +62,7 @@ if ($get_alerts) {
 		if ($alarms) {
 			foreach ($alarms as $alarm) {
 				$time = substr($alarm['timestamp'], 11, 5);
-				$msg = '<h3>'.__('Calendar alert: ').'</h3><h4><a href="index.php?sec=agenda&sec2=operation/agenda/agenda">'.$time.' '. __($alarm['title']).'</a></h4><h5>'.$alarm['description'].'</h5>';
+				$msg = '<h3 style="float: left; font-size:18px !important; font-weight: bold; margin-top:32px;">'.__('Calendar alert: ').'</h3><h4 style="float: left; font-size:15px !important; font-weight: bold; margin-top:32px;"><a href="index.php?sec=agenda&sec2=operation/agenda/agenda">'.$time.' '. __($alarm['title']).'</a></h4><h5 style="float: left; font-size:12px !important; font-weight: bold; margin-top:32px;">'.$alarm['description'].'</h5>';
 				$alarm_calendar_msg .= $msg;
 			}
 			$alerts .= $alarm_calendar_msg;
@@ -71,21 +71,21 @@ if ($get_alerts) {
 	if ($check_directory_permissions) {
 		$attachment = check_writable_attachment();
 		if ($attachment != '') {
-			$alerts .= '<h4>'.$attachment.'</h4>';
+			$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.$attachment.'</h4>';
 		}
 		
 		$tmp = check_writable_tmp();
 		if ($tmp != '') {
-			$alerts .= '<h4>'.$tmp.'</h4>';
+			$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.$tmp.'</h4>';
 		}
 		
 		$mr = check_writable_mr();
 		if ($mr != '') {
-			$alerts .= '<h4>'.$mr.'</h4>';
+			$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.$mr.'</h4>';
 		}
 	}
 	if ($check_minor_release_available) {
-		$alerts .= '<h4>'.__('You must logout and login again to update database schema.').'</h4>';
+		$alerts .= '<h4 style="width:100%; float: left; font-size:15px !important; font-weight: bold; margin-top:32px;">'.__('You must logout and login again to update database schema.').'</h4>';
 	}
 	if ($check_browser) {
 		$alerts .= '<h4>'.__('Recommended browsers are Firefox and Chrome. You are using another browser.').'</h4>';
@@ -93,7 +93,9 @@ if ($get_alerts) {
 	
 	echo $alerts;
 	echo '<br>';
-	echo "<input type='button' class='sub close' onClick='javascript: closeAlertDialog();' value='".__("Close")."''>";
+	echo '<br>';
+	print_button (__("Close"), "modal_cancel", false, 'closeAlertDialog()');
+	//echo "<input type='button' class='sub close' onClick='javascript: closeAlertDialog();' value='".__("Close")."''>";
 	return;	
 }
 

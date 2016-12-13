@@ -35,13 +35,11 @@ if (get_standalone_user($config["id_user"])) {
 	$escalate_acl     = false;
 	$kb_acl           = false;
 	$download_acl     = false;
-	$file_sharing_acl = false;
 } else {
 	$incidents_acl    = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
 	$escalate_acl     = give_acl($config["id_user"], 0, "SI") && $show_incidents != MENU_HIDDEN;
 	$kb_acl           = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
 	$download_acl     = give_acl($config["id_user"], 0, "FRR");
-	$file_sharing_acl = $download_acl;
 
 }
 
@@ -49,7 +47,6 @@ $incidents_link        = 'index.php?sec=incidents&sec2=operation/incidents/incid
 $escalate_tickets_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
 $kb_link               = 'index.php?sec=kb&sec2=operation/kb/browse';
 $download_link         = 'index.php?sec=download&sec2=operation/download/browse&show_types=1';
-$file_sharing_link     = 'index.php?sec=file_sharing&sec2=operation/file_sharing/manage';
 
 
 $support_link = 'javascript:';
@@ -65,14 +62,11 @@ else if ($kb_acl) {
 else if ($download_acl) {
 	$support_link = $download_link;
 }
-else if ($file_sharing_acl) {
-	$support_link = $file_sharing_link;
-}
 
 // Support
-if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl || $escalate_acl) {
+if ($incidents_acl || $kb_acl || $download_acl || $escalate_acl) {
     // Incident
-    if ($sec == "incidents" || $sec == "download" || $sec == "kb" || $sec == "file_sharing")
+    if ($sec == "incidents" || $sec == "download" || $sec == "kb")
 	    echo "<li id='current' class='support'>";
     else
 	    echo "<li class='support'>";
@@ -107,14 +101,6 @@ if ($incidents_acl || $kb_acl || $download_acl || $file_sharing_acl || $escalate
 				echo "<li class='files'>";
 			echo "<a href='" . $download_link . "'>".__('File Releases')."</a></li>";
 		}
-	}
-	// FILE SHARING
-	if ($file_sharing_acl) {
-		if ($sec == "file_sharing" )
-			echo "<li id='current' class='files'>";
-		else
-			echo "<li class='files'>";
-		echo "<a href='" . $file_sharing_link . "'>".__('File Sharing')."</a></li>";
 	}
 
 	echo '</ul>';

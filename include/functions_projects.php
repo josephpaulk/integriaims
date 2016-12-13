@@ -617,19 +617,18 @@ function print_task_tabs($selected_tab = '', $id_task_param = false) {
 	}
 
 	$numberfiles = give_number_files_project ($id_project);
-	if ($numberfiles > 0){
+	//if ($numberfiles > 0){
 		$t_menu['files'] = array (
 			'title' => __('Files') . "(" . $numberfiles . ")",
 			'link' => "operation/projects/task_files&id_project=" . $id_project . "&id_task=" . $id_task,
 			'img' => "images/products/folder.png",
 		);
-	} else {
+	/*} else {
 		$t_menu['files'] = array (
 			'title' => __('Files') . "(" . __("Empty") . ")",
-			'link' => "",
 			'img' => "images/folder_disabled.png",
 		);
-	}
+	}*/
 	
 	if ($selected_tab == 'detail') {
 		$t_menu['report'] = array (

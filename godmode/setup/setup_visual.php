@@ -120,7 +120,7 @@ $fontlist = get_font_files ();
 $flash_options = array();
 $flash_options[0]="Disabled";
 $flash_options[1]="Enabled";
-$table->data[0][1] = print_select ($flash_options, 'flash_charts', $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
+$table->data[0][1] = print_checkbox ('flash_charts', $flash_options, $config["flash_charts"], true, __('Enable flash charts'));
 
 $table->data[1][1] = print_select ($fontlist, 'pdffont', $config["pdffont"], '', '', '',  true, 0, true, __('Font for PDF')) ;
 

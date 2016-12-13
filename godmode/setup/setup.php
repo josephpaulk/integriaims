@@ -131,8 +131,8 @@ $table->data[0][1] = print_input_text ("sitename", $config["sitename"], '',
 
 $error_log_options[0] = __('Disabled');
 $error_log_options[1] = __('Enabled');
-$table->data[1][0] = print_select ($error_log_options, "error_log", 
-		$config["error_log"], '','','',true,0,true, __('Error log') . 
+$table->data[1][0] = print_checkbox ("error_log", $error_log_options, 
+		$config["error_log"], true, __('Enable error log') . 
 			print_help_tip (__("This errorlog is on /integria.log"), true));
 
 $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',
@@ -141,7 +141,7 @@ $table->data[1][1] = print_input_text ("timezone", $config["timezone"], '',
 $table->data[2][0] = print_textarea ("api_acl", 2, 1, $config["api_acl"], 'style="max-width: 280px;"', true, __('List of IP with access to API') . 
 	print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true), false);
 
-$table->data[2][1] = print_input_text ("api_password", $config["api_password"], '',
+$table->data[2][1] = print_input_password ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
 
 

@@ -201,11 +201,14 @@ if (($create_company) OR ($update_company)) {
 			exit;
 		}
 
-		$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
-		$last_update = process_sql ($sql);
+		//$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
+		//$last_update = process_sql ($sql);
 
 		if ($last_update == false) {
 			$last_update = '';
+		}
+		else {
+			$last_update = safe_output($last_update);
 		}
 		
 		$sql = sprintf ('UPDATE tcompany SET manager="%s", id_parent = %d, comments = "%s", name = "%s",

@@ -24,8 +24,8 @@ function openAlerts() {
 						opacity: 0.5,
 						background: "black"
 					},
-					width: 620,
-					height: 400
+					width: 620
+					//height: 400
 				});
 			$("#alert_window").dialog('open');
 			

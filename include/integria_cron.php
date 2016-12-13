@@ -980,6 +980,7 @@ function delete_old_workflow_event_data () {
 		process_sql ($sql);
 	}
 }
+
 /**
  * Remove users from projects when none task is assigned in this project
  * 
@@ -999,6 +1000,55 @@ function remove_no_task_users_project () {
 	process_sql ($sql);
 }
 
+/**
+ * Move file sharing items to file releases section (attachment/downloads) and 
+ * remove it from file sharing section (attachment/file_sharing)
+ */
+function move_file_sharing_items () {
+	global $config;
+
+	$file_sharing_path = $config["homedir"]."attachment/file_sharing/";
+	$new_path = $config["homedir"]."attachment/downloads/";
+
+	if (is_dir($file_sharing_path)) {
+		if ($dh = opendir($file_sharing_path)) {
+			while (($file = readdir($dh)) !== false) {
+				if (is_dir($file_sharing_path . $file) && $file != "." && $file != "..") {
+					$file_path = $file_sharing_path . $file . "/";
+					if ($dh2 = opendir($file_sharing_path . $file)) {
+						while (($file2 = readdir($dh2)) !== false) {
+							if ($file2 != "." && $file2 != "..") {
+								copy($file_path . $file2, $new_path . $file2);
+
+								$external_id = sha1(random_string(12).date());
+								$values = array(
+										'name' => $file2,
+										'location' => "attachment/downloads/$file2",
+										'description' => "Migrated from file sharing",
+										'id_category' => 0,
+										'id_user' => $config["id_user"],
+										'date' => date("Y-m-d H:i:s"),
+										'public' => 1,
+										'external_id' => $external_id
+									);
+								process_sql_insert("tdownload", $values);
+
+								unlink($file_path . $file2);
+							}
+						}
+					}
+					closedir($dh2);
+					rmdir($file_path);
+				}
+			}
+		}
+		closedir($dh);
+		rmdir($file_sharing_path);
+	}
+
+	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('file_sharing_items_moved', 1)");
+}
+
 // ---------------------------------------------------------------------------
 /* Main code goes here */
 // ---------------------------------------------------------------------------
@@ -1008,6 +1058,7 @@ function remove_no_task_users_project () {
 $installed = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'crontask'");
 $previous = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'previous_crontask'");
 $current_date = date ("Y/m/d H:i:s");
+$file_sharing_items_moved = get_db_sql ("SELECT value FROM tconfig WHERE `token` = 'file_sharing_items_moved'");
 
 if ($previous == 0) {
 	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('previous_crontask', '$current_date')");
@@ -1022,6 +1073,9 @@ if ($installed == 0){
 	process_sql ("UPDATE tconfig SET `value` = '$current_date' WHERE `token` = 'crontask'");
 }
 
+if (!$file_sharing_items_moved) {
+	move_file_sharing_items();
+}
 
 // Daily check only
 
