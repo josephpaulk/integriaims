@@ -50,7 +50,7 @@ $safe_content_disposition = array('attachment', 'inline');
 if (!in_array($content_disposition, $safe_content_disposition))
 	$content_disposition = 'attachment';
 
-if ($type !== "external_release" && $type !== "file_sharing") {
+if ($type !== "external_release") {
 	check_login();
 }
 
@@ -211,28 +211,6 @@ switch ($type) {
 		$last_name = $data["filename"];
 		
 		break;
-	case "file_sharing":
-		$public_key = get_parameter("key");
-
-		if (!empty($public_key)) {
-			$filter = array(
-					'public_key' => $public_key,
-					'file_sharing' => 1
-				);
-			$id_attachment = get_db_value_filter("id_attachment", "tattachment", $filter);
-
-			if (empty($id_attachment)) {
-				audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to download an invalid file sharing file");
-				require ($general_error);
-				exit;
-			}
-		}
-		else {
-			audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to download an invalid file sharing file");
-			require ($general_error);
-			exit;
-		}
-		break;
 	default:
 }
 
@@ -241,17 +219,6 @@ if ($type == "release" || $type == "external_release") {
 	$fileLocation = $config["homedir"]."/".$data["location"];
 	$short_name = preg_split ("/\//", $data["location"]);
 	$last_name = $short_name[sizeof($short_name)-1];
-}
-else if ($type == "file_sharing") {
-	if (!empty($id_attachment)) {
-		require_once($config['homedir']."/operation/file_sharing/FileSharingPackage.class.php");
-		$file = new FileSharingPackage($id_attachment);
-		$fileLocation = $file->getFullpath();
-		$last_name = $file->getName();
-		$file->trackingDownload();
-
-		$data = $id_attachment;
-	}
 }
 else {
 	$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
