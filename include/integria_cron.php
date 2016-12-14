@@ -93,112 +93,6 @@ function call_api($url, $postparameters = false) {
 }
 
 /**
- * This function creates an inventory object for each agent of pandora with name, address, description 
- * and extra fields if are defined as operating system and url address
- */
-function synchronize_pandora_inventory () {
-	global $config;
-
-	if (!isset($config["pandora_url"])){
-		return;
-	}
-
-	if ($config["pandora_url"] == ""){
-		return;
-	}
-
-	$separator = ':;:';
-	
-	$url = $config['pandora_url'].'/include/api.php?op=get&apipass='.$config['pandora_api_password'].'&op2=all_agents&return_type=csv&user='.$config['pandora_user'].'&pass='.$config['pandora_pass'];
-	
-	$return = call_api($url);
-
-	$agents_csv = explode("\n",$return);
-
-	foreach($agents_csv as $agent_csv) {
-		// Avoiding empty csv lines like latest one
-		if($agent_csv == '') {
-			continue;
-		}
-
-		$values = array();
-
-		$agent = explode(";",$agent_csv);
-		$agent_id = $agent[0];
-		$agent_name = $agent[1];
-		$agent_name_safe = safe_input($agent_name);
-		$address = $agent[2];
-		$description = $agent[3];
-		$os_name = $agent[4];
-		$url_address = $agent[5];
-		
-		// Check if exist to avoid the creation
-		$inventory_id = get_db_value ('id', 'tinventory', 'name', $agent_name_safe);
-
-		if($inventory_id !== false) {
-			process_sql_delete ('tinventory', array('id'=>$inventory_id));
-			process_sql_delete ('tobject_field_data', array('id_inventory'=>$inventory_id));
-			
-		}
-		
-		$id_object_type = get_db_value('id', 'tobject_type', 'name', safe_input('Pandora agents'));
-	
-		$values['name'] = $agent_name_safe;
-		$values['description'] = $description;
-		$values['id_object_type'] = $id_object_type;
-		$values['id_contract'] = $config['default_contract'];
-		
-		
-		$id_inventory = process_sql_insert('tinventory', $values);
-		
-		if ($id_inventory) {
-			
-			$id_type_field_os = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('OS')));
-			$id_type_field_ip = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('IP Address')));
-			if ($id_type_field_ip == false) {
-				$id_type_field_ip = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'IP Address'));
-			}
-			$id_type_field_url = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('URL Address')));
-			if ($id_type_field_url == false) {
-				$id_type_field_url = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'URL Address'));
-			}
-			$id_type_field_id = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('ID Agent')));
-			if ($id_type_field_id == false) {
-				$id_type_field_id = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'ID Agent'));
-			}
-
-			$value_os = array();
-			$value_os['id_inventory'] = $id_inventory;
-			$value_os['id_object_type_field'] = $id_type_field_os;
-			$value_os['data'] = $os_name;
-			
-			process_sql_insert('tobject_field_data', $value_os);
-			
-			$value_ip = array();
-			$value_ip['id_inventory'] = $id_inventory;
-			$value_ip['id_object_type_field'] = $id_type_field_ip;
-			$value_ip['data'] = $address;
-			
-			process_sql_insert('tobject_field_data', $value_ip);
-			
-			$value_url = array();
-			$value_url['id_inventory'] = $id_inventory;
-			$value_url['id_object_type_field'] = $id_type_field_url;
-			$value_url['data'] = $url_address;
-			
-			process_sql_insert('tobject_field_data', $value_url);
-			
-			$value_id = array();
-			$value_id['id_inventory'] = $id_inventory;
-			$value_id['id_object_type_field'] = $id_type_field_id;
-			$value_id['data'] = $agent_id;
-			
-			process_sql_insert('tobject_field_data', $value_id);
-		}
-	}		
-}
-
-/**
  * This function is executed once per day and do several different subtasks
  * like email notify ending tasks or projects, events for this day, etc.
  */
@@ -215,7 +109,6 @@ function run_daily_check () {
 	run_task_check ();
 	run_autowu();
 	run_auto_incident_close();
-	synchronize_pandora_inventory();
 	delete_tmp_files();
 	delete_old_audit_data();
 	delete_old_event_data();

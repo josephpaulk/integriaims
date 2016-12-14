@@ -41,12 +41,6 @@ $labels = get_inventory_generic_labels ();
 $update = (bool) get_parameter ("update");
 
 if ($update) {
-	$config["pandora_url"] = get_parameter ("pandora_url");
-	$config["pandora_api_password"] = get_parameter ("pandora_api_password");
-	$config["pandora_user"] = get_parameter ("pandora_user");
-	$config["pandora_pass"] = get_parameter ("pandora_pass");
-	$config["default_contract"] = get_parameter ("default_contract");
-	$config["duplicate_inventory_name"] = get_parameter ("duplicate_inventory_name");
 
     $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
 	$config["inventory_default_owner"] = (string) get_parameter("inventory_default_owner", "");
@@ -64,19 +58,12 @@ if ($update) {
 
 	update_config_token ("inventory_default_companies", $config["inventory_default_companies"]);
 	update_config_token ("inventory_default_users", $config["inventory_default_users"]);
-	update_config_token ("duplicate_inventory_name", $config["duplicate_inventory_name"]);
 
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");
 		update_config_token ("pandora_$k", $config["pandora_$k"]);
 	}
 	
-    update_config_token ("pandora_url", $config["pandora_url"]);
-    update_config_token ("pandora_api_password", $config["pandora_api_password"]);
-	update_config_token ("pandora_user", $config["pandora_user"]);
-    update_config_token ("pandora_pass", $config["pandora_pass"]); 
-    update_config_token ("default_contract", $config["default_contract"]);
-
 	echo ui_print_success_message (__('Successfully updated'), '', true, 'h3', true);
 }
 
@@ -85,23 +72,6 @@ $table->width = '100%';
 $table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
-
-$table->data[0][0] = print_input_text ("pandora_url", $config["pandora_url"], '',
-	30, 100, true, __('Pandora FMS URL'));
-
-$table->data[0][1] = print_input_text ("pandora_api_password", $config["pandora_api_password"], '', 
-	30, 100,  true, __('Pandora FMS API password')) ;
-	
-$table->data[1][0] = print_input_text ("pandora_user", $config["pandora_user"], '',
-	30, 100, true, __('Pandora FMS User'));
-
-$table->data[1][1] = print_input_text ("pandora_pass", $config["pandora_pass"], '', 
-	30, 100,  true, __('Pandora FMS User password')) ;	
-
-$contracts = get_contracts();
-$table->data[2][0] = print_select ($contracts, 'default_contract', $config["default_contract"], '', __('Select'), '',  true, 0, true, __('Default Contract')) ;
-
-$table->data[2][1] = print_checkbox ("duplicate_inventory_name", 1, $config["duplicate_inventory_name"], true, __('Allow inventory objects with the same name'));
 
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
