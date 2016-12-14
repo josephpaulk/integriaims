@@ -105,9 +105,8 @@ if ($get_alert_popup) {
 	$alarm_calendar_msg = '';
 	$alarm = check_alarm_calendar(false, $id);
 	$time = substr($alarm['timestamp'], 11, 5);
-	//$alarm_calendar_msg = '<h4>'.$time.' '. __($alarm['title']).'</h4>';
-	$alarm_calendar_msg = '<h3><a href="index.php?sec=agenda&sec2=operation/agenda/agenda">'.$time.' '. __($alarm['title']).'</a></h3><h4>'.$alarm['description'].'</h4>';
-	
+
+	$alarm_calendar_msg = '<h3><a style="font-family: Verdana; font-size:16px; font-weight: normal; line-height: 1.5em;" href="index.php?sec=agenda&sec2=operation/agenda/agenda">'.$time.' '. __($alarm['title']).'</a></h3><h4 style="font-family: Verdana; font-size:14px; font-weight: normal; line-height: 1.5em;">'.$alarm['description'].'</h4>';
 	echo $alarm_calendar_msg;
 	return;
 		
