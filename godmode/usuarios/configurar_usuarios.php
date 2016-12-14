@@ -538,7 +538,7 @@ foreach ($user_fields as $u) {
 			}
 
 			echo "<td>";
-			echo print_select ($options, 'custom_'.$u["id"], $data, '', '', '0', true);
+			echo print_select ($options, 'custom_'.$u["id"], $data, '', '', '0', true,0,false);
 			echo "</td>";
 			echo "</tr>";
 			break;
