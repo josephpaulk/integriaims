@@ -201,14 +201,11 @@ if (($create_company) OR ($update_company)) {
 			exit;
 		}
 
-		//$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
-		//$last_update = process_sql ($sql);
+		$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
+		$last_update = process_sql ($sql);
 
 		if ($last_update == false) {
-			$last_update = '';
-		}
-		else {
-			$last_update = safe_output($last_update);
+			$last_update = date("Y-m-d H:i:s");
 		}
 		
 		$sql = sprintf ('UPDATE tcompany SET manager="%s", id_parent = %d, comments = "%s", name = "%s",
@@ -483,7 +480,12 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	$table->data[0][2] .= "&nbsp;<a href='javascript:show_company_search(\"\",\"\",\"\",\"\",\"\",\"\");' title='".__('Add parent')."'><img src='images/zoom.png'></a>";
 	$table->data[0][2] .= "&nbsp;<a href='javascript:clearParent();' title='".__('Clear parent')."'><img src='images/cross.png'></a>";
 	
-	$table->data[1][0] = print_input_text ("last_update", $last_update, "", 18, 100, true, __('Last update'), $disabled_write);
+	if (!$new_company) {
+		$table->data[1][0] = print_input_text ("last_update", $last_update, "", 18, 100, true, __('Last update'), true);
+	}
+	else {
+		$table->data[1][0] = print_input_text ("last_update", $last_update, "", 18, 100, true, __('Last update'), $disabled_write);
+	}
 	
 	$table->data[1][1] = print_input_text ("fiscal_id", $fiscal_id, "", 18, 100, true, __('Fiscal ID'), $disabled_write);
 	$table->data[1][2] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
