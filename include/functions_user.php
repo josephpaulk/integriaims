@@ -322,7 +322,6 @@ function user_search_result ($filter, $ajax, $size_page, $offset, $clickin, $sea
 	
 	if ($from_tickets) {
 		$query1 = users_get_allowed_users_query ($config['id_user'], $filter);
-		$query1 .= " GROUP BY t1.id_usuario";
 	}
 	$count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
 	
@@ -517,10 +516,9 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 		$search .= " AND t1.id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
 	}
 	
-	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
-	
+	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");	
 	if ($level == 1) { //admin
-		$query = "SELECT * FROM tusuario t1 WHERE 1=1";
+		$final_query = "SELECT * FROM tusuario t1 WHERE 1=1";
 		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
 	} else {
 		$query = "SELECT * FROM tusuario t1
@@ -538,10 +536,10 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 			if ($group['id_grupo'] == 1) { //all
 				$query = "SELECT * FROM tusuario t1 WHERE 1=1";
 			}
-		}	
+		}
+		$final_query = $query.$search." GROUP BY t1.id_usuario";
 	}
 	
-	$final_query = $query.$search;
 
 	return $final_query;
 }
