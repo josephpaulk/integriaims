@@ -36,7 +36,8 @@ if ($search_companies) {
 	$where_clause = sprintf (' AND (tcompany.id = %d
 									OR tcompany.name LIKE "%%%s%%"
 									OR tcompany.country LIKE "%%%s%%"
-									OR tcompany.manager LIKE "%%%s%%") ', $string, $string, $string, $string);
+									OR tcompany.manager LIKE "%%%s%%") AND tcompany.manager = "%s"', $string, $string, $string, $string, $id_user);
+	
 	$companies = crm_get_companies_list($where_clause . $filter, false, "ORDER BY name", true);
 
 	if (!$companies) {
