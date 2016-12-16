@@ -518,7 +518,7 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");	
 	if ($level == 1) { //admin
-		$final_query = "SELECT * FROM tusuario t1 WHERE 1=1";
+		$final_query = "SELECT * FROM tusuario t1 WHERE 1=1 " . $search;
 		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
 	} else {
 		$query = "SELECT * FROM tusuario t1
