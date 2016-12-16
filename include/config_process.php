@@ -138,6 +138,10 @@ if ((!isset($config["timezone"])) OR ($config["timezone"] == "")){
         $config["timezone"] = "Europe/Berlin";
 }
 
+if ((!isset($config["no_change_owner"])) OR ($config["no_change_owner"] == "")){
+        $config["no_change_owner"] = 0;
+}
+
 date_default_timezone_set($config["timezone"]);
 
 include_once ($config["homedir"]."/include/functions_html.php");
