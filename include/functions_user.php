@@ -499,7 +499,7 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	
 	$search = "";
 	if ($search_text != "") {
-		$search .= " AND (id_usuario LIKE '%$search_text%' OR comentarios LIKE '%$search_text%' OR nombre_real LIKE '%$search_text%' OR direccion LIKE '%$search_text%')";
+		$search .= " AND (t1.id_usuario LIKE '%$search_text%' OR comentarios LIKE '%$search_text%' OR nombre_real LIKE '%$search_text%' OR direccion LIKE '%$search_text%')";
 	}
 
 	if ($disabled_user > -1) {
@@ -511,9 +511,9 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	}
 
 	if ($group == -1){
-		$search .= " AND t1.id_usuario NOT IN (select id_usuario from tusuario_perfil)";
+		$search .= " AND t1.id_usuario NOT IN (select tusuario_perfil.id_usuario from tusuario_perfil)";
 	} else if($group > 0) {
-		$search .= " AND t1.id_usuario = ANY (SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+		$search .= " AND t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
 	}
 	
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");	
