@@ -739,7 +739,7 @@ form.searchform input.button {
 	background-color: #3f3f3f;
 	color: #ffffff;
 	height: 50px;
-	min-width: 1024px;
+	min-width: 1200px;
 }
 
 #header h1#logo {
@@ -1568,6 +1568,7 @@ div#login {
 
 div#footer {
 	text-align: center;
+	min-width: 1200px;
 	margin-top: 120px;
 	font-size: 10px;
 	border-top: solid 3px #FF9933;
@@ -1813,7 +1814,7 @@ iframe.ax-main-frame {
 #login_body {
 	/* Set rules to fill background */
 	min-height: 100%;
-	min-width: 1024px;
+	min-width: 1200px;
 
 	/* Set up proportionate scaling */
 	width: 100%;
