@@ -48,12 +48,13 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_fs_files', 7),
 ('max_days_files_track', 15),
 ('update_manager_installed', 1),
-('current_package', 57),
+('current_package', 58),
 ('url_updatemanager', 'https://firefly.artica.es/integriaupdate5/server.php'),
 ('license', 'INTEGRIA-FREE'),
 ('login_background', 'paisaje.jpg'),
 ('inventory_default_owner', 'admin'),
-('minor_release', 55);
+('minor_release', 56),
+('ticket_owner_is_creator', 0);
 
 -- Default password is 'integria'
 
