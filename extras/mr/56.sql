@@ -12,4 +12,4 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 
-INSERT INTO `tconfig` (`token`, `value`) VALUES  ('ticket_owner_is_creator','0);
+INSERT INTO `tconfig` (`token`, `value`) VALUES  ('ticket_owner_is_creator','0');
