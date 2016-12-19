@@ -138,8 +138,8 @@ if ((!isset($config["timezone"])) OR ($config["timezone"] == "")){
         $config["timezone"] = "Europe/Berlin";
 }
 
-if ((!isset($config["no_change_owner"])) OR ($config["no_change_owner"] == "")){
-        $config["no_change_owner"] = 0;
+if ((!isset($config["ticket_owner_is_creator"])) OR ($config["ticket_owner_is_creator"] == "")){
+        $config["ticket_owner_is_creator"] = 1;
 }
 
 date_default_timezone_set($config["timezone"]);
