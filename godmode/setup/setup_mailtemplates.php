@@ -362,7 +362,7 @@ if($create_template || $update_template){
 	print_table ($table);
 		echo "<div class='button-form'>";
 			if ($update_template) {
-				print_submit_button (__('Update'), 'action2', false, 'class="sub upd"');
+				print_submit_button (__('Update'), 'action2', false, 'onClick="disabled_to_readonly();" class="sub upd"');
 			} else {
 				print_submit_button (__('Create'), 'action2', false, 'class="sub upd"');
 			}
@@ -371,6 +371,7 @@ if($create_template || $update_template){
 }
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Delete")."' id='item_delete_window'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Caution")."' id='change_template_alert'></div>";
 
 
 function get_template_files ($field) {
@@ -393,19 +394,26 @@ function get_template_files ($field) {
 
 <script type="text/javascript">
 $(document).ready (function () {
-	var create_template = "<?php  echo $create_template; ?>";
-	var search_template = "<?php  echo $search; ?>";
+	var create_template = "<?php echo $create_template; ?>";
+	var search_template = "<?php echo $search; ?>";
 	if (search_template == 0){
 		if(create_template == 0){
 			onchange_template();
 		} else {
-			onchange_actions();
+			onchange_actions(0, 1);
 		}
 		$("#template_name").change(onchange_template);
-		$("#template_action").change(onchange_actions);
+		$("#template_action").change(function(){
+			onchange_actions(value_template_action, 0);
+		});
 		$("textarea").TextAreaResizer ();
 	}
 });
+
+function disabled_to_readonly(){
+	$('#template_group').attr('disabled', false);
+	$('#template_action').attr('disabled', false);
+}
 
 function inicialiced(){
 	tinymce.init({
@@ -446,6 +454,7 @@ function onchange_template() {
 			}
 			$('#template_group').val(data[1]);
 			$('#template_action').val(data[2]);
+			value_template_action = data[2];
 			if (data[3] == 1){
 				$('#template_group').attr('disabled', true);
 				$('#template_action').attr('disabled', true);
@@ -457,30 +466,114 @@ function onchange_template() {
 	});
 }
 
-function onchange_actions() {
-	var editor = tinyMCE.get('textarea-template_content');
-	var data   = $('#template_action').val();
-	if(data == 2 || data ==0 || data ==10 || data ==12 || data ==14 || data ==7 || data ==9 || data ==16 || data ==17) {
-		tinymce.init({
-		    selector: 'textarea',
-		    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
-		    force_br_newlines : true,
-		    force_p_newlines : false,
-		    forced_root_block : false,
-		    plugins: [
-		    	'advlist autolink lists link image charmap print preview anchor',
-		    	'searchreplace visualblocks code fullscreen',
-		    	'insertdatetime media table contextmenu paste code'
-		  	],
-		  	menubar: false,
-		  	toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-		  	content_css: 'include/js/tinymce/integria.css',
-		});
-	} else {
-		if(editor){
-			editor.remove();
+function onchange_actions(id, new_create) {
+	if(new_create){
+		var editor = tinyMCE.get('textarea-template_content');
+		var data   = $('#template_action').val();
+		value_template_action = data;
+		
+		if(data == 2 || data ==0 || data ==10 || data ==12 || data ==14 || data ==7 || data ==9 || data ==16 || data ==17) {
+			$('#textarea-template_content').empty();
+			$('#textarea-template_content').val('');
+			tinymce.init({
+			    selector: 'textarea',
+			    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+			    force_br_newlines : true,
+			    force_p_newlines : false,
+			    forced_root_block : false,
+			    plugins: [
+			    	'advlist autolink lists link image charmap print preview anchor',
+			    	'searchreplace visualblocks code fullscreen',
+			    	'insertdatetime media table contextmenu paste code'
+			  	],
+			  	menubar: false,
+			  	toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+			  	content_css: 'include/js/tinymce/integria.css',
+			});
+		} else {
+			if(editor){
+				editor.remove();
+			}
+			$('#textarea-template_content').empty();
+			$('#textarea-template_content').val('');
 		}
 	}
+	else{
+		show_alert_change_actions_templates('change_function', id);
+	}
+}
+
+function show_alert_change_actions_templates (name, id) {
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/mail&change_template_alert=1",
+		dataType: "html",
+		success: function(data){
+			$("#change_template_alert").html (data);
+			$("#change_template_alert").show ();
+			$("#change_template_alert").dialog ({
+					resizable: false,
+					draggable: false,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 440,
+					height: 195
+				});
+			$("#change_template_alert").dialog('open');
+			$("#change_template_form").submit(function (e){
+				e.preventDefault();
+				var editor = tinyMCE.get('textarea-template_content');
+				var data   = $('#template_action').val();
+				value_template_action = data;
+				
+				if(data == 2 || data ==0 || data ==10 || data ==12 || data ==14 || data ==7 || data ==9 || data ==16 || data ==17) {
+					$('#textarea-template_content').empty();
+					$('#textarea-template_content').val('');
+					tinymce.init({
+					    selector: 'textarea',
+					    fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+					    force_br_newlines : true,
+					    force_p_newlines : false,
+					    forced_root_block : false,
+					    plugins: [
+					    	'advlist autolink lists link image charmap print preview anchor',
+					    	'searchreplace visualblocks code fullscreen',
+					    	'insertdatetime media table contextmenu paste code'
+					  	],
+					  	menubar: false,
+					  	toolbar: 'undo redo | styleselect | bold italic fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+					  	content_css: 'include/js/tinymce/integria.css',
+					});
+				} else {
+					if(editor){
+						editor.remove();
+					}
+					$('#textarea-template_content').empty();
+				$('#textarea-template_content').val('');
+				}
+
+				$("#change_template_alert").dialog('close');
+
+			});
+			$("#button-modal_cancel").click(function (e){
+				e.preventDefault();
+				$("#change_template_alert").dialog('close');
+				$("#template_action").val(id);
+			});
+			$('.ui-widget-overlay').click(function(e){
+				e.preventDefault();
+				$("#change_template_alert").dialog('close');
+				$("#template_action").val(id);
+				
+			});
+
+		}
+	});
+
 }
 
 trim_element_on_submit('input[name="template_name"]');

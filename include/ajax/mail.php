@@ -20,6 +20,7 @@ require_once('include/functions_mail.php');
 ob_clean();
 
 $check_transport = (bool) get_parameter('check_transport');
+$change_template_alert = (bool) get_parameter('change_template_alert');
 
 if ($check_transport) {
 	$proto = (string) get_parameter('proto');
@@ -64,6 +65,17 @@ if ($check_transport) {
 		));
 		return;
 	}
+}
+
+if($change_template_alert){
+	echo "<div style='float: left;'><img style='padding:10px;' src='images/icon_delete.png' alt='".__('Delete')."'></div>";
+	echo "<div style='float: left; font-size:15px; font-weight: bold; margin-top:32px;'><b>".__('Are you sure you want to change action?')."</b></br>";
+	echo "<span style='font-size:13px; font-weight: normal; line-height: 1.5em;'>" . __('Remove template contents'). "</span></div>";
+	echo '<form id="change_template_form" method="post">';
+		echo print_submit_button (__('Delete'), "delete_btn", false, 'class="sub close" width="160px;"', true);
+		echo print_button (__('Cancel'), 'modal_cancel', false, '', '', false);
+	echo '</form>';
+	return;
 }
 
 exit;
