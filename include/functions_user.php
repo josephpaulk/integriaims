@@ -515,10 +515,9 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	} else if($group > 0) {
 		$search .= " AND t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
 	}
-	
-	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");	
+	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 	if ($level == 1) { //admin
-		$final_query = "SELECT * FROM tusuario t1 WHERE 1=1 " . $search;
+		$final_query = "SELECT * FROM tusuario t1";
 		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
 	} else {
 		$query = "SELECT * FROM tusuario t1
