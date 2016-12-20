@@ -134,10 +134,8 @@ $left_side = print_container('incident_details', __('Details'), $incident_detail
 /* Description */
 $incident_description = clean_output_breaks($incident["descripcion"]);
 
-$incident_description = clean_large_words($incident_description);
-
 $incident_table = "<tr>";
-$incident_table .= "<td colspan=6>".$incident_description."</td>";
+$incident_table .= "<td colspan=6 style='max-width: 300px; word-wrap: break-word;'>".$incident_description."</td>";
 $incident_table .= "</tr>";
 
 $left_side .= print_container('incident_description', __('Description'), $incident_table, 'open', true, true, '', '', 5, 'less_widht');

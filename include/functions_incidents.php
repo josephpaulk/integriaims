@@ -4742,24 +4742,5 @@ function incidents_get_resolution_name($id_resolution) {
 	return $name;
 }
 
-function clean_large_words($comment) {
-	$comment = explode (" ", $comment);
 
-	$new_comment = "";
-	$cut_mark = "<cut-here>";
-	
-	foreach ($comment as $word) {
-		if (strlen($word) >= 150) {
-			$string = wordwrap($word, 150, $cut_mark, true);
-			$string = explode($cut_mark, $string);
-			foreach ($string as $s) {
-				$new_comment .= $s . '<br>';
-			}
-		}
-		else {
-			$new_comment .= $word . " ";
-		}
-	}
-	return $new_comment;
-}
 ?>
