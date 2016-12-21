@@ -674,14 +674,19 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
-			
-			// Update Manager
-			if ($sec2 == "godmode/setup/update_manager")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".__('Update')."</a></li>";
-			
+			$is_enterprise = false;
+			if (file_exists ("enterprise/load_enterprise.php")) {
+				$is_enterprise = true;
+			}
+			if( !$is_enterprise || ( $is_enterprise && $config['license'] != 'INTEGRIA-FREE' ) ){
+				// Update Manager
+				if ($sec2 == "godmode/setup/update_manager")
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".__('Update')."</a></li>";
+			}
+
 			// Offline update manager
 			if ($sec2 == "godmode/setup/offline_update")
 				echo "<li id='sidesel'>";

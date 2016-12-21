@@ -27,6 +27,7 @@ if (! dame_admin ($config["id_user"])) {
 include_once("include/functions_update_manager.php");
 if (file_exists ("enterprise/include/functions_update_manager.php")) {
 	require_once("enterprise/include/functions_update_manager.php");
+	include_once("enterprise/include/functions_license.php");
 }
 
 if (defined ('AJAX')) {
