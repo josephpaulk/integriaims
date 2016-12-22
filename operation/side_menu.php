@@ -686,14 +686,15 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 					echo "<li>";
 				echo "<a href='index.php?sec=godmode&sec2=godmode/setup/update_manager'>".__('Update')."</a></li>";
 			}
-
-			// Offline update manager
-			if ($sec2 == "godmode/setup/offline_update")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=godmode&sec2=godmode/setup/offline_update'>".__('Offline update')."</a></li>";
 			
+			if($is_enterprise){
+				// Offline update manager
+				if ($sec2 == "godmode/setup/offline_update")
+					echo "<li id='sidesel'>";
+				else
+					echo "<li>";
+				echo "<a href='index.php?sec=godmode&sec2=godmode/setup/offline_update'>".__('Offline update')."</a></li>";
+			}
 		/* DISABLED UNTIL WE FIX IT
 			// Update Manager
 			if ($sec2 == "godmode/updatemanager/main")
