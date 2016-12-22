@@ -338,7 +338,8 @@ function update_manager_check_online_free_packages ($is_ajax = true) {
 
 	$params = array('action' => 'newest_package',
 			'license' => "INTEGRIA-FREE",
-			'limit_count' => $users,
+			'regular_limit_count' => license_count_regular_users(),
+			'manager_limit_count' => license_count_manager_users(),
 			'current_package' => $current_package,
 			'version' => $config['version'],
 			'build' => $config['build']);
