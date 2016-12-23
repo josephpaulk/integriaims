@@ -689,7 +689,7 @@ if ($action == "insert" && !$id) {
 	
 	
 	$usuario = get_parameter('id_user', '');
-	
+	$valid_user = true;
 	if ($usuario == '') {
 		$sql = 'SELECT id_user_default FROM tgrupo WHERE id_grupo = '.$grupo;
 
@@ -700,9 +700,13 @@ if ($action == "insert" && !$id) {
 		} else {
 			$usuario = $default_user;
 		}
+		
 	}
 	else {
-		$valid_user = get_db_value_sql("SELECT id_up FROM tusuario_perfil where id_usuario = '$usuario' AND (id_grupo = $grupo OR id_grupo = 1)");
+		$is_admin = get_db_value ('nivel', 'tusuario', 'id_usuario', $usuario);
+		if ($is_admin != 1) {
+			$valid_user = get_db_value_sql("SELECT id_up FROM tusuario_perfil where id_usuario = '$usuario' AND (id_grupo = $grupo OR id_grupo = 1)");
+		}
 	}
 	
 	$closed_by = get_parameter ("closed_by", '');
@@ -1604,6 +1608,10 @@ $(document).ready (function () {
 		bindAutocomplete("#text-id_creator", idUser,false,false,true,group);
 		bindAutocomplete("#text-id_user", idUser,false,false,true,group);
 		bindAutocomplete("#text-closed_by", idUser,false,false,true,group);
+
+		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",group);
+		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>",group);
+		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>",group);
 			
 		if (!no_change_owner) {	
 			$("#text-id_user").val(group_info.id_user_default);
@@ -1764,9 +1772,9 @@ $(document).ready (function () {
 		//~ validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
 		//~ validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
 		//~ validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
-		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
-		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
-		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
+		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",idGroup);
+		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>",idGroup);
+		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>",idGroup);
 	}
 	
 	$("#tgl_incident_control").click(function() {

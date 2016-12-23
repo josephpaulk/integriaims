@@ -464,7 +464,7 @@ function users_get_users_owners_or_creators ($id_user, $id_group = false) {
 	}
 	
 	if ($id_group) {
-		$query_users = "SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $id_group OR id_grupo = 0"; 
+		$query_users = "SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $id_group OR id_grupo = 1"; 
 	} else {
 		$query_users = users_get_allowed_users_query ($id_user, false);
 	}
@@ -518,7 +518,7 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	}
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 	if ($level == 1) { //admin
-		$final_query = "SELECT * FROM tusuario t1";
+		$final_query = "SELECT * FROM tusuario t1 WHERE t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group OR id_grupo = 1) OR nivel = 1";
 		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
 	} 
 	else {
@@ -540,7 +540,6 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 		}
 		$final_query = $query.$search." GROUP BY t1.id_usuario";
 	}
-	
 
 	return $final_query;
 }

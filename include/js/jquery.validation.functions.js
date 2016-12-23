@@ -102,10 +102,9 @@ function validate_user (form, input, message) {
 	add_validate_form_element_rules(input, rules, messages);
 }
 
-function validate_ticket_user (form, input, message) {
+function validate_ticket_user (form, input, message, idGroup) {
 	var rules;
 	var messages;
-	var idGroup = $("#grupo_form").val();
 
 	rules = {
 		remote: {
