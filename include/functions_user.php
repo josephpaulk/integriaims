@@ -512,14 +512,16 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 
 	if ($group == -1){
 		$search .= " AND t1.id_usuario NOT IN (select tusuario_perfil.id_usuario from tusuario_perfil)";
-	} else if($group > 0) {
-		$search .= " AND t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group)";
+	} 
+	else if ($group > 0) {
+		$search .= " AND t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group OR id_grupo = 1)";
 	}
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 	if ($level == 1) { //admin
 		$final_query = "SELECT * FROM tusuario t1";
 		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
-	} else {
+	} 
+	else {
 		$query = "SELECT * FROM tusuario t1
 					INNER JOIN tusuario_perfil t2 ON t1.id_usuario = t2.id_usuario 
 						AND t2.id_grupo IN (SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '".$id_user."')";

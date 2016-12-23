@@ -469,7 +469,6 @@ if ($action == 'update') {
 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 	
 	if ($user == '') {
-
 		$sql = 'SELECT id_user_default FROM tgrupo WHERE id_grupo = '.$grupo;
 		$default_user = get_db_value_sql($sql);
 
@@ -702,6 +701,9 @@ if ($action == "insert" && !$id) {
 			$usuario = $default_user;
 		}
 	}
+	else {
+		$valid_user = get_db_value_sql("SELECT id_up FROM tusuario_perfil where id_usuario = '$usuario' AND (id_grupo = $grupo OR id_grupo = 1)");
+	}
 	
 	$closed_by = get_parameter ("closed_by", '');
 	$blocked = get_parameter ("blocked", 0);
@@ -714,17 +716,19 @@ if ($action == "insert" && !$id) {
 	$creator_exists = get_user($id_creator);
 	$user_exists = get_user($usuario);
 
-
-	if ($titulo == "") {
+	if (!$valid_user) {
+		$result_msg  = ui_print_error_message (__('User not valid to this group'), '', true, 'h3', true);
+	}
+	else if ($titulo == "") {
 		$result_msg  = ui_print_error_message (__('Title cannot be empty'), '', true, 'h3', true);
-	} else if($creator_exists === false) {
+	} 
+	else if($creator_exists === false) {
 		$result_msg  = ui_print_error_message (__('Creator user does not exist'), '', true, 'h3', true);
 	}
 	else if($user_exists === false) {
 		$result_msg  = ui_print_error_message (__('Owner user does not exist'), '', true, 'h3', true);
 	}
 	else {
-	
 		if ($id_parent == 0) {
 			$idParentValue = null;
 		}
