@@ -86,7 +86,8 @@ if ($action == 'insert') {
 	$end_date = (string) get_parameter ('end_date');
 	$id_project_group = (int) get_parameter ('id_project_group');
 	$cc = get_parameter("cc", "");
-	
+	$export_tasks = get_parameter('export_tasks', 0);
+
 	$error_msg = "";
 	
 	if($id_owner == "") {
@@ -107,11 +108,37 @@ if ($action == 'insert') {
 			$name, $description, $start_date, $end_date, $id_owner,
 			$id_project_group, $cc);
 		$id_project = process_sql ($sql, 'insert_id');
+
+		if ($id_project) {
+			if ($export_tasks != 0) {
+				$tasks = get_db_all_rows_sql("SELECT * FROM ttask WHERE id_project = " . $export_tasks);
+				foreach ($tasks as $t) {
+					$values = array();
+					$values['id_project'] = $id_project;
+					$values['name'] = $t['name'];
+					$values['description'] = $t['description'];
+					$values['completion'] = $t['completion'];
+					$values['priority'] = $t['priority'];
+					$values['dep_type'] = $t['dep_type'];
+					$values['start'] = $t['start'];
+					$values['end'] = $t['end'];
+					$values['hours'] = $t['hours'];
+					$values['estimated_cost'] = $t['estimated_cost'];
+					$values['periodicity'] = $t['periodicity'];
+					$values['count_hours'] = $t['count_hours'];
+					$values['cc'] = $t['cc'];
+					
+					process_sql_insert('ttask', $values);
+				}
+			}
+		}
 	}
 	
 	if ($id_project === false) {
 		echo ui_print_err_message (__('Project cannot be created, problem found.').$error_msg, '', true, 'h3', true);
-	} else {
+	} 
+	else {
+		
 		echo ui_print_success_message (__('The project successfully created.').' #'.$id_project, '', true, 'h3', true);
 		audit_db ($id_owner, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
 		

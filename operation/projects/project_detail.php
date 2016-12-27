@@ -201,6 +201,18 @@ else {
 	$table->data[1][2] = '<b>'.__('End').' </b><br >';
 	$table->data[1][2] .= print_input_text ('end_date', $end_date, '', 10, 10, true);
 
+	if (!$id_project) {
+		$projects_export = get_projects_query($config['id_user']);
+		$projects_export = get_db_all_rows_sql($projects_export);
+		$prj = array();
+		$prj[0] = __('Any');
+		foreach ($projects_export as $pr) {
+			$prj[$pr['id']] = $pr['name'];
+		}
+		$table->data[2][0] = '<b>'.__('Export tasks from other project').' </b><br >';
+		$table->data[2][0] .= html_print_select ($prj, "export_tasks", 0, '', '', 0, true);
+	}
+	
 	// Description
 	$table->colspan[7][0] = 4;
 	$table->data[7][0] = "<b>".__("Description")."</b>";
