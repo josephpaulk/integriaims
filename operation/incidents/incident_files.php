@@ -254,7 +254,7 @@ if (!$clean_output) {
 	$table->class = 'search-table-button';
 	$table->data = array();
 	$table->data[0][0] = print_textarea ("file_description", 5, 40, '', '', true, __('Description'));
-	$table->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create"', true);
+	$table->data[1][0] = print_submit_button (__('Add'), 'crt_btn', false, 'class="sub create" style="float: right;"', true);
 	print_table($table);
 	echo "</div>";
 
