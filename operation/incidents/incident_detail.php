@@ -723,9 +723,6 @@ if ($action == "insert" && !$id) {
 	if (!$valid_user) {
 		$result_msg  = ui_print_error_message (__('User not valid to this group'), '', true, 'h3', true);
 	}
-	else if ($titulo == "") {
-		$result_msg  = ui_print_error_message (__('Title cannot be empty'), '', true, 'h3', true);
-	} 
 	else if($creator_exists === false) {
 		$result_msg  = ui_print_error_message (__('Creator user does not exist'), '', true, 'h3', true);
 	}
@@ -1047,7 +1044,7 @@ $table->cellpadding = 2;
 
 //~ if (($has_permission && (!isset($blocked_incident))) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!isset($blocked_incident)))) {
 if (($has_permission && (!$blocked_incident)) || (give_acl ($config['id_user'], $id_grupo, "SI") && (!$blocked_incident))) {
-	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, '', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
+	$table->data[0][0] = print_input_text_extended ('titulo', $titulo, 'text_title', '', 55, 100, false, '', "style='width:300px;'", true, false, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
@@ -1536,6 +1533,27 @@ $(document).ready (function () {
 			set_allowed_resolution();
 		}
 	}
+
+	$("#text_title").change(function () {
+		var rules;
+		var messages;
+
+		var title = $("#text_title").val();
+		var message = "COSA";
+
+		console.log(title);
+		if (title == "") {
+			rules = {
+				required: true
+			};
+			messages = {
+				remote: message
+			};
+			validate_form("#incident_status_form");
+			add_validate_form_element_rules("#text_title", rules, messages);
+		}
+		
+	});
 
 	// Incident type combo change event
 	$("#id_incident_type").change( function() {

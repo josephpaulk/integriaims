@@ -159,7 +159,18 @@ if ($operation == "delete"){
 		$sql = "DELETE FROM trole_people_task WHERE id = $id";
 		task_tracking ($id_task, TASK_MEMBER_DELETED);
 	// People delete for whole PROJECT
-	} else {
+	}
+	else {
+		$filter = array();
+		$filter['id'] = $id;
+		$id_user_prj = get_db_value_filter ('id_user', 'trole_people_project', $filter);
+		$project = get_db_value_filter ('id_project', 'trole_people_project', $filter);
+		$tasks = get_db_all_rows_filter('ttask', array('id_project' => $project), 'id');
+		foreach ($tasks as $t) {
+			$sql_t = "DELETE FROM trole_people_task WHERE id_task = " . $t['id'] . " AND id_user = '" . $id_user_prj . "'";
+			mysql_query($sql_t);
+		}
+
 		$sql = "DELETE FROM trole_people_project WHERE id = $id";
 	}
 	if (mysql_query($sql)){
@@ -206,7 +217,7 @@ if ($operation == 'insert_all') {
 				$id_task_inserted = process_sql ($sql, 'insert_id');
 				
 				if ($id_task_inserted !== false) {
-					$result_output .= ui_print_success_message (__('Successfully deleted'), '', true, 'h3', true);
+					$result_output .= ui_print_success_message (__('Successfully created'), '', true, 'h3', true);
 					audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 						"User/Role added to task", "User $id_user added to task " . get_db_value ("name", "ttask", "id", $id_task));
 				}
