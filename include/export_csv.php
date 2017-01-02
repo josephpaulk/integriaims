@@ -113,9 +113,8 @@ if ($export_csv_contracts) {
 	}
 
 	$where_clause = get_parameter('where_clause');
-	
+	$where_clause = "WHERE 1=1 ".$where_clause;	
 	$rows = crm_get_all_contracts (clean_output($where_clause));
-
 	if ($read && $enterprise) {
 		$rows = crm_get_user_contracts($config['id_user'], $rows);
 	}

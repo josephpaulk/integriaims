@@ -183,8 +183,8 @@ function crm_get_all_contacts ($where_clause, $only_name = false) {
 function crm_get_all_contracts ($where_clause, $order_by='date_end') {
 	global $config;
 	
-	//$sql = "SELECT * FROM tcontract $where_clause ORDER BY date_end DESC";
-	$sql = "SELECT * FROM tcontract $where_clause ORDER BY $order_by DESC";
+	//~ $sql = "SELECT * FROM tcontract $where_clause ORDER BY $order_by DESC";
+	$sql = "SELECT * FROM tcontract as tc $where_clause ORDER BY $order_by DESC";
 
 	$contracts = get_db_all_rows_sql ($sql);
 	if(!isset($only_name)){
