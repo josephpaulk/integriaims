@@ -231,6 +231,11 @@ function crm_get_all_contracts_with_custom_fields ($where_clause) {
 		$header=array();
 
 		foreach ($contracts as $con) {
+
+			if(isset($con['id_company'])){
+				$contracts[$i]['company'] = get_db_value ('name', 'tcompany', 'id', $con["id_company"]);
+			}
+			
 			//This controls whether there label and data, if not eliminate the array exists
 			if($con['label'] == ''){
 				unset($contracts[$i]['label']);
