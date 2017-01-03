@@ -206,7 +206,7 @@ function crm_get_all_contracts ($where_clause, $order_by='date_end') {
 	return $contracts;
 }
 
-function crm_get_all_contracts_with_custom_fields ($where_clause) {
+function crm_get_all_contracts_with_custom_fields ($where_clause, $from_csv = false) {
 	global $config;
 	
 	$sql = "select * from(
@@ -246,10 +246,15 @@ function crm_get_all_contracts_with_custom_fields ($where_clause) {
 			if($save_id == $con['id']){
 				//This controls exist label as key and data as value
 				if(isset($con['label'])){
-					//add array contracts label
-					$contracts[$i-$k][$con['label']] = $con['data'];
+					if (!$from_csv) {
+						//add array contracts label
+						$contracts[$i-$k][$con['label']] = $con['data'];
+					} else {
+						$contracts[$i-$k][safe_output($con['label'])] = $con['data'];
+					}
 					//for th table
-					$header[$con['label']] = $con['label'];
+					//~ $header[$con['label']] = $con['label'];
+					$header[safe_output($con['label'])] = $con['label'];
 				}
 				//delete arrays with same id
 				unset($contracts[$i]);
@@ -258,9 +263,14 @@ function crm_get_all_contracts_with_custom_fields ($where_clause) {
 				//if isset label
 				if(isset($con['label'])){
 					//This controls exist label as key and data as value
-					$contracts[$i][$con['label']] = $con['data'];
+					if (!$from_csv) {
+						$contracts[$i][$con['label']] = $con['data'];
+					} else {
+						$contracts[$i][safe_output($con['label'])] = $con['data'];
+					}
 					//for th table
-					$header[$con['label']] = $con['label'];
+					//~ $header[$con['label']] = $con['label'];
+					$header[safe_output($con['label'])] = $con['label'];
 					//delete label and data
 					unset($contracts[$i]['label']);
 					unset($contracts[$i]['data']);
@@ -271,8 +281,11 @@ function crm_get_all_contracts_with_custom_fields ($where_clause) {
 			$save_id = $con['id'];
 			$i++;
 		}
-		//add new field for build table
-		array_push($contracts , $header);
+		
+		if (!$from_csv) {
+			//add new field for build table
+			array_push($contracts, $header);
+		}
 	}
 
 	return $contracts;
