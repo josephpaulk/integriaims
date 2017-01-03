@@ -1289,7 +1289,7 @@ if ($has_im && $create_incident){
 	$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
 }
 
-if ($has_im || give_acl ($config['id_user'], $id_grupo, "SI")){
+if (($has_im || give_acl ($config['id_user'], $id_grupo, "SI")) && (!get_standalone_user($config["id_user"]))) {
 	$table_advanced->data[0][2] = print_checkbox ('sla_disabled', 1, $sla_disabled,	true, __('SLA disabled'), $blocked_incident);
 
 } else {
