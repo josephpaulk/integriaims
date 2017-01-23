@@ -106,22 +106,43 @@ function validate_ticket_user (form, input, message, idGroup) {
 	var rules;
 	var messages;
 
-	rules = {
-		remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-				page: "include/ajax/remote_validations",
-				check_allowed_users: 1,
-				id_group: idGroup,
-				user_id: function() { return $(input).val() }
+	if(input != '#text-id_creator'){
+		rules = {
+			remote: {
+				url: "ajax.php",
+				type: "POST",
+				data: {
+					page: "include/ajax/remote_validations",
+					check_allowed_users: 1,
+					id_group: function() { return $(idGroup).val() },
+					user_id: function() { return $(input).val() }
+				}
 			}
-		}
-	};
-	messages = {
-		remote: message
-	};
-	validate_form(form);
-	add_validate_form_element_rules(input, rules, messages);
+		};
+		messages = {
+			remote: message
+		};
+		validate_form(form);
+		add_validate_form_element_rules(input, rules, messages);
+	}
+	else{
+		rules = {
+			remote: {
+				url: "ajax.php",
+				type: "POST",
+				data: {
+					page: "include/ajax/remote_validations",
+					check_allowed_users: 1,
+					id_group: '',
+					user_id: 'admin'
+				}
+			}
+		};
+		messages = {
+			remote: message
+		};
+		validate_form(form);
+		add_validate_form_element_rules(input, rules, messages);
+	}
 }
 

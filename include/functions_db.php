@@ -1732,9 +1732,11 @@ function get_incident_types ($only_names = true, $no_empty = false, $id_user = "
 		foreach ($types as $id=>$type) {
 			if ($type['id_group'] != '0') {
 
-				$groups = explode(',',$type['id_group']);
+				$groups = explode(',&#x20;',$type['id_group']);
 				foreach ($groups as $group) {
-					$group = preg_replace('/^(&#x20;)\.*/',"",$group);
+					$group = preg_replace('/^(&nbsp;&nbsp;&nbsp;&nbsp;)\.*/',"",$group);
+					$group = safe_output($group);
+
 					foreach ($user_groups as $id => $ug) {
 						if ($ug['id_grupo'] == 1) { //all
 							$final_types[$type['id']] = $type;

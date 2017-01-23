@@ -1110,11 +1110,11 @@ if ($check_allowed_users) {
 	if ($id_group != '') {
 		$filter['group'] = $id_group;
 	} else {
-		$filter = false;
+		$filter['group'] = -1;
 	}
-	
+
 	//~ $query_users = users_get_allowed_users_query ($config['id_user'], false);
-	$query_users = users_get_allowed_users_query ($config['id_user'], $filter);
+	$query_users = users_get_allowed_users_query ($user_id, $filter);
 	$users = get_db_all_rows_sql($query_users);
 	foreach ($users as $user) {
 		if(preg_match('/^'.$user_id.'$/i', $user['id_usuario']) || preg_match('/^'.$user_id.'$/i', $user['nombre_real'])|| preg_match('/^'.$user_id.'$/i', $user['num_employee'])) {

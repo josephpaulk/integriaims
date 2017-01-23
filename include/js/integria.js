@@ -648,8 +648,6 @@ function show_validation_delete_general (name, id, id2, offset, search_params) {
 }
 
 function delete_item_general (name, id, id2, offset, search_params) {
-	console.log(id);
-	console.log(id2);
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -657,7 +655,6 @@ function delete_item_general (name, id, id2, offset, search_params) {
 		dataType: "html",
 		async:false,
 		success: function (data) {
-			console.log(name);
 			switch (name) {
 				case 'delete_project':
 					window.location.assign("index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id="+id+"&offset="+offset+"&search_params="+search_params);

@@ -311,14 +311,11 @@ if (defined ('AJAX')) {
 		$option_any = (int)get_parameter('option_any');
 		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 		if($id_group_type != "" && $id_group_type != "0"){
-			if(give_acl ($config['id_user'], $id_grupo, "SI")){
-				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
-			}
-			else{
-				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-			}
-			//$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-			$id_group_type = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", $id_group_type);
+			$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+			
+			$id_group_type   = str_replace("    ", "", $id_group_type);
+			$id_group_type   = preg_replace("/&#?[a-z0-9]+;/i","",$id_group_type);
+			$groups_all      = preg_replace("/&#?[a-z0-9]+;/i","",$groups_all);
 			$groups_selected = explode(', ', $id_group_type);
 			$groups = array_intersect(safe_output($groups_all), $groups_selected);
 			if($option_any){
@@ -1110,7 +1107,10 @@ if($id_group_type != "" && $id_group_type != "0"){
 	else{
 		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
 	}
-	$id_group_type = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", $id_group_type);
+	
+	$id_group_type = str_replace("    ", "", $id_group_type);
+	$id_group_type   = preg_replace("/&#?[a-z0-9]+;/i","",$id_group_type);
+	$groups_all      = preg_replace("/&#?[a-z0-9]+;/i","",$groups_all);
 	$groups_selected = explode(', ', $id_group_type);
 	$groups = array_intersect($groups_all, $groups_selected);
 } else {
@@ -1120,6 +1120,7 @@ if($id_group_type != "" && $id_group_type != "0"){
 	else{
 		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
 	}
+	
 	$groups_selected = explode(', ', $id_group_type);
 }
 
@@ -1542,7 +1543,6 @@ $(document).ready (function () {
 		var title = $("#text_title").val();
 		var message = "COSA";
 
-		console.log(title);
 		if (title == "") {
 			rules = {
 				required: true
@@ -1621,18 +1621,15 @@ $(document).ready (function () {
 		}
 		
 		var group = $("#grupo_form").val();
-		
 		var group_info = get_group_info(group);
 
-		//~ bindAutocomplete("#text-id_creator", idUser,false,false,true,group);
-		bindAutocomplete("#text-id_creator", idUser);
+		bindAutocomplete("#text-id_creator", 'admin',false,false,true, -1);
 		bindAutocomplete("#text-id_user", idUser,false,false,true,group);
 		bindAutocomplete("#text-closed_by", idUser,false,false,true,group);
 
-		//~ validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",group);
-		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
-		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>",group);
-		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>",group);
+		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>","#grupo_form");
+		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>","#grupo_form");
+		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>","#grupo_form");
 			
 		if (!no_change_owner) {	
 			$("#text-id_user").val(group_info.id_user_default);
@@ -1782,20 +1779,14 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	var idGroup = $("#grupo_form").val();
 	
-	bindAutocomplete("#text-id_creator", idUser);
-	//~ bindAutocomplete("#text-id_user", idUser);
-	//~ bindAutocomplete("#text-closed_by", idUser);
-	//~ bindAutocomplete("#text-id_creator", idUser,false,false,true,idGroup);
+	bindAutocomplete("#text-id_creator", 'admin',false,false,true,-1);
 	bindAutocomplete("#text-id_user", idUser,false,false,true,idGroup);
 	bindAutocomplete("#text-closed_by", idUser,false,false,true,idGroup);
 	
 	if ($("#incident_status_form").length > 0){
-		validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
-		//~ validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
-		//~ validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
-		//~ validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",idGroup);
-		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>",idGroup);
-		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>",idGroup);
+		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>","#grupo_form");
+		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>","#grupo_form");
+		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>","#grupo_form");
 	}
 	
 	$("#tgl_incident_control").click(function() {

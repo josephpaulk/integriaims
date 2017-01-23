@@ -246,7 +246,8 @@ function users_get_groups_for_select($id_user,  $privilege = "IR", $returnAllGro
 	if ($id_groups === false) {
 		$id_groups = null;
 	}
-	
+	global $config;
+
 	$user_groups = get_user_groups ($id_user, $privilege, $returnAllGroup, $returnAllColumns);
 	/*
 	$user_groups_flag_si = get_user_groups ($id_user, "SI", $returnAllGroup, $returnAllColumns);
@@ -464,7 +465,12 @@ function users_get_users_owners_or_creators ($id_user, $id_group = false) {
 	}
 	
 	if ($id_group) {
-		$query_users = "SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $id_group OR id_grupo = 1"; 
+		if($id_group == -1){
+			$query_users = "SELECT id_usuario FROM tusuario_perfil";
+		}
+		else{
+			$query_users = "SELECT id_usuario FROM tusuario_perfil WHERE id_grupo = $id_group OR id_grupo = 1";
+		}
 	} else {
 		$query_users = users_get_allowed_users_query ($id_user, false);
 	}
@@ -518,8 +524,13 @@ function users_get_allowed_users_query ($id_user, $filter = false) {
 	}
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 	if ($level == 1) { //admin
-		$final_query = "SELECT * FROM tusuario t1 WHERE t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group OR id_grupo = 1) OR nivel = 1";
-		//~ $query = "SELECT * FROM tusuario t1 WHERE 1=1 OR nivel = 1";
+		if ($group != -1){
+			$final_query = "SELECT * FROM tusuario t1 WHERE t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil WHERE id_grupo = $group OR id_grupo = 1) OR nivel = 1";
+		}
+		else{
+			$final_query = "SELECT * FROM tusuario t1 WHERE t1.id_usuario = ANY (SELECT tusuario_perfil.id_usuario FROM tusuario_perfil ) OR nivel = 1";	
+		}
+		
 	} 
 	else {
 		$query = "SELECT * FROM tusuario t1
