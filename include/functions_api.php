@@ -537,6 +537,15 @@ function api_update_incident ($return_type, $user, $params){
 				$num_params++;
 			}
 		}
+		
+		$email_on_incident_update = get_db_value_filter('value','tconfig','token', 'email_on_incident_update');
+		
+		if (($email_on_incident_update != 3) && ($email_on_incident_update != 4) && ($values['estado'] == 7)) { //add emails only closed
+    		mail_incident ($id_incident, $values['id_usuario'], "", 0, 5);
+    	}
+    	if (($email_on_incident_update != 3) && ($email_on_incident_update != 4) && ($values['estado'] == 1)) { //add emails only opened
+    		mail_incident ($id_incident, $values['id_usuario'], "", 0, 1);
+    	}
 			
 		switch($return_type) {
 			case "xml": 

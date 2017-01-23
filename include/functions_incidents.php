@@ -1657,6 +1657,10 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_time_used_"] = $timeused;
 	$MACROS["_incident_main_text_"] = $description;
 	
+	$MACROS["_id_group_"] = $group_name;
+	$MACROS["_id_priority_"] = $prioridad ;
+	$MACROS["_id_status_"] = $estado;
+	
 	$access_dir = empty($config['access_public']) ? $config["base_url"] : $config['public_url'];
 	$MACROS["_access_url_"] = $access_dir."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
 	$MACROS["_incident_epilog_"] = $row["epilog"];

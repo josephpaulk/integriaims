@@ -30,10 +30,6 @@ El asunto y el cuerpo del email pueden formarse mediante macros. A continuación
 <li>_incident_own_email_: Email del usuario propietario.</li>
 <li>_incident_group_email_: Email del grupo asignado.</li>
 <li>_incident_auth_email_: Email del usuario creador del ticket.</li>
-<li>_owner_: Usuario que gestiona el incidente.</li>
-<li>_id_group_: Id del grupo asignado al incidente.</li>
-<li>_name_group_: Nombre del grupo asignado al incidente.</li>
-<li>_author_: Creador del incidente.</li>
 <li>_type_tickets_: Tipo de tickets.</li>
 <li>Plantillas de campos personalizados: Esto permite que al crear un tipo de objeto el nombre de los campos que agregas puedes incluirlos como una macro la cual mostrara el valor de dicho campo: _nombre del campo personalizado_.</li>
 
@@ -42,7 +38,7 @@ El asunto y el cuerpo del email pueden formarse mediante macros. A continuación
 <p>
 <b>Ejemplo de Para:</b>
 <br>
-_incident_owner_email_
+_incident_own_email_
 </p>
 
 <p>

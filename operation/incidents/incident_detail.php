@@ -1182,7 +1182,8 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	
 	if (!$disabled_creator) {
 		//add button to display info user for creator
-		$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		//~ $table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0);'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table->data[2][0] .= "&nbsp;&nbsp;<a href='javascript: incident_show_user_search(\"\", 0,\"creator_primera\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 	}
 } else {
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
@@ -1623,11 +1624,13 @@ $(document).ready (function () {
 		
 		var group_info = get_group_info(group);
 
-		bindAutocomplete("#text-id_creator", idUser,false,false,true,group);
+		//~ bindAutocomplete("#text-id_creator", idUser,false,false,true,group);
+		bindAutocomplete("#text-id_creator", idUser);
 		bindAutocomplete("#text-id_user", idUser,false,false,true,group);
 		bindAutocomplete("#text-closed_by", idUser,false,false,true,group);
 
-		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",group);
+		//~ validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",group);
+		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
 		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>",group);
 		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>",group);
 			
@@ -1779,18 +1782,18 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	var idGroup = $("#grupo_form").val();
 	
-	//~ bindAutocomplete("#text-id_creator", idUser);
+	bindAutocomplete("#text-id_creator", idUser);
 	//~ bindAutocomplete("#text-id_user", idUser);
 	//~ bindAutocomplete("#text-closed_by", idUser);
-	bindAutocomplete("#text-id_creator", idUser,false,false,true,idGroup);
+	//~ bindAutocomplete("#text-id_creator", idUser,false,false,true,idGroup);
 	bindAutocomplete("#text-id_user", idUser,false,false,true,idGroup);
 	bindAutocomplete("#text-closed_by", idUser,false,false,true,idGroup);
 	
 	if ($("#incident_status_form").length > 0){
-		//~ validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
+		validate_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>");
 		//~ validate_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>");
 		//~ validate_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>");
-		validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",idGroup);
+		//~ validate_ticket_user ("#incident_status_form", "#text-id_creator", "<?php echo __('Invalid user')?>",idGroup);
 		validate_ticket_user ("#incident_status_form", "#text-id_user", "<?php echo __('Invalid user')?>",idGroup);
 		validate_ticket_user ("#incident_status_form", "#text-closed_by", "<?php echo __('Invalid user')?>",idGroup);
 	}

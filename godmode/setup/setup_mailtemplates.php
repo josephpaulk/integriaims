@@ -287,11 +287,16 @@ if($search){
 			$data[0] = '<a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates&update_template=1&name_template='.$value['name'].'">'.$value['name'].'</a>';
 			// templates group
 			$name_group = get_db_value ('nombre', 'tgrupo', 'id_grupo', $value['id_group']);
-			if($name_group){
-				$data[1] = $name_group;
-			} else{
-				$data[1] = '--';
+			if ($value['id_group']== 0) {
+				$name_group = __('All');
 			}
+			//~ if($name_group){
+				//~ $data[1] = $name_group;
+			//~ } else{
+				//~ $data[1] = '--';
+			//~ }
+			$data[1] = $name_group;
+			
 			// templates actions
 			$name_action_template =	get_template_action();
 			$data[2] = $name_action_template[$value['template_action']];

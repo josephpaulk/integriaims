@@ -457,9 +457,12 @@ function process_massive_updates () {
 		assigned_user = $("#mass_assigned_user").attr("value");
 		groups = $("#mass_groups").attr("value");
 		task = $("#task_user").attr("value");
-		parent_ticket_name = $("#text-search_parent").attr("value");
-		parent_ticket_split = parent_ticket_name.split('#');
-		parent_ticket_id = parent_ticket_split[1];	
+		
+		//~ if(parent_ticket != 0) {
+		//~ parent_ticket_name = $("#text-search_parent").attr("value");
+		//~ parent_ticket_split = parent_ticket_name.split('#');
+		//~ parent_ticket_id = parent_ticket_split[1];
+		//~ }	
 		
 		for(var i=0;i<checked_ids.length;i++){
 			values = Array ();
@@ -491,10 +494,10 @@ function process_massive_updates () {
 				values.push ({name: "id_task",
 						value: task});
 			}
-			if(parent_ticket != 0) {
-				values.push ({name: "id_parent",
-						value: parent_ticket_id});
-			}
+			//~ if(parent_ticket != 0) {
+				//~ values.push ({name: "id_parent",
+						//~ value: parent_ticket_id});
+			//~ }
 			values.push ({name: "massive_number_loop",
 					value: i});
 			values.push ({name: "action",
@@ -997,14 +1000,23 @@ $.ajax({
 	});	
 }
 
-function incident_show_user_search (filter, clickin) {
+function incident_show_user_search (filter, clickin,rol_ini) {
 
-var idGroup = $("#grupo_form").val();
+if (rol_ini == "creator_primera") {
+	idGroup = 0;
+	rol_ini = "creator_otro";
+} else if (rol_ini == "creator_otro") {
+	idGroup = $("#group").val();
+	rol_ini = "creator_otro";
+} else {
+	idGroup = $("#grupo_form").val();
+	rol_ini = "owner";
+}
 
 $.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: 'page=include/ajax/incidents&get_user_search=1&clickin='+clickin+'&ajax=1&'+filter+'&group='+idGroup,
+		data: 'page=include/ajax/incidents&get_user_search=1&clickin='+clickin+'&ajax=1&'+filter+'&group='+idGroup+'&rol_ini='+rol_ini,
 		dataType: "html",
 		success: function(data){	
 			$("#users_search_window").html (data);
@@ -1026,7 +1038,7 @@ $.ajax({
 			//JS to catch incident search submit request
 			$("#saved-user-form").submit(function (){
 				var filter = $("#saved-user-form").formSerialize();
-				incident_show_user_search(filter, clickin);
+				incident_show_user_search(filter, clickin,rol_ini);
 				return false;
 			});
 						
@@ -1038,7 +1050,7 @@ $.ajax({
 				
 				var filter = $("#saved-user-form").formSerialize();
 				filter = filter+"&offset="+offset;
-				incident_show_user_search(filter, clickin);
+				incident_show_user_search(filter, clickin,rol_ini);
 			});			
 		}
 	});	

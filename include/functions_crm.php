@@ -1271,4 +1271,119 @@ function crm_get_next_invoice_id () {
 
 	return $result_id;
 }
+
+function crm_get_contract_fields () {
+	global $config;
+
+	$sql = "SELECT * FROM tcontract_field ORDER BY `order`";
+
+	$config['mysql_result_type'] = MYSQL_ASSOC;
+	$contract_fields = get_db_all_rows_sql($sql);
+	
+	if (!$contract_fields) {
+		$contract_fields = array();
+	}
+		
+	return $contract_fields;
+}
+
+function crm_get_contract_fields_table ($return = true) {
+	global $config;
+
+	$table_contract_fields = new stdclass;
+	$table_contract_fields->width = "100%";
+	$table_contract_fields->class = "search-table";
+	$table_contract_fields->data = array();
+	$table_contract_fields->colspan = array();
+	
+	$contract_fields = crm_get_contract_fields ();
+	
+	$column = 0;
+	$row = 0;
+	if ($contract_fields) {
+		foreach ($contract_fields as $key => $contract_field) {
+			switch ($contract_field['type']) {
+				case "text": 
+					$input = print_input_text('search_contract_field_'.$contract_field['id'], $data, '', 30, 30, $return, $contract_field['label']);
+					break;
+				
+				case "combo":
+					$combo_values = explode(",", $contract_field['combo_value']);
+					$values = array();
+					foreach ($combo_values as $value) {
+						$values[$value] = $value;
+					}
+					$input = print_select ($values, 'search_contract_field_'.$contract_field['id'], $data, '', __('Any'), '', $return, false, false, $contract_field['label']);
+					break;
+
+				case "linked":
+					$linked_values = explode(",", $contract_field['linked_value']);
+					$values = array();
+					foreach ($linked_values as $value) {
+						$value_without_parent =  preg_replace("/^.*\|/","", safe_output($value));
+						$values[$value_without_parent] = $value_without_parent;
+						
+						$has_childs = get_db_all_rows_sql("SELECT * FROM tcontract_field WHERE parent=".$contract_field['id']);
+						if ($has_childs) {
+							$i = 0;
+							foreach ($has_childs as $child) {
+								if ($i == 0) 
+									$childs = $child['id'];
+								else 
+									$childs .= ','.$child['id'];
+								$i++;
+							}
+							$childs = "'".$childs."'";
+							$script = 'javascript:change_linked_type_fields_table('.$childs.','.$contract_field['id'].');';
+						} else {
+							$script = '';
+						}
+					}
+					$input = print_select ($values, 'search_contract_field_'.$contract_field['id'], $data, $script, __('Any'), '', $return, false, false, $contract_field['label']);
+					break;
+
+				case "numeric":
+					$input = print_input_number ('search_contract_field_'.$contract_field['id'], $data, 1, 1000000, '', $return, $contract_field['label']);
+					break;
+
+				case "date":
+					$input = print_input_date ('search_contract_field_'.$contract_field['id'], $data, '', '', '', $return, $contract_field['label']);
+					break;
+
+				case "textarea":
+					if($row != 0){
+						$column++;
+						$row=0;
+					}
+					$table_contract_fields->colspan[$column][0] = 4;
+					$input = print_textarea ('search_contract_field_'.$contract_field['id'], 5, 5, $data, '', $return, $contract_field['label']);
+					$textarea=1; 
+					break;
+			}				
+			
+			$table_contract_fields->data[$column][$row] = $input;
+			if ($textarea){
+				$column++;
+				$row = 0;
+				$textarea = 0;
+			}else if ($row < 3) {
+				$row++;
+			} else {
+				$row=0;
+				$column++;
+			}
+		}
+		
+		if ($return) {
+			return $table_contract_fields;
+		}
+		
+		if ($table_contract_fields->data) {
+			print_table($table_contract_fields, true);
+		}
+	}
+	return;
+}
+
+
 ?>

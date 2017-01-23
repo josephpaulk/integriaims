@@ -904,9 +904,8 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 	}
 //Revisar icono
 	// PEOPLE MANAGEMENT
-	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED){
-		if($show_people != MENU_MINIMAL) {
-			
+	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED && (!user_is_standalone ($config['id_user']))) {
+		if($show_people != MENU_MINIMAL) {		
 			if (($sec2 == "godmode/usuarios/lista_usuarios") || ($sec2 == "godmode/usuarios/lista_usuarios") || ($sec2 == "godmode/usuarios/user_field_list") ||
 			($sec2 == "godmode/usuarios/import_from_csv") || ($sec2 == "godmode/usuarios/role_manager") || ($sec2 == "godmode/grupos/lista_grupos") ||
 			($sec2 == "enterprise/godmode/usuarios/menu_visibility_manager") || ($sec2 == "enterprise/godmode/usuarios/profile_list") ||

@@ -295,7 +295,14 @@ $table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM 
 //Task
 $table->data[1][0] = combo_task_user (0, $config["id_user"], 0, 0, true);
 //Groups
-$table->data[1][1] =  print_select_from_sql('SELECT id_grupo, nombre FROM tgrupo;', 'mass_groups', '0', '', __('Select'), -1, true, false, true, __('Groups'));
+//~ if(give_acl ($config['id_user'], $id_grupo, "SI")){
+	//~ $groups = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
+//~ }
+//~ else{
+	$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
+//~ }
+//~ $table->data[1][1] =  print_select_from_sql('SELECT id_grupo, nombre FROM tgrupo;', 'mass_groups', '0', '', __('Select'), -1, true, false, true, __('Groups'));
+$table->data[1][1] =  print_select ($groups, "mass_groups", "", '', '', 0, true, false, false, __('Group'));
 
 if ($has_im) {
 	//Parent ticket

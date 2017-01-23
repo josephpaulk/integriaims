@@ -57,7 +57,7 @@ if ($get_user_search) {
 	echo "</div>";
 	//~ user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin);
 	//~ user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, false, true);
-	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, $id_group, true);
+	user_search_result($filter, $ajax, $size_page=$config["block_size"], $offset=$filter['offset'], $clickin, false, false, false, $id_group, false);
 }
 
 if ($get_incident_name) {
