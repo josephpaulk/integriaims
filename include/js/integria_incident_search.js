@@ -1084,19 +1084,36 @@ function loadContactEmail(email) {
 }
 
 function loadgroups() {
-	selText = '';
+	
+	var groups = new Array();
+	var i = 0;
+	var groups_keys = new Array();
+	
+	if ($("#destiny option:selected").length > 0) {
+		$('#groups_selected').empty();
+	}
+	
 	$("#destiny option:selected").each(function () {
 	   var $this = $(this);
 	   if ($this.length) {
-	    selText = selText + $this.text() + ', ';
+		 groups[i++] = parseInt($this.val());
+		 
+		 $('#groups_selected')
+			.append($("<option>")
+				.val($this.val())
+				.html($this.text())
+				.prop("selected", true));
 	   }
 	});
-	$("#text-id_group").val(selText);
+	
+	if (groups.length > 0)
+		$("#id_group").val(JSON.stringify(groups));
+	
 	$("#group_search_window").dialog("close");
 }
 
 function clean_groups_field () {
-	$("#text-id_group").attr("value", "");	
+	$("#text-id_group").attr("value", "");
 }
 
 function setTicketScore(id_ticket, score) {

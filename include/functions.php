@@ -1406,6 +1406,36 @@ function check_writable_mr() {
 	return $output;
 }
 
+function check_integrity_incident_types () {
+	
+	$sql = "SELECT * FROM tincident_type ORDER BY name";
+	$types = get_db_all_rows_sql ($sql);
+	
+	foreach ($types as $type) {
+		if ($type['id_group']) {
+							
+			if (!json_decode(safe_output($type['id_group']))) {
+				$filter = array();
+				$groups = safe_output(str_replace('&nbsp;&nbsp;&nbsp;&nbsp;',"",$type['id_group']));
+				$groups = explode(', ', $groups);
+				$array_groups = array_filter($groups, 
+					function($value) {
+						if ($value !== '')
+							return $value;
+					});
+				
+				$filter['nombre']  = explode(',',safe_input(implode(',', $array_groups)));
+				$result = group_get_groups ($filter);
+				
+				$values['name'] = $type['name'];
+				$values['description'] = $type['description'];
+				$values['id_group'] = json_encode(array_keys($result));
+				$result = process_sql_update('tincident_type', $values, array('id' => $type['id']));
+			}
+		}
+	}
+}
+
 function getFileUploadStatus ($file_input_name) {
 	return $_FILES[$file_input_name]['error'];
 }

@@ -453,6 +453,8 @@ if ($buffer_html) {
 }
 
 load_menu_visibility();
+check_integrity_incident_types();
+
 ?><script>var lang = {
 	"Are you sure?" : "<?php echo __('Are you sure?')?>",
 	"Added" : "<?php echo __('Added')?>",

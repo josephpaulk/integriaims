@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 require_once ('include/functions_incidents.php');
+require_once ('include/functions_groups.php');
 
 if (! give_acl ($config["id_user"], 0, "IM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access ticket type section");
@@ -254,8 +255,6 @@ if ($update_field && $upd) { //update field to incident type
 		}
 	}
 }
-
-
 
 // CREATE
 if ($create_type) {
@@ -683,14 +682,27 @@ else {
 		$name = "";
 		$description = "";
 		$id_group = "";
-		//$id_wizard = "";
 	}
 	else {
 		$type = get_db_row ('tincident_type', 'id', $id);
 		$name = $type['name'];
 		$description = $type['description'];
 		$id_group = $type['id_group'];
-		//$id_wizard = $type['id_wizard'];
+		if (json_decode(safe_output($id_group))) {
+			$filter = array();
+			$array_groups = json_decode(safe_output($id_group), true);
+			$filter['id_grupo'] = $array_groups;
+			$groups = group_get_groups ($filter);
+			$result = array();
+			$selected = array();
+			
+			array_walk($groups, function(&$item, $key) {
+				$item = groups_get_group_deep($key) . $item;
+			});
+			
+			$result = $groups;
+			$selected = array_keys($groups);
+		}
 	}
 	
 	$table2 = new StdClass();
@@ -699,7 +711,17 @@ else {
 	$table2->data = array ();
 	
 	$table2->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
-	$table2->data[1][0] = print_input_text ('id_group', $id_group,"", 40, 1000, true, __("Groups") . "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search(\"$id_group\")'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>", false, false, true);
+	//~ $table2->data[1][0] = print_input_text ('id_group', $id_group,"", 40, 1000, true, __("Groups") . "&nbsp;&nbsp;<a href='javascript: incident_show_groups_search(\"$id_group\")'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . "&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>", false, false, true);
+	$table2->data[1][0] = "<b>" . __("Groups") . "</b>" . 
+		"&nbsp;&nbsp;<a href='javascript: incident_show_groups_search(\"$id_group\")'>" . 
+		print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . 
+		"&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . 
+		print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+	
+	$table2->data[1][0] .= html_print_select ($result, 'groups_selected', 
+		$selected, '', '', '', true, true, false, '', true, 
+		false, false, false);
+	$table2->data[1][0] .= print_input_hidden ('id_group', $id_group, true, '', false, 'id_group');
 	
 	$table2->data[2][0] = print_textarea ('description', 10, 1, $description, '', true, __('Description'));
 	
@@ -708,7 +730,8 @@ else {
 		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
 		$button .= print_input_hidden ('update_type', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
-	} else {
+	}
+	else {
 		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
 		$button .= print_input_hidden ('create_type', 1, true);
 	}
@@ -747,8 +770,19 @@ else {
 			$data = array ();
 			
 			$data[0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&show_fields=1&id='.$type['id'].'">'.$type['name'].'</a>';
-			if($type['id_group']){
-				$data[1] = ui_print_truncate_text($type['id_group'], 60);
+			if ($type['id_group']) {
+								
+				if (json_decode(safe_output($type['id_group']))) {
+					$filter = array();
+					$array_groups = json_decode(safe_output($type['id_group']), true);
+					$filter['id_grupo'] = $array_groups;
+					$result = group_get_groups ($filter);
+					$selected = array_values($result);
+					$data[1] = ui_print_truncate_text(implode(', ', $selected), 60);
+				}
+				else {
+					$data[1] = ui_print_truncate_text($type['id_group'], 60);
+				}
 			} else {
 				$data[1] = '';
 			}

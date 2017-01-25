@@ -1728,32 +1728,30 @@ function get_incident_types ($only_names = true, $no_empty = false, $id_user = "
 		$types = get_db_all_rows_in_table ('tincident_type');
 		if ($types == false)
 			return array ();
-
-		foreach ($types as $id=>$type) {
-			if ($type['id_group'] != '0') {
-
-				$groups = explode(',&#x20;',$type['id_group']);
+		
+		foreach ($types as $id => $type) {
+			if ($type['id_group'] != '') {
+				$groups = json_decode(safe_output($type['id_group']), true);
+				
 				foreach ($groups as $group) {
-					$group = preg_replace('/^(&nbsp;&nbsp;&nbsp;&nbsp;)\.*/',"",$group);
-					$group = safe_output($group);
-
 					foreach ($user_groups as $id => $ug) {
 						if ($ug['id_grupo'] == 1) { //all
 							$final_types[$type['id']] = $type;
-						} else {
-							$id_g = get_db_value('id_grupo','tgrupo', 'nombre', $group);
-							if ($ug['id_grupo'] == $id_g) {
+						}
+						else {
+							if ($ug['id_grupo'] == $group) {
 								$final_types[$type['id']] = $type;
 							}
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				$final_types[$type['id']] = $type;
 			}
 		}
 	}
-
+	
 	$types = $final_types;
 
 	if (!$no_empty) {

@@ -312,4 +312,39 @@ function groups_get_childrens($parent, $groups = null) {
 	
 	return $return;
 }
+
+function groups_get_parents($parent, $onlyPropagate = false, $groups = null) {
+	if (empty($groups)) {
+		$groups = get_db_all_rows_in_table('tgrupo');
+	}
+	
+	$return = array();
+	
+	foreach ($groups as $key => $group) {
+		if ($group['id_grupo'] == 0) {
+			continue;
+		}
+		
+		if (($group['id_grupo'] == $parent)) {
+			$return = $return +
+				array($group['id_grupo'] => $group) +
+				groups_get_parents($group['parent'], $onlyPropagate, $groups);
+		}
+	}
+	
+	return $return;
+}
+
+function groups_get_group_deep ($id_group) {
+	global $config;
+	$parents = groups_get_parents($id_group, false);
+	
+	$deep = "";
+	if (!empty($parents)) {
+		if (count($parents) > 1)
+			$deep = str_repeat("&nbsp;&nbsp;", count($parents));
+	}
+	
+	return $deep;
+}
 ?>

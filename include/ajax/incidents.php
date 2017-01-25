@@ -16,6 +16,7 @@
 global $config;
 
 include_once("include/functions_incidents.php");
+include_once("include/functions_groups.php");
 require_once ("enterprise/include/functions_incidents.php");
 
 
@@ -69,34 +70,27 @@ if ($get_incident_name) {
 }
 
 if ($get_group_search) {
-	$filter = get_parameter("filter");
-	//Get group if was not defined
-	if($id_grupo==0) {
-		$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
+	$id_grupos = get_parameter("filter");
+	
+	if (json_decode($id_grupos)) {
+		$filter = array();
+		$array_groups = json_decode($id_grupos, true);
+		$filter['id_grupo'] = $array_groups;
+		$groups_selected = group_get_groups ($filter);
+		$result = array();
 		
-		//If no group assigned use ALL by default
-		if (!$id_grupo_incident) {
-			$id_grupo_incident = 1;
-		}
+		array_walk($groups_selected, function(&$item, $key) {
+			$item = groups_get_group_deep($key) . $item;
+		});
 		
-	} else {
-		$id_grupo_incident = $id_grupo;
+		$groups = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+		$groups = array_diff_key($groups, $groups_selected);
 	}
-
-
-	if($filter){
-		$groups_selected_prepare = str_replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;", safe_output($filter));
-		$groups_selected_prepare = explode(", ", $groups_selected_prepare);
-		
-		$groups_prepare = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'nombre'));
-		
-		$groups = array_diff($groups_prepare, $groups_selected_prepare);
-		$groups_selected = array_intersect($groups_prepare, $groups_selected_prepare);
-		
-	} else {
-		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'nombre'));
+	else {
+		$array_groups = array();
+		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo'));
 	}
-
+	
 	echo '<div class="div_ui div_left_ui">';
 		echo print_select ($groups, "origin", $id_grupo_incident, '', '', 0, true, true, false);
 	echo '</div>';
