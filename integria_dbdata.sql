@@ -62,8 +62,8 @@ INSERT INTO `tusuario` (id_usuario, nombre_real, password, comentarios, fecha_re
 
 
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (1,'All','world.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (2,'Customer #A','eye.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (3,'Customer #B','eye.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (2,'Customer&#x20;#A','eye.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (3,'Customer&#x20;#B','eye.png',0, 'admin');
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (4,'Engineering','computer.png',0, 'admin');
 
 INSERT INTO `tlanguage` VALUES ('en_GB','English');
