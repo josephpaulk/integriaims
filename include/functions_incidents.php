@@ -133,7 +133,8 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			else {
 				$sql_clause .= sprintf(' AND id_grupo NOT IN (%s)', $ids);
 			}
-		} else {
+		}
+		else {
 			if (!$is_inverse) {
 				$sql_clause .= sprintf(' AND id_grupo = %d', $filters['id_group']);
 			}
@@ -435,7 +436,7 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	$result = array();
 	foreach ($incidents as $incident) {
 		//Check external users ACLs
-		$standalone_check = enterprise_hook('manage_standalone', array($incident, 'read'));
+		$type_user = user_get_user_level ($config['id_user']);
 
 		//~ if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
 			//~ continue;
@@ -449,16 +450,24 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 			//~ }
 		//~ }
 		
-		if ($standalone_check !== ENTERPRISE_NOT_HOOK) { // Enterprise
-			if (($standalone_check == 0) || ($standalone_check == 1)) { // standalone user
-				if ((!$standalone_check)) {
+		if (enterprise_installed()) {
+			if ($type_user == -1) { // standalone user
+				$standalone_check = enterprise_hook('manage_standalone', array($incident, 'read'));
+				if ($standalone_check == -1 || $standalone_check == 0 ) { // standalone user
 					continue;
-				}	
-			} else { // grouped user
+				}
+			}
+			else if ($type_user == 0){ // grouped user
 				$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
 				if (!$check_acl) {
 					continue;
 				}
+			}
+			elseif ($type_user == 1) {
+				//Admin user
+			}
+			else {
+				continue;
 			}
 		}
 		

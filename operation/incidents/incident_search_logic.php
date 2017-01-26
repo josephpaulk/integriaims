@@ -254,7 +254,8 @@ echo '</div>';
 
 if ($filter_form['group_by_project']) {
 	incidents_search_result_group_by_project ($filter);
-} else {
+}
+else {
 	incidents_search_result($filter, false, false, true);
 }
 

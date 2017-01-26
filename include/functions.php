@@ -952,6 +952,23 @@ function enterprise_hook ($function_name, $parameters = false) {
 	return ENTERPRISE_NOT_HOOK;
 }
 
+/**
+ * Check if the enterprise version is installed.
+ * 
+ * @return boolean If it is installed return true, otherwise return false.
+ */
+function enterprise_installed() {
+	$return = false;
+	
+	if (defined('INTEGRIA_ENTERPRISE')) {
+		if (INTEGRIA_ENTERPRISE) {
+			$return = true;
+		}
+	}
+	
+	return $return;
+}
+
 function enterprise_include ($filename, $once = false) {
 	global $config;
 	
