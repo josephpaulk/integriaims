@@ -272,7 +272,6 @@ if (defined ('AJAX')) {
 			$allowed_status = incidents_get_all_status();
 		}
 		
-		ksort($allowed_status);
 		echo json_encode($allowed_status);
 		return;
 		
