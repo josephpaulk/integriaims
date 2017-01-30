@@ -323,7 +323,6 @@ if (defined ('AJAX')) {
 				$item = groups_get_group_deep($key) . safe_output($item);
 			});
 			
-			debugPrint();
 			$array_groups = json_decode(safe_output($id_group_type), true);
 			$filter['id_grupo'] = $array_groups;
 			$groups_selected = group_get_groups ($filter);
