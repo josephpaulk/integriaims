@@ -3029,7 +3029,7 @@ function incidents_search_result ($filter, $ajax = false,
 				echo "</span>";
 				echo '</td>';
 				
-				if ($config["show_creator_incident"] == 1){	
+				if ($config["show_creator_incident"] == 1) {	
 					echo "<td>";
 					if (isset($config["show_user_name"]) && ($config["show_user_name"])) {
 						$incident_creator = get_db_value('nombre_real', 'tusuario', 'id_usuario', $incident["id_creator"]);
@@ -4729,7 +4729,7 @@ function incidents_get_sla_info ($id_group) {
 function incidents_get_all_status() {
 	global $config;
 	
-	$sql = 'SELECT id, name FROM tincident_status';
+	$sql = 'SELECT id, name FROM tincident_status order by name';
 	
 	$rows = get_db_all_rows_sql ($sql);
 	if ($rows == false) {
@@ -4748,6 +4748,4 @@ function incidents_get_resolution_name($id_resolution) {
 	$name = get_db_value ('name', 'tincident_resolution', 'id', $id_resolution);
 	return $name;
 }
-
-
 ?>

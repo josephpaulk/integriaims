@@ -257,7 +257,6 @@ if (defined ('AJAX')) {
 			$initial_status = incidents_get_all_status();
 		}
 		
-		ksort($initial_status);
 		echo json_encode($initial_status);
 		return;
 	}
