@@ -83,12 +83,16 @@ if ($get_group_search) {
 			$item = groups_get_group_deep($key) . $item;
 		});
 		
-		$groups = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+		$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+		$groups_si = users_get_groups_for_select ($config['id_user'], "SI", false, true, null, 'id_grupo');
+		$groups = $groups_iw + $groups_si;
+		
 		$groups = array_diff_key($groups, $groups_selected);
 	}
 	else {
-		$array_groups = array();
-		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo'));
+		$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+		$groups_si = users_get_groups_for_select ($config['id_user'], "SI", false, true, null, 'id_grupo');
+		$groups = $groups_iw + $groups_si;
 	}
 	
 	echo '<div class="div_ui div_left_ui">';

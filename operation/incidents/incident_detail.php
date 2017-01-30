@@ -312,12 +312,9 @@ if (defined ('AJAX')) {
 		$id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 		
 		if ($id_group_type != "" && $id_group_type != "0") {
-			if (give_acl ($config['id_user'], $id_grupo, "SI")) {
-				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
-			}
-			else {
-				$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-			}
+			$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+			$groups_si = users_get_groups_for_select ($config['id_user'], "SI", false, true, null, 'id_grupo');
+			$groups_all = $groups_iw + $groups_si;
 			
 			array_walk($groups_all, function(&$item, $key) {
 				$item = str_replace('&nbsp;', ' ', $item);
@@ -340,12 +337,9 @@ if (defined ('AJAX')) {
 			}
 		}
 		else {
-			if (give_acl ($config['id_user'], $id_grupo, "SI")) {
-				$groups = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
-			}
-			else {
-				$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-			}
+			$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+			$groups_si = users_get_groups_for_select ($config['id_user'], "SI", false, true, null, 'id_grupo');
+			$groups = $groups_iw + $groups_si;
 			
 			if ($option_any) {
 				$groups[0] = __('Any');
