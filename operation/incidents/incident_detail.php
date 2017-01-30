@@ -320,7 +320,8 @@ if (defined ('AJAX')) {
 			}
 			
 			array_walk($groups_all, function(&$item, $key) {
-				$item = groups_get_group_deep($key) . safe_output($item);
+				$item = str_replace('&nbsp;', ' ', $item);
+				$item = groups_get_group_deep($key) . ltrim(safe_output($item));
 			});
 			
 			$array_groups = json_decode(safe_output($id_group_type), true);
@@ -1136,7 +1137,8 @@ if ($id_group_type != "" && $id_group_type != "0") {
 	}
 	
 	array_walk($groups_all, function(&$item, $key) {
-		$item = groups_get_group_deep($key) . safe_output($item);
+		$item = str_replace('&nbsp;', ' ', $item);
+		$item = groups_get_group_deep($key) . ltrim(safe_output($item));
 	});
 	
 	$array_groups = json_decode(safe_output($id_group_type), true);
