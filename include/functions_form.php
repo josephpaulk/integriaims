@@ -1047,9 +1047,11 @@ echo "</form>";
 echo "</div>";
 }
 
-function form_search_incident ($return = false, $filter=false, $ajax=0) {
+function form_search_incident ($return = false, $filter = false, $ajax = 0) {
+	
 	include_once ("functions_user.php");
 	global $config;
+	
 	$output = '';
 	
 	if (!$filter) {
@@ -1058,7 +1060,7 @@ function form_search_incident ($return = false, $filter=false, $ajax=0) {
 		$status = (int) get_parameter ('search_status', -10);
 		$priority = (int) get_parameter ('search_priority', -1);
 		$resolution = (int) get_parameter ('search_resolution', -1);
-		$id_group = (int) get_parameter ('search_id_group');
+		$id_group = (int) get_parameter ('search_id_group', 1);
 		$id_inventory = (int) get_parameter ('search_id_inventory');
 		$id_company = (int) get_parameter ('search_id_company');
 		$search_id_user = (string) get_parameter ('search_id_user');
@@ -1139,7 +1141,7 @@ function form_search_incident ($return = false, $filter=false, $ajax=0) {
 	$table->data[0][1] = print_select ($available_status,'search_status', $status,'', __('Any'), 0, true, false, true,__('Status'));
 	
 	// Groups
-	$groups = users_get_groups_for_select ($config['id_user'], "IW", true, true);
+	$groups = users_get_groups_for_select ($config['id_user'], "IW", users_can_manage_group_all(), true);
 	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
 	// Check Box

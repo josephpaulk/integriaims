@@ -50,6 +50,10 @@ if (isset ($_GET["loginhash"])) {
 	}
 }
 */
+/* Enterprise support */
+if (file_exists (ENTERPRISE_DIR."/load_enterprise.php")) {
+	include_once (ENTERPRISE_DIR."/load_enterprise.php");
+}
 
 // Check user
 check_login ();

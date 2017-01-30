@@ -1457,7 +1457,7 @@ function parent_search_form(filter, id_ticket) {
 function incidents_gift (){
 	
 	var filters = $('#search_incident_form').serialize();
-	
+	console.log(filters);	
 	$("#incident_table").html("<img id='inventory_loading' src='images/carga.gif' />");
 	$.ajax({	
 		type: "POST",

@@ -51,9 +51,11 @@ enterprise_include("include/functions_users.php");
 enterprise_include("include/functions_incidents.php");
 enterprise_include($config["homedir"]."/include/functions_groups.php");
 
-function filter_incidents ($filters, $count=false, $limit=true, $no_parents = false, $csv_mode = false) {
+function filter_incidents ($filters, $count = false, $limit = true, 
+	$no_parents = false, $csv_mode = false) {
+	
 	global $config;
-
+	
 	/* Set default values if none is set */
 	$filters['inverse_filter'] = isset ($filters['inverse_filter']) ? $filters['inverse_filter'] : false;
 	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
@@ -142,7 +144,6 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 				$sql_clause .= sprintf(' AND id_grupo <> %d', $filters['id_group']);
 			}
 		}
-
 	}
 	
 	// User
@@ -437,29 +438,17 @@ function filter_incidents ($filters, $count=false, $limit=true, $no_parents = fa
 	foreach ($incidents as $incident) {
 		//Check external users ACLs
 		$type_user = user_get_user_level ($config['id_user']);
-
-		//~ if ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check) {
-			//~ continue;
-		//~ }
-		//~ else {
-			//~ // Normal ACL pass if IR for this group or if the user is the incident creator
-			//~ // or if the user is the owner or if the user has workunits
-			//~ $check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
-			//~ if (!$check_acl) {
-				//~ continue;
-			//~ }
-		//~ }
 		
 		if (enterprise_installed()) {
 			if ($type_user == -1) { // standalone user
-				$standalone_check = enterprise_hook('manage_standalone', array($incident, 'read'));
-				if ($standalone_check == -1 || $standalone_check == 0 ) { // standalone user
+				$standalone_check = (bool) enterprise_hook('manage_standalone', array($incident, 'read'));
+				if ($standalone_check === false ) { // standalone user
 					continue;
 				}
 			}
-			else if ($type_user == 0){ // grouped user
+			else if ($type_user == 0) { // grouped user
 				$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
-				if (!$check_acl) {
+				if ($check_acl == false) {
 					continue;
 				}
 			}
@@ -2727,13 +2716,17 @@ function incidents_get_incident_slas ($id_incident, $only_names = true) {
 }
 
 /*Filters or display result for incident search*/
-function incidents_search_result ($filter, $ajax=false, $return_incidents = false, $print_result_count = false, $no_parents = false, $resolve_names = false, $report_mode = false, $csv_mode = false, $id_ticket = 0) {
+function incidents_search_result ($filter, $ajax = false, 
+	$return_incidents = false, $print_result_count = false, 
+	$no_parents = false, $resolve_names = false, $report_mode = false, 
+	$csv_mode = false, $id_ticket = 0) {
+	
 	global $config;
-	echo '<div class = "incident_table" id = "incident_table">';
+	echo '<div class="incident_table" id="incident_table">';
 	$params = "";
 
 	foreach ($filter as $key => $value) {
-		$params .= "&search_".$key."=".$value;
+		$params .= "&search_" . $key . "=" . $value;
 	}
 	
 	if ($filter['closed_by'] == '') {
@@ -2776,17 +2769,17 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 	}
 	// Set the limit filter to 0 to retrieve all the tickets for the array pagination
 	$filter["limit"] = 0;
-
+	
 	// All the tickets the user sees are retrieved
 	$incidents = filter_incidents($filter, false, true, $no_parents, $csv_mode);
-
+	
 	$count = empty($incidents) ? 0 : count($incidents);
 
 	if ($resolve_names) {
 		$incidents_aux = array();
 		$i=0;
 		foreach ($incidents as $inc) {
-			$incidents_aux[$i]=$inc;
+			$incidents_aux[$i] = $inc;
 			$incidents_aux[$i]['estado'] = incidents_get_incident_status_text ($inc['id_incidencia']);
 			$incidents_aux[$i]['resolution'] = incidents_get_incident_resolution_text ($inc['id_incidencia']);
 			$incidents_aux[$i]['prioridad'] = incidents_get_incident_priority_text ($inc['id_incidencia']);
@@ -2896,7 +2889,8 @@ function incidents_search_result ($filter, $ajax=false, $return_incidents = fals
 
 	if ($incidents == false) {
 		echo '<tr><td colspan="11">'.__('Nothing was found').'</td></tr>';
-	} else {
+	}
+	else {
 
 		foreach ($incidents as $incident) {
 			/* We print the rows directly, because it will be used in a sortable
@@ -3328,7 +3322,7 @@ function incidents_get_filter_tickets_tree ($filters, $mode = false, $id_task = 
 	$filters['string'] = isset ($filters['string']) ? $filters['string'] : '';
 	$filters['status'] = isset ($filters['status']) ? $filters['status'] : 0;
 	$filters['priority'] = isset ($filters['priority']) ? $filters['priority'] : -1;
-	$filters['id_group'] = isset ($filters['id_group']) ? $filters['id_group'] : -1;
+	$filters['id_group'] = isset ($filters['id_group']) ? $filters['id_group'] : 1;
 	$filters['id_company'] = isset ($filters['id_company']) ? $filters['id_company'] : 0;
 	$filters['id_inventory'] = isset ($filters['id_inventory']) ? $filters['id_inventory'] : 0;
 	$filters['id_incident_type'] = isset ($filters['id_incident_type']) ? $filters['id_incident_type'] : 0;

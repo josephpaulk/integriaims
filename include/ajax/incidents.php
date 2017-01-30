@@ -481,38 +481,36 @@ if ($set_params) {
 if ($search_ajax){
 	
 	$filter = array ();
-	$filter['inverse_filter']     = (bool) get_parameter ('search_inverse_filter');
-	$filter['string']             = (string) get_parameter ('search_string');
-	$filter['status']             = (int) get_parameter ('search_status', -10);
-	$filter['priority']           = (int) get_parameter ('search_priority', -1);
-	$filter['id_group']           = (int) get_parameter ('search_id_group', 1);
-	$filter['id_company']         = (int) get_parameter ('search_id_company');
-	$filter['id_inventory']       = (int) get_parameter ('search_id_inventory');
-	$filter['id_incident_type']   = (int) get_parameter ('search_id_incident_type');
-	$filter['id_user']            = (string) get_parameter ('search_id_user', '');
-	$filter['id_user_or_creator'] = (string) get_parameter ('id_user_or_creator');
+	$filter['inverse_filter'] = 	(bool) get_parameter('search_inverse_filter');
+	$filter['string'] = 			(string) get_parameter ('search_string');
+	$filter['priority'] = 			(int) get_parameter ('search_priority', -1);
+	$filter['id_group'] = 			(int) get_parameter ('search_id_group', 1);
+	$filter['status'] = 			(int) get_parameter ('search_status', -10);
+	$filter['resolution'] = 		(int) get_parameter ('search_resolution', -1);
+	$filter['id_product'] = 		(int) get_parameter ('search_id_product');
+	$filter['id_company'] = 		(int) get_parameter ('search_id_company');
+	$filter['id_inventory'] = 		(int) get_parameter ('id_inventory');
+	$filter['serial_number'] = 		(string) get_parameter ('search_serial_number');
+	$filter['sla_fired'] =	 		(bool) get_parameter ('search_sla_fired');
+	$filter['id_incident_type'] = 	(int) get_parameter ('search_id_incident_type');
+	$filter['id_user'] = 			(string) get_parameter ('search_id_user', '');
+	$filter['id_creator'] = 		(string) get_parameter ('search_id_creator', '');
+	$filter['editor'] = 			(string) get_parameter ('search_editor', '');
+	$filter['closed_by'] = 			(string) get_parameter ('search_closed_by', '');
+	$filter['order_by'] = 			(string) get_parameter ('search_order_by', '');
+	$filter['from_date'] = 			(string) get_parameter('search_from_date', '');
+	$filter['first_date'] = 		(string) get_parameter('search_first_date', '');
+	$filter['last_date'] = 			(string) get_parameter('search_last_date', '');
+	$filter['group_by_project'] = 	(bool) get_parameter('search_group_by_project');
+	$filter['sla_state'] = 			(int) get_parameter ('search_sla_state');
+	$filter['id_task'] = 			(int) get_parameter('search_id_task');
+	$filter['left_sla'] = 			(int) get_parameter ('search_left_sla');
+	$filter['right_sla'] = 			(int) get_parameter ('search_right_sla');
+	$filter['show_hierarchy'] = 	(bool) get_parameter('search_show_hierarchy');
+	$filter['medals'] = 			(int) get_parameter ('search_medals', 0);
+	$filter['parent_name'] = 		(string) get_parameter ('parent_name', '');
+		
 	
-	$filter['first_date']          = (string) get_parameter ('search_first_date');
-	$filter['last_date']          = (string) get_parameter ('search_last_date');	
-	$filter['id_creator']         = (string) get_parameter ('search_id_creator');
-	$filter['editor']             = (string) get_parameter ('search_editor');
-	$filter['closed_by']          = (string) get_parameter ('closed_by');
-	$filter['resolution']         = (int) get_parameter ('search_resolution', -1);
-	$filter["offset"]             = (int) get_parameter ('offset');
-	$filter['group_by_project']   = (bool) get_parameter('search_group_by_project');
-	$filter['sla_state']          = (string) get_parameter ('search_sla_state');
-	
-	$filter['id_task']            = (int) get_parameter ('search_id_task');	
-	$filter['left_sla']           = (int) get_parameter ('search_left_sla');
-	$filter['right_sla']          = (int) get_parameter ('search_right_left');
-	$filter['show_hierarchy']     = (bool) get_parameter('search_show_hierarchy');
-	
-	$filter['parent_name']        = get_parameter('parent_name');
-	$filter['serial_number']      = (string) get_parameter ('search_serial_number');
-	$filter['search_from_date']   = (int) get_parameter("search_from_date");
-	//$filter['id_product']       = (int) get_parameter ('search_id_product');
-	$filter['medals']             = (int) get_parameter('search_medals');
-
 	//custom fields
 	$type_fields = incidents_get_type_fields ($filter['id_incident_type']);
 	foreach ($type_fields as $key => $type_field) {
