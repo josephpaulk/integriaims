@@ -410,7 +410,8 @@ if (isset($incident)) {
 		exit;
 	}
 }
-elseif (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "SI") && (!get_standalone_user($config["id_user"]))) {
+elseif (!give_acl ($config['id_user'], $id_grupo, "IR") && !give_acl ($config['id_user'], $id_grupo, "IW") 
+	&& !give_acl ($config['id_user'], $id_grupo, "SI") && (!get_standalone_user($config["id_user"]))) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
 	include ("general/noaccess.php");
@@ -1104,13 +1105,13 @@ if (give_acl ($config['id_user'], $id_grupo, "IW") || give_acl ($config['id_user
 }
 else if (give_acl ($config['id_user'], $id_grupo, "SI")) {
 	
-	$group_escalate_sql = 'select g.nombre from tusuario_perfil u, tgrupo g where g.id_grupo=u.id_grupo and u.id_usuario = "'.$config['id_user'].'"';
+	$group_escalate_sql = 'select g.id_grupo from tusuario_perfil u, tgrupo g where g.id_grupo=u.id_grupo and u.id_usuario = "'.$config['id_user'].'"';
 	$group_escalate_p = get_db_all_rows_sql($group_escalate_sql);
 	foreach ($group_escalate_p as $v) {
-		$group_escalate .= $v['id_grupo']. '|';
+		$group_escalate[] = $v['id_grupo'];
 	}
-	$group_escalate = rtrim($group_escalate, "|");
-	$types_escalate_sql = 'select id, name from tincident_type where id_group REGEXP "'.$group_escalate.'"';
+	//~ $group_escalate = rtrim($group_escalate, "|");
+	$types_escalate_sql = 'select id, name from tincident_type where id_group LIKE \'%' . implode("%' OR id_group LIKE '%", $group_escalate) . '%\' OR id_group =""';
 	$types_escalate_s = get_db_all_rows_sql($types_escalate_sql);
 	$types_escalate = array();
 	
@@ -1122,12 +1123,9 @@ else if (give_acl ($config['id_user'], $id_grupo, "SI")) {
 $id_group_type = safe_output(get_db_value("id_group", "tincident_type", "id", $id_incident_type));
 
 if ($id_group_type != "" && $id_group_type != "0") {
-	if (give_acl ($config['id_user'], $id_grupo, "SI")) {
-		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
-	}
-	else {
-		$groups_all = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-	}
+	$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+	$groups_si = users_get_groups_for_select ($config['id_user'], "SI", false, true, null, 'id_grupo');
+	$groups_all = $groups_iw + $groups_si;
 	
 	array_walk($groups_all, function(&$item, $key) {
 		$item = str_replace('&nbsp;', ' ', $item);
@@ -1146,15 +1144,13 @@ if ($id_group_type != "" && $id_group_type != "0") {
 	$groups = array_intersect($groups_all, $groups_selected);
 }
 else {
-	if (give_acl ($config['id_user'], $id_grupo, "SI")) {
-		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "SI", false,  true));
-	}
-	else {
-		$groups = safe_output(users_get_groups_for_select ($config['id_user'], "IW", false,  true));
-	}
+	$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", false, true, null, 'id_grupo');
+	$groups_si = users_get_groups_for_select ($config['id_user'], "SI", false, true, null, 'id_grupo');
+	$groups = $groups_iw + $groups_si;
 	
 	array_walk($groups, function(&$item, $key) {
-		$item = groups_get_group_deep($key) . safe_output($item);
+		$item = str_replace('&nbsp;', ' ', $item);
+		$item = groups_get_group_deep($key) . ltrim(safe_output($item));
 	});
 }
 
