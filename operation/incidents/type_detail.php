@@ -715,7 +715,7 @@ else {
 	$table2->data[1][0] = "<b>" . __("Groups") . "</b>" . 
 		"&nbsp;&nbsp;<a href='javascript: incident_show_groups_search(\"$id_group\")'>" . 
 		print_image('images/add.png', true, array('title' => __('Add'))) . "</a>" . 
-		"&nbsp;&nbsp;<a href='javascript: clean_groups_field();'>" . 
+		"&nbsp;&nbsp;<a id='clean_groups' href='javascript:'>" . 
 		print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 	
 	$table2->data[1][0] .= html_print_select ($result, 'groups_selected', 
@@ -862,6 +862,10 @@ $("#type").change (function () {
 		break;
 	}
 }).change();
+
+$("#clean_groups").click (function () {
+	 clean_groups_field();
+});
 
 //autofocus
 var autofocus = <?php echo $autofocus ?>;

@@ -1141,7 +1141,10 @@ function form_search_incident ($return = false, $filter = false, $ajax = 0) {
 	$table->data[0][1] = print_select ($available_status,'search_status', $status,'', __('Any'), 0, true, false, true,__('Status'));
 	
 	// Groups
-	$groups = users_get_groups_for_select ($config['id_user'], "IW", users_can_manage_group_all(), true);
+	$groups_iw = users_get_groups_for_select ($config['id_user'], "IW", users_can_manage_group_all(), true);
+	$groups_si = users_get_groups_for_select ($config['id_user'], "SI", users_can_manage_group_all(), true);
+	$groups = $groups_iw + $groups_si;
+	
 	$table->data[0][2] = print_select ($groups, 'search_id_group', $id_group, '', '', '', true, false, false, __('Group'));
 
 	// Check Box

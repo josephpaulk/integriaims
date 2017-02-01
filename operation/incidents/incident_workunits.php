@@ -44,13 +44,27 @@ $incident = get_incident ($id_incident);
 $result_msg = '';
 
 //user with IR and incident creator see the information
-$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-$standalone_check = enterprise_hook("manage_standalone", array($incident));
-
-if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check)) {
-	audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident #".$id_incident);
-	include ("general/noaccess.php");
-	exit;
+$level_user = user_get_user_level ();
+//Incident creators must see their incidents
+if (enterprise_installed()) {
+	if ($level_user == -1) {
+		$standalone_check = enterprise_hook("manage_standalone", array($incident));
+		
+		if (!$standalone_check) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);
+			include ("general/noaccess.php");
+			exit;
+		}
+	}
+	elseif ($level_user == 0) {
+		$check_acl_ir = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'IR'));
+		
+		if (($check_acl_ir === false)) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);
+			include ("general/noaccess.php");
+			exit;
+		}
+	}
 }
 
 $is_enterprise = false;

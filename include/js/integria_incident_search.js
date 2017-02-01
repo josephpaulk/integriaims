@@ -1113,7 +1113,8 @@ function loadgroups() {
 }
 
 function clean_groups_field () {
-	$("#text-id_group").attr("value", "");
+	$("#id_group").prop("value", "");
+	$("#groups_selected").empty();
 }
 
 function setTicketScore(id_ticket, score) {

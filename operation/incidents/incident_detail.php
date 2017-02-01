@@ -283,6 +283,9 @@ if (defined ('AJAX')) {
 
 		$allowed_resolution = enterprise_hook("incidents_get_allowed_resolution", array($status, $resolution, $id_incident));
 		
+		// ORDER RESOLUTION BY NAME
+		asort ($allowed_resolution, SORT_STRING);
+		
 		if ($allowed_resolution == ENTERPRISE_NOT_HOOK) {
 			$allowed_resolution = get_incident_resolutions();
 		} else {
