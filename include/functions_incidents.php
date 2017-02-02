@@ -447,12 +447,8 @@ function filter_incidents ($filters, $count = false, $limit = true,
 				}
 			}
 			else if ($type_user == 0) { // grouped user
-				$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident));
-				//~ $check_acl_ir = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'IR'));
-				//~ $check_acl_iw = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'IW'));
-				//~ $check_acl_si = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'SI'));
-				//~ if (($check_acl_ir == false) && ($check_acl_iw == false) && ($check_acl_si == false)) {
-				if (($check_acl == false)) {
+				$check_acl = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'IR'));
+				if ($check_acl == false) {
 					continue;
 				}
 			}

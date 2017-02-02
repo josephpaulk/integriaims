@@ -331,7 +331,7 @@ if (defined ('AJAX')) {
 				$item = groups_get_group_deep($key) . safe_output($item);
 			});
 			
-			$groups = array_intersect(safe_output($groups_all), $groups_selected);
+			$groups = array_intersect($groups_all, $groups_selected);
 			
 			if ($option_any) {
 				$groups[0] = __('Any');
