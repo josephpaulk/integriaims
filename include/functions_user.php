@@ -165,7 +165,12 @@ function user_is_standalone ($id_user) {
 	return false;
 }
 
-function user_get_user_level ($id_user) {
+function user_get_user_level ($id_user = false) {
+	global $config;
+	
+	if (!$id_user)
+		$id_user = $config['id_user'];
+	
 	$level = get_db_value('nivel', 'tusuario', 'id_usuario', $id_user);
 	
 	return $level;

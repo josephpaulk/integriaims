@@ -30,7 +30,8 @@ if ($id) {
 
 	if ($incident !== false) {
 		$id_grupo = $incident['id_grupo'];
-	} else {
+	}
+	else {
 		echo "<h1>".__("Ticket")."</h1>";
 		echo ui_print_error_message (__("There is no information for this ticket"), '', true, 'h3', true);
 		echo "<br>";
@@ -40,23 +41,38 @@ if ($id) {
 }
 
 if (isset($incident)) {
+	
+	$level_user = user_get_user_level ();
 	//Incident creators must see their incidents
-	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
-	$standalone_check = enterprise_hook("manage_standalone", array($incident));
-
-	if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($standalone_check !== ENTERPRISE_NOT_HOOK && !$standalone_check)) {
-
-	 	// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);
-		include ("general/noaccess.php");
-		exit;
+	
+	if (enterprise_installed()) {
+		if ($level_user == -1) {
+			$standalone_check = enterprise_hook("manage_standalone", array($incident));
+			
+			if (!$standalone_check) {
+				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);
+				include ("general/noaccess.php");
+				exit;
+			}
+		}
+		elseif ($level_user == 0) {
+			$check_acl_ir = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'IR'));
+			
+			if (($check_acl_ir === false)) {
+				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket (External user) ".$id);
+				include ("general/noaccess.php");
+				exit;
+			}
+		}
 	}
-} else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
+}
+else if (! give_acl ($config['id_user'], $id_grupo, "IR") && ! give_acl ($config['id_user'], $id_grupo, "IW") && ! give_acl ($config['id_user'], $id_grupo, "SI")) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to ticket ".$id);
 	include ("general/noaccess.php");
 	exit;
-} else {
+}
+else {
 	//No incident but ACLs enabled
 	echo ui_print_error_message (__("The ticket doesn't exist"), '', true, 'h3', true);
 	return;
@@ -611,7 +627,8 @@ if (!$pure) {
 	echo "<ul>";
 
 	//Only incident manager and user with IR flag which are owners and admin can edit incidents
-	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
+	$check_acl_iw = enterprise_hook('incidents_check_incident_acl', array($incident, false, 'IW'));
+	
 
 	if (get_standalone_user($config["id_user"])) {
 		$check_standalone_acl = enterprise_hook("manage_standalone", array($incident, "write"));
@@ -621,8 +638,9 @@ if (!$pure) {
 			echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
 			echo "</li>";
 		}
-	} else {
-		if ($check_acl === ENTERPRISE_NOT_HOOK || $check_acl) {
+	}
+	else {
+		if (enterprise_installed() || $check_acl_iw) {
 			echo "<li>";
 			echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
 			echo "</li>";

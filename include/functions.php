@@ -1431,7 +1431,7 @@ function check_integrity_incident_types () {
 	foreach ($types as $type) {
 		if ($type['id_group']) {
 							
-			if (!json_decode(safe_output($type['id_group']))) {
+			if (!json_decode(safe_output($type['id_group'])) && $type['id_group'] != '') {
 				$filter = array();
 				$groups = safe_output(str_replace('&nbsp;&nbsp;&nbsp;&nbsp;',"",$type['id_group']));
 				$groups = explode(', ', $groups);
@@ -1444,9 +1444,14 @@ function check_integrity_incident_types () {
 				$filter['nombre']  = explode(',',safe_input(implode(',', $array_groups)));
 				$result = group_get_groups ($filter);
 				
+				if ($result)
+					$result = json_encode(array_keys($result));
+				else
+					$result = '';
+					
 				$values['name'] = $type['name'];
 				$values['description'] = $type['description'];
-				$values['id_group'] = json_encode(array_keys($result));
+				$values['id_group'] = $result;
 				$result = process_sql_update('tincident_type', $values, array('id' => $type['id']));
 			}
 		}
