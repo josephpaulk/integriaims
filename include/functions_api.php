@@ -111,7 +111,7 @@ function api_create_users ($return_type, $user, $params){
  * @return unknown_type
  */
 
-function api_create_incident ($return_type, $user, $params){
+function api_create_incident ($return_type, $user, $params, $change_comma = false){
 	global $config;
 	
 	$config['id_user'] = $user;
@@ -129,8 +129,13 @@ function api_create_incident ($return_type, $user, $params){
 	$timestamp = print_mysql_timestamp();
 	
 	// Read input variables
-	$title = $params[0];
-	$description = $params[3];
+	if ($change_comma) {
+		$title = str_replace(":::",",",$params[0]);
+		$description = str_replace(":::",",",$params[3]);
+	} else {
+		$title = $params[0];
+		$description = $params[3];
+	}
 	$source = 1; // User report
 	$priority = $params[2];
 	$id_creator = $user;
@@ -388,7 +393,7 @@ function array_to_csv($array) {
 	return stream_get_contents($csv);
 }
 
-function api_get_incident_details ($return_type, $user, $id_incident){
+function api_get_incident_details ($return_type, $user, $id_incident, $change_comma = false){
 	if(!check_user_incident($user, $id_incident)) {
 		return;
 	}
@@ -400,6 +405,13 @@ function api_get_incident_details ($return_type, $user, $id_incident){
 	}
 	
 	$result = clean_numerics(array($result));
+	
+	if ($change_comma) {
+		foreach ($result as $id=>$res) {
+			$result[$id]['titulo'] = str_replace(",",":::",$res['titulo']);
+			$result[$id]['descripcion'] = str_replace(",",":::",$res['descripcion']);
+		}
+	}
 	
 	$ret = '';
 	
@@ -417,9 +429,17 @@ function api_get_incident_details ($return_type, $user, $id_incident){
 	return $ret;
 }
 
-function api_update_incident ($return_type, $user, $params){	
+function api_update_incident ($return_type, $user, $params, $change_comma = false){	
 	$id_incident = $params[0];
-	$values['titulo'] = $params[1];
+	
+	if ($change_comma) {
+		$values['titulo'] = str_replace(":::",",",$params[1]);
+		$values['descripcion'] = str_replace(":::",",",$params[2]);
+	} else {
+		$values['titulo'] = $params[1];
+		$values['descripcion'] = $params[2];
+	}
+	
 	
 	// Check if user and title is not empty and user exists
 	if (empty ($values['titulo'])){
@@ -432,7 +452,6 @@ function api_update_incident ($return_type, $user, $params){
 	
 	$timestamp = print_mysql_timestamp();
 	
-	$values['descripcion'] = $params[2];
 	$values['epilog'] = $params[3];
 	$values['id_grupo'] = $params[4];
 	$values['prioridad'] = $params[5];
@@ -624,7 +643,7 @@ function api_get_incident_tracking ($return_type, $user, $id_incident){
 	return $ret;
 }
 
-function api_get_incident_workunits ($return_type, $user, $id_incident){
+function api_get_incident_workunits ($return_type, $user, $id_incident, $change_comma = false){
 	if(!check_user_incident($user, $id_incident)) {
 		return;
 	}
@@ -643,6 +662,12 @@ function api_get_incident_workunits ($return_type, $user, $id_incident){
 
 	if($result === false) {
 		return '';
+	}
+	
+	if ($change_comma) {
+		foreach ($result as $id=>$res) {
+			$result[$id]['description'] = str_replace(",",":::",$res['description']);
+		}
 	}
 	
 	$ret = '';
@@ -676,7 +701,7 @@ function api_get_incident_workunits ($return_type, $user, $id_incident){
 	return $ret;
 }
 
-function api_create_incident_workunit ($return_type, $user, $params){	
+function api_create_incident_workunit ($return_type, $user, $params, $change_comma = false){	
 	$id_incident = $params[0];
 
 	if(!check_user_incident($user, $id_incident)) {
@@ -685,7 +710,11 @@ function api_create_incident_workunit ($return_type, $user, $params){
 	
 	$values['timestamp'] = print_mysql_timestamp();
 	$values['id_user'] = $user;
-	$values['description'] = $params[1];
+	if ($change_comma) {
+		$values['description'] = str_replace(":::",",",$params[1]);
+	} else {
+		$values['description'] = $params[1];
+	}
 	$values['duration'] = $params[2];
 	$values['have_cost'] = $params[3];
 	$values['public'] = $params[4];

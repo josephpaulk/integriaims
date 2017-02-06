@@ -31,6 +31,7 @@ $user = get_parameter('user', false);
 $pass = get_parameter('pass', '');
 $user_pass = get_parameter('user_pass', '');
 $return_type = get_parameter('return_type', 'csv');
+$change_comma = get_parameter('change_comma', false);
 
 $info = get_parameter('info', false);
 if ($info == "version") {
@@ -92,19 +93,19 @@ switch ($op){
 
 	case "get_incident_details":
 	{
-		echo api_get_incident_details ($return_type, $user, $params);
+		echo api_get_incident_details ($return_type, $user, $params, $change_comma);
 		break;
 	}
 	case "create_incident":
 	{
 		$params = explode($token, $params);
-		api_create_incident ($return_type, $user, $params);
+		api_create_incident ($return_type, $user, $params, $change_comma);
 		break;
 	}
 	case "update_incident":
 	{
 		$params = explode($token, $params);
-		echo api_update_incident ($return_type, $user, $params);
+		echo api_update_incident ($return_type, $user, $params, $change_comma);
 		break;
 	}
 	case "delete_incident":
@@ -114,13 +115,13 @@ switch ($op){
 	}
 	case "get_incident_workunits":
 	{
-		echo api_get_incident_workunits ($return_type, $user, $params);
+		echo api_get_incident_workunits ($return_type, $user, $params, $change_comma);
 		break;
 	}
 	case "create_workunit":
 	{
 		$params = explode($token, $params);
-		api_create_incident_workunit ($return_type, $user, $params);
+		api_create_incident_workunit ($return_type, $user, $params, $change_comma);
 		break;
 	}
 	case "get_incident_files":
